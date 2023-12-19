@@ -10,7 +10,6 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -214,17 +213,17 @@ export default function CandidateListEntry(props : Props) {
       groupComponent = (
         <React.Fragment>
           {t("edit.req_rec", { grp_name: groupName })}:&nbsp;
-          <Link onClick={() => colabResponse(true)}>{t("edit.accept")}</Link>
+          <a onClick={() => colabResponse(true)}>{t("edit.accept")}</a>
           &nbsp; or&nbsp;
-          <Link onClick={() => colabResponse(false)}>{t("edit.decline")}</Link>
+          <a onClick={() => colabResponse(false)}>{t("edit.decline")}</a>
         </React.Fragment>
       );
     } else {
       groupComponent = (
         <React.Fragment>
-          <Link onClick={() => colabResponse(true)}>
+          <a onClick={() => colabResponse(true)}>
             {t("edit.req_help", { grp_name: groupName })}
-          </Link>
+          </a>
         </React.Fragment>
       );
     }

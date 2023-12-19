@@ -8,12 +8,11 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { Panel } from "primereact/panel";
 
 interface Props {
   consentFormId?: number;
@@ -99,7 +98,7 @@ export default function ConsentLog(props: Props) {
   }, [endpointStatus]);
 
   return (
-    <Paper>
+    <Panel>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant="h1">{t("edit.opening")}</Typography>
@@ -115,7 +114,7 @@ export default function ConsentLog(props: Props) {
           </p>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Link href={formPdfLink}>{t("edit.consent_dl")}</Link>
+          <a href={formPdfLink}>{t("edit.consent_dl")}</a>
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControlLabel
@@ -135,6 +134,6 @@ export default function ConsentLog(props: Props) {
           </Button>
         </Grid>
       </Grid>
-    </Paper>
+    </Panel>
   );
 }

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import Link from "@mui/material/Link";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -80,7 +78,7 @@ export default function ReactionsList(props: Props) {
       field: "user",
       renderCell: params => {
         const user = params.value;
-        return <Link href={`mailto:${user.email}`}>{user.name}</Link>;
+        return <a href={`mailto:${user.email}`}>{user.name}</a>;
       }
     },
     {
@@ -88,7 +86,7 @@ export default function ReactionsList(props: Props) {
       field: "id",
       renderCell: params => {
         const user = params.row.user;
-        return <Link href={`mailto:${user.email}`}>{user.email}</Link>;
+        return <a href={`mailto:${user.email}`}>{user.email}</a>;
       }
     },
     {
@@ -114,9 +112,9 @@ export default function ReactionsList(props: Props) {
       renderCell: params => {
         if ("Other" == params.value) {
           return (
-            <Link onClick={event => openPop(event, params.row.other_name)}>
+            <a onClick={event => openPop(event, params.row.other_name)}>
               {params.value}
-            </Link>
+            </a>
           );
         } else {
           return params.value;
@@ -129,9 +127,9 @@ export default function ReactionsList(props: Props) {
       renderCell: params => {
         if ("" != params.value) {
           return (
-            <Link onClick={event => openPop(event, params.row.improvements)}>
+            <a onClick={event => openPop(event, params.row.improvements)}>
               {t("reactions.suggestions_lbl")}
-            </Link>
+            </a>
           );
         } else {
           return "N/A";
@@ -141,8 +139,6 @@ export default function ReactionsList(props: Props) {
   ];
 
   return (
-    <Paper>
-      {null != props.reactionsList ? (
         <React.Fragment>
           <DataGrid
             isCellEditable={() => false}
@@ -166,9 +162,5 @@ export default function ReactionsList(props: Props) {
             <Container maxWidth="sm">{popMsg}</Container>
           </Popover>
         </React.Fragment>
-      ) : (
-        <div>{t("reactions.none_yet")}</div>
-      )}
-    </Paper>
   );
 }

@@ -4,10 +4,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { TabList, TabContext, TabPanel } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -30,6 +26,8 @@ import {
 //import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { Panel } from "primereact/panel";
+import { TabPanel, TabView } from "primereact/tabview";
 
 export default function ExperienceDataAdmin(props) {
   const category = "experience_admin";
@@ -46,7 +44,7 @@ export default function ExperienceDataAdmin(props) {
   });
   const { experienceIdParam, courseIdParam } = useParams();
 
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
     return state.status.dirtyStatus[category];
   });
@@ -207,7 +205,8 @@ export default function ExperienceDataAdmin(props) {
   };
 
   const detailsComponent = (
-    <Paper>
+    <Panel>
+
       <TextField
         label="Experience Name"
         id="experience-name"
@@ -292,7 +291,7 @@ export default function ExperienceDataAdmin(props) {
 
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   );
 
   const reactionListing =
@@ -306,22 +305,13 @@ export default function ExperienceDataAdmin(props) {
       "The Experience must be created before students can react to it."
     );
   return (
-    <Paper>
-      <TabContext value={curTab}>
-        <Box>
-          <TabList value={curTab} onChange={(event, value) => setCurTab(value)}>
-            <Tab label="Details" value="details" />
-            <Tab
-              label="Results"
-              value="results"
-              disabled={null == experienceId}
-            />
-          </TabList>
-        </Box>
-        <TabPanel value="details">{detailsComponent}</TabPanel>
-        <TabPanel value="results">{reactionListing}</TabPanel>
-      </TabContext>
-    </Paper>
+    <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+        <TabPanel header="Details">{detailsComponent}</TabPanel>
+        <TabPanel
+          header="Results"
+          disabled={null == experienceId}
+        >{reactionListing}</TabPanel>
+    </TabView>
   );
 }
 

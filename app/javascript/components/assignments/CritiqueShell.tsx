@@ -8,7 +8,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-import { Link, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -341,7 +341,7 @@ export default function CritiqueShell(props: Props) {
                 {t('submitted_link')}:
               </Typography>
               <Typography id='sub_link'>
-                <Link href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</Link>
+                <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
               </Typography>
             </React.Fragment>
           ): null}

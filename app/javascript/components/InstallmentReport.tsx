@@ -4,16 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
+
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
@@ -24,12 +22,13 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 import parse from "html-react-parser";
+import { Panel } from "primereact/panel";
 
 interface Props {
   rootPath?: string;
 };
 
-export default function InstallmentReport(props : Props) {
+export default function InstallmentReport(props: Props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -106,7 +105,7 @@ export default function InstallmentReport(props : Props) {
 
   const saveButton = (
     <Button variant="contained" onClick={() => saveContributions()}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t("submit")}</Suspense>
+      <Suspense fallback={<Skeleton className="mb-2" />}>{t("submit")}</Suspense>
     </Button>
   );
 
@@ -161,7 +160,7 @@ export default function InstallmentReport(props : Props) {
   //Store what we've got
   const saveContributions = () => {
     dispatch(startTask("saving"));
-    const url = ( props.rootPath === undefined ? '' : `/${props.rootPath}` ) +
+    const url = (props.rootPath === undefined ? '' : `/${props.rootPath}`) +
       endpoints.saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
@@ -209,7 +208,7 @@ export default function InstallmentReport(props : Props) {
   };
 
   return (
-    <Paper>
+    <Panel>
       <Collapse in={showAlerts}>
         <Alert
           action={
@@ -228,7 +227,7 @@ export default function InstallmentReport(props : Props) {
           {messages["status"]}
         </Alert>
       </Collapse>
-      <Suspense fallback={<Skeleton variant="text" height={15} />}>
+      <Suspense fallback={<Skeleton className="mb-2" height={'10rem'} />}>
         <h1>{t("subtitle")}</h1>
         <p>
           {parse(
@@ -242,41 +241,30 @@ export default function InstallmentReport(props : Props) {
         </p>
         <p>{t("slider.instructions")}</p>
       </Suspense>
-      <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>
+      <Suspense fallback={<Skeleton  height={'30rem'} />}>
+            <Accordion activeIndex={curPanel} onTabChange={(event) => setCurPanel(event.index)} >
         {Object.keys(contributions).map(sliceId => {
           return (
-            <Accordion
-              expanded={sliceId == String(curPanel)}
-              onChange={() => setPanel(sliceId)}
-              key={sliceId}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} id={sliceId}>
-                {factors[sliceId].name}
-              </AccordionSummary>
-              <AccordionDetails>
+              <AccordionTab header={factors[sliceId].name} key={sliceId}>
                 <LinkedSliders
                   key={"f_" + sliceId}
                   id={Number(sliceId)}
-                  sum={6000}
+                  sum={sliderSum}
                   updateContributions={updateSlice.bind(null, sliceId)}
                   description={factors[sliceId].description}
                   contributions={contributions[sliceId]}
                   debug={debug}
                 />
-              </AccordionDetails>
-            </Accordion>
+              </AccordionTab>
           );
         })}
+            </Accordion>
         <br />
         <br />
-        <Accordion
-          expanded={commentPanelOpen}
-          onChange={() => setCommentPanelOpen(!commentPanelOpen)}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} id={"comment"}>
-            {t("comment_prompt")}
-          </AccordionSummary>
-          <AccordionDetails>
+        <Accordion >
+          <AccordionTab
+            header={t("comment_prompt")}
+            >
             <TextField
               value={installment.comments || ""}
               name="Comments"
@@ -287,7 +275,7 @@ export default function InstallmentReport(props : Props) {
               fullWidth={true}
               onChange={updateComments}
             />
-          </AccordionDetails>
+          </AccordionTab>
         </Accordion>
       </Suspense>
       {saveButton}
@@ -308,7 +296,7 @@ export default function InstallmentReport(props : Props) {
           onChange={() => setDebug(!debug)}
         />
       </div>
-    </Paper>
+    </Panel>
   );
 }
 

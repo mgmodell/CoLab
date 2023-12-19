@@ -6,10 +6,6 @@ import { setDirty } from "../infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import TextField from "@mui/material/TextField";
 //For debug purposes
 
@@ -22,8 +18,21 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
 import parse from "html-react-parser";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Skeleton } from "primereact/skeleton";
 
-export default function ExperienceDiagnosis(props) {
+type Props = {
+  diagnoseFunc: (
+    behaviorId: number,
+    otherName: string,
+    comments: string,
+    resetData: () => void
+  ) => void;
+  weekNum: number;
+  weekText: string;
+};
+
+export default function ExperienceDiagnosis(props : Props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
@@ -56,7 +65,7 @@ export default function ExperienceDiagnosis(props) {
         props.diagnoseFunc(behaviorId, otherName, comments, resetData)
       }
     >
-      <Suspense fallback={<Skeleton variant="text" />}>
+      <Suspense fallback={<Skeleton className="mb-2" />}>
         {t("next.save_and_continue")}
       </Suspense>
     </Button>
@@ -79,21 +88,20 @@ export default function ExperienceDiagnosis(props) {
     setBehaviorId(0);
     setOtherName("");
     setComments("");
-    setShowComments(false);
   };
 
   return (
     <Paper>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Suspense fallback={<Skeleton variant="text" />}>
+          <Suspense fallback={<Skeleton className="mb-2" />}>
             <h3 className="journal_entry">
               {t("next.journal", { week_num: props.weekNum })}
             </h3>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
-          <Suspense fallback={<Skeleton variant="rectangular" />}>
+          <Suspense fallback={<Skeleton className="mb-2" />}>
             <p>{parse(props.weekText)}</p>
           </Suspense>
         </Grid>
@@ -123,21 +131,15 @@ export default function ExperienceDiagnosis(props) {
               })}
             </RadioGroup>
           ) : (
-            <Skeleton variant="rectangular" />
+            <Skeleton className="mb-2" />
           )}
         </Grid>
         <Grid item xs={12}>
           {otherPnl}
         </Grid>
         <Grid item xs={12}>
-          <Accordion
-            expanded={showComments}
-            onChange={() => setShowComments(!showComments)}
-          >
-            <AccordionSummary id="comments_pnl">
-              {t("next.click_for_comment")}
-            </AccordionSummary>
-            <AccordionDetails>
+          <Accordion >
+            <AccordionTab header={t("next.click_for_comment")}>
               <TextField
                 variant="filled"
                 label={t("next.comments")}
@@ -147,7 +149,7 @@ export default function ExperienceDiagnosis(props) {
                   setComments(event.target.value);
                 }}
               />
-            </AccordionDetails>
+            </AccordionTab>
           </Accordion>
         </Grid>
       </Grid>
@@ -156,8 +158,3 @@ export default function ExperienceDiagnosis(props) {
   );
 }
 
-ExperienceDiagnosis.propTypes = {
-  diagnoseFunc: PropTypes.func.isRequired,
-  weekNum: PropTypes.number.isRequired,
-  weekText: PropTypes.string.isRequired
-};

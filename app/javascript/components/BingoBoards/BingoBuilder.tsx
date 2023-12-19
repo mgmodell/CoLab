@@ -5,8 +5,6 @@ import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
 import ScoredGameDataTable from "./ScoredGameDataTable";
 import PropTypes from "prop-types";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 
@@ -17,6 +15,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Panel } from "primereact/panel";
 
 export default function BingoBuilder(props) {
   const category = "candidate_results";
@@ -212,7 +211,7 @@ export default function BingoBuilder(props) {
     ) {
       return (
         <React.Fragment>
-          <Link onClick={() => saveBoard()}>{t('save_lnk')}</Link> {t('gen_board_msg')}&hellip;
+          <a onClick={() => saveBoard()}>{t('save_lnk')}</a> {t('gen_board_msg')}&hellip;
         </React.Fragment>
       );
     } else {
@@ -227,9 +226,9 @@ export default function BingoBuilder(props) {
       (null !== board.bingo_game.end_date &&
         new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
-        <Link onClick={() => getPrintableBoard()}>
+        <a onClick={() => getPrintableBoard()}>
           {t('download_board_lnk')}
-        </Link>{" "}
+        </a>{" "}
         {t('play_msg')}
       </React.Fragment>
     ) : (
@@ -239,7 +238,7 @@ export default function BingoBuilder(props) {
   const workSheetInstr = board.practicable ? (
     <li key={'practice'}>
       Print and complete this&nbsp;
-      <Link onClick={() => getWorksheet()}>Practice Bingo Board</Link> then turn
+      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn
       it in before class begins.
     </li>
   ) : (
@@ -249,9 +248,9 @@ export default function BingoBuilder(props) {
   const playableInstr = board.playable ? (
     <React.Fragment>
       <li key={'generate'}>
-        <Link onClick={() => randomizeTiles()}>
+        <a onClick={() => randomizeTiles()}>
           (Re)Generate your playable board
-        </Link>{" "}
+        </a>{" "}
         until you get one you like and then&hellip;
       </li>
       <li key={'save_board'}>{saveBtn()}</li>
@@ -262,7 +261,8 @@ export default function BingoBuilder(props) {
   );
 
   return (
-    <Paper>
+    <Panel>
+
       <Typography>
         <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
       </Typography>
@@ -299,7 +299,7 @@ export default function BingoBuilder(props) {
         </TabList>
         <TabPanel value="worksheet">
           {null != board.worksheet ? (
-            <Paper square={false}>
+            <Panel>
               <Typography>
                 <strong>Score:</strong>&nbsp;
                 {board.worksheet.performance || 0}
@@ -309,13 +309,14 @@ export default function BingoBuilder(props) {
                 "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
-            </Paper>
+            </Panel>
           ) : (
             "No Worksheet"
           )}
         </TabPanel>
         <TabPanel value="builder">
-          <Paper square={false}>
+          <Panal>
+
             <br />
             <ol>
               {workSheetInstr}
@@ -326,7 +327,7 @@ export default function BingoBuilder(props) {
                 <BingoBoard board={board} />
               </div>
             ) : null}
-          </Paper>
+          </Panal>
         </TabPanel>
         <TabPanel value="results">
           <ScoredGameDataTable candidates={candidates} />
@@ -335,7 +336,7 @@ export default function BingoBuilder(props) {
           <ConceptChips concepts={concepts} />
         </TabPanel>
       </TabContext>
-    </Paper>
+    </Panel>
   );
 }
 BingoBuilder.propTypes = {
