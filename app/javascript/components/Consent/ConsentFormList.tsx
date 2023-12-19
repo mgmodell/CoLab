@@ -97,7 +97,7 @@ export default function ConsentFormList(props) {
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField="start_date"
+        sortField="name"
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

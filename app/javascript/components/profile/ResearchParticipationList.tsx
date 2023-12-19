@@ -69,7 +69,7 @@ export default function ResearchParticipationList(props: Props) {
         rowsPerPageOptions={
           [5, 10, 20, props.consentFormList.length]
         }
-        sortField="start_date"
+        sortField="name"
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

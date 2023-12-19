@@ -108,7 +108,7 @@ export default function UserCourseList(props: Props) {
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField="start_date"
+        sortField="name"
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

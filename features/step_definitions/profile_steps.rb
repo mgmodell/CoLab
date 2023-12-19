@@ -8,7 +8,7 @@ Then(/^user opens their profile$/) do
   text = "Tell us about yourself, #{@user.first_name} (optional)"
   all(:xpath, "//div[contains(.,'#{text}')]").size.should be > 3
   # page.should have_content('Tell us about yourself, ' + @user.first_name)
-  find(:xpath, "//div[text()='Email settings']").click
+  find(:xpath, "//div[@data-pc-name='accordion']/div/div/a[contains(.,'Email settings')]").click
   @user.emails.each do |email|
     page.should have_content(email.email)
   end

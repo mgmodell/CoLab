@@ -114,7 +114,7 @@ export default function TaskList(props: Props) {
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField="start_date"
+        sortField={OPT_COLS.START_DATE}
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

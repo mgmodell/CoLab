@@ -65,7 +65,7 @@ export default function UserEmailList(props: Props) {
         }
         
         reorderableColumns
-        sortField="start_date"
+        sortField="email"
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"

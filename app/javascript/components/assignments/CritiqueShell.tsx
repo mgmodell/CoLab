@@ -287,7 +287,7 @@ export default function CritiqueShell(props: Props) {
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField="start_date"
+        sortField="submitted"
         sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
