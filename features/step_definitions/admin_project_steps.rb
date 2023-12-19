@@ -96,11 +96,7 @@ Then('the user adds a group named {string}') do |group_name|
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
-  begin
-    click_link tab
-  rescue Capybara::ElementNotFound
-    find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
-  end
+  find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
   wait_for_render
 end
 

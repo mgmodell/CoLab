@@ -1,5 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -7,9 +9,6 @@ import Switch from "@mui/material/Switch";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import { TabList, TabPanel, TabContext } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -28,9 +27,11 @@ import {
   Priorities
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import axios from "axios";
+
 import { Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { TabPanel, TabView } from "primereact/tabview";
+import { Panel } from "primereact/panel";
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
@@ -46,7 +47,7 @@ export default function ProjectDataAdmin(props) {
   );
   const { courseIdParam, projectIdParam } = useParams();
 
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
     return state.status.dirtyStatus[category];
   });
@@ -224,7 +225,7 @@ export default function ProjectDataAdmin(props) {
   };
 
   const detailsComponent = (
-    <Paper>
+    <Panel>
       <TextField
         label="Project Name"
         id="name"
@@ -354,7 +355,7 @@ export default function ProjectDataAdmin(props) {
       </Select>
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   );
   const chartContainer =
     0 < projectId && "" !== projectName ? (
@@ -371,15 +372,9 @@ export default function ProjectDataAdmin(props) {
     ) : null;
 
   return (
-    <Paper>
-      <TabContext value={curTab}>
-        <TabList value={curTab} onChange={(event, value) => setCurTab(value)}>
-          <Tab label="Details" value="details" />
-          <Tab label="Groups" value="groups" disabled={null == projectId} />
-          <Tab label="Reporting" value="rpt" disabled={null == projectId} />
-        </TabList>
-        <TabPanel value="details">{detailsComponent}</TabPanel>
-        <TabPanel value="groups">
+      <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+        <TabPanel header="Details">{detailsComponent}</TabPanel>
+        <TabPanel header="Groups">
           <ProjectGroups
             projectId={projectId}
             groupsUrl={endpoints.groupsUrl}
@@ -388,9 +383,9 @@ export default function ProjectDataAdmin(props) {
             diversityRescoreGroups={endpoints.diversityRescoreGroups}
           />
         </TabPanel>
-        <TabPanel value="rpt">{chartContainer}</TabPanel>
-      </TabContext>
-    </Paper>
+        <TabPanel header="Reporting">{chartContainer}</TabPanel>
+      </TabView>
+
   );
 }
 
