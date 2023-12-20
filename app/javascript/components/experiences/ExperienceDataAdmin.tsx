@@ -294,6 +294,8 @@ export default function ExperienceDataAdmin(props) {
     </Panel>
   );
 
+  console.log( reactionsUrl, reactionData );
+
   const reactionListing =
     reactionsUrl != undefined && experienceId > 0 ? (
       <ReactionsList

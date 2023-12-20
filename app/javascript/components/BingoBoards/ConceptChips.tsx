@@ -1,27 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import Chip from "@mui/material/Chip";
-import Paper from "@mui/material/Paper";
+import { Chip } from "primereact/chip";
+import { Panel } from "primereact/panel";
 
-export default function ConceptChips(props) {
+type Props = {
+  concepts: Array<{ id: number; name: string }>;
+};
+export default function ConceptChips(props : Props) {
   var c = [{ id: 1, name: "nothing" }];
 
   return (
-    <Paper>
+    <Panel>
       {props.concepts.map(chip => {
         return (
           <Chip key={chip.id} id={`concept_${chip.id}`} label={chip.name} />
         );
       })}
-    </Paper>
+    </Panel>
   );
 }
 
-ConceptChips.propTypes = {
-  concepts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string
-    })
-  )
-};

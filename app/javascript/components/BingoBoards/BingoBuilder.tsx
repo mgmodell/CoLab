@@ -4,9 +4,6 @@ import { useDispatch } from "react-redux";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
 import ScoredGameDataTable from "./ScoredGameDataTable";
-import PropTypes from "prop-types";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -14,10 +11,15 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Panel } from "primereact/panel";
 
-export default function BingoBuilder(props) {
+import { Panel } from "primereact/panel";
+import { TabView, TabPanel } from "primereact/tabview";
+
+type Props = {
+  rootPath?: string;
+};
+
+export default function BingoBuilder(props : Props) {
   const category = "candidate_results";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -30,7 +32,7 @@ export default function BingoBuilder(props) {
 
   const dispatch = useDispatch();
 
-  const [curTab, setCurTab] = useState("builder");
+  const [curTab, setCurTab] = useState(0);
 
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -263,59 +265,23 @@ export default function BingoBuilder(props) {
   return (
     <Panel>
 
-      <Typography>
+      <p>
         <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
-      </Typography>
+      </p>
       <div>
         <strong>{t('description_lbl')}:</strong>{" "}
         <p>{parse(board.bingo_game.description || "")}</p>
       </div>
       {null != candidateList && (
-        <Typography>
+        <p>
           <strong>{t('performance_lbl')}:</strong>
           <span id="performance">{candidateList.cached_performance}</span>
-        </Typography>
+        </p>
       )}
       <hr />
-      <TabContext value={curTab}>
-        <TabList
-          value={curTab}
-          onChange={(event, value) => setCurTab(value)}
-          centered
-        >
-          <Tab value="builder" label="Bingo game builder" />
-          <Tab value="results" label="Your performance" />
-          <Tab
-            value="worksheet"
-            label="Worksheet result"
-            disabled={
-              !board.practicable ||
-              null == board.worksheet ||
-              (null == board.worksheet.performance &&
-                null == board.worksheet.result_img)
-            }
-          />
-          <Tab value="concepts" label="Concepts found by class" />
-        </TabList>
-        <TabPanel value="worksheet">
-          {null != board.worksheet ? (
-            <Panel>
-              <Typography>
-                <strong>Score:</strong>&nbsp;
-                {board.worksheet.performance || 0}
-                <br />
-              </Typography>
-              {null != board.worksheet.result_img &&
-                "" != board.worksheet.result_img ? (
-                <img src={board.worksheet.result_img} />
-              ) : null}
-            </Panel>
-          ) : (
-            "No Worksheet"
-          )}
-        </TabPanel>
-        <TabPanel value="builder">
-          <Panal>
+      <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
+        <TabPanel header={'Bingo game builder'}>
+          <Panel>
 
             <br />
             <ol>
@@ -327,18 +293,42 @@ export default function BingoBuilder(props) {
                 <BingoBoard board={board} />
               </div>
             ) : null}
-          </Panal>
+          </Panel>
+
         </TabPanel>
-        <TabPanel value="results">
+        <TabPanel header={'Your performance'}>
           <ScoredGameDataTable candidates={candidates} />
         </TabPanel>
-        <TabPanel value="concepts">
+        <TabPanel
+          header={'Worksheet result'}
+          disabled={
+            !board.practicable ||
+            null == board.worksheet ||
+            (null == board.worksheet.performance &&
+              null == board.worksheet.result_img)
+          }
+          >
+          {null != board.worksheet ? (
+            <Panel>
+              <p>
+                <strong>Score:</strong>&nbsp;
+                {board.worksheet.performance || 0}
+                <br />
+              </p>
+              {null != board.worksheet.result_img &&
+                "" != board.worksheet.result_img ? (
+                <img src={board.worksheet.result_img} />
+              ) : null}
+            </Panel>
+          ) : (
+            "No Worksheet"
+          )}
+        </TabPanel>
+        <TabPanel header={'Concepts found by class'}>
           <ConceptChips concepts={concepts} />
         </TabPanel>
-      </TabContext>
+      </TabView>
+
     </Panel>
   );
 }
-BingoBuilder.propTypes = {
-  rootPath: PropTypes.string
-};
