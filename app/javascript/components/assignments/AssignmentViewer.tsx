@@ -20,11 +20,12 @@ import { DateTime, Settings } from "luxon";
 import parse from "html-react-parser";
 
 import { useTranslation } from "react-i18next";
-import Skeleton from "@mui/material/Skeleton";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Tab from "@mui/material/Tab";
+
 import { Grid, Typography } from "@mui/material";
+
 import AssignmentSubmission from "./AssignmentSubmission";
+import { TabView, TabPanel } from "primereact/tabview";
+import { Skeleton } from "primereact/skeleton";
 
 interface ISubmissionCondensed {
   id: number;
@@ -75,7 +76,7 @@ export default function AssignmentViewer(props) {
   const dispatch = useDispatch();
   const [t, i18n] = useTranslation(`${endpointSet}s`);
 
-  const [curTab, setCurTab] = useState("overview");
+  const [curTab, setCurTab] = useState(0);
 
   const [submissions, setSubmissions] = useState([]);
 
@@ -153,26 +154,11 @@ export default function AssignmentViewer(props) {
   let output = null;
   const curDate = DateTime.local();
   if (!endpointsLoaded) {
-    output = <Skeleton variant="rectangular" />;
+    output = <Skeleton className="mb-2" />;
   } else {
     output = (
-      <TabContext value={curTab}>
-        <TabList onChange={handleTabChange}>
-          <Tab label="Overview" value="overview" />
-          <Tab
-            label={t('submissions.response_tab_lbl')}
-            value="responses"
-            disabled={
-              assignment.startDate > curDate || assignment.endDate < curDate
-            }
-          />
-          <Tab
-            label={t('progress.progress_tab_lbl')}
-            value="progress"
-            disabled={submissions.length < 1 || assignment.startDate < curDate}
-          />
-        </TabList>
-        <TabPanel value="overview">
+      <TabView activeIndex={curTab} onTabChange={(e) => setCurTab(e.index)}>
+        <TabPanel header={'Overview'} >
           <Grid container spacing={1} columns={70}>
             <Grid item xs={15}>
               <Typography variant="h6">{t("name")}:</Typography>
@@ -189,15 +175,25 @@ export default function AssignmentViewer(props) {
             </Grid>
             <RubricViewer rubric={assignment.rubric} />
           </Grid>
+
         </TabPanel>
-        <TabPanel value="responses">
+        <TabPanel
+          header={t('submissions.response_tab_lbl')}
+            >
           <AssignmentSubmission
             assignment={assignment}
             reloadCallback={loadAssignment}
           />
         </TabPanel>
-        <TabPanel value="progress">{t('progress.in_progress_msg')}</TabPanel>
-      </TabContext>
+        <TabPanel header={t('progress.progress_tab_lbl')}
+            disabled={
+              assignment.startDate > curDate || assignment.endDate < curDate
+            }
+            >
+          {t('progress.in_progress_msg')}
+        </TabPanel>
+
+      </TabView>
     );
   }
 
