@@ -1,24 +1,22 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
-import Skeleton from "@mui/material/Skeleton";
-
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabContext, TabList, TabPanel } from "@mui/lab/";
+import { Skeleton } from "primereact/skeleton";
+import { TabView, TabPanel } from "primereact/tabview";
+import { Panel } from "primereact/panel";
 
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -70,7 +68,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation("bingo_games");
 
   const [dirty, setDirty] = useState(false);
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -241,7 +239,7 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const save_btn = dirty ? (
-    <Suspense fallback={<Skeleton variant="text" />}>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
         variant="contained"
         color="primary"
@@ -256,7 +254,7 @@ export default function BingoGameDataAdmin(props) {
   ) : null;
 
   const group_options = gameGroupOption ? (
-    <Suspense fallback={<Skeleton variant="text" />}>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
       <React.Fragment>
         <Grid item xs={6}>
           <TextField
@@ -300,17 +298,10 @@ export default function BingoGameDataAdmin(props) {
     </Suspense>
   ) : null;
   return (
-    <Suspense fallback={<Skeleton variant="text" />}>
-      <Paper style={{ height: "95%", width: "100%" }}>
-        <TabContext value={curTab}>
-          <Box>
-            <TabList value={curTab} onChange={changeTab} centered>
-              <Tab value="details" label={t("game_details_pnl")} />
-              <Tab value="results" label={t("response_pnl")} />
-            </TabList>
-          </Box>
-          <TabPanel value="details">
-            <React.Fragment>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
+      <Panel style={{ height: "95%", width: "100%" }}>
+        <TabView activeIndex={curTab} onTabChange={(event)=> setCurTab( event.index)}>
+          <TabPanel header={t("game_details_pnl")} >
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
@@ -443,9 +434,8 @@ export default function BingoGameDataAdmin(props) {
               </Grid>
               {save_btn} {messages.status}
               <Typography>{saveStatus}</Typography>
-            </React.Fragment>
           </TabPanel>
-          <TabPanel value="results">
+          <TabPanel header={t("response_pnl")} >
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
                 <ConceptChips concepts={concepts} />
@@ -455,8 +445,9 @@ export default function BingoGameDataAdmin(props) {
               </Grid>
             </Grid>
           </TabPanel>
-        </TabContext>
-      </Paper>
+          
+        </TabView>
+      </Panel>
     </Suspense>
   );
 }
