@@ -7,3 +7,14 @@ body {
   /* text-shadow: 0 1px 1px white; */
   font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
 }
+
+a {
+  color: hsl(246, 56%, 34%);
+  text-decoration: none;
+}
+
+
+a:hover, a:active {
+  color: hsl(246, 56%, 34%);
+  text-decoration: underline;
+}
