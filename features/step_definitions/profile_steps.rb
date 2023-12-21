@@ -2,8 +2,8 @@
 
 Then(/^user opens their profile$/) do
   wait_for_render
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="profile-menu-item"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'profile-menu-item').click
   page.should have_content('Edit your profile')
   text = "Tell us about yourself, #{@user.first_name} (optional)"
   all(:xpath, "//div[contains(.,'#{text}')]").size.should be > 3

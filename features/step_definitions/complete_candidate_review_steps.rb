@@ -265,6 +265,6 @@ Then(/^there will be (\d+) concepts$/) do |concept_count|
 end
 
 Then('the user navigates home') do
-  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:id, 'main-menu-button').click
   find(:xpath, '//*[@id="home-menu-item"]').click
 end

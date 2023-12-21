@@ -143,8 +143,8 @@ end
 
 Then(/^the user logs out$/) do
   wait_for_render
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="logout-menu-item"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'logout-menu-item').click
   wait_for_render
   page.quit
 end

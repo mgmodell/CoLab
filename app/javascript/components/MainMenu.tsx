@@ -56,6 +56,7 @@ export default function MainMenu(props: Props) {
       [{
         label: t("home.title"),
         icon: "pi pi-fw pi-home",
+        id: "home-menu-item",
         command: () => navTo("/home")
       }];
 
@@ -63,98 +64,111 @@ export default function MainMenu(props: Props) {
       builtMenu.push({
         label: t("profile"),
         icon: "pi pi-fw pi-user",
+        id: "profile-menu-item",
         command: () => navTo("/profile")
       });
-    }
-    if (user.is_instructor || user.is_admin) {
-      let adminItems =
-        [
-          {
-            label: t("courses_edit"),
-            icon: "pi pi-fw pi-book",
-            command: () => navTo("/admin/courses")
-          },
-          {
-            label: t("reporting"),
-            icon: "pi pi-fw pi-chart-bar",
-            command: () => navTo("/admin/reporting")
-          },
-          {
-            label: t("rubrics_edit"),
-            icon: "pi pi-fw pi-table",
-            command: () => navTo("/admin/rubrics")
-          },
-        ];
-      if (user.is_admin) {
-        adminItems.push(
-          {
-            label: t("concepts_edit"),
-            icon: "pi pi-fw pi-tags",
-            command: () => navTo("/admin/concepts")
-          },
-          {
-            label: t("schools_edit"),
-            icon: "pi pi-fw pi-users",
-            command: () => navTo("/admin/schools")
-          },
-          {
-            label: t("consent_forms_edit"),
-            icon: "pi pi-fw pi-file",
-            command: () => navTo("/admin/consent_forms")
-          }
+      console.log("user", user);
+      if (user.is_instructor || user.is_admin) {
+        let adminItems =
+          [
+            {
+              label: t("courses_edit"),
+              icon: "pi pi-fw pi-book",
+              id: "courses-menu-item",
+              command: () => navTo("/admin/courses")
+            },
+            {
+              label: t("reporting"),
+              icon: "pi pi-fw pi-chart-bar",
+              id: "reporting-menu-item",
+              command: () => navTo("/admin/reporting"),
+            },
+            {
+              label: t("rubrics_edit"),
+              icon: "pi pi-fw pi-table",
+              id: "rubrics-menu-item",
+              command: () => navTo("/admin/rubrics"),
+            },
+          ];
+        if (user.is_admin) {
+          adminItems.push(
+            {
+              label: t("concepts_edit"),
+              icon: "pi pi-fw pi-tags",
+              id: "concepts-menu-item",
+              command: () => navTo("/admin/concepts")
+            },
+            {
+              label: t("schools_edit"),
+              icon: "pi pi-fw pi-users",
+              id: "schools-menu-item",
+              command: () => navTo("/admin/schools")
+            },
+            {
+              label: t("consent_forms_edit"),
+              icon: "pi pi-fw pi-file",
+              id: "consent-forms-menu-item",
+              command: () => navTo("/admin/consent_forms")
+            }
 
-        );
+          );
+          builtMenu.push(
+            {
+              separator: true
+            },
+
+            {
+              label: t("administration"),
+              items: adminItems,
+              id: "administration-menu",
+            }
+          );
+        }
       }
+    }
+    builtMenu.push(
+      {
+        separator: true
+      },
+      {
+        label: t('titles.demonstration'),
+        icon: "pi pi-fw pi-play",
+        id: "demo-menu-item",
+        command: () => navTo("/demo")
+      },
+      {
+        label: t("support_menu"),
+        icon: "pi pi-fw pi-question-circle",
+        id: "support-menu-item",
+        command: () => {
+          window.location.href = `mailto:${props.supportAddress}`;
+        }
+      },
+      {
+        label: t("about"),
+        icon: "pi pi-fw pi-info-circle",
+        id: "about-menu-item",
+        command: () => {
+          navTo(props.moreInfoUrl);
+        }
+      }
+    )
+
+    if (isLoggedIn) {
       builtMenu.push(
         {
-          separator: true
-        },
-
-        {
-          label: t("administration"),
-          items: adminItems,
+          label: t("logout"),
+          icon: "pi pi-fw pi-sign-out",
+          id: "logout-menu-item",
+          command: () => {
+            dispatch(signOut());
+            setMenuOpen(false);
+          }
         }
       );
-      builtMenu.push(
-        {
-          separator: true
-        },
-        {
-          label: t('titles.demonstration'),
-          icon: "pi pi-fw pi-play",
-          command: () => navTo("/demo")
-        },
-        {
-          label: t("support_menu"),
-          icon: "pi pi-fw pi-question-circle",
-          command: () => {
-            window.location.href = `mailto:${props.supportAddress}`;
-          }
-        },
-        {
-          label: t("about"),
-          icon: "pi pi-fw pi-info-circle",
-          command: () => {
-            navTo(props.moreInfoUrl);
-          }
-        }
-      )
-
-      if (isLoggedIn) {
-        builtMenu.push(
-          {
-            label: t("logout"),
-            icon: "pi pi-fw pi-sign-out",
-            command: () => {
-              dispatch(signOut());
-              setMenuOpen(false);
-            }
-          }
-        );
-      }
-
-
     }
+
+
     return builtMenu;
   }
 
@@ -181,7 +195,7 @@ export default function MainMenu(props: Props) {
 
   ]
 
-//  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
+  //  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
 
 
   return (
@@ -193,19 +207,17 @@ export default function MainMenu(props: Props) {
         onClick={(event) => menuButton.current.toggle(event)}
         className="p-mr-2"
       />
-        <TieredMenu
-          //closeOnEscape
-          
-          popup
-          ref={menuButton}
-          appendTo={'self'}
-          submenuIcon="pi pi-fw pi-cog"
-          
-          model={
-            buildMyMenu()
-          }
-        />
-        {/*
+      <TieredMenu
+        popup
+        ref={menuButton}
+        appendTo={'self'}
+        submenuIcon="pi pi-fw pi-cog"
+
+        model={
+          buildMyMenu()
+        }
+      />
+      {/*
       <Menu
         popup
         appendTo={'self'}

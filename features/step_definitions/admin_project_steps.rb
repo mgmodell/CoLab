@@ -3,13 +3,14 @@
 require 'chronic'
 # frozen_string_literal: true
 Then(/^the user "([^"]*)" see an Admin button$/) do |admin|
-  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:id, 'main-menu-button').click
   if 'does' == admin
     page.should have_content('Administration')
   else
     page.should_not have_content('Administration')
   end
-  page.document.first(:id, 'home-menu-item').send_keys :escape
+  find(:id, 'main-menu-button').click
+
 end
 
 Given(/^the user is an admin$/) do
@@ -19,8 +20,8 @@ Given(/^the user is an admin$/) do
 end
 
 Then(/^the user clicks the Admin button$/) do
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="administration-menu"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'administration-menu').hover
 end
 
 Then(/^the user sees (\d+) course$/) do |course_count|
