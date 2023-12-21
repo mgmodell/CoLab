@@ -15,23 +15,23 @@ Then(/^user opens their profile$/) do
 end
 
 Then(/^the user sees the experience in the history$/) do
-  find(:xpath, "//button[contains(.,'History')]").click
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
   page.should have_content(@experience.get_name(false))
 end
 
 Then(/^user sees the Bingo! in the history$/) do
-  find(:xpath, "//button[contains(.,'History')]").click
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
   page.should have_content(@bingo.get_name(false))
 end
 
 Then(/^user sees the assessed project in the history$/) do
-  find(:xpath, "//button[contains(.,'History')]").click
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
   wait_for_render
   page.should have_content(@project.get_name(false))
 end
 
 Then(/^user sees the assignment in the history$/) do
-  find(:xpath, "//button[contains(.,'History')]").click
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
   wait_for_render
   page.should have_content(@assignment.get_name(false))
 end
