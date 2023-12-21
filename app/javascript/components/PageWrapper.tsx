@@ -76,7 +76,13 @@ export default function PageWrapper(props : Props) {
             </Suspense>
           }
         >
-          <Route element={<Outlet />}>
+          <Route element={
+            <div
+              className="mainContent"
+            >
+              <Outlet />
+            </div>
+          }>
             <Route
               index
               element={

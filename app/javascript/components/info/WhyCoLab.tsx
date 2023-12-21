@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSpring, animated, config } from "react-spring";
 import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fontStyle } from "@mui/system";
 import StudentConcern from "../svgs/StudentConcern";
 import SocialLoafing from "../svgs/SocialLoafing";
 import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
@@ -79,12 +78,18 @@ export default function WhyCoLab(props) {
                         </ul>
                     </Col>
                     <Col sm={4}>
+                        <p>Are you a&hellip;</p>
                         <ul>
-                            <li onClick={()=>{
-                                navigate('/welcome/student');
-
-                            }}>
+                            <li >
+                                <a href='/welcome/student'>
                                 Student?
+                                </a>
+                            </li>
+                            <li >
+
+                                <a href='/welcome/instructor'>
+                                Instructor?
+                                </a>
                             </li>
                         </ul>
                     </Col>
@@ -524,7 +529,7 @@ export default function WhyCoLab(props) {
                 setScene(curScene + 1);
             }}
             //Account for the off-by-one of 0-indexing
-            opacity={curScene < ( NavSpecs.navDots - 1 ) ? 1 : 0}
+            opacity={curScene < (NavSpecs.navDots - 1) ? 1 : 0}
         >
 
             <circle
@@ -639,10 +644,10 @@ export default function WhyCoLab(props) {
             <EmbeddedHTMLInSVG
                 width={titleSpring.width}
                 height={titleSpring.height}
-                >
+            >
                 {titles[curScene]}
 
-                </EmbeddedHTMLInSVG>
+            </EmbeddedHTMLInSVG>
             {
                 curNav
             }

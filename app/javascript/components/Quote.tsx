@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-export default function Quote(props) {
+type Props = {
+  url: string;
+};
+
+export default function Quote(props : Props) {
   const [quote, setQuote] = useState({ text: "", attribution: "" });
 
   const updateQuote = () => {
@@ -24,6 +28,3 @@ export default function Quote(props) {
     </span>
   );
 }
-Quote.propTypes = {
-  url: PropTypes.string
-};

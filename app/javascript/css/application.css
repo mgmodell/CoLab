@@ -18,3 +18,21 @@ a:hover, a:active {
   color: hsl(246, 56%, 34%);
   text-decoration: underline;
 }
+
+.mainNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: navy;
+  color: azure;
+}
+
+.mainContent {
+  margin-top: 3rem;
+}
