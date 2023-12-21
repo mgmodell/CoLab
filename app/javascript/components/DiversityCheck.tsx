@@ -1,26 +1,20 @@
 import React, { useState, Suspense } from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
 
 import { useTranslation } from "react-i18next";
 
-import CompareIcon from "@mui/icons-material/Compare";
 import axios from "axios";
 
-export default function DiversityCheck(props) {
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Container, Row, Col } from "react-grid-system";
+
+type Props = {
+  diversityScoreFor: string;
+};
+
+export default function DiversityCheck(props:Props) {
   const [emails, setEmails] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [diversityScore, setDiversityScore] = useState(null);
@@ -65,27 +59,36 @@ export default function DiversityCheck(props) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <React.Fragment>
-        <ListItem button onClick={() => openDialog()}>
-          <ListItemIcon>
-            <CompareIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{t("calc_diversity")}</ListItemText>
-        </ListItem>
+        <Button
+          label={t("calc_diversity")}
+          icon="pi pi-calculator"
+          link
+          onClick={() => {
+            openDialog();
+          }}
+        />
         <Dialog
-          open={dialogOpen}
-          onClose={() => closeDialog()}
+          header={t("calc_it")}
+          visible={dialogOpen}
+          onHide={() => closeDialog()}
           aria-labelledby={t("calc_it")}
+          footer={
+            <>
+              <Button onClick={calcDiversity}>
+                {t("calc_diversity_sub")}
+              </Button>
+              <Button onClick={handleClear}>
+                {t("clear")}
+              </Button>
+            </>
+          }
         >
-          <DialogTitle>{t("calc_it")}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>{t("ds_emails_lbl")}</DialogContentText>
-            <TextField value={emails} onChange={handleChange} />
+            <InputText value={emails} onChange={handleChange} />
 
             {foundUsers.length > 0 ? (
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
+              <Container>
+                <Row>
+                  <Col>
                       {foundUsers.map(user => {
                         return (
                           <a key={user.email} href={"mailto:" + user.email}>
@@ -94,29 +97,17 @@ export default function DiversityCheck(props) {
                           </a>
                         );
                       })}
-                    </TableCell>
-                    <TableCell valign="middle" align="center">
+                  </Col>
+                  <Col >
                       {diversityScore}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+                  </Col>
+                </Row>
+
+              </Container>
             ) : null}
-            <DialogActions>
-              <Button variant="contained" onClick={calcDiversity}>
-                {t("calc_diversity_sub")}
-              </Button>
-              <Button variant="contained" onClick={handleClear}>
-                {t("clear")}
-              </Button>
-            </DialogActions>
-          </DialogContent>
         </Dialog>
       </React.Fragment>
     </Suspense>
   );
 }
 
-DiversityCheck.propTypes = {
-  diversityScoreFor: PropTypes.string.isRequired
-};

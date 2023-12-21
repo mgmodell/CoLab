@@ -11,6 +11,7 @@ import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 import { TieredMenu } from "primereact/tieredmenu";
+import DiversityCheck from "./DiversityCheck";
 
 type Props = {
   diversityScoreFor: string;
@@ -67,7 +68,6 @@ export default function MainMenu(props: Props) {
         id: "profile-menu-item",
         command: () => navTo("/profile")
       });
-      console.log("user", user);
       if (user.is_instructor || user.is_admin) {
         let adminItems =
           [
@@ -129,6 +129,9 @@ export default function MainMenu(props: Props) {
     builtMenu.push(
       {
         separator: true
+      },
+      {
+        template: (<DiversityCheck diversityScoreFor={props.diversityScoreFor} />),
       },
       {
         label: t('titles.demonstration'),
