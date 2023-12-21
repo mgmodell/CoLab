@@ -26,31 +26,7 @@ enum OPT_COLS {
   GAMES = "games"
 }
 
-const styles = theme => ({
-  table: {
-    fontFamily: theme.typography.fontFamily
-  },
-  flexContainer: {
-    display: "flex",
-    alignItems: "center",
-    boxSizing: "border-box"
-  },
-  tableRow: {
-    cursor: "pointer"
-  },
-  tableRowHover: {
-    "&:hover": {
-      backgroundColor: theme.palette.grey[200]
-    }
-  },
-  tableCell: {
-    flex: 1
-  },
-  noClick: {
-    cursor: "initial"
-  }
-});
-export default function ConceptsTable(props) {
+export default function ConceptsTable() {
   const category = "concept";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -108,28 +84,7 @@ export default function ConceptsTable(props) {
         dispatch(endTask("load"));
       });
   };
-  const filter = function(event) {
-    var filtered = conceptsRaw.filter(concept =>
-      concept.cap_name.includes(event.target.value.toUpperCase())
-    );
-    setConcepts(filtered);
-  };
 
-  const colSort = function(event) {
-    let tmpArray = conceptsRaw;
-    let direction = SortDirection.DESC;
-    let mod = 1;
-    if (event.sortBy == sortBy && direction == sortDirection) {
-      direction = SortDirection.ASC;
-      mod = -1;
-    }
-    tmpArray.sort((a, b) => {
-      return mod * a[event.sortBy].localeCompare(b[event.sortBy]);
-    });
-    setConcepts(tmpArray);
-    setSortDirection(direction);
-    setSortBy(event.sortBy);
-  };
   const drillDown = event => {
     setConceptId(event.data.id);
     setConceptName(event.data.name);
@@ -211,6 +166,7 @@ export default function ConceptsTable(props) {
             filter
             key="name"
             />
+          { visibleColumns.includes(t(OPT_COLS.USE_COUNT)) ? (
           <Column
             header={t("use_count")}
             field="times"
@@ -218,6 +174,9 @@ export default function ConceptsTable(props) {
             filter
             key="times"
             />
+          ) : null
+          }
+          { visibleColumns.includes(t(OPT_COLS.COURSES)) ? (
           <Column
             header={t("courses")}
             field="courses"
@@ -225,6 +184,8 @@ export default function ConceptsTable(props) {
             filter
             key="courses"
             />
+          ) : null }
+          { visibleColumns.includes(t(OPT_COLS.GAMES)) ? (
           <Column
             header={t("games")}
             field="bingos"
@@ -232,6 +193,7 @@ export default function ConceptsTable(props) {
             filter
             key="bingos"
             />
+          ) : null }
         </DataTable>
       <Dialog
         visible={editing}
