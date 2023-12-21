@@ -1,209 +1,180 @@
 /* eslint-disable no-console */
 import React from "react";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import { SortDirection } from "react-virtualized";
-import WrappedVirtualizedTable from "../WrappedVirtualizedTable";
+
+import { useTranslation } from "react-i18next";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import StandardListToolbar from "../StandardListToolbar";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import { Panel } from "primereact/panel";
 
 const BingoGameResults = React.lazy(() => import("./BingoGameResults"));
 
-class BingoGameDataAdminTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: "",
-      sortBy: "student",
-      sortDirection: SortDirection.DESC,
-      results: this.props.results_raw,
-      individual: {
-        open: false,
-        student: "",
-        board: [],
-        close: this.closeDialog,
-        candidates: []
-      },
-      columns: [
-        {
-          width: 120,
-          flexGrow: 1.0,
-          label: "List Performance",
-          dataKey: "performance",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          flexGrow: 1.0,
-          label: "Worksheet Score",
-          dataKey: "score",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          flexGrow: 1.0,
-          label: "Student",
-          dataKey: "student",
-          numeric: false,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          label: "Group",
-          dataKey: "group",
-          numeric: false,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          label: "Expected",
-          dataKey: "concepts_expected",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          label: "Entered",
-          dataKey: "concepts_entered",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          label: "Credited",
-          dataKey: "concepts_credited",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        },
-        {
-          width: 120,
-          label: "Term Problems",
-          dataKey: "term_problems",
-          numeric: true,
-          disableSort: false,
-          visible: true
-        }
-      ]
-    };
-    this.filter = this.filter.bind(this);
-    this.colSort = this.colSort.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    this.openDialog = this.openDialog.bind(this);
-  }
-  openDialog(event) {
-    const index = event.index;
-    this.setState({
-      individual: {
-        open: true,
-        student: this.state.results[index].student,
-        board: this.state.results[index].practice_answers,
-        candidates: this.state.results[index].candidates,
-        score: this.state.results[index].score
-      }
-    });
-  }
-  closeDialog() {
-    this.setState({
-      individual: {
-        open: false
-      }
-    });
-  }
-  filter = function(event) {
-    var filtered = this.props.results_raw.filter(user =>
-      user.student.toUpperCase().includes(event.target.value.toUpperCase())
-    );
-    this.setState({ results: filtered });
-  };
-
-  colSort = function(event) {
-    let tmpArray = this.props.results_raw;
-    let direction = SortDirection.DESC;
-    let mod = 1;
-    if (
-      event.sortBy == this.state.sortBy &&
-      direction == this.state.sortDirection
-    ) {
-      direction = SortDirection.ASC;
-      mod = -1;
-    }
-    let index = 0;
-    for (index = 0; index < this.state.columns.length; ++index) {
-      if (this.state.columns[index].dataKey == event.sortBy) {
-        break;
-      }
-    }
-
-    if (this.state.columns[index].numeric) {
-      tmpArray.sort((a, b) => {
-        return mod * a[event.sortBy] - b[event.sortBy];
-      });
-    } else {
-      tmpArray.sort((a, b) => {
-        return mod * a[event.sortBy].localeCompare(b[event.sortBy]);
-      });
-    }
-    this.setState({
-      results: tmpArray,
-      sortDirection: direction,
-      sortBy: event.sortBy
-    });
-  };
-  render() {
-    return (
-      <Paper style={{ height: "100%", width: "100%" }}>
-        {null == this.props.results_raw || null == this.state.results ? (
-          <React.Fragment>
-            <br />
-            <Typography variant={"h3"} align={"center"}>
-              Loading&hellip;
-            </Typography>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <Toolbar>
-              <InputBase placeholder="Search results" onChange={this.filter} />
-              <SearchIcon />
-              <Typography color="inherit">
-                Showing {this.state.results.length} of{" "}
-                {this.props.results_raw.length}
-              </Typography>
-            </Toolbar>
-            <WrappedVirtualizedTable
-              rowCount={this.state.results.length}
-              rowGetter={({ index }) => this.state.results[index]}
-              sort={this.colSort}
-              sortBy={this.state.sortBy}
-              sortDirection={this.state.sortDirection}
-              onRowClick={event => this.openDialog(event)}
-              columns={this.state.columns}
-            />
-            <BingoGameResults
-              open={this.state.individual.open}
-              student={this.state.individual.student}
-              board={this.state.individual.board}
-              score={this.state.individual.score}
-              close={this.closeDialog}
-              candidates={this.state.individual.candidates}
-            />
-          </React.Fragment>
-        )}
-      </Paper>
-    );
-  }
-}
-BingoGameDataAdminTable.propTypes = {
-  results_raw: PropTypes.array
+type Props = {
+  results_raw: Array<any>;
 };
-export default BingoGameDataAdminTable;
+
+enum OPT_COLS {
+  PERFORMANCE = "List Performance",
+  SCORE = "Worksheet Score",
+  STUDENT = "Student",
+  GROUP = "Group",
+  EXPECTED = "Expected",
+  ENTERED = "Entered",
+  CREDITED = "Credited",
+  TERM_PROBLEMS = "Term Problems"
+}
+
+export default function BingoGameDataAdminTable(props: Props) {
+  const { t } = useTranslation();
+  const user = useTypedSelector(state => state.profile.user);
+  const [individual, setIndividual] = React.useState({
+    student: "",
+    board: [],
+    candidates: [],
+    score: 0
+  });
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  const [filterText, setFilterText] = React.useState("");
+  const optColumns = [
+    OPT_COLS.GROUP,
+    OPT_COLS.EXPECTED,
+    OPT_COLS.ENTERED,
+    OPT_COLS.CREDITED,
+    OPT_COLS.TERM_PROBLEMS
+  ];
+  const [visibleColumns, setVisibleColumns] = React.useState([]);
+
+  const openDialog = (event) => {
+    const index = event.index;
+    setIndividual({
+      student: props.results_raw[index].student,
+      board: props.results_raw[index].practice_answers,
+      candidates: props.results_raw[index].candidates,
+      score: props.results_raw[index].score
+    });
+    setDialogOpen(true);
+  }
+
+
+  return (
+    <Panel>
+      <DataTable
+        value={props.results_raw}
+        resizableColumns
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={
+          [5, 10, 20, 100]
+        }
+        tableStyle={{
+          width: "100%"
+        }}
+        scrollable
+        scrollHeight="calc(100vh - 20rem)"
+        className="p-datatable-striped p-datatable-gridlines"
+        dataKey="id"
+        onRowClick={(event) =>{
+          openDialog(event);
+
+        } }
+        header={
+          <StandardListToolbar
+            itemType={'invitation'}
+            filtering={
+              {
+                filterValue: filterText,
+                setFilterFunc: setFilterText
+              }
+            }
+            columnToggle={
+              {
+                optColumns: optColumns,
+                visibleColumns: visibleColumns,
+                setVisibleColumnsFunc: setVisibleColumns,
+              }
+            }
+          />}
+      >
+          <Column
+            header={OPT_COLS.PERFORMANCE}
+            field={'performance'}
+            sortable
+            filter
+            key={'performance'}
+          />
+
+          <Column
+            header={OPT_COLS.SCORE}
+            field={'score'}
+            sortable
+            filter
+            key={'score'}
+          />
+          <Column
+            header={OPT_COLS.STUDENT}
+            field={'student'}
+            sortable
+            filter
+            key={'student'}
+          />
+        {visibleColumns.includes(OPT_COLS.GROUP) ? (
+          <Column
+            header={OPT_COLS.GROUP}
+            field={'group'}
+            sortable
+            filter
+            key={'group'}
+          />
+        ) : null}
+        {visibleColumns.includes(OPT_COLS.EXPECTED) ? (
+          <Column
+            header={OPT_COLS.EXPECTED}
+            field={'concepts_expected'}
+            sortable
+            filter
+            key={'concepts_expected'}
+          />
+        ) : null}
+        {visibleColumns.includes(OPT_COLS.ENTERED) ? (
+          <Column
+            header={OPT_COLS.ENTERED}
+            field={'concepts_entered'}
+            sortable
+            filter
+            key={'concepts_entered'}
+          />
+        ) : null}
+        {visibleColumns.includes(OPT_COLS.CREDITED) ? (
+          <Column
+            header={OPT_COLS.CREDITED}
+            field={'concepts_credited'}
+            sortable
+            filter
+            key={'concepts_credited'}
+          />
+        ) : null}
+        {visibleColumns.includes(OPT_COLS.TERM_PROBLEMS) ? (
+          <Column
+            header={OPT_COLS.TERM_PROBLEMS}
+            field={'term_problems'}
+            sortable
+            filter
+            key={'term_problems'}
+          />
+        ) : null}
+
+      </DataTable>
+      <BingoGameResults
+        open={dialogOpen}
+        student={individual.student}
+        board={individual.board}
+        score={individual.score}
+        close={() => setDialogOpen(false)}
+        candidates={individual.candidates}
+        />
+    </Panel>
+  );
+}

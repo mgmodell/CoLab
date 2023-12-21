@@ -105,7 +105,6 @@ export default function DecisionEnrollmentsTable(props: Props) {
           [5, 10, 20, 100]
         }
         virtualScrollerOptions={{ itemSize: 100 }}
-        onRowClick={drillDown}
         header={
           <StandardListToolbar
             itemType={'invitation'}
