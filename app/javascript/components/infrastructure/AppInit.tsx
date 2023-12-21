@@ -28,10 +28,6 @@ export default function AppInit(props: Props) {
   useEffect(() => {
     //dispatch( authConfig()  )
     dispatch(getContext(props.endpointsUrl));
-    setInterval(function() {
-      //this code runs every minute
-      dispatch(cleanUpMsgs());
-    }, 6000);
   }, []);
 
   return (
