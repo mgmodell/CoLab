@@ -8,15 +8,7 @@ Then(/^the user clicks the link to the concept list$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
 
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@bingo.get_name(@anon)}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[@role='cell' and text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
   # current_path = page.current_path
@@ -25,8 +17,7 @@ Then(/^the user clicks the link to the concept list$/) do
   # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
   # props_string = x['data-react-props']
-  elem = page.find(:xpath, "//button[contains(.,'Concepts found by class')]")
-  elem.click
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Concepts found by class')]" ).click
 
   # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
