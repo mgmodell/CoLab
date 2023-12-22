@@ -61,6 +61,8 @@ export default function MainMenu(props: Props) {
         command: () => navTo("/home")
       }];
 
+    console.log("user", user);
+    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn) {
       builtMenu.push({
         label: t("profile"),
@@ -112,6 +114,7 @@ export default function MainMenu(props: Props) {
             }
 
           );
+        }
           builtMenu.push(
             {
               separator: true
@@ -123,7 +126,6 @@ export default function MainMenu(props: Props) {
               id: "administration-menu",
             }
           );
-        }
       }
     }
     builtMenu.push(
