@@ -65,35 +65,57 @@ Then('the user sees {int} rubrics') do |count|
 end
 
 Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
-  field = find_all(:xpath,
-                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field_num = case field_name.downcase
+              when 'description'
+                1
+              when 'weight'
+                2
+              when 'l1_description'
+                3
+              when 'l2_description'
+                4
+              when 'l3_description'
+                5
+              when 'l4_description'
+                6
+              when 'l5_description'
+                7
+              else
+                true.should be false
+              end
+  field = row.find_all( 'td' )[field_num]
+  field.click
+  
+  field = find( :id, field_name.downcase )
 
-  text = field.text
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys value
-  send_keys :enter
+  field.send_keys value
+  field.send_keys :enter
+
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
-  wait_for_render
-  field = find_all(:xpath,
-                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
-  text = field.text
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field_num = level + 2
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys value
-  send_keys :enter
+  field = row.find_all( 'td' )[field_num]
+  field.click
+
+  field = find_by_id("l#{level}_description")
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
+
+  field.send_keys value
+  field.send_keys :enter
 end
 
 Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']/div")[criteria_num - 1]
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[2]
+
   field.text.to_i.should eq weight
 end
 
@@ -103,8 +125,8 @@ end
 
 Then('the user will see an empty criteria {int}') do |criteria_num|
   wait_for_render
-  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='description']/div"
-  field = find_all(:xpath, path)[criteria_num - 1]
+  row = find_all( :xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[1]
   field.text.should eq 'New Criteria'
 end
 
@@ -122,15 +144,17 @@ Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, f
 end
 
 Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weight|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']")[criteria_num - 1]
-  text = field.text
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[2]
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys weight
-  send_keys :enter
+  field.click
+
+  field = find_by_id("weight")
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
+
+  field.send_keys weight
+  field.send_keys :enter
 end
 
 Then('retrieve the {string} rubric from the db') do |name|

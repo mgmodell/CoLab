@@ -299,6 +299,7 @@ export default function RubricDataAdmin(props) {
         return (
           <InputText
             type={'number'}
+            id={options.field}
             value={options.value || 0}
             onChange={event => {
               options.editorCallback( event.target.value );
@@ -316,6 +317,7 @@ export default function RubricDataAdmin(props) {
         return (
           <InputTextarea
             value={options.value || ''}
+            id={options.field}
             onChange={event => {
               options.editorCallback( event.target.value );
             }}
@@ -375,7 +377,6 @@ export default function RubricDataAdmin(props) {
         />}
         sortField="sequence"
         editMode={'cell'}
-        sortOrder={-1}
         paginatorTemplate="CurrentPageReport"
         currentPageReportTemplate="{totalRecords} Criteria"
         dataKey="id"
