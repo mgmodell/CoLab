@@ -25,11 +25,7 @@ def wait_for_render
 end
 
 def ack_messages
-  retries ||= 3
-  all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-rescue Selenium::WebDriver::Error::ElementNotInteractableError
-  (retries += 1).should be < 10, 'Too many ack retries'
-  retry unless retries > 5
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each(&:click)
 end
 
 # Not sure I should really need this, but...

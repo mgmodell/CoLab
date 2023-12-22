@@ -219,6 +219,7 @@ end
 
 Then('the user searches for {string}') do |search_string|
   field = find(:xpath, "//input[@id='rubric-search']")
+  ack_messages
   oldVal = field.value
   field.click
 
