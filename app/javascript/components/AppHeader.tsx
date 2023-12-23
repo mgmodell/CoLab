@@ -39,41 +39,39 @@ export default function AppHeader(props) {
 
   return (
     <React.Fragment>
-        <Toolbar
+      <Toolbar
         className="mainNav"
-          start={(
-            endpoints !== undefined ? (
-              <>
-              <MainMenu
-                diversityScoreFor={endpoints.diversityScoreFor}
-                reportingUrl={endpoints.reportingUrl}
-                supportAddress={endpoints.supportAddress}
-                moreInfoUrl={endpoints.moreInfoUrl}
-              />
-              &nbsp;
-              <Logo
-                height={32}
-                width={32}
-                spinning={working}
-              />
-              <Suspense fallback={<Skeleton className="mb-2" />}>
-                {t("title")}
-                <br />
-                <Quote url={endpoints.quotePath} />
-              </Suspense>
-              </>
-            ) : (
-              <Skeleton className="mb-2" width={'10rem'} height={'10rem'} />
-            )
+        start={(
+          endpoints !== undefined ? (
+            <MainMenu
+              diversityScoreFor={endpoints.diversityScoreFor}
+              reportingUrl={endpoints.reportingUrl}
+              supportAddress={endpoints.supportAddress}
+              moreInfoUrl={endpoints.moreInfoUrl}
+            />
+          ) : (
+            <Skeleton className="mb-2" width={'10rem'} height={'10rem'} />
+          )
+        )}
+        center={(
+          endpoints !== undefined ? (
+            <>
+              {t("title")}
+              <br />
+              <Quote url={endpoints.quotePath} />
+            </>
 
-          )}
-          end={(
-            <Suspense fallback={<Skeleton className="mr-2" shape={'circle'} />} >
-              <HelpMenu lookupUrl={endpoints?.lookupsUrl} />
-            </Suspense>
+          ) : (
+            <Skeleton className="mb-2" width={'10rem'} height={'10rem'} />
+          )
+        )}
+        end={(
+          <Suspense fallback={<Skeleton className="mr-2" shape={'circle'} />} >
+            <HelpMenu lookupUrl={endpoints?.lookupsUrl} />
+          </Suspense>
 
-          )}
-        />
+        )}
+      />
     </React.Fragment>
   );
 }

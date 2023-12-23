@@ -12,6 +12,7 @@ import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 import { TieredMenu } from "primereact/tieredmenu";
 import DiversityCheck from "./DiversityCheck";
+import Logo from "./Logo";
 
 type Props = {
   diversityScoreFor: string;
@@ -27,6 +28,20 @@ export default function MainMenu(props: Props) {
   const [t, i18n] = useTranslation();
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
+
+  const working = useTypedSelector(state => {
+    let accum = 0;
+    if (undefined === props.identifier) {
+      accum = state.status.tasks[props.identifier];
+    } else {
+      accum = Number(
+        Object.values(state.status.tasks).reduce((accum, nextVal) => {
+          return Number(accum) + Number(nextVal);
+        }, accum)
+      );
+    }
+    return accum > 0;
+  });
 
   const menuButton = useRef(null);
 
@@ -207,11 +222,17 @@ export default function MainMenu(props: Props) {
     <React.Fragment>
       <Button
         id="main-menu-button"
-        icon="pi pi-bars"
+        text
         //onClick={(event) => setMenuOpen(!menuOpen)}
         onClick={(event) => menuButton.current.toggle(event)}
         className="p-mr-2"
-      />
+        >
+          <Logo
+            height={48}
+            width={48}
+            spinning={working}
+            />
+        </Button>
       <TieredMenu
         popup
         ref={menuButton}

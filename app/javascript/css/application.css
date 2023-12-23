@@ -22,7 +22,8 @@ a:hover, a:active {
 .mainNav {
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
+  margin-top: 0rem;
   position: fixed;
   z-index: 1000;
   width: 100%;
@@ -33,11 +34,21 @@ a:hover, a:active {
 }
 .mainNav .p-toolbar-group-start {
   display: block;
-  width: 80%;
+  width: 9%;
   align-items: center;
 }
+.mainNav .p-toolbar-group-center {
+  display: block;
+  align-items: top;
+  width: 80%;
+}
+.mainNav .p-toolbar-group-center .quotes {
+  font-size: small;
+}
 .mainNav .p-toolbar-group-end {
-  width: 15%%;
+  margin-left: auto;
+  float: right;
+  clear: right;
 }
 
 .mainContent {
