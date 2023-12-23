@@ -38,7 +38,7 @@ end
 
 Then 'the user will dismiss the error {string}' do |error_message|
   page.should have_content error_message
-  find(:xpath, "//button[@id='error-close']").click
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each(&:click)
 end
 
 Then(/^the user waits to see "([^"]*)"$/) do |wait_msg|
