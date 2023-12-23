@@ -241,11 +241,15 @@ export default function InstallmentReport(props: Props) {
         </p>
         <p>{t("slider.instructions")}</p>
       </Suspense>
-      <Suspense fallback={<Skeleton  height={'30rem'} />}>
-            <Accordion activeIndex={curPanel} onTabChange={(event) => setCurPanel(event.index)} >
-        {Object.keys(contributions).map(sliceId => {
-          return (
-              <AccordionTab header={factors[sliceId].name} key={sliceId}>
+      <Suspense fallback={<Skeleton height={'30rem'} />}>
+        <div id='installments'>
+
+        <Accordion activeIndex={curPanel} onTabChange={(event) => setCurPanel(event.index)} >
+          {Object.keys(contributions).map(sliceId => {
+            return (
+              <AccordionTab
+                header={factors[sliceId].name}
+                key={sliceId}>
                 <LinkedSliders
                   key={"f_" + sliceId}
                   id={Number(sliceId)}
@@ -256,15 +260,16 @@ export default function InstallmentReport(props: Props) {
                   debug={debug}
                 />
               </AccordionTab>
-          );
-        })}
-            </Accordion>
+            );
+          })}
+        </Accordion>
+        </div>
         <br />
         <br />
         <Accordion >
           <AccordionTab
             header={t("comment_prompt")}
-            >
+          >
             <TextField
               value={installment.comments || ""}
               name="Comments"

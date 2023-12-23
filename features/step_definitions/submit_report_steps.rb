@@ -113,8 +113,10 @@ Then(/^the installment form should request factor x user values$/) do
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
-  page.all(:xpath,
-           '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
+  page.all(:xpath, "//div[@id='installments']//a[@role='tab']" ).each(&:click)
+  actual_count = page.all(:xpath, '//input[starts-with(@name,"slider_")]', visible: :all).size
+  actual_count.should eq expected_count
+
 end
 
 Then(/^the assessment should show up as completed$/) do
