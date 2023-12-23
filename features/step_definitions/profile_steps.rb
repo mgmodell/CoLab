@@ -25,6 +25,7 @@ Then(/^user sees the Bingo! in the history$/) do
 end
 
 Then(/^user sees the assessed project in the history$/) do
+  ack_messages
   find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
   wait_for_render
   page.should have_content(@project.get_name(false))

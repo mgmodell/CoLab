@@ -69,7 +69,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     find(:xpath, '//input[@id="debug"]', visible: :all).click
     @project.factors.each do |factor|
       # Open the factor panel
-      find(:xpath, "//div[text( )='#{factor.name}']").click
+      find(:xpath, "//a[contains(.,'#{factor.name}')]").click
       elements = page
                  .all(:xpath, "//input[@factor=#{factor.id}]",
                       visible: false)
