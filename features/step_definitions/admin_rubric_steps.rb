@@ -383,10 +383,7 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
 end
 
 Then('the user deletes criteria {int}') do |criteria_num|
-  fields = find_all(:xpath,
-                    "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[@data-field='actions']/button[@id='delete_criteria']")
-  fields.size.should be 1
-  fields[0].click
+  find_all(:xpath, "//button[@id='delete_criteria']")[criteria_num - 1].click
 end
 
 Then('criteria {int} matches the remembered criteria') do |criteria_num|
@@ -402,9 +399,7 @@ end
 
 Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
   wait_for_render
-  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='actions']/button[@id='#{up_or_down}_criteria']"
-  field = find_all(:xpath, path)[criteria_num - 1]
-  field.click
+  find_all(:xpath, "//button[@id='#{up_or_down}_criteria']")[criteria_num - 1].click
 end
 
 Then('the user deletes the {string} rubric') do |rubric_name|

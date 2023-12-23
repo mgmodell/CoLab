@@ -446,6 +446,7 @@ export default function RubricDataAdmin(props) {
                   <Button
                     tooltip={t("criteria.up")}
                     icon="pi pi-arrow-up"
+                    id="down_criteria"
                     aria-label={t("criteria.up")}
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
@@ -460,6 +461,7 @@ export default function RubricDataAdmin(props) {
                     tooltip={t("criteria.down")}
                     icon="pi pi-arrow-down"
                     aria-label={t("criteria.down")}
+                    id='up_criteria'
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
                       const criterium = tmpCriteria.find(value => {
@@ -472,6 +474,7 @@ export default function RubricDataAdmin(props) {
                   <Button
                     tooltip={t("criteria.copy")}
                     icon="pi pi-copy"
+                    id='copy_criteria'
                     aria-label={t("criteria.copy")}
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
@@ -497,6 +500,7 @@ export default function RubricDataAdmin(props) {
                   <Button
                     tooltip={t("criteria.delete")}
                     icon="pi pi-trash"
+                    id='delete_criteria'
                     aria-label={t("criteria.delete")}
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
