@@ -76,8 +76,6 @@ export default function MainMenu(props: Props) {
         command: () => navTo("/home")
       }];
 
-    console.log("user", user);
-    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn) {
       builtMenu.push({
         label: t("profile"),
@@ -223,7 +221,6 @@ export default function MainMenu(props: Props) {
       <Button
         id="main-menu-button"
         text
-        //onClick={(event) => setMenuOpen(!menuOpen)}
         onClick={(event) => menuButton.current.toggle(event)}
         className="p-mr-2"
         >
