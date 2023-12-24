@@ -123,11 +123,12 @@ export default function UserListAdminToolbar(props: Props) {
                       addresses: newUserAddresses
                     })
                     .then(response => {
+                      // console.log("response", response);
                       const data = response.data;
                       props.addMessagesFunc(data.messages);
+                      props.refreshUsersFunc();
                     })
                     .finally(() => {
-                      props.refreshUsersFunc();
                       dispatch(endTask("adding_email"));
                     });
                   closeDialog();

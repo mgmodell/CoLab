@@ -9,7 +9,7 @@ Then(/^the user "([^"]*)" see an Admin button$/) do |admin|
   else
     page.should_not have_content('Administration')
   end
-  find(:id, 'main-menu-button').click
+  send_keys :escape
 
 end
 
@@ -248,7 +248,10 @@ Then(/^group "([^"]*)" has (\d+) revision$/) do |group_name, revision_count|
 end
 
 Then('the user selects the {string} menu item') do |menu_item|
-  find(:xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
+  search_path = "//*[@id='#{menu_item.downcase}-menu-item']"
+  find(:xpath, "//*[@id='administration-menu']").click unless has_xpath?( search_path )
+
+  find(:xpath, search_path).click
 end
 
 Then('the user clicks the {string} button') do |button_name|

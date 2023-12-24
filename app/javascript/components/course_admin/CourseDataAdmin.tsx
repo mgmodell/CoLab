@@ -222,7 +222,6 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
-
     dispatch(addMessage(msgs.main, new Date(), Priorities.INFO));
     setMessages(msgs);
   };

@@ -291,6 +291,7 @@ export default function ProfileDataAdmin(props : Props) {
 
         <AccordionTab
           header={t("edit_profile")}
+          aria-label={t("edit_profile")}
           >
 
           <Grid container spacing={3}>
@@ -319,7 +320,9 @@ export default function ProfileDataAdmin(props : Props) {
           </Grid>
           </AccordionTab>
           <AccordionTab
-          header={t("email_settings")}>
+          header={t("email_settings")}
+          aria-label={t("email_settings")}
+          >
 
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -343,6 +346,7 @@ export default function ProfileDataAdmin(props : Props) {
           </AccordionTab>
           <AccordionTab
           header={t("display_settings.prompt")}
+          aria-label={t("display_settings.prompt")}
           >
 
           <Grid container spacing={3}>
@@ -446,6 +450,7 @@ export default function ProfileDataAdmin(props : Props) {
           </AccordionTab>
           <AccordionTab
           header={t("demographics.prompt", { first_name: user.first_name })}
+          aria-label={t("demographics.prompt", { first_name: user.first_name })}
           >
 
           <Grid container spacing={3}>

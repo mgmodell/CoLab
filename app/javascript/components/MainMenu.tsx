@@ -10,7 +10,6 @@ import { signOut } from "./infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
-import { TieredMenu } from "primereact/tieredmenu";
 import DiversityCheck from "./DiversityCheck";
 import Logo from "./Logo";
 
@@ -90,18 +89,21 @@ export default function MainMenu(props: Props) {
               label: t("courses_edit"),
               icon: "pi pi-fw pi-book",
               id: "courses-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/courses")
             },
             {
               label: t("reporting"),
               icon: "pi pi-fw pi-chart-bar",
               id: "reporting-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/reporting"),
             },
             {
               label: t("rubrics_edit"),
               icon: "pi pi-fw pi-table",
               id: "rubrics-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/rubrics"),
             },
           ];
@@ -111,18 +113,21 @@ export default function MainMenu(props: Props) {
               label: t("concepts_edit"),
               icon: "pi pi-fw pi-tags",
               id: "concepts-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/concepts")
             },
             {
               label: t("schools_edit"),
               icon: "pi pi-fw pi-users",
               id: "schools-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/schools")
             },
             {
               label: t("consent_forms_edit"),
               icon: "pi pi-fw pi-file",
               id: "consent-forms-menu-item",
+              visible: adminOpen,
               command: () => navTo("/admin/consent_forms")
             }
 
@@ -135,10 +140,16 @@ export default function MainMenu(props: Props) {
 
             {
               label: t("administration"),
-              items: adminItems,
+              icon: "pi pi-fw pi-cog",
               id: "administration-menu",
+              command: () =>{
+                setAdminOpen(!adminOpen);
+              },
             }
           );
+          adminItems.forEach((menuItem) => {
+            builtMenu.push(menuItem);
+          });
       }
     }
     builtMenu.push(
@@ -221,7 +232,9 @@ export default function MainMenu(props: Props) {
       <Button
         id="main-menu-button"
         text
-        onClick={(event) => menuButton.current.toggle(event)}
+        onClick={(event) => {
+          setMenuOpen(!menuOpen);
+        }}
         className="p-mr-2"
         >
           <Logo
@@ -230,19 +243,15 @@ export default function MainMenu(props: Props) {
             spinning={working}
             />
         </Button>
-      <TieredMenu
-        popup
-        ref={menuButton}
-        appendTo={'self'}
-        submenuIcon="pi pi-fw pi-cog"
-
-        model={
-          buildMyMenu()
-        }
-      />
-      {/*
+        <Sidebar
+          visible={menuOpen}
+          onHide={() => setMenuOpen(false)}
+          modal
+          position={'left'}
+          style={{width: '15rem'}}
+          baseZIndex={1000000}
+          >
       <Menu
-        popup
         appendTo={'self'}
         closeOnEscape
         ref={menuButton}
@@ -250,7 +259,7 @@ export default function MainMenu(props: Props) {
           buildMyMenu()
         }
       />
-        */}
+        </Sidebar>
 
     </React.Fragment>
   );

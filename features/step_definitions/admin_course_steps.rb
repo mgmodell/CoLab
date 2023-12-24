@@ -352,8 +352,6 @@ end
 Then 'there are {int} students in the course' do |count|
   wait_for_render
   
-  #byebug if count != @course.rosters.students.size
-
   @course.rosters.students.size.should eq count
 end
 
