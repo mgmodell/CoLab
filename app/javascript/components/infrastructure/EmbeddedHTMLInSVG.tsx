@@ -6,29 +6,43 @@ interface EmbeddedHTMLInSVGProps {
   children: ReactNode;
   width: string | SpringValue<number>;
   height: string | SpringValue<number>;
+  x?: string | SpringValue<number>;
+  y?: string | SpringValue<number>;
 }
 
 
-const EmbeddedHTMLInSVG: React.FC<EmbeddedHTMLInSVGProps> = ({ children, width, height }) => {
-  const curScale = useContext( SvgContext );
+const EmbeddedHTMLInSVG: React.FC<EmbeddedHTMLInSVGProps> = ({ children, width, height, x, y }) => {
+  const curScale = useContext(SvgContext);
 
-  const localWidth = typeof width === 'string' ? parseInt( width ) : width;
-  const localHeight = typeof height === 'string' ? parseInt( height ) : height;
+  const localWidth = typeof width === 'string' ? parseInt(width) : width;
+  const localHeight = typeof height === 'string' ? parseInt(height) : height;
+  const localX = typeof x === 'string' ? parseInt(x) : x;
+  const localY = typeof y === 'string' ? parseInt(y) : y;
 
   return (
-      <animated.foreignObject width={width} height={localHeight}
-      >
-        <animated.html xmlns="http://www.w3.org/1999/xhtml" style={{
+    <animated.foreignObject
+      width={localWidth}
+      height={localHeight}
+      x={x}
+      y={y}
+
+    >
+      <animated.div
+        //xmlns="http://www.w3.org/1999/xhtml"
+        style={{
           position: 'relative',
-          width: typeof width === 'string' ? parseInt( width ) : width,
-          height: typeof height === 'string' ? parseInt( height ) : height,
+          width: localWidth,
+          height: localHeight,
           scale: curScale,
         }}>
+        {children}
+        {/*
           <body>
             {children}
           </body>
-        </animated.html>
-      </animated.foreignObject>
+          */}
+      </animated.div>
+    </animated.foreignObject>
   );
 };
 

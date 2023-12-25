@@ -103,35 +103,35 @@ export default function WhyCoLab(props) {
     const TXT = [
         {
             x: 10,
-            y: 100,
+            y: 50,
             width: 175,
             height: 200,
             opacity: 1,
         },
         {
             x: 10,
-            y: 125,
+            y: 100,
             width: 175,
             height: 125,
             opacity: 1,
         },
         {
             x: 10,
-            y: 125,
+            y: 120,
             width: 175,
             height: 125,
             opacity: 1,
         },
         {
             x: 5,
-            y: 155,
+            y: 160,
             width: 350,
             height: 50,
             opacity: 1,
         },
         {
             x: 5,
-            y: 155,
+            y: 160,
             width: 350,
             height: 50,
             opacity: 1,
@@ -644,6 +644,8 @@ export default function WhyCoLab(props) {
             <EmbeddedHTMLInSVG
                 width={titleSpring.width}
                 height={titleSpring.height}
+                x={titleSpring.x}
+                y={titleSpring.y}
             >
                 {titles[curScene]}
 
