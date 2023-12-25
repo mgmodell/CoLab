@@ -160,6 +160,7 @@ Feature: Timezone Support
 
     #Loop - every hour for 5 days
     When the user logs in
+    Then the user should see a successful login message
     Given today is "March 5, 1980 at 3:00pm"
     Given the user sees 0 assessment every hour of the day
     Given today is "March 6, 1980 at 3:00pm"
