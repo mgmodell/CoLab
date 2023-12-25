@@ -34,7 +34,7 @@ end
 Then(/^they open the drawer for additional comments$/) do
   wait_for_render
   find(:xpath,
-       "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
+       "//div/a[contains(.,'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
 Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
