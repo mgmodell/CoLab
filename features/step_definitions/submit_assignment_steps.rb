@@ -107,9 +107,11 @@ Then('the user opens the {string} submissions tab') do |tab_name|
   wait_for_render
   case tab_name
   when 'Submissions'
-    click_link_or_button 'Responses'
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
+    tab.click
   when 'Grading'
-    click_link_or_button 'Progress'
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
+    tab.click
   else
     true.should be false
   end
