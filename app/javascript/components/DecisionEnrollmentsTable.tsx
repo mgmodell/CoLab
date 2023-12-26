@@ -160,6 +160,7 @@ export default function DecisionEnrollmentsTable(props: Props) {
                     decision(id, true);
                   }}
                   aria-label="Accept"
+                  id="Accept"
                   tooltip="Accept"
                   size="small"
                   rounded
@@ -172,6 +173,7 @@ export default function DecisionEnrollmentsTable(props: Props) {
                     decision(id, false);
                   }}
                   aria-label="Reject"
+                  id="Reject"
                   tooltip="Reject"
                   size="small"
                   rounded

@@ -25,7 +25,11 @@ def wait_for_render
 end
 
 def ack_messages
-  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each(&:click)
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each do |element|
+    element.click
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+    puts e.inspect
+  end
 end
 
 # Not sure I should really need this, but...
