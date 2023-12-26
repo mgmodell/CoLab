@@ -69,15 +69,12 @@ export default function RubricDataAdmin(props) {
   };
 
   const editableTextValueSetter = (event) => {
-    console.log( event );
     let { rowData, newValue, field, originalEvent: oEvent } = event;
 
       rowData[field] = newValue;
     const row = rubricCriteria.find(criterium => {
-      console.log( criterium, rowData );
       return criterium.id === rowData.id;
     });
-    console.log( row );
     row[field] = newValue;
 
      setRubricCriteria( rubricCriteria );

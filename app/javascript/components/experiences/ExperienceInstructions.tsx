@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import PropTypes from "prop-types";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -10,7 +9,11 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 import parse from "html-react-parser";
 
-export default function Experience(props) {
+type Props = {
+  acknowledgeFunc: () => void;
+};
+
+export default function Experience(props: Props) {
   const [t, i18n] = useTranslation("experiences");
 
   const behaviors = useTypedSelector(state => state.context.lookups.behaviors);
@@ -67,6 +70,3 @@ export default function Experience(props) {
   );
 }
 
-Experience.propTypes = {
-  acknowledgeFunc: PropTypes.func.isRequired
-};

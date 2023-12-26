@@ -4,8 +4,6 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import { acknowledgeMsg } from "./infrastructure/StatusSlice";
 
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
-
 import { Toast } from "primereact/toast";
 
 export default function AppStatusBar(props) {
@@ -17,16 +15,20 @@ export default function AppStatusBar(props) {
 
   useEffect(() => {
     messages.forEach((message, index) => {
-      toast.current.show({
-        severity: message.priority,
-        summary: message.priority,
-        detail: message.text,
-        life: 30000,
-      });
-    } );
+      if (!message.dismissed) {
+        toast.current.show({
+          severity: message.priority,
+          summary: message.priority,
+          detail: message.text,
+          life: 30000,
+        });
+        dispatch(acknowledgeMsg(index));
+
+      }
+    });
   }, [messages]);
 
   return (
-      <Toast ref={toast} />
+    <Toast ref={toast} />
   );
 }
