@@ -136,13 +136,13 @@ end
 Then('the {string} tab {string} enabled') do |tab_name, enabled|
   case tab_name.downcase
   when 'submissions'
-    tab = find(:xpath, "//button[text()='Responses']")
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
   when 'grading'
-    tab = find(:xpath, "//button[text()='Progress']")
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
   else
     true.should be false
   end
-  ('true' == tab['disabled']).should be 'is' != enabled
+  (tab['class']).include?('disabled').should_not be 'is' != enabled
 end
 
 Then('the user creates a new submission') do
