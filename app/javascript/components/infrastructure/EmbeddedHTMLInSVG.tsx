@@ -4,10 +4,10 @@ import { SpringValue, animated } from 'react-spring';
 
 interface EmbeddedHTMLInSVGProps {
   children: ReactNode;
-  width: string | SpringValue<number>;
-  height: string | SpringValue<number>;
-  x?: string | SpringValue<number>;
-  y?: string | SpringValue<number>;
+  width: string | SpringValue<number> | number;
+  height: string | SpringValue<number> | number;
+  x?: string | SpringValue<number> | number;
+  y?: string | SpringValue<number> | number;
 }
 
 
@@ -23,8 +23,8 @@ const EmbeddedHTMLInSVG: React.FC<EmbeddedHTMLInSVGProps> = ({ children, width, 
     <animated.foreignObject
       width={localWidth}
       height={localHeight}
-      x={x}
-      y={y}
+      x={localX}
+      y={localY}
 
     >
       <animated.div

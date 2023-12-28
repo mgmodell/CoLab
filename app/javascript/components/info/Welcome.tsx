@@ -25,11 +25,14 @@ export default function Welcome(props: Props) {
 
   const login = params['*'] === 'login' ?
   (
-    <animated.g>
-      <EmbeddedHTMLInSVG width={`${width / 2}`} height={`${height}`}>
+      <EmbeddedHTMLInSVG
+         width={`${width * 4 /5 }rem`}
+         height={`${height}rem`}
+         x={-70}
+         y={0}
+         >
            <SignIn />
       </EmbeddedHTMLInSVG>
-    </animated.g>
 
   ) : null;
 
