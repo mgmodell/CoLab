@@ -210,7 +210,8 @@ export default function SignIn(props) {
                   <Grid item xs={12} sm={9}>
                     <span className='p-float-label'>
                       <Password
-                        id="password"
+                        inputId="password"
+                        feedback={false}
                         value={password}
                         onChange={event => setPassword(event.target.value)}
                         onKeyDown={submitOnEnter}
