@@ -442,9 +442,12 @@ export default function RubricDataAdmin(props) {
                 <Fragment>
                   <Button
                     tooltip={t("criteria.up")}
+                    tooltipOptions={{
+                      style: { width: "10rem" }
+                    }}
                     icon="pi pi-arrow-up"
-                    id="down_criteria"
                     aria-label={t("criteria.up")}
+                    id='up_criteria'
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
                       const criterium = tmpCriteria.find(value => {
@@ -457,8 +460,11 @@ export default function RubricDataAdmin(props) {
                   <Button
                     tooltip={t("criteria.down")}
                     icon="pi pi-arrow-down"
+                    tooltipOptions={{
+                      style: { width: "10rem" }
+                    }}
                     aria-label={t("criteria.down")}
-                    id='up_criteria'
+                    id="down_criteria"
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
                       const criterium = tmpCriteria.find(value => {
@@ -473,6 +479,9 @@ export default function RubricDataAdmin(props) {
                     icon="pi pi-copy"
                     id='copy_criteria'
                     aria-label={t("criteria.copy")}
+                    tooltipOptions={{
+                      style: { width: "10rem" }
+                    }}
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];
                       const criterium = Object.assign(
@@ -498,6 +507,9 @@ export default function RubricDataAdmin(props) {
                     tooltip={t("criteria.delete")}
                     icon="pi pi-trash"
                     id='delete_criteria'
+                    tooltipOptions={{
+                      style: { width: "10rem" }
+                    }}
                     aria-label={t("criteria.delete")}
                     onClick={event => {
                       const tmpCriteria = [...rubricCriteria];

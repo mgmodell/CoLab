@@ -315,8 +315,7 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
 end
 
 Then('the user adds a level to criteria {int}') do |criteria_num|
-  path = "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[contains(@data-field,'_description')]"
-  levels = find_all(:xpath, path)
+  levels = find_all(:xpath, "//tbody/tr[#{criteria_num - 1}]/td" )
 
   levels.each_with_index do |level, index|
     next if level.text.present?
@@ -387,7 +386,7 @@ Then('the user deletes criteria {int}') do |criteria_num|
 end
 
 Then('criteria {int} matches the remembered criteria') do |criteria_num|
-  test_criteria = @rubric.criteria[criteria_num]
+  test_criteria = @rubric.criteria[criteria_num - 1]
   test_criteria.description.should eq @criterium.description
   test_criteria.weight.should eq @criterium.weight
   test_criteria.l1_description.should eq @criterium.l1_description
