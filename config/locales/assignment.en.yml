@@ -43,6 +43,7 @@ en:
       past_header: Previous Responses
       score: Score
       id: Submission ID
+      user: Submitted by
       submitted: Submission Date
       withdrawn: Withdrawn Date
       submitter: Submitted by

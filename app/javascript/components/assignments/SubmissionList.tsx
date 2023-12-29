@@ -70,7 +70,6 @@ export default function SubmissionList(props: Props) {
           }}
         />}
         sortField={OPT_COLS.SUBMITTED}
-        sortOrder={-1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"

@@ -324,12 +324,13 @@ Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
   target_sub = find_all(:xpath, "//tbody/tr" )[ assignment_ord - 1 ]
   target_sub.click
   wait_for_render
-  button_count = find_all(:xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
+  button = find( :xpath, "//button[text()='Withdraw revision']" )
+
   case can.downcase
   when 'can'
-    button_count.should eq 1
+    button['disabled'].should eq 'false'
   when 'cannot'
-    button_count.should eq 0
+    button['disabled'].should eq 'true'
   else
     puts "'#{can}' is not a valid option"
     true.should be false
