@@ -9,7 +9,6 @@ import { iconForType } from "../ActivityLib";
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
-import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 
@@ -36,7 +35,6 @@ export default function CourseAdminListToolbar(props: Props) {
   const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
   const addMenu = useRef(null);
-  const toast = useRef(null);
 
   const title = (
     <h3>{t('activities_list_ttl')}&nbsp;</h3>
@@ -86,7 +84,6 @@ export default function CourseAdminListToolbar(props: Props) {
   ) : null;
   const addButton = (
     <React.Fragment>
-      <Toast ref={toast} />
       <Menu
         popup
         model={menuModel}

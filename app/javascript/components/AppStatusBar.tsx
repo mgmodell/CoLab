@@ -29,6 +29,7 @@ export default function AppStatusBar(props) {
   }, [messages]);
 
   return (
-    <Toast ref={toast} />
+    <Toast 
+      ref={toast} />
   );
 }

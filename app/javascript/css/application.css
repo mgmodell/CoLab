@@ -54,3 +54,9 @@ a:hover, a:active {
 .mainContent {
   margin-top: 3rem;
 }
+
+.p-toast {
+  z-index: 1500;
+  width: 100%;
+  margin-top: 3rem;
+}

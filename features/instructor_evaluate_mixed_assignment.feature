@@ -70,6 +70,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user saves the critique
     Then the user sees 'failed to save'
     Then the user sees 'Feedback is required'
+    Then close all messages
     Then the user responds to all criteria with 'novice' and 'all' feedback
     Then the user saves the critique
     Then the user sees 'Successfully saved'

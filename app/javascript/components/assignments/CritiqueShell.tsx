@@ -19,6 +19,7 @@ import { ISubmissionFeedback } from "./RubricScorer";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Panel } from "primereact/panel";
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
@@ -236,7 +237,7 @@ export default function CritiqueShell(props: Props) {
   }
 
   return (
-    <>
+    <Panel header={t('critique_title')}>
     <Grid container columns={12}>
     <Grid display={'flex'}
       justifyContent={'center'}
@@ -377,7 +378,7 @@ export default function CritiqueShell(props: Props) {
     </Grid>
 
     
-    </>
+    </Panel>
 
   );
 }
