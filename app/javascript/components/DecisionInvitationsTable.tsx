@@ -8,13 +8,10 @@ import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 import { useTranslation } from "react-i18next";
 
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 import axios from "axios";
 
 import { DateTime } from "luxon";
-import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
 import { DataTable } from "primereact/datatable";
 import StandardListToolbar from "./StandardListToolbar";
 import { Column } from "primereact/column";
