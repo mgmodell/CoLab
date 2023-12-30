@@ -86,16 +86,11 @@
     "whatwg-fetch": "^3.6.2"
   },
   "version": "0.1.0",
-  "babel": {
-    "presets": [
-      "./node_modules/shakapacker/package/babel/preset.js"
-    ]
-  },
   "browserslist": [
     "defaults"
   ],
   "devDependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.8",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "react-refresh": "^0.14.0",
     "webpack-dev-server": "^4.11.1"
   }
