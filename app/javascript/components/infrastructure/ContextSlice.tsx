@@ -212,30 +212,15 @@ const contextSlice = createSlice({
   name: "context",
   initialState: initialState,
   reducers: {
-    setInitialised: {
-      reducer (state, action) {
+    setInitialised (state, action) {
         state.status.initialised = true;
-      },
-      prepare: () => {
-        return {};
-      }
     },
-    setEndPointUrl: {
-      reducer(state, action) {
+    setEndPointUrl (state, action) {
         state.config.endpoint_url = action.payload;
-      },
-      prepare( url: string ) {
-        return {
-          payload:  url,
-        };
-      }
     },
-    setLoggingIn: {
-      reducer: (state, action) => {
+    setLoggingIn (state, action) {
         state.status.loggingIn = true;
         state.status.loggedIn = false;
-      },
-      prepare: () => { return {} }
     },
     setLoggedIn: {
       reducer (state, action) {
@@ -246,53 +231,35 @@ const contextSlice = createSlice({
         state.status.endpointsLoaded = true;
         state.status.lookupsLoaded = true;
       },
-      prepare ( payload: {lookups: object, endpoints: object } ) {
+      prepare(payload: { lookups: object; endpoints: object }): { payload: { lookups: object; endpoints: object; }; meta: any; error: any; } {
         return {
           payload: {
             lookups: payload.lookups,
             endpoints: payload.endpoints
-          }
+          },
+          meta: null,
+          error: null
         };
       }
     },
-    setLoginFailed: {
-      reducer (state, action) {
+    setLoginFailed (state, action) {
         state.status.loggingIn = false;
-      },
-      prepare () { return {} }
     },
-    setLoggedOut: {
-      reducer(state, action) {
+    setLoggedOut (state, action) {
         state.status.loggingIn = false;
         state.status.loggedIn = false;
         state.lookups = {};
         state.endpoints = {};
         state.status.endpointsLoaded = true;
         state.status.initialised = false;
-      },
-      prepare ( ) { return {} }
     },
-    setEndPoints: {
-      reducer (state, action) {
+    setEndPoints (state, action) {
         state.endpoints = action.payload;
         state.status.endpointsLoaded = true;
-      },
-      prepare ( endpoints )  {
-        return {
-          payload: endpoints
-        }
-      }
     },
-    setLookups: {
-      reducer: (state, action) => {
+    setLookups (state, action) {
         state.lookups = action.payload;
         state.status.lookupsLoaded = true;
-      },
-      prepare: ( lookups ) => {
-        return {
-          payload: lookups
-        }
-      }
     }
   }
 });

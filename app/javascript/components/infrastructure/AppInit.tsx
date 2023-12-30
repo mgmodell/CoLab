@@ -1,7 +1,6 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
-import { getContext, setInitialised } from "./ContextSlice";
-import { cleanUpMsgs } from "./StatusSlice";
+import { getContext } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
 import PropTypes from "prop-types";

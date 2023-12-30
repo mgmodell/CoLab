@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+
+import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import { InputText } from "primereact/inputtext";
@@ -12,7 +14,6 @@ import { Dialog } from "primereact/dialog";
 import { StudentData } from "./CourseUsersList";
 
 import { Toolbar } from "primereact/toolbar";
-import { useDispatch } from "react-redux";
 
 type Props = {
   courseId: number;
@@ -115,7 +116,9 @@ export default function UserListAdminToolbar(props: Props) {
             <>
               <Button
                 onClick={() => {
+                  
                   dispatch(startTask("adding_email"));
+                  //dispatch<AsyncThunkAction<any, any, any>>(startTask("adding_email"));
 
                   axios
                     .put(props.addUsersPath, {
@@ -123,7 +126,6 @@ export default function UserListAdminToolbar(props: Props) {
                       addresses: newUserAddresses
                     })
                     .then(response => {
-                      // console.log("response", response);
                       const data = response.data;
                       props.addMessagesFunc(data.messages);
                       props.refreshUsersFunc();
