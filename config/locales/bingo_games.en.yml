@@ -1,6 +1,12 @@
 en:
   bingo_games:
     update_bingo_btn: Update Bingo Game
+    scored_game:
+      list_title: scored item
+      term: Term
+      definition: Definition
+      feedback: Feedback
+      concept: Concept
     create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
