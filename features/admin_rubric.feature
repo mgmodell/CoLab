@@ -99,13 +99,13 @@ Feature: Rubric administration
     Then the user searches for "Trojan"
     Then the user edits the "Trojan War Diorama" rubric
      And the user clicks "Deactivate Rubric"
-    Then the user will see "success"
+    Then the user will see "Rubric was deactivated"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
      And the rubric "is not" active
      And the user clicks "Activate Rubric"
-    Then the user will see "success"
+    Then the user will see "Rubric was activated"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
