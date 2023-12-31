@@ -88,6 +88,7 @@ Then('the user clicks {string}') do |link_or_button|
 end
 
 Then('the user adds a group named {string}') do |group_name|
+  ack_messages
   button = 'Add Group'
   find(:xpath, "//button[contains(.,'#{button}')]",
        match: :first,
