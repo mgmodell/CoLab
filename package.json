@@ -86,6 +86,11 @@
     "whatwg-fetch": "^3.6.2"
   },
   "version": "0.1.0",
+  "babel": {
+    "presets": [
+        "./node_modules/shakapacker/package/babel/preset.js"
+    ]
+  },
   "browserslist": [
     "defaults"
   ],

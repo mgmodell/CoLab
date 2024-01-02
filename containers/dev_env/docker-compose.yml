@@ -28,10 +28,3 @@ volumes:
   mariadb-data:
   devdata:
 
-networks:
-  frontend-network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.16.238.0/24
