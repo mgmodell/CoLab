@@ -190,34 +190,31 @@ Then('the db critique matches the data entered') do
 end
 
 Then('the user selects the {string} submission') do |temporal_relation|
-  find(:xpath, '//div[contains(@class,"MuiDataGrid-columnHeaderTitleContainer") and contains(.,"Submission date")]' \
-                '//button[@title="Sort"]', visible: :all).hover
+  id_col = 0
+  target_col = 0
+  find_all( :xpath, '//th').each_with_index do |th, index|
+    target_col = index + 1 if 'Submission date' == th.text
+    id_col = index + 1 if 'Submission id' == th.text
+  end
+  find( :xpath, "//th[#{id_col }]" ).click
 
+
+  row_index = 1
   case temporal_relation
   when 'latest'
-    sort_dir = 'Downward'
+    find( :xpath, "//th[#{target_col }]" ).click
+    find( :xpath, "//th[#{target_col }]" ).click
+  when 'earliest'
+    find( :xpath, "//th[#{target_col }]" ).click
   else
     log "Selecting the '#{temporal_relation}' item is not yet handled"
     pending
   end
-  svg_search = "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" \
-                "//button[@title='Sort']/*[contains(@data-testid,'#{sort_dir}')]"
 
-  unless has_xpath? svg_search
-    find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
-                  "//button[@title='Sort']", visible: :all).click
-    unless has_xpath? svg_search
-      find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
-                    "//button[@title='Sort']", visible: :all).click
-    end
-    true.should eq false unless has_xpath? svg_search
-  end
-  find(:xpath, '//div[@data-rowindex=0]').click
-
-  row = find(:xpath, '//div[@data-rowindex=0]')
-  row.click
-  submission_id = row['data-id'].to_i
+  id_cell = find(:xpath, "//table/tbody/tr[#{row_index}]/td[#{id_col}]" )
+  submission_id = id_cell.text.to_i
   @submission = Submission.find submission_id
+  id_cell.click
 
   wait_for_render
 end

@@ -23,9 +23,11 @@ en:
     save_success_msg: Successfully saved your feedback
     save_fail_msg: Your feedback failed to save
     submissions:
+      id: Submission id
       score: Score
       calculated_score: Calculated score
       submitted: Submission date
       withdrawn: Withdrawn date
+      not_withdrawn: --
       submitter: Submitted by
       score_na: --

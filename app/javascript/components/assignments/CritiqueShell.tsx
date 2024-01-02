@@ -298,17 +298,46 @@ export default function CritiqueShell(props: Props) {
           loadSubmission( event.data.id );
         }}
       >
-        <Column columnKey="id" key='id' field="id" header={t("submissions.id")} />
-        <Column key='recorded_score' field="recorded_score" header={t("submissions.score")} />
-        <Column field="calculated_score" header={t("submissions.calculated_score")} />
-        <Column field="submitted" header={t("submissions.submitted")}
+        <Column
+          columnKey="id"
+          key='id'
+          field="id"
+          sortable
+          header={t("submissions.id")} />
+        <Column
+          key='recorded_score'
+          field="recorded_score"
+          sortable
+          header={t("submissions.score")} />
+        <Column
+          field="calculated_score"
+          header={t("submissions.calculated_score")}
+          sortable
+            body={(rowData) => {
+              console.log( rowData );
+              if( rowData.withdrawn === null ){
+                return <span>{t('submissions.score_na')}</span>;
+              } else {
+                const dt = DateTime.fromISO(rowData.withdrawn);
+                return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+              }
+
+            }}
+          />
+        <Column
+          field="submitted"
+          sortable
+          header={t("submissions.submitted")}
             body={(rowData) => {
               const dt = DateTime.fromISO(rowData.submitted);
               return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
 
             }}
         />
-        <Column field="withdrawn" header={t("submissions.withdrawn")}
+        <Column
+          field="withdrawn"
+          sortable
+          header={t("submissions.withdrawn")}
             body={(rowData) => {
               console.log( rowData );
               if( rowData.withdrawn === null ){
@@ -322,6 +351,8 @@ export default function CritiqueShell(props: Props) {
         />
         <Column
           field="user"
+          sortable
+          sortField="user.last_name"
           header={t("submissions.submitter")}
           body={param => {
             return `${param.user.last_name}, ${param.user.first_name}`;
