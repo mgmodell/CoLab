@@ -177,6 +177,7 @@ Feature: Rubric administration
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
     Then the user clicks "Save Rubric"
+    Then the user will see "Success"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db

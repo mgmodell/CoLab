@@ -145,31 +145,64 @@ class RubricsController < ApplicationController
         @rubric.school = current_user.school
         @rubric.save
       else
-        @rubric.update(rubric_params)
-        if !@rubric.errors.empty? && @rubric.errors[:published].present?
-          new_version = current_user.rubrics.new(
-            name: @rubric.name,
-            description: @rubric.description,
-            published: false,
-            version: (@rubric.version + 1),
-            active: false,
-            school: @rubric.school,
-            parent: @rubric
-          )
-          @rubric.criteria.each do |criterium|
-            new_version.criteria.new(
-              description: criterium.description,
-              weight: criterium.weight,
-              sequence: criterium.sequence,
-              l1_description: criterium.l1_description,
-              l2_description: criterium.l2_description,
-              l3_description: criterium.l3_description,
-              l4_description: criterium.l4_description,
-              l5_description: criterium.l5_description
+        @rubric.transaction do
+          #@rubric.update(rubric_params)
+          @rubric.name = params[:rubric][:name] if params[:rubric][:name].present?
+          @rubric.description = params[:rubric][:description] if params[:rubric][:description].present?
+          @rubric.published = params[:rubric][:published] if params[:rubric][:published].present?
+          @rubric.version = params[:rubric][:version] if params[:rubric][:version].present?
+          @rubric.active = params[:rubric][:active] if params[:rubric][:active].present?
+          @rubric.school_id = params[:rubric][:school_id] if params[:rubric][:school_id].present?
+          @rubric.parent = params[:rubric][:parent] if params[:rubric][:parent].present?
+          @rubric.user_id = params[:rubric][:user_id] if params[:rubric][:user_id].present?
+
+          @rubric.criteria.delete_all
+
+          # Manual assignment of criteria attributes is necessary to avoid
+          # sequence uniqueness constraint violations
+          params[:rubric][:criteria_attributes].each do |criterium|
+            @rubric.criteria.new(
+              id: criterium[:id],
+              description: criterium[:description],
+              weight: criterium[:weight],
+              sequence: criterium[:sequence],
+              l1_description: criterium[:l1_description],
+              l2_description: criterium[:l2_description],
+              l3_description: criterium[:l3_description],
+              l4_description: criterium[:l4_description],
+              l5_description: criterium[:l5_description]
             )
           end
-          @rubric = new_version
           @rubric.save
+          puts @rubric.errors.full_messages unless @rubric.errors.empty?
+
+          # Must figure out how to resequence criteria without violating uniqueness constraint
+
+          if !@rubric.errors.empty? && @rubric.errors[:published].present?
+            new_version = current_user.rubrics.new(
+              name: @rubric.name,
+              description: @rubric.description,
+              published: false,
+              version: (@rubric.version + 1),
+              active: false,
+              school: @rubric.school,
+              parent: @rubric
+            )
+            @rubric.criteria.each do |criterium|
+              new_version.criteria.new(
+                description: criterium.description,
+                weight: criterium.weight,
+                sequence: criterium.sequence,
+                l1_description: criterium.l1_description,
+                l2_description: criterium.l2_description,
+                l3_description: criterium.l3_description,
+                l4_description: criterium.l4_description,
+                l5_description: criterium.l5_description
+              )
+            end
+            @rubric = new_version
+            @rubric.save
+          end
         end
       end
       logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
@@ -243,7 +276,7 @@ class RubricsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def rubric_params
-    params.require(:rubric).permit(:name, :description, :published,
+    params.require(:rubric).permit(:id, :name, :description, :published,
                                    criteria_attributes: %I[id description weight
                                                            sequence l1_description
                                                            l2_description l3_description
