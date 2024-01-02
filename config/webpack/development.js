@@ -14,12 +14,15 @@ const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
     // eslint-disable-next-line global-require
     const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
     clientWebpackConfig.plugins.push(
-      new ReactRefreshWebpackPlugin({
-        overlay: {
-          sockPort: 3035
-          // sockPort: devServer.port,
-        },
-      }),
+      {options: {
+        jsc: {
+          transform: {
+            react: {
+              refresh: true
+            }
+          }
+        }
+      }}
     );
   }
 };
