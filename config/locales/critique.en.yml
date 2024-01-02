@@ -1,5 +1,6 @@
 en:
   critiques:
+    critique_title: Critiques
     error:
       not_loaded: No submission loaded
       feedback_required: >
