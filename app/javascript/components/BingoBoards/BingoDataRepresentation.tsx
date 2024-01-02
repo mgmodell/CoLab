@@ -1,12 +1,19 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
 const LinePath = React.lazy(() => import("../Reports/visxLinePath"));
 const Text = React.lazy(() => import("../Reports/visxText"));
 
-export default function BingoDataRepresentation(props) {
+
+type Props = {
+  height: number;
+  width: number;
+  value: number;
+  scores: number[];
+};
+
+export default function BingoDataRepresentation(props : Props) {
   const getAvg = valueArray => {
     let total = 0;
     for (var i = 0; i < valueArray.length; i++) {
@@ -142,10 +149,3 @@ export default function BingoDataRepresentation(props) {
     </React.Fragment>
   );
 }
-
-BingoDataRepresentation.propTypes = {
-  height: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-  scores: PropTypes.arrayOf(PropTypes.number).isRequired
-};

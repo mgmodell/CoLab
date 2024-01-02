@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import useResizeObserver from "resize-observer-hook";
 
 import { scaleOrdinal } from "@visx/scale";
@@ -29,7 +28,17 @@ export const unit_codes = {
 
 export const code_units = ["individual", "group"];
 
-export default function SubjectChart(props) {
+type Props = {
+  subjectId: number;
+  projectId: number;
+  unitOfAnalysis: string;
+  forResearch: boolean;
+  anonymize: boolean;
+  hideFunc: Function;
+  hidden: boolean;
+};
+
+export default function SubjectChart(props : Props) {
   const category = "graphing";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -506,13 +515,3 @@ export default function SubjectChart(props) {
     </div>
   );
 }
-
-SubjectChart.propTypes = {
-  subjectId: PropTypes.number.isRequired,
-  projectId: PropTypes.number.isRequired,
-  unitOfAnalysis: PropTypes.oneOf(["individual", "group"]).isRequired,
-  forResearch: PropTypes.bool.isRequired,
-  anonymize: PropTypes.bool.isRequired,
-  hideFunc: PropTypes.func,
-  hidden: PropTypes.bool
-};

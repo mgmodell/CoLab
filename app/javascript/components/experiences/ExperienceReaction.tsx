@@ -1,23 +1,29 @@
 import React, { Suspense, useState } from "react";
-import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { setDirty } from "../infrastructure/StatusSlice";
-
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
-import TextField from "@mui/material/TextField";
-
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
+
+import {Button } from 'primereact/button';
+import {Panel } from 'primereact/panel';
+import { Skeleton } from "primereact/skeleton";
+
+
+import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
+
 import parse from "html-react-parser";
-export default function ExperienceReaction(props) {
+
+type Props = {
+  reactionFunc: Function;
+};
+
+export default function ExperienceReaction(props : Props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
@@ -43,12 +49,11 @@ export default function ExperienceReaction(props) {
       disabled={
         !dirtyStatus || !improvementsPresent || (detailNeeded && !detailPresent)
       }
-      variant="contained"
       onClick={() =>
         props.reactionFunc(behaviorId, otherName, improvements, resetData)
       }
     >
-      <Suspense fallback={<Skeleton variant="text" />}>
+      <Suspense fallback={<Skeleton className="mb-2" />}>
         {t("reaction.submit")}
       </Suspense>
     </Button>
@@ -72,15 +77,15 @@ export default function ExperienceReaction(props) {
   };
 
   return (
-    <Paper>
+    <Panel>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Suspense fallback={<Skeleton variant="text" />}>
+          <Suspense fallback={<Skeleton className="mb-2" />}>
             <h3>{t("reaction.title")}</h3>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
-          <Suspense fallback={<Skeleton variant="rectangular" />}>
+          <Suspense fallback={<Skeleton className="mb-2" />}>
             <p>{parse(t("reaction.instructions"))}</p>
           </Suspense>
         </Grid>
@@ -109,7 +114,7 @@ export default function ExperienceReaction(props) {
               })}
             </RadioGroup>
           ) : (
-            <Skeleton variant="rectangular" />
+            <Skeleton className="mb-2" />
           )}
         </Grid>
         <Grid item xs={12}>
@@ -129,10 +134,7 @@ export default function ExperienceReaction(props) {
         </Grid>
       </Grid>
       {saveButton}
-    </Paper>
+    </Panel>
   );
 }
 
-ExperienceReaction.propTypes = {
-  reactionFunc: PropTypes.func.isRequired
-};

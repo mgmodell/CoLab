@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";

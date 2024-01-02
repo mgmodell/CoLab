@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
@@ -16,14 +15,10 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-DropUserButton.propTypes = {
-  dropUrl: PropTypes.string.isRequired,
-  refreshFunc: PropTypes.func.isRequired
-};
 
 type Props = {
   dropUrl: string;
-  refreshFunc: (messages: Array<string>) => void;
+  refreshFunc: (messages: { }) => void;
 };  
 
 export default function DropUserButton(props : Props) {

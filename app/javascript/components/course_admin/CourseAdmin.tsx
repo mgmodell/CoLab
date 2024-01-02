@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
-import PropTypes from "prop-types";
-import { Settings } from "luxon";
 
 const CourseList = React.lazy(() => import("./CourseList"));
 const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));

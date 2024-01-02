@@ -7,9 +7,10 @@ import Button from "@mui/material/Button";
 
 import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
+
+import { Panel } from "primereact/panel";
 
 export default function EnrollInCourse(props) {
   const category = "home";
@@ -93,7 +94,7 @@ export default function EnrollInCourse(props) {
   }, [endpointsLoaded]);
 
   return (
-    <Paper>
+    <Panel>
       <h1>{t(messageHeader)}</h1>
       <p>
         {t(message, {
@@ -109,7 +110,7 @@ export default function EnrollInCourse(props) {
           {cancelButton}
         </Grid>
       </Grid>
-    </Paper>
+    </Panel>
   );
 }
 EnrollInCourse.propTypes = {};

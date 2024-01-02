@@ -387,6 +387,7 @@ end
 
 Then('criteria {int} matches the remembered criteria') do |criteria_num|
   test_criteria = @rubric.criteria[criteria_num - 1]
+  byebug
   test_criteria.description.should eq @criterium.description
   test_criteria.weight.should eq @criterium.weight
   test_criteria.l1_description.should eq @criterium.l1_description

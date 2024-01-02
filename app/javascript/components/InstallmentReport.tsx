@@ -1,10 +1,8 @@
 import React, { Suspense, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";

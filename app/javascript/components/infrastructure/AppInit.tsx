@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { getContext } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
-import PropTypes from "prop-types";
 import Skeleton from "@mui/material/Skeleton";
 
 type Props = {
@@ -36,6 +35,3 @@ export default function AppInit(props: Props) {
   );
 }
 
-AppInit.propTypes = {
-  endpointsUrl: PropTypes.string.isRequired
-};

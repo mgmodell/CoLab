@@ -2,18 +2,15 @@ import React, { Suspense } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  BrowserRouter as Router,
   Route,
   createRoutesFromElements,
   Outlet,
-  Navigate,
-  useLocation
-} from "react-router-dom";
+  Navigate} from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
 
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/md-light-indigo/theme.css"; // theme
 import "primereact/resources/primereact.min.css"; // core css
 import "primeicons/primeicons.css"; //Prime icons
@@ -24,7 +21,6 @@ import {
   StyledEngineProvider,
   createTheme
 } from "@mui/material";
-import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";

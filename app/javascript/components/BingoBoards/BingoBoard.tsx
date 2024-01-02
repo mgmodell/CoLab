@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import withTheme from "@mui/styles/withTheme";
 import Paper from "@mui/material/Paper";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";

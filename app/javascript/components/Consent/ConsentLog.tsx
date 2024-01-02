@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
+
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { FormControlLabel, Checkbox } from "@mui/material";
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";

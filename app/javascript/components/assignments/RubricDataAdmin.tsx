@@ -268,7 +268,7 @@ export default function RubricDataAdmin(props) {
       onClick={saveRubric}
       disabled={!dirty}
     >
-      {rubricId > 0 ? "Save" : "Create"} Rubric
+      {parseInt(rubricId) > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
 

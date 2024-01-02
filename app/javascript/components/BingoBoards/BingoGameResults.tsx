@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Draggable from "react-draggable";
-import PropTypes from "prop-types";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -17,6 +16,24 @@ import { TabView, TabPanel } from "primereact/tabview";
 
 const ScoredGameDataTable = React.lazy(() => import("./ScoredGameDataTable"));
 
+type Candidate = {
+  id: number;
+  concept: string;
+  definition: string;
+  term: string;
+  feedback: string;
+  feedback_id: number;
+};
+
+type Props = {
+  open: boolean;
+  student: string;
+  board: Array<Array<string>>;
+  score: number;
+  close: Function;
+  candidates: Array<Candidate>;
+};
+
 function PaperComponent(props) {
   return (
     <Draggable>
@@ -25,7 +42,7 @@ function PaperComponent(props) {
   );
 }
 
-export default function BingoGameResults(props) {
+export default function BingoGameResults(props : Props) {
   const [curTab, setCurTab] = useState(0);
 
   const renderBoard = board => {
@@ -81,21 +98,3 @@ export default function BingoGameResults(props) {
     </Dialog>
   );
 }
-
-BingoGameResults.propTypes = {
-  open: PropTypes.bool.isRequired,
-  student: PropTypes.string,
-  board: PropTypes.array,
-  score: PropTypes.number,
-  close: PropTypes.func,
-  candidates: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      concept: PropTypes.string,
-      definition: PropTypes.string,
-      term: PropTypes.string,
-      feedback: PropTypes.string,
-      feedback_id: PropTypes.number
-    })
-  )
-};
