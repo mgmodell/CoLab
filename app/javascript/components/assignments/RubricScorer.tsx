@@ -1,5 +1,4 @@
-import React, { Suspense, useState, useEffect, Dispatch } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, Dispatch } from "react";
 
 //Redux store stuff
 
@@ -15,10 +14,9 @@ import { Editor } from "primereact/editor";
 
 import { useTranslation } from "react-i18next";
 import { Button, Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
-import { IRubricData, ICriteria } from "./RubricViewer";
+import { ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
-import { number } from "prop-types";
 import axios from "axios";
 
 type Props = {
