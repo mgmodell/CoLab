@@ -113,7 +113,12 @@ class RubricsController < ApplicationController
     copied_rubric.save
     logger.debug copied_rubric.errors.full_messages unless copied_rubric.errors.empty?
 
-    render json: standardized_response(copied_rubric, copied_rubric.errors)
+    messages = if copied_rubric.errors.empty?
+                 { main: t('rubrics.copy_success') }
+               else
+                 copied_rubric.errors
+               end
+    render json: standardized_response(copied_rubric, messages)
   end
 
   # GET /rubrics/new

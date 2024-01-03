@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export enum Priorities  {
+export enum Priorities {
   ERROR = "error",
   INFO = "info",
   WARNING = "warning"
@@ -18,8 +18,8 @@ const statusSlice = createSlice({
   name: "status",
   initialState: initialState,
   reducers: {
-    startTask:{
-      reducer (state, action) {
+    startTask: {
+      reducer(state, action) {
         state[action.payload] = (state[action.payload] || 0) + 1;
       },
       prepare(taskName?: string) {
@@ -32,20 +32,30 @@ const statusSlice = createSlice({
       }
 
     },
-    endTask(state, action) {
+    endTask: {
+      reducer(state, action) {
         state[action.payload] = Math.max(0, state[action.payload] || 0) - 1;
+      },
+      prepare(taskName?: string) {
+        const localTaskName = taskName || 'default';
+        return {
+          payload: localTaskName,
+          meta: null,
+          error: null
+        };
+      }
     },
-    setDirty (state, action) {
-        state.dirtyStatus[action.payload] = true;
+    setDirty(state, action) {
+      state.dirtyStatus[action.payload] = true;
     },
-    setClean (state, action) {
-        state.dirtyStatus[action.payload] = false;
+    setClean(state, action) {
+      state.dirtyStatus[action.payload] = false;
     },
     addMessage: {
-      reducer (state, action) {
+      reducer(state, action) {
         state.messages.push(action.payload);
       },
-      prepare(text: string, msgTime: Date, priority: Priorities ) {
+      prepare(text: string, msgTime: Date, priority: Priorities) {
         return {
           payload: {
             text: text,
@@ -58,12 +68,12 @@ const statusSlice = createSlice({
         };
       }
     },
-    acknowledgeMsg (state, action) {
-        state.messages.map((message, index) => {
-          if (index === action.payload) {
-            message.dismissed = true;
-          }
-        });
+    acknowledgeMsg(state, action) {
+      state.messages.map((message, index) => {
+        if (index === action.payload) {
+          message.dismissed = true;
+        }
+      });
     },
   }
 });
