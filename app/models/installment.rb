@@ -67,70 +67,56 @@ class Installment < ApplicationRecord
 
   def check_dates
     if assessment.end_date.in_time_zone.end_of_day < Time.current.in_time_zone
-      errors[:base] << 'This assessment has expired and can no longer be ' \
-                         "submit for this installment [expired: #{assessment.end_date.end_of_day}, now: #{Time.current}.]"
+      errors.add(:base, 'This assessment has expired and can no longer be ' \
+                         "submit for this installment [expired: #{assessment.end_date.end_of_day}, now: #{Time.current}.]")
     end
     errors
   end
 
   def anonymize_comments
-    if comments.present?
-      working_space = comments.dup
+    return if comments.blank?
 
-      # Phase 1 - convert to codes
-      this_course = Course.readonly.includes(:school, :users, projects: :users)
-                          .find(assessment.project.course_id)
+    working_space = comments.dup
 
-      this_school = this_course.school
-      if this_school.name.present?
-        working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]")
+    # Phase 1 - convert to codes
+    this_course = Course.readonly.includes(:school, :users, projects: :users)
+                        .find(assessment.project.course_id)
+
+    this_school = this_course.school
+    working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]") if this_school.name.present?
+    working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]") if this_course.name.present?
+    working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]") if this_course.number.present?
+
+    this_course.projects.each do |project|
+      working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]") if project.name.present?
+      project.groups.each do |group|
+        working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]") if group.name.present?
       end
-      if this_course.name.present?
-        working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]")
-      end
-      if this_course.number.present?
-        working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]")
-      end
-
-      this_course.projects.each do |project|
-        if project.name.present?
-          working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]")
-        end
-        project.groups.each do |group|
-          if group.name.present?
-            working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]")
-          end
-        end
-      end
-
-      this_course.users.each do |user|
-        if user.first_name.present?
-          working_space.gsub! /\b#{user.first_name}\b/i, "[ufn_#{user.id}]"
-        end
-        if user.last_name.present?
-          working_space.gsub! /\b#{user.last_name}\b/i, "[uln_#{user.id}]"
-        end
-      end
-
-      # Phase 2 - convert from codes
-      working_space.gsub!("[s_#{this_school.id}]", this_school.anon_name)
-      working_space.gsub!("[cnam_#{this_course.id}]", this_course.anon_name)
-      working_space.gsub!("[cnum_#{this_course.id}]", this_course.anon_number)
-
-      this_course.projects.each do |project|
-        working_space.gsub!("[p_#{project.id}]", project.anon_name)
-        project.groups.each do |group|
-          working_space.gsub!("[g_#{group.id}]", group.anon_name)
-        end
-      end
-
-      this_course.users.each do |user|
-        working_space.gsub!("[ufn_#{user.id}]", user.anon_first_name)
-        working_space.gsub!("[uln_#{user.id}]", user.anon_last_name)
-      end
-
-      self.anon_comments = working_space
     end
+
+    this_course.users.each do |user|
+      working_space.gsub!(/\b#{user.first_name}\b/i, "[ufn_#{user.id}]") if user.first_name.present?
+      working_space.gsub!(/\b#{user.last_name}\b/i, "[uln_#{user.id}]") if user.last_name.present?
+    end
+
+    # Phase 2 - convert from codes
+    working_space.gsub!("[s_#{this_school.id}]", this_school.anon_name)
+    working_space.gsub!("[cnam_#{this_course.id}]", this_course.anon_name)
+    working_space.gsub!("[cnum_#{this_course.id}]", this_course.anon_number)
+
+    this_course.projects.each do |project|
+      working_space.gsub!("[p_#{project.id}]", project.anon_name)
+      project.groups.each do |group|
+        working_space.gsub!("[g_#{group.id}]", group.anon_name)
+      end
+    end
+
+    this_course.users.each do |user|
+      working_space.gsub!("[ufn_#{user.id}]", user.anon_first_name)
+      working_space.gsub!("[uln_#{user.id}]", user.anon_last_name)
+    end
+
+    self.anon_comments = working_space
   end
 
   def normalize_sums
@@ -148,7 +134,7 @@ class Installment < ApplicationRecord
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       difference = Installment::TOTAL_VAL - total
-      if difference != 0
+      if 0 != difference
         delta = difference <=> 0
         index = 0
         difference.abs.to_i.times do
@@ -158,7 +144,7 @@ class Installment < ApplicationRecord
         total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       end
       if Installment::TOTAL_VAL != total
-        errors[:base] << 'Unable to reconcile reported values. Please contact an administrator.'
+        errors[:base] << I18n.t( 'err_normalize_sums' )
       end
     end
   end

@@ -7,7 +7,7 @@ class Candidate < ApplicationRecord
   belongs_to :concept, inverse_of: :candidates,
                        optional: true, counter_cache: true
   belongs_to :user, inverse_of: :candidates
-  has_many :bingo_cells, inverse_of: :candidate
+  has_many :bingo_cells, inverse_of: :candidate, dependent: :nullify
 
   default_scope { order(:filtered_consistent) }
   scope :completed, lambda {
@@ -27,16 +27,20 @@ class Candidate < ApplicationRecord
     @@filter
   end
 
+  def self.clean_term(term)
+    Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+  end
+
   def clean_data
     self.term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
-    self.filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+    self.filtered_consistent = term.nil? ? '' : Candidate.clean_term(term)
     definition.strip!
 
     # Reset the performance data on the List
-    if concept_id_changed? || candidate_feedback_id_changed?
-      candidate_list.cached_performance = nil
-      candidate_list.save
-    end
+    return unless concept_id_changed? || candidate_feedback_id_changed?
+
+    candidate_list.cached_performance = nil
+    candidate_list.save
   end
 
   private
@@ -47,23 +51,20 @@ class Candidate < ApplicationRecord
       concept.bingo_games_count = concept.bingo_games.uniq.size
       concept.courses_count = concept.courses.uniq.size
     end
-    if concept_id_changed? && concept_id_was.present?
-      # Caching solution - candidate mentions are automatic
-      # TODO: verify that the previous owner is updated properly.
-      old_concept = Concept.find(concept_id_was).includes(:bingo_games, :coureses)
-      old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
-      old_concept.courses_count = old_concept.courses.uniq.size
-      old_concept.save
-    end
+    return unless concept_id_changed? && concept_id_was.present?
+
+    # Caching solution - candidate mentions are automatic
+    # TODO: verify that the previous owner is updated properly.
+    Rails.logger.debug "prior concept: #{concept_id_was}"
+    old_concept = Concept.includes(:bingo_games, :courses).find(concept_id_was)
+    old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
+    old_concept.courses_count = old_concept.courses.uniq.size
+    old_concept.save
   end
 
   def concept_assigned
-    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?)
-      unless CandidateFeedback.find(candidate_feedback_id).term_prob
-        if concept_id.nil?
-          errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
-        end
-      end
+    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?) && !CandidateFeedback.find(candidate_feedback_id).term_prob && concept_id.nil?
+      errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
     end
   end
 end

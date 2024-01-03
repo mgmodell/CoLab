@@ -1,0 +1,80 @@
+es:
+  courses:
+    dialog_title: Crear Una Copia
+    btn_tooltip_title: Crear una copia basado en este curso.
+    copy_btn_aria: Hacer una copia
+    copy_btn_txt: Hacer una copia
+    size_btn: Grande
+    date_picker_label: Nueva fecha de inicio del curso?
+    copy_cancel_btn: Cancelar
+    index:
+      title: Lista de Cursos
+      submit_copy: Copiar este Curso
+      copy_new_start: Cuando va empezar este nuevo curso?
+      original_date: Fecha del curso existente
+      copy_new_start_lbl: Nueva fecha de inicio del curso?
+    edit:
+      title: Editar detalles del curso
+      self_reg_dwnld: Descargar código de autoregistro
+    show:
+      title: Detalles des curso
+      instructors: Instructores del curso
+      roster: Lista de estudiantes
+      add_instructor_lbl: 'Agregar instructor por correo electronico:'
+      add_student_lbl: 'Agregar estudiante por correo electronico:'
+      add: Agregar!
+      enrolled_count:
+        one: Hay un estudiante matriculado.
+        other: Hay %{count} estudiantes matriculados.
+    new:
+      title: Nuevo Curso
+    destroy_success: Curso destruida con exito!
+    copy_dlg: >
+      Este curso comenzó el {{start_date}}. Cuándo le gustaría para el
+      nueva copia para comenzar? Todo se cambiará en consecuencia.
+    update_success: Curso actualizado con éxito!
+    copy_success: Curso copiado con exito!
+    copy_fail: >
+      El curso no se copió correctamente. Soporte de contacto.
+    instructor_invited:
+      zero: No hay instructores invitados. ¿Hubo un error tipográfico?
+      one: Un instructor ha sido invitado.
+      other: "%{count} instructores han sido invitados."
+    students_invited:
+      zero: No hay estudiantes invitados. ¿Hubo un error tipográfico?
+      one: Un estudiante ha sido invitado.
+      other: "%{count} estudiantes han sido invitados."
+    accept_fail: Solo puede aceptar sus propias inscripciones
+    decline_fail: Solo puede rechazar sus propias inscripciones
+    permission_fail: No se le permite hacer ese tipo de cambio.
+    last_instructor: Los cursos siempre deben tener al menos un instructor.
+    not_instructor: Este usuario no es un instructor en este curso.
+    no_roster: Ese usuario no figura como estudiante en ese curso.
+    editing: Editar el curso.
+    participants: Participantes.
+    activities: Actividades del curso.
+    re_invite: Re Invitar.
+    drop: Soltar.
+    courses: Cursos.
+    drop_student_confirm_dlg: >
+      ¿Está seguro de que desea dar de baja a este usuario de este curso? Esto puede ser
+      revertir más tarde, pero puede resultar en la pérdida de datos y confusión en el
+      parte del alumno.
+    drop_confirm_title: Confirmar abandonar al estudiante del curso.  
+    drop_cancel_btn: Cancelar
+    drop_tooltip_title: Soltar al estudiante.
+    drop_tooltip_aria: Soltar al estudiante.
+    first_name: Primer Nombre
+    last_name: Apellido
+    email: Correo electrónico
+    bingo_progress: Progreso de Bingo.
+    assessment_progress: Progreso de la evaluación
+    assessment_performance: Rendimiento de la evaluación
+    experience_progress: Progreso de la experiencia
+    experience_performance: Rendimiento de experiencia
+    status: Estado
+    drop_student: Soltar al estudiante
+    accept_student: Acceptar al estudiante
+    decline_student: Rechazar al estudiante
+    cancel: Cancelar
+    save_course_warning: Tiene que guardar el curso para que se le asignen estudiantes.

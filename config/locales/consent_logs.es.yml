@@ -1,0 +1,18 @@
+es:
+  consent_logs:
+    title: Actualizar la respuesta de consentimiento
+    edit:
+      opening: Podemos utilizar sus datos para la investigacion?
+      title: Formulario de consentimiento
+      instructions: >
+        CoLab se basa en los resultados de la investigacion &mdash; los beneficios que ofrece
+        son el resultado de un analisis riguroso de los datos y experiencias de los estudiantes,
+        como la suya. A los investigadores les gustaria su permiso para usar sus datos en
+        sus investigaciones. Por favor revise el documento a continacion. Es posible que deba desplazarse
+        hacia abajo para ver el documento completo. Si acepta permitir que su inforamcion 
+        se utilice de acuerdo con los terminos de este documento, marque la casilla "Acepto"
+        a continacion. Puede volver a este documento en cualquier momento para cambiar
+        su respuesta.
+      submit_response: Registar mi respuesta a este formulario de consentimiento 
+      consent_dl: Descargue una copia de este documento
+      accept: Acepto

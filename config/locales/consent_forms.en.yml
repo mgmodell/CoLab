@@ -7,8 +7,13 @@ en:
     consent_form: Research Consent Form
     edit:
       title: Consent Form
+      create_btn: Create consent form
+      save_btn: Save consent form
+      file_select_btn: Select file
     index:
       title: Listing Consent Forms
+      name_col: Name
+      active_col: Active
     show:
       name: Name of the Study
       lead_admin: Lead Administrator of the Study

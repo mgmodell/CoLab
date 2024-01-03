@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 class User < ApplicationRecord
+  include DeviseTokenAuth::Concerns::User
+  include DeviseTokenAuth::Concerns::ResourceFinder
+  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+
   has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,
@@ -17,8 +21,8 @@ class User < ApplicationRecord
   has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
   has_many :bingo_games, through: :courses
-  has_many :bingo_boards, inverse_of: :user
-  has_many :candidates, inverse_of: :user
+  has_many :bingo_boards, inverse_of: :user, dependent: :destroy
+  has_many :candidates, inverse_of: :user, dependent: :nullify
   has_many :concepts, through: :candidates
   belongs_to :gender, inverse_of: :users, optional: true
   belongs_to :theme, inverse_of: :users, optional: true
@@ -32,50 +36,49 @@ class User < ApplicationRecord
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
-  has_many :rosters, inverse_of: :user, dependent: :destroy
+  has_many :rosters, inverse_of: :user, dependent: :destroy, autosave: true
   has_many :courses, through: :rosters
 
   has_many :reactions, inverse_of: :user, dependent: :destroy
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 
-  has_many :messages, class_name: 'Ahoy::Message'
+  has_many :rubrics, inverse_of: :user, dependent: :nullify
+
+  has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
   validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects
+  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   before_save :anonymize
 
   # Give us a standard form of the name
   def name(anonymous)
     if anonymous
-      name = "#{anon_last_name}, #{anon_first_name}"
+      "#{anon_last_name}, #{anon_first_name}"
+    elsif last_name.nil? && first_name.nil?
+      email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
-        name += (!first_name.nil? ? first_name : '[No First Name Given]')
-      end
+      name = "#{!last_name.nil? ? last_name : '[No Last Name Given]'}, "
+      name + (!first_name.nil? ? first_name : '[No First Name Given]')
     end
   end
 
   def informal_name(anonymous)
     if anonymous
-      name = "#{anon_first_name} #{anon_last_name}"
+      "#{anon_first_name} #{anon_last_name}"
+    elsif last_name.nil? && first_name.nil?
+      email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
-        name += (!last_name.nil? ? last_name : '[No Last Name Given]')
-      end
+      name = "#{!first_name.nil? ? first_name : '[No First Name Given]'} "
+      name + (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
 
   def language_code
-    language.nil? ? nil : language.code
+    language&.code
   end
 
   def anonymize?
@@ -101,7 +104,7 @@ class User < ApplicationRecord
       end
     end
 
-    now = Date.today
+    now = Time.zone.today
     # Find those consent forms to which the user has not yet responded
     # We only want to do this for currently active consent forms
     consent_forms = ConsentForm.global_active_at(now).to_a
@@ -121,15 +124,23 @@ class User < ApplicationRecord
   end
 
   def is_instructor?
-    if admin || rosters.instructor.count > 0
-      true
-    else
-      false
-    end
+    instructor
+  end
+
+  def update_instructor
+    self.instructor = if admin || rosters.instructor.count.positive?
+                        true
+                      else
+                        false
+                      end
   end
 
   def is_researcher?
     researcher
+  end
+
+  def active_for_authentication?
+    super && active?
   end
 
   def waiting_instructor_tasks
@@ -137,9 +148,23 @@ class User < ApplicationRecord
 
     BingoGame.joins(course: :rosters)
              .includes(:course)
-             .where('rosters.user_id': id, 'rosters.role': Roster.roles[:instructor])
+             .where('rosters.user_id': id)
+             .and(Roster.faculty)
              .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
+    end
+
+    cur_date = DateTime.current
+    Assignment.joins(:submissions, course: :rosters)
+              .where('rosters.user_id': id)
+              .where('assignments.end_date >= ?', cur_date)
+              .and(Submission.where.not(submitted: nil))
+              .and(Submission.where(withdrawn: nil))
+              .and(Submission.where(recorded_score: nil))
+              # .and(Submission.where('recorded_score < 0'))
+              .and(Roster.faculty)
+              .find_each do |submission|
+      waiting_tasks << submission
     end
 
     waiting_tasks.sort_by(&:end_date)
@@ -151,8 +176,7 @@ class User < ApplicationRecord
     BingoGame.joins(course: :rosters)
              .includes(:course, :project)
              .where(reviewed: true, 'rosters.user_id': id)
-             .where('rosters.role = ? OR rosters.role = ?',
-                    Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+             .and(Roster.enrolled)
              .all.find_each do |bingo_game|
       activities << bingo_game
     end
@@ -162,18 +186,27 @@ class User < ApplicationRecord
     # Add in projects
     activities.concat projects.includes(:course).all
 
+    # Add in assignments
+    Assignment.joins(course: :rosters)
+              .includes(:course, :submissions)
+              .where('rosters.user_id': id)
+              .and(Roster.enrolled)
+              .all.find_each do |assignment|
+      activities << assignment
+    end
+
     activities.sort_by(&:end_date)
   end
 
   def get_bingo_performance(course_id: 0)
     my_candidate_lists = []
-    if course_id > 0
+    if course_id.positive?
       my_candidate_lists.concat candidate_lists
         .includes(candidates: :candidate_feedback,
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -200,13 +233,13 @@ class User < ApplicationRecord
 
   def get_bingo_data(course_id: 0)
     my_candidate_lists = []
-    if course_id > 0
+    if course_id.positive?
       my_candidate_lists.concat candidate_lists
         .includes(candidates: :candidate_feedback,
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -232,10 +265,9 @@ class User < ApplicationRecord
   end
 
   def get_experience_performance(course_id: 0)
-    my_reactions = []
-    my_reactions = if course_id > 0
+    my_reactions = if course_id.positive?
                      reactions.includes(:narrative).joins(:experience)
-                              .where(experiences: { course_id: course_id })
+                              .where(experiences: { course_id: })
                    else
                      reactions
                    end
@@ -244,13 +276,12 @@ class User < ApplicationRecord
     my_reactions.includes(:behavior).find_each do |reaction|
       total += reaction.status
     end
-    my_reactions.count == 0 ? 100 : (total / my_reactions.count)
+    my_reactions.count.zero? ? 100 : (total / my_reactions.count)
   end
 
   def get_assessment_performance(course_id: 0)
-    my_projects = []
-    my_projects = if course_id > 0
-                    projects.includes(:assessments).where(course_id: course_id)
+    my_projects = if course_id.positive?
+                    projects.includes(:assessments).where(course_id:)
                   else
                     projects.includes(:assessments)
                   end
@@ -259,7 +290,7 @@ class User < ApplicationRecord
     my_projects.each do |project|
       total += project.get_performance(self)
     end
-    my_projects.count == 0 ? 100 : (total / my_projects.count)
+    my_projects.count.zero? ? 100 : (total / my_projects.count)
   end
 
   def waiting_student_tasks
@@ -267,10 +298,8 @@ class User < ApplicationRecord
     waiting_tasks = assessments.includes(course: :consent_form).active_at(cur_date).to_a
 
     # Check available tasks for students
-    available_rosters = rosters.enrolled
 
     # Add the experiences
-
     waiting_experiences = Experience.active_at(cur_date)
                                     .includes(course: :consent_form)
                                     .joins(course: :rosters)
@@ -295,16 +324,28 @@ class User < ApplicationRecord
     waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
 
+    waiting_assignments = Assignment.joins(course: :rosters)
+                                    .includes({ course: :consent_form }, :project)
+                                    .where('rosters.user_id': id, 'assignments.active': true)
+                                    .where('rosters.role = ? OR rosters.role = ?',
+                                           Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+                                    .where('assignments.end_date >= ? AND courses.start_date <= ?', cur_date, cur_date)
+                                    .to_a
+
+    waiting_tasks.concat waiting_assignments
+
     waiting_tasks.sort_by(&:end_date)
   end
 
   def self.from_omniauth(access_token)
-    data = access_token.info
+    data = access_token
     user = User.joins(:emails).where(emails: { email: data['email'] }).first
 
     user ||= User.create(
       email: data['email'],
       password: Devise.friendly_token[0, 20],
+      first_name: data['given_name'],
+      last_name: data['family_name'],
       timezone: 'UTC'
     )
     user.confirm
@@ -369,7 +410,7 @@ class User < ApplicationRecord
         # prey_u.destroy!
       end
     else
-      puts 'One or more user were not found. No work done.'
+      logger.debug 'One or more user were not found. No work done.'
     end
   end
 
@@ -377,20 +418,18 @@ class User < ApplicationRecord
 
   def anonymize
     if gender.present? && gender.changed?
-      case gender.code
-      when 'm'
-        self.anon_first_name = Forgery::Name.male_first_name
-        self.anon_last_name = Forgery::Name.last_name
-      when 'f'
-        self.anon_first_name = Forgery::Name.female_first_name
-        self.anon_last_name = Forgery::Name.last_name
-      else
-        self.anon_first_name = Forgery::Name.first_name
-        self.anon_last_name = Forgery::Name.last_name
-        end
+      self.anon_first_name = case gender.code
+                             when 'm'
+                               Faker::Name.male_first_name
+                             when 'f'
+                               Faker::Name.female_first_name
+                             else
+                               Faker::Name.first_name
+                             end
+      self.anon_last_name = Faker::Name.last_name
     elsif !persisted?
-      self.anon_first_name = Forgery::Name.first_name
-      self.anon_last_name = Forgery::Name.last_name
+      self.anon_first_name = Faker::Name.first_name
+      self.anon_last_name = Faker::Name.last_name
     end
   end
 end

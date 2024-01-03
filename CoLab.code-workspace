@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"ruby.rubocop.useBundler": true,
+		"ruby.useLanguageServer": true,
+		"git.autofetch": true,
+		"ruby.rubocop.configFilePath": ".rubocop.yml",
+		"prettier.singleQuote": true,
+		"prettier.singleAttributePerLine": false,
+		"prettier.jsxSingleQuote": true
+	}
+}

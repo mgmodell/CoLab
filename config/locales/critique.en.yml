@@ -1,0 +1,34 @@
+en:
+  critiques:
+    critique_title: Critiques
+    error:
+      not_loaded: No submission loaded
+      feedback_required: >
+        Feedback is required for anything less than a perfect
+        score.
+    submissions_title: Submissions
+    submitted: Assignment submission
+    no_text: No text entered
+    feedback: Overall feedback
+    calculated_score_lbl: Calculated score
+    override_option_lbl: Override the score?
+    override_score_lbl: Set score
+    clear_override_btn: Clear overridden score
+    history: Previous submissions and feedback
+    rubric:
+      name: Name
+      version: Version
+      minimum: Minimum requirements not met.
+      criteria_feedback: Criteria feedback
+    save_btn: Save feedback
+    save_success_msg: Successfully saved your feedback
+    save_fail_msg: Your feedback failed to save
+    submissions:
+      id: Submission id
+      score: Score
+      calculated_score: Calculated score
+      submitted: Submission date
+      withdrawn: Withdrawn date
+      not_withdrawn: --
+      submitter: Submitted by
+      score_na: --

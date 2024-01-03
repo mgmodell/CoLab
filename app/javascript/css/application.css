@@ -1,0 +1,62 @@
+body {
+  /* max-width: 50rem; */
+  padding: 1rem;
+  margin: auto;
+  background: hsl(240, 86%, 45%);
+  color: hsl(35, 50%, 20%);
+  /* text-shadow: 0 1px 1px white; */
+  font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
+}
+
+a {
+  color: hsl(246, 56%, 34%);
+  text-decoration: none;
+}
+
+
+a:hover, a:active {
+  color: hsl(246, 56%, 34%);
+  text-decoration: underline;
+}
+
+.mainNav {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0rem;
+  margin-top: 0rem;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: navy;
+  color: azure;
+}
+.mainNav .p-toolbar-group-start {
+  display: block;
+  width: 9%;
+  align-items: center;
+}
+.mainNav .p-toolbar-group-center {
+  display: block;
+  align-items: top;
+  width: 80%;
+}
+.mainNav .p-toolbar-group-center .quotes {
+  font-size: small;
+}
+.mainNav .p-toolbar-group-end {
+  margin-left: auto;
+  float: right;
+  clear: right;
+}
+
+.mainContent {
+  margin-top: 3rem;
+}
+
+.p-toast {
+  z-index: 1500;
+  width: 100%;
+  margin-top: 3rem;
+}

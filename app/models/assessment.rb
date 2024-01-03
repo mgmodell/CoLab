@@ -19,7 +19,37 @@ class Assessment < ApplicationRecord
                     }
 
   def is_completed_by_user(user)
-    user.installments.where(assessment: self).count != 0
+    0 != user.installments.where(assessment: self).count
+  end
+
+  def task_data(current_user:)
+    helpers = Rails.application.routes.url_helpers
+    # link = helpers.edit_installment_path(assessment_id: id)
+    link = "project/checkin/#{id}"
+    group = group_for_user(current_user)
+    instructor_task = false
+
+    log = course.get_consent_log(user: current_user)
+    consent_link = if log.present?
+                     helpers.edit_consent_log_path(
+                       consent_form_id: log.consent_form_id
+                     )
+                   end
+    {
+      id:,
+      type: :assessment,
+      instructor_task:,
+      name: project.get_name(false),
+      group_name: group.get_name(false),
+      status: is_completed_by_user(current_user) ? 100 : 0,
+      course_name: course.get_name(false),
+      start_date:,
+      end_date:,
+      next_date: next_deadline,
+      link:,
+      consent_link:,
+      active: project.active
+    }
   end
 
   def next_deadline
@@ -28,7 +58,7 @@ class Assessment < ApplicationRecord
 
   def group_for_user(user)
     groups = self.groups.joins(:users).where(users: { id: user })
-    if groups.nil? || groups.count == 0
+    if groups.nil? || groups.count.zero?
       groups = nil
     else
       logger.debug 'Too many groups for this assessment' if groups.count > 1
@@ -74,7 +104,7 @@ class Assessment < ApplicationRecord
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(assessment.project.get_name(false) + ' (assessment)',
+        AdministrativeMailer.summary_report("#{assessment.project.get_name(false)} (assessment)",
                                             assessment.project.course.pretty_name(false),
                                             instructor,
                                             completion_hash).deliver_later
@@ -98,18 +128,20 @@ class Assessment < ApplicationRecord
     assessment.active = true
 
     day_delta = init_day - project.start_dow
-    if day_delta == 0
+    if day_delta.zero?
       assessment.start_date = init_date_in_tz.beginning_of_day
     else
-      day_delta = 7 + day_delta if day_delta < 0
+      day_delta = 7 + day_delta if day_delta.negative?
       assessment.start_date = (init_date_in_tz - day_delta.days)
     end
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
 
     # calc period
-    period = project.end_dow > project.start_dow ?
-      project.end_dow - project.start_dow :
-      7 - project.start_dow + project.end_dow
+    period = if project.end_dow > project.start_dow
+               project.end_dow - project.start_dow
+             else
+               7 - project.start_dow + project.end_dow
+             end
 
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
@@ -122,14 +154,13 @@ class Assessment < ApplicationRecord
 
     if existing_assessments.empty? &&
        assessment.start_date <= init_date &&
-       assessment.end_date >= init_date
+       assessment.end_date >= init_date &&
+       project.is_available?
       assessment.project = project
       assessment.save
-      unless assessment.errors.empty?
-        logger.debug assessment.errors.full_messages
-      end
+      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
-    elsif existing_assessments.count == 1
+    elsif 1 == existing_assessments.count
       existing_assessment = existing_assessments[0]
       if project.is_available?
         existing_assessment.start_date = assessment.start_date
@@ -148,4 +179,7 @@ class Assessment < ApplicationRecord
       logger.debug msg
     end
   end
+
+  delegate :name, to: :project
+  delegate :description, to: :project
 end

@@ -11,46 +11,55 @@ class Reaction < ApplicationRecord
 
   validate :thorough_completion
 
+  validates :other_name, length: { maximum: 255 }
+
+  def assign_narrative
+    if self.narrative.nil?
+      # If we've already been assigned at least one reaction
+      # interrogate the user for their existing reactions
+      if self.user.reactions.count.positive? && self.user.reactions.count < Narrative.all.count
+        if self.user.reactions.where.not(narrative_id: nil).count < Scenario.all.count
+          # If they haven't yet been assigned all possible scenarios
+          assigned_scenarios = self.user.reactions.joins(:narrative).group(:scenario_id).count
+          possible_narratives = if assigned_scenarios.empty?
+                                  Narrative.all
+                                else
+                                  Narrative
+                                    .where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+                                end
+
+        else
+          # If they've been assigned all scenarios, but not all narratives
+          available_scenarios = self.user.reactions.group(:narrative_id).where.not(narrative_id: nil).count
+          possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
+
+        end
+        self.narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
+
+      else
+        # check the extant proportions of the experience
+        # select a scenario/narrative
+        self.narrative = experience.get_least_reviewed_narrative
+      end
+    end
+  end
+
   def next_week
     week = nil
 
     # If we haven't yet decided on a narrative....
     if narrative.nil?
 
-      found_narrative = NilClass
-      # If we've already been assigned at least one reaction
-      if user.reactions.count > 0 && user.reactions.count < Narrative.all.count
-        if user.reactions.count < Scenario.all.count
-          # If they haven't yet been assigned all possible scenarios
-          assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
-          possible_narratives = Narrative
-                                .where('scenario_id NOT IN (?)', assigned_scenarios.keys)
-
-          found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
-
-        else
-          # If they've been assigned all scenarios, but not all narratives
-          available_scenarios = user.reactions.group(:narrative_id).count
-          possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
-          found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
-
-        end
-
-      # interrogate the user for their existing reactions
-      # check the extant proportions of the experience
-      # select a scenario/narrative
-      else
-        found_narrative = experience.get_least_reviewed_narrative
-      end
-      self.narrative = found_narrative
+      self.assign_narrative
       week = narrative.weeks.order('weeks.week_num').first
     else
       previous_diagnosis = diagnoses.joins(:week).order('weeks.week_num DESC').first
-      if previous_diagnosis.nil?
-        week = narrative.weeks.where(weeks: { week_num: 1 }).first
-      else
-        week = Week.where(narrative: previous_diagnosis.reaction.narrative, week_num: previous_diagnosis.week.week_num + 1).first
-      end
+      week = if previous_diagnosis.nil?
+               narrative.weeks.where(weeks: { week_num: 1 }).first
+             else
+               Week.where(narrative: previous_diagnosis.reaction.narrative,
+                          week_num: previous_diagnosis.week.week_num + 1).first
+             end
     end
     week
   end
@@ -63,7 +72,7 @@ class Reaction < ApplicationRecord
   end
 
   def status
-    if diagnoses.count == 0
+    if diagnoses.count.zero?
       0
     elsif behavior.present?
       100

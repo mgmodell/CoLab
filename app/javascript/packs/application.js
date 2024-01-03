@@ -8,9 +8,17 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import 'promise-polyfill/src/polyfill'
-import 'whatwg-fetch'
-var componentRequireContext = require.context("components", true)
-var ReactRailsUJS = require("react_ujs")
-ReactRailsUJS.useContext(componentRequireContext)
+import ReactOnRails from "react-on-rails";
 
+import "../css/application.css";
+import "promise-polyfill/src/polyfill";
+import "whatwg-fetch";
+// var componentRequireContext = require.context("components", true);
+// var ReactRailsUJS = require("react_ujs");
+// ReactRailsUJS.useContext(componentRequireContext);
+
+import PageWrapper from "../components/PageWrapper";
+
+ReactOnRails.register({
+  PageWrapper
+});

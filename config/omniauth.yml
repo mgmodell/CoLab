@@ -1,0 +1,14 @@
+default: &default
+  # google_client_id: 881119118431-qlnjrlkaqp9kmnle15qvad0hqtdggshs.apps.googleusercontent.com
+  # google_client_id: 881119118431-n84db1n0thludliga9t3coskva795leb.apps.googleusercontent.com
+  google_client_id: <%= Rails.application.credentials.google.client_id %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+

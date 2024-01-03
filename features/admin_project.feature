@@ -13,24 +13,28 @@ Feature: Project Administration
     Given the project started "5/10/1978" and ends "10/29/2012", opened "Saturday" and closes "Monday"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+  @javascript
   Scenario: Instructor creates a new project
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Project"
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
     Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -42,22 +46,26 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a new project but leaves the dates untouched
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Project"
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -69,24 +77,27 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor edits an existing project
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Edit" on the existing project
+    Then the user clicks on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "05/10/1976"
     Then the user sets the project "end" date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save Project"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -99,22 +110,26 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project and doesn't set the dates then edits it
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Project"
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -126,15 +141,16 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
-    Then the user clicks "Edit Project Details"
+    # Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save Project"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -147,24 +163,28 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project then edits it
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Project"
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
     Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -176,17 +196,18 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
-    Then the user clicks "Edit Project Details"
+    #Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "05/10/1976"
     Then the user sets the project "end" date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save Project"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -199,24 +220,28 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project then edits it, but doesn't edit the dates
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Project"
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
     Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -228,15 +253,16 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
-    Then the user clicks "Edit Project Details"
+    # Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool beans"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save Project"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then the project "Name" is "Cool beans"
@@ -248,6 +274,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor assigns a course's students to groups
     Given the course started "5/10/1976" and ended "4 months hence"
     Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
@@ -256,23 +283,33 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
 
-    Then the user clicks "Show" on the existing project
-    Then the user sets the "New group name" field to "my group"
-    Then the user clicks "Add!"
-    Then the user will see "success"
-    Then the user sets the "New group name" field to "your group"
-    Then the user clicks "Add!"
-    #Edit the groups
-    Then the user clicks "Edit Project Details"
+    Then the user clicks on the existing project
+    Then the user switches to the "Groups" tab
+    Then the user adds a group named 'my group'
+    # Then the user sets the "g_-1" field to "my group"
+    Then the user clicks "Save"
+     And the user waits to see "success"
+    Then close all messages
+    Then the user adds a group named 'your group'
+    # Because the above was saved, this one is -1 again
+    # Then the user sets the "g_-1" field to "your group"
+    Then the user clicks "Save"
+    Then the user switches to the "Details" tab
     Then the user sets the project "start" date to "yesterday"
     Then the user sets the project "end" date to "tomorrow"
+    Then the user clicks "Save"
+     And the user waits to see "success"
 
+    #Edit the groups
+    Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
     Then the project "end" date is "tomorrow"
@@ -281,18 +318,20 @@ Feature: Project Administration
     Then group "my group" has 1 revision
 
     #Another revision
-    Then the user clicks "Edit Project Details"
+    Then the user switches to the "Groups" tab
     Then set user 2 to group "my group"
     Then set user 3 to group "your group"
     Then set user 4 to group "your group"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
+    Then the user clicks "Save"
+     And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
-    Then group "my group" has 2 revision
     Then group "your group" has 2 user
+    Then group "my group" has 2 revision
     Then group "your group" has 1 revision
 
+@javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
@@ -326,6 +365,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sun=> no emails, no access
     Given the course timezone is "UTC"
     Given the user timezone is "UTC"
@@ -360,6 +400,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: End date=> 10/10/1979 on 11/10/1979=> no emails, no access
     # Change the project
     Given today is "11/10/1979"
@@ -379,6 +420,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: A deactivated project incurs no emails and is not listed
     Given the email queue is empty
     Given the project has a group with 4 confirmed users

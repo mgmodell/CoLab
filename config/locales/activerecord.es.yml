@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    errors:
+      models:
+        diagnosis:
+          attributes:
+            behavior:
+              required: Debes seleccionar un comportamiento.
+        group:
+          attributes:
+            project:
+              required: Un grupo debe estar adjunto a un proyecto.
+        project:
+          attributes:
+            style:
+              required: Se debe establecer el estilo de evaluacion.

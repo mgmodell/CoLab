@@ -1,9 +1,14 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mgmodell/CoLab?style=flat-square)
+![GitHub language count](https://img.shields.io/github/languages/count/mgmodell/CoLab)
+[![CucumberReports: CoLab](https://messages.cucumber.io/api/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6/badge)](https://reports.cucumber.io/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6)
+
 # README #
 
 The CoLab system provides instructor support for collaborative learning
 groups. In its current state, it deploys successfully to Heroku with
-Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a
-paid dyno with SSL enabled or a configuration change would be required.
+Amazon SES & S3 (using ActiveStorage), Scheduler and JAWS Maria DB add-ons with a libVips
+buildpack. It should run in a paid dyno with SSL enabled or a configuration
+change would be required.
 
 ## What is this repository for? ##
 
@@ -13,73 +18,63 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. I am using both [Linux
-Mint](https://www.linuxmint.com/download.php) and [Bash on Ubuntu on
-Windows](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide)
-because I'm comfortable using the command line. That's just for context
-- GUIs can be powerful too and I can help you set them up if you run
-into difficulty.
+desktop OS. It requires [Docker](https://www.docker.com/)
+[git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
+support (native on MacOSX and Linux but may require additional
+download/installation on Windows).
 
-At a minimum, you will need to install git and a text editor (I use vi,
-but there are tons of GUI editors like Notepad++ -- which is good and
-fee) to contribute. However, to do actual testing, you'll want ruby,
-ruby on rails, mariadb (mysql would also work). Deployment will require
-the Heroku toolbelt. Follow the installation instructions for your OS:
+### Setting up ###
+1. On Windows, you'll first want to install [Ubuntu on WSL2](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview) (version 20.04 LTS or later should work just fine).
+1. If you plan to run tests, you must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
+    1. mariadb-client
+    1. mysql-client
+1. (**Recommended**) Set up ssh-keys on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+1. Open a terminal and navigate to a directory where you'd like to
+  download the project.
+1. Run `git clone https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
+1. Run `./buildContainers.sh`
+1. Run `./dev_serv.sh -j` to load up anonymized testing data.
+1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
+up the testing user with your email and a password of 'password' for
+testing purposes.
 
-### Contributing ###
+The following two scripts are used to launch the development/testing
+server for manual testing and to launch the automated tests
+(respectively). Running either without any parameters will give you a
+full guide::
 
-* [Official git page](https://git-scm.com/) [Windows](https://git-for-windows.github.io/) (other platforms are easy and I can help, but they're not worth listing here).
-* [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
-* [Learn Cucumber](https://cucumber.io/docs)
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-* [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
-
-### Testing ###
-* [rvm (does not work in regular Windows)](http://rvm.io/)
-* [ruby 2.4.2 (use rvm to install if not on Windows)](https://www.ruby-lang.org/en/downloads/)
-* [MariaDB](https://mariadb.org/download/)
-    * Create `colab_dev` and `colab_test` databases
-    * Create a `test` user with `test` for the password
-    * Make sure the user is enabled and has full access to the 'colab_dev' and `colab_test` databases
-* Make the following environment variables available (the following should work in a `.profile` (if you will actually need to test file attachments, contact me and we can look into setting up S3 buckets for you):
-    * export S3_BUCKET_NAME=colab-dev
-    * export AWS_ACCESS_KEY_ID=XXXXXXX
-    * export AWS_SECRET_ACCESS_KEY=XXXXXXX
-    * export AWS_REGION=ap-northeast-2
-
-* clone this repository 'git clone https://<your bitbucket ID>@bitbucket.org/_performance/colab.git'
-* Enter the new `CoLab` directory (type `cd colab`)
-* `gem install bundler`
-* `bundle install`
-* `rake db:create db:schema:load db:seed`
-
-### Deployment ###
-* [Heroku Toolbelt](https://devcenter.heroku.com/articles/heroku-cli)
-* [Configure an Amazon SES SMTP Account](https://www.sitepoint.com/deliver-the-mail-with-amazon-ses-and-rails/)
-    * heroku config:set SES_SMTP_USERNAME=<your username>
-    * heroku config:set SES_SMTP_PASSWORD=<your password>
+* `dev_serv.sh` - Get started by using the `-j` option to load a basic
+  test dump and the `-s` option to start the server on
+  [http://localhost:3000](http://localhost:3000).
+* `run_tests.sh` - Start with the `-c` option to make sure the database
+  exists, then the `-r` option will kick off the process (*warning it
+  runs for nearly a day*).
 
 # Contribution instructions #
-* Review the issues
-* Find one that interests you
-* Assign it to yourself
-* Start working in your own branch
-    * `git br <enter_new_branch_name>`
-    * `git co <enter_new_branch_name>`
-* Use `rails s` to run the server
-* Open [the test server](http://localhost:3000)
-* Play with it to understand the problem
-    * Create your own user account
-    * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
-* Start writing tests
-* Run your tests
+1. Review the issues
+1. Find one that interests you
+1. Assign it to yourself
+1. Start working in your own branch
+    * `git branch <enter_new_branch_name>`
+    * `git checkout <enter_new_branch_name>`
+1. Create what you need
+    * Create your own user account (if auth is working)
+    * Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"`
+    * Run `./dev_serv.sh -e "examples[`<yourEmail@something.com>`]"`
+1. Open [the test server](http://localhost:3000)
+1. Play with it to understand the problem
+1. Start writing tests
+1. Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
-* Check in your code
+1. Check in your code
     * `git add <file name>`
-    * `git checkin`
+    * ``git commit -m `<meaningful message>` ``
     * `git push`
 
 ### Who do I talk to? ###
 
 * @micah_gideon
-* Ask on [Slack](https://suny-k.slack.com/messages/G4DNHKPMM)
+* Ask on [Slack](https://mountsaintmarycollege.slack.com/archives/G01269L9DAT)
+
+## Contributors
+My wife, Misun, and my two children have been instrumental in making this possible by putting up with me throughout.

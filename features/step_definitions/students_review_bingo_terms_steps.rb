@@ -1,32 +1,37 @@
 # frozen_string_literal: true
 
-Given /^the user is any student in the course$/ do
+Given(/^the user is any student in the course$/) do
   @user = @course.rosters.enrolled.sample.user
 end
 
-Then /^the user clicks the link to the concept list$/ do
-  first(:link, @bingo.get_name(@anon)).click
+Then(/^the user clicks the link to the concept list$/) do
+  wait_for_render
+  step 'the user switches to the "Task View" tab'
 
-  current_path = page.current_path
+  find(:xpath, "//tbody/tr/td[@role='cell' and text()='#{@bingo.get_name(@anon)}']").click
 
-  page.should have_content 'Terms list for review'
-  x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
+  wait_for_render
+  # current_path = page.current_path
 
-  props_string = x['data-react-props']
+  # page.should have_content 'Terms list for review'
+  # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
-  props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
+  # props_string = x['data-react-props']
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Concepts found by class')]" ).click
 
-  # url = "#{props['conceptsUrl']}.json"
-  url = "#{bingo_concepts_path(@bingo.id)}.json"
-  visit url
+  # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
-  @concepts = JSON.parse(page.text)
+  # url = "#{bingo_concepts_path(@bingo.id)}.json"
+  # visit url
 
-  visit current_path
+  chips = all(:xpath, "//div[contains(@id,'concept_')]")
+  @concepts = chips.collect { |chip| { id: chip[:id], name: chip.text } }
+
+  # visit current_path
 end
 
-Then /^the concept list should match the list$/ do
-  concept_names = @concepts.collect { |concept| concept['name'] }
+Then(/^the concept list should match the list$/) do
+  concept_names = @concepts.collect { |concept| concept[:name] }
 
   @bingo.concepts.where('concepts.id > 0').uniq.each do |concept|
     concept_names.include?(concept.name).should be true
@@ -34,12 +39,12 @@ Then /^the concept list should match the list$/ do
   end
 end
 
-Then /^the user should see (\d+) concepts$/ do |concept_count|
+Then(/^the user should see (\d+) concepts$/) do |concept_count|
   # Add a concept to compensate for the fake '*' square
   @concepts.count.should eq concept_count.to_i
 end
 
-Then /^the number of concepts is less than the total number of concepts$/ do
+Then(/^the number of concepts is less than the total number of concepts$/) do
   page.all(:xpath, "//tr[@id='concept']").count.should be < Concept.count
 end
 
@@ -67,5 +72,5 @@ Then 'the cached performance is erased' do
   cl = @bingo.candidate_list_for_user(@user)
   cl.cached_performance = nil
   cl.save
-  puts cl.errors.full_messages unless cl.errors.empty?
+  log cl.errors.full_messages unless cl.errors.empty?
 end

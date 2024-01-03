@@ -8,36 +8,121 @@
 
 require 'cucumber/rails'
 require 'selenium/webdriver'
+require 'webdrivers'
+Webdrivers.cache_time = 86_400
 
-require 'simplecov'
-SimpleCov.start 'rails'
+# require 'simplecov'
+# SimpleCov.start 'rails'
+
+def wait_for_render
+  times = 3000
+
+  while !all(:xpath, "//*[@id='waiting']").empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
+    sleep(0.01)
+    times -= 1
+  end
+end
+
+def ack_messages
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each do |element|
+    element.click
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    # puts e.inspect
+  end
+end
+
+# Not sure I should really need this, but...
+# Latest pulled from https://chromedriver.storage.googleapis.com/index.html
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
 Capybara.register_driver :headless_firefox do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.timeout = 120 # instead of the default of 60s
   browser_options = Selenium::WebDriver::Firefox::Options.new
   browser_options.args << '--headless'
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
+    profile:,
+    http_client: client,
     options: browser_options
   )
 end
 
-Capybara.register_driver(:chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[disable-gpu] }
+Capybara.register_driver :firefox do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.timeout = 120 # instead of the default of 60s
+  browser_options = Selenium::WebDriver::Firefox::Options.new
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :firefox,
+    profile:,
+    http_client: client,
+    options: browser_options
   )
+end
+
+Capybara.register_driver(:remote_chrome) do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :remote,
+    url: 'http://browser:4444/wd/hub',
+    options:
+  )
+end
+
+Capybara.register_driver(:headless_chrome) do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
+  options.add_argument('--disable-extensions')
+  options.add_argument('--browser-test')
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    options: :options
   )
 end
 
-Capybara.javascript_driver = :selenium_chrome_headless
-# Capybara.javascript_driver = :chrome
-# Capybara.javascript_driver = :headless_firefox
-# Capybara.javascript_driver = :selenium
+Capybara.register_driver(:chrome) do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--disable-extensions')
+  options.add_argument('--browser-test')
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options:
+  )
+end
+
+# Fix docker-ization later
+Capybara.javascript_driver = case ENV['DRIVER']
+                             when 'docker'
+                               Capybara.server_host = `hostname -s`.strip
+                               Capybara.server_port = '31337'
+                               Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+                               :remote_chrome
+                             when 'chrome_h'
+                               :headless_chrome
+                             when 'chrome'
+                               :chrome
+                             when 'ff'
+                               :firefox
+                             when 'ff_h'
+                               :headless_firefox
+                             when 'safari'
+                               :safari
+                             when 'selenium'
+                               :selenium
+                             else # This will be the default for JavaScript
+                               :selenium_chrome_headless
+                             end
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
@@ -51,6 +136,7 @@ def loadData
     end
   end
 end
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
@@ -76,7 +162,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
@@ -106,6 +192,8 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+# loadData
+
 Before do
   EmailAddress::Config.setting(:host_validation, :syntax)
   loadData
@@ -115,13 +203,13 @@ Before do
   @anon = false
 end
 
-After ('@javascript') do |_scenario|
+After('@javascript') do |_scenario|
   DatabaseCleaner.clean
   loadData
   travel_back
 end
 
-After ('not @javascript') do |_scenario|
+After('not @javascript') do |_scenario|
   DatabaseCleaner.clean
   travel_back
 end
@@ -134,7 +222,7 @@ Around() do |scenario, block|
   perform_enqueued_jobs do
     block.call
   end
-  scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.zone.now - start
+  scenario_times["#{scenario.location}::#{scenario.name}"] = Time.zone.now - start
 end
 
 at_exit do

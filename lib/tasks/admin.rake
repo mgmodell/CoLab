@@ -24,6 +24,9 @@ namespace :admin do
     Concept.all.each do |concept|
       Concept.reset_counters( concept.id, :candidates, touch: false )
     end
+    School.all.each do |school|
+      School.reset_counters( school.id, :candidates, touch: false )
+    end
   end
 
   desc 'Cache performance numbers'

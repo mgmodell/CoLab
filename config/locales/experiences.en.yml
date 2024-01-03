@@ -23,6 +23,17 @@ en:
     not_started: Not Started
     not_completed: Not Completed
     improvements: Improvements
+    reactions:
+      student_lbl: Student
+      email_lbl: Email
+      completion_lbl: Completion
+      narrative_lbl: Narrative
+      scenario_lbl: Scenario
+      response_lbl: Response
+      improvements_lbl: Improvements
+      suggestions_lbl: Suggestions
+      none_yet: No reactions yet.
+      
     tz_warn: This experience occurs in the %{time_zone} time zone and all dates reflect this.
     react_title: Experience Reaction
     editing: Editing Experience
@@ -71,7 +82,7 @@ en:
     new:
       title: New Experience
     next:
-      journal: 'Journal entry: Week %{week_num}'
+      journal: 'Journal entry: Week {{week_num}}'
       prompt: Which behavior best characterizes this group now?
       other: What behavior did you see?
       comments: Your comments
@@ -87,11 +98,13 @@ en:
       dom_behavior: What behavior dominated the narrative?
       improve: How could I improve upon the narrative?
       suggest: 'Your suggestions:'
+      submit: Submit
     instructions:
       title: Instructions for completing this experience
       scenario_lbl: The student project scenario
       behaviors_lbl: The behaviors
       behaviors_lbl_sub: These labels and descriptions are provided on each page which follows
+      next: Next
       reminder: >
         You may access these instructions or the project description
         at any time using the <i>Instructions</i> button in the upper right-hand

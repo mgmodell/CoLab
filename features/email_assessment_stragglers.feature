@@ -26,6 +26,7 @@ Feature: Email assessment stragglers
     Then 3 emails will be sent
     Then 3 emails will be tracked
 
+  @javascript
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
     Given reset time clock to now
     Given the email queue is empty

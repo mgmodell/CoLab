@@ -1,6 +1,13 @@
 en:
   bingo_games:
     update_bingo_btn: Update Bingo Game
+    scored_game:
+      list_title: scored item
+      term: Term
+      definition: Definition
+      feedback: Feedback
+      concept: Concept
+    create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game
@@ -30,6 +37,24 @@ en:
     active: Active
     group_option: Make groups available?
     activate_success: Bingo! Game activated!
+    review:
+      completed_col: Complete
+      submitter_col: Submitted by
+      term_col: Term
+      definition_col: Definition
+      feedback_col: Feedback
+      concept_col: Concept
+      none_msg: N/A
+      review_complete_msg: Review completed
+      not_set_opt: Not set
+      data_loaded_msg: Data loaded
+      saving_msg: Saving feedback
+      save_fail_msg: The save operation failed
+      reload_btn: Reload
+      toggle_columns_plc: Hide columns
+      progress_key: >
+        Unique concepts [acceptable concepts]
+        {{unique}} [{{acceptable}}]
     #Term data
     topic: Topic
     description: Description
@@ -73,4 +98,6 @@ en:
     end_date_err: >
       The bingo game cannot begin after the course has ended
       (%{end_date} > %{course_end_date})
+    scored_success: >
+      The score was successfully saved.
 

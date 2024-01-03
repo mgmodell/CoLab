@@ -13,8 +13,10 @@
 !/log/.keep
 /tmp
 /public/assets/*
+**/id_rsa
 rerun.txt
 *.swp
+**/~$*.pptx
 *.DS_Store
 *~
 .byebug_history
@@ -29,3 +31,13 @@ test_results.html
 coverage
 cucumber
 .rake_tasks
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+/config/master.key
+

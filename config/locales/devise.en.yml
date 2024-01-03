@@ -2,9 +2,13 @@
 
 en:
   devise:
+    change_password_intro: Enter and confirm your new password
     bingo_performance: Bingo! Performance
     experience_performance: Experience Participation Level
     assessment_performance: Assessment Participation Level
+    email_fld: Email
+    password_fld: Password
+    reset_btn: Clear
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: >
@@ -14,6 +18,10 @@ en:
         If your email address exists in our database, you will receive an
         email with instructions for how to confirm your email address in a few minutes.
       no_instructions: "Didn't receive confirmation instructions?"
+      no_token: >
+        You can't access this page without coming from a confirmation email. If
+        you do have a confirmation email, please make sure you used the
+        full URL provided.
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -47,7 +55,7 @@ en:
         on how to reset your password in a few minutes. Please log out and use the
         link in the email to reset your password.
       send_paranoid_instructions: >
-        If your email address exists in our database, you will receive a password
+        If that email address exists in our database, you will receive a password
         recovery link at your primary email address in a few minutes. When you
         receive it, be sure to log out before clicking the reset link.
       updated: "Your password has been changed successfully. You are now signed in."
@@ -59,8 +67,13 @@ en:
       hint: "%{min} characters minimum"
       forgot_title: Forgot your password?
       forgot_submit: Send me reset password instructions
+      reset_tab: Forgot your password?
     registrations:
+      first_name_fld: First name
+      last_name_fld: Last name
       signup: Sign up
+      signup_tab: Sign up
+      signup_btn: Sign me up!
       my_courses: My Courses
       my_courses_count:
         zero: You've not yet been involved in a CoLab course.
@@ -106,13 +119,18 @@ en:
       new_address_lbl: "New address:"
       new_address_prompt: What is the new address?
       optional_demo: >
-        Supplying the forllowing information about yourself is optional, but providing it may
+        Supplying the following information about yourself is optional, but providing it may
         help us to provide a smoother experience for you.
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
+      signup_failed: >
+        We're sorry, but we were unable to create your account. Perhaps
+        the address is already signed up or the address itself is
+        invalid? Please contact support for assistance.
       signed_up_but_inactive: >
-        You have signed up successfully. However, we could not sign you in because your
-        account is not yet activated.
+        You have signed up successfully and your account is reserved. However, we could
+        not sign you in because your account is not yet activated.  Please check your
+        email and click the link there to verify and activate your new account.
       signed_up_but_locked: >
         You have signed up successfully. However, we could not sign you in because your
         account is locked.
@@ -132,7 +150,7 @@ en:
       email_destroyed: That email address was completely removed from our records.
       set_primary: Your primary email address has been set.
     sessions:
-      signed_in: "Signed in successfully."
+      signed_in: "Welcome! You've signed in successfully."
       signed_out: "Signed out successfully."
       already_signed_out: "Signed out successfully."
       login: Log in

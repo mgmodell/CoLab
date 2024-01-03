@@ -2,6 +2,14 @@ en:
   schools:
     index:
       title: List of Schools
+      name_lbl: Name
+      courses_lbl: Courses
+      students_lbl: Student count
+      instructor_lbl: Instructor count
+      project_lbl: Project count
+      experience_lbl: Experience count
+      terms_list_lbl: Terms lists
+
     edit:
       title: Edit School
     show:
@@ -15,3 +23,4 @@ en:
     courses: School Courses
     no_courses: No courses.
     back: Back to the list of schools
+    time_zone: Time Zone

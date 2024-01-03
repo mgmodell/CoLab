@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class School < ApplicationRecord
   has_many :courses, inverse_of: :school, dependent: :destroy
   has_many :bingo_games, through: :courses
   has_many :projects, through: :courses
   has_many :experiences, through: :courses
   has_many :rosters, through: :courses
+  has_many :rubrics, inverse_of: :school, dependent: :nullify
 
   before_create :anonymize
   validates :name, :timezone, presence: true
@@ -26,6 +27,6 @@ class School < ApplicationRecord
   private
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute"
+    self.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}"
   end
 end
