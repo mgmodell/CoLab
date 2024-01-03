@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'chronic'
 
 Given('the course has an assignment named {string} with an {string} rubric named {string}') do |assignment_name, rubric_published, rubric_name|
@@ -45,13 +47,14 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     label = 'Start Date'
     begin
       find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
       field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(value).strftime('%Y')
     new_date = Chronic.parse(value).strftime('%m%d%Y')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -59,13 +62,14 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     label = 'Close Date'
     begin
       find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
       field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(value).strftime('%Y')
     new_date = Chronic.parse(value).strftime('%m%d%Y')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -96,7 +100,7 @@ Then('retrieve the {string} assignment from the db') do |which_assignment|
   @assignment = if 'latest' == which_assignment
                   Assignment.last
                 else
-                  Assignment.find_by_name which_assignment
+                  Assignment.find_by name: which_assignment
                 end
 end
 
@@ -105,11 +109,11 @@ Then('the assignment {string} field is {string}') do |field_name, value|
   when 'name'
     @assignment.name.should eq value
   when 'description'
-    @assignment.description.should eq "<p>#{value}</p>\n"
+    @assignment.description.should eq "<p>#{value}</p>"
   when 'opening'
     @assignment.start_date.should eq Chronic.parse(value).to_date
   when 'close'
-    @assignment.end_date.should eq Chronic.parse(value).end_of_day.change( sec: 59 )
+    @assignment.end_date.should eq Chronic.parse(value).end_of_day.change(sec: 59)
   else
     true.should be false
   end

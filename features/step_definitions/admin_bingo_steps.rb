@@ -6,7 +6,7 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
   begin
     find(:xpath, "//label[text()='#{field_name}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
     field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
@@ -14,14 +14,16 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   new_year = Chronic.parse(date_value).strftime('%Y')
   # Be sure to enter the year first or leap years will break
   new_date = Chronic.parse(date_value).strftime('%m%d')
+  send_keys :right, :right
   send_keys new_year
   send_keys :left, :left
   send_keys new_date
 end
 
-Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
-  click_link_or_button 'Activities'
-  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]").click
+Then('the user clicks on the existing bingo game') do
+  find(:xpath, "//a[contains(.,'Activities')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{@bingo.get_name(@anon)}']").click
+  wait_for_render
 end
 
 Then(/^retrieve the latest Bingo! game from the db$/) do
@@ -47,7 +49,7 @@ Given(/^the course has a Bingo! game$/) do
   @bingo.save
   if @bingo.persisted?
     @bingo.get_topic(true).should_not be_nil
-    @bingo.get_topic(true).length.should be > 0
+    @bingo.get_topic(true).length.should be  > 0
   end
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
@@ -105,7 +107,7 @@ end
 
 Then('the {string} label is disabled') do |label|
   control = page.all(:xpath, "//label[contains(., '#{label}')][not(@disabled)]")
-  control.size.should be > 0
+  control.size.should be  > 0
 end
 
 Then('the bingo project is empty') do

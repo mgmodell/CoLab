@@ -21,6 +21,7 @@ else
 #    git branch --track "${branch##*/}" "$branch"
 #  done
 
+  git checkout .
   git pull --all
 
 fi

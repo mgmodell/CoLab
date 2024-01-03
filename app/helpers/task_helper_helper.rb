@@ -4,7 +4,7 @@ module TaskHelperHelper
   def task_link(task:, anonymize:, user:)
     if task.instance_of?(BingoGame)
       candidate_list = task.candidate_list_for_user(user)
-      o_string = if task.awaiting_review?
+      if task.awaiting_review?
                    link_to t('candidate_lists.review',
                              task: task.get_name(anonymize)),
                            review_bingo_candidates_path(task)
@@ -27,7 +27,7 @@ module TaskHelperHelper
         #{task.project.get_name(anonymize)})</small>"
     elsif task.instance_of?(Experience)
       reaction = task.get_user_reaction(user)
-      o_string = if reaction.behavior.present?
+      if reaction.behavior.present?
                    t('experiences.completed',
                      task: task.get_name(anonymize))
                  else
@@ -36,7 +36,7 @@ module TaskHelperHelper
                            next_experience_path(experience_id: task.id)
                  end
     else
-      o_string = 'Unhandled object'
+      'Unhandled object'
     end
   end
 end

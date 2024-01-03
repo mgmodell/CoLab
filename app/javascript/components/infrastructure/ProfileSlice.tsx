@@ -2,7 +2,7 @@ import i18n from "./i18n";
 import axios from "axios";
 import { addMessage, startTask, endTask, Priorities } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {Settings} from 'luxon';
+import { Settings } from "luxon";
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
@@ -87,36 +87,24 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: initialState,
   reducers: {
-    setRetrievedProfile: {
-      reducer: (state, action) => {
+    setRetrievedProfile (state, action) {
         state.user = action.payload;
         state.lastRetrieved = Date.now();
-      }
     },
-    setProfile: {
-      reducer: (state, action) => {
+    setProfile (state, action) {
         state.user = action.payload;
-      }
     },
-    setAnonymize: {
-      reducer: (state, action) => {
+    setAnonymize (state, action) {
         state.user.anonymize = action.payload;
-      }
     },
-    setProfileTimezone: {
-      reducer: (state, action) => {
+    setProfileTimezone (state, action) {
         state.user.timezone = action.payload;
-      }
     },
-    setProfileTheme: {
-      reducer: (state, action) => {
+    setProfileTheme (state, action) {
         state.user.theme_id = action.payload;
-      }
     },
-    clearProfile: {
-      reducer: (state, action) => {
+    clearProfile (state, action) {
         state = initialState;
-      }
     }
   }
 });
@@ -153,8 +141,8 @@ export const fetchProfile = createAsyncThunk(
       .then(response => {
         const user: ProfilesRootState = response.data.user;
         dispatch(setRetrievedProfile(user));
-        const tz_hash = getState().context.lookups['timezone_lookup']
-        Settings.defaultZone = tz_hash[ user.timezone ];
+        const tz_hash = getState().context.lookups["timezone_lookup"];
+        Settings.defaultZone = tz_hash[user.timezone];
         dispatch(endTask("loading"));
       })
       .catch(error => {
@@ -205,8 +193,8 @@ export const persistProfile = createAsyncThunk(
       .then(data => {
         user = data["data"]["user"];
 
-        const tz_hash = getState().context.lookups['timezone_lookup']
-        Settings.defaultZone = tz_hash[ user.timezone ];
+        const tz_hash = getState().context.lookups["timezone_lookup"];
+        Settings.defaultZone = tz_hash[user.timezone];
         dispatch(setRetrievedProfile(user));
         dispatch(endTask("loading"));
       })

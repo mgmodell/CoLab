@@ -3,16 +3,16 @@
 require 'faker'
 class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses, counter_cache: true
-  has_many :projects, inverse_of: :course, dependent: :destroy
-  has_many :rosters, inverse_of: :course, dependent: :destroy
-  has_many :bingo_games, inverse_of: :course, dependent: :destroy
+  has_many :projects, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :rosters, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :bingo_games, inverse_of: :course, dependent: :destroy, autosave: true
   has_many :candidate_lists, through: :bingo_games
   has_many :concepts, through: :candidate_lists
   has_many :users, through: :rosters
   belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
-  has_many :assignments, inverse_of: :course
+  has_many :assignments, inverse_of: :course, autosave: true, dependent: :destroy
 
-  has_many :experiences, inverse_of: :course, dependent: :destroy
+  has_many :experiences, inverse_of: :course, dependent: :destroy, autosave: true
 
   validates :timezone, :start_date, :end_date, presence: true
   validates :name, presence: true
@@ -23,7 +23,6 @@ class Course < ApplicationRecord
   before_create :anonymize
 
   def pretty_name(anonymous = false)
-    prettyName = ''
     if anonymous
       "#{anon_name} (#{anon_number})"
     elsif number.present?
@@ -82,16 +81,18 @@ class Course < ApplicationRecord
 
   def get_user_role(user)
     roster = rosters.find_by(user:)
-    roster.nil? ? nil : roster.role
+    roster&.role
   end
 
   def copy_from_template(new_start:)
     # Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
-    new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
+    # new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # new_start = new_start.beginning_of_day.getlocal(course_tz)
     # new_start = course_tz.utc_to_local(new_start).beginning_of_day
     # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
-    date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    # date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    date_difference = (new_start - start_date.beginning_of_day) / 86_400
     new_course = nil
 
     Course.transaction do
@@ -292,14 +293,14 @@ class Course < ApplicationRecord
   def activity_date_check
     experiences.reload.each do |experience|
       if experience.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Experience '#{experience.name}' currently starts before this course does"
         msg += " (#{experience.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless experience.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
       errors.add(:end_date, msg)
@@ -313,21 +314,21 @@ class Course < ApplicationRecord
       end
       next unless project.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
       errors.add(:end_date, msg)
     end
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless bingo_game.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
       errors.add(:end_date, msg)

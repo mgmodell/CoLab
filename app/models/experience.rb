@@ -13,7 +13,6 @@ class Experience < ApplicationRecord
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
 
-
   scope :active_at, lambda { |date|
                       where(active: true)
                         .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date)
@@ -23,6 +22,7 @@ class Experience < ApplicationRecord
     reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user:)
 
     reaction = Reaction.create(user:, experience: self, instructed: false) if reaction.nil?
+    reaction.assign_narrative if reaction.narrative.nil?
     reaction
   end
 
@@ -56,14 +56,14 @@ class Experience < ApplicationRecord
     destroy_url = nil
     sim_url = helpers.next_experience_path(experience_id: id)
 
-    if user_role == 'instructor'
+    if 'instructor' == user_role
       edit_url = helpers.edit_experience_path(self)
       destroy_url = helpers.experience_path(self)
       sim_url = nil
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if (active && 'enrolled_student' == user_role) ||
+       ('instructor' == user_role)
       events << {
         type: 'experience',
         id: "exp_in_#{id}",
@@ -137,7 +137,7 @@ class Experience < ApplicationRecord
 
   def get_least_reviewed_narrative(include_ids = [])
     narrative_counts = if include_ids.empty?
-                         reactions.group(:narrative_id).count
+                         reactions.where.not(narrative_id: nil).group(:narrative_id).count
                        else
                          reactions
                            .where(narrative_id: include_ids)
@@ -159,7 +159,6 @@ class Experience < ApplicationRecord
           sorted =  narrative_counts.sort_by { |a| a[1] }
           narrative = Narrative.includes(scenario: :behavior).find(sorted[0][0])
         end
-        # narrative = Narrative.where( id: include_ids).take
       end
     elsif narrative_counts.count < Narrative.includes(scenario:
     :behavior).all.count
@@ -171,10 +170,6 @@ class Experience < ApplicationRecord
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
-                                                                            scenario_counts.keys)
-                     .where(reactions: { narrative_id: exp })
-                     .group(:narrative_id).count
         narrative = if include_ids.empty?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
@@ -206,33 +201,38 @@ class Experience < ApplicationRecord
   end
 
   def get_narrative_counts
-    reactions.group(:narrative).count.to_a.sort! { |x, y| x[1] <=> y[1] }
+    reactions.group(:narrative).count.to_a.sort_by! { |a| a[1] }
   end
 
   def get_scenario_counts
-    reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort! { |x, y| x[1] <=> y[1] }
+    reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort_by! { |a| a[1] }
   end
 
   def self.inform_instructors
     count = 0
     cur_date = DateTime.current
-    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).find_each do |experience|
-      completion_hash = {}
-      experience.course.enrolled_students.each do |student|
-        reaction = experience.get_user_reaction student
-        completion_hash[student.email] = { name: student.name(false), status: reaction.status }
-      end
+    Experience.transaction do
+      Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).find_each do |experience|
+        completion_hash = {}
+        experience.course.enrolled_students.each do |student|
+          reaction = experience.get_user_reaction student
+          completion_hash[student.email] = {
+            name: student.name(false),
+            status: reaction.status
+          }
+        end
 
-      experience.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report("#{experience.name} (experience)",
-                                            experience.course.pretty_name,
-                                            instructor,
-                                            completion_hash).deliver_later
-        count += 1
+        experience.course.instructors.each do |instructor|
+          AdministrativeMailer.summary_report("#{experience.name} (experience)",
+                                              experience.course.pretty_name,
+                                              instructor,
+                                              completion_hash).deliver_later
+          count += 1
+        end
+        experience.instructor_updated = true
+        experience.save
+        logger.debug experience.errors.full_messages unless experience.errors.empty?
       end
-      experience.instructor_updated = true
-      experience.save
-      logger.debug experience.errors.full_messages unless experience.errors.empty?
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end

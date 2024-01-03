@@ -18,18 +18,23 @@ def wait_for_render
   times = 3000
 
   while !all(:xpath, "//*[@id='waiting']").empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
     sleep(0.01)
     times -= 1
   end
 end
 
 def ack_messages
-  retries ||= 3
-  all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-  (retries += 1).should be < 10, 'Too many ack retries'
-  retry unless retries > 5
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each do |element|
+    element.click
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    # puts e.inspect
+  end
 end
+
+# Not sure I should really need this, but...
+# Latest pulled from https://chromedriver.storage.googleapis.com/index.html
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
 Capybara.register_driver :headless_firefox do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
@@ -75,6 +80,7 @@ Capybara.register_driver(:headless_chrome) do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--headless')
   options.add_argument('--disable-extensions')
+  options.add_argument('--browser-test')
 
   Capybara::Selenium::Driver.new(
     app,
@@ -86,6 +92,7 @@ end
 Capybara.register_driver(:chrome) do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--disable-extensions')
+  options.add_argument('--browser-test')
 
   Capybara::Selenium::Driver.new(
     app,

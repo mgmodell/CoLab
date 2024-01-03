@@ -12,9 +12,7 @@ class ProjectsController < ApplicationController
   before_action :check_viewer, only: %i[show index]
 
   def show
-    @title = t('.title')
     respond_to do |format|
-      format.html { render :show }
       format.json do
         course_hash = {
           id: @project.course_id,
@@ -42,12 +40,9 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def edit
-    @title = t('.title')
-  end
+  def edit; end
 
   def index
-    @title = t('.title')
     @projects = []
     if current_user.is_admin?
       @projects = Project.all
@@ -60,20 +55,9 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @title = t('.title')
     @project = Project.new(project_params)
     if @project.save
       respond_to do |format|
-        format.html do
-          notice = if @project.active
-                     t('projects.create_success')
-                   else
-                     t('projects.create_success_inactive')
-                   end
-          redirect_to project_path(@project,
-                                   notice:,
-                                   format: params[:format])
-        end
         format.json do
           response = {
             project: @project.as_json(
@@ -93,9 +77,6 @@ class ProjectsController < ApplicationController
     else
       logger.debug @project.errors.full_messages unless @project.errors.empty?
       respond_to do |format|
-        format.html do
-          render :new
-        end
         format.json do
           render json: { messages: @project.errors }
         end
@@ -104,17 +85,8 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @title = t('projects.edit.title')
     if @project.update(project_params)
       respond_to do |format|
-        format.html do
-          notice = if @project.active
-                     t('projects.update_success')
-                   else
-                     t('projects.update_success_inactive')
-                   end
-          redirect_to @project, notice:
-        end
         format.json do
           response = {
             project: @project.as_json(
@@ -138,9 +110,6 @@ class ProjectsController < ApplicationController
     else
       logger.debug @project.errors.full_messages
       respond_to do |format|
-        format.html do
-          render :edit
-        end
         format.json do
           render json: { messages: @project.errors }
         end
@@ -178,9 +147,9 @@ class ProjectsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        group_hash.values.each(&:save!)
+        group_hash.each_value(&:save!)
       end
-    rescue StandardError => e
+    rescue StandardError
       # Post back a JSON error
       get_groups_helper project:, message: t('projects.group_save_failure')
     else
@@ -239,16 +208,14 @@ class ProjectsController < ApplicationController
   end
 
   def add_group
-    @title = t('.title')
     @project = Project.find(params[:project_id])
-    group = Group.create(name: params[:group_name], project: @project)
+    Group.create(name: params[:group_name], project: @project)
 
     redirect_to @project, notice: t('projects.group_create_success')
   end
 
   def rescore_group
-    @title = t('.title')
-    group = @project.groups.where(id: params[:group_id]).take
+    group = @project.groups.find_by(id: params[:group_id])
     if group.present?
       group.calc_diversity_score
       group.save
@@ -258,9 +225,6 @@ class ProjectsController < ApplicationController
         format.json do
           get_groups
         end
-        format.html do
-          redirect_to @project, notice: t('projects.diversity_calculated')
-        end
       end
     else
       redirect_to @project, notice: t('projects.wrong_group')
@@ -268,7 +232,6 @@ class ProjectsController < ApplicationController
   end
 
   def rescore_groups
-    @title = t('.title')
     @project.groups.each do |group|
       group.calc_diversity_score
       group.save
@@ -279,16 +242,12 @@ class ProjectsController < ApplicationController
       format.json do
         get_groups
       end
-      format.html do
-        redirect_to @project, notice: t('projects.diversities_calculated')
-      end
     end
   end
 
   def activate
-    @title = t('projects.show.title')
     if current_user.is_admin? ||
-       @project.course.get_user_role(current_user) == 'instructor'
+       'instructor' == @project.course.get_user_role(current_user)
       @project.active = true
       @project.save
       logger.debug @project.errors.full_messages unless @project.errors.empty?
@@ -300,7 +259,7 @@ class ProjectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    if params[:id].blank? || params[:id] == 'new'
+    if params[:id].blank? || 'new' == params[:id]
       course = Course.find(params[:course_id])
       p_test = course.projects.new
       p_test.start_date = course.start_date

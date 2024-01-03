@@ -1,10 +1,8 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
-import { getContext, setInitialised } from "./ContextSlice";
-import { cleanUpMsgs } from "./StatusSlice";
+import { getContext } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
-import PropTypes from "prop-types";
 import Skeleton from "@mui/material/Skeleton";
 
 type Props = {
@@ -28,20 +26,12 @@ export default function AppInit(props: Props) {
   useEffect(() => {
     //dispatch( authConfig()  )
     dispatch(getContext(props.endpointsUrl));
-    setInterval(function() {
-      //this code runs every minute
-      dispatch(cleanUpMsgs());
-    }, 6000);
   }, []);
 
-  return(
-    <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+  return (
+    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
       {props.children}
-
     </Suspense>
-  )
+  );
 }
 
-AppInit.propTypes = {
-  endpointsUrl: PropTypes.string.isRequired
-};

@@ -10,13 +10,14 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     field_name = 'Experience Start Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
       field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
     new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -24,13 +25,14 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     field_name = 'Experience End Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
       field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
     new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -52,7 +54,7 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
   @experience.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 end
 
-Then 'the user clicks {string} on the existing experience' do |_action|
-  find(:xpath, "//td[contains(.,'#{@experience.name}')]").click
-  # find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
+Then 'the user edits the existing experience' do
+  find( :xpath, "//tbody/tr/td[text()='#{@experience.name}']" ).click
+  wait_for_render
 end

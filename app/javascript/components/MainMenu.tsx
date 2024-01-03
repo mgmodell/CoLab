@@ -1,49 +1,48 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
-
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-// Icons
-import HomeIcon from "@mui/icons-material/Home";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import InfoIcon from "@mui/icons-material/Info";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import MenuIcon from "@mui/icons-material/Menu";
-import MultilineChartIcon from "@mui/icons-material/MultilineChart";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import SchoolIcon from "@mui/icons-material/School";
-import TableViewIcon from "@mui/icons-material/TableView";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import FindInPageIcon from "@mui/icons-material/FindInPage";
-import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
-
-import DiversityCheck from "./DiversityCheck";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { signOut } from "./infrastructure/ContextSlice";
-import { Skeleton } from "@mui/material";
+import { Sidebar } from "primereact/sidebar";
+import { Button } from "primereact/button";
+import { Menu } from "primereact/menu";
+import DiversityCheck from "./DiversityCheck";
+import Logo from "./Logo";
 
-export default function MainMenu(props) {
+type Props = {
+  diversityScoreFor: string;
+  reportingUrl: string;
+  supportAddress: string;
+  moreInfoUrl: string;
+};
+
+export default function MainMenu(props: Props) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
+
+  const working = useTypedSelector(state => {
+    let accum = 0;
+    if (undefined === props.identifier) {
+      accum = state.status.tasks[props.identifier];
+    } else {
+      accum = Number(
+        Object.values(state.status.tasks).reduce((accum, nextVal) => {
+          return Number(accum) + Number(nextVal);
+        }, accum)
+      );
+    }
+    return accum > 0;
+  });
+
+  const menuButton = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -66,195 +65,203 @@ export default function MainMenu(props) {
     navigate(url);
   };
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navTo("/");
+
+  const buildMyMenu = () => {
+    let builtMenu =
+      [{
+        label: t("home.title"),
+        icon: "pi pi-fw pi-home",
+        id: "home-menu-item",
+        command: () => navTo("/home")
+      }];
+
+    if (isLoggedIn) {
+      builtMenu.push({
+        label: t("profile"),
+        icon: "pi pi-fw pi-user",
+        id: "profile-menu-item",
+        command: () => navTo("/profile")
+      });
+      if (user.is_instructor || user.is_admin) {
+        let adminItems =
+          [
+            {
+              label: t("courses_edit"),
+              icon: "pi pi-fw pi-book",
+              id: "courses-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/courses")
+            },
+            {
+              label: t("reporting"),
+              icon: "pi pi-fw pi-chart-bar",
+              id: "reporting-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/reporting"),
+            },
+            {
+              label: t("rubrics_edit"),
+              icon: "pi pi-fw pi-table",
+              id: "rubrics-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/rubrics"),
+            },
+          ];
+        if (user.is_admin) {
+          adminItems.push(
+            {
+              label: t("concepts_edit"),
+              icon: "pi pi-fw pi-tags",
+              id: "concepts-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/concepts")
+            },
+            {
+              label: t("schools_edit"),
+              icon: "pi pi-fw pi-users",
+              id: "schools-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/schools")
+            },
+            {
+              label: t("consent_forms_edit"),
+              icon: "pi pi-fw pi-file",
+              id: "consent-forms-menu-item",
+              visible: adminOpen,
+              command: () => navTo("/admin/consent_forms")
+            }
+
+          );
+        }
+          builtMenu.push(
+            {
+              separator: true
+            },
+
+            {
+              label: t("administration"),
+              icon: "pi pi-fw pi-cog",
+              id: "administration-menu",
+              command: () =>{
+                setAdminOpen(!adminOpen);
+              },
+            }
+          );
+          adminItems.forEach((menuItem) => {
+            builtMenu.push(menuItem);
+          });
+      }
     }
-  }, [isLoggedIn]);
+    builtMenu.push(
+      {
+        separator: true
+      },
+      {
+        template: (<DiversityCheck diversityScoreFor={props.diversityScoreFor} />),
+      },
+      {
+        label: t('titles.demonstration'),
+        icon: "pi pi-fw pi-play",
+        id: "demo-menu-item",
+        command: () => navTo("/demo")
+      },
+      {
+        label: t("support_menu"),
+        icon: "pi pi-fw pi-question-circle",
+        id: "support-menu-item",
+        command: () => {
+          window.location.href = `mailto:${props.supportAddress}`;
+        }
+      },
+      {
+        label: t("about"),
+        icon: "pi pi-fw pi-info-circle",
+        id: "about-menu-item",
+        command: () => {
+          navTo(props.moreInfoUrl);
+        }
+      }
+    )
 
-  const adminItems =
-    isLoggedIn && (user.is_instructor || user.is_admin) ? (
-      <React.Fragment>
-        <Divider />
-        <ListItemButton
-          id="administration-menu"
-          onClick={() => setAdminOpen(!adminOpen)}
-        >
-          <ListItemIcon>
-            <SettingsApplicationsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>
-            {t("administration")} {adminOpen ? <ExpandLess /> : <ExpandMore />}
-          </ListItemText>
-        </ListItemButton>
-        <Collapse in={adminOpen} timeout="auto" unmountOnExit>
-          <Divider />
-          <ListItemButton
-            id="courses-menu-item"
-            onClick={() => navTo("/admin/courses")}
-          >
-            <ListItemIcon>
-              <SchoolIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("courses_edit")}</ListItemText>
-          </ListItemButton>
-          <ListItemButton
-            id="admin_rpt-menu"
-            onClick={() => navTo("/admin/reporting")}
-          >
-            <ListItemIcon>
-              <MultilineChartIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("reporting")}</ListItemText>
-          </ListItemButton>
-          <ListItemButton
-            id="rubrics-menu-item"
-            onClick={() => navTo("/admin/rubrics")}
-          >
-            <ListItemIcon>
-              <TableViewIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("rubrics_edit")}</ListItemText>
-          </ListItemButton>
-          {user.is_admin ? (
-            <React.Fragment>
-              <ListItemButton
-                id="concepts-menu-item"
-                onClick={() => navTo("/admin/concepts")}
-              >
-                <ListItemIcon>
-                  <DynamicFeedIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{t("concepts_edit")}</ListItemText>
-              </ListItemButton>
-              <ListItemButton
-                id="schools-menu-item"
-                onClick={() => navTo("/admin/schools")}
-              >
-                <ListItemIcon>
-                  <AccountBoxIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{t("schools_edit")}</ListItemText>
-              </ListItemButton>
-              <ListItemButton
-                id="consent_forms-menu-item"
-                onClick={() => navTo("/admin/consent_forms")}
-              >
-                <ListItemIcon>
-                  <FindInPageIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{t("consent_forms_edit")}</ListItemText>
-              </ListItemButton>
-            </React.Fragment>
-          ) : null}
+    if (isLoggedIn) {
+      builtMenu.push(
+        {
+          label: t("logout"),
+          icon: "pi pi-fw pi-sign-out",
+          id: "logout-menu-item",
+          command: () => {
+            dispatch(signOut());
+            setMenuOpen(false);
+          }
+        }
+      );
+    }
 
-          <Divider />
-        </Collapse>
-      </React.Fragment>
-    ) : null;
 
-  const basicOpts = isLoggedIn ? (
-    <React.Fragment>
-      <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
-        <ListItemIcon>
-          <HomeIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{t("home.title")}</ListItemText>
-      </ListItemButton>
-      <ListItemButton id="profile-menu-item" onClick={() => navTo("/profile")}>
-        <ListItemIcon>
-          <AccountBoxIcon />
-        </ListItemIcon>
-        <ListItemText>{t("profile")}</ListItemText>
-      </ListItemButton>
-      <Suspense fallback={<Skeleton variant={'text'} />} >
-        <DiversityCheck diversityScoreFor={props.diversityScoreFor || ''} />
+    return builtMenu;
+  }
 
-      </Suspense>
-    </React.Fragment>
-  ) : (
-    <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
-      <ListItemIcon>
-        <HomeIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{t("home.title")}</ListItemText>
-    </ListItemButton>
-  );
-  const logoutItem = isLoggedIn ? (
-    <ListItemButton
-      id="logout-menu-item"
-      onClick={() => {
-        dispatch(signOut());
-        setMenuOpen(false);
-      }}
-    >
-      <ListItemIcon>
-        <ExitToAppIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{t("logout")}</ListItemText>
-    </ListItemButton>
-  ) : null;
+  const genericOpts = [
+    {
+      label: t('titles.demonstration'),
+      icon: "pi pi-fw pi-play",
+      command: () => navTo("/demo")
+    },
+    {
+      label: t("support_menu"),
+      icon: "pi pi-fw pi-question-circle",
+      command: () => {
+        window.location.href = `mailto:${props.supportAddress}`;
+      }
+    },
+    {
+      label: t("about"),
+      icon: "pi pi-fw pi-info-circle",
+      commant: () => {
+        navTo(props.moreInfoUrl);
+      }
+    }
+
+  ]
+
+  //  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
+
 
   return (
     <React.Fragment>
-      <IconButton
+      <Button
         id="main-menu-button"
-        color="secondary"
-        aria-controls="main-menu"
-        aria-haspopup="true"
-        onClick={toggleDrawer}
-        size="large"
-      >
-        <MenuIcon />
-      </IconButton>
-      <SwipeableDrawer
-        anchor="left"
-        open={menuOpen}
-        onClose={toggleDrawer}
-        onOpen={toggleDrawer}
-      >
-        <List id="main-menu-list">
-          {basicOpts}
-          {adminItems}
-          <Divider />
-          <ListItemButton id="demo-menu-item" onClick={() => navTo("/demo")}>
-            <ListItemIcon>
-              <RateReviewIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("titles.demonstration")}</ListItemText>
-          </ListItemButton>
-          <ListItemButton
-            id="support-menu-item"
-            onClick={() => {
-              window.location = "mailto:" + props.supportAddress;
-            }}
+        text
+        onClick={(event) => {
+          setMenuOpen(!menuOpen);
+        }}
+        className="p-mr-2"
+        >
+          <Logo
+            height={48}
+            width={48}
+            spinning={working}
+            />
+        </Button>
+        <Sidebar
+          visible={menuOpen}
+          onHide={() => setMenuOpen(false)}
+          modal
+          position={'left'}
+          style={{width: '15rem'}}
+          baseZIndex={1000000}
           >
-            <ListItemIcon>
-              <ContactSupportIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("support_menu")}</ListItemText>
-          </ListItemButton>
-          <ListItemButton
-            id="about-menu-item"
-            onClick={() => {
-              window.location.href = props.moreInfoUrl;
-            }}
-          >
-            <ListItemIcon>
-              <InfoIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("about")}</ListItemText>
-          </ListItemButton>
-          {logoutItem}
-        </List>
-      </SwipeableDrawer>
+      <Menu
+        appendTo={'self'}
+        closeOnEscape
+        ref={menuButton}
+        model={
+          buildMyMenu()
+        }
+      />
+        </Sidebar>
+
     </React.Fragment>
   );
 }
 
-MainMenu.propTypes = {
-  diversityScoreFor: PropTypes.string.isRequired,
-  reportingUrl: PropTypes.string,
-  supportAddress: PropTypes.string.isRequired,
-  moreInfoUrl: PropTypes.string.isRequired
-};

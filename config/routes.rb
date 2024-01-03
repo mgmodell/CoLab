@@ -47,14 +47,24 @@ Rails.application.routes.draw do
     resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
 
     resources :submissions, only: %i[update show]
-    resources :submission_feedbacks, only: %i[update]
 
     get 'assignment/critiques/:id' => 'submission_feedbacks#index_for_assignment',
          as: 'assignment_critiques',
          constraints: ->(req) { req.format == :json }
 
+    patch 'assignment/critique/:submission_feedback_id' => 'submission_feedbacks#update',
+         constraints: ->(req) { req.format == :json }
+
+    put 'assignment/critique/:submission_feedback_id' => 'submission_feedbacks#update',
+         as: 'critique_update',
+         constraints: ->(req) { req.format == :json }
+
     get 'assignment/critique/:submission_id' => 'submission_feedbacks#show',
          as: 'critique_assignment',
+         constraints: ->(req) { req.format == :json }
+
+    get 'submissions/withdraw/:id' => 'submissions#withdraw',
+         as: 'submission_withdraw',
          constraints: ->(req) { req.format == :json }
 
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
@@ -162,6 +172,9 @@ Rails.application.routes.draw do
     # Consent log paths
     get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
     patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
+    get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
+
+    resources :installments, only: %i[update create]
   end
 
   scope 'infra' do
@@ -221,36 +234,34 @@ Rails.application.routes.draw do
   scope 'demo' do
     # get '' => 'home#demo_start'
     scope 'api-backend' do
-    # Demo paths
-    get 'task_list' => 'home#demo_start', as: :demo_task_list
-
-    get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
-    get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
-    get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
-    get 'bingo/bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
-        as: 'board_for_game_demo'
-    patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
-          as: 'update_board_demo'
-    get 'bingo/concepts_for_game/:id' => 'concepts#concepts_for_game_demo',
-        as: :bingo_concepts_demo,
-        constraints: ->(req) { req.format == :json }
-    get 'bingo/candidates_review/:id' => 'bingo_games#review_candidates_demo',
-        as: :bingo_demo_review
-    patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
-          as: :demo_update_bingo_candidates_review,
+      # Demo paths
+      get 'task_list' => 'home#demo_start', as: :demo_task_list
+  
+      get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
+      patch 'installments/:id' => 'installments#demo_update'
+      get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
+      get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
+      get 'bingo/bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
+          as: 'board_for_game_demo'
+      patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
+            as: 'update_board_demo'
+      get 'bingo/concepts_for_game/:id' => 'concepts#concepts_for_game_demo',
+          as: :bingo_concepts_demo,
           constraints: ->(req) { req.format == :json }
-    get 'bingo/worksheet/:id' => 'bingo_boards#demo_worksheet_for_game',
-        as: :worksheet_for_bingo_demo,
-        constraints: ->(req) { req.format == :pdf }
-    get 'bingo/my_results/:id' => 'bingo_games#demo_my_results',
-        as: 'my_results_demo',
-        constraints: ->(req) { req.format == :json }
-  end
+      get 'bingo/candidates_review/:id' => 'bingo_games#review_candidates_demo',
+          as: :bingo_demo_review
+      patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
+            as: :demo_update_bingo_candidates_review,
+            constraints: ->(req) { req.format == :json }
+      get 'bingo/worksheet/:id' => 'bingo_boards#demo_worksheet_for_game',
+          as: :worksheet_for_bingo_demo,
+          constraints: ->(req) { req.format == :pdf }
+      get 'bingo/my_results/:id' => 'bingo_games#demo_my_results',
+          as: 'my_results_demo',
+          constraints: ->(req) { req.format == :json }
+    end
   end
 
-  get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
-
-  resources :installments, only: %i[update create]
 
   get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

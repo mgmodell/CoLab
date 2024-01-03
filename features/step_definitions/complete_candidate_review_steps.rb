@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_solo|
+Given('the users {string} prep {string}') do |completion_level, group_or_solo|
   # Store the previous user (do no harm)
   temp_user = @user
 
   user_group = @users
   # If we're working with a group, as a group, then...
-  if group_or_solo == 'as a group'
+  if 'as a group' == group_or_solo
     collab_requested = false
     @users.each do |user|
       @user = user
@@ -45,18 +45,34 @@ Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_sol
     fields_to_complete = 0
   else
     log "we didn't test anything here: #{completion_level}"
+    true.should be false
   end
 
   user_group.each do |user|
-    @user = user
-    step 'the user "has" had demographics requested'
-    step 'the user logs in'
-    step 'the user clicks the link to the candidate list'
-    step "the user populates #{fields_to_complete} of the \"term\" entries"
-    step "the user populates #{fields_to_complete} of the \"definition\" entries"
-    step 'the user clicks "Save"' if fields_to_complete.positive?
-    step 'the user will see "success"'
-    step 'the user logs out'
+    @bingo.transaction do
+      cl = @bingo.candidate_list_for_user user
+      @entries_lists = {} if @entries_lists.nil?
+      @entries_lists[user] = [] if @entries_lists[user].nil?
+      @entries_list = @entries_lists[user]
+
+      fields_to_complete.times do |index|
+        @entries_list[index] = {} if @entries_list[index].nil?
+        @entries_list[index]['term'] = "#{Faker::Company.industry}_#{index}"
+        @entries_list[index]['definition'] = Faker::Company.bs
+
+        candidate = Candidate.new(
+          candidate_list: cl,
+          term: @entries_list[index]['term'],
+          definition: @entries_list[index]['definition'],
+          user:
+        )
+        candidate.save
+        if candidate.errors.size.positive?
+          log candidate.errors.full_messages
+          true.should be false
+        end
+      end
+    end
   end
 
   # Reset back to previous user (whomever that was)
@@ -67,10 +83,10 @@ Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 
-  page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
+  page.all(:xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all)
       .count.should eq candidate_count.to_i
   # Latest UI only shows 'Concept' when relevant/available
   # page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
@@ -82,7 +98,8 @@ Given(/^the user sees review items for all the expected candidates$/) do
     # Latest UI only shows 'Concept' when relevant/available
     # page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
     page.all(:xpath,
-             "//div[@id='feedback_4_#{candidate.id}']",
+             # "//div[@id='feedback_4_#{candidate.id}']",
+             "//input[@id='feedback_4_#{candidate.id}']",
              visible: false).count.should eq 1
   end
 end
@@ -110,12 +127,12 @@ Given(/^the user lowercases "([^"]*)" concepts$/) do |which_concepts|
   end
 end
 
-Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_type|
+Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -129,68 +146,96 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
   end
 
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', "#{feedback_type}%")
-  error_msg = ''
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample
     @feedback_list[candidate.id] = { feedback: }
     concept = nil
-    if feedback.critique == 'term_problem'
+    if 'term_problem' == feedback.critique
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!(1).first
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
 
+    # Set the feedback
     begin
       retries ||= 0
-      elem = page.find(:xpath,
-                       "//div[@id='feedback_4_#{candidate.id}']")
-      elem.scroll_to(elem)
-      elem.click
-    rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-      elem.send_keys :escape
+      xp_search = "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div"
+
+      find( :xpath, xp_search, visible: :all ).click
+    rescue Selenium::WebDriver::Error::ElementNotInteractableError
+      find( :xpath, xp_search, visible: :all ).send_keys :escape
+      (retries += 1).should be < 20, 'Too many retries'
+      retry unless retries > 5
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      find(:xpath, '//body').click
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     end
 
     begin
-      elem = page.find(:xpath,
-                       "//li[text()=\"#{feedback.name}\"]")
-      elem.scroll_to(elem)
-      elem.send_keys :enter
+      xpth_search = "//li[text()=\"#{feedback.name}\"]"
+      page.find(:xpath, xpth_search ).click
+      begin
+        if has_xpath?( xpth_search )
+          page.find(:xpath, xpth_search ).click
+          send_keys :enter
+        end
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+        send_keys :escape
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+      rescue Capybara::ElementNotFound => e
+        send_keys :escape
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+      end
 
       if concept.present?
-        elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-        elem.scroll_to(elem)
-        elem.set(concept)
+        find(:xpath, "//span[@id='concept_4_#{candidate.id}']").click
+        send_keys [:control, 'a'], :backspace
+        send_keys [:command, 'a'], :backspace
+        send_keys concept
       end
+    rescue Selenium::WebDriver::Error::NoSuchElementError => e
+      puts e.message
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+      # Nothing needed
+      puts e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
                        "//li[text()=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
       elem.click
 
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
-      error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
-      # elem.send_keys :escape
-
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     rescue Capybara::ElementNotFound => e
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
-      error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
-      elem.send_keys :enter
+      begin
+        send_keys :enter
+      rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+        log 'Element not interactable error'
+        log e
+      end
     end
   end
 end
 
 Given(/^the saved reviews match the list$/) do
   @feedback_list.each do |key, value|
+  #   puts "#{Candidate.find( key ).concept.name}|#{value[:concept]}"
     Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
   end
+end
+
+Given('the user checks the review completed checkbox') do
+  inpt = find(:xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all)
+
+  find(:xpath, "//div[@id='review_complete']").click if 'true' != inpt[:checked]
 end
 
 Given(/^the user checks "([^"]*)"$/) do |checkbox_name|
@@ -204,21 +249,14 @@ end
 When(/^the user clicks the link to the candidate review$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@bingo.get_name(@anon)}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
+
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 end
 
 Then(/^there will be (\d+) concepts$/) do |concept_count|
@@ -227,6 +265,6 @@ Then(/^there will be (\d+) concepts$/) do |concept_count|
 end
 
 Then('the user navigates home') do
-  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:id, 'main-menu-button').click
   find(:xpath, '//*[@id="home-menu-item"]').click
 end

@@ -23,7 +23,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def board_for_game_demo
-    bingo_game_id = params[:bingo_game_id]
+    params[:bingo_game_id]
     demo_project = Project.new(
       id: -1,
       name: (t :demo_project),
@@ -50,7 +50,7 @@ class BingoBoardsController < ApplicationController
       iteration: 0,
       performance: 88
     )
-    if params[:format] == 'pdf'
+    if 'pdf' == params[:format]
       bingo_board.bingo_cells = []
       # reconstitue saved items
       cells_array = JSON.parse(session[:demo_cells])
@@ -67,13 +67,13 @@ class BingoBoardsController < ApplicationController
   end
 
   def board_for_game
-    bingo_game_id = params[:bingo_game_id]
+    params[:bingo_game_id]
     bingo_game = BingoGame.find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
-                            .where(user_id: current_user.id).take
+                            .find_by(user_id: current_user.id)
     worksheet = bingo_game.bingo_boards.worksheet
-                          .where(user_id: current_user.id).take
+                          .find_by(user_id: current_user.id)
     board_for_game_helper bingo_board:,
                           worksheet:,
                           bingo_game:,
@@ -102,7 +102,7 @@ class BingoBoardsController < ApplicationController
     size.times do |row|
       size.times do |column|
         i = size * row + column
-        cell = cells[i]
+        cells[i]
         next unless cells[i].nil?
 
         cell = bingo_board.bingo_cells.build
@@ -164,11 +164,11 @@ class BingoBoardsController < ApplicationController
       0.upto(bingo_game.size - 1) do |column|
         c = star
         is_answer = false
-        unless row == 2 && column == 2
+        unless 2 == row && 2 == column
           c = concepts.delete(concepts.sample)
           is_answer = (row == column) ||
-                      ((row + column) == 5) ||
-                      ((row + column) == 1)
+                      (5 == (row + column)) ||
+                      (1 == (row + column))
         end
         wksheet.bingo_cells << BingoCell.new(
           row:,
@@ -213,9 +213,6 @@ class BingoBoardsController < ApplicationController
             practice_answers: @practice_answers.as_json
           }
         end
-        format.html do
-          # worksheet_results
-        end
       end
     else
       redirect_to root_path
@@ -224,14 +221,14 @@ class BingoBoardsController < ApplicationController
 
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
-    if bingo_game_id == '-42'
+    if '-42' == bingo_game_id
       demo_worksheet_for_game
 
     else
       bingo_game = BingoGame.find(params[:bingo_game_id])
       wksheet = bingo_game.bingo_boards.worksheet
                           .includes(:bingo_game, bingo_cells: %i[concept candidate])
-                          .where(user_id: current_user.id).take
+                          .find_by(user_id: current_user.id)
 
       if wksheet.blank?
         candidates = bingo_game.candidates.acceptable.to_a
@@ -254,7 +251,7 @@ class BingoBoardsController < ApplicationController
 
         # Distribute clues and board elements
         concepts = bingo_game.concepts.to_a
-        if items.length == ITEM_COUNT && concepts.size > 25
+        if ITEM_COUNT == items.length && concepts.size > 25
           cells = items.values
           while cells.length < 24
             c = concepts.delete(concepts.sample)
@@ -266,7 +263,7 @@ class BingoBoardsController < ApplicationController
           0.upto(bingo_game.size - 1) do |row|
             0.upto(bingo_game.size - 1) do |column|
               c = star
-              c = cells.delete(cells.sample) unless row == 2 && column == 2
+              c = cells.delete(cells.sample) unless 2 == row && 2 == column
               wksheet.bingo_cells.build(
                 row:,
                 column:,
@@ -283,9 +280,9 @@ class BingoBoardsController < ApplicationController
 
       respond_to do |format|
         format.pdf do
-          # TODO: fix the ws_results_url here
-          pdf = WorksheetPdf.new(wksheet,
-                                 url: ws_results_url(wksheet))
+          url = "#{root_url}bingo/score_bingo_worksheet/#{wksheet.id}"
+          # TODO: there's got to be a better way to do this.
+          pdf = WorksheetPdf.new(wksheet, url:)
           send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
         end
       end
@@ -307,7 +304,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def update_demo
-    bingo_game_id = params[:bingo_game_id]
+    params[:bingo_game_id]
     @board = BingoBoard.new(
       id: -42,
       iteration: 0,
@@ -336,10 +333,10 @@ class BingoBoardsController < ApplicationController
 
   def update
     bingo_game_id = params[:bingo_game_id]
-    @board = BingoBoard.playable.where(
+    @board = BingoBoard.playable.find_by(
       user_id: current_user.id,
       bingo_game_id:
-    ).take
+    )
     if @board.nil?
       @board = BingoBoard.new(
         user_id: current_user.id,
@@ -355,7 +352,7 @@ class BingoBoardsController < ApplicationController
 
     cells = []
     params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
-      bc = BingoCell.where(id: bc_hash[:id]).take
+      bc = BingoCell.find_by(id: bc_hash[:id])
       if bc.nil?
         bc = @board.bingo_cells.build(
           row: bc_hash[:row],

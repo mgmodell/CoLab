@@ -36,5 +36,5 @@ Then('the AWS keys are available') do
 end
 
 Then('we artificially fail for info') do
-  true.should eq(false ), 'Test commandeered to document meta-test information'
+  true.should eq(false), 'Test commandeered to document meta-test information'
 end

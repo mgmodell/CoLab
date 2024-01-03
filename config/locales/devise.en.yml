@@ -7,6 +7,7 @@ en:
     experience_performance: Experience Participation Level
     assessment_performance: Assessment Participation Level
     email_fld: Email
+    password_fld: Password
     reset_btn: Clear
     confirmations:
       confirmed: "Your email address has been successfully confirmed."

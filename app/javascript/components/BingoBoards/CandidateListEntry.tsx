@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -11,18 +10,19 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-
-import { Settings } from "luxon";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
-export default function CandidateListEntry(props) {
+type Props = {
+  rootPath?: string,
+}
+
+export default function CandidateListEntry(props : Props) {
   const endpointSet = "candidate_list";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -60,6 +60,7 @@ export default function CandidateListEntry(props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    
 
     axios
       .get(url, {})
@@ -91,13 +92,10 @@ export default function CandidateListEntry(props) {
     const candidate_count = candidates.length;
     tmpCandidates.sort((a, b) => {
       if (0 == b.term.length) {
-        //console.log( `empty b: "${a.term}" and "${b.term}"`)
         return -1;
       } else if (0 == a.term.length) {
-        //console.log( `empty a: "${a.term}" and "${b.term}"`)
         return 1;
       } else {
-        //console.log( `not empty: "${a.term}" and "${b.term}"`)
         return a.term.localeCompare(b.term);
       }
     });
@@ -117,7 +115,10 @@ export default function CandidateListEntry(props) {
   const saveCandidateList = () => {
     dispatch(startTask("saving"));
 
-    const url = endpoints.baseUrl + bingoGameId + ".json";
+    const url = 
+      props.rootPath === undefined
+        ? `${ endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${ endpoints.baseUrl}${bingoGameId}.json`;
 
     axios
       .put(url, {
@@ -172,7 +173,11 @@ export default function CandidateListEntry(props) {
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
-    const url = `${requestCollaborationUrl}${decision}.json`;
+    const url = 
+      props.rootPath === undefined 
+        ?  `${requestCollaborationUrl}${decision}.json`
+        :  `/${props.rootPath}${requestCollaborationUrl}${decision}.json` ;
+
     axios
       .get(url, {})
       .then(response => {
@@ -208,17 +213,17 @@ export default function CandidateListEntry(props) {
       groupComponent = (
         <React.Fragment>
           {t("edit.req_rec", { grp_name: groupName })}:&nbsp;
-          <Link onClick={() => colabResponse(true)}>{t("edit.accept")}</Link>
+          <a onClick={() => colabResponse(true)}>{t("edit.accept")}</a>
           &nbsp; or&nbsp;
-          <Link onClick={() => colabResponse(false)}>{t("edit.decline")}</Link>
+          <a onClick={() => colabResponse(false)}>{t("edit.decline")}</a>
         </React.Fragment>
       );
     } else {
       groupComponent = (
         <React.Fragment>
-          <Link onClick={() => colabResponse(true)}>
+          <a onClick={() => colabResponse(true)}>
             {t("edit.req_help", { grp_name: groupName })}
-          </Link>
+          </a>
         </React.Fragment>
       );
     }
@@ -238,18 +243,16 @@ export default function CandidateListEntry(props) {
     <Paper>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={3}>
-          <Typography>{t('topic')}</Typography>
+          <Typography>{t("topic")}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
           <Typography>{topic}</Typography>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <Typography>{t('description')}</Typography>
+          <Typography>{t("description")}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-            <Typography>
-              {parse( description ) }
-            </Typography>
+          <Typography>{parse(description)}</Typography>
         </Grid>
         <Grid item xs={12} sm={3}>
           <Typography>For</Typography>
@@ -316,6 +319,3 @@ export default function CandidateListEntry(props) {
   );
 }
 
-CandidateListEntry.propTypes = {
-  rootPath: PropTypes.string
-};

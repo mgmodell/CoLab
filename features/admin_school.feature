@@ -14,7 +14,7 @@ Feature: School Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Schools' menu item
-     And the user clicks the "New School" button
+     And the user clicks the "New school" button
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
     Then the user clicks "Create School"
@@ -32,7 +32,7 @@ Feature: School Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Schools' menu item
-     And the user clicks the "New School" button
+     And the user clicks the "New school" button
      #no name
      And the user sets the "Name" field to ""
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"

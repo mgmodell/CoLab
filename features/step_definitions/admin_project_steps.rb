@@ -3,13 +3,14 @@
 require 'chronic'
 # frozen_string_literal: true
 Then(/^the user "([^"]*)" see an Admin button$/) do |admin|
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  if admin == 'does'
+  find(:id, 'main-menu-button').click
+  if 'does' == admin
     page.should have_content('Administration')
   else
     page.should_not have_content('Administration')
   end
-  page.document.first(:id, 'home-menu-item').send_keys :escape
+  send_keys :escape
+
 end
 
 Given(/^the user is an admin$/) do
@@ -19,8 +20,8 @@ Given(/^the user is an admin$/) do
 end
 
 Then(/^the user clicks the Admin button$/) do
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="administration-menu"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'administration-menu').hover
 end
 
 Then(/^the user sees (\d+) course$/) do |course_count|
@@ -38,14 +39,15 @@ Then('retrieve the instructor user') do
 end
 
 Then(/^the user opens the course$/) do
-  elem = find(:xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
+  elem = find(:xpath, "//td[@role='cell' and text()='#{@course.get_name(@anon)}']" )
   elem.click
 end
 
 Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   wait_for_render
-  find(:xpath, '//button[@aria-label="Add Activity"]').click
-  find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
+  find(:xpath, "//button[@id='new_activity']" ).click
+  find( :xpath, "//ul[@role='menu']/li/a/span[contains(.,'#{link_or_button}')]" ).click
+
   wait_for_render
 end
 
@@ -65,9 +67,10 @@ Then('the user clicks {string}') do |link_or_button|
                    visible: :all)
     btn = find(:xpath, "//input[@value='#{link_or_button}']",
                visible: :all)
+  else
+    puts "nothing found yet for '#{link_or_button}"
+    pending # nothing is found yet
   end
-  # Make sure we actually clicked something
-  true.should be false if btn.nil?
   begin
     retries ||= 0
     btn.click
@@ -75,44 +78,42 @@ Then('the user clicks {string}') do |link_or_button|
     puts e.inspect
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     puts e.inspect
-    retry if (retries += 1) < 4
+    if (retries += 1) < 4
+      retry
+    else
+      true.should be false
+    end
   end
   wait_for_render
 end
 
 Then('the user adds a group named {string}') do |group_name|
+  ack_messages
   button = 'Add Group'
-  btn = find(:xpath, "//button[contains(.,'#{button}')]",
-             match: :first,
-             visible: :all).click
+  find(:xpath, "//button[contains(.,'#{button}')]",
+       match: :first,
+       visible: :all).click
   elem = find_field('g_-1')
   elem.set(group_name)
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
-  begin
-    click_link tab
-  rescue Capybara::ElementNotFound => e
-    find(:xpath, "//button[text()='#{tab}']").click
-  end
+  find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
   wait_for_render
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//button[@aria-label='Select columns']").click
+  ack_messages
+  (1..3).each do |tries|
+    find(:xpath, "//div[@data-pc-name='multiselect']" ).click
+    checkboxes = find_all(:xpath, "//ul[@role='listbox']/li[contains(.,'#{view_option}')]/div/div" )
+    next unless checkboxes.size.positive?
+    break if 'true' == checkboxes[0]['data-p-highlight']
 
-  begin
-    retries ||= 0
-    # inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
-    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]" ).sibling('span').find(:xpath, './span/input', visible: false )
-  rescue StandardError => e
-    log e.inspect
-    sleep 0.1
-    retry if (retries += 1) < 2
+    checkboxes[0].click
   end
-  inpt.click unless inpt.checked?
+  send_keys :escape
 
-  find(:xpath, '//body').click
 end
 
 Then(/^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/) do |field, value|
@@ -120,23 +121,30 @@ Then(/^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/) do |field, v
 end
 
 Then(/^the user sets the rich "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  field = find(:xpath,
-               "//div[@id='rdw-wrapper-#{field}']//div[@contenteditable='true']")
+  field = find( :xpath, "//div[@id='#{field}']/div[@data-pc-section='content']" )
   text = field.text
-  field.send_keys :end
+  field.click
+  send_keys :end
   text.length.times do
-    field.send_keys :backspace
+    send_keys :backspace
   end
-  field.send_keys value
+  send_keys value
 end
 
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  find_field(field).click
+  # find_field(field).click
   elem = find_field(field)
+  elem.click
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
+  elem.value.size.times do
+    elem.send_keys :right
+  end
   elem.value.size.times do
     elem.send_keys :backspace
   end
-  elem.set(value)
+  elem.send_keys value
+  # elem.set(value)
 end
 
 Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
@@ -144,25 +152,26 @@ Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_p
   find(:xpath, "//label[text()='#{field_name}']").click
   new_year = Chronic.parse(date_value).strftime('%Y')
   day_month = Chronic.parse(date_value).strftime('%m%d')
+  send_keys :right, :right
   send_keys new_year
   send_keys :left, :left
   send_keys day_month
 end
 
-Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|
+Then('the user selects {string} as {string}') do |value, field|
   id = find(:xpath,
             "//label[contains(text(),'#{field}')]")[:for]
   begin
     retries ||= 0
     selectCtrl = find_all(:xpath, "//select[@id='#{id}']")
-  rescue NoMethodError => e
+  rescue NoMethodError
     retry if (retries += 1) < 4
   end
 
   if selectCtrl.empty?
     find(:xpath, "//div[@id='#{id}']", visible: :all).click
     find(:xpath, "//li[contains(text(),'#{value}')]").click
-    sleep(0.3)
+    # sleep(0.3)
   else
     selectCtrl[0].select(value)
   end
@@ -203,11 +212,9 @@ Then(/^the project "([^"]*)" is "([^"]*)"$/) do |field, value|
   end
 end
 
-Then(/^the user clicks "([^"]*)" on the existing project$/) do |_action|
-  click_link_or_button 'Activities'
-  elem = find(:xpath, "//td[contains(.,'#{@project.name}')]")
-  # elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
-  elem.click
+Then('the user clicks on the existing project') do
+  find(:xpath, "//a[contains(.,'Activities')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{@project.get_name(@anon)}']").click
 end
 
 Then(/^the project Factor pack is "([^"]*)"$/) do |selected_factor_pack|
@@ -242,7 +249,10 @@ Then(/^group "([^"]*)" has (\d+) revision$/) do |group_name, revision_count|
 end
 
 Then('the user selects the {string} menu item') do |menu_item|
-  find(:xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
+  search_path = "//*[@id='#{menu_item.downcase}-menu-item']"
+  find(:xpath, "//*[@id='administration-menu']").click unless has_xpath?( search_path )
+
+  find(:xpath, search_path).click
 end
 
 Then('the user clicks the {string} button') do |button_name|
@@ -251,7 +261,7 @@ Then('the user clicks the {string} button') do |button_name|
 end
 
 Then('the user clicks the course {string} button') do |button_name|
-  xquery = "//tr[contains(.,'#{@course.get_name(false)}')]//button[@aria-label='#{button_name}']"
+  xquery = "//div[contains(.,'#{@course.get_name(false)}')]//button[@aria-label='#{button_name}']"
   elem = find(:xpath, xquery)
   elem.click
 end

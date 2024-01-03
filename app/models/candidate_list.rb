@@ -11,7 +11,8 @@ class CandidateList < ApplicationRecord
   has_one :course, through: :bingo_game
 
   belongs_to :current_candidate_list, class_name: 'CandidateList', optional: true
-  has_many :archived_candidate_lists, class_name: 'CandidateList', foreign_key: :current_candidate_list_id
+  has_many :archived_candidate_lists, class_name: 'CandidateList',
+              foreign_key: :current_candidate_list_id
 
   accepts_nested_attributes_for :candidates
 
@@ -57,7 +58,7 @@ class CandidateList < ApplicationRecord
 
   def expected_count
     if is_group
-      required_term_count = bingo_game.required_terms_for_contributors(contributor_count)
+      bingo_game.required_terms_for_contributors(contributor_count)
     else
       bingo_game.individual_count
     end
@@ -89,7 +90,6 @@ class CandidateList < ApplicationRecord
     else
       false
     end
-
   end
 
   private

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
 import TableSortLabel from "@mui/material/TableSortLabel";
 
@@ -11,7 +10,18 @@ import SortIcon from "@mui/icons-material/Sort";
 import { SortDirection } from "react-virtualized";
 import axios from "axios";
 
-export default function DiversityScore(props) {
+type Props = {
+  groupId: number;
+  documented: number;
+  scoreReviewUrl: string;
+  students: any;
+  rescoreGroup: Function;
+  parentDirty: boolean;
+  sortDirection: string;
+  sortFunc: Function;
+};
+
+export default function DiversityScore(props : Props) {
   const direction = {
     [SortDirection.ASC]: "asc",
     [SortDirection.DESC]: "desc"
@@ -81,14 +91,3 @@ export default function DiversityScore(props) {
     </React.Fragment>
   );
 }
-
-DiversityScore.propTypes = {
-  groupId: PropTypes.number.isRequired,
-  documented: PropTypes.number.isRequired,
-  scoreReviewUrl: PropTypes.string.isRequired,
-  students: PropTypes.object.isRequired,
-  rescoreGroup: PropTypes.func.isRequired,
-  parentDirty: PropTypes.bool.isRequired,
-  sortDirection: PropTypes.string.isRequired,
-  sortFunc: PropTypes.func.isRequired
-};

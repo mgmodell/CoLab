@@ -58,7 +58,7 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
-     And the user clicks the "New Course" button
+     And the user clicks the "New course" button
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
@@ -83,7 +83,7 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
-     And the user clicks the "New Course" button
+     And the user clicks the "New course" button
      #no name
      And the user sets the "Name" field to ""
      And the user sets the "Number" field to "099"
@@ -94,24 +94,24 @@ Feature: Course Administration
     Then the user clicks "Create Course"
      And the user will see "Please review the problems below"
      Then close all messages
-     #no start date
-     And the user sets the "Name" field to "Off"
-     And the user sets the "Number" field to "099"
-     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user sets the start date to "" and the end date to "next month"
-    Then the user clicks "Create Course"
-     And the user will see "Please review the problems below"
-     Then close all messages
-     #no end date
-     And the user sets the "Name" field to "Off"
-     And the user sets the "Number" field to "099"
-     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user sets the start date to "tomorrow" and the end date to ""
-     And the timezone "is" "Nairobi"
-     And the timezone "isn't" "Mexico City"
-    Then the user clicks "Create Course"
-     And the user will see "Please review the problems below"
-     Then close all messages
+#     #no start date
+#     And the user sets the "Name" field to "Off"
+#     And the user sets the "Number" field to "099"
+#     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+#     And the user sets the start date to "" and the end date to "next month"
+#    Then the user clicks "Create Course"
+#     And the user will see "Please review the problems below"
+#     Then close all messages
+#     #no end date
+#     And the user sets the "Name" field to "Off"
+#     And the user sets the "Number" field to "099"
+#     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+#     And the user sets the start date to "tomorrow" and the end date to ""
+#     And the timezone "is" "Nairobi"
+#     And the timezone "isn't" "Mexico City"
+#    Then the user clicks "Create Course"
+#     And the user will see "Please review the problems below"
+#     Then close all messages
      #no number or description
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to ""

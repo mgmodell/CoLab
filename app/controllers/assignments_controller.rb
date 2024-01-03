@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: %i[show edit update destroy status]
   include PermissionsCheck
 
-  before_action :check_editor
+  before_action :check_editor, except: :status
 
   before_action :check_admin, only: :index
 
@@ -14,23 +16,23 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1/status or /assignments/1/status.json
   def status
     # TODO: Check if course owner
-    response = standardized_response( @assignment )
-    response[:rubric] = @assignment.rubric.as_json( 
+    response = standardized_response(@assignment)
+    response[:rubric] = @assignment.rubric.as_json(
       include: { criteria: {
-        only: %i[ id description weight sequence 
-        l1_description l2_description l3_description l4_description l5_description ]
-      }},
-      only: %i[ id name description version ]
+        only: %i[ id description weight sequence
+                  l1_description l2_description l3_description l4_description l5_description ]
+      } },
+      only: %i[id name description version]
     )
     submissions = []
-    if current_user.is_admin? || @assignment.instructors.include?(current_user)
-      submissions = @assignment.submissions.includes( :user )
+    if current_user.is_admin? || @assignment.course.rosters.instructor.include?(current_user)
+      submissions = @assignment.submissions.includes(:user)
     elsif @assignment.group_enabled
       group = @assignment.project.group_for_user(current_user)
 
-      submissions = @assignment.submisions.includes(:user).where( group: group)
+      submissions = @assignment.submissions.includes(:user).where(group:)
     else
-      submissions = @assignment.submisions..includes(:user).where( user: current_user)
+      submissions = @assignment.submissions.includes(:user).where(user: current_user)
     end
 
     anon = current_user.anonymize?
@@ -40,8 +42,8 @@ class AssignmentsController < ApplicationController
         id: submission.id,
         submitted: submission.submitted,
         withdrawn: submission.withdrawn,
-        recorded_score: submission.recorded_score,
-        user: current_user.name( anon )
+        recorded_score: submission.recorded_score || submission.calculated_score,
+        user: current_user.name(anon)
       }
     end
 
@@ -84,8 +86,8 @@ class AssignmentsController < ApplicationController
       else
         errors = @assignment.errors
         errors.add(:main, I18n.t('assignments.errors.create_failed'))
-        puts @assignment.inspect
-        puts @assignment.errors.full_messages
+        Rails.logger.debug @assignment.inspect
+        Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
     end
@@ -101,7 +103,7 @@ class AssignmentsController < ApplicationController
       else
         errors = @assignment.errors
         errors.add(:mail, I18n.t('assignments.errors.update_failed'))
-        puts @assignment.errors.full_messages
+        Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
     end

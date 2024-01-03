@@ -21,13 +21,13 @@ Given(/^there is a course with an experience$/) do
   log @experience.errors.full_messages if @experience.errors.present?
 
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be  > 0
   @experience.get_name(true).should_not be_nil
-  @experience.get_name(true).length.should be > 0
+  @experience.get_name(true).length.should be  > 0
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
-  @experience.active = has_or_has_not == 'has'
+  @experience.active = 'has' == has_or_has_not
   @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 end
@@ -71,7 +71,7 @@ Given(/^the experience started "([^"]*)" and ends "([^"]*)"$/) do |start_date, e
 end
 
 Given(/^the users "(.*?)" had demographics requested$/) do |with_demographics|
-  demographics_requested = with_demographics == 'have'
+  demographics_requested = 'have' == with_demographics
   @users.each do |u|
     u.welcomed = demographics_requested
     u.save!
@@ -102,12 +102,12 @@ Given(/^the course has an assessed project$/) do
     end_dow: 2,
     start_date: yesterday,
     end_date: tomorrow,
-    style: Style.find(1)
+    style: Style.find(2)
   )
   @project.save!
   if @project.persisted?
     @project.get_name(true).should_not be_nil
-    @project.get_name(true).length.should be > 0
+    @project.get_name(true).length.should be  > 0
   end
   log @project.errors.full_messages if @project.errors.present?
 end
@@ -143,7 +143,7 @@ Given(/^the user is in a group on the project$/) do
   @group.users << @user
   @group.save!
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name(true).length.should be  > 0
   log @group.errors.full_messages if @group.errors.present?
   @project.active = false
   @project.save!

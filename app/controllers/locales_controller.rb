@@ -5,7 +5,7 @@ class LocalesController < ApplicationController
 
   def get_resources
     ns = params[:ns]
-    texts = if ns == 'base'
+    texts = if 'base' == ns
               I18n.t '.'
             else
               I18n.t ns

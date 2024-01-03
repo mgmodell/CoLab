@@ -13,7 +13,7 @@ class Project < ApplicationRecord
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
-  has_many :installments, through: :assessments
+  has_many :installments, through: :assessments, dependent: :destroy
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -34,18 +34,18 @@ class Project < ApplicationRecord
   after_initialize do
     if new_record?
       self.active = false
-      # Simple/Goldfinch factor pack is the default
-      self.factor_pack_id = 1
+      # AECT 2023 factor pack is the default
+      self.factor_pack_id ||= 4
       # Sliders style
-      self.style_id = 2
-      self.start_dow = 5
-      self.end_dow = 1
+      self.style_id ||= 2
+      self.start_dow ||= 5
+      self.end_dow ||= 1
 
     end
   end
 
   def group_for_user(user)
-    if id == -1 # This hack supports demonstration of group term lists
+    if -1 == id # This hack supports demonstration of group term lists
       Group.new(name: 'SuperStars', users: [user])
     else
       groups.joins(:users).find_by(users: { id: user.id })
@@ -95,7 +95,6 @@ class Project < ApplicationRecord
   def get_activity_on_date(date:, anon:)
     day = date.wday
     o_string = get_name(anon)
-    add_string = ''
     add_string = if has_inside_date_range?
                    if day < start_dow || day > end_dow
                      ' (work)'
@@ -180,13 +179,13 @@ class Project < ApplicationRecord
 
     edit_url = nil
     destroy_url = nil
-    if user_role == 'instructor'
+    if 'instructor' == user_role
       edit_url = helpers.edit_project_path(self)
       destroy_url = helpers.project_path(self)
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if (active && 'enrolled_student' == user_role) ||
+       ('instructor' == user_role)
 
       days = get_days_applicable
 

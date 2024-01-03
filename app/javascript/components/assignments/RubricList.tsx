@@ -1,26 +1,18 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { Settings } from "luxon";
-
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-
-import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
+
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import axios from "axios";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
 
 export default function RubricList(props) {
   const category = "rubric";
@@ -30,89 +22,26 @@ export default function RubricList(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+
   const user = useTypedSelector(state => state.profile.user);
   const { t } = useTranslation(`${category}s`);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
+  const [filterText, setFilterText] = useState('');
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const columns: GridColDef[] = [
-    { field: "name", headerName: t("name") },
-    { field: "published", headerName: t("show.published") },
-    {
-      field: "version",
-      type: "number",
-      headerName: t("version"),
-      getApplyQuickFilterFn: undefined
-    },
-    { field: "user", headerName: t("show.creator") },
-    {
-      field: "actions",
-      headerName: "",
-      type: "actions",
-      editable: false,
-      sortable: false,
-      renderCell: (params: GridRenderCellParams ) => (
-        <Fragment>
-          <Tooltip title={t("rubric.copy")}>
-            <IconButton
-              id="copy_rubric"
-              onClick={event => {
-                const rubric = Object.assign(
-                  {},
-                  rubrics.find(value => {
-                    return params.id == value.id;
-                  })
-                );
-                const url = `${endpoints["baseUrl"]}/copy/${rubric.id}.json`;
-                axios
-                  .get(url)
-                  .then(resp => {
-                    console.log("resp", resp);
-                    // check for possible errors
-                    getRubrics();
-                  })
-                  .catch(error => {
-                    console.log(error);
-                  });
-              }}
-              aria-label={t("rubric.copy")}
-              size="small"
-            >
-              <FileCopyIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t("rubric.delete")}>
-            <span>
-
-            <IconButton
-              id="delete_rubric"
-              aria-label={t("rubric.delete")}
-              disabled={params.row.published}
-              onClick={event => {
-                const rubric = Object.assign(
-                  {},
-                  rubrics.find(value => {
-                    return params.id == value.id;
-                  })
-                );
-                const url = `${endpoints["baseUrl"]}/${rubric.id}.json`;
-                axios.delete(url).then(resp => {
-                  // check for possible errors
-                  getRubrics();
-                });
-              }}
-              size="small"
-            >
-              <DeleteIcon />
-            </IconButton>
-            </span>
-          </Tooltip>
-        </Fragment>
-      )
-    }
+enum OPT_COLS {
+  PUBLISHED = 'published',
+  VERSION = 'version',
+  CREATOR = 'creator',
+}
+  const optColumns = [
+    OPT_COLS.PUBLISHED,
+    OPT_COLS.VERSION,
+    OPT_COLS.CREATOR,
   ];
+  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const [rubrics, setRubrics] = useState([]);
 
@@ -141,50 +70,144 @@ export default function RubricList(props) {
 
   return (
     <React.Fragment>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"] || null}
-        </Alert>
-      </Collapse>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataGrid
-            getRowId={(model: GridRowModel) => {
-              return model.id;
+          <DataTable
+            value={rubrics.filter( (rubric) =>{
+              return filterText.length === 0 ||  rubric.name.includes( filterText );
+
+            })}
+            resizableColumns
+            reorderableColumns
+            paginator
+            rows={5}
+            tableStyle={{
+              minWidth: '50rem'
             }}
-            autoHeight
-            rows={rubrics}
-            columns={columns}
-            isCellEditable={params => {
-              return false;
+            rowsPerPageOptions={
+              [5, 10, 20, rubrics.length]
+            }
+            header={<AdminListToolbar
+              itemType={category}
+              filtering={{
+                filterValue: filterText,
+                setFilterFunc: setFilterText,
+              }}
+              columnToggle={{
+                optColumns: optColumns,
+                visibleColumns: visibleColumns,
+                setVisibleColumnsFunc: setVisibleColumns,
+
+              }}
+              />}
+            sortOrder={-1}
+            paginatorDropdownAppendTo={'self'}
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}"
+            dataKey="id"
+            onRowClick={(event) => {
+              navigate(String(event.data.id));
             }}
-            onCellClick={(params, event, details) => {
-              if ("actions" != params.field) {
-                navigate(String(params.row.id));
+          >
+            <Column
+              header={t('name')}
+              field='name'
+              sortable
+              data-id='name'
+              filter
+              key={'name'}
+            />
+            {visibleColumns.includes( OPT_COLS.PUBLISHED) ? (
+            <Column
+              header={t('show.published')}
+              field='published'
+              sortable
+              filter
+              key={'published'}
+            />
+            ): null}
+            {visibleColumns.includes( OPT_COLS.VERSION) ? (
+            <Column
+              header={t('version')}
+              field='version'
+              sortable
+              filter
+              key={'version'}
+            />
+            ): null}
+            {visibleColumns.includes( OPT_COLS.CREATOR) ? (
+            <Column
+              header={t('show.creator')}
+              field='user'
+              sortable
+              filter
+              key={'user'}
+            />
+            ): null}
+            <Column
+              header={t('index.actions_col')}
+              field="id"
+              body={(rubric) => {
+                const scoresUrl = endpoints.scoresUrl + rubric.id + ".csv";
+                const copyUrl = endpoints.courseCopyUrl + rubric.id + ".json";
+                return (
+                  <>
+                    <Button
+                      icon='pi pi-copy'
+                      tooltip={t('rubric.copy')}
+                      tooltipOptions={{
+                        position: 'left',
+                      }}
+                      id={'copy_rubric'}
+                      onClick={event => {
+                        const url = `${endpoints["baseUrl"]}/copy/${rubric.id}.json`;
+                        axios
+                          .get(url)
+                          .then(resp => {
+                            // check for possible errors
+                            getRubrics();
+                          })
+                          .catch(error => {
+                            console.log(error);
+                          });
+                      }}
+                      aria-label={t('rubric.copy')}
+                      size="large"
+                    />
+                    <Button
+                      icon='pi pi-trash'
+                      tooltip={t('rubric.delete')}
+                      disabled={rubric.published}
+                      tooltipOptions={{
+                        position: 'left',
+                      }}
+                      id={'delete_rubric'}
+                      onClick={event => {
+                        const rubric = Object.assign(
+                          {},
+                          rubrics.find(value => {
+                            return rubric.id == value.id;
+                          })
+                        );
+                        const url = `${endpoints["baseUrl"]}/${rubric.id}.json`;
+                        axios.delete(url).then(resp => {
+                          // check for possible errors
+                          getRubrics();
+                        });
+                      }}
+                      aria-label={t('rubric.copy')}
+                      size="large"
+                    />
+                  </>
+
+                )
+
               }
-            }}
-            components={{
-              Toolbar: AdminListToolbar
-            }}
-            componentsProps={{
-              toolbar: {
-                activityType: "rubric"
               }
-            }}
-          />
+            />
+
+          </DataTable>
+
         </div>
       </div>
     </React.Fragment>

@@ -2,5 +2,5 @@
 
 class Theme < ApplicationRecord
   translates :name
-  has_many :users, inverse_of: :theme
+  has_many :users, inverse_of: :theme, dependent: nil
 end

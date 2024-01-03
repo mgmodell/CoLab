@@ -123,7 +123,7 @@ class Installment < ApplicationRecord
     values_by_factor.each do |_factor, au_hash|
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
 
-      au_hash.each_value do |v|
+      au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
         v.value = if prelim.nan?
                     (Installment::TOTAL_VAL / v.installment.values.count).round
@@ -134,7 +134,7 @@ class Installment < ApplicationRecord
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       difference = Installment::TOTAL_VAL - total
-      if difference != 0
+      if 0 != difference
         delta = difference <=> 0
         index = 0
         difference.abs.to_i.times do
@@ -144,7 +144,7 @@ class Installment < ApplicationRecord
         total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       end
       if Installment::TOTAL_VAL != total
-        errors[:base] << 'Unable to reconcile reported values. Please contact an administrator.'
+        errors[:base] << I18n.t( 'err_normalize_sums' )
       end
     end
   end

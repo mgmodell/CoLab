@@ -4,16 +4,9 @@ import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import EmailValidator from "email-validator";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Paper from "@mui/material/Paper";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
+
 import Grid from "@mui/material/Grid";
-import Skeleton from "@mui/material/Skeleton";
-import Tab from "@mui/material/Tab";
+
 
 import { useTranslation } from "react-i18next";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
@@ -23,8 +16,14 @@ import {
   emailSignUp
 } from "./infrastructure/ContextSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { TabContext, TabPanel, TabList } from "@mui/lab";
 import axios from "axios";
+import { TabView, TabPanel } from "primereact/tabview";
+import { Button } from "primereact/button";
+import { Skeleton } from "primereact/skeleton";
+import { Panel } from "primereact/panel";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 export default function SignIn(props) {
@@ -32,7 +31,7 @@ export default function SignIn(props) {
   const { t }: { t: any } = useTranslation(category);
 
   const dispatch = useDispatch();
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -42,7 +41,7 @@ export default function SignIn(props) {
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const loggingIn = useTypedSelector(state => state.context.status.loggingIn);
-  const [curTab, setCurTab] = useState("login");
+  const [curTab, setCurTab] = useState(0);
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -54,6 +53,8 @@ export default function SignIn(props) {
     state => state.context.lookups["oauth_ids"]
   );
 
+  const from = undefined != location.state?.from ? location.state.from : "/home";
+
   //Code to trap an 'enter' press and submit
   //It gets placed on the password field
   const submitOnEnter = evt => {
@@ -63,8 +64,6 @@ export default function SignIn(props) {
     }
   };
 
-  const from = undefined != state ? state.from : "/";
-
   const enterLoginBtn = (
     <Button
       disabled={
@@ -73,7 +72,6 @@ export default function SignIn(props) {
         !endpointsLoaded ||
         !EmailValidator.validate(email)
       }
-      variant="contained"
       onClick={() => {
         dispatch(emailSignIn({ email, password })).then(navigate(from));
       }}
@@ -85,27 +83,28 @@ export default function SignIn(props) {
   const registerBlock = (
     <React.Fragment>
       <Grid item xs={12} sm={6}>
-        <TextField
-          label={t("registrations.first_name_fld")}
-          id="first_name"
-          value={firstName}
-          onChange={event => setFirstName(event.target.value)}
-          variant="standard"
-        />
+        <span className='p-float-label'>
+          <InputText
+            id="first_name"
+            value={firstName}
+            onChange={event => setFirstName(event.target.value)}
+          />
+          <label htmlFor="first_name">{t("registrations.first_name_fld")}</label>
+        </span>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <TextField
-          label={t("registrations.last_name_fld")}
-          id="last_name"
-          value={lastName}
-          onChange={event => setLastName(event.target.value)}
-          variant="standard"
-        />
+        <span className='p-float-label'>
+          <InputText
+            id="last_name"
+            value={lastName}
+            onChange={event => setLastName(event.target.value)}
+          />
+          <label htmlFor="last_name">{t("registrations.last_name_fld")}</label>
+        </span>
       </Grid>
       <Grid item xs={12} sm={6}>
         <Button
           disabled={"" === email || !endpointsLoaded}
-          variant="contained"
           onClick={() => {
             dispatch(
               emailSignUp({
@@ -126,7 +125,6 @@ export default function SignIn(props) {
     <Grid item xs={12} sm={6}>
       <Button
         disabled={"" === email || !endpointsLoaded}
-        variant="contained"
         onClick={() => {
           const url = profileEndpoints.passwordResetUrl + ".json";
 
@@ -154,7 +152,6 @@ export default function SignIn(props) {
     <Grid item xs={12} sm={6}>
       <Button
         disabled={"" === email && "" === password}
-        variant="contained"
         onClick={() => {
           setPassword("");
           setEmail("");
@@ -183,98 +180,70 @@ export default function SignIn(props) {
 
   const emailField = (
     <Grid item xs={12}>
-      <TextField
-        label={t("email_fld")}
-        id="email"
-        autoFocus
-        value={email}
-        onChange={event => setEmail(event.target.value)}
-        error={"" !== email && !EmailValidator.validate(email)}
-        helperText={
-          "" === email || EmailValidator.validate(email)
-            ? null
-            : "Must be a valid email address"
-        }
-        variant="standard"
-      />
+      <span className='p-float-label'>
+        <InputText
+          id="email"
+          autoFocus
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <label htmlFor="email">{t("email_fld")}</label>
+      </span>
     </Grid>
   );
 
-  if ( loggingIn || oauth_client_ids === undefined ) {
-    return <Skeleton variant="rectangular" height="300" />;
-  } else
-  if (isLoggedIn) {
-    return <Navigate replace to={state.from || "/"} />;
+  if (loggingIn || oauth_client_ids === undefined) {
+    return <Skeleton className="mb-2" height="300" />;
+  } else if (isLoggedIn) {
+    //return <Navigate replace to={location.state?.from || "/home"} />;
+    return <Navigate replace to={from} />;
   } else {
     return (
-      <Suspense fallback={<Skeleton variant={'rectangular'} height='300' />} >
-
-      <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
-        <Paper>
-          <TabContext value={curTab}>
-            <TabList
-              onChange={(evt, newVal) => {
-                setCurTab(newVal);
-              }}
-            >
-              <Tab label={t("sessions.login")} value="login" />
-              <Tab label={t("registrations.signup_tab")} value="register" />
-              <Tab label={t("passwords.reset_tab")} value="password" />
-            </TabList>
-            <TabPanel value="login">
-              <Grid container>
-                {emailField}
-                <Grid item xs={12} sm={9}>
-                  <TextField
-                    label="Password"
-                    id="password"
-                    value={password}
-                    variant="standard"
-                    onChange={event => setPassword(event.target.value)}
-                    onKeyDown={submitOnEnter}
-                    type={showPassword ? "text" : "password"}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={() => {
-                              setShowPassword(!showPassword);
-                            }}
-                            onMouseDown={event => {
-                              event.preventDefault;
-                            }}
-                            size="large"
-                          >
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
+      <Suspense fallback={<Skeleton className="mb-2" height="300" />}>
+        <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
+          <Panel>
+            <TabView activeIndex={curTab} >
+              <TabPanel
+                header={t("sessions.login")}  >
+                <Grid container>
+                  {emailField}
+                  <Grid item xs={12} sm={9}>
+                    <span className='p-float-label'>
+                      <Password
+                        inputId="password"
+                        feedback={false}
+                        value={password}
+                        onChange={event => setPassword(event.target.value)}
+                        onKeyDown={submitOnEnter}
+                        toggleMask
+                      />
+                      <label htmlFor="password">{t("password_fld")}</label>
+                    </span>
+                  </Grid>
                 </Grid>
-              </Grid>
-              {enterLoginBtn}
-              {clearBtn}
-              {oauthBtn}
-            </TabPanel>
-            <TabPanel value="register">
-              <Grid container>
-                {emailField}
-                {registerBlock}
+                {enterLoginBtn}
                 {clearBtn}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="password">
-              <Grid container>
-                {emailField}
-                {passwordResetBtn}
-                {clearBtn}
-              </Grid>
-            </TabPanel>
-          </TabContext>
-        </Paper>
-      </GoogleOAuthProvider>
+                {oauthBtn}
+              </TabPanel>
+              <TabPanel
+                header={t("registrations.signup_tab")} >
+                <Grid container>
+                  {emailField}
+                  {registerBlock}
+                  {clearBtn}
+                </Grid>
+              </TabPanel>
+              <TabPanel
+                header={t("passwords.reset_tab")} >
+                <Grid container>
+                  {emailField}
+                  {passwordResetBtn}
+                  {clearBtn}
+                </Grid>
+              </TabPanel>
+            </TabView>
+          </Panel>
+        </GoogleOAuthProvider>
       </Suspense>
     );
   }

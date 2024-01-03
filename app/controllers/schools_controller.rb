@@ -8,7 +8,6 @@ class SchoolsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { render :show }
       format.json do
         response = {
           school: @school.as_json(
@@ -54,9 +53,6 @@ class SchoolsController < ApplicationController
     if @school.save
       notice = t('schools.create_success')
       respond_to do |format|
-        format.html do
-          redirect_to schools_url, notice:
-        end
         format.json do
           response = {
             school: @school.as_json(
@@ -70,9 +66,6 @@ class SchoolsController < ApplicationController
     else
       logger.debug @school.errors.full_messages unless @school.errors.empty?
       respond_to do |format|
-        format.html do
-          render :new
-        end
         format.json do
           messages = @school.errors.as_json
           messages[:main] = 'Please review the problems below'
@@ -88,9 +81,6 @@ class SchoolsController < ApplicationController
     if @school.update(school_params)
       notice = t('schools.update_success')
       respond_to do |format|
-        format.html do
-          redirect_to school_path(@school), notice:
-        end
         format.json do
           response = {
             school: @school.as_json(
@@ -104,9 +94,6 @@ class SchoolsController < ApplicationController
     else
       logger.debug @school.errors.full_messages
       respond_to do |format|
-        format.html do
-          render :edit
-        end
         format.json do
           messages = @school.errors.to_hash
           messages.store(:main, 'Unable to save. Please resolve the issues and try again.')
@@ -128,7 +115,7 @@ class SchoolsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_school
-    @school = if params[:id].blank? || params[:id] == 'new'
+    @school = if params[:id].blank? || 'new' == params[:id]
                 School.new(
                   timezone: current_user.timezone
                 )

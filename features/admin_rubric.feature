@@ -24,7 +24,7 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor creates a rubric
     Then the user sees 5 rubrics
-    Then the user clicks the "new-activity" button
+    Then the user clicks the "New rubric" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
      And the user sets criteria 1 "Description" to "History"
@@ -99,13 +99,13 @@ Feature: Rubric administration
     Then the user searches for "Trojan"
     Then the user edits the "Trojan War Diorama" rubric
      And the user clicks "Deactivate Rubric"
-    Then the user will see "success"
+    Then the user will see "Rubric was deactivated"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
      And the rubric "is not" active
      And the user clicks "Activate Rubric"
-    Then the user will see "success"
+    Then the user will see "Rubric was activated"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
@@ -177,6 +177,7 @@ Feature: Rubric administration
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
     Then the user clicks "Save Rubric"
+    Then the user will see "Success"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -197,6 +198,7 @@ Feature: Rubric administration
      And the user sets criteria 4 level 5 to "super duper level 5"
      And the user copies criteria 4
     Then the user clicks "Save Rubric"
+    Then the user will see "Success"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db

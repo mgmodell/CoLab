@@ -26,19 +26,19 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  row = find(:xpath, "//td[contains(.,'#{@school.name}')]")
+  row = find(:xpath, "//tbody/tr/td[text()='#{@school.name}']" )
   row.click
 end
 
 Then 'the user selects {string} as the {string}' do |value, field|
   lbl = find(:xpath, "//label[text()='#{field}']")[:for]
-  elem = find(:xpath, "//*[@id='#{lbl}']").click
+  find(:xpath, "//*[@id='#{lbl}']").click
   find(:xpath, "//li[text()='#{value}']").click
 end
 
 Then 'the user will dismiss the error {string}' do |error_message|
   page.should have_content error_message
-  find(:xpath, "//button[@id='error-close']").click
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each(&:click)
 end
 
 Then(/^the user waits to see "([^"]*)"$/) do |wait_msg|

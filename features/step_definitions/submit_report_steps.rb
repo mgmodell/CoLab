@@ -24,19 +24,19 @@ Given(/^the project measures (\d+) factors$/) do |num_factors|
 end
 
 Given(/^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/) do |num_weeks|
-  @project.start_date = (Date.today - 1.month)
+  @project.start_date = (Time.zone.today - 1.month)
   @project.end_date = (@assessment.start_date + num_weeks.to_i.weeks)
   @project.start_dow = Date.yesterday.wday
   @project.end_dow = Date.tomorrow.wday
 end
 
 When(/^the user submits the installment$/) do
-  click_link_or_button('Submit Weekly Installment')
+  click_link_or_button('Submit Weekly Check-In')
   wait_for_render
 end
 
 Then(/^there should be no error$/) do
-  page.should_not have_content('Unable to reconcile installment values.')
+  page.should_not have_content('Unable to reconcile check-in values.')
   page.should_not have_content('assessment has expired')
 end
 
@@ -45,15 +45,7 @@ Then(/^the user should see an error indicating that the installment request expi
 end
 
 When(/^user clicks the link to the project$/) do
-  find(:xpath, "//div[@data-field='group_name']/div/div[contains(.,'#{@project.group_for_user(@user).name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='group_name']/div/div[contains(.,'#{@project.group_for_user(@user).name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@project.group_for_user(@user).name}')]")[0].click
-  end
+  find( :xpath, "//tbody/tr/td[text()='#{@project.group_for_user(@user).name}']" ).click
 
   wait_for_render
 end
@@ -67,7 +59,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set 0 if element[:id].end_with? 'value'
     end
-  elsif distribution == 'evenly'
+  elsif 'evenly' == distribution
     cell_value = column_points.to_i / task.group_for_user(@user).users.count
     page.all(:xpath, '//input[starts-with(@name,"slider_")]').each do |element|
       element.set cell_value if element[:id].end_with? 'value'
@@ -77,7 +69,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     find(:xpath, '//input[@id="debug"]', visible: :all).click
     @project.factors.each do |factor|
       # Open the factor panel
-      find(:xpath, "//div[text( )='#{factor.name}']").click
+      find(:xpath, "//a[contains(.,'#{factor.name}')]").click
       elements = page
                  .all(:xpath, "//input[@factor=#{factor.id}]",
                       visible: false)
@@ -86,7 +78,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
       actions = []
       rand(3..10).times do
         actions << {
-          increment: rand(2000) * (rand(2) == 1 ? -1 : 1),
+          increment: rand(2000) * (1 == rand(2) ? -1 : 1),
           target: factor_vals.keys.sample
         }
       end
@@ -100,9 +92,10 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
         new_val = (increment + contrib.value.to_i).clamp(0, Installment::TOTAL_VAL)
         contrib.set new_val
 
+        wait_for_render
         sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
           factor_vals[slider[:contributor]] = slider.value
-          total += slider.value.to_i
+          total + slider.value.to_i
         end
         sum.should eq Installment::TOTAL_VAL
       end
@@ -120,10 +113,10 @@ Then(/^the installment form should request factor x user values$/) do
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
+  page.all(:xpath, "//div[@id='installments']//a[@role='tab']" ).each(&:click)
+  actual_count = page.all(:xpath, '//input[starts-with(@name,"slider_")]', visible: :all).size
+  actual_count.should eq expected_count
 
-  actual_count = 0
-  page.all(:xpath,
-           '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
 end
 
 Then(/^the assessment should show up as completed$/) do
@@ -131,8 +124,10 @@ Then(/^the assessment should show up as completed$/) do
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
-  page.should have_xpath("//div[@data-field='group_name']/div/div[contains(., '#{group_name}')]/.."), 'No link to assessment'
-  page.should have_xpath("//div/div/div[contains(., 'Completed')]"), "No 'completed' message"
+  page.should have_xpath("//tbody/tr/td[text()='#{group_name}']"),
+              'No link to assessment'
+  page.should have_xpath("//tbody/tr/td[text()='Completed']"),
+              "No 'completed' message"
 end
 
 Then(/^the user logs in and submits an installment$/) do
@@ -150,9 +145,10 @@ end
 
 Then(/^the user logs out$/) do
   wait_for_render
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="logout-menu-item"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'logout-menu-item').click
   wait_for_render
+  page.quit
 end
 
 Then(/^there should be an error$/) do
@@ -161,7 +157,7 @@ end
 
 Then(/^the installment values will match the submit ratio$/) do
   installment = Installment.last
-  if @value_ratio == 'evenly'
+  if 'evenly' == @value_ratio
     baseline = installment.values[0].value
     installment.values.each do |value|
       value.value.should eq baseline
@@ -175,7 +171,7 @@ Then(/^the installment values will match the submit ratio$/) do
       recorded_vals[value.factor.id] = factor_vals
     end
 
-    recorded_vals.each_key do |factor_id|
+    recorded_vals.keys.each do |factor_id|
       set_vals = @installment_values[factor_id]
       set_tot = set_vals.values.reduce(0) { |sum, x| sum + x.to_i }
       set_vals_a = []
@@ -198,7 +194,7 @@ Then(/^the user enters a comment "([^"]*)" personally identifiable information$/
   @comment = 'A nice, bland, comment'
   @anon_comment = @comment
 
-  if anonymized == 'with'
+  if 'with' == anonymized
     group =  @project.group_for_user(@user)
     user_one = group.users.last
     user_two = group.users.first
@@ -269,6 +265,6 @@ end
 
 Then(/^user will be presented with the installment form$/) do
   wait_for_render
-  page.should have_content 'Your weekly installment'
+  page.should have_content 'Your weekly check-in'
   page.should have_content @project.name
 end

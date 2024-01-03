@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Assignment < ApplicationRecord
   include TimezonesSupportConcern
   include DateSanitySupportConcern
@@ -6,7 +8,7 @@ class Assignment < ApplicationRecord
   belongs_to :course, inverse_of: :assignments
   belongs_to :project, optional: true
 
-  has_many :submissions, inverse_of: :assignment
+  has_many :submissions, inverse_of: :assignment, autosave: true, dependent: :destroy
 
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize
@@ -39,19 +41,19 @@ class Assignment < ApplicationRecord
   end
 
   def task_data(current_user:)
-    is_faculty = course.rosters.where( user: current_user ).faculty.size > 0
+    is_faculty = course.rosters.where(user: current_user).faculty.size.positive?
 
     group = project.group_for_user(current_user) if project.present? && !is_faculty
-    link = is_faculty ? "assignment/critiques/#{id}" :"/#{get_link}/#{id}"
+    link = is_faculty ? "assignment/critiques/#{id}" : "#{get_link}/#{id}"
 
     log = course.get_consent_log(user: current_user)
     consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
-    status =  if is_faculty
-                submissions.where( withdrawn: nil, recorded_score: nil )
-                .and( Submission.where.not( submitted: nil ) )
-              else
-                status_for_user( current_user )
-              end
+    status = if is_faculty
+               submissions.where(withdrawn: nil, recorded_score: nil)
+                          .and(Submission.where.not(submitted: nil))
+             else
+               status_for_user(current_user)
+             end
 
     {
       id:,
@@ -80,7 +82,7 @@ class Assignment < ApplicationRecord
 
   def status_for_user(user)
     # TODO: check for graded
-    get_submissions_for_user(user).size.positive?
+    get_submissions_for_user(user).size
   end
 
   private
@@ -93,10 +95,15 @@ class Assignment < ApplicationRecord
 
   def anonymize
     self.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"
-    self.anon_description = "#{Faker::Lorem.sentence(
+    self.anon_description = Faker::Lorem.sentence(
       word_count: 8,
       supplemental: true,
       random_words_to_add: 9
-    )}"
+    ).to_s
+  end
+
+  def self.inform_instructors
+    # TODO build a reminder mechanism
+
   end
 end

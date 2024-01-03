@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 class InstallmentsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[demo_complete]
+  skip_before_action :authenticate_user!, only: %i[demo_complete demo_update]
   before_action :demo_user, only: %i[demo_complete]
 
   include Demoable
 
   def submit_installment
     assessment = Assessment.find(params[:assessment_id])
-    @title = t 'installments.title'
     project = assessment.project
 
     # TODO: Consent Log logic ought to move into a before_action
@@ -46,8 +45,6 @@ class InstallmentsController < ApplicationController
 
   def submit_helper(factors:, group:, installment:)
     respond_to do |format|
-      format.html { render installment.assessment.project.style.filename }
-
       format.json do
         render json: {
           factors: Hash[ factors.collect do |factor|
@@ -145,148 +142,106 @@ class InstallmentsController < ApplicationController
     end
   end
 
+  def demo_update
+    result = {
+      messages: {
+        status: t('installments.demo_success')
+      },
+      installment: {
+        id: -42,
+        assessment_id: params[:assessment_id],
+        group_id: params[:group_id],
+        values: params[:contributions].values
+                                      .reduce([]) do |tmp_arr, item_set|
+                  tmp_arr.concat(
+                    item_set.collect do |item|
+                      {
+                        id: item[:id],
+                        user_id: item[:userId],
+                        factor_id: item[:factorId],
+                        name: item[:name],
+                        value: item[:value]
+                      }
+                    end
+                  )
+                end
+      }
+    }
+    respond_to do |format|
+      format.json do
+        render json: result
+      end
+    end
+
+  end
+
   def update
     id = params[:id].to_i
 
-    respond_to do |format|
-      format.html do
-        @title = t 'installments.title'
-        if id.negative?
-          flash[:notice] = t 'installments.demo_success'
-          redirect_to root_url
-        elsif id.positive?
-          @installment = Installment.find(id)
-          if @installment.update(i_params)
-            notice = t('installments.success')
-            redirect_to root_url, notice:
-          else
-            logger.debug @installment.errors.full_messages unless @installment.errors.empty?
-            @group = Group.find(@installment.group)
-            @project = @installment.assessment.project
-            @factors = @installment.assessment.project.factors
-            @project_name = @installment.assessment.project.name
-            @members = @group.users
-            render @project.style.filename
-          end
+    result = {}
+
+    ActiveRecord::Base.transaction do
+      installment = Installment.includes(:values).find(id)
+      installment.comments = params[:installment][:comments]
+      installment.save!
+
+      value_hash = installment.values.reduce { |v_map, item| v_map[item.id] = item }
+      params[:contributions].each do |contribution|
+        value = value_hash[contribution.id]
+        if value.nil?
+          installment.build_value(
+            user_id: item[:userId],
+            factor_id: item[:factorId],
+            value: item[:value]
+          )
         else
-          @installment = Installment.new(i_params)
-          @installment.id = nil
-          found = false
-          @installment.group.users.each do |user|
-            found = true if current_user == user
-          end
-
-          if !found
-            redirect_to root_url error: (t 'installments.err_not_member')
-          elsif @installment.save
-            project = @installment.assessment.project
-            flash[:notice] = t 'installments.success'
-            redirect_to root_url
-          else
-            @factors = @installment.assessment.project.factors
-            @project_name = @installment.assessment.project.name
-            @group = @installment.group
-
-            @members = @installment.values_by_user.keys
-            if @installment.errors[:base].any?
-              flash[:error] = @installment.errors[:base][0]
-              redirect_to root_url
-            else
-              flash[:error] = t 'installments.err_unknown'
-              render @installment.assessment.project.style.filename
-            end
-          end
+          value.value = item[:value]
         end
+        # TODO: check for valid sum and normalize if not
+        value.save!
       end
+    end
+    Rails.logger.debug value.errors.full_messages unless value.errors.empty?
+    result = if value.errors.empty?
+               {
+                 messages: {
+                   status: t('installments.success')
+                 },
+                 installment: {
+                   id:,
+                   assessment_id: params[:assessment_id],
+                   group_id: params[:group_id],
+                   values: params[:contributions].values
+                                                 .reduce([]) do |tmp_arr, item_set|
+                             tmp_arr.concat(
+                               item_set.collect do |item|
+                                 {
+                                   id: item[:id],
+                                   user_id: item[:userId],
+                                   factor_id: item[:factorId],
+                                   name: item[:name],
+                                   value: item[:value]
+                                 }
+                               end
+                             )
+                           end
+                 }
+               }
+             else
+               {
+                 messages: value.errors.full_messages,
+                 error: true
+               }
+
+             end
+    respond_to do |format|
       format.json do
-        if id.negative?
-          valueArray =
-            render json: {
-              messages: {
-                status: t('installments.demo_success')
-              },
-              installment: {
-                id:,
-                assessment_id: params[:assessment_id],
-                group_id: params[:group_id],
-                values: params[:contributions].values
-                                              .reduce([]) do |tmpArr, itemSet|
-                          tmpArr.concat(
-                            itemSet.collect do |item|
-                              {
-                                id: item[:id],
-                                user_id: item[:userId],
-                                factor_id: item[:factorId],
-                                name: item[:name],
-                                value: item[:value]
-                              }
-                            end
-                          )
-                        end
-              }
-            }
-        else
-          ActiveRecord::Base.transaction do
-            installment = Installment.includes(:values).find(id)
-            installment.comments = params[:installment][:comments]
-            installment.save!
-
-            value_hash = installment.values.reduce { |v_map, item| v_map[item.id] = item }
-            params[:contributions].each do |contribution|
-              value = value_hash[contribution.id]
-              if value.nil?
-                installment.build_value(
-                  user_id: item[:userId],
-                  factor_id: item[:factorId],
-                  value: item[:value]
-                )
-              else
-                value.value = item[:value]
-              end
-              # TODO: check for valid sum and normalize if not
-              value.save!
-            end
-          end
-          Rails.logger.debug value.errors.full_messages unless value.errors.empty?
-          if value.errors.empty?
-            render json: {
-              messages: {
-                status: t('installments.success')
-              },
-              installment: {
-                id:,
-                assessment_id: params[:assessment_id],
-                group_id: params[:group_id],
-                values: params[:contributions].values
-                                              .reduce([]) do |tmpArr, itemSet|
-                          tmpArr.concat(
-                            itemSet.collect do |item|
-                              {
-                                id: item[:id],
-                                user_id: item[:userId],
-                                factor_id: item[:factorId],
-                                name: item[:name],
-                                value: item[:value]
-                              }
-                            end
-                          )
-                        end
-              }
-            }
-          else
-            render json: {
-              messages: value.errors.full_messages,
-              error: true
-            }
-
-          end
-        end
+        render json: result
       end
     end
   end
 
   def demo_complete
-    @title = t 'demo_title', orig: t('installments.title')
     @project = get_demo_project
     @group = get_demo_group
 

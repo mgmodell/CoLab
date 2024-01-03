@@ -4,34 +4,35 @@ import { useDispatch } from "react-redux";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
 import ScoredGameDataTable from "./ScoredGameDataTable";
-import PropTypes from "prop-types";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
-import parse from 'html-react-parser';
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import parse from "html-react-parser";
 
-export default function BingoBuilder(props) {
-  const endpointSet = "candidate_results";
+import { Panel } from "primereact/panel";
+import { TabView, TabPanel } from "primereact/tabview";
+
+type Props = {
+  rootPath?: string;
+};
+
+export default function BingoBuilder(props : Props) {
+  const category = "candidate_results";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(category);
 
   const dispatch = useDispatch();
 
-  const [curTab, setCurTab] = useState("builder");
+  const [curTab, setCurTab] = useState(0);
 
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -44,7 +45,7 @@ export default function BingoBuilder(props) {
     iteration: 0,
     bingo_game: {
       size: 5,
-      topic: "no game"
+      topic: t('no_game_msg')
     }
   });
 
@@ -90,19 +91,19 @@ export default function BingoBuilder(props) {
         cells[i].concept = concept;
       }
     }
-    board.bingo_cells = cells;
-    board.iteration = iteration;
-    board.initialised = true;
-    setBoard(board);
+    const tmpBoard = Object.assign({}, board);
+    tmpBoard.bingo_cells = cells;
+    tmpBoard.iteration = iteration;
+    tmpBoard.initialised = true;
+    setBoard(tmpBoard);
   };
+
+  const prefix = props.rootPath === undefined ? '' : `/${props.rootPath}`;
 
   const getConcepts = () => {
     dispatch(startTask());
 
-    const url =
-      props.rootPath === undefined
-        ? `${endpoints.conceptsUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.conceptsUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.conceptsUrl}${bingoGameId}.json`;
 
     axios
       .get(url, {})
@@ -113,16 +114,14 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
 
   const getMyResults = () => {
     dispatch(startTask());
     const url =
-      props.rootPath === undefined
-        ? `${endpoints.baseUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+      `${prefix}${endpoints.baseUrl}${bingoGameId}.json`
     axios
       .get(url, {})
       .then(response => {
@@ -134,15 +133,13 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
   const getBoard = () => {
     dispatch(startTask());
-    const url =
-      props.rootPath === undefined
-        ? `${endpoints.boardUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.boardUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.boardUrl}${bingoGameId}.json`;
+
     axios
       .get(url, {})
       .then(response => {
@@ -155,7 +152,7 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
 
@@ -163,7 +160,8 @@ export default function BingoBuilder(props) {
     dispatch(startTask("saving"));
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    const url = `${endpoints.boardUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.boardUrl}${bingoGameId}.json`;
+
     axios
       .patch(url, {
         bingo_board: board
@@ -193,158 +191,144 @@ export default function BingoBuilder(props) {
       });
   };
   const getWorksheet = () => {
-    open(`${endpoints.worksheetUrl}${bingoGameId}.pdf`);
+    open(`${prefix}${endpoints.worksheetUrl}${bingoGameId}.pdf`);
   };
   const getPrintableBoard = () => {
-    open(`${endpoints.boardUrl}${bingoGameId}.pdf`);
+    open(`${prefix}${endpoints.boardUrl}${bingoGameId}.pdf`);
   };
 
-  //This nested ternary operator is ugly, but it works. At some point
-  // I need to figure out the right way to do it.
-  const saveBtn =
-    null !== board.bingo_game.end_date &&
-    new Date(board.bingo_game.end_date) < new Date() ? (
-      <em>
-        This game has already been played, so you cannot save a new board.
-      </em>
-    ) : board.initialised &&
+  const saveBtn = () => {
+
+    if (null === board.bingo_game.end_date) {
+      //no op
+      return (<></>);
+    } else if (new Date(board.bingo_game.end_date) < new Date()) {
+      return (
+        <em key='played_btn'>{t('already_played_msg')}</em>
+      )
+    } else if (
+      board.initialised &&
       board.iteration > 0 &&
-      null !== board.bingo_game.end_date &&
-      new Date(board.bingo_game.endDate) > new Date() ? (
-      <React.Fragment>
-        <Link onClick={() => saveBoard()}>Save</Link> the board you
-        generated&hellip;
-      </React.Fragment>
-    ) : (
-      <em>If you generate a new board, you will be able to save it here.</em>
-    );
+      new Date(board.bingo_game.end_date) > new Date()
+    ) {
+      return (
+        <React.Fragment>
+          <a onClick={() => saveBoard()}>{t('save_lnk')}</a> {t('gen_board_msg')}&hellip;
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <em key='save_btn'>{t('gen_and_save_msg')}</em>
+      );
+    }
+  }
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-    (null !== board.bingo_game.end_date &&
-      new Date(board.bingo_game.end_date) < new Date()) ? (
+      (null !== board.bingo_game.end_date &&
+        new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
-        <Link onClick={() => getPrintableBoard()}>
-          Download your Bingo Board
-        </Link>{" "}
-        and play along in class!
+        <a onClick={() => getPrintableBoard()}>
+          {t('download_board_lnk')}
+        </a>{" "}
+        {t('play_msg')}
       </React.Fragment>
     ) : (
       "Save your board before this step"
     );
 
   const workSheetInstr = board.practicable ? (
-    <li>
+    <li key={'practice'}>
       Print and complete this&nbsp;
-      <Link onClick={() => getWorksheet()}>Practice Bingo Board</Link> then turn
+      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn
       it in before class begins.
     </li>
   ) : (
-    <li>
-      Not enough usable entries for a practice sheet. Encourage your classmates
-      to complete their assignments.
-    </li>
+    <li key={'practice'}>{t('not_enough_entries_msg')}</li>
   );
 
   const playableInstr = board.playable ? (
     <React.Fragment>
-      <li>
-        <Link onClick={() => randomizeTiles()}>
+      <li key={'generate'}>
+        <a onClick={() => randomizeTiles()}>
           (Re)Generate your playable board
-        </Link>{" "}
+        </a>{" "}
         until you get one you like and then&hellip;
       </li>
-      <li>{saveBtn}</li>
-      <li>{printBtn}</li>
+      <li key={'save_board'}>{saveBtn()}</li>
+      <li key={'print_board'}>{printBtn}</li>
     </React.Fragment>
   ) : (
-    <li>
-      Not enough usable entries to generate a playble Bingo board &mdash;
-      encourage your classmates to complete their assignments.
-    </li>
+    <li>{t('not_enough_entries_msg')}</li>
   );
 
-  const builder = board.playable ? (
-    <div id="bingoBoard" className="mt4">
-      <BingoBoard board={board} />
-    </div>
-  ) : null;
-
   return (
-    <Paper>
-      <Typography>
-        <strong>Topic:</strong> {board.bingo_game.topic}
-      </Typography>
+    <Panel>
+
+      <p>
+        <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
+      </p>
       <div>
-        <strong>Description:</strong>{" "}
-        <p>
-          {parse( board.bingo_game.description || '' )}
-        </p>
+        <strong>{t('description_lbl')}:</strong>{" "}
+        <p>{parse(board.bingo_game.description || "")}</p>
       </div>
       {null != candidateList && (
-        <Typography>
-          <strong>Performance:</strong>
-          <span id="performance">{candidateList.performance}</span>
-        </Typography>
+        <p>
+          <strong>{t('performance_lbl')}:</strong>
+          <span id="performance">{candidateList.cached_performance}</span>
+        </p>
       )}
       <hr />
-      <TabContext value={curTab}>
-        <TabList
-          value={curTab}
-          onChange={(event, value) => setCurTab(value)}
-          centered
-        >
-          <Tab value="builder" label="Bingo game builder" />
-          <Tab value="results" label="Your performance" />
-          <Tab
-            value="worksheet"
-            label="Worksheet result"
-            disabled={
-              !board.practicable ||
-              null == board.worksheet ||
-              (null == board.worksheet.performance &&
-                null == board.worksheet.result_img)
-            }
-          />
-          <Tab value="concepts" label="Concepts found by class" />
-        </TabList>
-        <TabPanel value="worksheet">
-          {null != board.worksheet ? (
-            <Paper square={false}>
-              <Typography>
-                <strong>Score:</strong>&nbsp;
-                {board.worksheet.performance || 0}
-                <br />
-              </Typography>
-              {null != board.worksheet.result_img &&
-              "" != board.worksheet.result_img ? (
-                <img src={board.worksheet.result_img} />
-              ) : null}
-            </Paper>
-          ) : (
-            "No Worksheet"
-          )}
-        </TabPanel>
-        <TabPanel value="builder">
-          <Paper square={false}>
+      <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
+        <TabPanel header={'Bingo game builder'}>
+          <Panel>
+
             <br />
             <ol>
               {workSheetInstr}
               {playableInstr}
             </ol>
-            {builder}
-          </Paper>
+            {board.playable ? (
+              <div id="bingoBoard" className="mt4">
+                <BingoBoard board={board} />
+              </div>
+            ) : null}
+          </Panel>
+
         </TabPanel>
-        <TabPanel value="results">
+        <TabPanel header={'Your performance'}>
           <ScoredGameDataTable candidates={candidates} />
         </TabPanel>
-        <TabPanel value="concepts">
+        <TabPanel
+          header={'Worksheet result'}
+          disabled={
+            !board.practicable ||
+            null == board.worksheet ||
+            (null == board.worksheet.performance &&
+              null == board.worksheet.result_img)
+          }
+          >
+          {null != board.worksheet ? (
+            <Panel>
+              <p>
+                <strong>Score:</strong>&nbsp;
+                {board.worksheet.performance || 0}
+                <br />
+              </p>
+              {null != board.worksheet.result_img &&
+                "" != board.worksheet.result_img ? (
+                <img src={board.worksheet.result_img} />
+              ) : null}
+            </Panel>
+          ) : (
+            "No Worksheet"
+          )}
+        </TabPanel>
+        <TabPanel header={'Concepts found by class'}>
           <ConceptChips concepts={concepts} />
         </TabPanel>
-      </TabContext>
-    </Paper>
+      </TabView>
+
+    </Panel>
   );
 }
-BingoBuilder.propTypes = {
-  rootPath: PropTypes.string
-};

@@ -5,25 +5,16 @@ require 'faker'
 Then(/^the user clicks the link to the experience$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[text()='#{@experience.name}']").click
 end
 
-Then('the {string} button will be disabled') do |button_name|
+Then 'the {string} button will be disabled' do |button_name|
   wait_for_render
   elem = find(:xpath, "//button[contains(.,'#{button_name}')]")
-  byebug if elem[:disabled] == 'false'
   elem[:disabled].should eq 'true'
 end
 
-Then(/^the user will see "([^"]*)"$/) do |checkText|
+Then 'the user will see {string}' do |checkText|
   wait_for_render
   page.should have_content(:all, checkText)
 end
@@ -36,13 +27,14 @@ Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 rescue Capybara::ElementNotFound => e
   puts linkOrButtonName
-  puts e.to_s
+  puts e
   puts e.full_messages
 end
 
 Then(/^they open the drawer for additional comments$/) do
+  wait_for_render
   find(:xpath,
-       "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
+       "//div/a[contains(.,'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
 Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
@@ -101,7 +93,7 @@ Then(/^the user completes a week$/) do
   step step_text
   step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
   # Only enter behavior name if 'Other' is selected
-  step step_text if behavior.name_en == 'Other'
+  step step_text if 'Other' == behavior.name_en
   step_text = 'the user presses "Save and continue"'
   step step_text
   wait_for_render
@@ -148,7 +140,7 @@ end
 Then(/^no user will have reacted to the same narrative more than once$/) do
   User.all.each do |user|
     reaction_counts = user.reactions.group('narrative_id').count
-    reaction_counts.each_value do |val|
+    reaction_counts.values.each do |val|
       val.should <= 1
     end
   end
@@ -159,7 +151,7 @@ Then(/^the user successfully completes an experience$/) do
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
   step 'the user presses "Next"'
-  14.times do |_count|
+  14.times do |index|
     step 'the user completes a week'
   end
   step 'the user will see "Overall Group Behavior"'
@@ -177,14 +169,10 @@ Then(/^all users complete the course successfully$/) do
   @course.enrolled_students.each do |user|
     @user = user
     step 'the user logs in'
-    # puts "post-login: #{_count}"
     step 'the user should see a successful login message'
-    # puts "logged in: #{_count}"
     step 'the user successfully completes an experience'
-    # puts "iteration: #{_count}"
     # _count += 1
     step 'the user logs out'
-    # puts "post-logout: #{_count}"
   end
 end
 
@@ -198,7 +186,7 @@ Given(/^the user enrolls in a new course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be  > 0
   @course.rosters.new(
     user: @user,
     role: Roster.roles[:enrolled_student]

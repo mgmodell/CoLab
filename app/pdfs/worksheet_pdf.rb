@@ -24,7 +24,7 @@ class WorksheetPdf
     # This inserts an image in the pdf file and sets the size of the image
     top = cursor
 
-    image "#{Rails.root}/app/assets/images/CoLab.png",
+    image Rails.root.join('app/assets/images/CoLab.png').to_s,
           width: 120, height: 120,
           at: [450, top + 20]
     if @bingo_board.worksheet?
@@ -51,7 +51,7 @@ class WorksheetPdf
     @bingo_board.bingo_cells.each do |bc|
       items << [bc.indeks_as_letter, bc.candidate.definition, bc.concept] unless bc.candidate.nil?
     end
-    items.sort! { |a, b| a[0] <=> b[0] }
+    items.sort_by! { |a| a[0] }
 
     move_down 10
     # The bounding_box takes the x and y coordinates for positioning its content and some options to style it
@@ -73,7 +73,7 @@ class WorksheetPdf
     size = @bingo_board.bingo_game.size
     data = Array.new(size) { Array.new(size) }
     @bingo_board.bingo_cells.each do |bc|
-      data[bc.row][bc.column] = if bc.concept.name == '*'
+      data[bc.row][bc.column] = if '*' == bc.concept.name
                                   '<color rgb=\'FF00FF\'><font size=\'48\'>*</font></color>'
                                 else
                                   bc.concept.name

@@ -1,45 +1,65 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Skeleton from "@mui/material/Skeleton";
-import Checkbox from "@mui/material/Checkbox";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 import { useTranslation } from "react-i18next";
-const RemoteAutosuggest = React.lazy(() => import("../RemoteAutosuggest"));
-import MUIDataTable from "mui-datatables";
+import RemoteAutosuggest from "./RemoteAutosuggest";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
+
+import {Container, Row, Col} from 'react-grid-system';
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
+import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
+import { DataTable } from "primereact/datatable";
 
-export default function CandidatesReviewTable(props) {
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { ScrollPanel } from "primereact/scrollpanel";
+import { Skeleton } from "primereact/skeleton";
+import { Dropdown } from "primereact/dropdown";
+
+import { ColumnMeta } from "../infrastructure/Types";
+import { Panel } from "primereact/panel";
+
+type Props = {
+  rootPath?: string,
+}
+export default function CandidatesReviewTable(props : Props) {
+  const category = "candidate_review";
+
+  // Inconsistent naming follows. This should be cleaned up.
   const { t } = useTranslation("bingo_games");
-  const endpointSet = "candidate_review";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
+  //const [ref, chartWidth, height] = useResizeObserver();
+
+  const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
+  const paginatorRight = <Button type="button" icon="pi pi-download" text />;
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
-  const [feedbackOptions, setFeedbackOptions] = useState([]);
+  const [feedbackOptions] = useState(
+        // Add a non-response for the UI
+    [{
+
+          credit: 0,
+          critique: "empty",
+          id: 0,
+          name: t("review.not_set_opt")
+    }, ...useTypedSelector(
+        state => state.context.lookups["candidate_feedbacks"]
+      )
+    ]
+  );
   const [bingoGame, setBingoGame] = useState();
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -65,117 +85,6 @@ export default function CandidatesReviewTable(props) {
     })[0];
   };
 
-  const columns = [
-    {
-      label: "#",
-      name: "number",
-      options: {
-        filter: false
-      }
-    },
-    {
-      label: "Complete",
-      name: "completed",
-      options: {
-        customBodyRender: value => {
-          return 100 == value ? "*" : null;
-        }
-      }
-    },
-    {
-      label: "Submitted by",
-      name: "id",
-      options: {
-        display: false,
-        customBodyRender: value => {
-          const candidate = getById(candidates, value);
-          const user = getById(users, candidate.user_id);
-          let cl = getById(candidateLists, candidate.candidate_list_id);
-          const output = [
-            <div>
-              <Link href={"mailto:" + user.email}>
-                {user.last_name},&nbsp;{user.first_name}
-              </Link>
-            </div>
-          ];
-          if (cl.is_group) {
-            output.push(
-              <em>
-                {"\n"}
-                (on behalf of {getById(groups, cl.group_id).name})
-              </em>
-            );
-          }
-          return output;
-        }
-      }
-    },
-    {
-      label: "Term",
-      name: "term"
-    },
-    {
-      label: "Definition",
-      name: "definition"
-    },
-    {
-      label: "Feedback",
-      name: "id",
-      options: {
-        customBodyRender: value => {
-          const candidate = getById(candidates, value);
-          return (
-            <Select
-              value={candidate.candidate_feedback_id || 0}
-              onChange={event => {
-                feedbackSet(value, event.target.value);
-              }}
-              id={`feedback_4_${value}`}
-            >
-              {feedbackOptions.map(opt => {
-                return (
-                  <MenuItem key={`fb_${opt.id}`} value={opt.id}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          );
-        }
-      }
-    },
-    {
-      label: "Concept",
-      name: "id",
-      options: {
-        customBodyRender: value => {
-          let output = "N/A";
-          const candidate = getById(candidates, value);
-          const feedback = getById(
-            feedbackOptions,
-            candidate.candidate_feedback_id || 0
-          );
-
-          if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
-            output = (
-              <RemoteAutosuggest
-                inputLabel={"Concept"}
-                itemId={value}
-                enteredValue={candidate.concept.name}
-                controlId={"concept_4_" + candidate.id}
-                dataUrl={endpoints.conceptUrl}
-                setFunction={conceptSet}
-              />
-            );
-          }
-          return output;
-        }
-      }
-    }
-  ];
-
-  const review_complete_lbl = "Review completed";
-
   useEffect(() => {
     if (endpointStatus) {
       getData();
@@ -188,6 +97,7 @@ export default function CandidatesReviewTable(props) {
     if (fb_id != null) {
       item.completed = 100;
       const fb = getById(options, fb_id);
+
       if ("term_problem" != fb.critique && item.concept.name.length < 1) {
         item.completed = 50;
       }
@@ -209,7 +119,9 @@ export default function CandidatesReviewTable(props) {
 
     let filtered = concepts
       .filter(x => "" != x.concept.name)
-      .map(x => x.concept.name.toLowerCase());
+      .map(x => {
+        x.concept.name.toLowerCase();
+      });
 
     const unique_concepts = new Set(filtered).size;
     //Now for just the acceptable ones
@@ -237,18 +149,11 @@ export default function CandidatesReviewTable(props) {
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
+
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        // Add a non-response for the UI
-        data.feedback_opts.unshift({
-          credit: 0,
-          critique: "empty",
-          id: 0,
-          name: "Not set"
-        });
-        setFeedbackOptions(data.feedback_opts);
 
         setBingoGame(data.bingo_game);
 
@@ -263,12 +168,12 @@ export default function CandidatesReviewTable(props) {
               name: ""
             };
           }
-          setCompleted(item, data.feedback_opts);
+          setCompleted(item, feedbackOptions);
         });
 
         setCandidates(data.candidates);
 
-        setReviewStatus("Data loaded");
+        setReviewStatus(t("review.data_loaded_msg"));
         setDirty(false);
         dispatch(endTask());
         updateProgress();
@@ -281,9 +186,12 @@ export default function CandidatesReviewTable(props) {
   const saveFeedback = () => {
     setDirty(false);
     dispatch(startTask("saving"));
-    setReviewStatus("Saving feedback.");
+    setReviewStatus(t("review.saving_msg"));
 
-    const url = `${endpoints.reviewSaveUrl}${bingoGameId}.json`;
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
     axios
       .patch(url, {
@@ -293,15 +201,17 @@ export default function CandidatesReviewTable(props) {
       .then(response => {
         const data = response.data;
         setDirty(typeof data.success !== "undefined");
-        dispatch(endTask("saving"));
         setReviewStatus(data.notice);
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = "The operation failed";
+        fail_data.notice = t("review.save_fail_msg");
         fail_data.success = false;
         console.log("error");
         return fail_data;
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   };
 
@@ -324,108 +234,179 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
-  const notify =
-    progress < 100 ? null : (
-      <FormControlLabel
-        control={
-          <Checkbox
-            id="review_complete"
-            onClick={() => setReviewComplete(!reviewComplete)}
-            checked={reviewComplete}
-          />
+  const optColumns: Array<ColumnMeta> = [
+    { field: "number", header: "#", sortable: true, key: "number" },
+    {
+      field: "completed",
+      header: t("review.completed_col"),
+      sortable: true,
+      filterable: true,
+      body: param => {
+        return 100 === param.completed ? "*" : null;
+      },
+      key: "completed"
+    },
+    {
+      field: "user_id",
+      header: t("review.submitter_col"),
+      sortable: true,
+      filterable: true,
+
+      body: candidate => {
+        const user = getById(users, candidate.user_id);
+        const cl = getById(candidateLists, candidate.candidate_list_id);
+        if (undefined === user) {
+          return null;
+        } else {
+          const output = [
+            <div>
+              <a href={"mailto:" + user.email}>
+                {user.last_name},&nbsp;{user.first_name}
+              </a>
+            </div>
+          ];
+          if (cl.is_group) {
+            output.push(
+              <em>
+                {"\n"}
+                (on behalf of {getById(groups, cl.group_id).name})
+              </em>
+            );
+          }
+          return output;
         }
-        label={review_complete_lbl}
-      />
-    );
-  const saveButton = (
-    <Button
-      disabled={!dirty}
-      variant="contained"
-      onClick={() => saveFeedback()}
-    >
-      Save
-    </Button>
+      }
+    }
+  ];
+  const [visibleColumns, setVisibleColumns] = useState(optColumns.slice(0, 2));
+
+  const toolbarHdr = (
+    <CandidateReviewListToolbar
+      progress={progress}
+      uniqueConcepts={uniqueConcepts}
+      acceptableUniqueConcepts={acceptableUniqueConcepts}
+      dirty={dirty}
+      reviewStatus={reviewStatus}
+      reviewComplete={reviewComplete}
+      setReviewCompleteFunc={setReviewComplete}
+      saveFeedbackFunc={saveFeedback}
+      reloadFunc={getData}
+      optColumns={optColumns}
+      visibleColumns={visibleColumns}
+      setVisibleColumnsFunc={setVisibleColumns}
+    />
   );
 
+
   return (
-    <Paper>
+    <ScrollPanel>
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
-        <Grid container>
-          <Grid item xs={12} sm={3}>
-            {t("topic")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            {bingoGame.topic}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            {t("close_date")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            {bingoGame.end_date}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            {t("description")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <p>
-              {parse( bingoGame.description ) }
-            </p>
-          </Grid>
-        </Grid>
+        <Panel>
+
+        <Container>
+          <Row>
+            <Col sm={3}>
+              {t("topic")}:
+            </Col>
+            <Col sm={9}>
+              {bingoGame.topic}
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={3}>
+              {t("close_date")}:
+            </Col>
+            <Col sm={9}>
+              {bingoGame.end_date}
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={3}>
+              {t("description")}:
+            </Col>
+            <Col sm={9}>
+              <p>{parse(bingoGame.description)}</p>
+            </Col>
+          </Row>
+
+        </Container>
+        </Panel>
+
       ) : (
-        <Skeleton variant="rectangular" height={20} />
+        <Skeleton height={20} />
       )}
-      <MUIDataTable
-        data={candidates}
-        columns={columns}
-        options={{
-          responsive: "standard",
-          filter: false,
-          print: false,
-          download: false,
-          selectableRows: "none",
-          rowsPerPageOptions: [10, 15, 100, candidates.length],
-          customToolbar: () => {
+      <DataTable
+        value={candidates}
+        resizableColumns
+        tableStyle={{ minWidth: "50rem" }}
+        header={toolbarHdr}
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={[5, 10, 20, candidates.length]}
+        paginatorDropdownAppendTo={"self"}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        paginatorLeft={paginatorLeft}
+        paginatorRight={paginatorRight}
+        dataKey="id"
+      >
+        {visibleColumns.map(col => (
+          <Column {...col} />
+        ))}
+        <Column field="term" header={t("review.term_col")} />
+        <Column field="definition" header={t("review.definition_col")} />
+        <Column
+          field="candidate_feedback_id"
+          header={t("review.feedback_col")}
+          key="id"
+          body={candidate => {
             return (
-              <Grid
-                container
-                spacing={8}
-                direction="row"
-                justifyContent="flex-end"
-                alignItems="stretch"
-              >
-                <Grid item>
-                  <CircularProgress
-                    size={10}
-                    variant={progress > 0 ? "determinate" : "indeterminate"}
-                    value={progress}
-                  />
-                  &nbsp;
-                  {progress}%
-                  <Tooltip title="Unique concepts identified [acceptably explained]">
-                    <Typography>
-                      {uniqueConcepts} [{acceptableUniqueConcepts}]
-                    </Typography>
-                  </Tooltip>
-                  {reviewStatus}
-                  {notify}
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={() => getData()}>
-                    Reload
-                  </Button>
-                  {saveButton}
-                </Grid>
-              </Grid>
+              <React.Fragment>
+                <input type={"hidden"} id={`feedback_4_${candidate.id}`} />
+                <Dropdown
+                  value={candidate.candidate_feedback_id || 0}
+                  onChange={event => {
+                    feedbackSet(candidate.id, event.target.value);
+                  }}
+                  options={feedbackOptions}
+                  optionLabel="name"
+                  optionValue="id"
+                />
+              </React.Fragment>
             );
-          }
-        }}
-      />
-    </Paper>
+          }}
+        />
+        <Column
+          field="concept_id"
+          header={t("review.concept_col")}
+          body={candidate => {
+            let output = <div>{t("review.none_msg")}</div>;
+            //const candidate = getById(candidates, params.row.id);
+            const feedback = getById(
+              feedbackOptions,
+              candidate.candidate_feedback_id || 0
+            );
+
+            if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
+              output = (
+                <RemoteAutosuggest
+                  inputLabel={t("concept")}
+                  itemId={candidate.id}
+                  enteredValue={candidate.concept.name}
+                  controlId={"concept_4_" + candidate.id}
+                  dataUrl={endpoints.conceptUrl}
+                  setFunction={conceptSet}
+                  rootPath={props.rootPath}
+                />
+              );
+            }
+            return output;
+          }}
+        />
+      </DataTable>
+    </ScrollPanel>
   );
 }
-CandidatesReviewTable.propTypes = {
-  rootPath: PropTypes.string
-};

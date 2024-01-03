@@ -8,7 +8,12 @@ import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 
-export default function BingoShell() {
+
+type Props = {
+  rootPath?: string
+
+}
+export default function BingoShell( props: Props) {
   const [working] = useState(true);
 
   return (
@@ -17,24 +22,31 @@ export default function BingoShell() {
       <Routes>
         <Route
           path={`enter_candidates/:bingoGameId`}
-          element={<CandidateListEntry />}
+          element={<CandidateListEntry rootPath={props.rootPath}/>}
         />
         <Route
           path={`review_candidates/:bingoGameId`}
           element={
-            <RequireInstructor>
-              <CandidatesReviewTable />
-            </RequireInstructor>
+            <>
+              { undefined === props.rootPath ? (
+                <RequireInstructor>
+                  <CandidatesReviewTable rootPath={props.rootPath} />
+                </RequireInstructor>
+              ) : (
+                <CandidatesReviewTable rootPath={props.rootPath} />
+              )}
+            </>
           }
         />
         <Route
           path={`candidate_results/:bingoGameId`}
-          element={<BingoBuilder />}
+          element={<BingoBuilder rootPath={props.rootPath} />}
         />
         <Route
           path={`score_bingo_worksheet/:worksheetIdParam`}
           element={
             <RequireInstructor>
+              {/* No rootPath because there exists no demo for it */}
               <ScoreBingoWorksheet />
             </RequireInstructor>
           }
@@ -43,5 +55,3 @@ export default function BingoShell() {
     </React.Fragment>
   );
 }
-
-BingoShell.propTypes = {};

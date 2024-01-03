@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -15,7 +14,19 @@ import Switch from "@mui/material/Switch";
 import SubjectChart, { unit_codes, code_units } from "./SubjectChart";
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
-export default function ChartContainer(props) {
+type Project = {
+  id: number;
+  name: string;
+};
+
+type Props = {
+  unitOfAnalysis: string;
+  projects: Project[];
+  anonymize: boolean;
+  forResearch: boolean;
+};
+
+export default function ChartContainer(props : Props) {
   const category = "graphing";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -287,14 +298,3 @@ export default function ChartContainer(props) {
   );
 }
 
-ChartContainer.propTypes = {
-  unitOfAnalysis: PropTypes.oneOf(["group", "individual"]).isRequired,
-  projects: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired
-    })
-  ),
-  anonymize: PropTypes.bool,
-  forResearch: PropTypes.bool
-};

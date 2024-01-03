@@ -10,26 +10,19 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
+import { TabView, TabPanel } from "primereact/tabview";
 
 import Skeleton from "@mui/material/Skeleton";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
-
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
 
 import { useTranslation } from "react-i18next";
 
@@ -39,6 +32,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Checkbox, FormLabel } from "@mui/material";
+import { Editor } from "primereact/editor";
 
 const useStyles = makeStyles({
   container: {
@@ -73,7 +67,7 @@ export default function AssignmentDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -85,12 +79,7 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentName, setAssignmentName] = useState("");
   const [
     assignmentDescriptionEditor,
-    setAssignmentDescriptionEditor
-  ] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
-    )
-  );
+    setAssignmentDescriptionEditor ] = useState( '' );
   const [assignmentId, setAssignmentId] = useState(
     "new" === assignmentIdParam ? null : assignmentIdParam
   );
@@ -158,14 +147,6 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    console.log(
-      method,
-      url,
-      assignmentName,
-      assignmentTextSub,
-      assignmentGroupOption,
-      assignmentRubricId
-    );
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -174,9 +155,7 @@ export default function AssignmentDataAdmin(props) {
         assignment: {
           course_id: courseIdParam,
           name: assignmentName,
-          description: draftToHtml(
-            convertToRaw(assignmentDescriptionEditor.getCurrentContent())
-          ),
+          description: assignmentDescriptionEditor,
           active: assignmentActive,
           start_date: assignmentStartDate,
           end_date: assignmentEndDate,
@@ -206,7 +185,6 @@ export default function AssignmentDataAdmin(props) {
       });
   };
 
-
   const setAssignmentData = data => {
     const projects = new Array({ id: -1, name: "None Selected" }).concat(
       data.projects
@@ -224,13 +202,7 @@ export default function AssignmentDataAdmin(props) {
     const assignment = data.assignment;
     setAssignmentId(assignment.id);
     setAssignmentName(assignment.name || "");
-    setAssignmentDescriptionEditor(
-      EditorState.createWithContent(
-        ContentState.createFromBlockArray(
-          htmlToDraft(assignment.description || "").contentBlocks
-        )
-      )
-    );
+    setAssignmentDescriptionEditor( assignment.description || '' );
     setAssignmentActive(assignment.active || false);
     var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
       assignment.course.timezone
@@ -271,9 +243,6 @@ export default function AssignmentDataAdmin(props) {
       });
   };
 
-  const changeTab = (event, name) => {
-    setCurTab(name);
-  };
 
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton variant="text" />}>
@@ -326,17 +295,8 @@ export default function AssignmentDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
-        <TabContext value={curTab}>
-          <Box>
-            <TabList value={curTab} onChange={changeTab} centered>
-              <Tab value="details" label={t("edit.assignment_details_pnl")} />
-              <Tab
-                value="results"
-                label={t("edit.assignment_submissions_pnl")}
-              />
-            </TabList>
-          </Box>
-          <TabPanel value="details">
+        <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+          <TabPanel header={t("edit.assignment_details_pnl")}>
             <React.Fragment>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
@@ -352,47 +312,13 @@ export default function AssignmentDataAdmin(props) {
                 </Grid>
                 <Grid item xs={12}>
                   <Editor
-                    wrapperId="Description"
-                    label={t("description")}
+                    id="description"
+                    aria-label={t("description")}
                     placeholder={t("description")}
-                    onEditorStateChange={setAssignmentDescriptionEditor}
-                    toolbarOnFocus
-                    toolbar={{
-                      options: [
-                        "inline",
-                        "list",
-                        "link",
-                        "blockType",
-                        "fontSize",
-                        "fontFamily"
-                      ],
-                      inline: {
-                        options: [
-                          "bold",
-                          "italic",
-                          "underline",
-                          "strikethrough",
-                          "monospace"
-                        ],
-                        bold: { className: "bordered-option-classname" },
-                        italic: { className: "bordered-option-classname" },
-                        underline: { className: "bordered-option-classname" },
-                        strikethrough: {
-                          className: "bordered-option-classname"
-                        },
-                        code: { className: "bordered-option-classname" }
-                      },
-                      blockType: {
-                        className: "bordered-option-classname"
-                      },
-                      fontSize: {
-                        className: "bordered-option-classname"
-                      },
-                      fontFamily: {
-                        className: "bordered-option-classname"
-                      }
+                    value={assignmentDescriptionEditor}
+                    onTextChange={(event)=>{
+                      setAssignmentDescriptionEditor( event.htmlValue );
                     }}
-                    editorState={assignmentDescriptionEditor}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -560,14 +486,14 @@ export default function AssignmentDataAdmin(props) {
               <Typography>{saveStatus}</Typography>
             </React.Fragment>
           </TabPanel>
-          <TabPanel value="results">
+          <TabPanel header={t("edit.assignment_submissions_pnl")}>
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
                 Nothing here yet
               </Grid>
             </Grid>
           </TabPanel>
-        </TabContext>
+        </TabView>
       </Paper>
     </Suspense>
   );
