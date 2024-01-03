@@ -79,6 +79,42 @@ en:
     no_roster: That user is not listed as a student in that course.
     editing: Editing Course
     participants: Participants
+    wizard:
+      advanced_switch: Switch to advanced mode
+      wizard_switch: Switch to assist me mode
+      name_number_ttl: What course is this?
+      name_number_dsec: >
+        Please enter the course title and the course identifier. These
+        are how the course will be presented to you and your students.
+        You are free to enter whatever you'd like, but most schools have
+        both names and numbers that students and instructors will be
+        familiar with and these should be used here.
+      course_description_desc: >
+        Below you can enter a description of the course. It is rarely
+        shown to students or instructors, so this is optional and
+        primarily for your benefit.
+      instructor_ttl: Who will teach this course?
+      instructor_is_you_desc: >
+        Will you be teaching this course? Say 'yes' even if you will
+        have assistants or co-teachers.
+      instructor_additional: >
+        Please enter the email addresses of all course instructors
+        (excluding yourself).
+      dates_ttl: When will this course run?
+      dates_desc: >
+        Please enter the start and end date for this course. All
+        course activities must fall within these dates as we use this
+        information to perform some sanity checks and make sure
+        activities aren't accidentally planned for dates that won't make
+        any sense.
+      confirm_save_ttl: Is this all correct?
+      confirm_save_desc: >
+        Please review all the information we've captured so far to make
+        sure it's correct before we save it. If anything is incorrect,
+        you can use the buttons above to go to fix it. After the course
+        is saved, you'll be able to add activities and begin enrolling
+        students.
+      confirm_save_btn: This is all correct &mdash; let's create it!
     activities: 
       type_col: Type
       name_col: Name
