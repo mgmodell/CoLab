@@ -4,10 +4,10 @@ import axios from "axios";
 
 import { useDispatch } from "react-redux";
 import {
-    startTask,
-    endTask,
-    addMessage,
-    Priorities
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
@@ -59,9 +59,9 @@ export default function RubricList(props) {
     }).catch(error => {
       console.log(error);
     })
-    .finally(() => {  
-      dispatch(endTask("loading"));
-    })
+      .finally(() => {
+        dispatch(endTask("loading"));
+      })
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function RubricList(props) {
 
   const postNewMessage = msgs => {
     Object.keys(msgs).forEach(key => {
-      if( 'main' === key ) {
+      if ('main' === key) {
         dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
       } else {
         dispatch(addMessage(msgs[key], new Date(), Priorities.WARNING));
@@ -179,15 +179,15 @@ export default function RubricList(props) {
                           .get(url)
                           .then(resp => {
                             // check for possible errors
-                            postNewMessage( resp.data.messages );
+                            postNewMessage(resp.data.messages);
                             getRubrics();
                           })
                           .catch(error => {
                             console.log(error);
                           })
                           .finally(() => {
-                            dispatch(endTask( ) );
-                          } );
+                            dispatch(endTask());
+                          });
                       }}
                       aria-label={t('rubric.copy')}
                       size="large"
@@ -217,9 +217,7 @@ export default function RubricList(props) {
                       size="large"
                     />
                   </>
-
                 )
-
               }
               }
             />
