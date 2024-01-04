@@ -361,6 +361,9 @@ export default function Welcome(props: Props) {
             id="title_text"
             style={{
                x: 0,
+               // Learned this here:
+               // https://stackoverflow.com/questions/55127454/how-to-apply-transform-origin-to-svg-element
+               // https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events
                pointerEvents: 'none',
 
                strokeWidth: .125,
