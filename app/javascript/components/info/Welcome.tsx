@@ -361,6 +361,7 @@ export default function Welcome(props: Props) {
             id="title_text"
             style={{
                x: 0,
+               pointerEvents: 'none',
 
                strokeWidth: .125,
                fill: 'white',
