@@ -60,3 +60,18 @@ a:hover, a:active {
   width: 100%;
   margin-top: 3rem;
 }
+
+.intro {
+  color: azure;
+}
+
+.intro a {
+  color: hsl(247, 41%, 69%);
+  text-decoration: none;
+}
+
+
+.intro a:hover, a:active {
+  color: hsl(247, 41%, 69%);
+  text-decoration: underline;
+}

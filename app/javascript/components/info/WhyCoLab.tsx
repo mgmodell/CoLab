@@ -15,7 +15,7 @@ type Props = {
   width: number;
 };
 
-export default function WhyCoLab(props) {
+export default function WhyCoLab(props: Props) {
   const viewBox = [0, 0, 400, 225].join(" ");
 
   const location = useLocation();
@@ -38,11 +38,11 @@ export default function WhyCoLab(props) {
   }));
 
   const titles = [
-    <p style={{ color: "azure" }}>We dream of teamwork that looks like this</p>,
-    <p style={{ color: "azure" }}>But we often learn that&hellip;</p>,
-    <p style={{ color: "azure" }}>It feels like an inequitable experience</p>,
-    <p style={{ color: "azure" }}>And negative experiences take many shapes</p>,
-    <p style={{ color: "azure" }}>
+    <p >We dream of teamwork that looks like this</p>,
+    <p >But we often learn that&hellip;</p>,
+    <p >It feels like an inequitable experience</p>,
+    <p >And negative experiences take many shapes</p>,
+    <p >
       Or possibly the results just feel cookie-cutter and boring?
     </p>,
     <Container
@@ -504,9 +504,8 @@ export default function WhyCoLab(props) {
       />
       <animated.polyline
         points={`${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY -
-          NavSpecs.dotRad} ${rightArrowLoc},${
-          NavSpecs.centerY
-        } ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY +
+          NavSpecs.dotRad} ${rightArrowLoc},${NavSpecs.centerY
+          } ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY +
           NavSpecs.dotRad}`}
         x1={rightArrowLoc}
         y1={NavSpecs.centerY}
@@ -608,7 +607,9 @@ export default function WhyCoLab(props) {
         x={titleSpring.x}
         y={titleSpring.y}
       >
-        {titles[curScene]}
+        <div className="intro">
+          {titles[curScene]}
+        </div>
       </EmbeddedHTMLInSVG>
       {curNav}
     </svg>

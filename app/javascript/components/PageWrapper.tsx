@@ -42,7 +42,6 @@ const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
 
 const Privacy = React.lazy(() => import("./info/Privacy"));
 const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
-const WhatIsIt = React.lazy(() => import("./info/WhatIsIt"));
 const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
 const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
 const Demo = React.lazy(() => import("./Demo"));
@@ -144,7 +143,6 @@ export default function PageWrapper(props: Props) {
             </Route>
 
             <Route path="user/password/edit" element={<PasswordEdit />} />
-            <Route path={`what_is_colab`} element={<WhatIsIt />} />
             <Route path={`tos`} element={<TermsOfService />} />
             <Route path={`privacy`} element={<Privacy />} />
             <Route
