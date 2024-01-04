@@ -38,7 +38,7 @@ type Props = {
   hidden: boolean;
 };
 
-export default function SubjectChart(props : Props) {
+export default function SubjectChart(props: Props) {
   const category = "graphing";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]

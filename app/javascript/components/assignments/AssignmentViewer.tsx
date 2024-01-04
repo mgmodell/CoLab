@@ -157,8 +157,8 @@ export default function AssignmentViewer(props) {
     output = <Skeleton className="mb-2" />;
   } else {
     output = (
-      <TabView activeIndex={curTab} onTabChange={(e) => setCurTab(e.index)}>
-        <TabPanel header={'Overview'} >
+      <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
+        <TabPanel header={"Overview"}>
           <Grid container spacing={1} columns={70}>
             <Grid item xs={15}>
               <Typography variant="h6">{t("name")}:</Typography>
@@ -175,24 +175,21 @@ export default function AssignmentViewer(props) {
             </Grid>
             <RubricViewer rubric={assignment.rubric} />
           </Grid>
-
         </TabPanel>
-        <TabPanel
-          header={t('submissions.response_tab_lbl')}
-            >
+        <TabPanel header={t("submissions.response_tab_lbl")}>
           <AssignmentSubmission
             assignment={assignment}
             reloadCallback={loadAssignment}
           />
         </TabPanel>
-        <TabPanel header={t('progress.progress_tab_lbl')}
-            disabled={
-              assignment.startDate > curDate || assignment.endDate < curDate
-            }
-            >
-          {t('progress.in_progress_msg')}
+        <TabPanel
+          header={t("progress.progress_tab_lbl")}
+          disabled={
+            assignment.startDate > curDate || assignment.endDate < curDate
+          }
+        >
+          {t("progress.in_progress_msg")}
         </TabPanel>
-
       </TabView>
     );
   }

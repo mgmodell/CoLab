@@ -4,11 +4,9 @@ import { setDirty } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-
-import {Button } from 'primereact/button';
-import {Panel } from 'primereact/panel';
+import { Button } from "primereact/button";
+import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
-
 
 import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
@@ -23,7 +21,7 @@ type Props = {
   reactionFunc: Function;
 };
 
-export default function ExperienceReaction(props : Props) {
+export default function ExperienceReaction(props: Props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
@@ -137,4 +135,3 @@ export default function ExperienceReaction(props : Props) {
     </Panel>
   );
 }
-

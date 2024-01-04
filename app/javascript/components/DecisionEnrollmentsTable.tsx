@@ -8,16 +8,15 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 import { useTranslation } from "react-i18next";
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import StandardListToolbar from "./StandardListToolbar";
 
-
 type Props = {
-  init_url: string,
-  update_url: string
+  init_url: string;
+  update_url: string;
 };
 
 export default function DecisionEnrollmentsTable(props: Props) {
@@ -49,11 +48,11 @@ export default function DecisionEnrollmentsTable(props: Props) {
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
-      }).finally(() => {
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
-
 
   const decision = (id, accept) => {
     setWorking(true);
@@ -76,14 +75,14 @@ export default function DecisionEnrollmentsTable(props: Props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
-      }).finally(() => {
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
 
   return 0 < requests.length ? (
     <Panel>
-
       <h1>Decision Enrollment Requests</h1>
       <p>
         The following students are trying to enroll in your course. Please
@@ -92,66 +91,46 @@ export default function DecisionEnrollmentsTable(props: Props) {
       <WorkingIndicator identifier="loading_enrollments" />
       <DataTable
         value={requests.filter(request => {
-          return filterText.length === 0 || request.cap_name.includes(filterText.toUpperCase());
+          return (
+            filterText.length === 0 ||
+            request.cap_name.includes(filterText.toUpperCase())
+          );
         })}
         resizableColumns
         tableStyle={{
-          minWidth: '50rem'
+          minWidth: "50rem"
         }}
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, 100]
-        }
+        rowsPerPageOptions={[5, 10, 20, 100]}
         virtualScrollerOptions={{ itemSize: 100 }}
         header={
           <StandardListToolbar
-            itemType={'invitation'}
-            filtering={
-              {
-                filterValue: filterText,
-                setFilterFunc: setFilterText
-              }
-            }
-          />}
+            itemType={"invitation"}
+            filtering={{
+              filterValue: filterText,
+              setFilterFunc: setFilterText
+            }}
+          />
+        }
         sortField="name"
-        paginatorDropdownAppendTo={'self'}
+        paginatorDropdownAppendTo={"self"}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
         //paginatorLeft={paginatorLeft}
         //paginatorRight={paginatorRight}
         dataKey="id"
       >
-        <Column
-          header='First Name'
-          field='first_name'
-          sortable
-
-        />
-        <Column
-          header='Last Name'
-          field='last_name'
-          sortable
-
-        />
-        <Column
-          header='Course Name'
-          field='course_name'
-          sortable
-
-        />
-        <Column
-          header='Course Number'
-          field='course_number'
-          sortable
-
-        />
+        <Column header="First Name" field="first_name" sortable />
+        <Column header="Last Name" field="last_name" sortable />
+        <Column header="Course Name" field="course_name" sortable />
+        <Column header="Course Number" field="course_number" sortable />
         <Column
           header={t("accept_decline")}
-          field='id'
+          field="id"
           sortable
-          body={(rowData) => {
+          body={rowData => {
             const id = rowData.id;
             return (
               <React.Fragment>
@@ -182,11 +161,9 @@ export default function DecisionEnrollmentsTable(props: Props) {
                   disabled={working}
                 />
               </React.Fragment>
-            )
+            );
           }}
-
         />
-
       </DataTable>
     </Panel>
   ) : null;

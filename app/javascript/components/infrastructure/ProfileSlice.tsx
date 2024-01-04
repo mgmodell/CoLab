@@ -87,24 +87,24 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: initialState,
   reducers: {
-    setRetrievedProfile (state, action) {
-        state.user = action.payload;
-        state.lastRetrieved = Date.now();
+    setRetrievedProfile(state, action) {
+      state.user = action.payload;
+      state.lastRetrieved = Date.now();
     },
-    setProfile (state, action) {
-        state.user = action.payload;
+    setProfile(state, action) {
+      state.user = action.payload;
     },
-    setAnonymize (state, action) {
-        state.user.anonymize = action.payload;
+    setAnonymize(state, action) {
+      state.user.anonymize = action.payload;
     },
-    setProfileTimezone (state, action) {
-        state.user.timezone = action.payload;
+    setProfileTimezone(state, action) {
+      state.user.timezone = action.payload;
     },
-    setProfileTheme (state, action) {
-        state.user.theme_id = action.payload;
+    setProfileTheme(state, action) {
+      state.user.theme_id = action.payload;
     },
-    clearProfile (state, action) {
-        state = initialState;
+    clearProfile(state, action) {
+      state = initialState;
     }
   }
 });

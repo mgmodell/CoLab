@@ -5,7 +5,7 @@ import { ProgressBar } from "primereact/progressbar";
 type Props = {
   identifier?: string;
 };
-export default function WorkingIndicator(props : Props) {
+export default function WorkingIndicator(props: Props) {
   const working = useTypedSelector(state => {
     let accum = 0;
     if (undefined === props.identifier) {
@@ -25,6 +25,6 @@ export default function WorkingIndicator(props : Props) {
       mode="indeterminate"
       style={{ height: "6px", width: "100%" }}
       id={props.identifier || "waiting"}
-      />
+    />
   ) : null;
 }

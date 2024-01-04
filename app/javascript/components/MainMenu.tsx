@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ export default function MainMenu(props: Props) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [t, i18n] = useTranslation();
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
@@ -43,37 +44,45 @@ export default function MainMenu(props: Props) {
   });
 
   const menuButton = useRef(null);
+  enum MENUS {
+    ADMIN = "admin",
+    ABOUT = "about"
+  };
+
+  const toggleMenu = (menu: MENUS) => {
+    switch (menu) {
+      case MENUS.ADMIN:
+        setAdminOpen(!adminOpen);
+        setAboutOpen(false);
+        break;
+      case MENUS.ABOUT:
+        setAboutOpen(!aboutOpen);
+        setAdminOpen(false);
+        break;
+      default:
+        setAboutOpen(false);
+        setAdminOpen(false);
+        break;
+    }
+  }
 
   const dispatch = useDispatch();
 
-  const toggleDrawer = event => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    if (menuOpen) {
-      setAdminOpen(false);
-    }
-    setMenuOpen(!menuOpen);
-  };
 
   const navTo = url => {
     setMenuOpen(false);
     navigate(url);
   };
 
-
   const buildMyMenu = () => {
-    let builtMenu =
-      [{
+    let builtMenu = [
+      {
         label: t("home.title"),
         icon: "pi pi-fw pi-home",
         id: "home-menu-item",
         command: () => navTo("/home")
-      }];
+      }
+    ];
 
     if (isLoggedIn) {
       builtMenu.push({
@@ -83,30 +92,29 @@ export default function MainMenu(props: Props) {
         command: () => navTo("/profile")
       });
       if (user.is_instructor || user.is_admin) {
-        let adminItems =
-          [
-            {
-              label: t("courses_edit"),
-              icon: "pi pi-fw pi-book",
-              id: "courses-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/courses")
-            },
-            {
-              label: t("reporting"),
-              icon: "pi pi-fw pi-chart-bar",
-              id: "reporting-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/reporting"),
-            },
-            {
-              label: t("rubrics_edit"),
-              icon: "pi pi-fw pi-table",
-              id: "rubrics-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/rubrics"),
-            },
-          ];
+        let adminItems = [
+          {
+            label: t("courses_edit"),
+            icon: "pi pi-fw pi-book",
+            id: "courses-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/courses")
+          },
+          {
+            label: t("reporting"),
+            icon: "pi pi-fw pi-chart-bar",
+            id: "reporting-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/reporting")
+          },
+          {
+            label: t("rubrics_edit"),
+            icon: "pi pi-fw pi-table",
+            id: "rubrics-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/rubrics")
+          }
+        ];
         if (user.is_admin) {
           adminItems.push(
             {
@@ -130,26 +138,25 @@ export default function MainMenu(props: Props) {
               visible: adminOpen,
               command: () => navTo("/admin/consent_forms")
             }
-
           );
         }
-          builtMenu.push(
-            {
-              separator: true
-            },
+        builtMenu.push(
+          {
+            separator: true
+          },
 
-            {
-              label: t("administration"),
-              icon: "pi pi-fw pi-cog",
-              id: "administration-menu",
-              command: () =>{
-                setAdminOpen(!adminOpen);
-              },
+          {
+            label: t("administration"),
+            icon: "pi pi-fw pi-cog",
+            id: "administration-menu",
+            command: () => {
+              toggleMenu(MENUS.ADMIN);
             }
-          );
-          adminItems.forEach((menuItem) => {
-            builtMenu.push(menuItem);
-          });
+          }
+        );
+        adminItems.forEach(menuItem => {
+          builtMenu.push(menuItem);
+        });
       }
     }
     builtMenu.push(
@@ -157,10 +164,10 @@ export default function MainMenu(props: Props) {
         separator: true
       },
       {
-        template: (<DiversityCheck diversityScoreFor={props.diversityScoreFor} />),
+        template: <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
       },
       {
-        label: t('titles.demonstration'),
+        label: t("titles.demonstration"),
         icon: "pi pi-fw pi-play",
         id: "demo-menu-item",
         command: () => navTo("/demo")
@@ -174,94 +181,67 @@ export default function MainMenu(props: Props) {
         }
       },
       {
+        separator: true
+      },
+      {
         label: t("about"),
         icon: "pi pi-fw pi-info-circle",
         id: "about-menu-item",
         command: () => {
           navTo(props.moreInfoUrl);
+          //toggleMenu(MENUS.ABOUT);
         }
-      }
-    )
+      },
+      {
+        separator: true
+      },
+    );
 
     if (isLoggedIn) {
-      builtMenu.push(
-        {
-          label: t("logout"),
-          icon: "pi pi-fw pi-sign-out",
-          id: "logout-menu-item",
-          command: () => {
-            dispatch(signOut());
-            setMenuOpen(false);
-          }
+      builtMenu.push({
+        label: t("logout"),
+        icon: "pi pi-fw pi-sign-out",
+        id: "logout-menu-item",
+        command: () => {
+          dispatch(signOut());
+          setMenuOpen(false);
         }
-      );
+      });
     }
-
 
     return builtMenu;
-  }
+  };
 
-  const genericOpts = [
-    {
-      label: t('titles.demonstration'),
-      icon: "pi pi-fw pi-play",
-      command: () => navTo("/demo")
-    },
-    {
-      label: t("support_menu"),
-      icon: "pi pi-fw pi-question-circle",
-      command: () => {
-        window.location.href = `mailto:${props.supportAddress}`;
-      }
-    },
-    {
-      label: t("about"),
-      icon: "pi pi-fw pi-info-circle",
-      commant: () => {
-        navTo(props.moreInfoUrl);
-      }
-    }
-
-  ]
 
   //  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
-
 
   return (
     <React.Fragment>
       <Button
         id="main-menu-button"
         text
-        onClick={(event) => {
+        onClick={() => {
           setMenuOpen(!menuOpen);
         }}
         className="p-mr-2"
-        >
-          <Logo
-            height={48}
-            width={48}
-            spinning={working}
-            />
-        </Button>
-        <Sidebar
-          visible={menuOpen}
-          onHide={() => setMenuOpen(false)}
-          modal
-          position={'left'}
-          style={{width: '15rem'}}
-          baseZIndex={1000000}
-          >
-      <Menu
-        appendTo={'self'}
-        closeOnEscape
-        ref={menuButton}
-        model={
-          buildMyMenu()
-        }
-      />
-        </Sidebar>
-
+      >
+        <Logo height={48} width={48} spinning={working} />
+      </Button>
+      <Sidebar
+        visible={menuOpen}
+        onHide={() => setMenuOpen(false)}
+        modal
+        position={"left"}
+        style={{ width: "15rem" }}
+        baseZIndex={1000000}
+      >
+        <Menu
+          appendTo={"self"}
+          closeOnEscape
+          ref={menuButton}
+          model={buildMyMenu()}
+        />
+      </Sidebar>
     </React.Fragment>
   );
 }
-

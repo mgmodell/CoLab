@@ -123,18 +123,18 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
     score = 0
     case competence
     when 'proficient'
-      level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
-      proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size}')]")
+      level_elements = find_all(:xpath, "//td[contains(@id,'level-#{criterium.id}')]")
+      proficient_elem = find(:xpath, "//td[contains(@id,'level-#{criterium.id}-#{level_elements.size}')]")
       proficient_elem.click
       score = 100
     when 'competent'
-      level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
+      level_elements = find_all(:xpath, "//td[contains(@id,'level-#{criterium.id}')]")
       competent_level = level_elements.size > 1 ? level_elements.size - 1 : 1
-      competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
+      competent_elem = find(:xpath, "//td[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
       competent_elem.click
       score = ( (competent_level) * 100.0 / level_elements.size).round
     when 'novice'
-      elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
+      elem = find(:xpath, "//td[@id='minimum-#{criterium.id}']")
       elem.click
       score = 0
     when 'numbers', 'mixed'

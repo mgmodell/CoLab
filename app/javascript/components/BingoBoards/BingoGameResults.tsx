@@ -42,7 +42,7 @@ function PaperComponent(props) {
   );
 }
 
-export default function BingoGameResults(props : Props) {
+export default function BingoGameResults(props: Props) {
   const [curTab, setCurTab] = useState(0);
 
   const renderBoard = board => {
@@ -87,7 +87,7 @@ export default function BingoGameResults(props : Props) {
           <TabPanel header={"Scored Results"}>
             {renderBoard(props.board)}
           </TabPanel>
-          <TabPanel header={'Answer Key'}>
+          <TabPanel header={"Answer Key"}>
             <ScoredGameDataTable candidates={props.candidates} />
           </TabPanel>
         </TabView>

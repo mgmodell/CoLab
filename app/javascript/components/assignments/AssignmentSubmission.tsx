@@ -41,7 +41,7 @@ export default function AssignmentSubmission(props: Props) {
   const [submittedDate, setSubmittedDate] = useState<DateTime | null>(null);
   const [withdrawnDate, setWithdrawnDate] = useState<DateTime | null>(null);
   const [recordedScore, setRecordedScore] = useState(0);
-  const [submissionTextEditor, setSubmissionTextEditor] = useState( '' );
+  const [submissionTextEditor, setSubmissionTextEditor] = useState("");
   const [submissionLink, setSubmissionLink] = useState("");
   const notSubmitted = submittedDate === null;
 
@@ -79,10 +79,10 @@ export default function AssignmentSubmission(props: Props) {
         } else {
           setWithdrawnDate(null);
         }
-        setRecordedScore(data.submission.recorded_score || data.submission.calculated_score );
-        setSubmissionTextEditor(
-          data.submission.sub_text || ''
+        setRecordedScore(
+          data.submission.recorded_score || data.submission.calculated_score
         );
+        setSubmissionTextEditor(data.submission.sub_text || "");
       })
       .then(response => {
         setDirty(false);
@@ -98,15 +98,15 @@ export default function AssignmentSubmission(props: Props) {
   const sub_text = props.assignment.textSub ? (
     <Grid item xs={12}>
       <Editor
-        id='description'
+        id="description"
         placeholder={t("submissions.sub_text_placeholder")}
         aria-label={t("submissions.sub_text_placeholder")}
         readOnly={!notSubmitted}
         value={submissionTextEditor}
-        onTextChange={(e)=>{
-          setSubmissionTextEditor( e.htmlValue );
+        onTextChange={e => {
+          setSubmissionTextEditor(e.htmlValue);
         }}
-        />
+      />
     </Grid>
   ) : null;
 
@@ -143,7 +143,7 @@ export default function AssignmentSubmission(props: Props) {
       method: method,
       data: {
         submission: {
-          sub_text:  submissionTextEditor,
+          sub_text: submissionTextEditor,
           sub_link: submissionLink,
           assignment_id: props.assignment.id
         },
@@ -171,7 +171,7 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor( data.submission.sub_text );
+          setSubmissionTextEditor(data.submission.sub_text);
         }
       })
       .then(props.reloadCallback)
@@ -207,7 +207,7 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor( data.submission.sub_text || '' );
+          setSubmissionTextEditor(data.submission.sub_text || "");
         }
       })
       .then(props.reloadCallback)
@@ -226,10 +226,7 @@ export default function AssignmentSubmission(props: Props) {
   );
 
   const draftSubmitBtn = (
-    <Button
-      disabled={ !notSubmitted}
-      onClick={() => saveSubmission(true)}
-    >
+    <Button disabled={!notSubmitted} onClick={() => saveSubmission(true)}>
       {t("submissions.submit_revision_btn")}
     </Button>
   );
@@ -245,7 +242,9 @@ export default function AssignmentSubmission(props: Props) {
 
   const withdrawBtn = !notSubmitted ? (
     <Button
-      disabled={notSubmitted || null !== withdrawnDate || null !== recordedScore  }
+      disabled={
+        notSubmitted || null !== withdrawnDate || null !== recordedScore
+      }
       onClick={() => withdrawSubmission()}
     >
       {t("submissions.withdraw_btn")}

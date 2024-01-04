@@ -20,6 +20,7 @@ en:
     update_success: Rubric was updated successfully!
     publish_success: Rubric was published successfully!
     activate_success: Rubric was activated
+    copy_success: Rubric was copied successfully!
     deactivate_success: Rubric was deactivated
     back: Back to the list of rubrics
     name: Name

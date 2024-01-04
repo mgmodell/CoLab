@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { ProgressBar } from "primereact/progressbar";
 import { Tooltip } from "primereact/tooltip";
 import { Toolbar } from "primereact/toolbar";
-import { ColumnMeta } from '../infrastructure/Types';
+import { ColumnMeta } from "../infrastructure/Types";
 import { MultiSelect } from "primereact/multiselect";
+import { Knob } from "primereact/knob";
 
 type Props = {
   progress: number;
@@ -31,7 +31,6 @@ export default function CandidateReviewListToolbar(props: Props) {
 
   const onColumnToggle = event => {
     props.setVisibleColumnsFunc(event.value);
-
   };
 
   const columnToggle = (
@@ -81,11 +80,11 @@ export default function CandidateReviewListToolbar(props: Props) {
         })}
         data-pr-position="left"
       >
-        <ProgressBar
+        <Knob
           value={props.progress}
           showValue
-          unit="%"
-          mode="determinate"
+          size={50}
+          valueTemplate="{value}%"
         />
         {props.reviewStatus}
       </i>

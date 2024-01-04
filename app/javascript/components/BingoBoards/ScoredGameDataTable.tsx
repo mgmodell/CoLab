@@ -25,7 +25,7 @@ type Props = {
 };
 
 export default function ScoredGameDataTable(props: Props) {
-  const category = 'bingo_game';
+  const category = "bingo_game";
   const { t } = useTranslation(`${category}s`);
   const optColumns = [
     t(`scored_game.${OPT_COLS.DEFINITION}`),
@@ -34,32 +34,30 @@ export default function ScoredGameDataTable(props: Props) {
   ];
   const [visibleColumns, setVisibleColumns] = useState(optColumns);
 
-
   return (
     <DataTable
       value={props.candidates}
       resizableColumns
       tableStyle={{
-        minWidth: '50rem'
+        minWidth: "50rem"
       }}
       reorderableColumns
       paginator
       rows={5}
-      rowsPerPageOptions={
-        [5, 10, 20, props.candidates.length]
-      }
+      rowsPerPageOptions={[5, 10, 20, props.candidates.length]}
       virtualScrollerOptions={{ itemSize: 100 }}
       header={
         <StandardListToolbar
-          itemType={t('scored_game.list_title')}
+          itemType={t("scored_game.list_title")}
           columnToggle={{
             optColumns: optColumns,
             visibleColumns: visibleColumns,
-            setVisibleColumnsFunc: setVisibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns
           }}
-        />}
+        />
+      }
       sortField="term"
-      paginatorDropdownAppendTo={'self'}
+      paginatorDropdownAppendTo={"self"}
       paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="{first} to {last} of {totalRecords}"
       //paginatorLeft={paginatorLeft}
@@ -81,10 +79,8 @@ export default function ScoredGameDataTable(props: Props) {
           filter
           key="definition"
         />
-
       ) : null}
       {visibleColumns.includes(t(OPT_COLS.FEEDBACK)) ? (
-
         <Column
           header={t(`scored_game.${OPT_COLS.FEEDBACK}`)}
           field="feedback"

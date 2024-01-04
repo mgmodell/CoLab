@@ -1,10 +1,8 @@
-import React, { Suspense, useState, useEffect, Dispatch } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, Dispatch } from "react";
+import axios from "axios";
 
 //Redux store stuff
-
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import parse from 'html-react-parser';
 import { useDispatch } from "react-redux";
 import {
   startTask,endTask,
@@ -12,14 +10,17 @@ import {
 } from "../infrastructure/StatusSlice";
 
 import { Editor } from "primereact/editor";
+import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import { Button, Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
-import { IRubricData, ICriteria } from "./RubricViewer";
-import Grid from "@mui/system/Unstable_Grid/Grid";
+import { ICriteria } from "./RubricViewer";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
-import { number } from "prop-types";
-import axios from "axios";
+
+import { Col, Container, Row } from "react-grid-system";
+import { Slider } from "primereact/slider";
+import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
+import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
 
 type Props = {
   submission: ISubmissionData;
@@ -53,7 +54,7 @@ export default function RubricScorer(props: Props) {
 
   const [overrideScore, setOverrideScore] = useState( false );
   const [overriddenScore, setOverriddenScore] = useState <number | null >( null );
-  const handleOverRideScoreChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+  const handleOverRideScoreChange = () =>{
     const newOverrideSetting = !overrideScore;
     if( newOverrideSetting ){
       setOverriddenScore( calcScore( ) );
@@ -121,7 +122,7 @@ export default function RubricScorer(props: Props) {
 
       })
       .finally(()=>{
-        dispatch(endTask());
+        dispatch(endTask({}));
       })
 
 
@@ -141,64 +142,82 @@ export default function RubricScorer(props: Props) {
 
 
   const evaluation = props.submission?.rubric !== undefined ? (
-    <Grid container columns={80}>
-            <Grid xs={15}>
-              <Typography variant="h6">{t('rubric.name' )}:</Typography>
-            </Grid>
-            <Grid xs={25}>
-              <Typography>
-                {props.submission.rubric.name}
-              </Typography>
-            </Grid>
-            <Grid xs={15}>
-              <Typography variant="h6">{t('rubric.version' )}:</Typography>
-            </Grid>
-            <Grid xs={25}>
-              <Typography>
-                {props.submission.rubric.version}
-              </Typography>
-            </Grid>
-            <Grid xs={15}>
-              <Typography variant="h6">{t('feedback' )}:</Typography>
-            </Grid>
-            <Grid xs={55}>
-              <Editor
-                id='overall-feedback'
-                placeholder={t('feedback')}
-                aria-label={t('feedback')}
-                value={props.submission.submission_feedback.feedback}
-                onTextChange={(e)=>{
-                      props.submissionReducer({
-                        type: SubmissionActions.set_feedback_overall,
-                        submission_feedback: e.htmlValue,
-                      })
+    <Container fluid>
+      <Row>
+        <Col xs={4}>
+          <b>{t('rubric.name' )}:</b>
+        </Col>
+        <Col xs={8}>
+          <p>
+            {props.submission.rubric.name}
+          </p>
+        </Col>
+        </Row>
 
-                }}
-              />
-            </Grid>
-            <Grid xs={55}>
-              <Typography variant="h6">
-              {t('calculated_score_lbl')}:
-                </Typography>
-              <Typography >
-              {calcScore()}
-                </Typography>
-              <FormControlLabel
-                control={<Checkbox />}
-                onChange={handleOverRideScoreChange}
-                value={overrideScore}
-                label={t('override_option_lbl')} />
+      <Row>
+        <Col xs={4}>
+          <b>{t('rubric.version' )}:</b>
+        </Col>
+        <Col xs={8}>
+          <p>
+            {props.submission.rubric.version}
+          </p>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={4}>
+          <b>{t('feedback' )}:</b>
+        </Col>
+        <Col xs={8}>
+          <Editor
+            id='overall-feedback'
+            placeholder={t('feedback')}
+            aria-label={t('feedback')}
+            value={props.submission.submission_feedback.feedback}
+            onTextChange={(e)=>{
+                  props.submissionReducer({
+                    type: SubmissionActions.set_feedback_overall,
+                    submission_feedback: e.htmlValue,
+                  })
 
-              {overrideScore ? (
-                <TextField id='override-score' label={t('override_score_lbl')}
-                  type='number'
-                  value={overriddenScore} onChange={
-                    (event: React.ChangeEvent<HTMLInputElement>) => {
-                      setOverriddenScore(event.target.value);
-                    }
-                  } />
-              ): null }
-            </Grid>
+            }}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={4}>
+          <b>{t('calculated_score_lbl')}:</b>
+        </Col>
+        <Col xs={4}>
+          <p>
+          {calcScore()} &nbsp;
+          </p>
+          </Col>
+          <Col xs={4}>
+          <p>
+          <Checkbox
+            onChange={handleOverRideScoreChange}
+            checked={overrideScore}
+            inputId="score_override_chk"
+            />
+            <label htmlFor='score_override_chk'>{t('override_option_lbl')}</label>
+            {overrideScore ? (
+              <InputNumber
+                inputId='override-score'
+                value={overriddenScore}
+                onChange={
+                  (event : InputNumberChangeEvent) => {
+                    setOverriddenScore(event.value);
+                  }
+                } />
+            ) : null}
+          </p>
+        </Col>
+      </Row>
+            <table>
+              <tbody>
+
+
             {props.submission.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
               const levels = [ 
                 criterium.l1_description,
@@ -220,21 +239,21 @@ export default function RubricScorer(props: Props) {
               levels.forEach( (levelText) => {
                 index++;
                 const score = Math.round( 100 / levels.length * index );
+                const rubricRowFeedback = props.submission.submission_feedback.rubric_row_feedbacks.find(
+                  (rubricRowFeedback)=>{
+                    return criterium.id === rubricRowFeedback.criterium_id;
+                  }
+                );
+                let color = '';
+                if( rubricRowFeedback.score >= score ){
+                  color = 'green';
+                }
                 renderedLevels.push( 
-                    <Grid
+                    <td
                       key={`${criterium.id}-${index}`}
                       id={`level-${criterium.id}-${index}`}
-                      xs={span}
-                      color={()=>{
-                        const rubricRowFeedback = props.submission.submission_feedback.rubric_row_feedbacks.find(
-                          (rubricRowFeedback)=>{
-                            return criterium.id === rubricRowFeedback.criterium_id;
-                          }
-                        )
-                        if( rubricRowFeedback.score >= score ){
-                          return 'green';
-                        }
-                      }}
+                      colSpan={span}
+                      color={ color }
                       onClick={()=>{
 
                         props.submissionReducer({
@@ -245,19 +264,23 @@ export default function RubricScorer(props: Props) {
                       }}
                       >
                       {parse( levelText) }
-                    </Grid>
+                    </td>
                 );
               })
               
               return(
                 <React.Fragment key={criterium.id}>
-                  <Grid xs={80}><hr></hr></Grid>
-                  <Grid xs={10 + span}>
+                  <tr>
+                    <td colSpan={80}><hr /></td>
+                    </tr>
+                  <tr>
+
+                  <td colSpan={10 + span}>
                     &nbsp;
-                  </Grid>
-                  <Grid
+                  </td>
+                  <td
                     id={`slider-${criterium.id}`}
-                    xs={60 - span}>
+                    colSpan={60 - span}>
                     <Slider
                       defaultValue={0}
                       max={100}
@@ -266,38 +289,37 @@ export default function RubricScorer(props: Props) {
                       onChange={( event )=>{
                         props.submissionReducer({
                           type: SubmissionActions.set_criteria_score,
-                          score: event.target.value,
+                          score: event.value,
                           criterium_id: criterium.id,
                         })
                       }
                       }
                     />
 
-                  </Grid>
-                  <Grid xs={10}>
-                    <TextField
-                      id={`score-${criterium.id}`}
+                  </td>
+                  <td colSpan={10}>
+                    <InputNumber
+                      inputId={`score-${criterium.id}`}
                       value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).score}
-                      type='number'
-                      size={'small'}
-                      variant={'standard'}
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>)=>{
+                      onChange={(event: InputNumberChangeEvent)=>{
                         props.submissionReducer({
                           type: SubmissionActions.set_criteria_score,
-                          score: event.target.value,
+                          score: event.value,
                           criterium_id: criterium.id,
                         })
                       }}
                     />
-                  </Grid>
-                  <Grid
+                  </td>
+                  </tr>
+                  <tr>
+                  <td
                       id={`description-${criterium.id}`}
-                      xs={10}>
+                      colSpan={10}>
                     <b>
                       { criterium.description}
                     </b>
-                  </Grid>
-                  <Grid xs={span}
+                  </td>
+                  <td colSpan={span}
                       id={`minimum-${criterium.id}`}
                       onClick={()=>{
 
@@ -310,10 +332,10 @@ export default function RubricScorer(props: Props) {
                     }
                         >
                     {t('rubric.minimum')}
-                  </Grid>
+                  </td>
                   { renderedLevels }
-                  <Grid 
-                      xs={10}>
+                  <td 
+                      colSpan={10}>
                 <Editor
                   id={`feedback-${criterium.id}`}
                   placeholder={t("rubric.criteria_feedback")}
@@ -328,16 +350,25 @@ export default function RubricScorer(props: Props) {
                       
                   }}
                 />
-                  </Grid>
+                  </td>
+                  </tr>
                 </React.Fragment>
               )
             })}
+              </tbody>
+            </table>
 
-      <Grid xs={80}><hr></hr></Grid>
-      <Grid xs={80}>
+      <Row>
+        <Col xs={12}>
+          <hr />
+        </Col>
+      </Row>
+      <Row >
+        <Col xs={12}>
         {saveBtn}
-      </Grid>
-    </Grid>
+        </Col>
+      </Row>
+    </Container>
   ) : null;
 
   return evaluation;

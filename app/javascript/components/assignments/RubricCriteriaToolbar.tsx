@@ -8,7 +8,6 @@ import { Button } from "primereact/button";
 type Props = {
   itemType: string;
   newItemFunc: () => void;
-
 };
 
 export default function RubricCriteriaToolbar(props: Props) {
@@ -16,22 +15,21 @@ export default function RubricCriteriaToolbar(props: Props) {
   const { t } = useTranslation(`${category}s`);
 
   const title = (
-            <h3>{props.itemType.charAt(0).toUpperCase() + props.itemType.slice( 1 )}</h3>
+    <h3>{props.itemType.charAt(0).toUpperCase() + props.itemType.slice(1)}</h3>
   );
-
 
   return (
     <Toolbar
       start={title}
-      end={(
+      end={
         <Button
-          label={t("new.criteria" ) }
+          label={t("new.criteria")}
           icon="pi pi-plus"
           onClick={() => {
             props.newItemFunc();
           }}
-          />
-      )}
+        />
+      }
     />
   );
 }

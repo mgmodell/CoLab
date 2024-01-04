@@ -18,7 +18,7 @@ import { Panel } from "primereact/panel";
 interface Props {
   consentFormId?: number;
   parentUpdateFunc?: () => void;
-};
+}
 
 export default function ConsentLog(props: Props) {
   const { t } = useTranslation("consent_logs");

@@ -5,7 +5,6 @@ import { curveMonotoneX } from "@visx/curve";
 const LinePath = React.lazy(() => import("../Reports/visxLinePath"));
 const Text = React.lazy(() => import("../Reports/visxText"));
 
-
 type Props = {
   height: number;
   width: number;
@@ -13,7 +12,7 @@ type Props = {
   scores: number[];
 };
 
-export default function BingoDataRepresentation(props : Props) {
+export default function BingoDataRepresentation(props: Props) {
   const getAvg = valueArray => {
     let total = 0;
     for (var i = 0; i < valueArray.length; i++) {

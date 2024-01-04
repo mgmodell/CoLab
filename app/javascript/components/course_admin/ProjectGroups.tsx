@@ -33,7 +33,7 @@ type Props = {
   diversityRescoreGroups: string;
 };
 
-export default function ProjectGroups(props : Props) {
+export default function ProjectGroups(props: Props) {
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
@@ -166,7 +166,8 @@ export default function ProjectGroups(props : Props) {
       })
       .catch(error => {
         console.log("error", error);
-      }).finally(() => {
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
@@ -198,7 +199,8 @@ export default function ProjectGroups(props : Props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
-      }).finally(() => {  
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
@@ -223,7 +225,8 @@ export default function ProjectGroups(props : Props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
-      }).finally(() => {
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
@@ -254,7 +257,8 @@ export default function ProjectGroups(props : Props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
-      }).finally(() => {
+      })
+      .finally(() => {
         dispatch(endTask());
       });
   };
@@ -385,4 +389,3 @@ export default function ProjectGroups(props : Props) {
     </Paper>
   );
 }
-

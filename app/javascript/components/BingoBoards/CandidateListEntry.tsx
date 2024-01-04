@@ -19,10 +19,10 @@ import axios from "axios";
 import parse from "html-react-parser";
 
 type Props = {
-  rootPath?: string,
-}
+  rootPath?: string;
+};
 
-export default function CandidateListEntry(props : Props) {
+export default function CandidateListEntry(props: Props) {
   const endpointSet = "candidate_list";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -60,7 +60,6 @@ export default function CandidateListEntry(props : Props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
-    
 
     axios
       .get(url, {})
@@ -115,10 +114,10 @@ export default function CandidateListEntry(props : Props) {
   const saveCandidateList = () => {
     dispatch(startTask("saving"));
 
-    const url = 
+    const url =
       props.rootPath === undefined
-        ? `${ endpoints.baseUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${ endpoints.baseUrl}${bingoGameId}.json`;
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
     axios
       .put(url, {
@@ -173,10 +172,10 @@ export default function CandidateListEntry(props : Props) {
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
-    const url = 
-      props.rootPath === undefined 
-        ?  `${requestCollaborationUrl}${decision}.json`
-        :  `/${props.rootPath}${requestCollaborationUrl}${decision}.json` ;
+    const url =
+      props.rootPath === undefined
+        ? `${requestCollaborationUrl}${decision}.json`
+        : `/${props.rootPath}${requestCollaborationUrl}${decision}.json`;
 
     axios
       .get(url, {})
@@ -318,4 +317,3 @@ export default function CandidateListEntry(props : Props) {
     </Paper>
   );
 }
-

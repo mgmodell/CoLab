@@ -128,9 +128,10 @@ export default function SchoolDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
-      }).finally(() => {
-        dispatch(endTask("saving"));
       })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      });
   };
 
   useEffect(() => {

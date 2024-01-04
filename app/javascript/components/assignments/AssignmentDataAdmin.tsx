@@ -79,7 +79,8 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentName, setAssignmentName] = useState("");
   const [
     assignmentDescriptionEditor,
-    setAssignmentDescriptionEditor ] = useState( '' );
+    setAssignmentDescriptionEditor
+  ] = useState("");
   const [assignmentId, setAssignmentId] = useState(
     "new" === assignmentIdParam ? null : assignmentIdParam
   );
@@ -202,7 +203,7 @@ export default function AssignmentDataAdmin(props) {
     const assignment = data.assignment;
     setAssignmentId(assignment.id);
     setAssignmentName(assignment.name || "");
-    setAssignmentDescriptionEditor( assignment.description || '' );
+    setAssignmentDescriptionEditor(assignment.description || "");
     setAssignmentActive(assignment.active || false);
     var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
       assignment.course.timezone
@@ -242,7 +243,6 @@ export default function AssignmentDataAdmin(props) {
         return [{ id: -1, name: "no data" }];
       });
   };
-
 
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton variant="text" />}>
@@ -295,7 +295,10 @@ export default function AssignmentDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
-        <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+        <TabView
+          activeIndex={curTab}
+          onTabChange={event => setCurTab(event.index)}
+        >
           <TabPanel header={t("edit.assignment_details_pnl")}>
             <React.Fragment>
               <Grid container spacing={3}>
@@ -316,8 +319,8 @@ export default function AssignmentDataAdmin(props) {
                     aria-label={t("description")}
                     placeholder={t("description")}
                     value={assignmentDescriptionEditor}
-                    onTextChange={(event)=>{
-                      setAssignmentDescriptionEditor( event.htmlValue );
+                    onTextChange={event => {
+                      setAssignmentDescriptionEditor(event.htmlValue);
                     }}
                   />
                 </Grid>

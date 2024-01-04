@@ -86,37 +86,40 @@ export default function ProjectDataAdmin(props) {
     } else {
       url = url + projectId + ".json";
     }
-    axios.get(url, {}).then(response => {
-      const data = response.data;
-      const project = response.data.project;
-      setFactorPacks(factorPacks.concat(data.factorPacks));
-      setStyles(styles.concat(data.styles));
+    axios
+      .get(url, {})
+      .then(response => {
+        const data = response.data;
+        const project = response.data.project;
+        setFactorPacks(factorPacks.concat(data.factorPacks));
+        setStyles(styles.concat(data.styles));
 
-      const course = data.course;
-      setCourseName(course.name);
-      setCourseTimezone(course.timezone);
-      //Settings.defaultZone = course.timezone;
+        const course = data.course;
+        setCourseName(course.name);
+        setCourseTimezone(course.timezone);
+        //Settings.defaultZone = course.timezone;
 
-      setProjectName(project.name || "");
-      setProjectDescription(project.description || "");
-      setProjectActive(project.active);
+        setProjectName(project.name || "");
+        setProjectDescription(project.description || "");
+        setProjectActive(project.active);
 
-      var receivedDate = DateTime.fromISO(project.start_date).setZone(
-        course.timezone
-      );
-      setProjectStartDate(receivedDate);
-      receivedDate = DateTime.fromISO(project.end_date).setZone(
-        course.timezone
-      );
-      setProjectEndDate(receivedDate);
-      setProjectFactorPackId(project.factor_pack_id);
-      setProjectStyleId(project.style_id);
-      setProjectStartDOW(project.start_dow);
-      setProjectEndDOW(project.end_dow);
-      dispatch(setClean(category));
-    }).finally(() => {
-      dispatch(endTask());
-    })
+        var receivedDate = DateTime.fromISO(project.start_date).setZone(
+          course.timezone
+        );
+        setProjectStartDate(receivedDate);
+        receivedDate = DateTime.fromISO(project.end_date).setZone(
+          course.timezone
+        );
+        setProjectEndDate(receivedDate);
+        setProjectFactorPackId(project.factor_pack_id);
+        setProjectStyleId(project.style_id);
+        setProjectStartDOW(project.start_dow);
+        setProjectEndDOW(project.end_dow);
+        dispatch(setClean(category));
+      })
+      .finally(() => {
+        dispatch(endTask());
+      });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
@@ -184,9 +187,10 @@ export default function ProjectDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
-      }).finally(() => {
-        dispatch(endTask("saving"));
       })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      });
   };
   useEffect(() => {
     daysOfWeek.unshift(daysOfWeek.pop());
@@ -372,20 +376,19 @@ export default function ProjectDataAdmin(props) {
     ) : null;
 
   return (
-      <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-        <TabPanel header="Details">{detailsComponent}</TabPanel>
-        <TabPanel header="Groups">
-          <ProjectGroups
-            projectId={projectId}
-            groupsUrl={endpoints.groupsUrl}
-            diversityCheckUrl={endpoints.diversityCheckUrl}
-            diversityRescoreGroup={endpoints.diversityRescoreGroup}
-            diversityRescoreGroups={endpoints.diversityRescoreGroups}
-          />
-        </TabPanel>
-        <TabPanel header="Reporting">{chartContainer}</TabPanel>
-      </TabView>
-
+    <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+      <TabPanel header="Details">{detailsComponent}</TabPanel>
+      <TabPanel header="Groups">
+        <ProjectGroups
+          projectId={projectId}
+          groupsUrl={endpoints.groupsUrl}
+          diversityCheckUrl={endpoints.diversityCheckUrl}
+          diversityRescoreGroup={endpoints.diversityRescoreGroup}
+          diversityRescoreGroups={endpoints.diversityRescoreGroups}
+        />
+      </TabPanel>
+      <TabPanel header="Reporting">{chartContainer}</TabPanel>
+    </TabView>
   );
 }
 

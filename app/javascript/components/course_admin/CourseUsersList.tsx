@@ -26,14 +26,14 @@ const BingoDataRepresentation = React.lazy(() =>
   import("../BingoBoards/BingoDataRepresentation")
 );
 enum OPT_COLS {
-  FIRST_NAME = 'first_name',
-  LAST_NAME = 'last_name',
-  EMAIL = 'email',
-  BINGO_PERF = 'bingo_performance',
-  CHECKIN_RECORD = 'checkin_record',
-  EXPERIENCE_COMPLETION = 'experience_completion',
-  STATUS = 'status',
-  ACTIONS = 'actions',
+  FIRST_NAME = "first_name",
+  LAST_NAME = "last_name",
+  EMAIL = "email",
+  BINGO_PERF = "bingo_performance",
+  CHECKIN_RECORD = "checkin_record",
+  EXPERIENCE_COMPLETION = "experience_completion",
+  STATUS = "status",
+  ACTIONS = "actions"
 }
 
 enum UserListType {
@@ -68,7 +68,7 @@ type Props = {
   usersList: Array<StudentData>; //Need an interface for the users
   usersListUpdateFunc: (usersList: Array<StudentData>) => void;
   userType: UserListType;
-  addMessagesFunc: ({ }) => void;
+  addMessagesFunc: ({}) => void;
 };
 
 export default function CourseUsersList(props: Props) {
@@ -80,14 +80,14 @@ export default function CourseUsersList(props: Props) {
 
   const dispatch = useDispatch();
 
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
   const [columnsToShow, setColumnsToShow] = useState([]);
 
   const optColumns = [
     t(OPT_COLS.EMAIL),
     t(OPT_COLS.CHECKIN_RECORD),
     t(OPT_COLS.BINGO_PERF),
-    t(OPT_COLS.EXPERIENCE_COMPLETION),
+    t(OPT_COLS.EXPERIENCE_COMPLETION)
   ];
 
   const getUsers = () => {
@@ -125,14 +125,12 @@ export default function CourseUsersList(props: Props) {
     }
   }, []);
 
-
   const iconForStatus = status => {
     var icon;
     switch (status.toLowerCase()) {
       case "enrolled":
       case "enrolled_student":
         icon = (
-
           <>
             <i className="pi pi-check-circle enrolled" />
           </>
@@ -143,9 +141,7 @@ export default function CourseUsersList(props: Props) {
       case "requesting_student":
         icon = (
           <>
-            <HelpOutlineIcon
-              className="awaiting"
-            />
+            <HelpOutlineIcon className="awaiting" />
           </>
         );
         break;
@@ -161,9 +157,7 @@ export default function CourseUsersList(props: Props) {
         break;
       case "instructor":
       case "assistant":
-        icon = (
-          <SupervisedUserCircleIcon className="instructor" />
-        );
+        icon = <SupervisedUserCircleIcon className="instructor" />;
         break;
       default:
         console.log("status not found: " + status);
@@ -175,7 +169,7 @@ export default function CourseUsersList(props: Props) {
     return (
       <>
         <DataTable
-          value={props.usersList.filter((user) => {
+          value={props.usersList.filter(user => {
             const checkType =
               UserListType.instructor !== user.status &&
               UserListType.assistant !== user.status;
@@ -185,135 +179,133 @@ export default function CourseUsersList(props: Props) {
 
             //Add filtering here
             // return filterText.length === 0 ||  rubric.name.includes( filterText );
-
           })}
           resizableColumns
           reorderableColumns
           paginator
           rows={5}
           tableStyle={{
-            minWidth: '50rem'
+            minWidth: "50rem"
           }}
-          rowsPerPageOptions={
-            [5, 10, 20, props.usersList.filter((user) => {
+          rowsPerPageOptions={[
+            5,
+            10,
+            20,
+            props.usersList.filter(user => {
               const checkType =
                 UserListType.instructor !== user.status &&
                 UserListType.assistant !== user.status;
               return UserListType.instructor === props.userType
                 ? !checkType
                 : checkType;
-            }).length]
+            }).length
+          ]}
+          header={
+            <UserListAdminToolbar
+              courseId={props.courseId}
+              userType={props.userType}
+              usersListUpdateFunc={props.usersListUpdateFunc}
+              retrievalUrl={props.retrievalUrl}
+              addMessagesFunc={props.addMessagesFunc}
+              refreshUsersFunc={getUsers}
+              addUsersPath={addUsersPath}
+              filtering={{
+                filterValue: filterText,
+                setFilterFunc: setFilterText
+              }}
+              columnToggle={{
+                setVisibleColumnsFunc: setColumnsToShow,
+                optColumns: optColumns,
+                visibleColumns: columnsToShow
+              }}
+            />
           }
-          header={<UserListAdminToolbar
-            courseId={props.courseId}
-            userType={props.userType}
-            usersListUpdateFunc={props.usersListUpdateFunc}
-            retrievalUrl={props.retrievalUrl}
-            addMessagesFunc={props.addMessagesFunc}
-            refreshUsersFunc={getUsers}
-            addUsersPath={addUsersPath}
-            filtering={{
-              filterValue: filterText,
-              setFilterFunc: setFilterText,
-            }}
-            columnToggle={{
-              setVisibleColumnsFunc: setColumnsToShow,
-              optColumns: optColumns,
-              visibleColumns: columnsToShow
-            }}
-          />}
           sortOrder={-1}
-          paginatorDropdownAppendTo={'self'}
+          paginatorDropdownAppendTo={"self"}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
           dataKey="id"
         >
           <Column
-            header={t('first_name')}
-            field='first_name'
+            header={t("first_name")}
+            field="first_name"
             sortable
-            data-id='first_name'
+            data-id="first_name"
             filter
-            key={'first_name'}
+            key={"first_name"}
           />
           <Column
-            header={t('last_name')}
-            field='last_name'
+            header={t("last_name")}
+            field="last_name"
             sortable
-            data-id='last_name'
+            data-id="last_name"
             filter
-            key={'last_name'}
+            key={"last_name"}
           />
-          {columnsToShow.includes(t(OPT_COLS.EMAIL))
-          ? (
+          {columnsToShow.includes(t(OPT_COLS.EMAIL)) ? (
             <Column
-              header={t('email')}
-              field='email'
+              header={t("email")}
+              field="email"
               sortable
-              data-id='email'
+              data-id="email"
               filter
-              key={'email'}
-              body={(params) => {
-                return(
-                  <a href="mailto:{params.email}">{params.email}</a>
-                )
+              key={"email"}
+              body={params => {
+                return <a href="mailto:{params.email}">{params.email}</a>;
               }}
-            />)
-            : null}
-          {columnsToShow.includes(t(OPT_COLS.BINGO_PERF) ) ?
-          (
+            />
+          ) : null}
+          {columnsToShow.includes(t(OPT_COLS.BINGO_PERF)) ? (
             <Column
-              header={t('bingo_progress')}
-              field='bingo_performance'
+              header={t("bingo_progress")}
+              field="bingo_performance"
               sortable
-              data-id='bingo_performance'
+              data-id="bingo_performance"
               filter
-              key={'bingo_performance'}
-              body={(params) => {
+              key={"bingo_performance"}
+              body={params => {
                 return (
                   <BingoDataRepresentation
                     height={30}
                     width={70}
                     value={Number(params.bingo_data)}
                     scores={params.bingo_data}
-                  />);
+                  />
+                );
               }}
             />
           ) : null}
           {columnsToShow.includes(t(OPT_COLS.CHECKIN_RECORD)) ? (
             <Column
-              header={t('checkin_record')}
+              header={t("checkin_record")}
               field="assessment_performance"
-              body={(params) => {
+              body={params => {
                 return `${params.assessment_performance}%`;
               }}
             />
           ) : null}
-          {columnsToShow.includes(t(OPT_COLS.EXPERIENCE_COMPLETION))
-          ? (
+          {columnsToShow.includes(t(OPT_COLS.EXPERIENCE_COMPLETION)) ? (
             <Column
-              header={t('experience_completion')}
+              header={t("experience_completion")}
               field="experience_performance"
-              body={(params) => {
+              body={params => {
                 return `${params.experience_performance}%`;
               }}
             />
           ) : null}
-          {columnsToShow.includes(t(OPT_COLS.STATUS)) ?
-           (
+          {columnsToShow.includes(t(OPT_COLS.STATUS)) ? (
             <Column
-              header={t('status')}
+              header={t("status")}
               field="status"
-              body={(params) => {
+              body={params => {
                 return iconForStatus(params.status);
               }}
             />
-
           ) : null}
           <Column
-            header={t('actions')}
+            header={t("actions")}
             field="id"
-            body={(params) => {
+            body={params => {
               const user = props.usersList.filter(user => {
                 return params.id === user.id;
               })[0];
@@ -335,12 +327,12 @@ export default function CourseUsersList(props: Props) {
                           })
                           .catch(error => {
                             console.log("error", error);
-                          }).finally(() => {
-                            dispatch(endTask("inviting"));
                           })
+                          .finally(() => {
+                            dispatch(endTask("inviting"));
+                          });
                       }}
                     />
-
                   );
                 case UserListType.instructor:
                 case UserListType.assistant:
@@ -374,9 +366,10 @@ export default function CourseUsersList(props: Props) {
                           })
                           .catch(error => {
                             console.log("error", error);
-                          }).finally(() => {
-                            dispatch(endTask("accepting_student"));
                           })
+                          .finally(() => {
+                            dispatch(endTask("accepting_student"));
+                          });
                       }}
                     />
                   );
@@ -398,9 +391,10 @@ export default function CourseUsersList(props: Props) {
                           })
                           .catch(error => {
                             console.log("error", error);
-                          }).finally(() => {
-                            dispatch(endTask("decline_student"));
                           })
+                          .finally(() => {
+                            dispatch(endTask("decline_student"));
+                          });
                       }}
                     />
                   );
@@ -426,9 +420,10 @@ export default function CourseUsersList(props: Props) {
                           })
                           .catch(error => {
                             console.log("error", error);
-                          }).finally(() => {
-                            dispatch(endTask("re-adding"));
                           })
+                          .finally(() => {
+                            dispatch(endTask("re-adding"));
+                          });
                       }}
                     />
                   );
@@ -438,11 +433,8 @@ export default function CourseUsersList(props: Props) {
               }
 
               return btns;
-
-            }
-            } />
-
-
+            }}
+          />
         </DataTable>
       </>
     );
@@ -450,20 +442,10 @@ export default function CourseUsersList(props: Props) {
 
   return (
     <Fragment>
-      <Tooltip
-        target={'.enrolled'}
-        content="Enrolled" />
-      <Tooltip
-        target={'.awaiting'}
-        content="Awaiting Response" />
-      <Tooltip
-        content="Not Enrolled"
-        target={'.not-enrolled'}
-      />
-      <Tooltip
-        target={'.instructor'}
-        content="Instructor or Assistant"
-      />
+      <Tooltip target={".enrolled"} content="Enrolled" />
+      <Tooltip target={".awaiting"} content="Awaiting Response" />
+      <Tooltip content="Not Enrolled" target={".not-enrolled"} />
+      <Tooltip target={".instructor"} content="Instructor or Assistant" />
       <WorkingIndicator identifier="loading_users" />
       {newUserList}
     </Fragment>

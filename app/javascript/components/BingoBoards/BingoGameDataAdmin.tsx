@@ -77,7 +77,7 @@ export default function BingoGameDataAdmin(props) {
   const [saveStatus, setSaveStatus] = useState("");
   const [resultData, setResultData] = useState(null);
   const [gameTopic, setGameTopic] = useState("");
-  const [gameDescriptionEditor, setGameDescriptionEditor] = useState( '' );
+  const [gameDescriptionEditor, setGameDescriptionEditor] = useState("");
   const [bingoGameId, setBingoGameId] = useState(
     "new" === bingoGameIdParam ? null : bingoGameIdParam
   );
@@ -207,7 +207,7 @@ export default function BingoGameDataAdmin(props) {
         const bingo_game = data.bingo_game;
         setBingoGameId(bingo_game.id);
         setGameTopic(bingo_game.topic || "");
-        setGameDescriptionEditor( bingo_game.description || '' );
+        setGameDescriptionEditor(bingo_game.description || "");
         setGameSource(bingo_game.source || "");
         setGameActive(bingo_game.active || false);
         var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
@@ -300,142 +300,142 @@ export default function BingoGameDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Panel style={{ height: "95%", width: "100%" }}>
-        <TabView activeIndex={curTab} onTabChange={(event)=> setCurTab( event.index)}>
-          <TabPanel header={t("game_details_pnl")} >
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="topic"
-                    label={t("topic")}
-                    className={classes.textField}
-                    value={gameTopic}
-                    fullWidth
-                    onChange={event => setGameTopic(event.target.value)}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Editor
-                    id="description"
-                    aria-label={t("description")}
-                    placeholder={t("description")}
-                    value={gameDescriptionEditor}
-                    onTextChange={(event) =>{
-                      setGameDescriptionEditor( event.htmlValue );
-                    }}
-                    />
-
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="bingo-lead-time"
-                    label={t("lead_time")}
-                    className={classes.lead_time}
-                    value={gameLeadTime}
-                    type="number"
-                    onChange={event => setGameLeadTime(event.target.value)}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="bingo-individual_count"
-                    label={t("ind_term_count")}
-                    className={classes.textField}
-                    value={gameIndividualCount}
-                    type="number"
-                    onChange={event =>
-                      setGameIndividualCount(event.target.value)
-                    }
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    error={null != messages.individual_count}
-                    helperText={messages.individual_count}
-                  />
-                </Grid>
-                <LocalizationProvider dateAdapter={AdapterLuxon}>
-                  <Grid item xs={4}>
-                    <DatePicker
-                      variant="inline"
-                      autoOk={true}
-                      format="MM/dd/yyyy"
-                      margin="normal"
-                      label={t("open_date")}
-                      value={gameStartDate}
-                      onChange={setGameStartDate}
-                      slot={{
-                        TextField: TextField
-                      }}
-                      slotProps={{
-                        textField: {
-                          id: "bingo_game_start_date"
-                        }
-                      }}
-                    />
-                    {null != messages.start_date ? (
-                      <FormHelperText error={true}>
-                        {messages.start_date}
-                      </FormHelperText>
-                    ) : null}
-                  </Grid>
-                  <Grid item xs={4}>
-                    <DatePicker
-                      variant="inline"
-                      autoOk={true}
-                      format="MM/dd/yyyy"
-                      margin="normal"
-                      label={t("close_date")}
-                      value={gameEndDate}
-                      onChange={setGameEndDate}
-                      slot={{
-                        TextField: TextField
-                      }}
-                      slotProps={{
-                        textField: {
-                          id: "bingo_game_end_date"
-                        }
-                      }}
-                    />
-                    {null != messages.end_date ? (
-                      <FormHelperText error={true}>
-                        {messages.end_date}
-                      </FormHelperText>
-                    ) : null}
-                  </Grid>
-                </LocalizationProvider>
-                <Grid item xs={4}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={gameActive}
-                        onChange={event => setGameActive(!gameActive)}
-                      />
-                    }
-                    label={t("active")}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Switch
-                    checked={gameGroupOption}
-                    id="group_option"
-                    onChange={event => setGameGroupOption(!gameGroupOption)}
-                    disabled={null == gameProjects || 2 > gameProjects.length}
-                  />
-                  <InputLabel htmlFor="group_option">
-                    {t("group_option")}
-                  </InputLabel>
-                </Grid>
-                {group_options}
+        <TabView
+          activeIndex={curTab}
+          onTabChange={event => setCurTab(event.index)}
+        >
+          <TabPanel header={t("game_details_pnl")}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  id="topic"
+                  label={t("topic")}
+                  className={classes.textField}
+                  value={gameTopic}
+                  fullWidth
+                  onChange={event => setGameTopic(event.target.value)}
+                  margin="normal"
+                />
               </Grid>
-              {save_btn} {messages.status}
-              <Typography>{saveStatus}</Typography>
+              <Grid item xs={12}>
+                <Editor
+                  id="description"
+                  aria-label={t("description")}
+                  placeholder={t("description")}
+                  value={gameDescriptionEditor}
+                  onTextChange={event => {
+                    setGameDescriptionEditor(event.htmlValue);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="bingo-lead-time"
+                  label={t("lead_time")}
+                  className={classes.lead_time}
+                  value={gameLeadTime}
+                  type="number"
+                  onChange={event => setGameLeadTime(event.target.value)}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="bingo-individual_count"
+                  label={t("ind_term_count")}
+                  className={classes.textField}
+                  value={gameIndividualCount}
+                  type="number"
+                  onChange={event => setGameIndividualCount(event.target.value)}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  margin="normal"
+                  error={null != messages.individual_count}
+                  helperText={messages.individual_count}
+                />
+              </Grid>
+              <LocalizationProvider dateAdapter={AdapterLuxon}>
+                <Grid item xs={4}>
+                  <DatePicker
+                    variant="inline"
+                    autoOk={true}
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    label={t("open_date")}
+                    value={gameStartDate}
+                    onChange={setGameStartDate}
+                    slot={{
+                      TextField: TextField
+                    }}
+                    slotProps={{
+                      textField: {
+                        id: "bingo_game_start_date"
+                      }
+                    }}
+                  />
+                  {null != messages.start_date ? (
+                    <FormHelperText error={true}>
+                      {messages.start_date}
+                    </FormHelperText>
+                  ) : null}
+                </Grid>
+                <Grid item xs={4}>
+                  <DatePicker
+                    variant="inline"
+                    autoOk={true}
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    label={t("close_date")}
+                    value={gameEndDate}
+                    onChange={setGameEndDate}
+                    slot={{
+                      TextField: TextField
+                    }}
+                    slotProps={{
+                      textField: {
+                        id: "bingo_game_end_date"
+                      }
+                    }}
+                  />
+                  {null != messages.end_date ? (
+                    <FormHelperText error={true}>
+                      {messages.end_date}
+                    </FormHelperText>
+                  ) : null}
+                </Grid>
+              </LocalizationProvider>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={gameActive}
+                      onChange={event => setGameActive(!gameActive)}
+                    />
+                  }
+                  label={t("active")}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Switch
+                  checked={gameGroupOption}
+                  id="group_option"
+                  onChange={event => setGameGroupOption(!gameGroupOption)}
+                  disabled={null == gameProjects || 2 > gameProjects.length}
+                />
+                <InputLabel htmlFor="group_option">
+                  {t("group_option")}
+                </InputLabel>
+              </Grid>
+              {group_options}
+            </Grid>
+            {save_btn} {messages.status}
+            <Typography>{saveStatus}</Typography>
           </TabPanel>
-          <TabPanel header={t("response_pnl")} >
+          <TabPanel header={t("response_pnl")}>
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
                 <ConceptChips concepts={concepts} />
@@ -445,7 +445,6 @@ export default function BingoGameDataAdmin(props) {
               </Grid>
             </Grid>
           </TabPanel>
-          
         </TabView>
       </Panel>
     </Suspense>
