@@ -65,15 +65,15 @@ export default function MainMenu(props: Props) {
     navigate(url);
   };
 
-
   const buildMyMenu = () => {
-    let builtMenu =
-      [{
+    let builtMenu = [
+      {
         label: t("home.title"),
         icon: "pi pi-fw pi-home",
         id: "home-menu-item",
         command: () => navTo("/home")
-      }];
+      }
+    ];
 
     if (isLoggedIn) {
       builtMenu.push({
@@ -83,30 +83,29 @@ export default function MainMenu(props: Props) {
         command: () => navTo("/profile")
       });
       if (user.is_instructor || user.is_admin) {
-        let adminItems =
-          [
-            {
-              label: t("courses_edit"),
-              icon: "pi pi-fw pi-book",
-              id: "courses-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/courses")
-            },
-            {
-              label: t("reporting"),
-              icon: "pi pi-fw pi-chart-bar",
-              id: "reporting-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/reporting"),
-            },
-            {
-              label: t("rubrics_edit"),
-              icon: "pi pi-fw pi-table",
-              id: "rubrics-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/rubrics"),
-            },
-          ];
+        let adminItems = [
+          {
+            label: t("courses_edit"),
+            icon: "pi pi-fw pi-book",
+            id: "courses-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/courses")
+          },
+          {
+            label: t("reporting"),
+            icon: "pi pi-fw pi-chart-bar",
+            id: "reporting-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/reporting")
+          },
+          {
+            label: t("rubrics_edit"),
+            icon: "pi pi-fw pi-table",
+            id: "rubrics-menu-item",
+            visible: adminOpen,
+            command: () => navTo("/admin/rubrics")
+          }
+        ];
         if (user.is_admin) {
           adminItems.push(
             {
@@ -130,26 +129,25 @@ export default function MainMenu(props: Props) {
               visible: adminOpen,
               command: () => navTo("/admin/consent_forms")
             }
-
           );
         }
-          builtMenu.push(
-            {
-              separator: true
-            },
+        builtMenu.push(
+          {
+            separator: true
+          },
 
-            {
-              label: t("administration"),
-              icon: "pi pi-fw pi-cog",
-              id: "administration-menu",
-              command: () =>{
-                setAdminOpen(!adminOpen);
-              },
+          {
+            label: t("administration"),
+            icon: "pi pi-fw pi-cog",
+            id: "administration-menu",
+            command: () => {
+              setAdminOpen(!adminOpen);
             }
-          );
-          adminItems.forEach((menuItem) => {
-            builtMenu.push(menuItem);
-          });
+          }
+        );
+        adminItems.forEach(menuItem => {
+          builtMenu.push(menuItem);
+        });
       }
     }
     builtMenu.push(
@@ -157,10 +155,10 @@ export default function MainMenu(props: Props) {
         separator: true
       },
       {
-        template: (<DiversityCheck diversityScoreFor={props.diversityScoreFor} />),
+        template: <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
       },
       {
-        label: t('titles.demonstration'),
+        label: t("titles.demonstration"),
         icon: "pi pi-fw pi-play",
         id: "demo-menu-item",
         command: () => navTo("/demo")
@@ -181,29 +179,26 @@ export default function MainMenu(props: Props) {
           navTo(props.moreInfoUrl);
         }
       }
-    )
+    );
 
     if (isLoggedIn) {
-      builtMenu.push(
-        {
-          label: t("logout"),
-          icon: "pi pi-fw pi-sign-out",
-          id: "logout-menu-item",
-          command: () => {
-            dispatch(signOut());
-            setMenuOpen(false);
-          }
+      builtMenu.push({
+        label: t("logout"),
+        icon: "pi pi-fw pi-sign-out",
+        id: "logout-menu-item",
+        command: () => {
+          dispatch(signOut());
+          setMenuOpen(false);
         }
-      );
+      });
     }
 
-
     return builtMenu;
-  }
+  };
 
   const genericOpts = [
     {
-      label: t('titles.demonstration'),
+      label: t("titles.demonstration"),
       icon: "pi pi-fw pi-play",
       command: () => navTo("/demo")
     },
@@ -221,47 +216,37 @@ export default function MainMenu(props: Props) {
         navTo(props.moreInfoUrl);
       }
     }
-
-  ]
+  ];
 
   //  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
-
 
   return (
     <React.Fragment>
       <Button
         id="main-menu-button"
         text
-        onClick={(event) => {
+        onClick={event => {
           setMenuOpen(!menuOpen);
         }}
         className="p-mr-2"
-        >
-          <Logo
-            height={48}
-            width={48}
-            spinning={working}
-            />
-        </Button>
-        <Sidebar
-          visible={menuOpen}
-          onHide={() => setMenuOpen(false)}
-          modal
-          position={'left'}
-          style={{width: '15rem'}}
-          baseZIndex={1000000}
-          >
-      <Menu
-        appendTo={'self'}
-        closeOnEscape
-        ref={menuButton}
-        model={
-          buildMyMenu()
-        }
-      />
-        </Sidebar>
-
+      >
+        <Logo height={48} width={48} spinning={working} />
+      </Button>
+      <Sidebar
+        visible={menuOpen}
+        onHide={() => setMenuOpen(false)}
+        modal
+        position={"left"}
+        style={{ width: "15rem" }}
+        baseZIndex={1000000}
+      >
+        <Menu
+          appendTo={"self"}
+          closeOnEscape
+          ref={menuButton}
+          model={buildMyMenu()}
+        />
+      </Sidebar>
     </React.Fragment>
   );
 }
-

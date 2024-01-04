@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Tooltip } from "primereact/tooltip";
 import { Toolbar } from "primereact/toolbar";
-import { ColumnMeta } from '../infrastructure/Types';
+import { ColumnMeta } from "../infrastructure/Types";
 import { MultiSelect } from "primereact/multiselect";
 import { Knob } from "primereact/knob";
 
@@ -31,7 +31,6 @@ export default function CandidateReviewListToolbar(props: Props) {
 
   const onColumnToggle = event => {
     props.setVisibleColumnsFunc(event.value);
-
   };
 
   const columnToggle = (

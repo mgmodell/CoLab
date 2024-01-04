@@ -2,28 +2,27 @@ import React, { useEffect, useState, useRef } from "react";
 
 type Props = {
   svgPos?: {
-    x: number,
-    y: number,
-    height?: number,
-    width?: number,
-    scale: number,
-  }
-  framed?: boolean,
-}
+    x: number;
+    y: number;
+    height?: number;
+    width?: number;
+    scale: number;
+  };
+  framed?: boolean;
+};
 export default function StudentConcern(props) {
   const mounted = useRef(false);
   const framed = props.framed === undefined ? true : props.framed;
 
-
   const content = (
     <g>
       <rect
-        id='bg'
+        id="bg"
         opacity={framed ? 100 : 0}
         height={5568}
         width={6780}
-        fill={'azure'}
-        />
+        fill={"azure"}
+      />
 
       <g
         id="layer1"
@@ -919,12 +918,10 @@ export default function StudentConcern(props) {
           id="path3594"
         />
       </g>
-
     </g>
   );
-  if( !props.svgPos ){
+  if (!props.svgPos) {
     return content;
-
   } else {
     const viewBox = [0, 0, 6780, 5568].join(" ");
     const height = props.svgPos.height || 72;

@@ -11,13 +11,16 @@ export default function RequireAuth({ children }) {
   if (isLoggedIn) {
     return children;
   } else if (isLoggingIn) {
-    return <Skeleton className={'mb-2'} height={'30rem'} />;
+    return <Skeleton className={"mb-2"} height={"30rem"} />;
   } else {
-    return <Navigate
-      to="/welcome/login"
-      replace
-      state={{
-        from: location.pathname
-      }} />;
+    return (
+      <Navigate
+        to="/welcome/login"
+        replace
+        state={{
+          from: location.pathname
+        }}
+      />
+    );
   }
 }

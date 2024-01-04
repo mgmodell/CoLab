@@ -5,7 +5,7 @@ type Props = {
   url: string;
 };
 
-export default function Quote(props : Props) {
+export default function Quote(props: Props) {
   const [quote, setQuote] = useState({ text: "", attribution: "" });
 
   const updateQuote = () => {

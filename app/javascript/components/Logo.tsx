@@ -4,7 +4,7 @@ type Props = {
   height?: number;
   width?: number;
   spinning?: boolean;
-}
+};
 
 export default function Logo(props: Props) {
   const height = props.height || 72;

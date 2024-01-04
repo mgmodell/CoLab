@@ -11,10 +11,10 @@ import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 
 type Props = {
-  lookupUrl: string
-}
+  lookupUrl: string;
+};
 
-export default function HelpMenu(props : Props) {
+export default function HelpMenu(props: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [t, i18n] = useTranslation();
 
@@ -35,49 +35,35 @@ export default function HelpMenu(props : Props) {
   const feedbackOpts = useTypedSelector(
     state => state.context.lookups["candidate_feedbacks"]
   );
-  const candidateFeedbackInfo = ()=> {
-   if( undefined === feedbackOpts || null === feedbackOpts ){
-    return (<p>Not loaded</p>);
-   } else{
-    return (
-
-     <table>
-      <thead>
-        <tr>
-
-        <td>Feedback</td>
-        <td>Definition</td>
-        <td>Points</td>
-        </tr>
-      </thead>
-      <tbody>
-
-       {
-         feedbackOpts.map( (feedbackOpt) =>{
-           return(
-             <tr
-              key={feedbackOpt.id}
-             >
-              <td>
-               <strong>{feedbackOpt.name}</strong>
-              </td>
-              <td>
-                 {feedbackOpt.definition}
-              </td>
-              <td>
-                 .{feedbackOpt.credit}%
-              </td>
-             </tr>
-           )
-         })
-
-       }
-      </tbody>
-     </table>
-     );
-   }
-
-
+  const candidateFeedbackInfo = () => {
+    if (undefined === feedbackOpts || null === feedbackOpts) {
+      return <p>Not loaded</p>;
+    } else {
+      return (
+        <table>
+          <thead>
+            <tr>
+              <td>Feedback</td>
+              <td>Definition</td>
+              <td>Points</td>
+            </tr>
+          </thead>
+          <tbody>
+            {feedbackOpts.map(feedbackOpt => {
+              return (
+                <tr key={feedbackOpt.id}>
+                  <td>
+                    <strong>{feedbackOpt.name}</strong>
+                  </td>
+                  <td>{feedbackOpt.definition}</td>
+                  <td>.{feedbackOpt.credit}%</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    }
   };
 
   const stepHash = {
@@ -90,9 +76,9 @@ export default function HelpMenu(props : Props) {
     ],
     bingo: [
       {
-        target: 'body',
+        target: "body",
         content: "There is no help available for this topic",
-        placement: 'center'
+        placement: "center"
       }
     ],
     experience: [
@@ -138,10 +124,15 @@ export default function HelpMenu(props : Props) {
   const [steps, setSteps] = useState(stepHash.default);
 
   const pathComponents = location.pathname.split("/");
-  const pathLoc = 'demo' === pathComponents[1] ? pathComponents[2] : pathComponents[1];
+  const pathLoc =
+    "demo" === pathComponents[1] ? pathComponents[2] : pathComponents[1];
   return (
     <React.Fragment>
-      <Sidebar visible={showInfo} position="right" onHide={()=> setShowInfo(false )} >
+      <Sidebar
+        visible={showInfo}
+        position="right"
+        onHide={() => setShowInfo(false)}
+      >
         {candidateFeedbackInfo()}
       </Sidebar>
       <Joyride
@@ -154,8 +145,8 @@ export default function HelpMenu(props : Props) {
         showSkipButton={steps.length > 1}
         run={helpMe}
         styles={{
-          options:{
-            width: '100%'
+          options: {
+            width: "100%"
           }
         }}
       />
@@ -165,7 +156,6 @@ export default function HelpMenu(props : Props) {
         aria-controls="help-menu"
         aria-haspopup="true"
         onClick={event => {
-
           switch (pathLoc) {
             case "":
               setSteps(stepHash.home);
@@ -184,24 +174,20 @@ export default function HelpMenu(props : Props) {
         rounded
         text
         outlined
-        icon='pi pi-question'
-
+        icon="pi pi-question"
       />
-      { pathComponents.includes( 'bingo' ) ?
+      {pathComponents.includes("bingo") ? (
         <Button
-          icon='pi pi-info'
+          icon="pi pi-info"
           size="small"
           rounded
           text
           outlined
-          onClick={event =>{
-            setShowInfo( !showInfo );
-
-          }
-          }
-          /> : null
-      }
+          onClick={event => {
+            setShowInfo(!showInfo);
+          }}
+        />
+      ) : null}
     </React.Fragment>
   );
 }
-

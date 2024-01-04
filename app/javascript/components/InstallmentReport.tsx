@@ -24,7 +24,7 @@ import { Panel } from "primereact/panel";
 
 interface Props {
   rootPath?: string;
-};
+}
 
 export default function InstallmentReport(props: Props) {
   const endpointSet = "installment";
@@ -103,7 +103,9 @@ export default function InstallmentReport(props: Props) {
 
   const saveButton = (
     <Button variant="contained" onClick={() => saveContributions()}>
-      <Suspense fallback={<Skeleton className="mb-2" />}>{t("submit")}</Suspense>
+      <Suspense fallback={<Skeleton className="mb-2" />}>
+        {t("submit")}
+      </Suspense>
     </Button>
   );
 
@@ -158,7 +160,8 @@ export default function InstallmentReport(props: Props) {
   //Store what we've got
   const saveContributions = () => {
     dispatch(startTask("saving"));
-    const url = (props.rootPath === undefined ? '' : `/${props.rootPath}`) +
+    const url =
+      (props.rootPath === undefined ? "" : `/${props.rootPath}`) +
       endpoints.saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
@@ -225,49 +228,47 @@ export default function InstallmentReport(props: Props) {
           {messages["status"]}
         </Alert>
       </Collapse>
-      <Suspense fallback={<Skeleton className="mb-2" height={'10rem'} />}>
+      <Suspense fallback={<Skeleton className="mb-2" height={"10rem"} />}>
         <h1>{t("subtitle")}</h1>
         <p>
           {parse(
             t("instructions", {
-              group_name: group['name'],
-              project_name: project['name'],
-              member_count: Object.keys(group['users'] || {}).length,
+              group_name: group["name"],
+              project_name: project["name"],
+              member_count: Object.keys(group["users"] || {}).length,
               factor_count: Object.keys(factors || {}).length
             })
           )}
         </p>
         <p>{t("slider.instructions")}</p>
       </Suspense>
-      <Suspense fallback={<Skeleton height={'30rem'} />}>
-        <div id='installments'>
-
-        <Accordion activeIndex={curPanel} onTabChange={(event) => setCurPanel(event.index)} >
-          {Object.keys(contributions).map(sliceId => {
-            return (
-              <AccordionTab
-                header={factors[sliceId].name}
-                key={sliceId}>
-                <LinkedSliders
-                  key={"f_" + sliceId}
-                  id={Number(sliceId)}
-                  sum={sliderSum}
-                  updateContributions={updateSlice.bind(null, sliceId)}
-                  description={factors[sliceId].description}
-                  contributions={contributions[sliceId]}
-                  debug={debug}
-                />
-              </AccordionTab>
-            );
-          })}
-        </Accordion>
+      <Suspense fallback={<Skeleton height={"30rem"} />}>
+        <div id="installments">
+          <Accordion
+            activeIndex={curPanel}
+            onTabChange={event => setCurPanel(event.index)}
+          >
+            {Object.keys(contributions).map(sliceId => {
+              return (
+                <AccordionTab header={factors[sliceId].name} key={sliceId}>
+                  <LinkedSliders
+                    key={"f_" + sliceId}
+                    id={Number(sliceId)}
+                    sum={sliderSum}
+                    updateContributions={updateSlice.bind(null, sliceId)}
+                    description={factors[sliceId].description}
+                    contributions={contributions[sliceId]}
+                    debug={debug}
+                  />
+                </AccordionTab>
+              );
+            })}
+          </Accordion>
         </div>
         <br />
         <br />
-        <Accordion >
-          <AccordionTab
-            header={t("comment_prompt")}
-          >
+        <Accordion>
+          <AccordionTab header={t("comment_prompt")}>
             <TextField
               value={installment.comments || ""}
               name="Comments"
@@ -302,4 +303,3 @@ export default function InstallmentReport(props: Props) {
     </Panel>
   );
 }
-

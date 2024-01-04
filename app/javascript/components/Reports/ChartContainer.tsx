@@ -26,7 +26,7 @@ type Props = {
   forResearch: boolean;
 };
 
-export default function ChartContainer(props : Props) {
+export default function ChartContainer(props: Props) {
   const category = "graphing";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -297,4 +297,3 @@ export default function ChartContainer(props : Props) {
     </Grid>
   );
 }
-

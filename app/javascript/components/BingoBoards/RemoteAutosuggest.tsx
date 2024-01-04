@@ -10,20 +10,18 @@ type Props = {
   controlId: string | null;
   dataUrl: string;
   rootPath: string | null;
-  setFunction: ( number, string ) => void;
-}
+  setFunction: (number, string) => void;
+};
 
-export default function RemoteAutosuggest( props: Props ){
-  const [items, setItems] = useState( [] );
+export default function RemoteAutosuggest(props: Props) {
+  const [items, setItems] = useState([]);
 
-  const getData = (value) => {
-    if( value.length > 2 ){
+  const getData = value => {
+    if (value.length > 2) {
       const url =
         props.rootPath === undefined
           ? `${props.dataUrl}.json?search_string=${value}`
-          : `/${props.rootPath}${
-              props.dataUrl
-            }.json?search_string=${value}`;
+          : `/${props.rootPath}${props.dataUrl}.json?search_string=${value}`;
 
       axios
         .get(url, {})
@@ -31,9 +29,9 @@ export default function RemoteAutosuggest( props: Props ){
           const data = response.data;
           let suggestions = [];
           data.map(item => {
-            suggestions.push( item.name );
+            suggestions.push(item.name);
           });
-          setItems( suggestions );
+          setItems(suggestions);
         })
         .catch(error => {
           console.log("error", error);
@@ -42,20 +40,17 @@ export default function RemoteAutosuggest( props: Props ){
     }
   };
 
-  return(
+  return (
     <AutoComplete
       id={props.controlId}
       value={props.enteredValue}
-      onChange={(e)=>{
-        props.setFunction( props.itemId, e.value );
-      } }
-      completeMethod={(e)=>{
+      onChange={e => {
+        props.setFunction(props.itemId, e.value);
+      }}
+      completeMethod={e => {
         getData(e.query);
       }}
       suggestions={items}
-      
-      />
-
-  )
-
+    />
+  );
 }

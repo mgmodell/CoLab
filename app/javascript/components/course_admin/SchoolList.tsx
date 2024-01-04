@@ -18,12 +18,12 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 enum OPT_COLS {
-  STUDENTS = 'students',
-  COURSES = 'courses',
-  INSTRS = 'instructors',
-  PROJS = 'projects',
-  EXPS = 'experiences',
-  BINGO = 'bingo!'
+  STUDENTS = "students",
+  COURSES = "courses",
+  INSTRS = "instructors",
+  PROJS = "projects",
+  EXPS = "experiences",
+  BINGO = "bingo!"
 }
 
 export default function SchoolList(props) {
@@ -43,7 +43,7 @@ export default function SchoolList(props) {
   const dispatch = useDispatch();
 
   const [schools, setSchools] = useState([]);
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
 
   const optColumns = [
     OPT_COLS.STUDENTS,
@@ -80,7 +80,7 @@ export default function SchoolList(props) {
 
   const schoolTable = (
     <DataTable
-      value={schools.filter((school) => {
+      value={schools.filter(school => {
         return filterText.length === 0 || school.name.includes(filterText);
       })}
       resizableColumns
@@ -88,98 +88,95 @@ export default function SchoolList(props) {
       paginator
       rows={5}
       tableStyle={{
-        minWidth: '50rem'
+        minWidth: "50rem"
       }}
-      rowsPerPageOptions={
-        [5, 10, 20, schools.length]
+      rowsPerPageOptions={[5, 10, 20, schools.length]}
+      header={
+        <AdminListToolbar
+          itemType={category}
+          filtering={{
+            filterValue: filterText,
+            setFilterFunc: setFilterText
+          }}
+          columnToggle={{
+            setVisibleColumnsFunc: setVisibleColumns,
+            optColumns: optColumns,
+            visibleColumns: visibleColumns
+          }}
+        />
       }
-      header={<AdminListToolbar
-        itemType={category}
-        filtering={{
-          filterValue: filterText,
-          setFilterFunc: setFilterText,
-        }}
-        columnToggle={{
-          setVisibleColumnsFunc: setVisibleColumns,
-          optColumns: optColumns,
-          visibleColumns: visibleColumns
-        }}
-      />}
       sortField="name"
       sortOrder={1}
-      paginatorDropdownAppendTo={'self'}
+      paginatorDropdownAppendTo={"self"}
       paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="{first} to {last} of {totalRecords}"
       dataKey="id"
-      onRowClick={(event) => {
+      onRowClick={event => {
         navigate(String(event.data.id));
       }}
     >
-
       <Column
-        header={t('index.name_lbl')}
+        header={t("index.name_lbl")}
         field="name"
         sortable
         filter
-        key={'name'}
+        key={"name"}
       />
       {visibleColumns.includes(OPT_COLS.COURSES) ? (
         <Column
-          header={t('index.courses_lbl')}
+          header={t("index.courses_lbl")}
           field="courses"
           sortable
           filter
-          key={'courses'}
+          key={"courses"}
         />
       ) : null}
       {visibleColumns.includes(OPT_COLS.STUDENTS) ? (
         <Column
-          header={t('index.students_lbl')}
+          header={t("index.students_lbl")}
           field="students"
           sortable
           filter
-          key={'students'}
+          key={"students"}
         />
       ) : null}
       {visibleColumns.includes(OPT_COLS.INSTRS) ? (
         <Column
-          header={t('index.instructors_lbl')}
+          header={t("index.instructors_lbl")}
           field="instructors"
           sortable
           filter
-          key={'instructors'}
+          key={"instructors"}
         />
       ) : null}
       {visibleColumns.includes(OPT_COLS.PROJS) ? (
         <Column
-          header={t('index.project_lbl')}
+          header={t("index.project_lbl")}
           field="project"
           sortable
           filter
-          key={'project'}
+          key={"project"}
         />
       ) : null}
       {visibleColumns.includes(OPT_COLS.EXPS) ? (
         <Column
-          header={t('index.experience_lbl')}
+          header={t("index.experience_lbl")}
           field="experience"
           sortable
           filter
-          key={'experience'}
+          key={"experience"}
         />
       ) : null}
       {visibleColumns.includes(OPT_COLS.BINGO) ? (
         <Column
-          header={t('index.terms_list_lbl')}
+          header={t("index.terms_list_lbl")}
           field="terms_lists"
           sortable
           filter
-          key={'terms_list'}
+          key={"terms_list"}
         />
       ) : null}
-
     </DataTable>
-
   );
 
   return (

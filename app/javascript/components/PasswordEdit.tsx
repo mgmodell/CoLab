@@ -26,7 +26,7 @@ export default function PasswordEdit(props) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const {state } = useLocation( );
+  const { state } = useLocation();
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -41,10 +41,9 @@ export default function PasswordEdit(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn({ email: string, password: string })).then( ()=>{
-        navigate(from)
-      }
-      );
+      dispatch(emailSignIn({ email: string, password: string })).then(() => {
+        navigate(from);
+      });
       evt.preventDefault();
     }
   };

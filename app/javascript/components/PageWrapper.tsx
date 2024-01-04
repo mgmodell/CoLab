@@ -5,7 +5,8 @@ import {
   Route,
   createRoutesFromElements,
   Outlet,
-  Navigate} from "react-router-dom";
+  Navigate
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
@@ -43,20 +44,19 @@ const Privacy = React.lazy(() => import("./info/Privacy"));
 const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
 const WhatIsIt = React.lazy(() => import("./info/WhatIsIt"));
 const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
-const PasswordEdit = React.lazy( () => import( './PasswordEdit'))
+const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
 const Demo = React.lazy(() => import("./Demo"));
 
 type Props = {
-  getEndpointsUrl: string
-}
+  getEndpointsUrl: string;
+};
 
-export default function PageWrapper(props : Props) {
+export default function PageWrapper(props: Props) {
   const store = configureStore({
     reducer: appStatus
   });
 
-  const styles = createTheme({
-  });
+  const styles = createTheme({});
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -72,33 +72,18 @@ export default function PageWrapper(props : Props) {
             </Suspense>
           }
         >
-          <Route element={
-            <div
-              className="mainContent"
-            >
-              <Outlet />
-            </div>
-          }>
+          <Route
+            element={
+              <div className="mainContent">
+                <Outlet />
+              </div>
+            }
+          >
+            <Route index element={<Navigate to={"welcome"} replace={true} />} />
+            <Route path={"welcome/*"} element={<Welcome />} />
             <Route
-              index
-              element={
-                <Navigate to={'welcome'} replace={true} />
-              }
-            />
-            <Route
-              path={'welcome/*'}
-              element={
-                <Welcome />
-              }
-            />
-            <Route
-              path={'login'}
-              element={
-                <Navigate
-                  to={'/welcome/login'}
-                  replace={true}
-                />
-              }
+              path={"login"}
+              element={<Navigate to={"/welcome/login"} replace={true} />}
             />
             <Route
               path="profile"
@@ -121,7 +106,7 @@ export default function PageWrapper(props : Props) {
               }
             />
             <Route
-              path={'home/*'}
+              path={"home/*"}
               element={
                 <Suspense fallback={<Skeleton variant={"rectangular"} />}>
                   <RequireAuth>
@@ -130,59 +115,31 @@ export default function PageWrapper(props : Props) {
                 </Suspense>
               }
             >
-              <Route
-                index
-                element={
-                  <HomeShell />
-                }
-              />
+              <Route index element={<HomeShell />} />
               <Route
                 path={`login`}
-                element={
-                  <Navigate
-                    to={'/home'}
-                    relative={'path'}
-                    />
-                }
+                element={<Navigate to={"/home"} relative={"path"} />}
               />
               <Route
                 path={`project/checkin/:installmentId`}
-                element={
-                  <InstallmentReport />
-                }
+                element={<InstallmentReport />}
               />
               {/* Perhaps subgroup under Bingo */}
-              <Route
-                path="bingo/*"
-                element={
-                  <BingoShell />
-                }
-              />
+              <Route path="bingo/*" element={<BingoShell />} />
               {/* Perhaps subgroup under Experience */}
               <Route
                 path={`experience/:experienceId`}
-                element={
-                  <Experience />
-                }
+                element={<Experience />}
               />
               {/* Perhaps subgroup under Assignment */}
-              <Route
-                path={`assignment/*`}
-                element={
-                  <AssignmentShell />
-                }
-              />
+              <Route path={`assignment/*`} element={<AssignmentShell />} />
               <Route
                 path={`research_information/:consentFormId`}
-                element={
-                  <ConsentLog />
-                }
+                element={<ConsentLog />}
               />
               <Route
                 path={`course/:courseId/enroll`}
-                element={
-                  <EnrollInCourse />
-                }
+                element={<EnrollInCourse />}
               />
             </Route>
 
@@ -221,4 +178,3 @@ export default function PageWrapper(props : Props) {
     </Provider>
   );
 }
-

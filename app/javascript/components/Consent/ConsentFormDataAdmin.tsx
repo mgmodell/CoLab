@@ -11,13 +11,12 @@ import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {DateTime, Settings} from 'luxon';
+import { DateTime, Settings } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -52,9 +51,9 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormActive, setConsentFormActive] = useState(false);
   const [consentFormStartDate, setConsentFormStartDate] = useState(
     DateTime.local()
-    );
+  );
   const [consentFormEndDate, setConsentFormEndDate] = useState(
-    DateTime.local().plus({year: 1})
+    DateTime.local().plus({ year: 1 })
   );
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
@@ -95,8 +94,8 @@ export default function ConsentFormDataAdmin(props) {
           Settings.timezone
         );
         setConsentFormEndDate(receivedDate);
-        setConsentFormFormTextEn( consentForm.form_text_en || '' );
-        setConsentFormFormTextKo( consentForm.form_text_ko || '' );
+        setConsentFormFormTextEn(consentForm.form_text_en || "");
+        setConsentFormFormTextKo(consentForm.form_text_ko || "");
 
         dispatch(endTask());
         setDirty(false);
@@ -122,7 +121,7 @@ export default function ConsentFormDataAdmin(props) {
     axios({
       method: method,
       url: url,
-      data:{
+      data: {
         consent_form: {
           name: consentFormName,
           start_date: consentFormStartDate,
@@ -130,7 +129,6 @@ export default function ConsentFormDataAdmin(props) {
           form_text_en: consentFormFormTextEn,
           form_text_ko: consentFormFormTextKo,
           active: consentFormActive
-          
         }
       }
     })
@@ -138,7 +136,7 @@ export default function ConsentFormDataAdmin(props) {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.consent_form;
-          console.log( response );
+          console.log(response);
           setConsentFormId(consentForm.id);
           setConsentFormName(consentForm.name);
 
@@ -151,8 +149,8 @@ export default function ConsentFormDataAdmin(props) {
             Settings.timezone
           );
           setConsentFormEndDate(receivedDate);
-          setConsentFormFormTextEn( consentForm.form_text_en || '' );
-          setConsentFormFormTextKo( consentForm.form_text_ko || '' );
+          setConsentFormFormTextEn(consentForm.form_text_en || "");
+          setConsentFormFormTextKo(consentForm.form_text_ko || "");
 
           setShowErrors(true);
           setDirty(false);
@@ -185,7 +183,7 @@ export default function ConsentFormDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button variant="contained" onClick={saveConsentForm}>
-      {null == consentFormId ? t('edit.create_btn') : t('edit.save_btn')}
+      {null == consentFormId ? t("edit.create_btn") : t("edit.save_btn")}
     </Button>
   ) : null;
 
@@ -262,32 +260,30 @@ export default function ConsentFormDataAdmin(props) {
           </Grid>
         </LocalizationProvider>
       </Grid>
-          <TabView>
-            <TabPanel header='English'>
-              <Editor
-                id='english_form'
-                placeholder={"en_form"}
-                aria-label={"en_form"}
-                onTextChange={(event) =>{
-                  setConsentFormFormTextEn( event.htmlValue)
-                }}
-                value={consentFormFormTextEn}
-                />
-
-            </TabPanel>
-            <TabPanel header='Korean'>
-              <Editor
-                id='korean_form'
-                placeholder={"ko_form"}
-                aria-label={"ko_form"}
-                onTextChange={(event)=>{
-                  setConsentFormFormTextKo( event.htmlValue)
-                }}
-                value={consentFormFormTextKo}
-                />
-            </TabPanel>
-
-          </TabView>
+      <TabView>
+        <TabPanel header="English">
+          <Editor
+            id="english_form"
+            placeholder={"en_form"}
+            aria-label={"en_form"}
+            onTextChange={event => {
+              setConsentFormFormTextEn(event.htmlValue);
+            }}
+            value={consentFormFormTextEn}
+          />
+        </TabPanel>
+        <TabPanel header="Korean">
+          <Editor
+            id="korean_form"
+            placeholder={"ko_form"}
+            aria-label={"ko_form"}
+            onTextChange={event => {
+              setConsentFormFormTextKo(event.htmlValue);
+            }}
+            value={consentFormFormTextKo}
+          />
+        </TabPanel>
+      </TabView>
       &nbsp;
       <label htmlFor={consentFormDataId}>
         <input

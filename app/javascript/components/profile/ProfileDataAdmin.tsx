@@ -32,7 +32,7 @@ const UserActivityList = React.lazy(() => import("./UserActivityList"));
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import {Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {
   fetchProfile,
@@ -50,7 +50,7 @@ type Props = {
   // profileId: number;
 };
 
-export default function ProfileDataAdmin(props : Props) {
+export default function ProfileDataAdmin(props: Props) {
   const category = "profile";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -215,7 +215,6 @@ export default function ProfileDataAdmin(props : Props) {
     dispatch(setProfile(temp));
   };
 
-
   const getStates = countryCode => {
     if (endpointStatus) {
       if (!endpoints.statesForUrl || null !== countryCode) {
@@ -283,17 +282,8 @@ export default function ProfileDataAdmin(props : Props) {
 
   const detailsComponent = lookupStatus ? (
     <Panel>
-
-      <Accordion
-        multiple
-        activeIndex={curPanel}
-        >
-
-        <AccordionTab
-          header={t("edit_profile")}
-          aria-label={t("edit_profile")}
-          >
-
+      <Accordion multiple activeIndex={curPanel}>
+        <AccordionTab header={t("edit_profile")} aria-label={t("edit_profile")}>
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
               <TextField
@@ -318,12 +308,11 @@ export default function ProfileDataAdmin(props : Props) {
               />
             </Grid>
           </Grid>
-          </AccordionTab>
-          <AccordionTab
+        </AccordionTab>
+        <AccordionTab
           header={t("email_settings")}
           aria-label={t("email_settings")}
-          >
-
+        >
           <Grid container spacing={3}>
             <Grid item xs={12}>
               {0 < user.emails.length ? (
@@ -338,17 +327,14 @@ export default function ProfileDataAdmin(props : Props) {
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <a href={endpoints["passwordResetUrl"]}>
-                {t("password_change")}
-              </a>
+              <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
             </Grid>
           </Grid>
-          </AccordionTab>
-          <AccordionTab
+        </AccordionTab>
+        <AccordionTab
           header={t("display_settings.prompt")}
           aria-label={t("display_settings.prompt")}
-          >
-
+        >
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <FormControl fullWidth>
@@ -447,12 +433,11 @@ export default function ProfileDataAdmin(props : Props) {
               </FormControl>
             </Grid>
           </Grid>
-          </AccordionTab>
-          <AccordionTab
+        </AccordionTab>
+        <AccordionTab
           header={t("demographics.prompt", { first_name: user.first_name })}
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
-          >
-
+        >
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
@@ -724,7 +709,7 @@ export default function ProfileDataAdmin(props : Props) {
               </ToggleButtonGroup>
             </Grid>
           </Grid>
-          </AccordionTab>
+        </AccordionTab>
       </Accordion>
       &nbsp;
       <br />
@@ -754,15 +739,18 @@ export default function ProfileDataAdmin(props : Props) {
           {messages["main"]}
         </Alert>
       </Collapse>
-      <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-        <TabPanel header={'Details'} disabled={!profileReady}>
+      <TabView
+        activeIndex={curTab}
+        onTabChange={event => setCurTab(event.index)}
+      >
+        <TabPanel header={"Details"} disabled={!profileReady}>
           {profileReady ? (
             detailsComponent
           ) : (
             <Skeleton className="mb-2" height="10rem" width="100%" />
           )}
         </TabPanel>
-        <TabPanel header={'My Courses'} disabled={!existingProfile}>
+        <TabPanel header={"My Courses"} disabled={!existingProfile}>
           <UserCourseList
             retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
             coursesList={courses}
@@ -770,7 +758,7 @@ export default function ProfileDataAdmin(props : Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={'History'} disabled={!existingProfile}>
+        <TabPanel header={"History"} disabled={!existingProfile}>
           <UserActivityList
             retrievalUrl={endpoints["activitiesUrl"] + ".json"}
             activitiesList={activities}
@@ -778,7 +766,7 @@ export default function ProfileDataAdmin(props : Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={'Research Participation'} disabled={!existingProfile}>
+        <TabPanel header={"Research Participation"} disabled={!existingProfile}>
           <ResearchParticipationList
             retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
             consentFormList={consentForms}
@@ -786,9 +774,7 @@ export default function ProfileDataAdmin(props : Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-
       </TabView>
     </Panel>
   );
 }
-

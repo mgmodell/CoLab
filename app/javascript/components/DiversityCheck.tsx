@@ -1,6 +1,5 @@
 import React, { useState, Suspense } from "react";
 
-
 import { useTranslation } from "react-i18next";
 
 import axios from "axios";
@@ -14,7 +13,7 @@ type Props = {
   diversityScoreFor: string;
 };
 
-export default function DiversityCheck(props:Props) {
+export default function DiversityCheck(props: Props) {
   const [emails, setEmails] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [diversityScore, setDiversityScore] = useState(null);
@@ -74,40 +73,32 @@ export default function DiversityCheck(props:Props) {
           aria-labelledby={t("calc_it")}
           footer={
             <>
-              <Button onClick={calcDiversity}>
-                {t("calc_diversity_sub")}
-              </Button>
-              <Button onClick={handleClear}>
-                {t("clear")}
-              </Button>
+              <Button onClick={calcDiversity}>{t("calc_diversity_sub")}</Button>
+              <Button onClick={handleClear}>{t("clear")}</Button>
             </>
           }
         >
-            <InputText value={emails} onChange={handleChange} />
+          <InputText value={emails} onChange={handleChange} />
 
-            {foundUsers.length > 0 ? (
-              <Container>
-                <Row>
-                  <Col>
-                      {foundUsers.map(user => {
-                        return (
-                          <a key={user.email} href={"mailto:" + user.email}>
-                            {user.name}
-                            <br />
-                          </a>
-                        );
-                      })}
-                  </Col>
-                  <Col >
-                      {diversityScore}
-                  </Col>
-                </Row>
-
-              </Container>
-            ) : null}
+          {foundUsers.length > 0 ? (
+            <Container>
+              <Row>
+                <Col>
+                  {foundUsers.map(user => {
+                    return (
+                      <a key={user.email} href={"mailto:" + user.email}>
+                        {user.name}
+                        <br />
+                      </a>
+                    );
+                  })}
+                </Col>
+                <Col>{diversityScore}</Col>
+              </Row>
+            </Container>
+          ) : null}
         </Dialog>
       </React.Fragment>
     </Suspense>
   );
 }
-

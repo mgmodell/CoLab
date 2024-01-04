@@ -10,7 +10,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
-import {Container, Row, Col} from 'react-grid-system';
+import { Container, Row, Col } from "react-grid-system";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
@@ -26,9 +26,9 @@ import { ColumnMeta } from "../infrastructure/Types";
 import { Panel } from "primereact/panel";
 
 type Props = {
-  rootPath?: string,
-}
-export default function CandidatesReviewTable(props : Props) {
+  rootPath?: string;
+};
+export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
   // Inconsistent naming follows. This should be cleaned up.
@@ -48,16 +48,15 @@ export default function CandidatesReviewTable(props : Props) {
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
   const [feedbackOptions] = useState(
-        // Add a non-response for the UI
-    [{
-
-          credit: 0,
-          critique: "empty",
-          id: 0,
-          name: t("review.not_set_opt")
-    }, ...useTypedSelector(
-        state => state.context.lookups["candidate_feedbacks"]
-      )
+    // Add a non-response for the UI
+    [
+      {
+        credit: 0,
+        critique: "empty",
+        id: 0,
+        name: t("review.not_set_opt")
+      },
+      ...useTypedSelector(state => state.context.lookups["candidate_feedbacks"])
     ]
   );
   const [bingoGame, setBingoGame] = useState();
@@ -148,7 +147,6 @@ export default function CandidatesReviewTable(props : Props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
-
 
     axios
       .get(url, {})
@@ -297,43 +295,29 @@ export default function CandidatesReviewTable(props : Props) {
     />
   );
 
-
   return (
     <ScrollPanel>
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
         <Panel>
-
-        <Container>
-          <Row>
-            <Col sm={3}>
-              {t("topic")}:
-            </Col>
-            <Col sm={9}>
-              {bingoGame.topic}
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={3}>
-              {t("close_date")}:
-            </Col>
-            <Col sm={9}>
-              {bingoGame.end_date}
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={3}>
-              {t("description")}:
-            </Col>
-            <Col sm={9}>
-              <p>{parse(bingoGame.description)}</p>
-            </Col>
-          </Row>
-
-        </Container>
+          <Container>
+            <Row>
+              <Col sm={3}>{t("topic")}:</Col>
+              <Col sm={9}>{bingoGame.topic}</Col>
+            </Row>
+            <Row>
+              <Col sm={3}>{t("close_date")}:</Col>
+              <Col sm={9}>{bingoGame.end_date}</Col>
+            </Row>
+            <Row>
+              <Col sm={3}>{t("description")}:</Col>
+              <Col sm={9}>
+                <p>{parse(bingoGame.description)}</p>
+              </Col>
+            </Row>
+          </Container>
         </Panel>
-
       ) : (
         <Skeleton height={20} />
       )}

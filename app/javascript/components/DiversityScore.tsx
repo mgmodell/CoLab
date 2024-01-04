@@ -21,7 +21,7 @@ type Props = {
   sortFunc: Function;
 };
 
-export default function DiversityScore(props : Props) {
+export default function DiversityScore(props: Props) {
   const direction = {
     [SortDirection.ASC]: "asc",
     [SortDirection.DESC]: "desc"

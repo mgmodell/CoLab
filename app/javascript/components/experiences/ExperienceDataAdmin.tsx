@@ -206,7 +206,6 @@ export default function ExperienceDataAdmin(props) {
 
   const detailsComponent = (
     <Panel>
-
       <TextField
         label="Experience Name"
         id="experience-name"
@@ -294,7 +293,7 @@ export default function ExperienceDataAdmin(props) {
     </Panel>
   );
 
-  console.log( reactionsUrl, reactionData );
+  console.log(reactionsUrl, reactionData);
 
   const reactionListing =
     reactionsUrl != undefined && experienceId > 0 ? (
@@ -308,11 +307,10 @@ export default function ExperienceDataAdmin(props) {
     );
   return (
     <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-        <TabPanel header="Details">{detailsComponent}</TabPanel>
-        <TabPanel
-          header="Results"
-          disabled={null == experienceId}
-        >{reactionListing}</TabPanel>
+      <TabPanel header="Details">{detailsComponent}</TabPanel>
+      <TabPanel header="Results" disabled={null == experienceId}>
+        {reactionListing}
+      </TabPanel>
     </TabView>
   );
 }

@@ -31,7 +31,7 @@ type Props = {
   weekText: string;
 };
 
-export default function ExperienceDiagnosis(props : Props) {
+export default function ExperienceDiagnosis(props: Props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
@@ -137,7 +137,7 @@ export default function ExperienceDiagnosis(props : Props) {
           {otherPnl}
         </Grid>
         <Grid item xs={12}>
-          <Accordion >
+          <Accordion>
             <AccordionTab header={t("next.click_for_comment")}>
               <TextField
                 variant="filled"
@@ -156,4 +156,3 @@ export default function ExperienceDiagnosis(props : Props) {
     </Paper>
   );
 }
-

@@ -4,9 +4,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 
 type Props = {
-  dataUrl: string
+  dataUrl: string;
 };
-export default function CourseCalendar(props : Props) {
+export default function CourseCalendar(props: Props) {
   const header = {
     left: "prev,next today",
     center: "title",

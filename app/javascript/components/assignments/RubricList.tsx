@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
-
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -30,20 +29,16 @@ export default function RubricList(props) {
 
   const user = useTypedSelector(state => state.profile.user);
   const { t } = useTranslation(`${category}s`);
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   enum OPT_COLS {
-    PUBLISHED = 'published',
-    VERSION = 'version',
-    CREATOR = 'creator',
+    PUBLISHED = "published",
+    VERSION = "version",
+    CREATOR = "creator"
   }
-  const optColumns = [
-    OPT_COLS.PUBLISHED,
-    OPT_COLS.VERSION,
-    OPT_COLS.CREATOR,
-  ];
+  const optColumns = [OPT_COLS.PUBLISHED, OPT_COLS.VERSION, OPT_COLS.CREATOR];
   const [visibleColumns, setVisibleColumns] = useState([]);
 
   const [rubrics, setRubrics] = useState([]);
@@ -52,16 +47,19 @@ export default function RubricList(props) {
     const url = endpoints.baseUrl + ".json";
 
     dispatch(startTask());
-    axios.get(url, {}).then(response => {
-      //Process the data
-      setRubrics(response.data);
-      dispatch(endTask("loading"));
-    }).catch(error => {
-      console.log(error);
-    })
-      .finally(() => {
+    axios
+      .get(url, {})
+      .then(response => {
+        //Process the data
+        setRubrics(response.data);
         dispatch(endTask("loading"));
       })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        dispatch(endTask("loading"));
+      });
   };
 
   useEffect(() => {
@@ -73,7 +71,7 @@ export default function RubricList(props) {
 
   const postNewMessage = msgs => {
     Object.keys(msgs).forEach(key => {
-      if ('main' === key) {
+      if ("main" === key) {
         dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
       } else {
         dispatch(addMessage(msgs[key], new Date(), Priorities.WARNING));
@@ -86,94 +84,96 @@ export default function RubricList(props) {
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
           <DataTable
-            value={rubrics.filter((rubric) => {
-              return filterText.length === 0 || rubric.name.includes(filterText);
-
+            value={rubrics.filter(rubric => {
+              return (
+                filterText.length === 0 || rubric.name.includes(filterText)
+              );
             })}
             resizableColumns
             reorderableColumns
             paginator
             rows={5}
             tableStyle={{
-              minWidth: '50rem'
+              minWidth: "50rem"
             }}
-            rowsPerPageOptions={
-              [5, 10, 20, rubrics.length]
+            rowsPerPageOptions={[5, 10, 20, rubrics.length]}
+            header={
+              <AdminListToolbar
+                itemType={category}
+                filtering={{
+                  filterValue: filterText,
+                  setFilterFunc: setFilterText
+                }}
+                columnToggle={{
+                  optColumns: optColumns,
+                  visibleColumns: visibleColumns,
+                  setVisibleColumnsFunc: setVisibleColumns
+                }}
+              />
             }
-            header={<AdminListToolbar
-              itemType={category}
-              filtering={{
-                filterValue: filterText,
-                setFilterFunc: setFilterText,
-              }}
-              columnToggle={{
-                optColumns: optColumns,
-                visibleColumns: visibleColumns,
-                setVisibleColumnsFunc: setVisibleColumns,
-
-              }}
-            />}
             sortOrder={-1}
-            paginatorDropdownAppendTo={'self'}
+            paginatorDropdownAppendTo={"self"}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
             dataKey="id"
-            onRowClick={(event) => {
+            onRowClick={event => {
               navigate(String(event.data.id));
             }}
           >
             <Column
-              header={t('name')}
-              field='name'
+              header={t("name")}
+              field="name"
               sortable
-              data-id='name'
+              data-id="name"
               filter
-              key={'name'}
+              key={"name"}
             />
             {visibleColumns.includes(OPT_COLS.PUBLISHED) ? (
               <Column
-                header={t('show.published')}
-                field='published'
+                header={t("show.published")}
+                field="published"
                 sortable
                 filter
-                key={'published'}
+                key={"published"}
               />
             ) : null}
             {visibleColumns.includes(OPT_COLS.VERSION) ? (
               <Column
-                header={t('version')}
-                field='version'
+                header={t("version")}
+                field="version"
                 sortable
                 filter
-                key={'version'}
+                key={"version"}
               />
             ) : null}
             {visibleColumns.includes(OPT_COLS.CREATOR) ? (
               <Column
-                header={t('show.creator')}
-                field='user'
+                header={t("show.creator")}
+                field="user"
                 sortable
                 filter
-                key={'user'}
+                key={"user"}
               />
             ) : null}
             <Column
-              header={t('index.actions_col')}
+              header={t("index.actions_col")}
               field="id"
-              body={(rubric) => {
+              body={rubric => {
                 const scoresUrl = endpoints.scoresUrl + rubric.id + ".csv";
                 const copyUrl = endpoints.courseCopyUrl + rubric.id + ".json";
                 return (
                   <>
                     <Button
-                      icon='pi pi-copy'
-                      tooltip={t('rubric.copy')}
+                      icon="pi pi-copy"
+                      tooltip={t("rubric.copy")}
                       tooltipOptions={{
-                        position: 'left',
+                        position: "left"
                       }}
-                      id={'copy_rubric'}
+                      id={"copy_rubric"}
                       onClick={event => {
-                        const url = `${endpoints["baseUrl"]}/copy/${rubric.id}.json`;
+                        const url = `${endpoints["baseUrl"]}/copy/${
+                          rubric.id
+                        }.json`;
                         dispatch(startTask());
                         axios
                           .get(url)
@@ -189,17 +189,17 @@ export default function RubricList(props) {
                             dispatch(endTask());
                           });
                       }}
-                      aria-label={t('rubric.copy')}
+                      aria-label={t("rubric.copy")}
                       size="large"
                     />
                     <Button
-                      icon='pi pi-trash'
-                      tooltip={t('rubric.delete')}
+                      icon="pi pi-trash"
+                      tooltip={t("rubric.delete")}
                       disabled={rubric.published}
                       tooltipOptions={{
-                        position: 'left',
+                        position: "left"
                       }}
-                      id={'delete_rubric'}
+                      id={"delete_rubric"}
                       onClick={event => {
                         const rubric = Object.assign(
                           {},
@@ -213,17 +213,14 @@ export default function RubricList(props) {
                           getRubrics();
                         });
                       }}
-                      aria-label={t('rubric.copy')}
+                      aria-label={t("rubric.copy")}
                       size="large"
                     />
                   </>
-                )
-              }
-              }
+                );
+              }}
             />
-
           </DataTable>
-
         </div>
       </div>
     </React.Fragment>

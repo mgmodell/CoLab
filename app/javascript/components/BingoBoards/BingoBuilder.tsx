@@ -19,7 +19,7 @@ type Props = {
   rootPath?: string;
 };
 
-export default function BingoBuilder(props : Props) {
+export default function BingoBuilder(props: Props) {
   const category = "candidate_results";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -45,7 +45,7 @@ export default function BingoBuilder(props : Props) {
     iteration: 0,
     bingo_game: {
       size: 5,
-      topic: t('no_game_msg')
+      topic: t("no_game_msg")
     }
   });
 
@@ -98,7 +98,7 @@ export default function BingoBuilder(props : Props) {
     setBoard(tmpBoard);
   };
 
-  const prefix = props.rootPath === undefined ? '' : `/${props.rootPath}`;
+  const prefix = props.rootPath === undefined ? "" : `/${props.rootPath}`;
 
   const getConcepts = () => {
     dispatch(startTask());
@@ -114,14 +114,13 @@ export default function BingoBuilder(props : Props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
       });
   };
 
   const getMyResults = () => {
     dispatch(startTask());
-    const url =
-      `${prefix}${endpoints.baseUrl}${bingoGameId}.json`
+    const url = `${prefix}${endpoints.baseUrl}${bingoGameId}.json`;
     axios
       .get(url, {})
       .then(response => {
@@ -133,7 +132,7 @@ export default function BingoBuilder(props : Props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
       });
   };
   const getBoard = () => {
@@ -152,7 +151,7 @@ export default function BingoBuilder(props : Props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
       });
   };
 
@@ -198,14 +197,11 @@ export default function BingoBuilder(props : Props) {
   };
 
   const saveBtn = () => {
-
     if (null === board.bingo_game.end_date) {
       //no op
-      return (<></>);
+      return <></>;
     } else if (new Date(board.bingo_game.end_date) < new Date()) {
-      return (
-        <em key='played_btn'>{t('already_played_msg')}</em>
-      )
+      return <em key="played_btn">{t("already_played_msg")}</em>;
     } else if (
       board.initialised &&
       board.iteration > 0 &&
@@ -213,76 +209,69 @@ export default function BingoBuilder(props : Props) {
     ) {
       return (
         <React.Fragment>
-          <a onClick={() => saveBoard()}>{t('save_lnk')}</a> {t('gen_board_msg')}&hellip;
+          <a onClick={() => saveBoard()}>{t("save_lnk")}</a>{" "}
+          {t("gen_board_msg")}&hellip;
         </React.Fragment>
       );
     } else {
-      return (
-        <em key='save_btn'>{t('gen_and_save_msg')}</em>
-      );
+      return <em key="save_btn">{t("gen_and_save_msg")}</em>;
     }
-  }
+  };
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-      (null !== board.bingo_game.end_date &&
-        new Date(board.bingo_game.end_date) < new Date()) ? (
+    (null !== board.bingo_game.end_date &&
+      new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
-        <a onClick={() => getPrintableBoard()}>
-          {t('download_board_lnk')}
-        </a>{" "}
-        {t('play_msg')}
+        <a onClick={() => getPrintableBoard()}>{t("download_board_lnk")}</a>{" "}
+        {t("play_msg")}
       </React.Fragment>
     ) : (
       "Save your board before this step"
     );
 
   const workSheetInstr = board.practicable ? (
-    <li key={'practice'}>
+    <li key={"practice"}>
       Print and complete this&nbsp;
-      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn
-      it in before class begins.
+      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn it in
+      before class begins.
     </li>
   ) : (
-    <li key={'practice'}>{t('not_enough_entries_msg')}</li>
+    <li key={"practice"}>{t("not_enough_entries_msg")}</li>
   );
 
   const playableInstr = board.playable ? (
     <React.Fragment>
-      <li key={'generate'}>
-        <a onClick={() => randomizeTiles()}>
-          (Re)Generate your playable board
-        </a>{" "}
+      <li key={"generate"}>
+        <a onClick={() => randomizeTiles()}>(Re)Generate your playable board</a>{" "}
         until you get one you like and then&hellip;
       </li>
-      <li key={'save_board'}>{saveBtn()}</li>
-      <li key={'print_board'}>{printBtn}</li>
+      <li key={"save_board"}>{saveBtn()}</li>
+      <li key={"print_board"}>{printBtn}</li>
     </React.Fragment>
   ) : (
-    <li>{t('not_enough_entries_msg')}</li>
+    <li>{t("not_enough_entries_msg")}</li>
   );
 
   return (
     <Panel>
-
       <p>
-        <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
+        <strong>{t("topic_lbl")}:</strong> {board.bingo_game.topic}
       </p>
       <div>
-        <strong>{t('description_lbl')}:</strong>{" "}
+        <strong>{t("description_lbl")}:</strong>{" "}
         <p>{parse(board.bingo_game.description || "")}</p>
       </div>
       {null != candidateList && (
         <p>
-          <strong>{t('performance_lbl')}:</strong>
+          <strong>{t("performance_lbl")}:</strong>
           <span id="performance">{candidateList.cached_performance}</span>
         </p>
       )}
       <hr />
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
-        <TabPanel header={'Bingo game builder'}>
+        <TabPanel header={"Bingo game builder"}>
           <Panel>
-
             <br />
             <ol>
               {workSheetInstr}
@@ -294,20 +283,19 @@ export default function BingoBuilder(props : Props) {
               </div>
             ) : null}
           </Panel>
-
         </TabPanel>
-        <TabPanel header={'Your performance'}>
+        <TabPanel header={"Your performance"}>
           <ScoredGameDataTable candidates={candidates} />
         </TabPanel>
         <TabPanel
-          header={'Worksheet result'}
+          header={"Worksheet result"}
           disabled={
             !board.practicable ||
             null == board.worksheet ||
             (null == board.worksheet.performance &&
               null == board.worksheet.result_img)
           }
-          >
+        >
           {null != board.worksheet ? (
             <Panel>
               <p>
@@ -316,7 +304,7 @@ export default function BingoBuilder(props : Props) {
                 <br />
               </p>
               {null != board.worksheet.result_img &&
-                "" != board.worksheet.result_img ? (
+              "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
             </Panel>
@@ -324,11 +312,10 @@ export default function BingoBuilder(props : Props) {
             "No Worksheet"
           )}
         </TabPanel>
-        <TabPanel header={'Concepts found by class'}>
+        <TabPanel header={"Concepts found by class"}>
           <ConceptChips concepts={concepts} />
         </TabPanel>
       </TabView>
-
     </Panel>
   );
 }

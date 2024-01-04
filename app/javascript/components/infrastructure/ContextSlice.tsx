@@ -149,10 +149,10 @@ const CONFIG = {
           dispatch(setRetrievedProfile(resp["data"]["profile"]["user"]));
           //dispatch( fetchProfile( ) );
         } else {
-          dispatch(setLoggedOut( {} ));
+          dispatch(setLoggedOut({}));
           dispatch(setLookups(resp["data"]["lookups"]));
           dispatch(setEndPoints(resp["data"]["endpoints"]));
-          dispatch(clearProfile( {} ));
+          dispatch(clearProfile({}));
           CONFIG.deleteData(CONFIG.SAVED_CREDS_KEY);
         }
       });
@@ -212,18 +212,18 @@ const contextSlice = createSlice({
   name: "context",
   initialState: initialState,
   reducers: {
-    setInitialised (state, action) {
-        state.status.initialised = true;
+    setInitialised(state, action) {
+      state.status.initialised = true;
     },
-    setEndPointUrl (state, action) {
-        state.config.endpoint_url = action.payload;
+    setEndPointUrl(state, action) {
+      state.config.endpoint_url = action.payload;
     },
-    setLoggingIn (state, action) {
-        state.status.loggingIn = true;
-        state.status.loggedIn = false;
+    setLoggingIn(state, action) {
+      state.status.loggingIn = true;
+      state.status.loggedIn = false;
     },
     setLoggedIn: {
-      reducer (state, action) {
+      reducer(state, action) {
         state.status.loggingIn = false;
         state.status.loggedIn = true;
         state.lookups = action.payload.lookups;
@@ -231,7 +231,14 @@ const contextSlice = createSlice({
         state.status.endpointsLoaded = true;
         state.status.lookupsLoaded = true;
       },
-      prepare(payload: { lookups: object; endpoints: object }): { payload: { lookups: object; endpoints: object; }; meta: any; error: any; } {
+      prepare(payload: {
+        lookups: object;
+        endpoints: object;
+      }): {
+        payload: { lookups: object; endpoints: object };
+        meta: any;
+        error: any;
+      } {
         return {
           payload: {
             lookups: payload.lookups,
@@ -242,24 +249,24 @@ const contextSlice = createSlice({
         };
       }
     },
-    setLoginFailed (state, action) {
-        state.status.loggingIn = false;
+    setLoginFailed(state, action) {
+      state.status.loggingIn = false;
     },
-    setLoggedOut (state, action) {
-        state.status.loggingIn = false;
-        state.status.loggedIn = false;
-        state.lookups = {};
-        state.endpoints = {};
-        state.status.endpointsLoaded = true;
-        state.status.initialised = false;
+    setLoggedOut(state, action) {
+      state.status.loggingIn = false;
+      state.status.loggedIn = false;
+      state.lookups = {};
+      state.endpoints = {};
+      state.status.endpointsLoaded = true;
+      state.status.initialised = false;
     },
-    setEndPoints (state, action) {
-        state.endpoints = action.payload;
-        state.status.endpointsLoaded = true;
+    setEndPoints(state, action) {
+      state.endpoints = action.payload;
+      state.status.endpointsLoaded = true;
     },
-    setLookups (state, action) {
-        state.lookups = action.payload;
-        state.status.lookupsLoaded = true;
+    setLookups(state, action) {
+      state.lookups = action.payload;
+      state.status.lookupsLoaded = true;
     }
   }
 });
@@ -336,7 +343,7 @@ export const emailSignUp = createAsyncThunk(
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
 
-    dispatch(setLoggingIn({} ));
+    dispatch(setLoggingIn({}));
 
     if (!params.email) {
       dispatch(setLoginFailed());
@@ -364,7 +371,7 @@ export const oAuthSignIn = createAsyncThunk(
   async (token: string, thunkAPI) => {
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
-    dispatch(setLoggingIn({} ));
+    dispatch(setLoggingIn({}));
 
     const url = getState().context.endpoints["home"].oauthValidate + ".json";
 

@@ -53,43 +53,35 @@ export default function ResearchParticipationList(props: Props) {
     }
   }, []);
 
-
   const consentFormList =
     null != props.consentFormList ? (
       <>
-      <DataTable
-        value={props.consentFormList}
-        resizableColumns
-        tableStyle={{
-          minWidth: '50rem'
-        }}
-        reorderableColumns
-        paginator
-        rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, props.consentFormList.length]
-        }
-        sortField="name"
-        sortOrder={-1}
-        paginatorDropdownAppendTo={'self'}
-        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        //paginatorLeft={paginatorLeft}
-        //paginatorRight={paginatorRight}
-        dataKey="id"
+        <DataTable
+          value={props.consentFormList}
+          resizableColumns
+          tableStyle={{
+            minWidth: "50rem"
+          }}
+          reorderableColumns
+          paginator
+          rows={5}
+          rowsPerPageOptions={[5, 10, 20, props.consentFormList.length]}
+          sortField="name"
+          sortOrder={-1}
+          paginatorDropdownAppendTo={"self"}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          //paginatorLeft={paginatorLeft}
+          //paginatorRight={paginatorRight}
+          dataKey="id"
         >
-          <Column
-            header={t("consent.name")}
-            field="name"
-            sortable
-            filter
-            />
+          <Column header={t("consent.name")} field="name" sortable filter />
           <Column
             header={t("consent.status")}
             field="id"
             sortable
             filter
-            body={(rowData) => {
+            body={rowData => {
               var output;
               if (rowData.active) {
                 if (Date.now() < Date.parse(rowData.end_date)) {
@@ -102,34 +94,32 @@ export default function ResearchParticipationList(props: Props) {
               }
               return <span>{output}</span>;
             }}
-            />
+          />
           <Column
             header={t("consent.accept_status")}
             field="accepted"
-            body={(rowData) => {
+            body={rowData => {
               return (
                 <span>
-                  {rowData.accepted ? t("consent.accepted") : t("consent.declined")}
+                  {rowData.accepted
+                    ? t("consent.accepted")
+                    : t("consent.declined")}
                 </span>
               );
             }}
-            />
+          />
           <Column
             header={t("consent.action")}
             field="link"
-            body={(rowData) => {
-              return (<a href={rowData.link}>Review/Update</a>);
+            body={rowData => {
+              return <a href={rowData.link}>Review/Update</a>;
             }}
-            />
-
+          />
         </DataTable>
       </>
     ) : (
       "The course data is loading"
     );
 
-  return (
-  <Panel>
-    {consentFormList}
-  </Panel>) ;
+  return <Panel>{consentFormList}</Panel>;
 }

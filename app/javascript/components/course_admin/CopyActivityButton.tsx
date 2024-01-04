@@ -8,7 +8,7 @@ import { Nullable } from "primereact/ts-helpers";
 
 import { Dialog } from "primereact/dialog";
 
-import { Button } from 'primereact/button';
+import { Button } from "primereact/button";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -16,12 +16,12 @@ import { useTranslation } from "react-i18next";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 type Props = {
-  itemId: number,
-  itemUpdateFunc: () => void,
-  startDate: Date,
-  copyUrl: string,
-  addMessagesFunc: (msgs: {}) => void,
-}
+  itemId: number;
+  itemUpdateFunc: () => void;
+  startDate: Date;
+  copyUrl: string;
+  addMessagesFunc: (msgs: {}) => void;
+};
 
 export default function CopyActivityButton(props: Props) {
   const category = "course";
@@ -41,9 +41,9 @@ export default function CopyActivityButton(props: Props) {
   const copyDialog = (
     <Dialog
       visible={null !== copyData}
-      header={<h3>{t('dialog_title')}</h3>}
+      header={<h3>{t("dialog_title")}</h3>}
       draggable={false}
-      onClick={(event) => {
+      onClick={event => {
         event.preventDefault();
       }}
       closeOnEscape={false}
@@ -68,8 +68,10 @@ export default function CopyActivityButton(props: Props) {
             onClick={event => {
               dispatch(startTask("copying_course"));
               const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
-              const sendDate =  DateTime.fromISO( newStartDate.toISOString().substring(0,10),
-                {zone: 'UTC' } );
+              const sendDate = DateTime.fromISO(
+                newStartDate.toISOString().substring(0, 10),
+                { zone: "UTC" }
+              );
 
               axios
                 .post(url, {
@@ -98,43 +100,37 @@ export default function CopyActivityButton(props: Props) {
       }
     >
       This course started on{" "}
-      {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
-      would you like for the new copy to begin? Everything will be
-      shifted accordingly.
+      {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When would you like
+      for the new copy to begin? Everything will be shifted accordingly.
       <br />
       <span className="card flex justify-content-center">
-
         <Calendar
           value={newStartDate}
           id="newCourseStartDate"
           showIcon
           onChange={newValue => {
-            setNewStartDate(newValue.value)
-
+            setNewStartDate(newValue.value);
           }}
         />
-        <label htmlFor="newCourseStartDate">
-          {t("date_picker_label")}
-        </label>
+        <label htmlFor="newCourseStartDate">{t("date_picker_label")}</label>
       </span>
     </Dialog>
-
   );
 
   return (
     <React.Fragment>
       <Button
-        tooltip={t('btn_tooltip_title')}
+        tooltip={t("btn_tooltip_title")}
         tooltipOptions={{
-          position: 'left',
+          position: "left"
         }}
-        icon='pi pi-copy'
+        icon="pi pi-copy"
         id={"copy-" + props.itemId}
         onClick={event => {
           setCopyData({
             id: props.itemId,
             startDate: props.startDate,
-            copyUrl: props.copyUrl,
+            copyUrl: props.copyUrl
           });
         }}
         aria-label={t("copy_btn_aria")}
@@ -144,4 +140,3 @@ export default function CopyActivityButton(props: Props) {
     </React.Fragment>
   );
 }
-

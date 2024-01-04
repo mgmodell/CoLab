@@ -46,7 +46,7 @@ export default function BingoGameDataAdminTable(props: Props) {
   ];
   const [visibleColumns, setVisibleColumns] = React.useState([]);
 
-  const openDialog = (event) => {
+  const openDialog = event => {
     const index = event.index;
     setIndividual({
       student: props.results_raw[index].student,
@@ -55,8 +55,7 @@ export default function BingoGameDataAdminTable(props: Props) {
       score: props.results_raw[index].score
     });
     setDialogOpen(true);
-  }
-
+  };
 
   return (
     <Panel>
@@ -66,9 +65,7 @@ export default function BingoGameDataAdminTable(props: Props) {
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, 100]
-        }
+        rowsPerPageOptions={[5, 10, 20, 100]}
         tableStyle={{
           width: "100%"
         }}
@@ -76,96 +73,91 @@ export default function BingoGameDataAdminTable(props: Props) {
         scrollHeight="calc(100vh - 20rem)"
         className="p-datatable-striped p-datatable-gridlines"
         dataKey="id"
-        onRowClick={(event) =>{
+        onRowClick={event => {
           openDialog(event);
-
-        } }
+        }}
         header={
           <StandardListToolbar
-            itemType={'invitation'}
-            filtering={
-              {
-                filterValue: filterText,
-                setFilterFunc: setFilterText
-              }
-            }
-            columnToggle={
-              {
-                optColumns: optColumns,
-                visibleColumns: visibleColumns,
-                setVisibleColumnsFunc: setVisibleColumns,
-              }
-            }
-          />}
+            itemType={"invitation"}
+            filtering={{
+              filterValue: filterText,
+              setFilterFunc: setFilterText
+            }}
+            columnToggle={{
+              optColumns: optColumns,
+              visibleColumns: visibleColumns,
+              setVisibleColumnsFunc: setVisibleColumns
+            }}
+          />
+        }
       >
-          <Column
-            header={OPT_COLS.PERFORMANCE}
-            field={'performance'}
-            sortable
-            filter
-            key={'performance'}
-          />
+        <Column
+          header={OPT_COLS.PERFORMANCE}
+          field={"performance"}
+          sortable
+          filter
+          key={"performance"}
+        />
 
-          <Column
-            header={OPT_COLS.SCORE}
-            field={'score'}
-            sortable
-            filter
-            key={'score'}
-          />
-          <Column
-            header={OPT_COLS.STUDENT}
-            field={'student'}
-            sortable
-            filter
-            key={'student'}
-          />
+        <Column
+          header={OPT_COLS.SCORE}
+          field={"score"}
+          sortable
+          filter
+          key={"score"}
+        />
+        <Column
+          header={OPT_COLS.STUDENT}
+          field={"student"}
+          sortable
+          filter
+          key={"student"}
+        />
         {visibleColumns.includes(OPT_COLS.GROUP) ? (
           <Column
             header={OPT_COLS.GROUP}
-            field={'group'}
+            field={"group"}
             sortable
             filter
-            key={'group'}
+            key={"group"}
           />
         ) : null}
         {visibleColumns.includes(OPT_COLS.EXPECTED) ? (
           <Column
             header={OPT_COLS.EXPECTED}
-            field={'concepts_expected'}
+            field={"concepts_expected"}
             sortable
             filter
-            key={'concepts_expected'}
+            key={"concepts_expected"}
           />
         ) : null}
         {visibleColumns.includes(OPT_COLS.ENTERED) ? (
           <Column
             header={OPT_COLS.ENTERED}
-            field={'concepts_entered'}
+            field={"concepts_entered"}
             sortable
             filter
-            key={'concepts_entered'}
+            key={"concepts_entered"}
           />
         ) : null}
         {visibleColumns.includes(OPT_COLS.CREDITED) ? (
           <Column
             header={OPT_COLS.CREDITED}
-            field={'concepts_credited'}
+            field={"concepts_credited"}
             sortable
             filter
-            key={'concepts_credited'}
+            key={"concepts_credited"}
           />
         ) : null}
         {visibleColumns.includes(OPT_COLS.TERM_PROBLEMS) ? (
           <Column
             header={OPT_COLS.TERM_PROBLEMS}
-            field={'term_problems'}
+            field={"term_problems"}
             sortable
             filter
-            key={'term_problems'}
+            key={"term_problems"}
           />
         ) : null}
-
       </DataTable>
       <BingoGameResults
         open={dialogOpen}
@@ -174,7 +166,7 @@ export default function BingoGameDataAdminTable(props: Props) {
         score={individual.score}
         close={() => setDialogOpen(false)}
         candidates={individual.candidates}
-        />
+      />
     </Panel>
   );
 }

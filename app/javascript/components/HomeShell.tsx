@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
@@ -29,7 +28,7 @@ const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const TaskList = React.lazy(() => import("./TaskList"));
 
 interface Props {
-  rootPath?: string
+  rootPath?: string;
 }
 
 export default function HomeShell(props: Props) {
@@ -73,55 +72,55 @@ export default function HomeShell(props: Props) {
         : `${endpoints.taskListUrl}.json`;
 
     dispatch(startTask());
-    axios.get(url, {}).then(resp => {
-      //Process the data
-      const data = resp.data;
-      data["tasks"].forEach((value, index, array) => {
-        switch (value.type) {
-          case "assessment":
-            value.title = value.group_name + " for (" + value.name + ")";
-            break;
-          case "bingo_game":
-            value.title = value.name;
-            break;
-          case "assignment":
-            value.title = value.name;
-            break;
-          case "experience":
-            value.title = value.name;
-            break;
-        }
-        if (props.rootPath === undefined) {
-          value.url = `/home/${value.link}`;
-        } else {
-          value.url = `/${props.rootPath}/home/${value.link}`;
-        }
-        value.link = value.url;
-        // Set the dates properly - close may need work
-        value.start = value.next_date;
-        if (null !== value.next_date) {
-          value.next_date = DateTime.fromISO(value.next_date);
-        }
-        if (null !== value.start_date) {
-          value.start_date = DateTime.fromISO(value.start_date);
-        }
+    axios
+      .get(url, {})
+      .then(resp => {
+        //Process the data
+        const data = resp.data;
+        data["tasks"].forEach((value, index, array) => {
+          switch (value.type) {
+            case "assessment":
+              value.title = value.group_name + " for (" + value.name + ")";
+              break;
+            case "bingo_game":
+              value.title = value.name;
+              break;
+            case "assignment":
+              value.title = value.name;
+              break;
+            case "experience":
+              value.title = value.name;
+              break;
+          }
+          if (props.rootPath === undefined) {
+            value.url = `/home/${value.link}`;
+          } else {
+            value.url = `/${props.rootPath}/home/${value.link}`;
+          }
+          value.link = value.url;
+          // Set the dates properly - close may need work
+          value.start = value.next_date;
+          if (null !== value.next_date) {
+            value.next_date = DateTime.fromISO(value.next_date);
+          }
+          if (null !== value.start_date) {
+            value.start_date = DateTime.fromISO(value.start_date);
+          }
+        });
+        setTasks(data.tasks);
+        setConsentLogs(data.consent_logs);
+        setWaitingRosters(data.waiting_rosters);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
-      setTasks(data.tasks);
-      setConsentLogs(data.consent_logs);
-      setWaitingRosters(data.waiting_rosters);
-
-    }).finally(() => {
-      dispatch(endTask());
-    })
   };
 
   useEffect(() => {
-
     if (endpointsLoaded && (props.rootPath !== undefined || isLoggedIn)) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
-
 
   var pageContent = <Skeleton className="mb-2" />;
   if (undefined !== consentLogs) {
@@ -145,12 +144,17 @@ export default function HomeShell(props: Props) {
               count: tasks.length
             })}
           </p>
-          <TabView activeIndex={curTab} onTabChange={e => { setCurTab(e.index) }}>
+          <TabView
+            activeIndex={curTab}
+            onTabChange={e => {
+              setCurTab(e.index);
+            }}
+          >
             <TabPanel header="Task View">
               <TaskList tasks={tasks} />
             </TabPanel>
 
-            <TabPanel header='Calendar View' >
+            <TabPanel header="Calendar View">
               <FullCalendar
                 headerToolbar={{
                   center: "thisWeek,dayGridMonth"
@@ -171,13 +175,10 @@ export default function HomeShell(props: Props) {
                 displayEventTime={false}
                 events={tasks}
                 eventClick={info => {
-                  navigate(
-                    info.event.url
-                  );
+                  navigate(info.event.url);
                 }}
                 plugins={[dayGridPlugin, luxonPlugin]}
               />
-
             </TabPanel>
           </TabView>
         </React.Fragment>
@@ -190,7 +191,7 @@ export default function HomeShell(props: Props) {
       <Container fluid>
         {endpointsLoaded ? (
           <React.Fragment>
-            <Row >
+            <Row>
               <Col xs={12}>
                 {undefined !== waitingRosters && waitingRosters.length > 0 ? (
                   <DecisionInvitationsTable
@@ -201,10 +202,10 @@ export default function HomeShell(props: Props) {
               </Col>
             </Row>
 
-            <Row >
+            <Row>
               <Col xs={12}>
                 {undefined !== endpoints["courseRegRequestsUrl"] &&
-                  undefined !== endpoints["courseRegUpdatesUrl"] ? (
+                undefined !== endpoints["courseRegUpdatesUrl"] ? (
                   <DecisionEnrollmentsTable
                     init_url={endpoints["courseRegRequestsUrl"]}
                     update_url={endpoints["courseRegUpdatesUrl"]}
@@ -215,13 +216,9 @@ export default function HomeShell(props: Props) {
           </React.Fragment>
         ) : null}
         <Row>
-          <Col xs={12}>
-            {pageContent}
-          </Col>
-
+          <Col xs={12}>{pageContent}</Col>
         </Row>
       </Container>
     </Panel>
   );
 }
-

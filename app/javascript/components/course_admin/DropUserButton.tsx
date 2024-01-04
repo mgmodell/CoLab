@@ -15,13 +15,12 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-
 type Props = {
   dropUrl: string;
-  refreshFunc: (messages: { }) => void;
-};  
+  refreshFunc: (messages: {}) => void;
+};
 
-export default function DropUserButton(props : Props) {
+export default function DropUserButton(props: Props) {
   const [showDialog, setShowDialog] = useState(false);
 
   const category = "course";
@@ -53,7 +52,7 @@ export default function DropUserButton(props : Props) {
         </Button>
         <Button
           onClick={event => {
-            dispatch(startTask('dropping'));
+            dispatch(startTask("dropping"));
             axios
               .get(`${props.dropUrl}.json`, {})
               .then(response => {
@@ -63,8 +62,9 @@ export default function DropUserButton(props : Props) {
               })
               .catch(error => {
                 console.log("error", error);
-              }).finally(() => {
-                dispatch(endTask('dropping'));
+              })
+              .finally(() => {
+                dispatch(endTask("dropping"));
               });
           }}
           color="primary"
@@ -93,4 +93,3 @@ export default function DropUserButton(props : Props) {
     </React.Fragment>
   );
 }
-
