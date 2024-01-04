@@ -331,7 +331,7 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
     @users.each do |_address|
       step 'the user enables the "Email" table view option'
       wait_for_render
-      xpression = "//tr/td/a[text()='#{_address.email}']/../../td/button[@aria-label='Drop Student']"
+      xpression = "//tr/td/a[contains(.,'#{_address.email}')]/../../td/button[@aria-label='Drop Student']"
       elem = find(:xpath, xpression )
       elem.click
       find(:xpath,
