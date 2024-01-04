@@ -341,7 +341,7 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
   else
     # Find the email
     wait_for_render
-    elem = find(:xpath, "//tr/td/a[text()='#{addresses}']/../../td/button[@aria-label='Drop Student']")
+    elem = find(:xpath, "//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='Drop Student']")
 
     elem.click
 
