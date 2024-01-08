@@ -15,13 +15,9 @@ import {
 
 import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { iconForType } from "../ActivityLib";
 
 const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 import { useTranslation } from "react-i18next";
-import CourseAdminListToolbar from "./CourseAdminListToolbar";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
@@ -32,9 +28,14 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
-import { set } from "mockdate";
+import ActivityList from "./ActivityList";
 
-export default function CourseDataAdmin(props) {
+interface IActivityLink {
+  name: string;
+  link: string;
+}
+
+export default function CourseDataAdmin() {
   const category = "course";
   const { t } = useTranslation(`${category}s`);
   const [filterText, setFilterText] = useState('');
@@ -46,12 +47,6 @@ export default function CourseDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
-
-  const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
@@ -88,7 +83,7 @@ export default function CourseDataAdmin(props) {
     state => state.context.lookups["timezones"]
   );
   const [consentForms, setConsentForms] = useState([]);
-  const [newActivityLinks, setNewActivityLinks] = useState([]);
+  const [newActivityLinks, setNewActivityLinks] =  useState <Array<IActivityLink>>([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const dispatch = useDispatch();
@@ -366,146 +361,15 @@ export default function CourseDataAdmin(props) {
     </Panel>
   );
 
-  enum ACTIVITY_COLS {
-    STATUS = "status",
-    OPEN = "open",
-    CLOSE = "close",
-  }
-
-  const optColumns = [
-    ACTIVITY_COLS.STATUS,
-    ACTIVITY_COLS.OPEN,
-    ACTIVITY_COLS.CLOSE,
-  ]
 
 
   const activityList =
     courseId != null && courseId > 0 ? (
-      <>
-        <DataTable
-          value={courseActivities.filter((activity) => {
-
-            //Add filtering here
-            return filterText.length === 0 || activity.name.includes(filterText);
-
-          })}
-          resizableColumns
-          reorderableColumns
-          paginator
-          rows={5}
-          tableStyle={{
-            minWidth: '50rem'
-          }}
-          rowsPerPageOptions={
-            [5, 10, 20, courseActivities.length]
-          }
-          header={
-            <CourseAdminListToolbar
-              newActivityLinks={newActivityLinks}
-              filtering={{
-                filterValue: filterText,
-                setFilterFunc: setFilterText,
-              }}
-              columnToggle={{
-                optColumns: optColumns,
-                visibleColumns: optActivityColumns,
-                setVisibleColumnsFunc: setOptActivityColumns,
-
-              }}
-            />}
-          sortOrder={-1}
-          paginatorDropdownAppendTo={'self'}
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          onRowClick={(event) => {
-            const link = event.data.link; //courseActivities[cellMeta.dataIndex].link;
-            const activityId = event.data.id; // courseActivities[cellMeta.dataIndex].id;
-            navigate(`${link}/${activityId}`);
-          }}
-          currentPageReportTemplate="{first} to {last} of {totalRecords}"
-          dataKey="id"
-        >
-          <Column
-            header={t('activities.type_col')}
-            field="type"
-            body={(rowData) => {
-              return iconForType(rowData.type);
-            }}
-          />
-          <Column
-            header={t('activities.name_col')}
-            field="name"
-          />
-          {optActivityColumns.includes(ACTIVITY_COLS.STATUS) ? (
-          <Column
-            header={t('activities.status_col')}
-            field="status"
-            body={(rowData) => {
-              if (!rowData.active) {
-                return 'Not Activated'
-              }
-              else if (rowData.end_date > new Date( )) {
-                return "Active";
-              } else {
-                return "Expired";
-              }
-            }}
-          /> ): null
-            }
-            {optActivityColumns.includes(ACTIVITY_COLS.OPEN) ? (
-          <Column
-            header={t('activities.open_col')}
-            field="start_date"
-            body={(rowData) => {
-              const dt = Date.parse(rowData.start_date);
-              return <span>{dt.toLocaleString( )}</span>;
-            }}
-          />
-              ):null }
-              {optActivityColumns.includes(ACTIVITY_COLS.CLOSE) ? (
-          <Column
-            header={t('activities.close_col')}
-            field="end_date"
-            body={(rowData) => {
-              const dt = Date.parse(rowData.end_date);
-              return <span>{dt.toLocaleString()}</span>;
-
-            }}
-          />
-                ): null}
-          <Column
-            header=''
-            field="link"
-            body={(rowData) => {
-              const lbl = t('activities.delete_lbl');
-              return (
-                <Button
-                  icon="pi pi-trash"
-                  aria-label="Delete"
-                  tooltip={lbl}
-                  onClick={event => {
-                    dispatch(startTask("deleting"));
-                    axios
-                      // Is this right? Shouldn't it be params.value?
-                      .delete(user.drop_link, {})
-                      .then(response => {
-                        const data = response.data;
-                        getCourse();
-                        setMessages(data.messages);
-                        dispatch(endTask("deleting"));
-                      })
-                      .catch(error => {
-                        console.log("error:", error);
-                      }).finally(() => {
-                        dispatch(endTask("deleting"));
-                      })
-                  }}
-                />
-              );
-            }}
-          />
-
-        </DataTable>
-      </>
+      <ActivityList
+        activities={courseActivities}
+        newActivityLinks={newActivityLinks}
+        refreshFunc={getCourse}
+        />
 
     ) : (
       <div>{t('activities.save_first_msg')}</div>
@@ -546,3 +410,5 @@ export default function CourseDataAdmin(props) {
     </Panel>
   );
 }
+
+export { IActivityLink}

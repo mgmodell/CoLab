@@ -11,11 +11,8 @@ import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { IActivityLink } from "./CourseDataAdmin";
 
-interface IActivityLink {
-  name: string;
-  link: string;
-}
 type Props = {
   newActivityLinks: Array<IActivityLink>;
   filtering?: {

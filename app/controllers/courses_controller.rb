@@ -3,21 +3,20 @@
 class CoursesController < ApplicationController
   include PermissionsCheck
 
-  layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
-  before_action :set_reg_course, only: %i[self_reg self_reg_confirm self_reg_init]
+  before_action :set_reg_course, only: %i[self_reg_init self_reg_confirm self_reg_init]
   before_action :check_admin, only: %i[new create]
-  before_action :check_editor, except: %i[next diagnose react accept_roster
+  before_action :check_editor, except: %i[accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  before_action :check_viewer, except: %i[next diagnose react accept_roster
+  before_action :check_viewer, except: %i[accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  skip_before_action :authenticate_user!, only: %i[qr get_quote]
+  skip_before_action :authenticate_user!, only: %i[qr]
 
   def show
     @title = t('.title')
