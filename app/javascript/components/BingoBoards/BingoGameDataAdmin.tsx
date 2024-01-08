@@ -12,8 +12,8 @@ import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+
 import { Skeleton } from "primereact/skeleton";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
@@ -23,7 +23,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { useTranslation } from "react-i18next";
 
-import makeStyles from "@mui/styles/makeStyles";
+// import makeStyles from "@mui/styles/makeStyles";
 
 import ConceptChips from "./ConceptChips";
 const BingoGameDataAdminTable = React.lazy(() =>
@@ -35,6 +35,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 
+/*
 const useStyles = makeStyles({
   container: {
     display: "flex",
@@ -50,9 +51,10 @@ const useStyles = makeStyles({
     width: 200
   }
 });
+*/
 
 export default function BingoGameDataAdmin(props) {
-  const classes = useStyles();
+  //const classes = useStyles();
 
   const endpointSet = "bingo_game";
   const endpoints = useTypedSelector(
@@ -243,7 +245,7 @@ export default function BingoGameDataAdmin(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes["button"]}
+        //className={classes["button"]}
         onClick={saveBingoGame}
         id="save_bingo_game"
         value="save_bingo_game"
@@ -261,7 +263,7 @@ export default function BingoGameDataAdmin(props) {
             id="bingo-name"
             label={t("group_discount")}
             type="number"
-            className={classes.textField}
+            //className={classes.textField}
             value={gameGroupDiscount}
             onChange={event =>
               setGameGroupDiscount(parseInt(event.target.value))
@@ -272,7 +274,9 @@ export default function BingoGameDataAdmin(props) {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormControl className={classes.formControl}>
+          <FormControl
+            //className={classes.formControl}
+            >
             <InputLabel shrink htmlFor="bingo_game_project_id">
               {t("group_source")}
             </InputLabel>
@@ -282,7 +286,7 @@ export default function BingoGameDataAdmin(props) {
               onChange={event => setGameGroupProjectId(event.target.value)}
               displayEmpty
               name="bingo_game_project"
-              className={classes.selectEmpty}
+              //className={classes.selectEmpty}
             >
               {gameProjects.map(project => {
                 return (
@@ -310,7 +314,7 @@ export default function BingoGameDataAdmin(props) {
                 <TextField
                   id="topic"
                   label={t("topic")}
-                  className={classes.textField}
+                  //className={classes.textField}
                   value={gameTopic}
                   fullWidth
                   onChange={event => setGameTopic(event.target.value)}
@@ -332,7 +336,7 @@ export default function BingoGameDataAdmin(props) {
                 <TextField
                   id="bingo-lead-time"
                   label={t("lead_time")}
-                  className={classes.lead_time}
+                  //className={classes.lead_time}
                   value={gameLeadTime}
                   type="number"
                   onChange={event => setGameLeadTime(event.target.value)}
@@ -346,7 +350,7 @@ export default function BingoGameDataAdmin(props) {
                 <TextField
                   id="bingo-individual_count"
                   label={t("ind_term_count")}
-                  className={classes.textField}
+                  //className={classes.textField}
                   value={gameIndividualCount}
                   type="number"
                   onChange={event => setGameIndividualCount(event.target.value)}

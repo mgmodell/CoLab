@@ -26,7 +26,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { useTranslation } from "react-i18next";
 
-import makeStyles from "@mui/styles/makeStyles";
+//import makeStyles from "@mui/styles/makeStyles";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
@@ -34,6 +34,7 @@ import axios from "axios";
 import { Checkbox, FormLabel } from "@mui/material";
 import { Editor } from "primereact/editor";
 
+/*
 const useStyles = makeStyles({
   container: {
     display: "flex",
@@ -49,9 +50,10 @@ const useStyles = makeStyles({
     width: 200
   }
 });
+*/
 
 export default function AssignmentDataAdmin(props) {
-  const classes = useStyles();
+  //const classes = useStyles();
 
   const category = "assignment";
   const endpoints = useTypedSelector(
@@ -249,7 +251,7 @@ export default function AssignmentDataAdmin(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes["button"]}
+        //className={classes["button"]}
         onClick={saveAssignment}
         id="save_assignment"
         value="save_assignment"
@@ -265,7 +267,9 @@ export default function AssignmentDataAdmin(props) {
     <Suspense fallback={<Skeleton variant="text" />}>
       <React.Fragment>
         <Grid item xs={6}>
-          <FormControl className={classes.formControl}>
+          <FormControl
+          //className={classes.formControl}
+          >
             <InputLabel shrink htmlFor="assignment_project_id">
               {t("edit.group_source")}
             </InputLabel>
@@ -277,7 +281,7 @@ export default function AssignmentDataAdmin(props) {
               }
               displayEmpty
               name="assignment_project"
-              className={classes.selectEmpty}
+              //className={classes.selectEmpty}
             >
               {assignmentProjects.map(project => {
                 return (
@@ -306,7 +310,7 @@ export default function AssignmentDataAdmin(props) {
                   <TextField
                     id="name"
                     label={t("name")}
-                    className={classes.textField}
+                    //className={classes.textField}
                     value={assignmentName}
                     fullWidth
                     onChange={event => setAssignmentName(event.target.value)}
@@ -377,7 +381,9 @@ export default function AssignmentDataAdmin(props) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    //className={classes.formControl}
+                    >
                     <InputLabel shrink htmlFor="assignment_rubric_id">
                       {t("edit.select_rubric")}
                     </InputLabel>
@@ -389,7 +395,7 @@ export default function AssignmentDataAdmin(props) {
                       }
                       displayEmpty
                       name="assignment_rubric"
-                      className={classes.selectEmpty}
+                      //className={classes.selectEmpty}
                     >
                       {availableRubrics.map(rubric => {
                         return (

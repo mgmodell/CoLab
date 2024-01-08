@@ -17,7 +17,6 @@
     "@fullcalendar/react": "^6.0.4",
     "@mui/icons-material": "^5.6.0",
     "@mui/material": "^5.6.0",
-    "@mui/styles": "^5.6.0",
     "@mui/x-date-pickers": "^6.0.1",
     "@react-oauth/google": "^0.12.1",
     "@react-spring/parallax": "^9.4.4",
