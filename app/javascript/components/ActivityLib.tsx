@@ -27,7 +27,7 @@ export function iconForType(type: string) {
     case "assignment":
     case "Assignments":
       className = "assignment";
-      icon = <span className={`${className} pi pi-file-edi`} />;
+      icon = <span className={`${className} pi pi-file-edit`} />;
       break;
     case "submission":
       className = "submission";

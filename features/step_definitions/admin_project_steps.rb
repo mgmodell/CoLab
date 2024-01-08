@@ -46,7 +46,7 @@ end
 Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   wait_for_render
   find(:xpath, "//button[@id='new_activity']" ).click
-  find( :xpath, "//ul[@role='menu']/li/a/span[contains(.,'#{link_or_button}')]" ).click
+  find( :xpath, "//ul[@role='menu']/li[contains(.,'#{link_or_button}')]" ).click
 
   wait_for_render
 end
