@@ -113,8 +113,11 @@ Then(/^the installment form should request factor x user values$/) do
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
-  page.all(:xpath, "//div[@id='installments']//a[@role='tab']" ).each(&:click)
-  actual_count = page.all(:xpath, '//input[starts-with(@name,"slider_")]', visible: :all).size
+  actual_count = 0
+  page.all(:xpath, "//div[@id='installments']//a[@role='button']" ).each do |tab|
+    tab.click unless 1 == tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]').size
+    actual_count += tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]//input[starts-with(@name,"slider_")]', visible: :all).size
+  end
   actual_count.should eq expected_count
 
 end
