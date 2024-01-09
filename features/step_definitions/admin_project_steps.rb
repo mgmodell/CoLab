@@ -104,14 +104,12 @@ end
 
 Then 'the user enables the {string} table view option' do |view_option|
   ack_messages
-  (1..3).each do |tries|
-    find(:xpath, "//div[@data-pc-name='multiselect']" ).click
-    checkboxes = find_all(:xpath, "//ul[@role='listbox']/li[contains(.,'#{view_option}')]/div/div" )
-    next unless checkboxes.size.positive?
-    break if 'true' == checkboxes[0]['data-p-highlight']
+  find(:xpath, "//div[@data-pc-name='multiselect']" ).click
+  checkboxes = find_all(:xpath, "//ul[@role='listbox']/li[contains(.,'#{view_option}')]/div/div" )
+  next unless checkboxes.size.positive?
+  break if 'true' == checkboxes[0]['data-p-highlight']
 
-    checkboxes[0].click
-  end
+  checkboxes[0].click
   send_keys :escape
 
 end
