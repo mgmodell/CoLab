@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Outlet, Route, Routes, useParams } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -310,7 +310,7 @@ export default function CourseDataAdmin() {
                 school_id: changeTo,
                 timezone: schoolTzHash[changeTo]
               };
-            } );
+            });
           }}
           optionLabel="name"
           optionValue="id"
@@ -349,7 +349,7 @@ export default function CourseDataAdmin() {
         options={consentForms}
         onChange={event => {
           setCourseValue('consent_form_id', event.target.value);
-        } }
+        }}
         optionValue="id"
         optionLabel="name"
         placeholder="Select a Consent Form"
@@ -369,10 +369,11 @@ export default function CourseDataAdmin() {
           const changeTo = event.value;
           setCourse(course => {
             return {
-                ...course,
-                start_date: changeTo[0],
-                end_date: changeTo[1] };
-          } )
+              ...course,
+              start_date: changeTo[0],
+              end_date: changeTo[1]
+            };
+          })
         }}
 
       />
@@ -409,39 +410,55 @@ export default function CourseDataAdmin() {
       <div>{t('activities.save_first_msg')}</div>
     );
 
-  return (
-    <Panel>
-      <TabView
-        activeIndex={curTab}
-        onTabChange={(event) => setCurTab(event.index)}
-      >
+  const advancedCourseAdmin = (
+            <Panel>
+              <TabView
+                activeIndex={curTab}
+                onTabChange={(event) => setCurTab(event.index)}
+              >
 
-        <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
-        <TabPanel header={t("instructors_tab")}>
-          <CourseUsersList
-            courseId={courseId}
-            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-            usersList={courseUsersList}
-            usersListUpdateFunc={setCourseUsersList}
-            userType={UserListType.instructor}
-            addMessagesFunc={postNewMessage}
-          />
-        </TabPanel>
-        <TabPanel header={t("students_tab")}>
-          <CourseUsersList
-            courseId={courseId}
-            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-            usersList={courseUsersList}
-            usersListUpdateFunc={setCourseUsersList}
-            userType={UserListType.student}
-            addMessagesFunc={postNewMessage}
-          />
-        </TabPanel>
-        <TabPanel header={t("activities_tab")}>{activityList}</TabPanel>
-      </TabView>
-      {saveButton}
-      {messages["status"]}
-    </Panel>
+                <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
+                <TabPanel header={t("instructors_tab")}>
+                  <CourseUsersList
+                    courseId={courseId}
+                    retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+                    usersList={courseUsersList}
+                    usersListUpdateFunc={setCourseUsersList}
+                    userType={UserListType.instructor}
+                    addMessagesFunc={postNewMessage}
+                  />
+                </TabPanel>
+                <TabPanel header={t("students_tab")}>
+                  <CourseUsersList
+                    courseId={courseId}
+                    retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+                    usersList={courseUsersList}
+                    usersListUpdateFunc={setCourseUsersList}
+                    userType={UserListType.student}
+                    addMessagesFunc={postNewMessage}
+                  />
+                </TabPanel>
+                <TabPanel header={t("activities_tab")}>{activityList}</TabPanel>
+              </TabView>
+              {saveButton}
+              {messages["status"]}
+            </Panel>
+
+  )
+  return (
+    <Routes>
+      <Route path="/" element={<Outlet />}>
+        <Route
+          index
+          element={
+            advancedCourseAdmin
+          }
+        />
+
+      </Route>
+
+
+    </Routes>
   );
 }
 
