@@ -76,7 +76,6 @@ export default function CourseList(props) {
 
   useEffect(() => {
     if (endpointStatus) {
-      dispatch(endTask("loading"));
       getCourses();
     }
   }, [endpointStatus]);
@@ -260,5 +259,3 @@ export default function CourseList(props) {
     </Suspense>
   );
 }
-
-CourseList.propTypes = {};
