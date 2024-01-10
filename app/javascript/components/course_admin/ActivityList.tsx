@@ -196,3 +196,5 @@ export default function ActivityList(props: Props) {
 
     )
 }
+
+export { ActivityType, Activity };
