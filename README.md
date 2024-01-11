@@ -25,6 +25,7 @@ download/installation on Windows).
 
 ### Setting up ###
 1. On Windows, you'll first want to install [Ubuntu on WSL2](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview) (version 20.04 LTS or later should work just fine).
+1. If you're installing Ubuntu, be sure to use the apt package for Docker rather than the snap version. Uninstall the snap version if it's present.
 1. If you plan to run tests, you must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
     1. mariadb-client
     1. mysql-client
@@ -32,6 +33,7 @@ download/installation on Windows).
 1. Open a terminal and navigate to a directory where you'd like to
   download the project.
 1. Run `git clone https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
+1. Navigate to the colab directory
 1. Run `./buildContainers.sh`
 1. Run `./dev_serv.sh -j` to load up anonymized testing data.
 1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
