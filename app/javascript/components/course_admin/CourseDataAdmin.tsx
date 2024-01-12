@@ -368,13 +368,17 @@ export default function CourseDataAdmin() {
         placeholder="Select a Date Range"
         onChange={event => {
           const changeTo = event.value;
-          setCourse(course => {
-            return {
-              ...course,
-              start_date: changeTo[0],
-              end_date: changeTo[1]
-            };
-          })
+          console.log('change', event);
+          if (null !== changeTo && changeTo.length > 1) {
+            setCourse(course => {
+              return {
+                ...course,
+                start_date: changeTo[0],
+                end_date: changeTo[1]
+              };
+            })
+
+          }
         }}
 
       />
@@ -412,40 +416,40 @@ export default function CourseDataAdmin() {
     );
 
   const advancedCourseAdmin = (
-            <Panel>
-              <TabView
-                activeIndex={curTab}
-                onTabChange={(event) => setCurTab(event.index)}
-              >
+    <Panel>
+      <TabView
+        activeIndex={curTab}
+        onTabChange={(event) => setCurTab(event.index)}
+      >
 
-                <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
-                <TabPanel header={t("instructors_tab") } disabled={isNaN(courseId)}>
-                  <CourseUsersList
-                    courseId={courseId}
-                    retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-                    usersList={courseUsersList}
-                    usersListUpdateFunc={setCourseUsersList}
-                    userType={UserListType.instructor}
-                    addMessagesFunc={postNewMessage}
-                  />
-                </TabPanel>
-                <TabPanel header={t("students_tab")} disabled={isNaN(courseId)}>
-                  <CourseUsersList
-                    courseId={courseId}
-                    retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-                    usersList={courseUsersList}
-                    usersListUpdateFunc={setCourseUsersList}
-                    userType={UserListType.student}
-                    addMessagesFunc={postNewMessage}
-                  />
-                </TabPanel>
-                <TabPanel header={t("activities_tab")} disabled={isNaN(courseId)}>
-                  {activityList}
-                </TabPanel>
-              </TabView>
-              {saveButton}
-              {messages["status"]}
-            </Panel>
+        <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
+        <TabPanel header={t("instructors_tab")} disabled={isNaN(courseId)}>
+          <CourseUsersList
+            courseId={courseId}
+            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType={UserListType.instructor}
+            addMessagesFunc={postNewMessage}
+          />
+        </TabPanel>
+        <TabPanel header={t("students_tab")} disabled={isNaN(courseId)}>
+          <CourseUsersList
+            courseId={courseId}
+            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType={UserListType.student}
+            addMessagesFunc={postNewMessage}
+          />
+        </TabPanel>
+        <TabPanel header={t("activities_tab")} disabled={isNaN(courseId)}>
+          {activityList}
+        </TabPanel>
+      </TabView>
+      {saveButton}
+      {messages["status"]}
+    </Panel>
 
   )
   return (
@@ -458,7 +462,7 @@ export default function CourseDataAdmin() {
           }
         />
         <Route
-          path={ 'courseWizard'}
+          path={'courseWizard'}
           element={
             <CourseWizard
               course={course}
@@ -466,7 +470,7 @@ export default function CourseDataAdmin() {
               saveCourseFunc={saveCourse}
             />
           }
-          />
+        />
 
       </Route>
 
