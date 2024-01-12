@@ -29,6 +29,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
 import ActivityList, { Activity } from "./ActivityList";
+import CourseWizard from "./CourseWizard";
 
 interface IActivityLink {
   name: string;
@@ -418,7 +419,7 @@ export default function CourseDataAdmin() {
               >
 
                 <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
-                <TabPanel header={t("instructors_tab")}>
+                <TabPanel header={t("instructors_tab") } disabled={isNaN(courseId)}>
                   <CourseUsersList
                     courseId={courseId}
                     retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -428,7 +429,7 @@ export default function CourseDataAdmin() {
                     addMessagesFunc={postNewMessage}
                   />
                 </TabPanel>
-                <TabPanel header={t("students_tab")}>
+                <TabPanel header={t("students_tab")} disabled={isNaN(courseId)}>
                   <CourseUsersList
                     courseId={courseId}
                     retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -438,7 +439,9 @@ export default function CourseDataAdmin() {
                     addMessagesFunc={postNewMessage}
                   />
                 </TabPanel>
-                <TabPanel header={t("activities_tab")}>{activityList}</TabPanel>
+                <TabPanel header={t("activities_tab")} disabled={isNaN(courseId)}>
+                  {activityList}
+                </TabPanel>
               </TabView>
               {saveButton}
               {messages["status"]}
@@ -454,6 +457,16 @@ export default function CourseDataAdmin() {
             advancedCourseAdmin
           }
         />
+        <Route
+          path={ 'courseWizard'}
+          element={
+            <CourseWizard
+              course={course}
+              setCourseValueFunc={setCourseValue}
+              saveCourseFunc={saveCourse}
+            />
+          }
+          />
 
       </Route>
 
@@ -462,4 +475,4 @@ export default function CourseDataAdmin() {
   );
 }
 
-export { IActivityLink }
+export { Course, IActivityLink }

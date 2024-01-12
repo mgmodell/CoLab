@@ -75,3 +75,7 @@ a:hover, a:active {
   color: hsl(247, 41%, 69%);
   text-decoration: underline;
 }
+
+.p-inputtextarea {
+  width: 100%;
+} 

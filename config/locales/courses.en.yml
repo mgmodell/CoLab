@@ -83,7 +83,7 @@ en:
       advanced_switch: Switch to advanced mode
       wizard_switch: Switch to assist me mode
       name_number_ttl: What course is this?
-      name_number_dsec: >
+      name_number_desc: >
         Please enter the course title and the course identifier. These
         are how the course will be presented to you and your students.
         You are free to enter whatever you'd like, but most schools have
