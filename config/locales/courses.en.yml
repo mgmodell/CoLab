@@ -97,6 +97,8 @@ en:
       instructor_is_you_desc: >
         Will you be teaching this course? Say 'yes' even if you will
         have assistants or co-teachers.
+      inst_is_you_yes_rdo: Yes, I am
+      inst_is_you_no_rdo: No, I'm not
       instructor_additional: >
         Please enter the email addresses of all course instructors
         (excluding yourself).
@@ -114,6 +116,8 @@ en:
         you can use the buttons above to go to fix it. After the course
         is saved, you'll be able to add activities and begin enrolling
         students.
+      next_btn: Next
+      prev_btn: Previous
       confirm_save_btn: This is all correct &mdash; let's create it!
     activities: 
       type_col: Type

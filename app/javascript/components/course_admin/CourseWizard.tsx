@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 //Redux store stuff
 
 
@@ -12,9 +12,9 @@ import { Panel } from "primereact/panel";
 import { Steps } from "primereact/steps";
 import { Col, Container, Row } from "react-grid-system";
 import { InputText } from "primereact/inputtext";
-import { Message } from "primereact/message";
-import { C } from "@fullcalendar/core/internal-common";
 import { InputTextarea } from "primereact/inputtextarea";
+import { Button } from "primereact/button";
+import { RadioButton } from "primereact/radiobutton";
 
 type Props = {
   course: Course;
@@ -32,6 +32,9 @@ export default function CourseWizard(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+
+  const [instructorIsYou, setInstructorIsYou] = useState(true);
+  const navigate = useNavigate();
 
   const steps = [
     {
@@ -100,12 +103,65 @@ export default function CourseWizard(props: Props) {
     },
     {
       label: t('wizard.instructor_ttl'),
+      disabled: props.course.name === "" || props.course.number === "",
+      element: (
+        <Panel header={t('wizard.instructor_ttl')} >
+          <Container>
+            <Row>
+              <Col sm={12}>
+                <p>
+                  {t('wizard.instructor_is_you_desc')}
+                </p>
+
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <RadioButton
+                  name='instrutor-is-you'
+                  inputId="instrutor-is-you-yes"
+                  value={true}
+                  onChange={event => {
+                    setInstructorIsYou(true);
+                  }}
+                  checked={instructorIsYou}
+                />
+                <label htmlFor="instrutor-is-you-yes">
+                  &nbsp;{t('wizard.inst_is_you_yes_rdo')}
+                </label>
+
+              </Col>
+              <Col sm={6}>
+                <RadioButton
+                  name='instrutor-is-you'
+                  inputId="instrutor-is-you-no"
+                  value={true}
+                  onChange={event => {
+                    setInstructorIsYou(false);
+                  }}
+                  checked={!instructorIsYou}
+                />
+                <label htmlFor="instrutor-is-you-no">
+                  &nbsp;{t('wizard.inst_is_you_no_rdo')}
+                </label>
+
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={12}>
+                {t('wizard.instructor_additional')}
+              </Col>
+            </Row>
+          </Container>
+        </Panel>
+      )
     },
     {
       label: t('wizard.dates_ttl'),
     },
     {
       label: t('wizard.confirm_save_ttl'),
+      disabled: props.course.start_date === null || props.course.end_date === null,
     }
   ];
 
@@ -120,6 +176,49 @@ export default function CourseWizard(props: Props) {
         readOnly={false}
       />
       {steps[activeStep].element}
+      <Button
+        label={t('wizard.advanced_switch')}
+        onClick={() => {
+          navigate('../');
+        }}
+      />
+
+      { 0 < activeStep ? (
+        <Button
+          iconPos={'left'}
+          icon={'pi pi-chevron-left'}
+          label={t('wizard.prev_btn')}
+          onClick={() => {
+            if (steps[activeStep + 1].disabled === false) {
+              setActiveStep(activeStep - 1);
+            }
+          }}
+          disabled={steps[activeStep + 1].disabled}
+        />
+      ): null }
+      {steps.length > activeStep ? (
+        <Button
+          iconPos={'right'}
+          icon={'pi pi-chevron-right'}
+          label={t('wizard.next_btn')}
+          onClick={() => {
+            if (steps[activeStep + 1].disabled === false) {
+              setActiveStep(activeStep + 1);
+            }
+          }}
+          disabled={steps[activeStep + 1].disabled}
+        />
+      ) : (
+        <Button
+          label={t('wizard.save_btn')} l
+          onClick={() => {
+            props.saveCourseFunc();
+          }}
+        />
+
+      )
+
+      }
     </Panel>
   );
 }

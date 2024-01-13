@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Outlet, Route, Routes, useParams } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate, useParams } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -101,6 +101,7 @@ export default function CourseDataAdmin() {
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getCourse = () => {
     dispatch(startTask());
@@ -447,6 +448,12 @@ export default function CourseDataAdmin() {
           {activityList}
         </TabPanel>
       </TabView>
+      <Button
+        label={t('wizard.wizard_switch')}
+        onClick={() => {
+          navigate( 'courseWizard' );
+        }}
+        />
       {saveButton}
       {messages["status"]}
     </Panel>
