@@ -118,6 +118,7 @@ en:
         students.
       next_btn: Next
       prev_btn: Previous
+      save_btn: Save
       confirm_save_btn: This is all correct &mdash; let's create it!
     activities: 
       type_col: Type

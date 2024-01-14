@@ -183,20 +183,17 @@ export default function CourseWizard(props: Props) {
         }}
       />
 
-      { 0 < activeStep ? (
+      {0 < activeStep && (steps.length) > activeStep ? (
         <Button
           iconPos={'left'}
           icon={'pi pi-chevron-left'}
           label={t('wizard.prev_btn')}
           onClick={() => {
-            if (steps[activeStep + 1].disabled === false) {
-              setActiveStep(activeStep - 1);
-            }
+            setActiveStep(activeStep - 1);
           }}
-          disabled={steps[activeStep + 1].disabled}
         />
-      ): null }
-      {steps.length > activeStep ? (
+      ) : null}
+      {(steps.length - 1) > activeStep ? (
         <Button
           iconPos={'right'}
           icon={'pi pi-chevron-right'}
