@@ -93,15 +93,6 @@ en:
         Below you can enter a description of the course. It is rarely
         shown to students or instructors, so this is optional and
         primarily for your benefit.
-      instructor_ttl: Who will teach this course?
-      instructor_is_you_desc: >
-        Will you be teaching this course? Say 'yes' even if you will
-        have assistants or co-teachers.
-      inst_is_you_yes_rdo: Yes, I am
-      inst_is_you_no_rdo: No, I'm not
-      instructor_additional: >
-        Please enter the email addresses of all course instructors
-        (excluding yourself).
       dates_ttl: When will this course run?
       dates_desc: >
         Please enter the start and end date for this course. All
@@ -109,6 +100,10 @@ en:
         information to perform some sanity checks and make sure
         activities aren't accidentally planned for dates that won't make
         any sense.
+      dates_timezone: >
+        We assume that this course will run in the {{timezone}} timezone
+        just like your school. However, you can click here to change
+        this. Perhaps for a study abroad course?
       confirm_save_ttl: Is this all correct?
       confirm_save_desc: >
         Please review all the information we've captured so far to make

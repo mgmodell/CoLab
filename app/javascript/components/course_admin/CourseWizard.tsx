@@ -14,7 +14,12 @@ import { Col, Container, Row } from "react-grid-system";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
-import { RadioButton } from "primereact/radiobutton";
+import { Calendar } from "primereact/calendar";
+import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace";
+import { Dropdown } from "primereact/dropdown";
+import { Skeleton } from "primereact/skeleton";
+import parse from 'html-react-parser'
+
 
 type Props = {
   course: Course;
@@ -31,6 +36,10 @@ export default function CourseWizard(props: Props) {
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
+  );
+
+  const timezones = useTypedSelector(
+    state => state.context.lookups["timezones"]
   );
 
   const [instructorIsYou, setInstructorIsYou] = useState(true);
@@ -102,62 +111,69 @@ export default function CourseWizard(props: Props) {
       )
     },
     {
-      label: t('wizard.instructor_ttl'),
-      disabled: props.course.name === "" || props.course.number === "",
+      label: t('wizard.dates_ttl'),
+      disabled: props.course.id === null && props.course.name === '' && props.course.number === '',
       element: (
-        <Panel header={t('wizard.instructor_ttl')} >
+        <Panel header={t('wizard.dates_ttl')} >
           <Container>
             <Row>
               <Col sm={12}>
                 <p>
-                  {t('wizard.instructor_is_you_desc')}
+                  {t('wizard.dates_desc')}
                 </p>
 
               </Col>
             </Row>
             <Row>
-              <Col sm={6}>
-                <RadioButton
-                  name='instrutor-is-you'
-                  inputId="instrutor-is-you-yes"
-                  value={true}
+              <Col sm={12}>
+                <Calendar
+                  id="course_dates"
+                  selectionMode={'range'}
+                  value={[props.course.start_date, props.course.end_date]}
+                  placeholder="Select a Date Range"
                   onChange={event => {
-                    setInstructorIsYou(true);
-                  }}
-                  checked={instructorIsYou}
-                />
-                <label htmlFor="instrutor-is-you-yes">
-                  &nbsp;{t('wizard.inst_is_you_yes_rdo')}
-                </label>
+                    const changeTo = event.value;
+                    console.log('change', event);
+                    if (null !== changeTo && changeTo.length > 1) {
+                      props.setCourseValueFunc('start_date', changeTo[0]);
+                      props.setCourseValueFunc('end_date', changeTo[1]);
 
-              </Col>
-              <Col sm={6}>
-                <RadioButton
-                  name='instrutor-is-you'
-                  inputId="instrutor-is-you-no"
-                  value={true}
-                  onChange={event => {
-                    setInstructorIsYou(false);
+                    }
                   }}
-                  checked={!instructorIsYou}
                 />
-                <label htmlFor="instrutor-is-you-no">
-                  &nbsp;{t('wizard.inst_is_you_no_rdo')}
-                </label>
-
               </Col>
             </Row>
             <Row>
               <Col sm={12}>
-                {t('wizard.instructor_additional')}
+                <Inplace closable>
+                  <InplaceDisplay>
+                    <p>
+                      {parse( t('wizard.dates_timezone', { timezone: props.course.timezone }) )}
+                    </p>
+                  </InplaceDisplay>
+                  <InplaceContent>
+                    {timezones.length > 0 ? (
+                      <Dropdown id="course_timezone"
+                        value={props.course.timezone}
+                        options={timezones}
+                        onChange={event => {
+                          props.setCourseValueFunc('timezone', event.target.value);
+                        }}
+                        optionLabel="name"
+                        optionValue="name"
+                        placeholder="Select a Time Zone"
+                      />
+                    ) : (
+                      <Skeleton className={"mb-2"} height={'2rem'} />
+                    )}
+
+                  </InplaceContent>
+                </Inplace>
               </Col>
             </Row>
           </Container>
         </Panel>
       )
-    },
-    {
-      label: t('wizard.dates_ttl'),
     },
     {
       label: t('wizard.confirm_save_ttl'),
@@ -199,6 +215,7 @@ export default function CourseWizard(props: Props) {
           icon={'pi pi-chevron-right'}
           label={t('wizard.next_btn')}
           onClick={() => {
+            console.log(steps[activeStep + 1], activeStep)
             if (steps[activeStep + 1].disabled === false) {
               setActiveStep(activeStep + 1);
             }
