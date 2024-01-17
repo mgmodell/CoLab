@@ -47,9 +47,11 @@ export default function CourseWizard(props: Props) {
 
   const steps = [
     {
-      label: t('wizard.name_number_ttl'),
+      label: t('wizard.name_number_lbl'),
+      title: t('wizard.name_number_ttl'),
+      saveValid: true,
       element: (
-        <Panel header={t('wizard.name_number_ttl')} >
+        <>
           <Container>
             <Row>
               <Col sm={12}>
@@ -107,14 +109,16 @@ export default function CourseWizard(props: Props) {
             </Row>
 
           </Container>
-        </Panel>
+        </>
       )
     },
     {
-      label: t('wizard.dates_ttl'),
-      disabled: props.course.id === null && props.course.name === '' && props.course.number === '',
+      label: t('wizard.dates_lbl'),
+      title: t('wizard.dates_ttl'),
+      saveValid: true,
+      disabled: isNaN(props.course.id) && props.course.name === '' && props.course.number === '',
       element: (
-        <Panel header={t('wizard.dates_ttl')} >
+        <>
           <Container>
             <Row>
               <Col sm={12}>
@@ -172,26 +176,65 @@ export default function CourseWizard(props: Props) {
               </Col>
             </Row>
           </Container>
-        </Panel>
+        </>
       )
     },
     {
-      label: t('wizard.confirm_save_ttl'),
+      label: t('wizard.confirm_save_lbl'),
+      title: t('wizard.confirm_save_ttl'),
+      saveValid: false,
       disabled: props.course.start_date === null || props.course.end_date === null,
+    },
+    {
+      label: t('wizard.instructors_lbl'),
+      title: t('wizard.instructors_ttl'),
+      saveValid: true,
+      disabled: isNaN( props.course.id ),
+    },
+    {
+      label: t('wizard.project_lbl'),
+      title: t('wizard.project_ttl'),
+      saveValid: true,
+      disabled: isNaN( props.course.id ),
+    },
+    {
+      label: t('wizard.readings_lbl'),
+      title: t('wizard.readings_ttl'),
+      saveValid: true,
+      disabled: isNaN( props.course.id ),
+    },
+    {
+      label: t('wizard.students_lbl'),
+      title: t('wizard.students_ttl'),
+      saveValid: true,
+      disabled: isNaN( props.course.id ),
     }
   ];
 
   const [activeStep, setActiveStep] = useState(0);
+  const savedSteps = steps.filter( (step)=>{
+    return step.saveValid;
+  });
 
   return (
     <Panel>
-      <Steps model={steps} activeIndex={activeStep}
+      <Steps
+        model={ isNaN( props.course.id ) ? steps : savedSteps }
+        activeIndex={activeStep}
         onSelect={(e) => {
           setActiveStep(e.index);
         }}
         readOnly={false}
       />
-      {steps[activeStep].element}
+      { /*
+        The following statement is ugly but it is compact and functional.
+        1. Check which array I should use (ternary)
+        2. index into that array with the activeStep
+        3. get the title key from that step
+      */}
+      <Panel header={( isNaN( props.course.id ) ? steps : savedSteps ) [activeStep].title} >
+        {steps[activeStep].element}
+      </Panel>
       <Button
         label={t('wizard.advanced_switch')}
         onClick={() => {
