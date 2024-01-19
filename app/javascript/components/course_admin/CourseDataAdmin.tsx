@@ -122,12 +122,6 @@ export default function CourseDataAdmin() {
 
         const course = data.course;
 
-        course.activities.forEach(activity => {
-
-          activity.end_date = new Date(Date.parse(activity.end_date));
-          activity.start_date = new Date(Date.parse(activity.start_date));
-        });
-
         const localCourse: Course = {
           id: courseId,
           name: course.name || "",
@@ -317,7 +311,7 @@ export default function CourseDataAdmin() {
           optionLabel="name"
           optionValue="id"
           placeholder="Select a School"
-          showClear={true}
+          showClear={false}
         />
       ) : (
         <Skeleton className={"mb-2"} height={'2rem'} />
@@ -336,7 +330,7 @@ export default function CourseDataAdmin() {
           optionLabel="name"
           optionValue="name"
           placeholder="Select a Time Zone"
-          showClear={true}
+          showClear={false}
         />
       ) : (
         <Skeleton className={"mb-2"} height={'2rem'} />

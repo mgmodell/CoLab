@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import { useTranslation } from "react-i18next";
+import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -141,8 +142,7 @@ export default function ActivityList(props: Props) {
                     header={t('activities.open_col')}
                     field="start_date"
                     body={(rowData) => {
-                        const dt = Date.parse(rowData.start_date);
-                        return <span>{dt.toLocaleString()}</span>;
+                        return <span>{DateTime.fromISO( rowData.start_date ).toLocaleString() }</span>;
                     }}
                 />
             ) : null}
@@ -151,8 +151,7 @@ export default function ActivityList(props: Props) {
                     header={t('activities.close_col')}
                     field="end_date"
                     body={(rowData) => {
-                        const dt = Date.parse(rowData.end_date);
-                        return <span>{dt.toLocaleString()}</span>;
+                        return <span>{DateTime.fromISO( rowData.end_date ).toLocaleString( )}</span>;
 
                     }}
                 />
