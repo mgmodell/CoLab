@@ -14,6 +14,7 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 
 import { Editor } from "primereact/editor";
 import SubmissionList from "./SubmissionList";
+import EditorToolbar from "../infrastructure/EditorToolbar";
 
 type Props = {
   assignment: IAssignment;
@@ -103,6 +104,9 @@ export default function AssignmentSubmission(props: Props) {
         aria-label={t("submissions.sub_text_placeholder")}
         readOnly={!notSubmitted}
         value={submissionTextEditor}
+        headerTemplate={
+          <EditorToolbar />
+        }
         onTextChange={e => {
           setSubmissionTextEditor(e.htmlValue);
         }}

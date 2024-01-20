@@ -34,6 +34,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
+import EditorToolbar from "../infrastructure/EditorToolbar";
 
 /*
 const useStyles = makeStyles({
@@ -327,6 +328,7 @@ export default function BingoGameDataAdmin(props) {
                   aria-label={t("description")}
                   placeholder={t("description")}
                   value={gameDescriptionEditor}
+                  headerTemplate={ <EditorToolbar /> }
                   onTextChange={event => {
                     setGameDescriptionEditor(event.htmlValue);
                   }}

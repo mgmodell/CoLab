@@ -22,6 +22,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import { TabView, TabPanel } from "primereact/tabview";
+import EditorToolbar from "../infrastructure/EditorToolbar";
 
 enum ConsentFormTabs {
   English = 1,
@@ -266,6 +267,7 @@ export default function ConsentFormDataAdmin(props) {
             id="english_form"
             placeholder={"en_form"}
             aria-label={"en_form"}
+            headerTemplate={ <EditorToolbar />}
             onTextChange={event => {
               setConsentFormFormTextEn(event.htmlValue);
             }}
@@ -277,6 +279,7 @@ export default function ConsentFormDataAdmin(props) {
             id="korean_form"
             placeholder={"ko_form"}
             aria-label={"ko_form"}
+            headerTemplate={ <EditorToolbar />}
             onTextChange={event => {
               setConsentFormFormTextKo(event.htmlValue);
             }}

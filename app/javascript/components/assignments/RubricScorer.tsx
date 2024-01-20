@@ -21,6 +21,7 @@ import { Slider } from "primereact/slider";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
+import EditorToolbar from "../infrastructure/EditorToolbar";
 
 type Props = {
   submission: ISubmissionData;
@@ -172,6 +173,7 @@ export default function RubricScorer(props: Props) {
           <Editor
             id='overall-feedback'
             placeholder={t('feedback')}
+            headerTemplate={ <EditorToolbar /> }
             aria-label={t('feedback')}
             value={props.submission.submission_feedback.feedback}
             onTextChange={(e)=>{
@@ -340,6 +342,7 @@ export default function RubricScorer(props: Props) {
                   id={`feedback-${criterium.id}`}
                   placeholder={t("rubric.criteria_feedback")}
                   aria-label={t("rubric.criteria_feedback")}
+                  headerTemplate={ <EditorToolbar /> }
                   value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
                   onTextChange={(e)=>{
                       props.submissionReducer({

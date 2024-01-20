@@ -33,6 +33,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Checkbox, FormLabel } from "@mui/material";
 import { Editor } from "primereact/editor";
+import EditorToolbar from "../infrastructure/EditorToolbar";
 
 /*
 const useStyles = makeStyles({
@@ -323,6 +324,7 @@ export default function AssignmentDataAdmin(props) {
                     aria-label={t("description")}
                     placeholder={t("description")}
                     value={assignmentDescriptionEditor}
+                    headerTemplate={ <EditorToolbar />}
                     onTextChange={event => {
                       setAssignmentDescriptionEditor(event.htmlValue);
                     }}
