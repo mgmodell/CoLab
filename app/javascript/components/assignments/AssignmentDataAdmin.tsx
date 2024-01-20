@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -15,6 +15,8 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
+
+import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
 
 import Skeleton from "@mui/material/Skeleton";
@@ -35,24 +37,6 @@ import { Checkbox, FormLabel } from "@mui/material";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../infrastructure/EditorToolbar";
 
-/*
-const useStyles = makeStyles({
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  textField: {
-    width: 200
-  },
-  dense: {
-    marginTop: 19
-  },
-  menu: {
-    width: 200
-  }
-});
-*/
-
 export default function AssignmentDataAdmin(props) {
   //const classes = useStyles();
 
@@ -68,6 +52,7 @@ export default function AssignmentDataAdmin(props) {
   const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation(`${category}s`);
+  const navigate = useNavigate();
 
   const [dirty, setDirty] = useState(false);
   const [curTab, setCurTab] = useState(0);
@@ -180,13 +165,16 @@ export default function AssignmentDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        dispatch(endTask("saving"));
+        navigate( `../${assignmentId}`, { replace: true });
 
         //getAssignmentData();
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      } ) ;
   };
 
   const setAssignmentData = data => {
@@ -299,7 +287,8 @@ export default function AssignmentDataAdmin(props) {
   ) : null;
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
-      <Paper style={{ height: "95%", width: "100%" }}>
+      <Panel >
+
         <TabView
           activeIndex={curTab}
           onTabChange={event => setCurTab(event.index)}
@@ -505,7 +494,7 @@ export default function AssignmentDataAdmin(props) {
             </Grid>
           </TabPanel>
         </TabView>
-      </Paper>
+      </Panel>
     </Suspense>
   );
 }

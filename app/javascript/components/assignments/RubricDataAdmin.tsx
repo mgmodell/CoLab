@@ -237,8 +237,8 @@ export default function RubricDataAdmin(props) {
 
             dispatch(setClean(category));
             dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
-            dispatch(endTask("saving"));
           }
+          navigate( `../${rubricId}`, { replace: true } );
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
           setMessages(messages);
@@ -246,7 +246,10 @@ export default function RubricDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      }) ;
   };
 
   useEffect(() => {

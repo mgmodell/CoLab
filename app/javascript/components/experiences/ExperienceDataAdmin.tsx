@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -22,8 +25,6 @@ import {
   addMessage,
   Priorities
 } from "../infrastructure/StatusSlice";
-//import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { Panel } from "primereact/panel";
@@ -37,7 +38,9 @@ export default function ExperienceDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  //const { t, i18n } = useTranslation('experiences' );
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation(`${category}s`);
+
   const user = useTypedSelector(state => state.profile.user);
   const userLoaded = useTypedSelector(state => {
     return null != state.profile.lastRetrieved;
@@ -165,16 +168,15 @@ export default function ExperienceDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
-          dispatch(endTask("saving"));
         }
+        navigate( `../${experienceId}`, { replace: true });
       })
       .catch(error => {
         console.log("error", error);
-        setMessages(data.messages);
-        dispatch(
-          addMessage(data.messages.status, new Date(), Priorities.ERROR)
-        );
-      });
+      })
+      .finally(() => {
+          dispatch(endTask("saving"));
+      }) ;
   };
 
   useEffect(() => {

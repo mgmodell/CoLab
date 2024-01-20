@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import TextField from "@mui/material/TextField";
@@ -36,24 +36,6 @@ import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../infrastructure/EditorToolbar";
 
-/*
-const useStyles = makeStyles({
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  textField: {
-    width: 200
-  },
-  dense: {
-    marginTop: 19
-  },
-  menu: {
-    width: 200
-  }
-});
-*/
-
 export default function BingoGameDataAdmin(props) {
   //const classes = useStyles();
 
@@ -67,6 +49,8 @@ export default function BingoGameDataAdmin(props) {
   const user = useTypedSelector(state => state.profile.user);
   const { courseIdParam, bingoGameIdParam } = useParams();
   const dispatch = useDispatch();
+
+  const navigate = useNavigate( );
 
   const { t, i18n } = useTranslation("bingo_games");
 
@@ -160,13 +144,16 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        dispatch(endTask("saving"));
 
         getBingoGameData();
+        navigate( `../${bingoGameId}`, { replace: true } );
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      } ) ;
   };
 
   const initResultData = () => {

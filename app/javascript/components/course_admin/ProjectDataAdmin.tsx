@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -45,6 +46,7 @@ export default function ProjectDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const navigate = useNavigate();
   const { courseIdParam, projectIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
@@ -178,6 +180,7 @@ export default function ProjectDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
+          navigate( `../${project.id}`, { replace: true });
         } else {
           setMessages(data.messages);
           dispatch(
