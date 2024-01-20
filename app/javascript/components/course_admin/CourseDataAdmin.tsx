@@ -183,6 +183,7 @@ export default function CourseDataAdmin() {
             }
           );
           setCourse(localCourse);
+          navigate( '../' + localCourse.id, { replace: true } );
 
 
           dispatch(setClean(category));
