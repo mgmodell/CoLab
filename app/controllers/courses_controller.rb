@@ -342,19 +342,24 @@ class CoursesController < ApplicationController
     end
   end
 
-  def new
-    @title = t('.title')
-    @course = nil
-    @course = if current_user.school.nil?
-                Course.new
-              else
-                current_user.school.courses.new
-              end
-    @course.timezone = current_user.timezone
-    @course.start_date = Date.tomorrow.beginning_of_day
-    @course.end_date = 1.month.from_now.end_of_day
-    @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
-  end
+#  def new
+#    @title = t('.title')
+#    @course = nil
+#    @course = if current_user.school.nil?
+#                Course.new
+#              else
+#                current_user.school.courses.new
+#              end
+#    @course.timezone = current_user.timezone
+#    @course.start_date = Date.tomorrow.beginning_of_day
+#    @course.end_date = 1.month.from_now.end_of_day
+#    @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
+#    respond_to do |format|
+#      format.json do
+#        render json: { course: @course.as_json }
+#      end
+#    end
+#  end
 
   def new_from_template
     new_start = Chronic.parse(params[:start_date])
@@ -562,7 +567,9 @@ class CoursesController < ApplicationController
       @course = if params[:id].blank? || 'new' == params[:id]
                   Course.new(
                     school_id: current_user.school_id,
-                    timezone: current_user.timezone
+                    timezone: current_user.timezone,
+                    start_date: Date.tomorrow.beginning_of_day,
+                    end_date: 1.month.from_now.end_of_day
                   )
                 else
                   Course.includes(:users).find(params[:id])

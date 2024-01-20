@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import parse from 'html-react-parser'
+import { DateTime } from "luxon";
 //Redux store stuff
 
 
@@ -18,12 +20,12 @@ import { Calendar } from "primereact/calendar";
 import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace";
 import { Dropdown } from "primereact/dropdown";
 import { Skeleton } from "primereact/skeleton";
-import parse from 'html-react-parser'
+import { el } from "@fullcalendar/core/internal-common";
 
 
 type Props = {
   course: Course;
-  setCourseValueFunc: (field: string, value: Date | string | number) => void;
+  setCourseFunc: (course: Course) => void;
   saveCourseFunc: () => void;
 }
 
@@ -68,7 +70,7 @@ export default function CourseWizard(props: Props) {
                   id="course-name"
                   value={props.course.name}
                   onChange={event => {
-                    props.setCourseValueFunc('name', event.target.value);
+                    props.setCourseFunc({ ...props.course, name: event.target.value });
                   }}
                 />
               </Col>
@@ -79,7 +81,7 @@ export default function CourseWizard(props: Props) {
                   id="course-number"
                   value={props.course.number}
                   onChange={event => {
-                    props.setCourseValueFunc('number', event.target.value);
+                    props.setCourseFunc({ ...props.course, number: event.target.value });
                   }}
                 />
               </Col>
@@ -98,7 +100,7 @@ export default function CourseWizard(props: Props) {
                   id="course-description"
                   value={props.course.description}
                   onChange={event => {
-                    props.setCourseValueFunc('description', event.target.value);
+                    props.setCourseFunc({ ...props.course, description: event.target.value });
                   }}
                   rows={5}
                   cols={30}
@@ -116,7 +118,7 @@ export default function CourseWizard(props: Props) {
       label: t('wizard.dates_lbl'),
       title: t('wizard.dates_ttl'),
       saveValid: true,
-      disabled: isNaN(props.course.id) && props.course.name === '' && props.course.number === '',
+      disabled: isNaN(props.course.id) && (props.course.name === '' || props.course.number === '' ),
       element: (
         <>
           <Container>
@@ -135,14 +137,29 @@ export default function CourseWizard(props: Props) {
                   selectionMode={'range'}
                   value={[props.course.start_date, props.course.end_date]}
                   placeholder="Select a Date Range"
+                  showIcon={true}
                   onChange={event => {
                     const changeTo = event.value;
-                    console.log('change', event);
-                    if (null !== changeTo && changeTo.length > 1) {
-                      props.setCourseValueFunc('start_date', changeTo[0]);
-                      props.setCourseValueFunc('end_date', changeTo[1]);
-
+                    if( null === changeTo ){
+                      return;
+                    }else if( 2 === changeTo.length ){
+                    props.setCourseFunc(
+                      {
+                        ...props.course,
+                        start_date: changeTo[0],
+                        end_date: changeTo[1]
+                      }
+                      );
+                    } else {
+                      props.setCourseFunc(
+                        {
+                          ...props.course,
+                          start_date: changeTo[0],
+                          end_date: changeTo[0]
+                        }
+                        );
                     }
+
                   }}
                 />
               </Col>
@@ -152,7 +169,7 @@ export default function CourseWizard(props: Props) {
                 <Inplace closable>
                   <InplaceDisplay>
                     <p>
-                      {parse( t('wizard.dates_timezone', { timezone: props.course.timezone }) )}
+                      {parse(t('wizard.dates_timezone', { timezone: props.course.timezone }))}
                     </p>
                   </InplaceDisplay>
                   <InplaceContent>
@@ -161,7 +178,7 @@ export default function CourseWizard(props: Props) {
                         value={props.course.timezone}
                         options={timezones}
                         onChange={event => {
-                          props.setCourseValueFunc('timezone', event.target.value);
+                          props.setCourseFunc({ ...props.course, timezone: event.target.value });
                         }}
                         optionLabel="name"
                         optionValue="name"
@@ -183,43 +200,116 @@ export default function CourseWizard(props: Props) {
       label: t('wizard.confirm_save_lbl'),
       title: t('wizard.confirm_save_ttl'),
       saveValid: false,
-      disabled: props.course.start_date === null || props.course.end_date === null,
+      disabled: null === props.course.start_date ||
+                null === props.course.end_date ||
+                isNaN( props.course.start_date.getTime() ) ||
+                isNaN( props.course.end_date.getTime() ),
+      element: (
+        <Container>
+          <Row>
+            <Col sm={12}>
+              <p>
+                {t('wizard.confirm_save_desc')}
+              </p>
+
+            </Col>
+          </Row>
+          <Row onClick={() => {
+            setActiveStep(0);
+          }}>
+            <Col sm={3}>
+              <p>
+                {t('wizard.confirm_save_name')}
+              </p>
+            </Col>
+            <Col sm={3}>
+              <p>
+                {props.course.name}
+              </p>
+            </Col>
+            <Col sm={3}>
+              <p>
+                {t('wizard.confirm_save_number')}
+              </p>
+            </Col>
+            <Col sm={3}>
+              <p>
+                {props.course.number}
+              </p>
+            </Col>
+          </Row>
+          <Row onClick={() => {
+            setActiveStep(0);
+          }}>
+
+            <Col sm={3}>
+              <p>
+                {t('wizard.confirm_save_description')}
+              </p>
+            </Col>
+            <Col sm={9}>
+              <p>
+                {props.course.description}
+              </p>
+            </Col>
+          </Row>
+          <Row onClick={() => {
+            setActiveStep(1);
+          }}>
+            <Col sm={12}>
+              <p>
+                {
+                  parse(
+                    t('wizard.confirm_save_dates',
+                      {
+                        open_date: DateTime.fromISO( props.course.start_date ),
+                        close_date: props.course.end_date?.toLocaleDateString(),
+                        timezone: props.course.timezone
+                      })
+                  )
+                }
+              </p>
+
+            </Col>
+          </Row>
+        </Container>
+      )
     },
     {
       label: t('wizard.instructors_lbl'),
       title: t('wizard.instructors_ttl'),
       saveValid: true,
-      disabled: isNaN( props.course.id ),
+      disabled: isNaN(props.course.id),
     },
     {
       label: t('wizard.project_lbl'),
       title: t('wizard.project_ttl'),
       saveValid: true,
-      disabled: isNaN( props.course.id ),
+      disabled: isNaN(props.course.id),
     },
     {
       label: t('wizard.readings_lbl'),
       title: t('wizard.readings_ttl'),
       saveValid: true,
-      disabled: isNaN( props.course.id ),
+      disabled: isNaN(props.course.id),
     },
     {
       label: t('wizard.students_lbl'),
       title: t('wizard.students_ttl'),
       saveValid: true,
-      disabled: isNaN( props.course.id ),
+      disabled: isNaN(props.course.id),
     }
   ];
 
   const [activeStep, setActiveStep] = useState(0);
-  const savedSteps = steps.filter( (step)=>{
+  const savedSteps = steps.filter((step) => {
     return step.saveValid;
   });
 
   return (
     <Panel>
       <Steps
-        model={ isNaN( props.course.id ) ? steps : savedSteps }
+        model={isNaN(props.course.id) ? steps : savedSteps}
         activeIndex={activeStep}
         onSelect={(e) => {
           setActiveStep(e.index);
@@ -232,7 +322,7 @@ export default function CourseWizard(props: Props) {
         2. index into that array with the activeStep
         3. get the title key from that step
       */}
-      <Panel header={( isNaN( props.course.id ) ? steps : savedSteps ) [activeStep].title} >
+      <Panel header={(isNaN(props.course.id) ? steps : savedSteps)[activeStep].title} >
         {steps[activeStep].element}
       </Panel>
       <Button
@@ -258,7 +348,6 @@ export default function CourseWizard(props: Props) {
           icon={'pi pi-chevron-right'}
           label={t('wizard.next_btn')}
           onClick={() => {
-            console.log(steps[activeStep + 1], activeStep)
             if (steps[activeStep + 1].disabled === false) {
               setActiveStep(activeStep + 1);
             }
@@ -267,7 +356,7 @@ export default function CourseWizard(props: Props) {
         />
       ) : (
         <Button
-          label={t('wizard.save_btn')} l
+          label={t('wizard.save_btn')}
           onClick={() => {
             props.saveCourseFunc();
           }}

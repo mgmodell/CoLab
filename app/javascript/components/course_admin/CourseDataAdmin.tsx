@@ -183,7 +183,8 @@ export default function CourseDataAdmin() {
             }
           );
           setCourse(localCourse);
-          navigate( '../' + localCourse.id, { replace: true } );
+          setCourseId(localCourse.id);
+          navigate( `../${localCourse.id}`, { replace: true } );
 
 
           dispatch(setClean(category));
@@ -362,6 +363,7 @@ export default function CourseDataAdmin() {
         selectionMode={'range'}
         value={[course.start_date, course.end_date]}
         placeholder="Select a Date Range"
+        showIcon={true}
         onChange={event => {
           const changeTo = event.value;
           console.log('change', event);
@@ -468,7 +470,7 @@ export default function CourseDataAdmin() {
           element={
             <CourseWizard
               course={course}
-              setCourseValueFunc={setCourseValue}
+              setCourseFunc={setCourse}
               saveCourseFunc={saveCourse}
             />
           }

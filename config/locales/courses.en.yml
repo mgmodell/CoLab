@@ -111,9 +111,15 @@ en:
       confirm_save_desc: >
         Please review all the information we've captured so far to make
         sure it's correct before we save it. If anything is incorrect,
-        you can use the buttons above to go to fix it. After the course
-        is saved, you'll be able to add activities and begin enrolling
-        students.
+        click on it to go back and fix it. After the course is saved,
+        you'll be able to add activities and begin enrolling students.
+      confirm_save_name: Course Name
+      confirm_save_number: Course Number
+      confirm_save_description: Course Description
+      confirm_save_dates: >
+        The course will kick off on {{open_date}} and it will wrap up on
+        {{close_date}}. All of this will be in the {{timezone}} time
+        zone.
       instructors_lbl: Instructors
       instructors_ttl: Who will teach this course?
       instructor_desc: >
