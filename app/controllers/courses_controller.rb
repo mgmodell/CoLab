@@ -354,11 +354,11 @@ class CoursesController < ApplicationController
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
     @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
-    respond_to do |format|
-      format.json do
-        render json: { course: @course.as_json }
-      end
-    end
+#    respond_to do |format|
+#      format.json do
+#        render json: { course: @course.as_json }
+#      end
+#    end
   end
 
   def new_from_template
@@ -577,6 +577,7 @@ class CoursesController < ApplicationController
     else
       @course = Course.find_by id: params[:id]
       # TODO: This can't be right and must be fixed for security later
+      # This needs to throw a security error
       redirect_to :show if @course.nil?
     end
   end

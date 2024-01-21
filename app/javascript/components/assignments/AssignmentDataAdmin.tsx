@@ -165,7 +165,7 @@ export default function AssignmentDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        navigate( `../${assignmentId}`, { replace: true });
+        navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
 
         //getAssignmentData();
       })
@@ -174,7 +174,7 @@ export default function AssignmentDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      } ) ;
+      });
   };
 
   const setAssignmentData = data => {
@@ -270,7 +270,7 @@ export default function AssignmentDataAdmin(props) {
               }
               displayEmpty
               name="assignment_project"
-              //className={classes.selectEmpty}
+            //className={classes.selectEmpty}
             >
               {assignmentProjects.map(project => {
                 return (
@@ -313,7 +313,7 @@ export default function AssignmentDataAdmin(props) {
                     aria-label={t("description")}
                     placeholder={t("description")}
                     value={assignmentDescriptionEditor}
-                    headerTemplate={ <EditorToolbar />}
+                    headerTemplate={<EditorToolbar />}
                     onTextChange={event => {
                       setAssignmentDescriptionEditor(event.htmlValue);
                     }}
@@ -373,8 +373,8 @@ export default function AssignmentDataAdmin(props) {
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl
-                    //className={classes.formControl}
-                    >
+                  //className={classes.formControl}
+                  >
                     <InputLabel shrink htmlFor="assignment_rubric_id">
                       {t("edit.select_rubric")}
                     </InputLabel>
@@ -386,7 +386,7 @@ export default function AssignmentDataAdmin(props) {
                       }
                       displayEmpty
                       name="assignment_rubric"
-                      //className={classes.selectEmpty}
+                    //className={classes.selectEmpty}
                     >
                       {availableRubrics.map(rubric => {
                         return (
