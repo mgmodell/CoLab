@@ -146,7 +146,7 @@ export default function BingoGameDataAdmin(props) {
         setMessages(data["messages"]);
 
         getBingoGameData();
-        navigate( `../${bingoGameId}`, { replace: true } );
+        navigate( `../${courseIdParam}/bingo_game/${bingoGameId}`, { replace: true } );
       })
       .catch(error => {
         console.log("error", error);

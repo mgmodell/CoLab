@@ -180,7 +180,7 @@ export default function ProjectDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
-          navigate( `../${project.id}`, { replace: true });
+          navigate( `../${courseIdParam}/project/${project.id}`, { replace: true });
         } else {
           setMessages(data.messages);
           dispatch(

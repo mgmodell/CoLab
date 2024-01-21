@@ -169,7 +169,7 @@ export default function ExperienceDataAdmin(props) {
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
         }
-        navigate( `../${experienceId}`, { replace: true });
+        navigate( `../${courseIdParam}/experience/${experienceId}`, { replace: true });
       })
       .catch(error => {
         console.log("error", error);
