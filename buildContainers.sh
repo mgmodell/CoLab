@@ -13,4 +13,7 @@ else
   docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f ./containers/x86/dev_server/Dockerfile -t colab_dev_server .
   docker build -f ./containers/x86/browser/Dockerfile -t colab_browser .
 fi
+pushd ./containers/agnostic/moodle
+docker build -f ./Dockerfile -t colab_moodle . 
+popd
 
