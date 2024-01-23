@@ -59,7 +59,7 @@ services:
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
     ports:
-      - 3080:8080
+      - 80:8080
     volumes:
       - moodledata:/var/www/moodledata
       - moodlehtml:/var/www/html
