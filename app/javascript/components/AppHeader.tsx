@@ -1,9 +1,5 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 
-import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-
-import Logo from "./Logo";
 import MainMenu from "./MainMenu";
 import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";

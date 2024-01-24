@@ -1,5 +1,6 @@
+import React, { useState } from "react";
+import axios from "axios";
 import {
-  Paper,
   Grid,
   TextField,
   IconButton,
@@ -8,13 +9,15 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";
+
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import React, { useState } from "react";
+
+import { Panel } from "primereact/panel";
+
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import axios from "axios";
 import { emailSignIn } from "./infrastructure/ContextSlice";
 
 export default function PasswordEdit(props) {
@@ -81,7 +84,7 @@ export default function PasswordEdit(props) {
     </Button>
   );
   return (
-    <Paper>
+    <Panel>
       <Grid container>
         <h1>{t("change_password_intro")}</h1>
         <Grid item xs={12} sm={9}>
@@ -125,6 +128,6 @@ export default function PasswordEdit(props) {
         </Grid>
         {updatePasswordBtn}
       </Grid>
-    </Paper>
+    </Panel>
   );
 }

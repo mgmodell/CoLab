@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { PropTypes } from "prop-types";
 import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -8,7 +7,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 
-export default function ConfirmDialog(props) {
+
+type Props = {
+  isOpen: boolean;
+  closeFunc: Function;
+};
+
+export default function ConfirmDialog(props : Props) {
   const category = "graphing";
   const { t, i18n } = useTranslation(category);
 
@@ -37,7 +42,3 @@ export default function ConfirmDialog(props) {
   );
 }
 
-ConfirmDialog.propTypes = {
-  isOpen: PropTypes.bool,
-  closeFunc: PropTypes.func
-};

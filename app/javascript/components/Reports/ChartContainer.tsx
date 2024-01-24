@@ -21,9 +21,9 @@ type Project = {
 
 type Props = {
   unitOfAnalysis: string;
-  projects: Project[];
-  anonymize: boolean;
-  forResearch: boolean;
+  projects?: Project[];
+  anonymize?: boolean;
+  forResearch?: boolean;
 };
 
 export default function ChartContainer(props: Props) {

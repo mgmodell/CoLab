@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { getContext } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
-import Skeleton from "@mui/material/Skeleton";
+import { Skeleton } from "primereact/skeleton";
 
 type Props = {
   children?: React.ReactNode;
@@ -29,7 +29,7 @@ export default function AppInit(props: Props) {
   }, []);
 
   return (
-    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+    <Suspense fallback={<Skeleton className={"mb-2"} />}>
       {props.children}
     </Suspense>
   );

@@ -1,7 +1,7 @@
 import React from "react";
-import Paper from "@mui/material/Paper";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import { Panel } from "primereact/panel";
 
 type Props = {
   board: Object;
@@ -10,7 +10,7 @@ type Props = {
 export default function BingoBoard(props: Props) {
   const gameDate = new Date(props.board.bingo_game.end_date);
   return (
-    <Paper>
+    <Panel>
       <hr />
       <center>
         {props.board.bingo_game.topic}&nbsp; ({gameDate.toDateString()})
@@ -38,6 +38,6 @@ export default function BingoBoard(props: Props) {
         )}
       </ImageList>
       <hr />
-    </Paper>
+    </Panel>
   );
 }

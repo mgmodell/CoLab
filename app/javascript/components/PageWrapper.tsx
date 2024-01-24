@@ -16,7 +16,7 @@ import "primereact/resources/themes/md-light-indigo/theme.css"; // theme
 import "primereact/resources/primereact.min.css"; // core css
 import "primeicons/primeicons.css"; //Prime icons
 
-import Skeleton from "@mui/material/Skeleton";
+import { Skeleton } from "primereact/skeleton";
 import {
   ThemeProvider,
   StyledEngineProvider,
@@ -62,7 +62,7 @@ export default function PageWrapper(props: Props) {
       <React.Fragment>
         <Route
           element={
-            <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
+            <Suspense fallback={<Skeleton className='mb-2' height={'50rem'} />}>
               <AppHeader />
               <WorkingIndicator />
               <br />
@@ -87,7 +87,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="profile"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className='mb-2'/>}>
                   <RequireAuth>
                     <ProfileDataAdmin />
                   </RequireAuth>
@@ -97,7 +97,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="admin/*"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={'mb-2'} />}>
                   <RequireAuth>
                     <Admin />
                   </RequireAuth>
@@ -107,7 +107,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path={"home/*"}
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={"mb-2"} />}>
                   <RequireAuth>
                     <Outlet />
                   </RequireAuth>
@@ -148,7 +148,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="demo/*"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={""} />}>
                   <Demo rootPath="demo" />
                 </Suspense>
               }

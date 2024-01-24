@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 //Redux store stuff
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+
 import {
   startTask,
   endTask,
@@ -11,21 +15,17 @@ import {
 } from "../infrastructure/StatusSlice";
 import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
+
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 
-import { Settings } from "luxon";
-
 //import i18n from './i18n';
-import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "../infrastructure/AppReducers";
-import axios from "axios";
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
@@ -145,13 +145,13 @@ export default function SchoolDataAdmin(props) {
   }, [schoolTimezone, schoolName, schoolDescription]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool} disabled={!dirty}>
+    <Button onClick={saveSchool} disabled={!dirty}>
       {schoolId > 0 ? "Save" : "Create"} School
     </Button>
   ) : null;
 
   const detailsComponent = endpointStatus ? (
-    <Paper>
+    <Panel>
       <TextField
         label="School Name"
         id="school-name"
@@ -198,7 +198,7 @@ export default function SchoolDataAdmin(props) {
       />
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   ) : null;
 
   return <Paper>{detailsComponent}</Paper>;
