@@ -24,8 +24,7 @@ import { Password } from "primereact/password";
 
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { Container } from "@mui/material";
-import { Col, Row } from "react-grid-system";
+import { Container, Col, Row } from "react-grid-system";
 export default function SignIn(props) {
   const category = "devise";
   const { t }: { t: any } = useTranslation(category);
@@ -219,7 +218,7 @@ export default function SignIn(props) {
             <TabView activeIndex={curTab} >
               <TabPanel
                 header={t("sessions.login")}  >
-                <Container>
+                <Container fluid>
                   <Row>
                   {emailField}
                   </Row>

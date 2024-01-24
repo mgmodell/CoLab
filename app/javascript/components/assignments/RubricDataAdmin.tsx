@@ -11,15 +11,12 @@ import {
 } from "../infrastructure/StatusSlice";
 import { useNavigate, useParams } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-
 import { DataTable } from "primereact/datatable";
 
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { Typography } from "@mui/material";
 import RubricCriteriaToolbar from "./RubricCriteriaToolbar";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -238,7 +235,7 @@ export default function RubricDataAdmin(props) {
             dispatch(setClean(category));
             dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           }
-          navigate( `../${rubricId}`, { replace: true } );
+          navigate(`../${rubricId}`, { replace: true });
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
           setMessages(messages);
@@ -249,7 +246,7 @@ export default function RubricDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      }) ;
+      });
   };
 
   useEffect(() => {
@@ -275,12 +272,11 @@ export default function RubricDataAdmin(props) {
         onClick={publishOrActivateRubric}
       >
         {t(
-          `${
-            rubricPublished
-              ? rubricActive
-                ? "Deactivate"
-                : "Activate"
-              : "Publish"
+          `${rubricPublished
+            ? rubricActive
+              ? "Deactivate"
+              : "Activate"
+            : "Publish"
           } Rubric`
         )}
       </Button>
@@ -323,34 +319,33 @@ export default function RubricDataAdmin(props) {
 
   const detailsComponent = endpointStatus ? (
     <Panel>
-      <TextField
-        label={t("name")}
-        id="rubric-name"
-        value={rubricName}
-        fullWidth={false}
-        onChange={event => setRubricName(event.target.value)}
-        error={null != messages["name"]}
-        helperText={messages["name"]}
-      />
+      <span className="p-float-label">
+        <InputText
+          itemID="rubric-name"
+          value={rubricName}
+          onChange={event => setRubricName(event.target.value)}
+        />
+        <label htmlFor="rubric-name">{t("name")}</label>
+      </span>
+
+
       &nbsp;
       <br />
-      <TextField
-        id="rubric-description"
-        placeholder="Enter a description of the rubric"
-        multiline={true}
-        minRows={2}
-        maxRows={4}
-        label={t("description")}
-        value={rubricDescription}
-        onChange={event => setRubricDescription(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
-      <Typography>Version {rubricVersion}</Typography>
-      <Typography>Published {rubricPublished ? "Yes" : "No"}</Typography>
-      <Typography>Active {rubricActive ? "Yes" : "No"}</Typography>
+      <span className="p-float-label">
+        <InputTextarea
+          itemID="rubric-description"
+          placeholder="Enter a description of the rubric"
+          rows={2}
+          autoResize={true}
+          value={rubricDescription}
+          onChange={event => setRubricDescription(event.target.value)}
+        />
+        <label htmlFor="rubric-description">{t("description")}</label>
+      </span>
+
+      <p>Version {rubricVersion}</p>
+      <p>Published {rubricPublished ? "Yes" : "No"}</p>
+      <p>Active {rubricActive ? "Yes" : "No"}</p>
       <br />
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>

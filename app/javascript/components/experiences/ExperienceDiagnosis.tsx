@@ -1,24 +1,25 @@
 import React, { Suspense, useState } from "react";
 
+import parse from "html-react-parser";
 import { useDispatch } from "react-redux";
 import { setDirty } from "../infrastructure/StatusSlice";
 
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
 //For debug purposes
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
-import parse from "html-react-parser";
+
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Skeleton } from "primereact/skeleton";
+import { Panel } from "primereact/panel";
 
 type Props = {
   diagnoseFunc: (
@@ -90,7 +91,7 @@ export default function ExperienceDiagnosis(props: Props) {
   };
 
   return (
-    <Paper>
+    <Panel>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton className="mb-2" />}>
@@ -153,6 +154,6 @@ export default function ExperienceDiagnosis(props: Props) {
         </Grid>
       </Grid>
       {saveButton}
-    </Paper>
+    </Panel>
   );
 }

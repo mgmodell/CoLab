@@ -21,11 +21,10 @@ import parse from "html-react-parser";
 
 import { useTranslation } from "react-i18next";
 
-import { Grid, Typography } from "@mui/material";
-
 import AssignmentSubmission from "./AssignmentSubmission";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
+import { Container, Col, Row } from "react-grid-system";
 
 interface ISubmissionCondensed {
   id: number;
@@ -159,22 +158,35 @@ export default function AssignmentViewer(props) {
     output = (
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
         <TabPanel header={"Overview"}>
-          <Grid container spacing={1} columns={70}>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t("name")}:</Typography>
-            </Grid>
-            <Grid item xs={55}>
-              <Typography>{assignment.name}</Typography>
-            </Grid>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t("status.brief")}:</Typography>
-            </Grid>
-            <Grid>{parse(assignment.description)}</Grid>
-            <Grid item xs={70}>
-              <Typography variant="h6">{t("status.eval_criteria")}:</Typography>
-            </Grid>
-            <RubricViewer rubric={assignment.rubric} />
-          </Grid>
+          <Container fluid>
+            <Row>
+              <Col xs={12} sm={3}>
+                <h6>{t("name")}:</h6>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span>{assignment.name}</span>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} sm={3}>
+                <h6>{t("status.brief")}:</h6>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span>{assignment.description}</span>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <h6>{t("status.eval_criteria")}:</h6>
+
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <RubricViewer rubric={assignment.rubric} />
+              </Col>
+            </Row>
+          </Container>
         </TabPanel>
         <TabPanel header={t("submissions.response_tab_lbl")}>
           <AssignmentSubmission

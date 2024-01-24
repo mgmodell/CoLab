@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -27,9 +27,6 @@ export default function DropUserButton(props: Props) {
   const { t } = useTranslation(`${category}s`);
   const dispatch = useDispatch();
 
-  function PaperComponent(props) {
-    return <Paper {...props} />;
-  }
 
   const copyDialog = (
     <Dialog
