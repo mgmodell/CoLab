@@ -134,8 +134,6 @@ export default function SignIn(props) {
   );
 
   const passwordResetBtn = (
-    <Row>
-
       <Col xs={12} sm={6}>
         <Button
           disabled={"" === email || !endpointsLoaded}
@@ -160,25 +158,20 @@ export default function SignIn(props) {
           {t("passwords.forgot_submit")}
         </Button>
       </Col>
-
-    </Row>
   );
 
   const clearBtn = (
-    <Row>
-
-    <Col xs={12} sm={6}>
-      <Button
-        disabled={"" === email && "" === password}
-        onClick={() => {
-          setPassword("");
-          setEmail("");
-        }}
-      >
-        {t("reset_btn")}
-      </Button>
-    </Col>
-    </Row>
+      <Col xs={12} sm={6}>
+        <Button
+          disabled={"" === email && "" === password}
+          onClick={() => {
+            setPassword("");
+            setEmail("");
+          }}
+        >
+          {t("reset_btn")}
+        </Button>
+      </Col>
   );
 
   const get_token_from_oauth = response => {
@@ -186,6 +179,7 @@ export default function SignIn(props) {
   };
 
   const oauthBtn = (
+    <Col xs={12}>
     <GoogleLogin
       onSuccess={get_token_from_oauth}
       onError={() => {
@@ -195,10 +189,10 @@ export default function SignIn(props) {
       context="use"
       text="continue_with"
     />
+    </Col>
   );
 
   const emailField = (
-    <Row>
       <Col xs={12}>
         <span className='p-float-label'>
           <InputText
@@ -210,7 +204,6 @@ export default function SignIn(props) {
           <label htmlFor="email">{t("email_fld")}</label>
         </span>
       </Col>
-    </Row>
   );
 
   if (loggingIn || oauth_client_ids === undefined) {
@@ -227,9 +220,11 @@ export default function SignIn(props) {
               <TabPanel
                 header={t("sessions.login")}  >
                 <Container>
-                  {emailField}
                   <Row>
-                    <Col xs={12} sm={9}>
+                  {emailField}
+                  </Row>
+                  <Row>
+                    <Col xs={12} >
                       <span className='p-float-label'>
                         <Password
                           inputId="password"
@@ -243,26 +238,37 @@ export default function SignIn(props) {
                       </span>
                     </Col>
                   </Row>
-                  {enterLoginBtn}
-                  {clearBtn}
-                  {oauthBtn}
-
+                  <Row>
+                    {enterLoginBtn}
+                    {clearBtn}
+                  </Row>
+                  <Row>
+                      {oauthBtn}
+                  </Row>
                 </Container>
               </TabPanel>
               <TabPanel
                 header={t("registrations.signup_tab")} >
                 <Container>
+                  <Row>
                   {emailField}
+                  </Row>
                   {registerBlock}
-                  {clearBtn}
+                  <Row>
+                    {clearBtn}
+                  </Row>
                 </Container>
               </TabPanel>
               <TabPanel
                 header={t("passwords.reset_tab")} >
                 <Container>
+                  <Row>
                   {emailField}
+                  </Row>
+                  <Row>
                   {passwordResetBtn}
                   {clearBtn}
+                  </Row>
                 </Container>
               </TabPanel>
             </TabView>
