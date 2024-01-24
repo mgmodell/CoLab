@@ -568,6 +568,9 @@ export default function Welcome(props: Props) {
                x="130"
                y="45"
                id="why_txt"
+               onClick={() => {
+                  goToScene('about');
+               }}
                style={{
                   stroke: "azure",
                   fill: 'midnightblue',
