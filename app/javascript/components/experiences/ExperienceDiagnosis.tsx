@@ -116,13 +116,21 @@ export default function ExperienceDiagnosis(props: Props) {
               { behaviors?.map(behavior => {
                   return (
                     <>
-                      <RadioButton key={"behavior_" + behavior.id}
+                      <RadioButton
+                        key={`behavior_${behavior.id}`}
+                        inputId={`behavior_${behavior.id}`}
                         className="behaviors"
                         name="behavior"
                         checked={behaviorId === behavior.id}
                         value={behavior.name}
+                        onChange={event => {
+                          setBehaviorId(behavior.id);
+                          setShowComments(behavior.needs_detail);
+                          dispatch(setDirty("diagnosis"));
+                        }}
+                        
                       />
-                      <label htmlFor="behavior">{behavior.name}</label>
+                      <label htmlFor={`behavior_${behavior.id}`}>{behavior.name}</label>
                       <p>{parse(behavior.description)}</p>
                     </>
                   );
@@ -143,6 +151,7 @@ export default function ExperienceDiagnosis(props: Props) {
               <AccordionTab header={t("next.click_for_comment")}>
                 <div className="p-float-label">
                   <InputTextarea
+                    itemID="comments"
                     id="comments"
                     value={comments}
                     onChange={event => {

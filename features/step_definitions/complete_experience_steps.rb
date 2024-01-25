@@ -39,14 +39,19 @@ end
 
 Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
   label = find(:xpath, "//label[text()='#{fld}']")
-  element = find(:xpath, "//input[@id='#{label[:for]}']")
+  element = if has_xpath?("//input[@id='#{label[:for]}']")
+              find(:xpath, "//input[@id='#{label[:for]}']")
+            else
+              find(:xpath, "//textarea[@itemid='#{label[:for]}']")
+            end
+  # element = find(:xpath, "//textarea[@id='#{label[:for]}']")
   element.click
   element.send_keys txt
 end
 
 Then(/^in the field "([^"]*)" they will see "([^"]*)"$/) do |fld, value|
   label = find(:xpath, "//label[text()='#{fld}']")
-  panel = all(:xpath, "//input[@id='#{label[:for]}']")
+  panel = all(:xpath, "//textarea[@id='#{label[:for]}']")
   panel[0].click unless panel.empty?
   # click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
   field_value = panel[0].value
