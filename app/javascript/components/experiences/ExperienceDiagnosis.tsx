@@ -4,21 +4,17 @@ import parse from "html-react-parser";
 import { useDispatch } from "react-redux";
 import { setDirty } from "../infrastructure/StatusSlice";
 
-//For debug purposes
-
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import Grid from "@mui/material/Grid";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Skeleton } from "primereact/skeleton";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { RadioButton } from "primereact/radiobutton";
+import { Container, Row, Col } from "react-grid-system";
 import { Panel } from "primereact/panel";
 
 type Props = {
@@ -60,7 +56,6 @@ export default function ExperienceDiagnosis(props: Props) {
       disabled={
         !dirtyStatus || 0 === behaviorId || (detailNeeded && !detailPresent)
       }
-      variant="contained"
       onClick={() =>
         props.diagnoseFunc(behaviorId, otherName, comments, resetData)
       }
@@ -73,15 +68,17 @@ export default function ExperienceDiagnosis(props: Props) {
 
   const otherPnl =
     0 !== behaviorId && detailNeeded ? (
-      <TextField
-        variant="filled"
-        label={t("next.other")}
-        id="other_name"
-        value={otherName}
-        onChange={event => {
-          setOtherName(event.target.value);
-        }}
-      />
+      <span className="p-float-label">
+        <InputText
+          itemID="other_name"
+          id="other_name"
+          value={otherName}
+          onChange={event => {
+            setOtherName(event.target.value);
+          }}
+        />
+        <label htmlFor="other_name">{t("next.other")}</label>
+      </span>
     ) : null;
 
   const resetData = () => {
@@ -92,68 +89,81 @@ export default function ExperienceDiagnosis(props: Props) {
 
   return (
     <Panel>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Suspense fallback={<Skeleton className="mb-2" />}>
-            <h3 className="journal_entry">
-              {t("next.journal", { week_num: props.weekNum })}
-            </h3>
-          </Suspense>
-        </Grid>
-        <Grid item xs={12}>
-          <Suspense fallback={<Skeleton className="mb-2" />}>
-            <p>{parse(props.weekText)}</p>
-          </Suspense>
-        </Grid>
-        <Grid item xs={12}>
-          <FormLabel>{t("next.prompt")}</FormLabel>
-          {behaviors !== undefined ? (
-            <RadioGroup
-              className="behaviors"
-              aria-label="behavior"
-              value={behaviorId}
-              onChange={event => {
-                dispatch(setDirty("diagnosis"));
-                setBehaviorId(Number(event.target.value));
-              }}
-            >
-              {behaviors.map(behavior => {
-                return (
-                  <React.Fragment key={"behavior_" + behavior.id}>
-                    <FormControlLabel
-                      value={behavior.id}
-                      label={behavior.name}
-                      control={<Radio />}
-                    />
-                    <p>{parse(behavior.description)}</p>
-                  </React.Fragment>
-                );
-              })}
-            </RadioGroup>
-          ) : (
-            <Skeleton className="mb-2" />
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          {otherPnl}
-        </Grid>
-        <Grid item xs={12}>
-          <Accordion>
-            <AccordionTab header={t("next.click_for_comment")}>
-              <TextField
-                variant="filled"
-                label={t("next.comments")}
-                value={comments}
-                id="comments"
-                onChange={event => {
-                  setComments(event.target.value);
-                }}
-              />
-            </AccordionTab>
-          </Accordion>
-        </Grid>
-      </Grid>
-      {saveButton}
+      <Container>
+        <Row>
+          <Col xs={12}>
+            <Suspense fallback={<Skeleton className="mb-2" />}>
+              <h3 className="journal_entry">
+                {t("next.journal", { week_num: props.weekNum })}
+              </h3>
+            </Suspense>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <Suspense fallback={<Skeleton className="mb-2" />}>
+              <p>{parse(props.weekText)}</p>
+            </Suspense>
+          </Col>
+
+        </Row>
+
+        <Row>
+          <Col xs={12}>
+            <h6>
+              {t("next.prompt")}
+            </h6>
+              { behaviors?.map(behavior => {
+                  return (
+                    <>
+                      <RadioButton key={"behavior_" + behavior.id}
+                        className="behaviors"
+                        name="behavior"
+                        checked={behaviorId === behavior.id}
+                        value={behavior.name}
+                      />
+                      <label htmlFor="behavior">{behavior.name}</label>
+                      <p>{parse(behavior.description)}</p>
+                    </>
+                  );
+                })
+              }
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {otherPnl}
+          </Col>
+
+        </Row>
+        <Row>
+
+          <Col xs={12}>
+            <Accordion>
+              <AccordionTab header={t("next.click_for_comment")}>
+                <div className="p-float-label">
+                  <InputTextarea
+                    id="comments"
+                    value={comments}
+                    onChange={event => {
+                      setComments(event.target.value);
+                    }}
+                    rows={5}
+                    cols={30}
+                  />
+                  <label htmlFor="comments">{t("next.comments")}</label>
+
+                </div>
+              </AccordionTab>
+            </Accordion>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {saveButton}
+          </Col>
+        </Row>
+      </Container>
     </Panel>
   );
 }

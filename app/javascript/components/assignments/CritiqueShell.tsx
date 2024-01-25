@@ -6,23 +6,24 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import parse from 'html-react-parser';
 import { useTranslation } from "react-i18next";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
 
-import Grid from "@mui/material/Unstable_Grid2";
-import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
+
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Panel } from "primereact/panel";
+import { ToggleButton } from "primereact/togglebutton";
+import { Col, Container, Row } from "react-grid-system";
+import { Splitter, SplitterPanel } from "primereact/splitter";
 
-enum SubmissionActions{
+enum SubmissionActions {
   init_no_data = 'INIT NO DATA',
   set_submission_full = 'SET SUBMISSION FULL',
   set_submission_feedback_full = 'SET FEEDBACK FULL',
@@ -32,17 +33,17 @@ enum SubmissionActions{
   set_criteria_feedback = 'SET CRITERIA FEEDBACK',
   set_criteria_score = 'SET CRITERIA SCORE',
 
-  
+
 }
 
-const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissionFeedback =>{
-  const submissionFeedback:ISubmissionFeedback = {
+const genCleanFeedback = (submission_id: number, rubric: IRubricData): ISubmissionFeedback => {
+  const submissionFeedback: ISubmissionFeedback = {
     id: null,
     submission_id: submission_id,
     feedback: '',
     rubric_row_feedbacks: []
   }
-  rubric.criteria.forEach( (value:ICriteria) =>{
+  rubric.criteria.forEach((value: ICriteria) => {
     const newRowFeedback: IRubricRowFeedback = {
       id: null,
       submission_feedback_id: null,
@@ -50,53 +51,53 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
       score: 0,
       feedback: '',
     }
-    submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
+    submissionFeedback.rubric_row_feedbacks.push(newRowFeedback);
   })
   return submissionFeedback;
 
 };
 
-const genCleanSubmission = ( submission_id:number, rubric:IRubricData ):ISubmissionData =>{
-      return {
-        id: 0,
-        recordedScore: null,
-        submitted: null,
-        withdrawn: null,
-        sub_text: null,
-        sub_link: null,
-        rubric: rubric,
-        submission_feedback: genCleanFeedback( submission_id, rubric )
+const genCleanSubmission = (submission_id: number, rubric: IRubricData): ISubmissionData => {
+  return {
+    id: 0,
+    recordedScore: null,
+    submitted: null,
+    withdrawn: null,
+    sub_text: null,
+    sub_link: null,
+    rubric: rubric,
+    submission_feedback: genCleanFeedback(submission_id, rubric)
 
-      };
+  };
 
 }
 
-const SubmissionReducer = ( state, action ) =>{
-  const tmpSubmission : ISubmissionData = Object.assign({}, state );
+const SubmissionReducer = (state, action) => {
+  const tmpSubmission: ISubmissionData = Object.assign({}, state);
 
   var local_rubric_row_feedback = null;
-  switch( action.type ){
+  switch (action.type) {
     case SubmissionActions.init_no_data:
-      return  genCleanSubmission( action.submission_id, action.rubric );
+      return genCleanSubmission(action.submission_id, action.rubric);
 
     case SubmissionActions.set_submission_full:
-      return {...action.submission as ISubmissionData};
+      return { ...action.submission as ISubmissionData };
     case SubmissionActions.set_submission_feedback_full:
       tmpSubmission.submission_feedback = action.submission_feedback
-      return Object.assign({}, tmpSubmission );
+      return Object.assign({}, tmpSubmission);
     case SubmissionActions.set_feedback_overall:
       tmpSubmission.submission_feedback.feedback = action.submission_feedback;
-      return Object.assign({}, tmpSubmission );
+      return Object.assign({}, tmpSubmission);
     case SubmissionActions.set_criteria:
-      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
-      Object.assign( local_rubric_row_feedback, action.rubric_row_feedback );
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find(candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id);
+      Object.assign(local_rubric_row_feedback, action.rubric_row_feedback);
       return tmpSubmission
     case SubmissionActions.set_criteria_feedback:
-      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find(candidate => candidate.criterium_id === action.criterium_id);
       local_rubric_row_feedback.feedback = action.criterium_feedback;
       return tmpSubmission
     case SubmissionActions.set_criteria_score:
-      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find(candidate => candidate.criterium_id === action.criterium_id);
       local_rubric_row_feedback.score = action.score;
       return tmpSubmission
     case SubmissionActions.set_recorded_score:
@@ -104,11 +105,11 @@ const SubmissionReducer = ( state, action ) =>{
       return tmpSubmission;
     default:
       const msg = 'no action taken in submissionReducer';
-      console.log( msg );
-      throw new Error( msg );
+      console.log(msg);
+      throw new Error(msg);
   }
 }
-interface ISubmissionData{
+interface ISubmissionData {
   id: number;
   recordedScore: number;
   submitted: DateTime;
@@ -122,34 +123,34 @@ interface ISubmissionData{
 type Props = {
 };
 
-  enum OPT_COLS {
-    ID = 'submissions.id',
-    RECORDED_SCORE = 'submissions.score',
-    CALCULATED_SCORE = 'submissions.calculated_score',
-    SUBMITTED = 'submissions.submitted',
-    WITHDRAWN = 'submissions.withdrawn',
+enum OPT_COLS {
+  ID = 'submissions.id',
+  RECORDED_SCORE = 'submissions.score',
+  CALCULATED_SCORE = 'submissions.calculated_score',
+  SUBMITTED = 'submissions.submitted',
+  WITHDRAWN = 'submissions.withdrawn',
 
-  }
+}
 export default function CritiqueShell(props: Props) {
   const category = "critique";
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const endpoints = useTypedSelector( 
+  const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
-  const { assignmentId } = useParams( );
+  const { assignmentId } = useParams();
   const [filterText, setFilterText] = useState("");
   const [visibleColumns, setVisibleColumns] = useState([]);
 
-  const [t, i18n] = useTranslation( `${category}s` );
-  const [panels, setPanels] = useState( () => ['submissions'] )
-  const [submissionsIndex, setSubmissionsIndex] = useState( Array<ISubmissionCondensed> );
-  const [assignmentAcceptsText, setAssignmentAcceptsText] = useState( false );
-  const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState( false );
-  const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState( false );
+  const [t, i18n] = useTranslation(`${category}s`);
+  const [panels, setPanels] = useState(() => ['submissions'])
+  const [submissionsIndex, setSubmissionsIndex] = useState(Array<ISubmissionCondensed>);
+  const [assignmentAcceptsText, setAssignmentAcceptsText] = useState(false);
+  const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState(false);
+  const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState(false);
 
   const initialState: ISubmissionData = {
     id: 0,
@@ -175,242 +176,253 @@ export default function CritiqueShell(props: Props) {
   const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, initialState);
 
   const optColumns = [
-    t( OPT_COLS.ID ),
-    t( OPT_COLS.RECORDED_SCORE ),
-    t( OPT_COLS.CALCULATED_SCORE ),
-    t( OPT_COLS.WITHDRAWN)
+    t(OPT_COLS.ID),
+    t(OPT_COLS.RECORDED_SCORE),
+    t(OPT_COLS.CALCULATED_SCORE),
+    t(OPT_COLS.WITHDRAWN)
   ]
 
   //Retrieve the submission
-  const loadSubmission = (submissionId:number) => {
-    dispatch( startTask());
+  const loadSubmission = (submissionId: number) => {
+    dispatch(startTask());
     const url = `${endpoints.showUrl}${submissionId}.json`;
-    axios.get( url )
+    axios.get(url)
       .then(response => {
         const data = response.data as {
           submission: ISubmissionData,
           rubric: IRubricData
         };
-        if( data.submission.submission_feedback === undefined ){
-          data.submission.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
+        if (data.submission.submission_feedback === undefined) {
+          data.submission.submission_feedback = genCleanFeedback(data.submission.id, data.submission.rubric);
         }
 
-        updateSelectedSubmission({type: SubmissionActions.set_submission_full, submission: data.submission} );
+        updateSelectedSubmission({ type: SubmissionActions.set_submission_full, submission: data.submission });
 
-        if( !panels.includes('submitted') ){
+        if (!panels.includes('submitted')) {
           const tmpPanels = [...panels, 'submitted'];
-          setPanels( tmpPanels );
+          setPanels(tmpPanels);
         }
-      }).finally( () =>{
-        dispatch( endTask() );
+      }).finally(() => {
+        dispatch(endTask());
       })
   }
 
-  const handlePaneSelection = (
-    event: React.MouseEvent<HTMLElement>,
-    newPanes: string[],
-  ) => {
-    setPanels( newPanes );
-  };
-
-  useEffect( () => {
-    if( endpointsLoaded ){
-      getSubmissions( );
+  useEffect(() => {
+    if (endpointsLoaded) {
+      getSubmissions();
     }
   }, [endpointsLoaded]);
 
   const getSubmissions = () => {
-    dispatch( startTask());
+    dispatch(startTask());
     const url = `${endpoints.baseUrl}${assignmentId}.json`;
-    axios.get( url )
+    axios.get(url)
       .then(response => {
         const data = response.data;
-        setAssignmentAcceptsText( data.assignment.text_sub );
-        setAssignmentAcceptsLink( data.assignment.link_sub );
-        setAssignmentGroupEnabled( data.assignment.group_enabled );
-        data.assignment.submissions.forEach( (submission: ISubmissionCondensed) =>{
-          submission.submitted = submission.submitted !== null ? DateTime.fromISO( submission.submitted) : null;
-          submission.withdrawn = submission.withdrawn !== null ? DateTime.fromISO( submission.withdrawn) : null;
+        setAssignmentAcceptsText(data.assignment.text_sub);
+        setAssignmentAcceptsLink(data.assignment.link_sub);
+        setAssignmentGroupEnabled(data.assignment.group_enabled);
+        data.assignment.submissions.forEach((submission: ISubmissionCondensed) => {
+          submission.submitted = submission.submitted !== null ? DateTime.fromISO(submission.submitted) : null;
+          submission.withdrawn = submission.withdrawn !== null ? DateTime.fromISO(submission.withdrawn) : null;
         })
-        setSubmissionsIndex( data.assignment.submissions );
-        
+        setSubmissionsIndex(data.assignment.submissions);
+
       })
   }
 
+  const [showSubmissions, setShowSubmissions] = useState(true);
+  const [showSubmitted, setShowSubmitted] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
   return (
     <Panel header={t('critique_title')}>
-    <Grid container columns={12}>
-    <Grid display={'flex'}
-      justifyContent={'center'}
-      alignItems={'center'}
-      xs={12} >
-      <ToggleButtonGroup
-        size="small"
-        value={panels}
-        onChange={handlePaneSelection}
-        aria-label="panels">
-        <ToggleButton value='submissions' aria-label={t('submissions_title')}>
-          {t('submissions_title')}
-        </ToggleButton>
-        <ToggleButton value='submitted' aria-label={t('submitted')}>
-          {t('submitted')}
-        </ToggleButton>
-        <ToggleButton value='feedback' aria-label={t('feedback')}>
-          {t('feedback')}
-        </ToggleButton>
-        <ToggleButton value='history' aria-label={t('history')}>
-          {t('history')}
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <Container fluid>
+        <Row>
+          <Col xs={12}>
+            <div className="p-inputgroup flex-1">
 
-    </Grid>
-      {panels.includes('submissions') ? (
-        <Grid xs={12 / panels.length } >
-          <Typography variant="h6">
-            {t('submissions_title')}
-          </Typography>
-      <DataTable
-        value={submissionsIndex}
-        resizableColumns
-        tableStyle={{
-          minWidth: '50rem'
-        }}
-        reorderableColumns
-        paginator
-        rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, submissionsIndex.length]
-        }
-        header={<AdminListToolbar
-          itemType={category}
-          columnToggle={{
-            optColumns: optColumns,
-            visibleColumns: visibleColumns,
-            setVisibleColumnsFunc: setVisibleColumns,
-          }}
-        />}
-        sortField="submitted"
-        sortOrder={-1}
-        paginatorDropdownAppendTo={'self'}
-        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        dataKey="id"
-        onRowClick={(event) => {
-          loadSubmission( event.data.id );
-        }}
-      >
-        <Column
-          columnKey="id"
-          key='id'
-          field="id"
-          sortable
-          header={t("submissions.id")} />
-        <Column
-          key='recorded_score'
-          field="recorded_score"
-          sortable
-          header={t("submissions.score")} />
-        <Column
-          field="calculated_score"
-          header={t("submissions.calculated_score")}
-          sortable
-            body={(rowData) => {
-              console.log( rowData );
-              if( rowData.withdrawn === null ){
-                return <span>{t('submissions.score_na')}</span>;
-              } else {
-                const dt = DateTime.fromISO(rowData.withdrawn);
-                return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-              }
+              <ToggleButton
+                checked={showSubmissions}
+                onChange={(e) => { setShowSubmissions(e.value); }}
+                aria-label={t('submissions_title')}>
+                {t('submissions_title')}
+              </ToggleButton>
+              <ToggleButton
+                checked={showSubmitted}
+                onChange={(e) => { setShowSubmitted(e.value); }}
+                aria-label={t('submitted')}>
+                {t('submitted')}
+              </ToggleButton>
+              <ToggleButton
+                checked={showFeedback}
+                onChange={(e) => { setShowFeedback(e.value) }}
+                aria-label={t('feedback')}>
+                {t('feedback')}
+              </ToggleButton>
+              <ToggleButton
+                checked={showHistory}
+                onChange={(e) => { setShowHistory(e.value) }}
+                aria-label={t('history')}>
+                {t('history')}
+              </ToggleButton>
+            </div>
 
-            }}
-          />
-        <Column
-          field="submitted"
-          sortable
-          header={t("submissions.submitted")}
-            body={(rowData) => {
-              const dt = DateTime.fromISO(rowData.submitted);
-              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Splitter>
+              {showSubmissions ? (
+                <SplitterPanel>
+                  <h6>
+                    {t('submissions_title')}
+                  </h6>
+                  <DataTable
+                    value={submissionsIndex}
+                    resizableColumns
+                    tableStyle={{
+                      minWidth: '50rem'
+                    }}
+                    reorderableColumns
+                    paginator
+                    rows={5}
+                    rowsPerPageOptions={
+                      [5, 10, 20, submissionsIndex.length]
+                    }
+                    header={<AdminListToolbar
+                      itemType={category}
+                      columnToggle={{
+                        optColumns: optColumns,
+                        visibleColumns: visibleColumns,
+                        setVisibleColumnsFunc: setVisibleColumns,
+                      }}
+                    />}
+                    sortField="submitted"
+                    sortOrder={-1}
+                    paginatorDropdownAppendTo={'self'}
+                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    dataKey="id"
+                    onRowClick={(event) => {
+                      loadSubmission(event.data.id);
+                    }}
+                  >
+                    <Column
+                      columnKey="id"
+                      key='id'
+                      field="id"
+                      sortable
+                      header={t("submissions.id")} />
+                    <Column
+                      key='recorded_score'
+                      field="recorded_score"
+                      sortable
+                      header={t("submissions.score")} />
+                    <Column
+                      field="calculated_score"
+                      header={t("submissions.calculated_score")}
+                      sortable
+                      body={(rowData) => {
+                        console.log(rowData);
+                        if (rowData.withdrawn === null) {
+                          return <span>{t('submissions.score_na')}</span>;
+                        } else {
+                          const dt = DateTime.fromISO(rowData.withdrawn);
+                          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                        }
 
-            }}
-        />
-        <Column
-          field="withdrawn"
-          sortable
-          header={t("submissions.withdrawn")}
-            body={(rowData) => {
-              console.log( rowData );
-              if( rowData.withdrawn === null ){
-                return <span>{t('submissions.not_withdrawn')}</span>;
-              } else {
-                const dt = DateTime.fromISO(rowData.withdrawn);
-                return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-              }
+                      }}
+                    />
+                    <Column
+                      field="submitted"
+                      sortable
+                      header={t("submissions.submitted")}
+                      body={(rowData) => {
+                        const dt = DateTime.fromISO(rowData.submitted);
+                        return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
 
-            }}
-        />
-        <Column
-          field="user"
-          sortable
-          sortField="user.last_name"
-          header={t("submissions.submitter")}
-          body={param => {
-            return `${param.user.last_name}, ${param.user.first_name}`;
-          }}
-        />
-        </DataTable>
+                      }}
+                    />
+                    <Column
+                      field="withdrawn"
+                      sortable
+                      header={t("submissions.withdrawn")}
+                      body={(rowData) => {
+                        console.log(rowData);
+                        if (rowData.withdrawn === null) {
+                          return <span>{t('submissions.not_withdrawn')}</span>;
+                        } else {
+                          const dt = DateTime.fromISO(rowData.withdrawn);
+                          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                        }
 
-        </Grid>
-      ): null}
-      {panels.includes('submitted') ? (
-        <Grid xs={12 / panels.length } >
-          <Typography variant="h6">
-            {t('submitted')}
-          </Typography>
-          {assignmentAcceptsLink ? (
-            <React.Fragment>
-              <Typography variant="h6">
-                {t('submitted_link')}:
-              </Typography>
-              <Typography id='sub_link'>
-                <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
-              </Typography>
-            </React.Fragment>
-          ): null}
-          {assignmentAcceptsText ? (
-            <React.Fragment>
-              <Typography variant='h6'>
-                {t('submitted_text')}:
-              </Typography>
-              <Typography id='sub_text' variant="body1">
-                {parse( selectedSubmission.sub_text || `<i>${t('no_text')}</i>` )}
-              </Typography>
-            </React.Fragment>
-          ) : null }
-        </Grid>
-      ): null}
-      {panels.includes('feedback') ? (
-        <Grid xs={12 / panels.length } >
-          <Typography variant="h6">
+                      }}
+                    />
+                    <Column
+                      field="user"
+                      sortable
+                      sortField="user.last_name"
+                      header={t("submissions.submitter")}
+                      body={param => {
+                        return `${param.user.last_name}, ${param.user.first_name}`;
+                      }}
+                    />
+                  </DataTable>
+
+                </SplitterPanel>
+              ) : null}
+              {showSubmitted ? (
+                <SplitterPanel>
+                  <h6>
+                    {t('submitted')}
+                  </h6>
+                  {assignmentAcceptsLink ? (
+                    <React.Fragment>
+                      <h6>
+                        {t('submitted_link')}:
+
+                      </h6>
+                      <p>
+                        <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
+                      </p>
+                    </React.Fragment>
+                  ) : null}
+                  {assignmentAcceptsText ? (
+                    <React.Fragment>
+                      <h6>
+                        {t('submitted_text')}:
+                      </h6>
+                      <p>
+                        {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
+                      </p>
+                    </React.Fragment>
+                  ) : null}
+                </SplitterPanel>
+              ) : null}
+      {showFeedback ? (
+        <SplitterPanel >
+          <h6>
             {t('feedback')}
-          </Typography>
+          </h6>
           <RubricScorer submission={selectedSubmission} submissionReducer={updateSelectedSubmission} />
-        </Grid>
-      ): null}
-      {panels.includes('history') ? (
-        <Grid xs={12 / panels.length } >
-          <Typography variant="h6">
+        </SplitterPanel>
+      ) : null}
+      {showHistory ? (
+        <SplitterPanel>
+          <h6>
             {t('history')}
-          </Typography>
+          </h6>
           {t('error.not_loaded')}
-        </Grid>
-      ): null}
+        </SplitterPanel>
+      ) : null}
+            </Splitter>
+          </Col>
+        </Row>
 
-    </Grid>
-
-    
-    </Panel>
+      </Container>
+    </Panel >
 
   );
 }
