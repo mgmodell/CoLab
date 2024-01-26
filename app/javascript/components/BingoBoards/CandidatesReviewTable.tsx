@@ -22,7 +22,7 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 
-import { ColumnMeta } from "../infrastructure/Types";
+import { IColumnMeta } from "../infrastructure/Types";
 import { Panel } from "primereact/panel";
 
 type Props = {
@@ -232,7 +232,7 @@ export default function CandidatesReviewTable(props: Props) {
     setCandidates(candidates_temp);
   };
 
-  const optColumns: Array<ColumnMeta> = [
+  const optColumns: Array<IColumnMeta> = [
     { field: "number", header: "#", sortable: true, key: "number" },
     {
       field: "completed",

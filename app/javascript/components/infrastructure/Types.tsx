@@ -1,4 +1,4 @@
-interface ColumnMeta {
+interface IColumnMeta {
   field: string;
   header: string;
   sortable: boolean;
@@ -8,4 +8,4 @@ interface ColumnMeta {
   key?: string;
 }
 
-export { ColumnMeta };
+export { IColumnMeta };

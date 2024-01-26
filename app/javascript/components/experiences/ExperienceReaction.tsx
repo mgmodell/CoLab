@@ -132,6 +132,7 @@ export default function ExperienceReaction(props: Props) {
             <h3>{t("reaction.improve")}</h3>
             <div className="p-float-label">
               <InputTextarea
+                id="improvements"
                 itemID="improvements"
                 value={improvements}
                 onChange={event => {

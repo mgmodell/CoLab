@@ -48,7 +48,7 @@ enum UserListType {
   declined_student = "declined_student"
 }
 
-type StudentData = {
+interface IStudentData {
   assessment_performance: number;
   bingo_data: Array<number>;
   bingo_performance: number;
@@ -65,8 +65,8 @@ type StudentData = {
 type Props = {
   courseId: number;
   retrievalUrl: string;
-  usersList: Array<StudentData>; //Need an interface for the users
-  usersListUpdateFunc: (usersList: Array<StudentData>) => void;
+  usersList: Array<IStudentData>; //Need an interface for the users
+  usersListUpdateFunc: (usersList: Array<IStudentData>) => void;
   userType: UserListType;
   addMessagesFunc: ({}) => void;
 };
@@ -452,4 +452,4 @@ export default function CourseUsersList(props: Props) {
   );
 }
 
-export { UserListType, StudentData };
+export { UserListType, IStudentData as StudentData };

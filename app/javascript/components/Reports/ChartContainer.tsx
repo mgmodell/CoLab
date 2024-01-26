@@ -14,14 +14,14 @@ import Switch from "@mui/material/Switch";
 import SubjectChart, { unit_codes, code_units } from "./SubjectChart";
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
-type Project = {
+interface IProject {
   id: number;
   name: string;
 };
 
 type Props = {
   unitOfAnalysis: string;
-  projects?: Project[];
+  projects?: IProject[];
   anonymize?: boolean;
   forResearch?: boolean;
 };

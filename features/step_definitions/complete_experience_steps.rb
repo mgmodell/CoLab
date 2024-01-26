@@ -42,7 +42,7 @@ Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
   element = if has_xpath?("//input[@id='#{label[:for]}']")
               find(:xpath, "//input[@id='#{label[:for]}']")
             else
-              find(:xpath, "//textarea[@itemid='#{label[:for]}']")
+              find(:xpath, "//textarea[@id='#{label[:for]}']")
             end
   # element = find(:xpath, "//textarea[@id='#{label[:for]}']")
   element.click

@@ -30,7 +30,7 @@ enum ActivityType {
     Assignment = "assignment",
 };
 
-type Activity = {
+interface IActivity {
     id: number;
     name: string;
     active: boolean;
@@ -48,7 +48,7 @@ enum ACTIVITY_COLS {
 
 
 type Props = {
-    activities: Activity[];
+    activities: IActivity[];
     newActivityLinks: Array<IActivityLink>;
     refreshFunc: () => void;
 };
@@ -196,4 +196,4 @@ export default function ActivityList(props: Props) {
     )
 }
 
-export { ActivityType, Activity };
+export { ActivityType, IActivity as Activity };

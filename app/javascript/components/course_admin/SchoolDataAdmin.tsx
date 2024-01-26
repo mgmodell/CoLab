@@ -16,7 +16,6 @@ import {
 import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -26,6 +25,8 @@ import FormHelperText from "@mui/material/FormHelperText";
 //import i18n from './i18n';
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
@@ -152,15 +153,15 @@ export default function SchoolDataAdmin(props) {
 
   const detailsComponent = endpointStatus ? (
     <Panel>
-      <TextField
-        label="School Name"
+      <div className="p-floating-label">
+      <InputText
         id="school-name"
+        itemID="school-name"
         value={schoolName}
-        fullWidth={false}
         onChange={event => setSchoolName(event.target.value)}
-        error={null != messages["name"]}
-        helperText={messages["name"]}
-      />
+        />
+        <label htmlFor="school-name">School Name</label>
+        </div>
       &nbsp;
       <FormControl>
         <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
@@ -182,20 +183,19 @@ export default function SchoolDataAdmin(props) {
         <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
       </FormControl>
       <br />
-      <TextField
-        id="school-description"
-        placeholder="Enter a description of the school"
-        multiline={true}
-        minRows={2}
-        maxRows={4}
-        label="Description"
-        value={schoolDescription}
-        onChange={event => setSchoolDescription(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
+      <div className="p-floating-label">
+        <InputTextarea
+          id="school-description"
+          placeholder="Enter a description of the school"
+          rows={4}
+          cols={30}
+          autoResize={true}
+          value={schoolDescription}
+          onChange={event => setSchoolDescription(event.target.value)}
+
+        />
+        <label htmlFor="school-description">Description</label>
+      </div>
       <br />
       {saveButton}
     </Panel>
@@ -203,7 +203,7 @@ export default function SchoolDataAdmin(props) {
 
   return (
     <Panel>
-    {detailsComponent}
+      {detailsComponent}
 
     </Panel>
   );

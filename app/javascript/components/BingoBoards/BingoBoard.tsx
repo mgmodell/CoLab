@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Panel } from "primereact/panel";
-import { BingoBoard } from "./BingoBuilder";
+import { IBingoBoard } from "./BingoBuilder";
 
 type Props = {
-  board: BingoBoard;
+  board: IBingoBoard;
 };
 
 export default function BingoBoard(props: Props) {

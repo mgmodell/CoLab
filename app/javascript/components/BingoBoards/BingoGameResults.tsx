@@ -7,7 +7,7 @@ import { Container, Row, Col } from "react-grid-system";
 
 const ScoredGameDataTable = React.lazy(() => import("./ScoredGameDataTable"));
 
-type Candidate = {
+interface ICandidate {
   id: number;
   concept: string;
   definition: string;
@@ -22,7 +22,7 @@ type Props = {
   board: Array<Array<string>>;
   score: number;
   close: Function;
-  candidates: Array<Candidate>;
+  candidates: Array<ICandidate>;
 };
 
 

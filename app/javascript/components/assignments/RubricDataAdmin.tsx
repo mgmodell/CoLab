@@ -334,6 +334,7 @@ export default function RubricDataAdmin(props) {
       <span className="p-float-label">
         <InputTextarea
           itemID="rubric-description"
+          id="rubric-description"
           placeholder="Enter a description of the rubric"
           rows={2}
           autoResize={true}

@@ -14,13 +14,12 @@ import parse from "html-react-parser";
 
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
-import { D } from "@fullcalendar/core/internal-common";
 
 type Props = {
   rootPath?: string;
 };
 
-type BingoCell = {
+interface IBingoCell {
   id?: number;
   row: number;
   column: number;
@@ -32,7 +31,7 @@ type BingoCell = {
   };
 };
 
-type BingoGame = {
+interface IBingoGame {
   id?: number;
   topic: string;
   description?: string;
@@ -40,11 +39,11 @@ type BingoGame = {
   end_date?: Date;
 };
 
-export type BingoBoard = {
+export interface IBingoBoard {
   initialised: boolean;
-  bingo_cells: BingoCell[];
+  bingo_cells: IBingoCell[];
   iteration: number;
-  bingo_game: BingoGame;
+  bingo_game: IBingoGame;
 };
 
 export default function BingoBuilder(props: Props) {
