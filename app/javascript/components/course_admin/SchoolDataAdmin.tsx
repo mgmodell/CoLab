@@ -152,7 +152,7 @@ export default function SchoolDataAdmin(props) {
   ) : null;
 
   const detailsComponent = endpointStatus ? (
-    <Panel>
+    <Panel header={t('edit.title')}>
       <div className="p-float-label">
         <InputText
           id="school-name"
