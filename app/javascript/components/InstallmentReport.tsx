@@ -1,7 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
@@ -9,6 +8,7 @@ import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
@@ -102,7 +102,7 @@ export default function InstallmentReport(props: Props) {
   };
 
   const saveButton = (
-    <Button variant="contained" onClick={() => saveContributions()}>
+    <Button onClick={() => saveContributions()}>
       <Suspense fallback={<Skeleton className="mb-2" />}>
         {t("submit")}
       </Suspense>

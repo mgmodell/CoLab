@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,6 +16,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Skeleton } from "primereact/skeleton";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -231,7 +231,6 @@ export default function BingoGameDataAdmin(props) {
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
-        variant="contained"
         color="primary"
         //className={classes["button"]}
         onClick={saveBingoGame}

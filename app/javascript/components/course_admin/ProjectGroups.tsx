@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+
 import Fab from "@mui/material/Fab";
-import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,6 +12,8 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TextField from "@mui/material/TextField";
+
+import { Panel } from "primereact/panel";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
@@ -269,7 +271,7 @@ export default function ProjectGroups(props: Props) {
   };
 
   return (
-    <Paper>
+    <Panel>
       <Toolbar>
         <InputBase
           placeholder="Search Students"
@@ -386,6 +388,6 @@ export default function ProjectGroups(props: Props) {
           })}
         </TableBody>
       </Table>
-    </Paper>
+    </Panel>
   );
 }

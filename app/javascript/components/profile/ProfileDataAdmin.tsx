@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
@@ -40,7 +40,8 @@ import {
   persistProfile,
   setLocalLanguage
 } from "../infrastructure/ProfileSlice";
-import axios from "axios";
+
+import { Button } from "primereact/button";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
@@ -275,7 +276,7 @@ export default function ProfileDataAdmin(props: Props) {
   useEffect(() => getStates(user.country), [user.country]);
 
   const saveButton = (
-    <Button variant="contained" onClick={saveProfile} disabled={!dirty}>
+    <Button onClick={saveProfile} disabled={!dirty}>
       {null == user.id ? "Create" : "Save"} Profile
     </Button>
   );

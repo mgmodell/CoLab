@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -31,6 +30,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
+
+import { Button } from "primereact/button";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 
@@ -221,7 +222,7 @@ export default function ProjectDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveProject}>
+    <Button onClick={saveProject}>
       {null == projectId ? "Create" : "Save"} Project
     </Button>
   ) : null;

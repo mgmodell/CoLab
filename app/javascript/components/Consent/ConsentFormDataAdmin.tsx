@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
+
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 import { DateTime, Settings } from "luxon";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -183,13 +185,13 @@ export default function ConsentFormDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveConsentForm}>
+    <Button onClick={saveConsentForm}>
       {null == consentFormId ? t("edit.create_btn") : t("edit.save_btn")}
     </Button>
   ) : null;
 
   const detailsComponent = (
-    <Paper>
+    <Panel>
       <Grid container spacing={3}>
         <LocalizationProvider dateAdapter={AdapterLuxon}>
           <Grid item xs={12}>
@@ -296,18 +298,18 @@ export default function ConsentFormDataAdmin(props) {
           onChange={handleFileSelect}
           type="file"
         />
-        <Button variant="contained" component="span">
+        <Button >
           {t("edit.file_select_btn")}
         </Button>
       </label>
       <br />
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   );
 
   return (
-    <Paper>
+    <Panel>
       <Collapse in={showErrors}>
         <Alert
           action={
@@ -328,6 +330,6 @@ export default function ConsentFormDataAdmin(props) {
         </Alert>
       </Collapse>
       {detailsComponent}
-    </Paper>
+    </Panel>
   );
 }

@@ -201,5 +201,10 @@ export default function SchoolDataAdmin(props) {
     </Panel>
   ) : null;
 
-  return <Paper>{detailsComponent}</Paper>;
+  return (
+    <Panel>
+    {detailsComponent}
+
+    </Panel>
+  );
 }

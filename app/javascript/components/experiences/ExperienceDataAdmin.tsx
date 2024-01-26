@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -27,6 +26,8 @@ import {
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+
+import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { TabPanel, TabView } from "primereact/tabview";
 
@@ -196,7 +197,7 @@ export default function ExperienceDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveExperience}>
+    <Button onClick={saveExperience}>
       {null == experienceId ? "Create" : "Save"} Experience
     </Button>
   ) : null;

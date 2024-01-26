@@ -7,7 +7,6 @@ import { setDirty } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";

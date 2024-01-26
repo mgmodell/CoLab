@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
+
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Grid from "@mui/material/Grid";
+
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -165,7 +167,7 @@ export default function CandidateListEntry(props: Props) {
   useEffect(() => setDirty(true), [candidates]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveCandidateList}>
+    <Button onClick={saveCandidateList}>
       Save Candidates
     </Button>
   ) : null;
@@ -239,7 +241,7 @@ export default function CandidateListEntry(props: Props) {
     setCandidates(tempList);
   };
   const detailsComponent = (
-    <Paper>
+    <Panel>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={3}>
           <Typography>{t("topic")}</Typography>
@@ -289,11 +291,11 @@ export default function CandidateListEntry(props: Props) {
         })}
       </Grid>
       {saveButton}
-    </Paper>
+    </Panel>
   );
 
   return (
-    <Paper>
+    <Panel>
       <Collapse in={showErrors}>
         <Alert
           action={
@@ -314,6 +316,6 @@ export default function CandidateListEntry(props: Props) {
         </Alert>
       </Collapse>
       {detailsComponent}
-    </Paper>
+    </Panel>
   );
 }

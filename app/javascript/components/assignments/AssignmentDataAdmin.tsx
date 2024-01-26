@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -16,6 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 
+import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
 
@@ -238,7 +238,6 @@ export default function AssignmentDataAdmin(props) {
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Button
-        variant="contained"
         color="primary"
         //className={classes["button"]}
         onClick={saveAssignment}

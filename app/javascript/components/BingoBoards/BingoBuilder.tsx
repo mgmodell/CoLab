@@ -14,9 +14,37 @@ import parse from "html-react-parser";
 
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
+import { D } from "@fullcalendar/core/internal-common";
 
 type Props = {
   rootPath?: string;
+};
+
+type BingoCell = {
+  id?: number;
+  row: number;
+  column: number;
+  selected: boolean;
+  concept_id: number;
+  concept?: {
+    id: number;
+    name: string;
+  };
+};
+
+type BingoGame = {
+  id?: number;
+  topic: string;
+  description?: string;
+  size: number;
+  end_date?: Date;
+};
+
+export type BingoBoard = {
+  initialised: boolean;
+  bingo_cells: BingoCell[];
+  iteration: number;
+  bingo_game: BingoGame;
 };
 
 export default function BingoBuilder(props: Props) {

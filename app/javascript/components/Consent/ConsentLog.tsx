@@ -6,13 +6,14 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { FormControlLabel, Checkbox } from "@mui/material";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+
+import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 
 interface Props {
@@ -130,7 +131,7 @@ export default function ConsentLog(props: Props) {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button fullWidth onClick={updateLog}>
+          <Button onClick={updateLog}>
             {t("edit.submit_response")}
           </Button>
         </Grid>
