@@ -154,14 +154,14 @@ export default function SchoolDataAdmin(props) {
   const detailsComponent = endpointStatus ? (
     <Panel>
       <div className="p-float-label">
-      <InputText
-        id="school-name"
-        itemID="school-name"
-        value={schoolName}
-        onChange={event => setSchoolName(event.target.value)}
+        <InputText
+          id="school-name"
+          itemID="school-name"
+          value={schoolName}
+          onChange={event => setSchoolName(event.target.value)}
         />
         <label htmlFor="school-name">{t('index.name_lbl')}</label>
-        </div>
+      </div>
       &nbsp;
       <FormControl>
         <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
