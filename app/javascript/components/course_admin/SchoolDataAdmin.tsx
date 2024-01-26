@@ -153,14 +153,14 @@ export default function SchoolDataAdmin(props) {
 
   const detailsComponent = endpointStatus ? (
     <Panel>
-      <div className="p-floating-label">
+      <div className="p-float-label">
       <InputText
         id="school-name"
         itemID="school-name"
         value={schoolName}
         onChange={event => setSchoolName(event.target.value)}
         />
-        <label htmlFor="school-name">School Name</label>
+        <label htmlFor="school-name">{t('index.name_lbl')}</label>
         </div>
       &nbsp;
       <FormControl>
@@ -183,7 +183,7 @@ export default function SchoolDataAdmin(props) {
         <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
       </FormControl>
       <br />
-      <div className="p-floating-label">
+      <div className="p-float-label">
         <InputTextarea
           id="school-description"
           placeholder="Enter a description of the school"
@@ -194,7 +194,7 @@ export default function SchoolDataAdmin(props) {
           onChange={event => setSchoolDescription(event.target.value)}
 
         />
-        <label htmlFor="school-description">Description</label>
+        <label htmlFor="school-description">{t('index.description_lbl')}</label>
       </div>
       <br />
       {saveButton}
