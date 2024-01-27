@@ -318,10 +318,11 @@ export default function RubricDataAdmin(props) {
   };
 
   const detailsComponent = endpointStatus ? (
-    <Panel>
+    <Panel header={parseInt( rubricId ) > 0 ? t('edit.title') : t('new.title')}>
       <span className="p-float-label">
         <InputText
           itemID="rubric-name"
+          id="rubric-name"
           value={rubricName}
           onChange={event => setRubricName(event.target.value)}
         />
