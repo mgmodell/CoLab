@@ -1,13 +1,13 @@
 import React, { Suspense, useState, useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import parse from 'html-react-parser';
 
 //Redux store stuff
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { DateTime } from 'luxon';
-import parse from 'html-react-parser';
 import { useTranslation } from "react-i18next";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";

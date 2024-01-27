@@ -1,31 +1,20 @@
 import React, { useState, useEffect } from "react";
-
-import Fab from "@mui/material/Fab";
-import InputBase from "@mui/material/InputBase";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Table from "@mui/material/Table";
-import Radio from "@mui/material/Radio";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import TextField from "@mui/material/TextField";
-
-import { Panel } from "primereact/panel";
+import axios from "axios";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import SearchIcon from "@mui/icons-material/Search";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
-
 const DiversityScore = React.lazy(() => import("../DiversityScore"));
 
 import { SortDirection } from "react-virtualized";
-import axios from "axios";
+
+import { RadioButton } from "primereact/radiobutton";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Panel } from "primereact/panel";
+import { Toolbar } from "primereact/toolbar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 type Props = {
   projectId: number;
@@ -86,19 +75,6 @@ export default function ProjectGroups(props: Props) {
     setStudents(students);
   };
 
-  const sortEvent = (event, key) => {
-    const studentsWS = [...students];
-
-    let direction = SortDirection.DESC;
-    if (key == sortBy && direction == sortDirection) {
-      direction = SortDirection.ASC;
-    }
-    sortStudents(key, direction, studentsWS);
-
-    setStudents(studentsWS);
-    setSortDirection(direction);
-    setSortBy(key);
-  };
 
   const filter = event => {
     const filter_text = event.target.value;
@@ -112,23 +88,6 @@ export default function ProjectGroups(props: Props) {
     setFilterText(event.target.value);
   };
 
-  const sortStudents = (key, direction, students) => {
-    const mod = direction == SortDirection.ASC ? -1 : 1;
-    if ("first_name" == key || "last_name" == key) {
-      students.sort((a, b) => {
-        return mod * a[key].localeCompare(b[key]);
-      });
-    } else {
-      const g_id = Number(key);
-      students.sort((a, b) => {
-        var resp = a.group_id - b.group_id;
-        if (a.group_id == g_id) {
-          resp = +1;
-        }
-        return mod * resp;
-      });
-    }
-  };
 
   useEffect(() => {
     getGroups();
@@ -272,122 +231,149 @@ export default function ProjectGroups(props: Props) {
 
   return (
     <Panel>
-      <Toolbar>
-        <InputBase
-          placeholder="Search Students"
-          onChange={filter}
-          value={filterText}
+      <DataTable
+        value={students}
+        resizableColumns
+        reorderableColumns
+        tableStyle={{
+          width: "100%"
+        }}
+        dataKey="id"
+        scrollable
+        className="p-datatable-striped p-datatable-gridlines"
+
+
+        header={
+          <Toolbar
+            end={
+              <>
+                <span className="p-input-icon-left">
+                  <i className="pi pi-search" />
+                  <InputText
+                    placeholder="Search Students"
+                    onChange={filter}
+                    value={filterText}
+                  />
+
+                </span>
+                <span>
+                  Showing {students.length + " of " + Object.values(studentsRaw).length}
+                </span>
+                {dirty ? (
+                  <Button
+                    onClick={saveGroups}
+                    icon="pi pi-save"
+                  >
+                    Save
+                  </Button>
+                ) : null}
+                <span>
+                  {message}
+                </span>
+                <Button
+                  onClick={recalcDiversity}
+                  icon="pi pi-calculator"
+                >
+                  Recalculate Diversity
+                </Button>
+                <Button
+                  onClick={addGroup}
+                  icon='pi pi-users'
+                >
+                  Add Group
+                </Button>
+              </>
+            }
+          />
+
+        }
+
+      >
+        <Column
+          header="Given Name"
+          field="first_name"
+          sortable
+          filter
+          key="first_name"
         />
-        <SearchIcon />
-        <Typography color="inherit">
-          Showing {students.length + " of " + Object.values(studentsRaw).length}
-        </Typography>
-        {dirty ? (
-          <Fab variant="extended" onClick={saveGroups}>
-            Save
-          </Fab>
-        ) : null}
-        <Typography color="inherit">{message}</Typography>
-        <Fab variant="extended" onClick={recalcDiversity}>
-          Recalculate Diversity
-        </Fab>
-        <Fab variant="extended" onClick={() => addGroup()}>
-          <GroupAddIcon />
-          Add Group
-        </Fab>
-      </Toolbar>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <TableSortLabel
-                active={"first_name" == sortBy}
-                direction={direction[sortDirection]}
-                onClick={() => sortEvent(event, "first_name")}
-              >
-                Given Name
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={"last_name" == sortBy}
-                direction={direction[sortDirection]}
-                onClick={() => sortEvent(event, "last_name")}
-              >
-                Family Name
-              </TableSortLabel>
-            </TableCell>
-            {groups.map(group => {
-              return (
-                <TableCell align="center" key={group.id}>
-                  <TextField
-                    onChange={() => setGroupName(event, group.id)}
-                    value={group.name}
-                    id={"g_" + group.id}
-                  />
-                  {group.id < 0 ? (
-                    <Fab
-                      variant="extended"
-                      size="small"
-                      onClick={() => removeGroup(event, group.id)}
-                    >
-                      <DeleteIcon />
-                    </Fab>
-                  ) : null}
-                  <DiversityScore
-                    groupId={group.id}
-                    parentDirty={dirty}
-                    documented={groupsRaw[group.id].diversity || 0}
-                    scoreReviewUrl={props.diversityCheckUrl}
-                    rescoreGroup={rescoreGroup}
-                    students={studentsRaw}
-                    sortBy={sortBy}
-                    sortDirection={sortDirection}
-                    sortFunc={sortEvent}
-                  />
-                </TableCell>
-              );
-            })}
-            <TableCell align="center">
-              <TableSortLabel
-                active={0 == sortBy}
-                direction={direction[sortDirection]}
-                onClick={() => sortEvent(event, 0)}
-              >
-                No Group
-              </TableSortLabel>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {students.map(student => {
-            return (
-              <TableRow key={"stuRow-" + student.id}>
-                <TableCell>{student.first_name}</TableCell>
-                <TableCell>{student.last_name}</TableCell>
-                {groups.map(group => {
+        <Column
+          header="Family Name"
+          field="last_name"
+          sortable
+          filter
+          key="last_name"
+        />
+        {groups.map(group => {
+          return (
+            <Column
+              header={
+                () => {
                   return (
-                    <TableCell align="center" key={student.id + "-" + group.id}>
-                      <Radio
-                        onClick={() => setGroup(student.id, group.id)}
-                        id={"user_group_" + student.id + "_" + group.id}
-                        checked={group.id == student.group_id}
+                    <>
+                    <span
+                      onClick={() => {
+                        const wip_students = [...students]
+                        wip_students.sort((a, b) => {
+                          return group.id === a.group_id ? -1 : 1;
+                        })
+                        setStudents(wip_students);
+                      }
+
+                      }
+                      >
+                      {group.name}
+                      </span>
+                      {group.id < 0 ? (
+                        <Button
+                          onClick={() => removeGroup(event, group.id)}
+                          icon='pi pi-trash'
+                          rounded
+                          size="small"
+                        />
+                      ) : null}
+                      <DiversityScore
+                        groupId={group.id}
+                        parentDirty={dirty}
+                        documented={groupsRaw[group.id].diversity || 0}
+                        scoreReviewUrl={props.diversityCheckUrl}
+                        rescoreGroup={rescoreGroup}
+                        students={studentsRaw}
                       />
-                    </TableCell>
-                  );
-                })}
-                <TableCell>
-                  <Radio
-                    id={"stu-" + student.id}
-                    onClick={() => setGroup(student.id, null)}
-                    checked={null == student.group_id}
+                    </>
+                  )
+                }
+              }
+              field={'id'}
+              columnKey={group.id}
+              key={group.id}
+              body={rowData => {
+                return (
+                  <RadioButton
+                    onClick={() => setGroup(rowData.id, group.id)}
+                    id={"user_group_" + rowData.id + "_" + group.id}
+                    checked={group.id === rowData.group_id}
                   />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                )
+              }}
+            />
+          );
+        })}
+        <Column
+        header="No Group"
+        field="id"
+        filter
+        key="0"
+        body={rowData => {
+          return (
+            <RadioButton
+              id={"stu-" + rowData.id}
+              onClick={() => setGroup(rowData.id, null)}
+              checked={null == rowData.group_id}
+            />
+          )
+        }}
+        />
+      </DataTable>
     </Panel>
   );
 }

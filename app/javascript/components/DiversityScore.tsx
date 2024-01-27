@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 
-import IconButton from "@mui/material/IconButton";
-import TableSortLabel from "@mui/material/TableSortLabel";
-
-import CompareIcon from "@mui/icons-material/Compare";
-import SaveIcon from "@mui/icons-material/Save";
-import SortIcon from "@mui/icons-material/Sort";
-
-import { SortDirection } from "react-virtualized";
 import axios from "axios";
+import { Button } from "primereact/button";
 
 type Props = {
   groupId: number;
@@ -17,15 +10,9 @@ type Props = {
   students: any;
   rescoreGroup: Function;
   parentDirty: boolean;
-  sortDirection: string;
-  sortFunc: Function;
 };
 
 export default function DiversityScore(props: Props) {
-  const direction = {
-    [SortDirection.ASC]: "asc",
-    [SortDirection.DESC]: "desc"
-  };
   const [calculated, setCalculated] = useState(null);
 
   function save() {
@@ -61,33 +48,32 @@ export default function DiversityScore(props: Props) {
 
   return (
     <React.Fragment>
-      <IconButton size="small" onClick={() => calcDiversity()}>
-        {props.documented}
-        <CompareIcon />
-      </IconButton>
+      <Button
+        className="pi pi-calculator"
+        onClick={() => calcDiversity()}
+        size="small"
+        >
+          {props.documented}
+        </Button>
       {null != calculated && calculated != props.documented ? (
         <React.Fragment>
           /{" "}
           {props.parentDirty ? (
             calculated
           ) : (
-            <IconButton size="small" onClick={() => save()}>
-              {calculated}
-              <SaveIcon />
-            </IconButton>
+            <Button
+              className="pi pi-save"
+              onClick={() => save()}
+              size="small"
+              >
+                {calculated}
+            </Button>
           )}
         </React.Fragment>
       ) : calculated == props.documented ? (
         " / " + calculated
       ) : null}
 
-      <TableSortLabel
-        active={props.groupId == parseInt(props.sortBy)}
-        direction={direction[props.sortBy]}
-        onClick={() => props.sortFunc(event, props.groupId)}
-      >
-        <SortIcon />
-      </TableSortLabel>
     </React.Fragment>
   );
 }
