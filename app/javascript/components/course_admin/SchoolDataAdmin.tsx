@@ -16,17 +16,12 @@ import {
 import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
 
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-
 //import i18n from './i18n';
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { Dropdown } from "primereact/dropdown";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
@@ -163,25 +158,22 @@ export default function SchoolDataAdmin(props) {
         <label htmlFor="school-name">{t('index.name_lbl')}</label>
       </div>
       &nbsp;
-      <FormControl>
-        <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          {t("time_zone")}
-        </InputLabel>
-        <Select
+      <span className="p-float-label">
+        <Dropdown
           id="school_timezone"
+          inputId="school_timezone"
           value={schoolTimezone}
-          onChange={event => setSchoolTimezone(String(event.target.value))}
-        >
-          {timezones.map(timezone => {
-            return (
-              <MenuItem key={timezone.name} value={timezone.name}>
-                {timezone.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
-      </FormControl>
+          options={timezones}
+          optionValue="name"
+          onChange={event => {
+            setSchoolTimezone(String(event.value))
+          }
+          }
+          optionLabel="name"
+          placeholder={t("time_zone")}
+        />
+        <label htmlFor="school_timezone">{t("time_zone")}</label>
+      </span>
       <br />
       <div className="p-float-label">
         <InputTextarea
