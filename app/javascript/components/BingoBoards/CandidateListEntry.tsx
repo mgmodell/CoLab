@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import Grid from "@mui/material/Grid";
-
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
 
@@ -19,6 +10,9 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { InputTextarea } from "primereact/inputtextarea";
+import { InputText } from "primereact/inputtext";
+import { Col, Container, Row } from "react-grid-system";
 
 type Props = {
   rootPath?: string;
@@ -242,79 +236,67 @@ export default function CandidateListEntry(props: Props) {
   };
   const detailsComponent = (
     <Panel>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("topic")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{topic}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("description")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{parse(description)}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>For</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{user.name}</Typography>
-        </Grid>
+      <Container>
+        <Row>
+        <Col xs={12} sm={3}>
+          <span>{t("topic")}</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{topic}</span>
+        </Col>
+        <Col xs={12} sm={3}>
+          <span>{t("description")}</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{parse(description)}</span>
+        </Col>
+        <Col xs={12} sm={3}>
+          <span>For</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{user.name}</span>
+        </Col>
         <hr />
-        <Grid item xs={12}>
+        <Col xs={12}>
           {groupComponent}
-        </Grid>
+        </Col>
         {candidates.map((candidate, index) => {
           return (
             <React.Fragment key={index}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Term"
-                  fullWidth
-                  id={`term_${index}`}
-                  onChange={event => updateTerm(event, index)}
-                  value={candidate.term}
-                />
-              </Grid>
-              <Grid item xs={12} sm={9}>
-                <TextareaAutosize
-                  label="Definition"
+              <Col xs={12} sm={3}>
+                <span className="p-float-label">
+                  <InputText
+                    id={`term_${index}`}
+                    onChange={event => updateTerm(event, index)}
+                    value={candidate.term}
+                    />
+                  <label htmlFor={`term_${index}`}>Term</label>
+                  </span>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span className="p-float-label">
+                <InputTextarea
                   width="90%"
                   id={`definition_${index}`}
                   onChange={event => updateDefinition(event, index)}
                   value={candidate.definition}
+                  autoResize
                 />
-              </Grid>
+                <label htmlFor={`definition_${index}`}>Definition</label>
+                </span>
+              </Col>
             </React.Fragment>
           );
         })}
-      </Grid>
+
+        </Row>
+      </Container>
       {saveButton}
     </Panel>
   );
 
   return (
     <Panel>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
       {detailsComponent}
     </Panel>
   );
