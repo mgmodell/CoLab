@@ -22,6 +22,8 @@ import { Panel } from "primereact/panel";
 import { ToggleButton } from "primereact/togglebutton";
 import { Col, Container, Row } from "react-grid-system";
 import { Splitter, SplitterPanel } from "primereact/splitter";
+import { SelectButton } from "primereact/selectbutton";
+import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace";
 
 enum SubmissionActions {
   init_no_data = 'INIT NO DATA',
@@ -231,160 +233,150 @@ export default function CritiqueShell(props: Props) {
       })
   }
 
-  const [showSubmissions, setShowSubmissions] = useState(true);
-  const [showSubmitted, setShowSubmitted] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
+  const panelDefs = [
+    { name: 'submissions', label: t('submissions_title') },
+    { name: 'submitted', label: t('submitted') },
+    { name: 'feedback', label: t('feedback') },
+    { name: 'history', label: t('history') },
+  ];
+
 
   return (
     <Panel header={t('critique_title')}>
       <Container fluid>
         <Row>
-          <Col xs={12}>
-            <div className="p-inputgroup flex-1">
-
-              <ToggleButton
-                checked={showSubmissions}
-                onChange={(e) => { setShowSubmissions(e.value); }}
-                aria-label={t('submissions_title')}>
-                {t('submissions_title')}
-              </ToggleButton>
-              <ToggleButton
-                checked={showSubmitted}
-                onChange={(e) => { setShowSubmitted(e.value); }}
-                aria-label={t('submitted')}>
-                {t('submitted')}
-              </ToggleButton>
-              <ToggleButton
-                checked={showFeedback}
-                onChange={(e) => { setShowFeedback(e.value) }}
-                aria-label={t('feedback')}>
-                {t('feedback')}
-              </ToggleButton>
-              <ToggleButton
-                checked={showHistory}
-                onChange={(e) => { setShowHistory(e.value) }}
-                aria-label={t('history')}>
-                {t('history')}
-              </ToggleButton>
+          <Col xs={12} >
+            <div className="card flex justify-content-center">
+              <SelectButton
+                value={panels}
+                options={panelDefs}
+                onChange={(e) => {
+                  console.log(e.value, panels)
+                  setPanels(e.value);
+                }}
+                optionLabel="label"
+                optionValue="name"
+                multiple
+              />
             </div>
-
           </Col>
         </Row>
         <Row>
-          <Col>
-            <Splitter>
-              {showSubmissions ? (
-                <SplitterPanel>
-                  <h6>
-                    {t('submissions_title')}
-                  </h6>
-                  <DataTable
-                    value={submissionsIndex}
-                    resizableColumns
-                    tableStyle={{
-                      minWidth: '50rem'
-                    }}
-                    reorderableColumns
-                    paginator
-                    rows={5}
-                    rowsPerPageOptions={
-                      [5, 10, 20, submissionsIndex.length]
-                    }
-                    header={<AdminListToolbar
-                      itemType={category}
-                      columnToggle={{
-                        optColumns: optColumns,
-                        visibleColumns: visibleColumns,
-                        setVisibleColumnsFunc: setVisibleColumns,
-                      }}
-                    />}
-                    sortField="submitted"
-                    sortOrder={-1}
-                    paginatorDropdownAppendTo={'self'}
-                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                    dataKey="id"
-                    onRowClick={(event) => {
-                      loadSubmission(event.data.id);
-                    }}
+          <Col >
+                <Panel
+                  header={panelDefs[0].name}
+                >
+                  <Inplace
+                    closable
                   >
-                    <Column
-                      columnKey="id"
-                      key='id'
-                      field="id"
-                      sortable
-                      header={t("submissions.id")} />
-                    <Column
-                      key='recorded_score'
-                      field="recorded_score"
-                      sortable
-                      header={t("submissions.score")} />
-                    <Column
-                      field="calculated_score"
-                      header={t("submissions.calculated_score")}
-                      sortable
-                      body={(rowData) => {
-                        console.log(rowData);
-                        if (rowData.withdrawn === null) {
-                          return <span>{t('submissions.score_na')}</span>;
-                        } else {
-                          const dt = DateTime.fromISO(rowData.withdrawn);
-                          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                    <InplaceDisplay>{t('submission_list_hidden')}</InplaceDisplay>
+                    <InplaceContent>
+
+                      <DataTable
+                        value={submissionsIndex}
+                        resizableColumns
+                        tableStyle={{
+                          minWidth: '50rem'
+                        }}
+                        reorderableColumns
+                        paginator
+                        rows={5}
+                        rowsPerPageOptions={
+                          [5, 10, 20, submissionsIndex.length]
                         }
+                        header={<AdminListToolbar
+                          itemType={category}
+                          columnToggle={{
+                            optColumns: optColumns,
+                            visibleColumns: visibleColumns,
+                            setVisibleColumnsFunc: setVisibleColumns,
+                          }}
+                        />}
+                        sortField="submitted"
+                        sortOrder={-1}
+                        paginatorDropdownAppendTo={'self'}
+                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                        dataKey="id"
+                        onRowClick={(event) => {
+                          loadSubmission(event.data.id);
+                        }}
+                      >
+                        <Column
+                          columnKey="id"
+                          key='id'
+                          field="id"
+                          sortable
+                          header={t("submissions.id")} />
+                        <Column
+                          key='recorded_score'
+                          field="recorded_score"
+                          sortable
+                          header={t("submissions.score")} />
+                        <Column
+                          field="calculated_score"
+                          header={t("submissions.calculated_score")}
+                          sortable
+                          body={(rowData) => {
+                            if (rowData.withdrawn === null) {
+                              return <span>{t('submissions.score_na')}</span>;
+                            } else {
+                              const dt = DateTime.fromISO(rowData.withdrawn);
+                              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                            }
 
-                      }}
-                    />
-                    <Column
-                      field="submitted"
-                      sortable
-                      header={t("submissions.submitted")}
-                      body={(rowData) => {
-                        const dt = DateTime.fromISO(rowData.submitted);
-                        return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                          }}
+                        />
+                        <Column
+                          field="submitted"
+                          sortable
+                          header={t("submissions.submitted")}
+                          body={(rowData) => {
+                            const dt = DateTime.fromISO(rowData.submitted);
+                            return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
 
-                      }}
-                    />
-                    <Column
-                      field="withdrawn"
-                      sortable
-                      header={t("submissions.withdrawn")}
-                      body={(rowData) => {
-                        console.log(rowData);
-                        if (rowData.withdrawn === null) {
-                          return <span>{t('submissions.not_withdrawn')}</span>;
-                        } else {
-                          const dt = DateTime.fromISO(rowData.withdrawn);
-                          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-                        }
+                          }}
+                        />
+                        <Column
+                          field="withdrawn"
+                          sortable
+                          header={t("submissions.withdrawn")}
+                          body={(rowData) => {
+                            if (rowData.withdrawn === null) {
+                              return <span>{t('submissions.not_withdrawn')}</span>;
+                            } else {
+                              const dt = DateTime.fromISO(rowData.withdrawn);
+                              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                            }
 
-                      }}
-                    />
-                    <Column
-                      field="user"
-                      sortable
-                      sortField="user.last_name"
-                      header={t("submissions.submitter")}
-                      body={param => {
-                        return `${param.user.last_name}, ${param.user.first_name}`;
-                      }}
-                    />
-                  </DataTable>
+                          }}
+                        />
+                        <Column
+                          field="user"
+                          sortable
+                          sortField="user.last_name"
+                          header={t("submissions.submitter")}
+                          body={param => {
+                            return `${param.user.last_name}, ${param.user.first_name}`;
+                          }}
+                        />
+                      </DataTable>
+                    </InplaceContent>
+                  </Inplace>
 
-                </SplitterPanel>
-              ) : null}
-              {showSubmitted ? (
-                <SplitterPanel>
-                  <h6>
-                    {t('submitted')}
-                  </h6>
+                </Panel>
+              <Splitter>
+              <SplitterPanel>
+                <Panel
+                  header={panelDefs[1].name}
+                >
                   {assignmentAcceptsLink ? (
                     <React.Fragment>
                       <h6>
                         {t('submitted_link')}:
 
                       </h6>
-                      <p>
+                      <p id='sub_link'>
                         <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
                       </p>
                     </React.Fragment>
@@ -394,29 +386,27 @@ export default function CritiqueShell(props: Props) {
                       <h6>
                         {t('submitted_text')}:
                       </h6>
-                      <p>
+                      <p id='sub_text'>
                         {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
                       </p>
                     </React.Fragment>
                   ) : null}
-                </SplitterPanel>
-              ) : null}
-      {showFeedback ? (
-        <SplitterPanel >
-          <h6>
-            {t('feedback')}
-          </h6>
-          <RubricScorer submission={selectedSubmission} submissionReducer={updateSelectedSubmission} />
-        </SplitterPanel>
-      ) : null}
-      {showHistory ? (
-        <SplitterPanel>
-          <h6>
-            {t('history')}
-          </h6>
-          {t('error.not_loaded')}
-        </SplitterPanel>
-      ) : null}
+                </Panel>
+              </SplitterPanel>
+              <SplitterPanel >
+                <Panel
+                  header={panelDefs[2].name}
+                >
+                  <RubricScorer submission={selectedSubmission} submissionReducer={updateSelectedSubmission} />
+                </Panel>
+              </SplitterPanel>
+              <SplitterPanel>
+                <Panel
+                  header={panelDefs[3].name}
+                >
+                  {t('error.not_loaded')}
+                </Panel>
+              </SplitterPanel>
             </Splitter>
           </Col>
         </Row>
