@@ -1,11 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
@@ -210,24 +206,6 @@ export default function InstallmentReport(props: Props) {
 
   return (
     <Panel>
-      <Collapse in={showAlerts}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowAlerts(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["status"]}
-        </Alert>
-      </Collapse>
       <Suspense fallback={<Skeleton className="mb-2" height={"10rem"} />}>
         <h1>{t("subtitle")}</h1>
         <p>

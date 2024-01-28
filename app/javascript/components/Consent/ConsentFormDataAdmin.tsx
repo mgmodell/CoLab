@@ -2,13 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -310,25 +306,6 @@ export default function ConsentFormDataAdmin(props) {
 
   return (
     <Panel>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
       {detailsComponent}
     </Panel>
   );

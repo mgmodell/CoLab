@@ -3,21 +3,16 @@ import axios from "axios";
 
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 
 import UserEmailList from "./UserEmailList";
-
-import CloseIcon from "@mui/icons-material/Close";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTime, Settings } from "luxon";
@@ -721,25 +716,6 @@ export default function ProfileDataAdmin(props: Props) {
 
   return (
     <Panel>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
       <TabView
         activeIndex={curTab}
         onTabChange={event => setCurTab(event.index)}
