@@ -181,8 +181,11 @@ Then('the db critique matches the data entered') do
     )
     db_rrfbks.size.should eq 1
     rrfbk.score.should eq db_rrfbks[0].score
-    rrfbk.feedback.should eq db_rrfbks[0].feedback
-
+    if rrfbk.feedback.blank?
+      db_rrfbks[0].feedback.should be_blank
+    else  
+      rrfbk.feedback.should eq db_rrfbks[0].feedback
+    end
   end
 end
 
