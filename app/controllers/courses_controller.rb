@@ -374,7 +374,6 @@ class CoursesController < ApplicationController
   end
 
   def create
-    @title = t('courses.new.title')
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
@@ -408,7 +407,6 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @title = t('courses.edit.title')
     if @course.update(course_params)
       notice = t('courses.create_success')
       respond_to do |format|

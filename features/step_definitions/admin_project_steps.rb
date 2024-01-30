@@ -129,6 +129,21 @@ Then(/^the user sets the rich "([^"]*)" field to "([^"]*)"$/) do |field, value|
   send_keys value
 end
 
+Then('the user sets the {string} start date to {string} and the end date to {string}') do |item_type, start_date, end_date|
+  datefield = find(:xpath, "//span[@id='#{item_type}_dates']/input" )
+  datefield.click
+
+  send_keys :escape
+
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
+
+  dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
+
+  datefield.fill_in with: dates_string
+
+end
+
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
   # find_field(field).click
   elem = find_field(field)
@@ -145,16 +160,6 @@ Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
   # elem.set(value)
 end
 
-Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
-  field_name = 'start' == date_field_prefix ? 'Project start date' : 'Project end date'
-  find(:xpath, "//label[text()='#{field_name}']").click
-  new_year = Chronic.parse(date_value).strftime('%Y')
-  day_month = Chronic.parse(date_value).strftime('%m%d')
-  send_keys :right, :right
-  send_keys new_year
-  send_keys :left, :left
-  send_keys day_month
-end
 
 Then('the user selects {string} as {string}') do |value, field|
   id = find(:xpath,
@@ -235,7 +240,11 @@ Then(/^set user (\d+) to group "([^"]*)"$/) do |user_number, group_name|
   group = Group.where(name: group_name).take
   button_id = "user_group_#{user.id}_#{group.id}"
 
-  find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
+  begin
+    find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+    find(:xpath, "//div[@id='#{button_id}']", visible: :all).click
+  end
 end
 
 Then(/^group "([^"]*)" has (\d+) user$/) do |group_name, user_count|

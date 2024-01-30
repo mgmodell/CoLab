@@ -7,7 +7,11 @@ en:
     update_success_inactive: >
       Project was successfully updated. Don't forget to activate it!
     destroy_success: Project was successfully destroyed.
-    factor_pack: Factor Pack
+    factor_pack: Factor pack
+    active_switch: Active
+    project_dates: Project Dates
+    name_lbl: Project Name
+    description_lbl: Project Description
     group_create_success: Group successfully created.
     group_save_success: Group data has been successfully updated.
     group_save_failure: Failed to update group data. Contact an Support.

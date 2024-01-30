@@ -310,6 +310,12 @@ export default function ProjectGroups(props: Props) {
                 () => {
                   return (
                     <>
+                    <InputText
+                      value={group.name}
+                      onChange={event => setGroupName(event, group.id)}
+                      id={`g_${group.id}`}
+                      itemID={`g_${group.id}`}
+                    />
                     <span
                       onClick={() => {
                         const wip_students = [...students]
@@ -321,7 +327,7 @@ export default function ProjectGroups(props: Props) {
 
                       }
                       >
-                      {group.name}
+                        <i className="pi pi-sort-alt" />
                       </span>
                       {group.id < 0 ? (
                         <Button
@@ -351,6 +357,8 @@ export default function ProjectGroups(props: Props) {
                   <RadioButton
                     onClick={() => setGroup(rowData.id, group.id)}
                     id={"user_group_" + rowData.id + "_" + group.id}
+                    itemID={"user_group_" + rowData.id + "_" + group.id}
+                    inputId={"user_group_" + rowData.id + "_" + group.id}
                     checked={group.id === rowData.group_id}
                   />
                 )

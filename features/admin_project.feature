@@ -25,8 +25,7 @@ Feature: Project Administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
+    Then the user sets the "project" start date to "02/29/1980" and the end date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -63,6 +62,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
@@ -88,13 +88,13 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "05/10/1976"
-    Then the user sets the project "end" date to "02/29/1980"
+    Then the user sets the "project" start date to "05/10/1976" and the end date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
@@ -127,6 +127,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
@@ -148,6 +149,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
@@ -175,13 +177,13 @@ Feature: Project Administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
+    Then the user sets the "project" start date to "02/29/1980" and the end date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
@@ -198,13 +200,13 @@ Feature: Project Administration
 
     #Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "05/10/1976"
-    Then the user sets the project "end" date to "02/29/1980"
+    Then the user sets the "project" start date to "05/10/1976" and the end date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
@@ -232,8 +234,7 @@ Feature: Project Administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
+    Then the user sets the "project" start date to "02/29/1980" and the end date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -299,8 +300,7 @@ Feature: Project Administration
     # Then the user sets the "g_-1" field to "your group"
     Then the user clicks "Save"
     Then the user switches to the "Details" tab
-    Then the user sets the project "start" date to "yesterday"
-    Then the user sets the project "end" date to "tomorrow"
+    Then the user sets the "project" start date to "yesterday" and the end date to "tomorrow"
     Then the user clicks "Save"
      And the user waits to see "success"
 

@@ -1,8 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
@@ -17,6 +15,7 @@ import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 import parse from "html-react-parser";
 import { Panel } from "primereact/panel";
+import { InputTextarea } from "primereact/inputtextarea";
 
 interface Props {
   rootPath?: string;
@@ -247,16 +246,19 @@ export default function InstallmentReport(props: Props) {
         <br />
         <Accordion>
           <AccordionTab header={t("comment_prompt")}>
-            <TextField
-              value={installment.comments || ""}
-              name="Comments"
-              id="Comments"
-              placeholder={"Enter your comments"}
-              helperText={messages["comments"]}
-              multiline={true}
-              fullWidth={true}
-              onChange={updateComments}
-            />
+            <span className="p-float-label">
+              <InputTextarea
+                value={installment.comments || ""}
+                name="comments"
+                id="comments"
+                itemID="comments"
+                autoResize={true}
+                onChange={updateComments}
+              />
+              <label htmlFor="Comments">
+                {t("comment_input_prompt")}
+              </label>
+            </span>
           </AccordionTab>
         </Accordion>
       </Suspense>

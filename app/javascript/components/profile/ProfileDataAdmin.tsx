@@ -11,13 +11,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import { Grid } from "@mui/material";
 
 import UserEmailList from "./UserEmailList";
-
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { DateTime, Settings } from "luxon";
-
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 const UserCourseList = React.lazy(() => import("./UserCourseList"));
 const ResearchParticipationList = React.lazy(() =>
   import("./ResearchParticipationList")
@@ -27,7 +23,6 @@ const UserActivityList = React.lazy(() => import("./UserActivityList"));
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import { Grid } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {
   fetchProfile,
@@ -41,6 +36,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
+import { Calendar } from "primereact/calendar";
 
 type Props = {
   // profileId: number;
@@ -499,25 +495,24 @@ export default function ProfileDataAdmin(props: Props) {
               >
                 {t("demographics.start_school")}
               </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterLuxon}>
-                <DatePicker
-                  clearable
-                  value={DateTime.fromISO(user.started_school).setZone(
-                    Settings.timezone
-                  )}
-                  placeholder={t("demographics.date_prompt")}
-                  onChange={date => setProfileStartedSchool(date)}
-                  format="MM/dd/yyyy"
-                  slot={{
-                    TextField: TextField
-                  }}
-                  slotProps={{
-                    textField: {
-                      id: "profile_primary_start_school"
-                    }
-                  }}
+              <span className="p-float-label">
+              <Calendar
+                id="profile_primary_start_school"
+                value={
+                  user.started_school
+                }
+                onChange={date => setProfileStartedSchool(date)}
+                dateFormat="mm/dd/yy"
+                showIcon={true}
+                showTime={false}
+                monthNavigator={true}
+                yearNavigator={true}
+                showButtonBar={true}
                 />
-              </LocalizationProvider>
+                <label htmlFor="profile_primary_start_school">
+                  {t('demographics.date_prompt')}
+                </label>
+                </span>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
@@ -632,25 +627,24 @@ export default function ProfileDataAdmin(props: Props) {
               >
                 {t("demographics.born")}
               </InputLabel>
-              <LocalizationProvider dateAdapter={AdapterLuxon}>
-                <DatePicker
-                  clearable
-                  value={DateTime.fromISO(user.date_of_birth).setZone(
-                    Settings.timezone
-                  )}
-                  placeholder={t("demographics.date_prompt")}
+              <span className="p-float-label">
+                <Calendar
+                  id="profile_date_of_birth"
+                  value={
+                    user.date_of_birth
+                  }
                   onChange={date => setProfileDOB(date)}
-                  format="MM/dd/yyyy"
-                  slot={{
-                    TextField: TextField
-                  }}
-                  slotProps={{
-                    textField: {
-                      id: "profile_date_of_birth"
-                    }
-                  }}
-                />
-              </LocalizationProvider>
+                  dateFormat="mm/dd/yy"
+                  showIcon={true}
+                  showTime={false}
+                  monthNavigator={true}
+                  yearNavigator={true}
+                  showButtonBar={true}
+                  />
+                  <label htmlFor="profile_date_of_birth">
+                    {t('demographics.date_prompt')}
+                  </label>
+              </span>
             </Grid>
             <Grid item xs={12} md={12}>
               <InputLabel htmlFor="impairments">
