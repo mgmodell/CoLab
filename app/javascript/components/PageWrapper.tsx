@@ -17,11 +17,6 @@ import "primereact/resources/primereact.min.css"; // core css
 import "primeicons/primeicons.css"; //Prime icons
 
 import { Skeleton } from "primereact/skeleton";
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-  createTheme
-} from "@mui/material";
 import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
@@ -55,8 +50,6 @@ export default function PageWrapper(props: Props) {
     reducer: appStatus
   });
 
-  const styles = createTheme({});
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
@@ -87,7 +80,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="profile"
               element={
-                <Suspense fallback={<Skeleton className='mb-2'/>}>
+                <Suspense fallback={<Skeleton className='mb-2' />}>
                   <RequireAuth>
                     <ProfileDataAdmin />
                   </RequireAuth>
@@ -162,16 +155,12 @@ export default function PageWrapper(props: Props) {
   return (
     <Provider store={store}>
       <PrimeReactProvider>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={styles}>
-            <AppInit endpointsUrl={props.getEndpointsUrl}>
-              <CookieConsent>
-                This website uses cookies to enhance the user experience.
-              </CookieConsent>
-              <RouterProvider router={router} />
-            </AppInit>
-          </ThemeProvider>
-        </StyledEngineProvider>
+        <AppInit endpointsUrl={props.getEndpointsUrl}>
+          <CookieConsent>
+            This website uses cookies to enhance the user experience.
+          </CookieConsent>
+          <RouterProvider router={router} />
+        </AppInit>
       </PrimeReactProvider>
     </Provider>
   );

@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Skeleton from "@mui/material/Skeleton";
-import Switch from "@mui/material/Switch";
 
 import SubjectChart, { unit_codes, code_units } from "./SubjectChart";
+import { Skeleton } from "primereact/skeleton";
+import { Dropdown } from "primereact/dropdown";
+import { InputSwitch } from "primereact/inputswitch";
+import { Col, Container, Row } from "react-grid-system";
+import { Panel } from "primereact/panel";
+
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
 interface IProject {
@@ -150,60 +148,46 @@ export default function ChartContainer(props: Props) {
     } else {
       const unit_code = unit_codes[props.unitOfAnalysis];
       return (
-        <FormControl variant="standard">
-          <InputLabel id={`${props.unitOfAnalysis}_list_label`}>
-            {t(`${props.unitOfAnalysis}_list`)}
-          </InputLabel>
-          <Select
-            id={`${unit_code}`}
-            labelId={`${props.unitOfAnalysis}_label`}
-            value={selectedSubject}
-            onChange={evt => {
-              selectSubject(evt.target.value);
-            }}
-          >
-            <MenuItem value={-1}>{t("none")}</MenuItem>
-            {subjects.map(subject => {
-              return (
-                <MenuItem
-                  key={`${props.unitOfAnalysis}-${subject.id}`}
-                  value={subject.id}
-                >
-                  {subject.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+          <span className="p-float-label">
+            <Dropdown
+              id={`${props.unitOfAnalysis}_list`}
+              value={selectedSubject}
+              options={subjects}
+              onChange={evt => {
+                selectSubject(evt.target.value);
+              }}
+              optionLabel="name"
+              optionValue="id"
+              placeholder={t(`${props.unitOfAnalysis}}_list`)}
+              />
+              <label htmlFor={`${props.unitOfAnalysis}_list`}>
+                {t(`${props.unitOfAnalysis}_list`)}
+              </label>
+          </span>
+
       );
     }
   };
 
   const projectSelect = () => {
     if (null == projects || 0 == projects.length) {
-      return <Skeleton variant="text" />;
+      return <Skeleton className="mb-2" />;
     } else if (1 < projects.length) {
       return (
-        <FormControl variant="standard">
-          <InputLabel id="project_list_label">{t("projects_list")}</InputLabel>
-          <Select
-            id="project_list"
-            labelId="project_list_label"
-            value={selectedProject}
-            onChange={evt => {
-              setSelectedProject(evt.target.value);
-            }}
-          >
-            <MenuItem value={-1}>{t("none")}</MenuItem>
-            {projects.map(project => {
-              return (
-                <MenuItem key={`project-${project.id}`} value={project.id}>
-                  {project.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+          <span className="p-float-label">
+            <Dropdown
+              id="project_list"
+              value={selectedProject}
+              options={projects}
+              onChange={evt => {
+                setSelectedProject(evt.target.value);
+              }}
+              optionLabel="name"
+              optionValue="id"
+              placeholder={t("projects_list")}
+              />
+              <label htmlFor="project_list">{t("projects_list")}</label>
+          </span>
       );
     } else {
       return (
@@ -223,19 +207,18 @@ export default function ChartContainer(props: Props) {
 
   const forResearchBlock =
     null == props.forResearch ? (
-      <Grid item xs={6}>
-        <FormControlLabel
-          label={t("consent_switch")}
-          control={
-            <Switch
-              disabled={2 > projects.length}
-              checked={forResearch}
-              onChange={() => setForResearchOpen(true)}
-            />
-          }
+      <Col xs={6}>
+        <InputSwitch
+          checked={forResearch}
+          id="for_research"
+          name="for_research"
+          itemID="for_research"
+          inputId="for_research"
+          onChange={() => setForResearchOpen(true)}
         />
+        <label htmlFor="for_research">{t("consent_switch")}</label>
         <ConfirmDialog isOpen={forResearchOpen} closeFunc={closeForResearch} />
-      </Grid>
+      </Col>
     ) : null;
 
   const closeAnonymize = agree => {
@@ -247,34 +230,39 @@ export default function ChartContainer(props: Props) {
 
   const anonymizeBlock =
     null == props.anonymize ? (
-      <Grid item xs={6}>
-        <FormControlLabel
-          label={t("anon_switch")}
-          control={
-            <Switch
-              disabled={2 > projects.length}
-              checked={anonymize}
-              onChange={() => {
-                setAnonymizeOpen(true);
-              }}
-            />
-          }
+      <Col xs={6}>
+        <InputSwitch
+          checked={anonymize}
+          id="anonymize"
+          inputId="anonymize"
+          itemID="anonymize"
+          name="anonymize"
+          onChange={() => setAnonymizeOpen(true)}
+          disabled={2 > projects.length}
         />
+        <label htmlFor="anonymize">{t("anon_switch")}</label>
         <ConfirmDialog isOpen={anonymizeOpen} closeFunc={closeAnonymize} />
-      </Grid>
+      </Col>
     ) : null;
 
   return (
-    <Grid container>
+    <Container>
+      <Row>
       {forResearchBlock}
       {anonymizeBlock}
-      <Grid item xs={12} sm={6}>
+      </Row>
+      <Row>
+      <Col xs={12} sm={6}>
         {projectSelect()}
-      </Grid>
-      <Grid item xs={12} sm={6}>
+      </Col>
+      <Col xs={12} sm={6}>
         {subjectSelect()}
-      </Grid>
-      <Grid item xs={12}>
+      </Col>
+      </Row>
+      <Row>
+      <Col xs={12}>
+        <Panel>
+
         {Object.values(charts)
           .sort((a, b) => {
             a.index - b.index;
@@ -293,7 +281,9 @@ export default function ChartContainer(props: Props) {
               />
             );
           })}
-      </Grid>
-    </Grid>
+        </Panel>
+      </Col>
+      </Row>
+    </Container>
   );
 }

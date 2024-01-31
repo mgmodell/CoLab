@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Select from "@mui/material/Select";
-import Switch from "@mui/material/Switch";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import ToggleButton from "@mui/material/ToggleButton";
-import { Grid } from "@mui/material";
-
 import UserEmailList from "./UserEmailList";
 const UserCourseList = React.lazy(() => import("./UserCourseList"));
 const ResearchParticipationList = React.lazy(() =>
@@ -37,10 +25,23 @@ import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { InputSwitch } from "primereact/inputswitch";
+import { InputText } from "primereact/inputtext";
+import { SelectButton } from "primereact/selectbutton";
+import { Container, Row, Col } from "react-grid-system";
 
 type Props = {
   // profileId: number;
 };
+
+const impairmentOptions = [
+  { label: "Visual", value: "visual" },
+  { label: "Auditory", value: "auditory" },
+  { label: "Motor", value: "motor" },
+  { label: "Cognitive", value: "cognitive" },
+  { label: "Other", value: "other" }
+];
 
 export default function ProfileDataAdmin(props: Props) {
   const category = "profile";
@@ -55,6 +56,36 @@ export default function ProfileDataAdmin(props: Props) {
     state => state.context.status.lookupsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+
+  const getImpairments = () => {
+    const imp = [];
+    if (user.impairment_visual) {
+      imp.push("visual");
+    }
+    if (user.impairment_auditory) {
+      imp.push("auditory");
+    }
+    if (user.impairment_motor) {
+      imp.push("motor");
+    }
+    if (user.impairment_cognitive) {
+      imp.push("cognitive");
+    }
+    if (user.impairment_other) {
+      imp.push("other");
+    }
+    return imp;
+  };
+
+  const setProfileImpairment = (imp : string[]) => {
+    setProfileImpVisual(imp.includes("visual"));
+    setProfileImpAuditory(imp.includes("auditory"));
+    setProfileImpMotor(imp.includes("motor"));
+    setProfileImpCognitive(imp.includes("cognitive"));
+    setProfileImpOther(imp.includes("other"));
+  };
+
+  
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
   const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
 
@@ -276,37 +307,44 @@ export default function ProfileDataAdmin(props: Props) {
     <Panel>
       <Accordion multiple activeIndex={curPanel}>
         <AccordionTab header={t("edit_profile")} aria-label={t("edit_profile")}>
-          <Grid container spacing={3}>
-            <Grid item sm={6} xs={12}>
-              <TextField
-                label={t("first_name")}
-                id="first-name"
+          <Container>
+            <Row>
+            <Col sm={6} xs={12}>
+              <span className="p-float-label">
+              <InputText
+                id='first-name'
+                itemID="first-name"
+                name="first-name"
                 value={user.first_name}
-                fullWidth
                 onChange={event => setProfileFirstName(event.target.value)}
-                error={null != messages["first_name"]}
-                helperText={messages["first_name"]}
-              />
-            </Grid>
-            <Grid item sm={6} xs={12}>
-              <TextField
-                label={t("last")}
-                id="last-name"
-                value={user.last_name}
-                fullWidth
-                onChange={event => setProfileLastName(event.target.value)}
-                error={null != messages["last_name"]}
-                helperText={messages["last_name"]}
-              />
-            </Grid>
-          </Grid>
+                />
+                <label htmlFor="first-name">{t("first_name")}</label>
+              </span>
+            </Col>
+            <Col sm={6} xs={12}>
+              <span className="p-float-label">
+                <InputText
+                  id='last-name'
+                  itemID="last-name"
+                  name="last-name"
+                  value={user.last_name}
+                  onChange={event => setProfileLastName(event.target.value)}
+                  />
+                  <label htmlFor="last-name">{t("last_name")}</label>
+              </span>
+            </Col>
+            </Row>
+            <Row>
+
+            </Row>
+          </Container>
         </AccordionTab>
         <AccordionTab
           header={t("email_settings")}
           aria-label={t("email_settings")}
         >
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
+          <Container>
+            <Col xs={12}>
               {0 < user.emails.length ? (
                 <UserEmailList
                   emailList={user.emails}
@@ -317,187 +355,123 @@ export default function ProfileDataAdmin(props: Props) {
                   primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
                 />
               ) : null}
-            </Grid>
-            <Grid item xs={12}>
+            </Col>
+            <Col xs={12}>
               <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
-            </Grid>
-          </Grid>
+            </Col>
+          </Container>
         </AccordionTab>
         <AccordionTab
           header={t("display_settings.prompt")}
           aria-label={t("display_settings.prompt")}
         >
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="profile_theme" id="profile_theme_lbl">
-                  {t("display_settings.ui_theme")}
-                </InputLabel>
-                <Select
-                  id="profile_theme"
+          <Container>
+            <Col md={6} xs={12}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_theme'
+                  inputId="profile_theme"
+                  itemID="profile_theme"
+                  name="profile_theme"
                   value={user.theme_id || 0}
-                  onChange={event =>
-                    setProfileTheme(Number(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {themes.map(theme => {
-                    return (
-                      <MenuItem key={theme.code} value={theme.id}>
-                        {theme.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["theme"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="profile_language"
-                  id="profile_language_lbl"
-                >
-                  {t("display_settings.language")}
-                </InputLabel>
-                <Select
-                  id="profile_language"
+                  options={themes}
+                  optionValue="id"
+                  optionLabel="name"
+                  onChange={event => setProfileTheme(Number(event.value))}
+                  placeholder={t("display_settings.ui_theme")}
+                />
+                <label htmlFor="profile_theme">{t("display_settings.ui_theme")}</label>
+              </span>
+            </Col>
+            <Col md={6} xs={12}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_language'
+                  inputId="profile_language"
+                  itemID="profile_language"
+                  name="profile_language"
                   value={user.language_id || 0}
-                  onChange={event =>
-                    setProfileLanguage(Number(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {languages.map(language => {
-                    return (
-                      <MenuItem key={language.name} value={language.id}>
-                        {language.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["language"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={3}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={user.researcher}
-                    onChange={event => setProfileResearcher(!profileResearcher)}
-                    name="researcher"
-                  />
-                }
-                label={t("display_settings.anonymize")}
+                  options={languages}
+                  optionValue="id"
+                  optionLabel="name"
+                  onChange={event => setProfileLanguage(Number(event.value))}
+                  placeholder={t("display_settings.language")}
+                />
+                <label htmlFor="profile_language">{t("display_settings.language")}</label>
+              </span>
+            </Col>
+            <Col xs={3}>
+              <InputSwitch
+                checked={user.researcher}
+                onChange={event => setProfileResearcher(!profileResearcher)}
+                name="researcher"
               />
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="profile_timezone"
-                  id="profile_timezone_lbl"
-                >
-                  {t("demographics.time_zone")}
-                </InputLabel>
-                <Select
-                  id="profile_timezone"
-                  value={user.timezone}
-                  onChange={event =>
-                    setProfileTimezone(String(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {timezones.map(timezone => {
-                    return (
-                      <MenuItem key={timezone.name} value={timezone.name}>
-                        {timezone.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["timezone"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-          </Grid>
+              <label htmlFor="researcher">{t("display_settings.anonymize")}</label>
+            </Col>
+            <Col xs={9}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_timezone'
+                  inputId="profile_timezone"
+                  itemID="profile_timezone"
+                  name="profile_timezone"
+                  value={user.timezone || 0}
+                  options={timezones}
+                  optionValue="name"
+                  optionLabel="name"
+                  onChange={event => setProfileTimezone(String(event.value))}
+                  placeholder={t("display_settings.time_zone")}
+                />
+                <label htmlFor="profile_timezone">{t("display_settings.time_zone")}</label>
+              </span>
+            </Col>
+          </Container>
         </AccordionTab>
         <AccordionTab
           header={t("demographics.prompt", { first_name: user.first_name })}
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
         >
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="profile_school" id="profile_school_lbl">
-                  {t("demographics.school")}
-                </InputLabel>
-                <Select
-                  id="profile_school"
+          <Container>
+            <Col xs={12} sm={6}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_school'
+                  inputId="profile_school"
+                  itemID="profile_school"
+                  name="profile_school"
                   value={user.school_id || 0}
-                  onChange={event =>
-                    setProfileSchool(Number(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {schools.map(school => {
-                    return (
-                      <MenuItem key={school.name} value={school.id}>
-                        {school.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["school_id"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="profile_cip_code"
-                  id="profile_cip_code_lbl"
-                >
-                  {t("demographics.major")}
-                </InputLabel>
-                <Select
-                  id="profile_cip_code"
+                  options={schools}
+                  optionValue="id"
+                  optionLabel="name"
+                  onChange={event => setProfileSchool(Number(event.value))}
+                  placeholder={t("demographics.school")}
+                />
+                <label htmlFor="profile_school">{t("demographics.school")}</label>
+              </span>
+            </Col>
+            <Col xs={12} sm={6}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_cip_code'
+                  inputId="profile_cip_code"
+                  itemID="profile_cip_code"
+                  name="profile_cip_code"
                   value={user.cip_code_id || 0}
-                  onChange={event =>
-                    setProfileCipCode(Number(event.target.value))
-                  }
-                >
-                  <MenuItem key={0} value={0}>
-                    {t("none_option")}
-                  </MenuItem>
-                  {cipCodes.map(cipCode => {
-                    return (
-                      <MenuItem key={cipCode.code} value={cipCode.id}>
-                        {cipCode.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["cip_code_id"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputLabel
-                htmlFor="profile_primary_start_school"
-                id="profile_primary_start_school_lbl"
-              >
-                {t("demographics.start_school")}
-              </InputLabel>
+                  options={cipCodes}
+                  optionValue="id"
+                  optionLabel="name"
+                  onChange={event => setProfileCipCode(Number(event.value))}
+                  placeholder={t("demographics.major")}
+                />
+                <label htmlFor="profile_cip_code">{t("demographics.major")}</label>
+              </span>
+            </Col>
+            <Col xs={12} sm={6}>
               <span className="p-float-label">
               <Calendar
                 id="profile_primary_start_school"
+                inputId="profile_primary_start_school"
+                name="profile_primary_start_school"
                 value={
                   user.started_school
                 }
@@ -510,124 +484,89 @@ export default function ProfileDataAdmin(props: Props) {
                 showButtonBar={true}
                 />
                 <label htmlFor="profile_primary_start_school">
-                  {t('demographics.date_prompt')}
+                  {t('demographics.start_school')}
                 </label>
                 </span>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="profile_country" id="profile_country_lbl">
-                  {t("demographics.home_town")}
-                </InputLabel>
-                <Select
-                  id="profile_country"
+            </Col>
+            <Col xs={12} md={6}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_country'
+                  inputId="profile_country"
+                  itemID="profile_country"
+                  name="profile_country"
                   value={user.country || 0}
+                  options={countries}
+                  optionValue="code"
+                  optionLabel="name"
                   onChange={event => {
-                    const country = String(event.target.value);
+                    const country = String(event.value);
                     setProfileHomeCountry(country);
                   }}
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {countries.map(country => {
-                    return (
-                      <MenuItem key={country.id} value={country.code}>
-                        {country.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["language"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
+                  placeholder={t("demographics.home_town")}
+                />
+                <label htmlFor="profile_country">{t("demographics.home_town")}</label>
+              </span>
+            </Col>
+            <Col xs={12} md={6}>
               {states.length > 0 ? (
-                <FormControl fullWidth>
-                  <Select
-                    id="profile_state"
-                    value={user.home_state_id}
+                <span className="p-float-label">
+                  <Dropdown
+                    id='profile_state'
+                    inputId="profile_state"
+                    itemID="profile_state"
+                    name="profile_state"
+                    value={user.home_state_id || 0}
+                    options={states}
+                    optionValue="id"
+                    optionLabel="name"
                     onChange={event => {
-                      setProfileHomeState(Number(event.target.value));
+                      setProfileHomeState(Number(event.value));
                     }}
-                  >
-                    {states.map(state => {
-                      return (
-                        <MenuItem key={state.id} value={state.id}>
-                          {state.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                  <FormHelperText error={true}>
-                    {messages["language"]}
-                  </FormHelperText>
-                </FormControl>
+                    placeholder={t("demographics.home_state")}
+                  />
+                  <label htmlFor="profile_state">{t("demographics.home_state")}</label>
+                </span>
               ) : null}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="profile_language"
-                  id="profile_language_lbl"
-                >
-                  {t("demographics.home_language")}
-                </InputLabel>
-                <Select
-                  id="profile_language"
-                  value={user.primary_language_id || 0}
-                  onChange={event =>
-                    setProfileHomeLanguage(Number(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {languages.map(language => {
-                    return (
-                      <MenuItem key={language.code} value={language.id}>
-                        {language.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["language"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="profile_gender" id="profile_gender_lbl">
-                  {t("demographics.gender")}
-                </InputLabel>
-                <Select
-                  id="profile_gender"
-                  value={user.gender_id || 0}
-                  onChange={event =>
-                    setProfileGender(Number(event.target.value))
-                  }
-                >
-                  <MenuItem value={0}>{t("none_option")}</MenuItem>
-                  {genders.map(gender => {
-                    return (
-                      <MenuItem key={gender.code} value={gender.id}>
-                        {gender.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText error={true}>
-                  {messages["language"]}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <InputLabel
-                htmlFor="profile_date_of_birth"
-                id="profile_date_of_birth_lbl"
-              >
-                {t("demographics.born")}
-              </InputLabel>
+            </Col>
+            <Col xs={12} md={6}>
               <span className="p-float-label">
+                <Dropdown
+                  id='profile_language'
+                  inputId="profile_language"
+                  itemID="profile_language"
+                  name="profile_language"
+                  value={user.primary_language_id || 0}
+                  options={languages}
+                  optionValue="id"
+                  optionLabel="name"
+                  onChange={event => setProfileHomeLanguage(Number(event.value))}
+                  placeholder={t("demographics.home_language")}
+                />
+                <label htmlFor="profile_language">{t("demographics.home_language")}</label>
+              </span>
+            </Col>
+            <Col xs={12} sm={6}>
+              <span className="p-float-label">
+                <Dropdown
+                  id='profile_gender'
+                  name="profile_gender"
+                  itemID="profile_gender"
+                  value={user.gender_id || 0}
+                  onChange={event => setProfileGender(Number(event.value))}
+                  options={genders }
+                  optionLabel="name"
+                  optionValue="id"
+                  placeholder={t('demographics.gender')}
+                  />
+                  <label htmlFor="profile_gender">{t('demographics.gender')}</label>
+                  </span>
+            </Col>
+            <Col xs={12} sm={6} md={3}>
+              <span className="p-float-label">
+                  <label htmlFor="profile_date_of_birth">
+                    {t('demographics.boen')}
+                  </label>
                 <Calendar
                   id="profile_date_of_birth"
                   value={
@@ -641,64 +580,22 @@ export default function ProfileDataAdmin(props: Props) {
                   yearNavigator={true}
                   showButtonBar={true}
                   />
-                  <label htmlFor="profile_date_of_birth">
-                    {t('demographics.date_prompt')}
-                  </label>
               </span>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <InputLabel htmlFor="impairments">
+            </Col>
+            <Col xs={12} md={12}>
+              <label htmlFor="impairments">
                 {t("demographics.impairments.prompt")}
-              </InputLabel>
-              <ToggleButtonGroup id="impairments">
-                <ToggleButton
-                  value="visual"
-                  selected={user.impairment_visual}
-                  onClick={() => {
-                    setProfileImpVisual(!profileImpVisual);
-                  }}
-                >
-                  {t("demographics.impairments.visual")}
-                </ToggleButton>
-                <ToggleButton
-                  value="auditory"
-                  selected={user.impairment_auditory}
-                  onClick={() => {
-                    setProfileImpAuditory(!profileImpAuditory);
-                  }}
-                >
-                  {t("demographics.impairments.auditory")}
-                </ToggleButton>
-                <ToggleButton
-                  value="cognitive"
-                  selected={user.impairment_cognitive}
-                  onClick={() => {
-                    setProfileImpCognitive(!profileImpCognitive);
-                  }}
-                >
-                  {t("demographics.impairments.cognitive")}
-                </ToggleButton>
-                <ToggleButton
-                  value="motor"
-                  selected={user.impairment_motor}
-                  onClick={() => {
-                    setProfileImpMotor(!profileImpMotor);
-                  }}
-                >
-                  {t("demographics.impairments.motor")}
-                </ToggleButton>
-                <ToggleButton
-                  value="other"
-                  selected={user.impairment_other}
-                  onClick={() => {
-                    setProfileImpOther(!profileImpOther);
-                  }}
-                >
-                  {t("demographics.impairments.other")}
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Grid>
-          </Grid>
+              </label>
+              <SelectButton
+                id="impairments"
+                name="impairments"
+                aria-label="impairments"
+                value={getImpairments()}
+                onChange={event => setProfileImpairment(event.target.value)}
+                multiple={true}
+                />
+            </Col>
+          </Container>
         </AccordionTab>
       </Accordion>
       &nbsp;

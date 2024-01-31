@@ -364,6 +364,7 @@ export default function BingoGameDataAdmin(props) {
                     id='active'
                     name='active'
                     itemID="active"
+                    inputId="active"
                   />
                   <label htmlFor="active">{t("active")}</label>
                 </Col>
