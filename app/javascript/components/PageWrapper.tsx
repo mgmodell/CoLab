@@ -29,7 +29,7 @@ import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));

@@ -6,20 +6,28 @@ import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
-// import LinkedSliders from './LinkedSliders';
-import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 import parse from "html-react-parser";
 import { Panel } from "primereact/panel";
 import { InputTextarea } from "primereact/inputtextarea";
+import { Col, Container, Row } from "react-grid-system";
+import { Slider } from "primereact/slider";
+import distributeChange from "./distributeChange";
+
+interface IContribution {
+  userId: number;
+  factorId: number;
+  name: string;
+  value: number;
+};
 
 interface Props {
   rootPath?: string;
-}
+};
 
 export default function InstallmentReport(props: Props) {
   const endpointSet = "installment";
@@ -56,6 +64,7 @@ export default function InstallmentReport(props: Props) {
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
+
     lContributions[id] = update;
     setContributions(lContributions);
   };
@@ -228,15 +237,50 @@ export default function InstallmentReport(props: Props) {
             {Object.keys(contributions).map(sliceId => {
               return (
                 <AccordionTab header={factors[sliceId].name} key={sliceId}>
-                  <LinkedSliders
-                    key={"f_" + sliceId}
-                    id={Number(sliceId)}
-                    sum={sliderSum}
-                    updateContributions={updateSlice.bind(null, sliceId)}
-                    description={factors[sliceId].description}
-                    contributions={contributions[sliceId]}
-                    debug={debug}
-                  />
+                  <Container>
+                    <Row>
+                      <Col xs={12}>
+                        <p>{factors[sliceId].description}</p>
+                      </Col>
+                    </Row>
+                  {contributions[sliceId].map((contrib, index) => {
+                    return(
+                    <Row
+                          key={"key_fs_" + sliceId + "_c_" + contrib.userId}
+                    >
+                      <Col xs={12} md={3}>
+                        <h5>{contrib.name}</h5>
+                      </Col>
+                      <Col xs={12} md={9}>
+                        <Slider
+                          value={contrib.value}
+                          id={"fs_" + sliceId + "_c_" + contrib.userId}
+                          itemID={"fs_" + sliceId + "_c_" + contrib.userId}
+                          name={"fs_" + sliceId + "_c_" + contrib.userId}
+                          max={sliderSum}
+                          min={0}
+                          onChange={event => {
+                            updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, event.value));
+                          }}
+                          />
+                          {debug ? (
+                            <input
+                              type="number"
+                              value={contrib.value}
+                              id={"debug_fs_" + contrib.userId + "_c_" + contributions[sliceId].userId}
+                              onChange={event => {
+                                updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, parseInt(event.target.value)));
+                              }}
+                              />
+                          ) : null }
+
+                      </Col>
+                    </Row>
+
+                    )
+
+                  })}
+                  </Container>
                 </AccordionTab>
               );
             })}
@@ -283,3 +327,4 @@ export default function InstallmentReport(props: Props) {
     </Panel>
   );
 }
+export { IContribution }

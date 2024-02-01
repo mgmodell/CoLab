@@ -4,7 +4,7 @@ import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import HomeShell from "./HomeShell";
 import { Skeleton } from "primereact/skeleton";
 
-const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
 
 import BingoShell from "./BingoBoards/BingoShell";
 const Experience = React.lazy(() => import("./experiences/Experience"));

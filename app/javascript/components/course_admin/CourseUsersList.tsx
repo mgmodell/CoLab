@@ -4,14 +4,6 @@ import { useDispatch } from "react-redux";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 // Icons - maybe replace later
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import NotInterestedIcon from "@mui/icons-material/NotInterested";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import ClearIcon from "@mui/icons-material/Clear";
-import EmailIcon from "@mui/icons-material/Email";
-import CheckIcon from "@mui/icons-material/Check";
-
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -139,25 +131,17 @@ export default function CourseUsersList(props: Props) {
       case "undetermined":
       case "invited_student":
       case "requesting_student":
-        icon = (
-          <>
-            <HelpOutlineIcon className="awaiting" />
-          </>
-        );
+        icon = 'pi pi-question-circle' ;
         break;
       case "dropped":
       case "rejected_student":
       case "dropped_student":
       case "declined_student":
-        icon = (
-          <>
-            <NotInterestedIcon className="not-enrolled" />
-          </>
-        );
+        icon = 'pi pi-ban';
         break;
       case "instructor":
       case "assistant":
-        icon = <SupervisedUserCircleIcon className="instructor" />;
+        icon = 'pi pi-users'
         break;
       default:
         console.log("status not found: " + status);
@@ -316,7 +300,7 @@ export default function CourseUsersList(props: Props) {
                     <Button
                       tooltip={t("re-send_invitation")}
                       aria-label={t("re-send_invitation")}
-                      icon={<EmailIcon />}
+                      icon='pi pi-envelope'
                       onClick={event => {
                         dispatch(startTask("inviting"));
                         axios
@@ -351,7 +335,7 @@ export default function CourseUsersList(props: Props) {
                   btns.push(
                     <Button
                       tooltip={acceptLbl}
-                      icon={<CheckIcon />}
+                      icon='pi pi-check'
                       aria-label={acceptLbl}
                       onClick={event => {
                         dispatch(startTask("accepting_student"));
@@ -377,7 +361,7 @@ export default function CourseUsersList(props: Props) {
                     <Button
                       tooltip={lbl2}
                       aria-label={lbl2}
-                      icon={<ClearIcon />}
+                      icon='pi pi-times-circle'
                       onClick={event => {
                         dispatch(startTask("decline_student"));
                         axios
@@ -406,7 +390,7 @@ export default function CourseUsersList(props: Props) {
                   btns.push(
                     <Button
                       tooltip={lbl}
-                      icon={<PersonAddIcon />}
+                      icon='pi pi-user-plus'
                       aria-label={lbl}
                       onClick={event => {
                         dispatch(startTask("re-adding"));
