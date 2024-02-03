@@ -16,7 +16,8 @@ import {
   fetchProfile,
   setProfile,
   persistProfile,
-  setLocalLanguage
+  setLocalLanguage,
+  IUser
 } from "../infrastructure/ProfileSlice";
 
 import { Button } from "primereact/button";
@@ -55,7 +56,7 @@ export default function ProfileDataAdmin(props: Props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
-  const user = useTypedSelector(state => state.profile.user);
+  const user : IUser = useTypedSelector(state => state.profile.user);
 
   const getImpairments = () => {
     const imp = [];
@@ -77,7 +78,7 @@ export default function ProfileDataAdmin(props: Props) {
     return imp;
   };
 
-  const setProfileImpairment = (imp : string[]) => {
+  const setProfileImpairment = (imp: string[]) => {
     setProfileImpVisual(imp.includes("visual"));
     setProfileImpAuditory(imp.includes("auditory"));
     setProfileImpMotor(imp.includes("motor"));
@@ -85,7 +86,7 @@ export default function ProfileDataAdmin(props: Props) {
     setProfileImpOther(imp.includes("other"));
   };
 
-  
+
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
   const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
 
@@ -181,13 +182,13 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
-    temp.date_of_birth = date_of_birth;
+    temp.date_of_birth = date_of_birth.toString();
     dispatch(setProfile(temp));
   };
   const setProfileStartedSchool = started_school => {
     const temp = {};
     Object.assign(temp, user);
-    temp.started_school = started_school;
+    temp.started_school = started_school.toString();
     dispatch(setProfile(temp));
   };
   const setProfileImpVisual = impairment_visual => {
@@ -309,33 +310,30 @@ export default function ProfileDataAdmin(props: Props) {
         <AccordionTab header={t("edit_profile")} aria-label={t("edit_profile")}>
           <Container>
             <Row>
-            <Col sm={6} xs={12}>
-              <span className="p-float-label">
-              <InputText
-                id='first-name'
-                itemID="first-name"
-                name="first-name"
-                value={user.first_name}
-                onChange={event => setProfileFirstName(event.target.value)}
-                />
-                <label htmlFor="first-name">{t("first_name")}</label>
-              </span>
-            </Col>
-            <Col sm={6} xs={12}>
-              <span className="p-float-label">
-                <InputText
-                  id='last-name'
-                  itemID="last-name"
-                  name="last-name"
-                  value={user.last_name}
-                  onChange={event => setProfileLastName(event.target.value)}
+              <Col sm={6} xs={12}>
+                <span className="p-float-label">
+                  <InputText
+                    id='first-name'
+                    itemID="first-name"
+                    name="first-name"
+                    value={user.first_name}
+                    onChange={event => setProfileFirstName(event.target.value)}
+                  />
+                  <label htmlFor="first-name">{t("first_name")}</label>
+                </span>
+              </Col>
+              <Col sm={6} xs={12}>
+                <span className="p-float-label">
+                  <InputText
+                    id='last-name'
+                    itemID="last-name"
+                    name="last-name"
+                    value={user.last_name}
+                    onChange={event => setProfileLastName(event.target.value)}
                   />
                   <label htmlFor="last-name">{t("last_name")}</label>
-              </span>
-            </Col>
-            </Row>
-            <Row>
-
+                </span>
+              </Col>
             </Row>
           </Container>
         </AccordionTab>
@@ -432,6 +430,7 @@ export default function ProfileDataAdmin(props: Props) {
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
         >
           <Container>
+            <Row>
             <Col xs={12} sm={6}>
               <span className="p-float-label">
                 <Dropdown
@@ -468,27 +467,32 @@ export default function ProfileDataAdmin(props: Props) {
             </Col>
             <Col xs={12} sm={6}>
               <span className="p-float-label">
-              <Calendar
-                id="profile_primary_start_school"
-                inputId="profile_primary_start_school"
-                name="profile_primary_start_school"
-                value={
-                  user.started_school
-                }
-                onChange={date => setProfileStartedSchool(date)}
-                dateFormat="mm/dd/yy"
-                showIcon={true}
-                showTime={false}
-                monthNavigator={true}
-                yearNavigator={true}
-                showButtonBar={true}
+                <Calendar
+                  id="profile_primary_start_school"
+                  inputId="profile_primary_start_school"
+                  name="profile_primary_start_school"
+                  value={new Date(Date.parse(user.started_school))}
+                  onChange={date => setProfileStartedSchool(date)}
+                  dateFormat="mm/dd/yy"
+                  showIcon={true}
+                  monthNavigator={true}
+                  showButtonBar={true}
                 />
                 <label htmlFor="profile_primary_start_school">
                   {t('demographics.start_school')}
                 </label>
-                </span>
+              </span>
             </Col>
-            <Col xs={12} md={6}>
+            </Row>
+            <Row>
+            <Col xs ={12} >
+              <h5>
+                {t("demographics.home_town")}
+              </h5>
+            </Col>
+            </Row>
+            <Row>
+            <Col xs={6} md={5} >
               <span className="p-float-label">
                 <Dropdown
                   id='profile_country'
@@ -503,12 +507,12 @@ export default function ProfileDataAdmin(props: Props) {
                     const country = String(event.value);
                     setProfileHomeCountry(country);
                   }}
-                  placeholder={t("demographics.home_town")}
+                  placeholder={t("demographics.home_country")}
                 />
-                <label htmlFor="profile_country">{t("demographics.home_town")}</label>
+                <label htmlFor="profile_country">{t("demographics.home_country")}</label>
               </span>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={6} >
               {states.length > 0 ? (
                 <span className="p-float-label">
                   <Dropdown
@@ -529,7 +533,9 @@ export default function ProfileDataAdmin(props: Props) {
                 </span>
               ) : null}
             </Col>
-            <Col xs={12} md={6}>
+            </Row>
+            <Row>
+            <Col xs={12} >
               <span className="p-float-label">
                 <Dropdown
                   id='profile_language'
@@ -554,32 +560,30 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_gender"
                   value={user.gender_id || 0}
                   onChange={event => setProfileGender(Number(event.value))}
-                  options={genders }
+                  options={genders}
                   optionLabel="name"
                   optionValue="id"
                   placeholder={t('demographics.gender')}
-                  />
-                  <label htmlFor="profile_gender">{t('demographics.gender')}</label>
-                  </span>
+                />
+                <label htmlFor="profile_gender">{t('demographics.gender')}</label>
+              </span>
             </Col>
             <Col xs={12} sm={6} md={3}>
               <span className="p-float-label">
-                  <label htmlFor="profile_date_of_birth">
-                    {t('demographics.boen')}
-                  </label>
                 <Calendar
                   id="profile_date_of_birth"
-                  value={
-                    user.date_of_birth
-                  }
+                  inputId="profile_date_of_birth"
+                  name="profile_date_of_birth"
+                  value={ new Date( Date.parse( user.date_of_birth ) ) }
                   onChange={date => setProfileDOB(date)}
                   dateFormat="mm/dd/yy"
                   showIcon={true}
-                  showTime={false}
                   monthNavigator={true}
-                  yearNavigator={true}
                   showButtonBar={true}
-                  />
+                />
+                <label htmlFor="profile_date_of_birth">
+                  {t('demographics.born')}
+                </label>
               </span>
             </Col>
             <Col xs={12} md={12}>
@@ -593,8 +597,9 @@ export default function ProfileDataAdmin(props: Props) {
                 value={getImpairments()}
                 onChange={event => setProfileImpairment(event.target.value)}
                 multiple={true}
-                />
+              />
             </Col>
+            </Row>
           </Container>
         </AccordionTab>
       </Accordion>

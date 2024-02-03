@@ -6,9 +6,6 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setClean,
-  addMessage,
-  Priorities
 } from "../infrastructure/StatusSlice";
 
 import RubricViewer, { CLEAN_RUBRIC } from "./RubricViewer";
@@ -17,7 +14,6 @@ import { IRubricData } from "./RubricViewer";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { DateTime, Settings } from "luxon";
-import parse from "html-react-parser";
 
 import { useTranslation } from "react-i18next";
 
