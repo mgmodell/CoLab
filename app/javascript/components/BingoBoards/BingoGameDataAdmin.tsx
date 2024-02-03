@@ -216,10 +216,6 @@ export default function BingoGameDataAdmin(props) {
       });
   };
 
-  const changeTab = (event, name) => {
-    setCurTab(name);
-  };
-
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
@@ -240,15 +236,16 @@ export default function BingoGameDataAdmin(props) {
         <Col xs={6}>
           <span className="p-float-label">
             <InputNumber
-              id="bingo-name"
-              itemID="bingo-name"
-              name="bingo-name"
+              id="bingo-discount"
+              itemID="bingo-discount"
+              name="bingo-discount"
+              inputId="bingo-discount"
               value={gameGroupDiscount}
               onChange={event => {
                 setGameGroupDiscount(event.value);
               }}
             />
-            <label htmlFor="bingo-name">{t("group_discount")}</label>
+            <label htmlFor="bingo-discount">{t("group_discount")}</label>
           </span>
         </Col>
         <Col xs={6}>
@@ -315,6 +312,7 @@ export default function BingoGameDataAdmin(props) {
                       id='bingo-lead-time'
                       name="bingo-lead-time"
                       itemID="bingo-lead-time"
+                      inputId="bingo-lead-time"
                       value={gameLeadTime}
                       onChange={event => setGameLeadTime(event.value)}
                     />
@@ -328,6 +326,7 @@ export default function BingoGameDataAdmin(props) {
                       id='bingo-individual_count'
                       name="bingo-individual_count"
                       itemID="bingo-individual_count"
+                      inputId="bingo-individual_count"
                       value={gameIndividualCount}
                       onChange={event => setGameIndividualCount(event.value)}
                     />

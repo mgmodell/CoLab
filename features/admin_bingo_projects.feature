@@ -92,7 +92,7 @@ Feature: Bingo Administration
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
-    Then the user clicks by label "Make groups available?"
+    Then the user checks "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the rich "description" field to "this is the coolest"

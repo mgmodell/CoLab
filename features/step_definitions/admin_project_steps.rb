@@ -146,7 +146,6 @@ Then('the user sets the {string} start date to {string} and the end date to {str
 end
 
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  # find_field(field).click
   elem = find_field(field)
   elem.click
   send_keys [:command, 'a'], :backspace
