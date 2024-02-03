@@ -63,6 +63,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
     Given the user assigns "Accept" feedback to all candidates
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user will see "success"
@@ -79,6 +80,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -97,6 +99,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the saved reviews match the list
@@ -114,6 +117,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -133,6 +137,7 @@ Feature: Review Candidate words for Bingo!
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -159,6 +164,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user lowercases "all" concepts
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -185,6 +191,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user lowercases "some" concepts
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -203,6 +210,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 24 emails will be sent
@@ -239,6 +247,7 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks the review completed checkbox
+    Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then 28 emails will be sent

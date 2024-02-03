@@ -65,6 +65,7 @@ Feature: Course Administration
      And the user sets the start date to "tomorrow" and the end date to "next month"
      And the timezone "is" "Nairobi"
      And the timezone "isn't" "Mexico City"
+    Then close all messages
     Then the user clicks "Create Course"
      And the user will see "successfully"
      Then close all messages
@@ -119,6 +120,7 @@ Feature: Course Administration
      And the user sets the start date to "tomorrow" and the end date to "next month"
      And the timezone "is" "Nairobi"
      And the timezone "isn't" "Mexico City"
+    Then close all messages
     Then the user clicks "Create Course"
      #We should have success now
      And the user will see "successfully"
@@ -156,6 +158,7 @@ Feature: Course Administration
      And the user sets the start date to "5/11/1976" and the end date to "next month"
      And the timezone "is" "Mexico City"
      And the user sets the course timezone to "Nairobi"
+    Then close all messages
     Then the user clicks "Save Course"
      And the user will see "successfully"
      Then close all messages
@@ -360,6 +363,7 @@ Feature: Course Administration
     Then the user clicks the course 'Make a copy' button
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
      And set the new course start date to "5/20/1976"
+    Then close all messages
      And the user executes the copy
     #Let's check what we've got
      And the user will see "successfully"
@@ -423,6 +427,7 @@ Feature: Course Administration
     Then the user clicks the course 'Make a copy' button
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
      And set the new course start date to "5/20/1976"
+    Then close all messages
      And the user executes the copy
     #Let's check what we've got
      And the user will see "successfully"

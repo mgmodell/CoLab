@@ -31,6 +31,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
@@ -240,6 +241,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
@@ -261,6 +263,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
@@ -292,6 +295,7 @@ Feature: Project Administration
     Then the user switches to the "Groups" tab
     Then the user adds a group named 'my group'
     # Then the user sets the "g_-1" field to "my group"
+    Then close all messages
     Then the user clicks "Save"
      And the user waits to see "success"
     Then close all messages
@@ -301,12 +305,14 @@ Feature: Project Administration
     Then the user clicks "Save"
     Then the user switches to the "Details" tab
     Then the user sets the "project" start date to "yesterday" and the end date to "tomorrow"
+    Then close all messages
     Then the user clicks "Save"
      And the user waits to see "success"
 
     #Edit the groups
     Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
+    Then close all messages
     Then the user clicks "Save"
      And the user waits to see "success"
     Then close all messages
@@ -322,6 +328,7 @@ Feature: Project Administration
     Then set user 2 to group "my group"
     Then set user 3 to group "your group"
     Then set user 4 to group "your group"
+    Then close all messages
     Then the user clicks "Save"
      And the user waits to see "success"
     Then close all messages

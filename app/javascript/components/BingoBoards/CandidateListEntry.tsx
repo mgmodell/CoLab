@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
@@ -33,8 +33,6 @@ export default function CandidateListEntry(props: Props) {
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");
@@ -127,6 +125,7 @@ export default function CandidateListEntry(props: Props) {
       })
       .then(response => {
         const data = response.data;
+        console.log("data.messages", data );
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -136,20 +135,21 @@ export default function CandidateListEntry(props: Props) {
           setHelpRequested(data.help_requested);
           setOthersRequestedHelp(data.others_requested_help);
 
-          setShowErrors(true);
           setDirty(false);
-          setMessages(data.messages);
           dispatch(endTask("saving"));
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
-          setShowErrors(true);
-          setMessages(data.messages);
-          dispatch(endTask("saving"));
+          data.messages.forEach(message => {
+            dispatch(addMessage(message, new Date(), Priorities.ERROR));
+          } );
         }
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("saving"));
-      });
+      } ) ;
   };
 
   useEffect(() => {

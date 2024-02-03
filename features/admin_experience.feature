@@ -25,6 +25,7 @@ Feature: Experience Administration
     Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user sets the "Days for instructor prep" field to "5"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
      Then close all messages
@@ -44,6 +45,7 @@ Feature: Experience Administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
      Then close all messages
@@ -64,6 +66,7 @@ Feature: Experience Administration
     Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
      Then close all messages
@@ -83,6 +86,7 @@ Feature: Experience Administration
     Then the user edits the existing experience
     Then the user sets the "Name" field to "Bob Marley"
     Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
+    Then close all messages
     Then the user clicks "Save Experience"
      And the user waits to see "success"
      Then close all messages
@@ -104,6 +108,7 @@ Feature: Experience Administration
     Then the user sets the "Name" field to "Bob Marley"
     Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
     Then the user sets the "Days for instructor prep" field to "5"
+    Then close all messages
     Then the user clicks "Save Experience"
      And the user waits to see "success"
      Then close all messages
