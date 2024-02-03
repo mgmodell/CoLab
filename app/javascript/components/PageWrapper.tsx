@@ -43,6 +43,7 @@ const Demo = React.lazy(() => import("./Demo"));
 
 type Props = {
   getEndpointsUrl: string;
+  debug?: boolean;
 };
 
 export default function PageWrapper(props: Props) {
@@ -155,7 +156,10 @@ export default function PageWrapper(props: Props) {
   return (
     <Provider store={store}>
       <PrimeReactProvider>
-        <AppInit endpointsUrl={props.getEndpointsUrl}>
+        <AppInit 
+          endpointsUrl={props.getEndpointsUrl}
+          debug={props.debug}
+        >
           <CookieConsent>
             This website uses cookies to enhance the user experience.
           </CookieConsent>

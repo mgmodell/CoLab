@@ -66,14 +66,15 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     end
   else
     # push the panel into debug mode
-    find(:xpath, '//input[@id="debug"]', visible: :all).click
     @project.factors.each do |factor|
       # Open the factor panel
-      find(:xpath, "//a[contains(.,'#{factor.name}')]").click
+      find(:xpath, "//span[@factorId='#{factor[:id]}']").click
+
       elements = page
-                 .all(:xpath, "//input[@factor=#{factor.id}]",
+                 .all(:xpath, "//input[@data-factor-id=#{factor.id}]",
                       visible: false)
-      factor_vals = Hash[elements.collect { |element| [element[:contributor], element.value] }]
+
+      factor_vals = Hash[elements.collect { |element| [element['data-contributor-id'], element.value] }]
 
       actions = []
       rand(3..10).times do
@@ -86,15 +87,16 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
       actions.each_with_index do |action, _index|
         target = action[:target]
         increment = action[:increment]
-        contrib = find(:xpath, "//input[@factor='#{factor.id}'][@contributor='#{target}']")
+        contrib = find(:xpath, "//input[@data-factor-id='#{factor.id}'][@data-contributor-id='#{target}']")
 
         # let's do the allocation math - this doesn't have to be performant
         new_val = (increment + contrib.value.to_i).clamp(0, Installment::TOTAL_VAL)
         contrib.set new_val
 
         wait_for_render
-        sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
-          factor_vals[slider[:contributor]] = slider.value
+
+        sum = all(:xpath, "//input[@data-factor-id='#{factor.id}']").reduce(0) do |total, slider|
+          factor_vals[slider['data-contributor-id']] = slider.value
           total + slider.value.to_i
         end
         sum.should eq Installment::TOTAL_VAL
@@ -116,8 +118,11 @@ Then(/^the installment form should request factor x user values$/) do
   actual_count = 0
   page.all(:xpath, "//div[@id='installments']//a[@role='button']" ).each do |tab|
     tab.click unless 1 == tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]').size
-    actual_count += tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]//input[starts-with(@name,"slider_")]', visible: :all).size
+    wait_for_render
+    tab_count = tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]//div[@data-pc-name="slider"]').size
+    actual_count += tab_count
   end
+
   actual_count.should eq expected_count
 
 end
@@ -227,7 +232,7 @@ Then(/^the user enters a comment "([^"]*)" personally identifiable information$/
   end
 
   find(:xpath, '//*[text()="Would you like to add additional comments?"]').click
-  page.fill_in('Comments', with: @comment, visible: :all, disabled: :all)
+  page.fill_in('comments', with: @comment, visible: :all, disabled: :all)
 end
 
 Then(/^the comment matches what was entered$/) do
