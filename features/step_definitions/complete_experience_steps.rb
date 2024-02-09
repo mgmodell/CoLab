@@ -16,7 +16,6 @@ end
 
 Then 'the user will see {string}' do |checkText|
   wait_for_render
-  byebug unless has_content? checkText
   page.should have_content(:all, checkText)
 end
 
