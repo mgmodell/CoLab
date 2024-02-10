@@ -114,6 +114,7 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor copies their own rubric
     Then the user searches for "Trojan"
+    Then close all messages
     Then the user copies the "Trojan War Diorama" rubric
     Then the user will see "success"
     #Check what was saved
@@ -128,6 +129,7 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor copies a public rubric
     Then the user searches for "Ruby 1"
+    Then close all messages
     Then the user copies the "Ruby 1" rubric
     Then the user will see "success"
     #Check what was saved
@@ -176,6 +178,7 @@ Feature: Rubric administration
     Then 'decrement' sequence of remembered criteria by 1
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
+    Then close all messages
     Then the user clicks "Save Rubric"
     Then the user will see "Success"
     Then close all messages
@@ -197,6 +200,7 @@ Feature: Rubric administration
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 5 to "super duper level 5"
      And the user copies criteria 4
+    Then close all messages
     Then the user clicks "Save Rubric"
     Then the user will see "Success"
     Then close all messages

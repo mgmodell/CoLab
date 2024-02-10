@@ -118,13 +118,18 @@ class Course < ApplicationRecord
 
       # copy the projects
       proj_hash = {}
+      course_tz = ActiveSupport::TimeZone.new(timezone)
+      offset = course_tz.utc_offset
+
       projects.each do |project|
         new_obj = new_course.projects.new(
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
           start_date: project.start_date.advance(days: date_difference),
-          end_date: project.end_date.advance(days: date_difference),
+          end_date: project.end_date
+                           .advance(seconds: offset )
+                           .advance(days: date_difference),
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
@@ -134,10 +139,14 @@ class Course < ApplicationRecord
 
       # copy the experiences
       experiences.each do |experience|
+
+
         new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date.advance(days: date_difference),
-          end_date: experience.end_date.advance(days: date_difference)
+            end_date: experience.end_date
+                                .advance(seconds: offset )
+                                .advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -155,7 +164,9 @@ class Course < ApplicationRecord
           group_discount: bingo_game.group_discount,
           project: proj_hash[bingo_game.project],
           start_date: bingo_game.start_date.advance(days: date_difference),
-          end_date: bingo_game.end_date.advance(days: date_difference)
+          end_date: bingo_game.end_date
+                              .advance(seconds: offset )
+                              .advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -166,7 +177,9 @@ class Course < ApplicationRecord
           name: assignment.name,
           description: assignment.description,
           start_date: assignment.start_date.advance(days: date_difference),
-          end_date: assignment.end_date.advance(days: date_difference),
+          end_date: assignment.end_date
+                              .advance(seconds: offset )
+                              .advance(days: date_difference),
           rubric: assignment.rubric,
           file_sub: assignment.file_sub,
           link_sub: assignment.link_sub,

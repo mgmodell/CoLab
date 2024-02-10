@@ -387,7 +387,7 @@ class HomeController < ApplicationController
                      end,
         other: case activity.type
                when 'Terms List'
-                 activity.candidate_list_for_user(current_user).get_concepts.size
+                 candidates_list = activity.candidate_list_for_user(current_user).status
                when 'Project'
                  activity.get_performance(current_user)
                when 'Group Experience'

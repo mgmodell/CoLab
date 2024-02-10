@@ -1,50 +1,53 @@
 import i18n from "./i18n";
 import axios from "axios";
-import { addMessage, startTask, endTask, Priorities } from "./StatusSlice";
+import { startTask, endTask, Priorities } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
+import { I } from "@fullcalendar/core/internal-common";
+
+interface IUser {
+  id: number;
+  first_name: string;
+  last_name: string;
+  name: string;
+  emails: [
+    {
+      email: string;
+      primary: boolean;
+    }
+  ];
+
+  welcomed: boolean;
+  is_instructor: boolean;
+  is_admin: boolean;
+  country: string;
+  timezone: string;
+  language_id: number;
+  theme_id: number;
+  admin: boolean;
+  researcher: boolean;
+  anonymize: boolean;
+
+  gender_id: number;
+  date_of_birth: string;
+  home_state_id: number;
+  primary_language_id: number;
+
+  school_id: number;
+  started_school: string;
+  cip_code_id: number;
+
+  impairment_visual: boolean;
+  impairment_auditory: boolean;
+  impairment_motor: boolean;
+  impairment_cognitive: boolean;
+  impairment_other: boolean;
+};
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
-  user: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    name: string;
-    emails: [
-      {
-        email: string;
-        primary: boolean;
-      }
-    ];
-
-    welcomed: boolean;
-    is_instructor: boolean;
-    is_admin: boolean;
-    country: string;
-    timezone: string;
-    language_id: number;
-    theme_id: number;
-    admin: boolean;
-    researcher: boolean;
-    anonymize: boolean;
-
-    gender_id: number;
-    date_of_birth: Date;
-    home_state_id: number;
-    primary_language_id: number;
-
-    school_id: number;
-    started_school: Date;
-    cip_code_id: number;
-
-    impairment_visual: boolean;
-    impairment_auditory: boolean;
-    impairment_motor: boolean;
-    impairment_cognitive: boolean;
-    impairment_other: boolean;
-  };
-}
+  user: IUser;
+};
 
 const initialState = {
   lastRetrieved: null,
@@ -67,12 +70,12 @@ const initialState = {
     anonymize: false,
 
     gender_id: "__",
-    date_of_birth: "",
+    date_of_birth: '',
     home_state_id: "",
     primary_language_id: "",
 
     school_id: "",
-    started_school: "",
+    started_school: '',
     cip_code_id: "",
 
     impairment_visual: false,
@@ -139,8 +142,9 @@ export const fetchProfile = createAsyncThunk(
     axios
       .get(url, {})
       .then(response => {
-        const user: ProfilesRootState = response.data.user;
+        const user: IUser = response.data.user;
         dispatch(setRetrievedProfile(user));
+
         const tz_hash = getState().context.lookups["timezone_lookup"];
         Settings.defaultZone = tz_hash[user.timezone];
         dispatch(endTask("loading"));
@@ -211,6 +215,7 @@ export const {
   setAnonymize,
   setProfileTheme,
   setProfileTimezone,
-  clearProfile
+  clearProfile,
 } = actions;
 export default reducer;
+export { IUser}

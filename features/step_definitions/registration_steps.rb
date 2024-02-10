@@ -49,7 +49,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     demographics = [
       { label: 'What is your gender?', value: 'Male' },
       { label: 'What are you studying?', value: 'Education' },
-      { label: 'What country and state do you call home?', value: 'Belize' },
+      { label: 'What country?', value: 'Belize' },
       { label: 'What language do you speak at home?', value: 'Avestan' }
     ]
 

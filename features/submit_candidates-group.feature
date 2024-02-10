@@ -162,6 +162,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages
@@ -172,6 +173,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages
@@ -251,6 +253,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the candidate lists have been merged
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages
@@ -267,6 +270,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user will see 36 term field sets
      When the user populates 4 of the "term" entries
       And the user populates 4 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages
@@ -283,6 +287,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user will see 36 term field sets
      When the user populates 4 additional "term" entries
       And the user populates 4 additional "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages
@@ -299,6 +304,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user will see 36 term field sets
      When the user changes a random 4 "term" entries
      When the user changes a random 4 "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages

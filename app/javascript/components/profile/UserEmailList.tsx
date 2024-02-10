@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import Paper from "@mui/material/Paper";
-
-import CheckIcon from "@mui/icons-material/Check";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
@@ -13,6 +10,7 @@ import UserListToolbar from "./UserListToolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
+import { Panel } from "primereact/panel";
 
 interface IEmail {
   id: number;
@@ -121,7 +119,7 @@ export default function UserEmailList(props: Props) {
             sortable
             key={"confirmed"}
             body={params => {
-              const resp = params["confirmed?"] ? <CheckIcon /> : null;
+              const resp = params["confirmed?"] ? <i className="pi pi-check"></i> : null;
               return resp;
             }}
           />
@@ -160,7 +158,7 @@ export default function UserEmailList(props: Props) {
     ) : null;
 
   return (
-    <Paper>
+    <Panel>
       <WorkingIndicator identifier="email_actions" />
       {null != props.emailList ? (
         <React.Fragment>
@@ -170,6 +168,6 @@ export default function UserEmailList(props: Props) {
       ) : (
         <div>{t("emails.none_yet")}</div>
       )}
-    </Paper>
+    </Panel>
   );
 }

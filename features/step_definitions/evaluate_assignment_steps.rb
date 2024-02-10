@@ -28,6 +28,9 @@ Given('the submission has been withdrawn') do
 end
 
 Then('the user selects submission {int}') do |index|
+  inplace_path = "//div[text()='Click here to see the submissions list']" 
+  find(:xpath, inplace_path ).click if has_xpath?( inplace_path )
+
   row = find_all( :xpath, "//table/tbody/tr" )[index - 1]
   row.click
   row.find_all(:xpath, "td" )[0]
@@ -39,16 +42,10 @@ Then('the user selects submission {int}') do |index|
 end
 
 Then('the user hides all but the {string} tab') do |tabname|
-  tabs = find_all( :xpath, "//div[@role='group']/button[not(text()='#{tabname}') " + 
-                            "and @aria-pressed='true']" )
-  tabs.each do |tab|
-    tab.click
-  end
-  tabs = find_all( :xpath, "//div[@role='group']/button[text()='#{tabname}' " + 
-                            "and @aria-pressed='false']" )
-  tabs.each do |tab|
-    tab.click
-  end
+  tabs = find_all(:xpath, "//div[@role='group']/button[not(text()='#{tabname}') and @aria-pressed='true']" )
+  tabs.each(&:click)
+  tabs = find_all(:xpath, "//div[@role='group']/button[text()='#{tabname}' and @aria-pressed='false']" )
+  tabs.each(&:click)
 end
 
 Then('the contents match the submission contents') do
@@ -184,20 +181,27 @@ Then('the db critique matches the data entered') do
     )
     db_rrfbks.size.should eq 1
     rrfbk.score.should eq db_rrfbks[0].score
-    rrfbk.feedback.should eq db_rrfbks[0].feedback
-
+    if rrfbk.feedback.blank?
+      db_rrfbks[0].feedback.should be_blank
+    else  
+      rrfbk.feedback.should eq db_rrfbks[0].feedback
+    end
   end
 end
 
 Then('the user selects the {string} submission') do |temporal_relation|
+  inplace_path = "//div[text()='Click here to see the submissions list']" 
+  find(:xpath, inplace_path ).click if has_xpath?( inplace_path )
+
   id_col = 0
   target_col = 0
+
   find_all( :xpath, '//th').each_with_index do |th, index|
     target_col = index + 1 if 'Submission date' == th.text
     id_col = index + 1 if 'Submission id' == th.text
   end
-  find( :xpath, "//th[#{id_col }]" ).click
 
+  find( :xpath, "//th[#{id_col }]" ).click
 
   row_index = 1
   case temporal_relation

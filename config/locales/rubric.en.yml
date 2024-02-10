@@ -16,6 +16,7 @@ en:
       criteria: New Criteria
       criteria_l1: Bare minimum
     create_success: Rubric was created successfully!
+    new_version_success: A new version was created.
     destroy_success: Rubric was destroyed successfully!
     update_success: Rubric was updated successfully!
     publish_success: Rubric was published successfully!

@@ -37,7 +37,7 @@ export default function CourseAdmin(props) {
           path={`:courseIdParam/assignment/:assignmentIdParam`}
           element={<AssignmentDataAdmin />}
         />
-        <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
+        <Route path={`:courseIdParam/*`} element={<CourseDataAdmin />} />
         <Route index element={<CourseList />} />
       </Route>
     </Routes>

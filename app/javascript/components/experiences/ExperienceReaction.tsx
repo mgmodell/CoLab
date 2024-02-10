@@ -3,19 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { setDirty } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import parse from "html-react-parser";
 
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 
-import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import Grid from "@mui/material/Grid";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
-
-import parse from "html-react-parser";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { RadioButton } from "primereact/radiobutton";
+import { Container, Row, Col } from "react-grid-system";
+import { di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   reactionFunc: Function;
@@ -58,14 +56,16 @@ export default function ExperienceReaction(props: Props) {
   );
   const otherPnl =
     0 !== behaviorId && getById(behaviors, behaviorId).needs_detail ? (
-      <TextField
-        variant="filled"
-        label={t("next.other")}
-        value={otherName}
-        onChange={event => {
-          setOtherName(event.target.value);
-        }}
-      />
+      <div className="p-float-label">
+        <InputText
+          itemID="otherName"
+          value={otherName}
+          onChange={event => {
+            setOtherName(event.target.value);
+          }}
+        />
+        <label htmlFor="otherName">{t("next.other")}</label>
+      </div>
     ) : null;
 
   const resetData = () => {
@@ -76,62 +76,84 @@ export default function ExperienceReaction(props: Props) {
 
   return (
     <Panel>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Suspense fallback={<Skeleton className="mb-2" />}>
-            <h3>{t("reaction.title")}</h3>
-          </Suspense>
-        </Grid>
-        <Grid item xs={12}>
-          <Suspense fallback={<Skeleton className="mb-2" />}>
-            <p>{parse(t("reaction.instructions"))}</p>
-          </Suspense>
-        </Grid>
-        <Grid item xs={12}>
-          <FormLabel>{t("reaction.dom_behavior")}</FormLabel>
-          {behaviors !== undefined ? (
-            <RadioGroup
-              aria-label="behavior"
-              value={behaviorId}
-              onChange={event => {
-                dispatch(setDirty("reaction"));
-                setBehaviorId(Number(event.target.value));
-              }}
-            >
-              {behaviors.map(behavior => {
-                return (
-                  <React.Fragment key={"behavior_" + behavior.id}>
-                    <FormControlLabel
-                      value={behavior.id}
-                      label={behavior.name}
-                      control={<Radio />}
-                    />
-                    <p>{parse(behavior.description)}</p>
-                  </React.Fragment>
-                );
-              })}
-            </RadioGroup>
-          ) : (
-            <Skeleton className="mb-2" />
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          {otherPnl}
-        </Grid>
-        <Grid item xs={12}>
-          <h3>{t("reaction.improve")}</h3>
-          <TextField
-            variant="filled"
-            label={t("reaction.suggest")}
-            value={improvements}
-            id="improvements"
-            onChange={event => {
-              setImprovements(event.target.value);
-            }}
-          />
-        </Grid>
-      </Grid>
-      {saveButton}
+      <Container>
+        <Row>
+          <Col xs={12}>
+            <Suspense fallback={<Skeleton className="mb-2" />}>
+              <h3>{t("reaction.title")}</h3>
+            </Suspense>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <Suspense fallback={<Skeleton className="mb-2" />}>
+              <p>{parse(t("reaction.instructions"))}</p>
+            </Suspense>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <h6>
+              {t("reaction.dom_behavior")}
+            </h6>
+            {
+            behaviors?.map(behavior => {
+              return (
+                <>
+                  <RadioButton
+                    key={`behavior_${behavior.id}`}
+                    inputId={`behavior_${behavior.id}`}
+                    name='dom_behavior'
+                    checked={behaviorId === behavior.id}
+                    value={behavior.name}
+                    onChange={event => {
+                      setBehaviorId(behavior.id);
+                      dispatch(setDirty("reaction"));
+                    }}
+                  />
+                  <label htmlFor={`behavior_${behavior.id}`}>{behavior.name}</label>
+
+                  <p>{parse(behavior.description)}</p>
+                </>
+              );
+            })
+          }
+
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {otherPnl}
+
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <h3>{t("reaction.improve")}</h3>
+            <div className="p-float-label">
+              <InputTextarea
+                id="improvements"
+                itemID="improvements"
+                value={improvements}
+                onChange={event => {
+                  setImprovements(event.target.value);
+                }}
+                rows={5}
+                cols={30}
+              />
+              <label htmlFor="improvements">{t("reaction.suggest")}</label>
+            </div>
+
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            {saveButton}
+
+          </Col>
+        </Row>
+      </Container>
+
     </Panel>
   );
 }

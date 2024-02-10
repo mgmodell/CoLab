@@ -2,15 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-
-import CloseIcon from "@mui/icons-material/Close";
-
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
@@ -181,24 +175,6 @@ export default function SchoolList(props) {
 
   return (
     <React.Fragment>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"] || null}
-        </Alert>
-      </Collapse>
       <div style={{ maxWidth: "100%" }}>{schoolTable}</div>
     </React.Fragment>
   );

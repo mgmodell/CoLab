@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Tooltip } from "primereact/tooltip";
 import { Toolbar } from "primereact/toolbar";
-import { ColumnMeta } from "../infrastructure/Types";
+import { IColumnMeta } from "../infrastructure/Types";
 import { MultiSelect } from "primereact/multiselect";
 import { Knob } from "primereact/knob";
 
@@ -20,8 +20,8 @@ type Props = {
   setReviewCompleteFunc: (boolean) => void;
   saveFeedbackFunc: () => void;
   reloadFunc: () => void;
-  optColumns: Array<ColumnMeta>;
-  visibleColumns: Array<ColumnMeta>;
+  optColumns: Array<IColumnMeta>;
+  visibleColumns: Array<IColumnMeta>;
   setVisibleColumnsFunc: (Array) => void;
 };
 

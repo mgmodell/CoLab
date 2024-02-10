@@ -1,30 +1,33 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import CloseIcon from "@mui/icons-material/Close";
-
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
-// import LinkedSliders from './LinkedSliders';
-import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 import parse from "html-react-parser";
 import { Panel } from "primereact/panel";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Col, Container, Row } from "react-grid-system";
+import { Slider } from "primereact/slider";
+import distributeChange from "./distributeChange";
+
+interface IContribution {
+  userId: number;
+  factorId: number;
+  name: string;
+  value: number;
+};
 
 interface Props {
   rootPath?: string;
-}
+};
 
 export default function InstallmentReport(props: Props) {
   const endpointSet = "installment";
@@ -34,6 +37,9 @@ export default function InstallmentReport(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const debug = useTypedSelector(
+    state => state.context.config.debug
+  );
   const user = useTypedSelector(state => state.profile.user);
   const navigate = useNavigate();
 
@@ -41,15 +47,12 @@ export default function InstallmentReport(props: Props) {
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
-  const [debug, setDebug] = useState(false);
+
   const [t, i18n] = useTranslation("installments");
 
   const [initialised, setInitialised] = useState(false);
   // I need to fix this to use the standard
-  const [messages, setMessages] = useState({});
   const [curPanel, setCurPanel] = useState(0);
-  const [showAlerts, setShowAlerts] = useState(false);
-  const [commentPanelOpen, setCommentPanelOpen] = useState(false);
   const [group, setGroup] = useState({});
   const [factors, setFactors] = useState({});
 
@@ -61,6 +64,7 @@ export default function InstallmentReport(props: Props) {
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
+
     lContributions[id] = update;
     setContributions(lContributions);
   };
@@ -102,7 +106,7 @@ export default function InstallmentReport(props: Props) {
   };
 
   const saveButton = (
-    <Button variant="contained" onClick={() => saveContributions()}>
+    <Button onClick={() => saveContributions()}>
       <Suspense fallback={<Skeleton className="mb-2" />}>
         {t("submit")}
       </Suspense>
@@ -198,36 +202,21 @@ export default function InstallmentReport(props: Props) {
           setContributions(receivedContributions);
           navigate(`..`);
         }
-        setMessages(data.messages);
-        setShowAlerts(true);
-        dispatch(endTask("saving"));
+        if (data.messages.status !== undefined) {
+          dispatch(addMessage(data.messages.status, new Date(), Priorities.ERROR));
+        }
         setDirty(false);
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      })
   };
 
   return (
     <Panel>
-      <Collapse in={showAlerts}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowAlerts(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["status"]}
-        </Alert>
-      </Collapse>
       <Suspense fallback={<Skeleton className="mb-2" height={"10rem"} />}>
         <h1>{t("subtitle")}</h1>
         <p>
@@ -250,16 +239,61 @@ export default function InstallmentReport(props: Props) {
           >
             {Object.keys(contributions).map(sliceId => {
               return (
-                <AccordionTab header={factors[sliceId].name} key={sliceId}>
-                  <LinkedSliders
-                    key={"f_" + sliceId}
-                    id={Number(sliceId)}
-                    sum={sliderSum}
-                    updateContributions={updateSlice.bind(null, sliceId)}
-                    description={factors[sliceId].description}
-                    contributions={contributions[sliceId]}
-                    debug={debug}
-                  />
+                <AccordionTab
+                  header={factors[sliceId].name}
+                  pt={{
+                    headerTitle: {
+                      factorId: sliceId
+                    }
+                  }}
+                  key={sliceId}
+                >
+                  <Container>
+                    <Row>
+                      <Col xs={12}>
+                        <p>{factors[sliceId].description}</p>
+                      </Col>
+                    </Row>
+                    {contributions[sliceId].map((contrib, index) => {
+                      return (
+                        <Row
+                          key={"key_fs_" + sliceId + "_c_" + contrib.userId}
+                        >
+                          <Col xs={12} md={3}>
+                            <h5>{contrib.name}</h5>
+                          </Col>
+                          <Col xs={12} md={9}>
+                            <Slider
+                              value={contrib.value}
+                              id={"fs_" + sliceId + "_c_" + contrib.userId}
+                              itemID={"fs_" + sliceId + "_c_" + contrib.userId}
+                              name={"fs_" + sliceId + "_c_" + contrib.userId}
+                              max={sliderSum}
+                              min={0}
+                              onChange={event => {
+                                updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, event.value));
+                              }}
+                            />
+                            {debug ? (
+                              <input
+                                type="number"
+                                data-contributor-id={contrib.userId}
+                                data-factor-id={sliceId}
+                                value={contrib.value}
+                                id={"debug_fs_" + contrib.userId + "_c_" + contributions[sliceId].userId}
+                                onChange={event => {
+                                  updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, parseInt(event.target.value)));
+                                }}
+                              />
+                            ) : null}
+
+                          </Col>
+                        </Row>
+
+                      )
+
+                    })}
+                  </Container>
                 </AccordionTab>
               );
             })}
@@ -269,16 +303,19 @@ export default function InstallmentReport(props: Props) {
         <br />
         <Accordion>
           <AccordionTab header={t("comment_prompt")}>
-            <TextField
-              value={installment.comments || ""}
-              name="Comments"
-              id="Comments"
-              placeholder={"Enter your comments"}
-              helperText={messages["comments"]}
-              multiline={true}
-              fullWidth={true}
-              onChange={updateComments}
-            />
+            <span className="p-float-label">
+              <InputTextarea
+                value={installment.comments || ""}
+                name="comments"
+                id="comments"
+                itemID="comments"
+                autoResize={true}
+                onChange={updateComments}
+              />
+              <label htmlFor="Comments">
+                {t("comment_input_prompt")}
+              </label>
+            </span>
           </AccordionTab>
         </Accordion>
       </Suspense>
@@ -293,13 +330,8 @@ export default function InstallmentReport(props: Props) {
           border: "0px"
         }}
       >
-        <input
-          type="checkbox"
-          value={String(debug)}
-          id="debug"
-          onChange={() => setDebug(!debug)}
-        />
       </div>
     </Panel>
   );
 }
+export { IContribution }

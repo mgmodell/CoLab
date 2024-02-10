@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
-import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import Grid from "@mui/material/Grid";
+
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { InputTextarea } from "primereact/inputtextarea";
+import { InputText } from "primereact/inputtext";
+import { Col, Container, Row } from "react-grid-system";
 
 type Props = {
   rootPath?: string;
@@ -37,8 +33,6 @@ export default function CandidateListEntry(props: Props) {
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");
@@ -131,6 +125,7 @@ export default function CandidateListEntry(props: Props) {
       })
       .then(response => {
         const data = response.data;
+        console.log("data.messages", data );
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -140,20 +135,21 @@ export default function CandidateListEntry(props: Props) {
           setHelpRequested(data.help_requested);
           setOthersRequestedHelp(data.others_requested_help);
 
-          setShowErrors(true);
           setDirty(false);
-          setMessages(data.messages);
           dispatch(endTask("saving"));
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
-          setShowErrors(true);
-          setMessages(data.messages);
-          dispatch(endTask("saving"));
+          data.messages.forEach(message => {
+            dispatch(addMessage(message, new Date(), Priorities.ERROR));
+          } );
         }
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("saving"));
-      });
+      } ) ;
   };
 
   useEffect(() => {
@@ -165,7 +161,7 @@ export default function CandidateListEntry(props: Props) {
   useEffect(() => setDirty(true), [candidates]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveCandidateList}>
+    <Button onClick={saveCandidateList}>
       Save Candidates
     </Button>
   ) : null;
@@ -239,81 +235,69 @@ export default function CandidateListEntry(props: Props) {
     setCandidates(tempList);
   };
   const detailsComponent = (
-    <Paper>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("topic")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{topic}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("description")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{parse(description)}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>For</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{user.name}</Typography>
-        </Grid>
+    <Panel>
+      <Container>
+        <Row>
+        <Col xs={12} sm={3}>
+          <span>{t("topic")}</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{topic}</span>
+        </Col>
+        <Col xs={12} sm={3}>
+          <span>{t("description")}</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{parse(description)}</span>
+        </Col>
+        <Col xs={12} sm={3}>
+          <span>For</span>
+        </Col>
+        <Col xs={12} sm={9}>
+          <span>{user.name}</span>
+        </Col>
         <hr />
-        <Grid item xs={12}>
+        <Col xs={12}>
           {groupComponent}
-        </Grid>
+        </Col>
         {candidates.map((candidate, index) => {
           return (
             <React.Fragment key={index}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Term"
-                  fullWidth
-                  id={`term_${index}`}
-                  onChange={event => updateTerm(event, index)}
-                  value={candidate.term}
-                />
-              </Grid>
-              <Grid item xs={12} sm={9}>
-                <TextareaAutosize
-                  label="Definition"
+              <Col xs={12} sm={3}>
+                <span className="p-float-label">
+                  <InputText
+                    id={`term_${index}`}
+                    onChange={event => updateTerm(event, index)}
+                    value={candidate.term}
+                    />
+                  <label htmlFor={`term_${index}`}>Term</label>
+                  </span>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span className="p-float-label">
+                <InputTextarea
                   width="90%"
                   id={`definition_${index}`}
                   onChange={event => updateDefinition(event, index)}
                   value={candidate.definition}
+                  autoResize
                 />
-              </Grid>
+                <label htmlFor={`definition_${index}`}>Definition</label>
+                </span>
+              </Col>
             </React.Fragment>
           );
         })}
-      </Grid>
+
+        </Row>
+      </Container>
       {saveButton}
-    </Paper>
+    </Panel>
   );
 
   return (
-    <Paper>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
+    <Panel>
       {detailsComponent}
-    </Paper>
+    </Panel>
   );
 }

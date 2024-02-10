@@ -21,11 +21,9 @@ module TimezonesSupportConcern
     if end_date.change(hour: 0) >= course.end_date.change(hour: 0)
       self.end_date = course.end_date
     elsif end_date_changed?
-      tmp_date = course_tz.utc_to_local(end_date)
-      proc_date = course_tz
-                  .local(tmp_date.year, tmp_date.month, tmp_date.day)
-                  .end_of_day
-      self.end_date = proc_date
+      tmp_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = tmp_date.end_of_day
+
     end
   end
 
@@ -42,12 +40,8 @@ module TimezonesSupportConcern
     if end_date.nil? || end_date.change(hour: 0) >= course.end_date.change(hour: 0)
       self.end_date = course.end_date
     else
-
-      tmp_date = course_tz.utc_to_local(end_date)
-      proc_date = course_tz
-                  .local(tmp_date.year, tmp_date.month, tmp_date.day)
-                  .end_of_day
-      self.end_date = proc_date
+      tmp_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = tmp_date.end_of_day
     end
   end
 end
