@@ -106,7 +106,6 @@ export default function RubricDataAdmin(props) {
     )
   ]);
 
-  const [messages, setMessages] = useState({});
 
   const timezones = useTypedSelector(state => {
     return state.context.lookups["timezones"];
@@ -172,11 +171,9 @@ export default function RubricDataAdmin(props) {
 
           dispatch(setClean(category));
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
-          //setMessages(data.messages);
           dispatch(endTask("saving"));
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
-          setMessages(messages);
           dispatch(endTask(action));
         }
       })
@@ -218,7 +215,7 @@ export default function RubricDataAdmin(props) {
           const rubric = data.rubric;
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
-            setMessages({ main: "A new version was created" });
+            dispatch( addMessage(t('new_version_success'), new Date(), Priorities.INFO) );
             navigate(`../rubrics/${String(rubric.id)}`);
           } else {
             setRubricId(rubric.id);
@@ -235,10 +232,9 @@ export default function RubricDataAdmin(props) {
             dispatch(setClean(category));
             dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           }
-          navigate(`../${rubricId}`, { replace: true });
+          navigate(`../rubrics/${rubricId}`, { replace: true });
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
-          setMessages(messages);
         }
       })
       .catch(error => {
