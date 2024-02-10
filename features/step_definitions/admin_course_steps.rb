@@ -339,6 +339,9 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
   else
     # Find the email
     wait_for_render
+    find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
+    find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+
     drop_button_xpath = "//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='drop student']"
 
     elem = find(:xpath, drop_button_xpath) 
