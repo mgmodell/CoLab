@@ -438,6 +438,7 @@ export default function WhyCoLab(props: Props) {
         fill={index <= curScene ? "#ffff00" : "midnightblue"}
         strokeWidth={1.5}
         opacity={1}
+        className="intro_nav"
         onClick={event => {
           setScene(index);
           navigate(`why#${index}`);
@@ -489,6 +490,7 @@ export default function WhyCoLab(props: Props) {
     <g
       id="right-arrow"
       key="right-arrow"
+      className="intro_nav"
       onClick={event => {
         setScene(curScene + 1);
       }}

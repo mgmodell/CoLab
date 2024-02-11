@@ -84,7 +84,7 @@ a:hover, a:active {
   background-color: rgb( 63, 81, 181 );
 }
 
-.logo_nav:hover {
+.intro_nav:hover {
   filter: brightness(150%);
   cursor: pointer;
 }
