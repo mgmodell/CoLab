@@ -481,6 +481,7 @@ export default function Welcome(props: Props) {
                cy="455"
                r="160"
                fill="#00ffff"
+               className="logo_nav"
                onClick={() =>
                   goToScene('welcome') // To Welcome
                }
@@ -494,6 +495,7 @@ export default function Welcome(props: Props) {
                   cy="135"
                   r="82"
                   fill="#00ff00"
+                  className="logo_nav"
                   onClick={() => {
                      goToScene('about');
                   }}
@@ -504,6 +506,7 @@ export default function Welcome(props: Props) {
                   cy="134"
                   r="80"
                   fill="#ff2a2a"
+                  className="logo_nav"
                   onClick={() => {
                      goToScene('research');
                   }}
@@ -514,6 +517,7 @@ export default function Welcome(props: Props) {
                   cy="530"
                   r="85"
                   fill="#ffff00"
+                  className="logo_nav"
                   onClick={() => {
                      goToScene('why');
                   }}
@@ -524,6 +528,7 @@ export default function Welcome(props: Props) {
                   cy="790"
                   r="81"
                   fill="#ff6600"
+                  className="logo_nav"
                   onClick={() => {
                      goToScene('student');
                   }}
@@ -534,6 +539,7 @@ export default function Welcome(props: Props) {
                   cy="710"
                   r="80"
                   fill="#ff00ff"
+                  className="logo_nav"
                   onClick={() =>
                      goToScene('instructor')
                   }
