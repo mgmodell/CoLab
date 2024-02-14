@@ -13,3 +13,13 @@ en:
         research: The research behind CoLab
         student: CoLab features for students
         instructor: CoLab features for instructors
+    why_slides:
+        captions:
+            one: We dream of teamwork that looks like this
+            two: But we often learn that...
+            three: ...it feels like an inequitable experience
+            four: And negative experiences take many shapes
+            five: Or possibly the results just feel cookie-cutter and boring?
+    images:
+        student_concern: Student talks to teacher
+        normally_functioning: A group of students where all are engaged
