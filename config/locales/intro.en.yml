@@ -1,0 +1,15 @@
+en:
+  intro:
+    tooltips:
+        welcome: Welcome
+        about: About
+        why: Why CoLab?
+        research: Research
+        student: Student?
+        instructor: Instructor?
+    titles:
+        about: Who's behind CoLab?
+        why: What problem does CoLab solve?
+        research: The research behind CoLab
+        student: CoLab features for students
+        instructor: CoLab features for instructors

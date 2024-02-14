@@ -10,11 +10,15 @@ import About from "./About";
 import Research from "./Research";
 import ForStudents from "./ForStudents";
 import ForInstructors from "./ForInstructors";
+import { useTranslation } from "react-i18next";
 
 type Props = {
 }
 
 export default function Welcome(props: Props) {
+   const category = 'intro';
+   const { t } = useTranslation(category);
+
    const location = useLocation();
    const params = useParams();
    const navigate = useNavigate();
@@ -22,6 +26,7 @@ export default function Welcome(props: Props) {
 
    const [welcomed, setWelcomed] = useState(false);
    const [title, setTitle] = useState('');
+   const [showTooltips, setShowTooltips] = useState(false);
 
    const height = 300;
    const width = 530;
@@ -192,30 +197,32 @@ export default function Welcome(props: Props) {
             setTitle('');
             break;
          case 'student':
-            setTitle('CoLab features for students');
+            setTitle(t(`titles.${animateSceneName}`));
             break;
          case 'instructor':
-            setTitle('CoLab features for instructors');
+            setTitle(t(`titles.${animateSceneName}`));
             break;
          case 'why':
-            setTitle('What problem does CoLab solve?');
+            setTitle(t(`titles.${animateSceneName}`));
             break;
          case 'research':
-            setTitle('The research behind CoLab');
+            setTitle(t(`titles.${animateSceneName}`));
             break;
          case 'about':
-            setTitle('Who\'s behind CoLab?');
+            setTitle(t(`titles.${animateSceneName}`));
             break;
          default:
             setTitle(`${sceneName} was not found`)
 
       }
+      const localShowTooltips = 'welcome' === animateSceneName;
+      setShowTooltips( localShowTooltips );
 
       tooltipApi.start({
          to: tooltipLook[animateSceneName]
       })
       titleApi.start({
-         to: titleLook['welcome' === animateSceneName ? 'welcome' : 'other']
+         to: titleLook[localShowTooltips ? 'welcome' : 'other']
       })
       logoApi.start({
          to: logoLook[animateSceneName]
@@ -481,7 +488,13 @@ export default function Welcome(props: Props) {
                onClick={() =>
                   goToScene('welcome') // To Welcome
                }
-            />
+            >
+               {
+                  !showTooltips ? (
+                     <title>{t('tooltips.welcome')}</title>
+                  ) : null
+               }
+            </circle>
             <g
                id="teammates"
                strokeWidth="20">
@@ -490,56 +503,86 @@ export default function Welcome(props: Props) {
                   cx="124"
                   cy="135"
                   r="82"
-               className="intro-nav"
+                  className="intro-nav"
                   fill="#00ff00"
                   onClick={() => {
                      goToScene('about');
                   }}
-               />
+               >
+                  {
+                     !showTooltips ? (
+                        <title>{t('tooltips.about')}</title>
+                     ) : null
+                  }
+               </circle>
                <circle
                   id="red"
                   cx="568"
                   cy="134"
                   r="80"
-               className="intro-nav"
+                  className="intro-nav"
                   fill="#ff2a2a"
                   onClick={() => {
                      goToScene('research');
                   }}
-               />
+               >
+                  {
+                     !showTooltips ? (
+                        <title>{t('tooltips.research')}</title>
+                     ) : null
+                  }
+               </circle>
                <circle
                   id="yellow"
                   cx="790"
                   cy="530"
                   r="85"
-               className="intro-nav"
+                  className="intro-nav"
                   fill="#ffff00"
                   onClick={() => {
                      goToScene('why');
                   }}
-               />
+               >
+                  {
+                     !showTooltips ? (
+                        <title>{t('tooltips.why')}</title>
+                     ) : null
+                  }
+               </circle>
                <circle
                   id="orange"
                   cx="610"
                   cy="790"
                   r="81"
-               className="intro-nav"
+                  className="intro-nav"
                   fill="#ff6600"
                   onClick={() => {
                      goToScene('student');
                   }}
-               />
+               >
+                  {
+                     !showTooltips ? (
+                        <title>{t('tooltips.student')}</title>
+                     ) : null
+                  }
+               </circle>
                <circle
                   id="purple"
                   cx="120"
                   cy="710"
                   r="80"
-               className="intro-nav"
+                  className="intro-nav"
                   fill="#ff00ff"
                   onClick={() =>
                      goToScene('instructor')
                   }
-               />
+               >
+                  {
+                     !showTooltips ? (
+                        <title>{t('tooltips.instructor')}</title>
+                     ) : null
+                  }
+               </circle>
             </g>
          </animated.g>
          <animated.g
@@ -568,7 +611,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles,
                }}
             >
-               Welcome
+               {t('tooltips.welcome')}
             </text>
             <text
                x="130"
@@ -580,7 +623,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles
                }}
             >
-               Why CoLab?
+               {t('tooltips.why')}
             </text>
 
             <animated.g
@@ -599,7 +642,7 @@ export default function Welcome(props: Props) {
                      ...tooltipRStyles
                   }}
                >
-                  Student?
+                  {t('tooltips.student')}
                </text>
             </animated.g>
             <text
@@ -613,7 +656,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles
                }}
             >
-               Instructor?
+               {t('tooltips.instructor')}
             </text>
             <text
                x="80"
@@ -628,7 +671,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles
                }}
             >
-               About
+               {t('tooltips.about')}
             </text>
             <text
                x="45"
