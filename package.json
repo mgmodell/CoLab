@@ -90,6 +90,6 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "react-refresh": "^0.14.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^5.0.1"
   }
 }
