@@ -106,7 +106,8 @@ en:
         We assume that this course will run in the {{timezone}} timezone
         just like your school. However, you can click here to change
         this. Perhaps for a study abroad course?
-      confirm_save_lbl: Save
+      confirm_create_lbl: Confirm and create
+      confirm_save_lbl: Summary
       confirm_save_ttl: Is this all correct?
       confirm_save_desc: >
         Please review all the information we've captured so far to make
