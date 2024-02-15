@@ -58,7 +58,9 @@ en:
       born: When were you born?
       gender: What is your gender?
       home_language: What language do you speak at home?
-      home_town: What country and state do you call home?
+      home_town: Where do you call home?
+      home_country: What country?
+      home_state: What state?
       impairments:
         prompt: >
           Do you have any impairments which alter your

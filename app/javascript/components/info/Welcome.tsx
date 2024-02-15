@@ -359,10 +359,9 @@ export default function Welcome(props: Props) {
          </text>
          <animated.g
             id="title_text"
+            className='intro-text'
             style={{
                x: 0,
-               pointerEvents: 'none',
-
                strokeWidth: .125,
                fill: 'white',
                stroke: 'black',
@@ -478,6 +477,7 @@ export default function Welcome(props: Props) {
                cy="455"
                r="160"
                fill="#00ffff"
+               className="intro-nav"
                onClick={() =>
                   goToScene('welcome') // To Welcome
                }
@@ -490,6 +490,7 @@ export default function Welcome(props: Props) {
                   cx="124"
                   cy="135"
                   r="82"
+               className="intro-nav"
                   fill="#00ff00"
                   onClick={() => {
                      goToScene('about');
@@ -500,6 +501,7 @@ export default function Welcome(props: Props) {
                   cx="568"
                   cy="134"
                   r="80"
+               className="intro-nav"
                   fill="#ff2a2a"
                   onClick={() => {
                      goToScene('research');
@@ -510,6 +512,7 @@ export default function Welcome(props: Props) {
                   cx="790"
                   cy="530"
                   r="85"
+               className="intro-nav"
                   fill="#ffff00"
                   onClick={() => {
                      goToScene('why');
@@ -520,6 +523,7 @@ export default function Welcome(props: Props) {
                   cx="610"
                   cy="790"
                   r="81"
+               className="intro-nav"
                   fill="#ff6600"
                   onClick={() => {
                      goToScene('student');
@@ -530,6 +534,7 @@ export default function Welcome(props: Props) {
                   cx="120"
                   cy="710"
                   r="80"
+               className="intro-nav"
                   fill="#ff00ff"
                   onClick={() =>
                      goToScene('instructor')
@@ -539,6 +544,7 @@ export default function Welcome(props: Props) {
          </animated.g>
          <animated.g
             id='tooltips'
+            className='intro-text'
             style={{
                fontWeight: 'bold',
                fontSize: '11',

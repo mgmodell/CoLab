@@ -170,6 +170,7 @@ export interface ContextRootState {
   config: {
     localStorage?: boolean;
     endpoint_url?: string;
+    debug: boolean;
   };
   lookups: {
     [key: string]: {
@@ -193,7 +194,8 @@ const initialState: ContextRootState = {
   },
   config: {
     localStorage: null,
-    endpoint_url: null
+    endpoint_url: null,
+    debug: false,
   },
   lookups: {
     behaviors: {},
@@ -267,6 +269,9 @@ const contextSlice = createSlice({
     setLookups(state, action) {
       state.lookups = action.payload;
       state.status.lookupsLoaded = true;
+    },
+    setDebug(state, action) {
+      state.config.debug = action.payload;
     }
   }
 });
@@ -403,11 +408,11 @@ export const signOut = createAsyncThunk(
     if (getState().context.status.loggedIn) {
       return axios.delete(CONFIG.SIGN_OUT_PATH, {}).then(resp => {
         var counter = 0;
-        dispatch(clearProfile());
-        dispatch(setLoggedOut());
+        dispatch(clearProfile({}));
+        dispatch(setLoggedOut({}));
         CONFIG.deleteData(CONFIG.SAVED_CREDS_KEY);
         CONFIG.retrieveResources(dispatch, getState).then(() => {
-          dispatch(setInitialised());
+          dispatch(setInitialised({}));
         });
       });
     }
@@ -417,7 +422,7 @@ export const signOut = createAsyncThunk(
 const { actions, reducer } = contextSlice;
 export const {
   setEndPoints,
-  setAnonymize,
+  setDebug,
   setEndPointUrl,
   setLoggedIn,
   setLoggedOut,

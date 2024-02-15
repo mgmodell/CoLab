@@ -42,57 +42,22 @@ Then('the assignment rubric is {string}') do |rubric_name|
 end
 
 Then('the user sets the assignment {string} to {string}') do |field_name, value|
+  chkbox_id = ''
+
   case field_name
-  when 'opening'
-    label = 'Start Date'
-    begin
-      find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-      field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find(:xpath, "//input[@id='#{field_id}']")
-      field.click
-    end
-    new_year = Chronic.parse(value).strftime('%Y')
-    new_date = Chronic.parse(value).strftime('%m%d%Y')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
-  when 'close'
-    label = 'Close Date'
-    begin
-      find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-      field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find(:xpath, "//input[@id='#{field_id}']")
-      field.click
-    end
-    new_year = Chronic.parse(value).strftime('%Y')
-    new_date = Chronic.parse(value).strftime('%m%d%Y')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
   when 'link'
-    if 'true' == value
-      check 'sub_link', visible: :all
-    else
-      uncheck 'sub_link', visible: :all
-    end
+    chkbox_id = 'sub_link'
   when 'text'
-    if 'true' == value
-      check 'sub_text', visible: :all
-    else
-      uncheck 'sub_text', visible: :all
-    end
+    chkbox_id = 'sub_text'
   when 'files'
-    if 'true' == value
-      check 'sub_file', visible: :all
-    else
-      uncheck 'sub_file', visible: :all
-    end
+    chkbox_id = 'sub_file'
   else
-    false.should be true
+    puts "No such field: #{field_name}"
+    pending
+  end
+
+  if value != find( :xpath, "//input[@name='#{chkbox_id}']", visible: :all )[:checked]
+    find( :xpath, "//div[@id='#{chkbox_id}']", visible: :all ).click
   end
 end
 
@@ -148,7 +113,7 @@ Then('the user selects the {string} version {int} rubric') do |rubric_name, vers
     page.select("#{rubric.name} (#{rubric.version})", from: 'Which rubric will be applied?', visible: :all)
   else
     find('div', id: /assignment_rubric_id/).click
-    find('li', text: "#{rubric.name} (#{rubric.version})").click
+    find('li', text: "#{rubric.name} v#{rubric.version}").click
 
   end
 end

@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useContext } from "react";
 import { SvgContext } from "./ResizableSVG";
 import { SpringValue, animated } from "react-spring";
 
-interface EmbeddedHTMLInSVGProps {
+interface Props {
   children: ReactNode;
   width: string | SpringValue<number> | number;
   height: string | SpringValue<number> | number;
@@ -10,7 +10,7 @@ interface EmbeddedHTMLInSVGProps {
   y?: string | SpringValue<number> | number;
 }
 
-const EmbeddedHTMLInSVG: React.FC<EmbeddedHTMLInSVGProps> = ({
+const EmbeddedHTMLInSVG: React.FC<Props> = ({
   children,
   width,
   height,

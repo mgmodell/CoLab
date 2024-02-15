@@ -3,21 +3,20 @@
 class CoursesController < ApplicationController
   include PermissionsCheck
 
-  layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
-  before_action :set_reg_course, only: %i[self_reg self_reg_confirm self_reg_init]
+  before_action :set_reg_course, only: %i[self_reg_init self_reg_confirm self_reg_init]
   before_action :check_admin, only: %i[new create]
-  before_action :check_editor, except: %i[next diagnose react accept_roster
+  before_action :check_editor, except: %i[accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  before_action :check_viewer, except: %i[next diagnose react accept_roster
+  before_action :check_viewer, except: %i[accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  skip_before_action :authenticate_user!, only: %i[qr get_quote]
+  skip_before_action :authenticate_user!, only: %i[qr]
 
   def show
     @title = t('.title')
@@ -355,6 +354,11 @@ class CoursesController < ApplicationController
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
     @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
+#    respond_to do |format|
+#      format.json do
+#        render json: { course: @course.as_json }
+#      end
+#    end
   end
 
   def new_from_template
@@ -370,7 +374,6 @@ class CoursesController < ApplicationController
   end
 
   def create
-    @title = t('courses.new.title')
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
@@ -404,7 +407,6 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @title = t('courses.edit.title')
     if @course.update(course_params)
       notice = t('courses.create_success')
       respond_to do |format|
@@ -563,7 +565,9 @@ class CoursesController < ApplicationController
       @course = if params[:id].blank? || 'new' == params[:id]
                   Course.new(
                     school_id: current_user.school_id,
-                    timezone: current_user.timezone
+                    timezone: current_user.timezone,
+                    start_date: Date.tomorrow.beginning_of_day,
+                    end_date: 1.month.from_now.end_of_day
                   )
                 else
                   Course.includes(:users).find(params[:id])
@@ -571,6 +575,7 @@ class CoursesController < ApplicationController
     else
       @course = Course.find_by id: params[:id]
       # TODO: This can't be right and must be fixed for security later
+      # This needs to throw a security error
       redirect_to :show if @course.nil?
     end
   end

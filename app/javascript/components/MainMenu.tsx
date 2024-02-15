@@ -180,9 +180,11 @@ export default function MainMenu(props: Props) {
           window.location.href = `mailto:${props.supportAddress}`;
         }
       },
+      /*
       {
         separator: true
       },
+      */
       {
         label: t("about"),
         icon: "pi pi-fw pi-info-circle",
@@ -192,9 +194,11 @@ export default function MainMenu(props: Props) {
           //toggleMenu(MENUS.ABOUT);
         }
       },
+      /*
       {
         separator: true
       },
+      */
     );
 
     if (isLoggedIn) {

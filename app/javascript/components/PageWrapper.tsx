@@ -16,12 +16,7 @@ import "primereact/resources/themes/md-light-indigo/theme.css"; // theme
 import "primereact/resources/primereact.min.css"; // core css
 import "primeicons/primeicons.css"; //Prime icons
 
-import Skeleton from "@mui/material/Skeleton";
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-  createTheme
-} from "@mui/material";
+import { Skeleton } from "primereact/skeleton";
 import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
@@ -34,7 +29,7 @@ import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
@@ -48,6 +43,7 @@ const Demo = React.lazy(() => import("./Demo"));
 
 type Props = {
   getEndpointsUrl: string;
+  debug?: boolean;
 };
 
 export default function PageWrapper(props: Props) {
@@ -55,14 +51,12 @@ export default function PageWrapper(props: Props) {
     reducer: appStatus
   });
 
-  const styles = createTheme({});
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
         <Route
           element={
-            <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
+            <Suspense fallback={<Skeleton className='mb-2' height={'50rem'} />}>
               <AppHeader />
               <WorkingIndicator />
               <br />
@@ -87,7 +81,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="profile"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className='mb-2' />}>
                   <RequireAuth>
                     <ProfileDataAdmin />
                   </RequireAuth>
@@ -97,7 +91,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="admin/*"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={'mb-2'} />}>
                   <RequireAuth>
                     <Admin />
                   </RequireAuth>
@@ -107,7 +101,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path={"home/*"}
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={"mb-2"} />}>
                   <RequireAuth>
                     <Outlet />
                   </RequireAuth>
@@ -148,7 +142,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="demo/*"
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                <Suspense fallback={<Skeleton className={""} />}>
                   <Demo rootPath="demo" />
                 </Suspense>
               }
@@ -162,16 +156,15 @@ export default function PageWrapper(props: Props) {
   return (
     <Provider store={store}>
       <PrimeReactProvider>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={styles}>
-            <AppInit endpointsUrl={props.getEndpointsUrl}>
-              <CookieConsent>
-                This website uses cookies to enhance the user experience.
-              </CookieConsent>
-              <RouterProvider router={router} />
-            </AppInit>
-          </ThemeProvider>
-        </StyledEngineProvider>
+        <AppInit 
+          endpointsUrl={props.getEndpointsUrl}
+          debug={props.debug}
+        >
+          <CookieConsent>
+            This website uses cookies to enhance the user experience.
+          </CookieConsent>
+          <RouterProvider router={router} />
+        </AppInit>
       </PrimeReactProvider>
     </Provider>
   );

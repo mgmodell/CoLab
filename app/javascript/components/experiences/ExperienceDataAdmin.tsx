@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
-import FormHelperText from "@mui/material/FormHelperText";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
-import { DateTime, Settings } from "luxon";
 const ReactionsList = React.lazy(() => import("./ReactionsList"));
 
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useDispatch } from "react-redux";
 import {
   startTask,
@@ -22,12 +14,25 @@ import {
   addMessage,
   Priorities
 } from "../infrastructure/StatusSlice";
-//import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+
+import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { TabPanel, TabView } from "primereact/tabview";
+import { InputText } from "primereact/inputtext";
+import { InputSwitch } from "primereact/inputswitch";
+import { Calendar } from "primereact/calendar";
+
+interface IExperience {
+  id: string;
+  name: string;
+  course_id: number;
+  lead_time: number;
+  active: boolean;
+  start_date: string;
+  end_date: string;
+};
 
 export default function ExperienceDataAdmin(props) {
   const category = "experience_admin";
@@ -37,7 +42,9 @@ export default function ExperienceDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  //const { t, i18n } = useTranslation('experiences' );
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation(`${category}s`);
+
   const user = useTypedSelector(state => state.profile.user);
   const userLoaded = useTypedSelector(state => {
     return null != state.profile.lastRetrieved;
@@ -56,12 +63,16 @@ export default function ExperienceDataAdmin(props) {
   const [experienceName, setExperienceName] = useState("");
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
+  const now = new Date();
   const [experienceStartDate, setExperienceStartDate] = useState(
-    DateTime.local()
+    now
   );
   //Using this Luxon function for later i18n
   const [experienceEndDate, setExperienceEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
+    () => {
+      now.setMonth( now.getMonth( )  + 3 );
+      return now;
+    }
   );
   const [experienceActive, setExperienceActive] = useState(false);
   const [reactionsUrl, setReactionsUrl] = useState();
@@ -82,7 +93,7 @@ export default function ExperienceDataAdmin(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        const experience = data.experience;
+        const experience : IExperience = data.experience;
         const course = data.course;
 
         setCourseName(course.name);
@@ -93,14 +104,11 @@ export default function ExperienceDataAdmin(props) {
         setExperienceActive(experience.active || false);
         setExperienceLeadTime(experience.lead_time || 3);
 
-        var receivedDate = DateTime.fromISO(experience.start_date).setZone(
-          course.timezone
-        );
+        var receivedDate = new Date( Date.parse( experience.start_date ) );
         setExperienceStartDate(receivedDate);
-        receivedDate = DateTime.fromISO(experience.end_date).setZone(
-          course.timezone
-        );
-        setExperienceEndDate(receivedDate);
+
+        receivedDate = new Date( Date.parse( experience.end_date ) );
+        setExperienceEndDate( new Date( Date.parse( experience.end_date ) ))
 
         dispatch(endTask());
         dispatch(setClean(category));
@@ -139,17 +147,15 @@ export default function ExperienceDataAdmin(props) {
       .then(response => {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const experience = data.experience;
+          const experience : IExperience = data.experience;
           setExperienceId(experience.id);
           setExperienceName(experience.name);
           setExperienceActive(experience.active);
-          var receivedDate = DateTime.fromISO(experience.start_date).setZone(
-            courseTimezone
-          );
+
+          var receivedDate = new Date( Date.parse( experience.start_date ) );
           setExperienceStartDate(receivedDate);
-          receivedDate = DateTime.fromISO(experience.end_date).setZone(
-            courseTimezone
-          );
+
+          receivedDate = new Date( Date.parse( experience.end_date ) );
           setExperienceEndDate(receivedDate);
 
           const course = data.course;
@@ -165,16 +171,15 @@ export default function ExperienceDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
-          dispatch(endTask("saving"));
         }
+        navigate( `../${courseIdParam}/experience/${experienceId}`, { replace: true });
       })
       .catch(error => {
         console.log("error", error);
-        setMessages(data.messages);
-        dispatch(
-          addMessage(data.messages.status, new Date(), Priorities.ERROR)
-        );
-      });
+      })
+      .finally(() => {
+          dispatch(endTask("saving"));
+      }) ;
   };
 
   useEffect(() => {
@@ -194,7 +199,7 @@ export default function ExperienceDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveExperience}>
+    <Button onClick={saveExperience}>
       {null == experienceId ? "Create" : "Save"} Experience
     </Button>
   ) : null;
@@ -206,86 +211,49 @@ export default function ExperienceDataAdmin(props) {
 
   const detailsComponent = (
     <Panel>
-      <TextField
-        label="Experience Name"
-        id="experience-name"
-        value={experienceName}
-        fullWidth={true}
-        onChange={event => setExperienceName(event.target.value)}
-        error={null != messages.name}
-        helperText={messages.name}
-      />
-      <TextField
-        id="experience-lead-time"
-        //label={t('lead_time')}
-        label="Days for instructor prep"
-        value={experienceLeadTime}
-        type="number"
-        onChange={event => setExperienceLeadTime(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
-      <FormControlLabel
-        control={
-          <Switch checked={experienceActive} onChange={() => toggleActive()} />
-        }
-        label="Active"
-      />
-
-      <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <DatePicker
-          disableToolbar
-          variant="inline"
-          autoOk={true}
-          format="MM/dd/yyyy"
-          margin="normal"
-          label="Experience Start Date"
-          value={experienceStartDate}
-          onChange={setExperienceStartDate}
-          error={null != messages.start_date}
-          helperText={messages.start_date}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "experience_start_date"
-            }
-          }}
+      <span className="p-float-label">
+        <InputText
+          id="experience-name"
+          value={experienceName}
+          onChange={event => setExperienceName(event.target.value)}
         />
-      </LocalizationProvider>
-      {null != messages.start_date ? (
-        <FormHelperText error={true}>{messages.start_date}</FormHelperText>
-      ) : null}
-
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <DatePicker
-          disableToolbar
-          variant="inline"
-          autoOk={true}
-          format="MM/dd/yyyy"
-          margin="normal"
-          label="Experience End Date"
-          value={experienceEndDate}
-          onChange={setExperienceEndDate}
-          error={null != messages.end_date}
-          helperText={messages.end_date}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "experience_end_date"
-            }
-          }}
+        <label htmlFor="experience-name">Experience Name</label>
+      </span>
+      <span className="p-float-label">
+        <InputText
+          id='experience-lead-time'
+          value={experienceLeadTime.toString()}
+          onChange={event => setExperienceLeadTime(parseInt( event.target.value ))}
+          type="number"
         />
-      </LocalizationProvider>
-      {null != messages.end_date ? (
-        <FormHelperText error={true}>{messages.end_date}</FormHelperText>
-      ) : null}
+        <label htmlFor="experience-lead-time">Days for instructor prep</label>
+      </span>
+
+      
+      <InputSwitch
+        checked={experienceActive}
+        onChange={() => toggleActive()}
+      />
+      <label htmlFor="experience-active">Active</label>
+
+      <span>All dates shown in {courseTimezone} timezone.</span>
+      <span className="p-float-label">
+      <Calendar
+        id="experience_dates"
+        value={[experienceStartDate, experienceEndDate]}
+        onChange={(event) =>{
+          const changeTo = event.value;
+          if( null !== changeTo && changeTo.length > 1){
+            setExperienceStartDate(changeTo[0]);
+            setExperienceEndDate(changeTo[1]);
+          }
+        } }
+        selectionMode="range"
+        showIcon={true}
+        />
+        <label htmlFor="experience_start_date">Experience Dates</label>
+      </span>
+
       <br />
 
       <br />
@@ -314,5 +282,3 @@ export default function ExperienceDataAdmin(props) {
     </TabView>
   );
 }
-
-ExperienceDataAdmin.propTypes = {};

@@ -19,6 +19,33 @@ type Props = {
   rootPath?: string;
 };
 
+interface IBingoCell {
+  id?: number;
+  row: number;
+  column: number;
+  selected: boolean;
+  concept_id: number;
+  concept?: {
+    id: number;
+    name: string;
+  };
+};
+
+interface IBingoGame {
+  id?: number;
+  topic: string;
+  description?: string;
+  size: number;
+  end_date?: Date;
+};
+
+export interface IBingoBoard {
+  initialised: boolean;
+  bingo_cells: IBingoCell[];
+  iteration: number;
+  bingo_game: IBingoGame;
+};
+
 export default function BingoBuilder(props: Props) {
   const category = "candidate_results";
   const endpoints = useTypedSelector(

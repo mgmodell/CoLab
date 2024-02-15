@@ -79,19 +79,20 @@ export default function CopyActivityButton(props: Props) {
                 })
                 .then(response => {
                   const data = response.data;
+                  console.log( data );
                   props.addMessagesFunc(data.messages);
                   if (Boolean(props.itemUpdateFunc)) {
                     props.itemUpdateFunc();
                   }
                   setNewStartDate(DateTime.local());
                   setCopyData(null);
-                  dispatch(endTask("copying_course"));
                 })
                 .catch(error => {
                   console.log("error:", error);
-
-                  dispatch(endTask("copying"));
-                });
+                })
+                .finally(() => {
+                  dispatch(endTask("copying_course"));
+                })
             }}
           >
             {t("copy_btn_txt")}

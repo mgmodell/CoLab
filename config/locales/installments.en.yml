@@ -14,6 +14,7 @@ en:
       You are not a member of this group and therefore are not permitted
       to submit this check-in.
     comment_prompt: Would you like to add additional comments?
+    comment_input_prompt: Enter your comments
     instructions: >
       Please complete this weeks' assessment for group 
       <em>{{group_name}}</em> (working with you on <em>{{project_name}}</em>)

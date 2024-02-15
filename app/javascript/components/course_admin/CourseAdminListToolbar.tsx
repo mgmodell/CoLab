@@ -3,19 +3,14 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import AddIcon from "@mui/icons-material/Add";
-
 import { iconForType } from "../ActivityLib";
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { IActivityLink } from "./CourseDataAdmin";
 
-interface IActivityLink {
-  name: string;
-  link: string;
-}
 type Props = {
   newActivityLinks: Array<IActivityLink>;
   filtering?: {

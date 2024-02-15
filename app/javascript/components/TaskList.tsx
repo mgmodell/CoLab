@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { DataTable } from "primereact/datatable";
 
-import { DateTime, Settings } from "luxon";
+import { DateTime } from "luxon";
 
 import { iconForType } from "./ActivityLib";
 

@@ -27,8 +27,10 @@ end
 def ack_messages
   find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each do |element|
     element.click
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError
-    # puts e.inspect
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+    true.should( be_false, e.inspect )
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    true.should( be_false, e.inspect )
   end
 end
 
