@@ -10,7 +10,6 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import StandardListToolbar from "./StandardListToolbar";
 
 import { Button } from "primereact/button";
-import { Panel } from "primereact/panel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
