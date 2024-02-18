@@ -13,8 +13,8 @@ a {
   text-decoration: none;
 }
 
-
-a:hover, a:active {
+a:hover,
+a:active {
   color: hsl(246, 56%, 34%);
   text-decoration: underline;
 }
@@ -61,6 +61,35 @@ a:hover, a:active {
   margin-top: 3rem;
 }
 
+.intro-text {
+  /* Learned this here:
+  // https://stackoverflow.com/questions/55127454/how-to-apply-transform-origin-to-svg-element
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events
+  */
+  pointer-events: none;
+}
+
+.intro-nav {
+  /* Nothing here yet */
+}
+
+.intro-nav:hover {
+  cursor: pointer;
+  animation: navPulseActive;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  filter: drop-shadow(0 0 0.5rem white);
+}
+
+@keyframes navPulseActive {
+  0% {
+    filter: drop-shadow(0 0 0.5rem indigo);
+  }
+  100% {
+    filter: drop-shadow(0 0 0.5rem white);
+  }
+}
+
 .intro {
   color: azure;
 }
@@ -70,15 +99,15 @@ a:hover, a:active {
   text-decoration: none;
 }
 
-
-.intro a:hover, a:active {
+.intro a:hover,
+a:active {
   color: hsl(247, 41%, 69%);
   text-decoration: underline;
 }
 
 .p-inputtextarea {
   width: 100%;
-} 
+}
 
 .p-datepicker-trigger {
   background-color: rgb( 63, 81, 181 );

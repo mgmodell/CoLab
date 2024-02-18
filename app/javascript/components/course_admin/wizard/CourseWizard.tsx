@@ -5,29 +5,26 @@ import { DateTime } from "luxon";
 //Redux store stuff
 
 
-import { useTypedSelector } from "../infrastructure/AppReducers";
+import { useTypedSelector } from "../../infrastructure/AppReducers";
 
-const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
+const CourseUsersList = React.lazy(() => import("../CourseUsersList"));
 import { useTranslation } from "react-i18next";
-import { Course } from "./CourseDataAdmin";
+import { ICourse } from "../CourseDataAdmin";
 import { Panel } from "primereact/panel";
 import { Steps } from "primereact/steps";
 import { Col, Container, Row } from "react-grid-system";
-import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
-import { Calendar } from "primereact/calendar";
-import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace";
-import { Dropdown } from "primereact/dropdown";
-import { Skeleton } from "primereact/skeleton";
-import { el } from "@fullcalendar/core/internal-common";
+import CourseNameAndNumberWizard from "./CourseNameAndNumberWizard";
+import CourseDatesWizard from "./CourseDatesWizard";
 
 
 type Props = {
-  course: Course;
-  setCourseFunc: (course: Course) => void;
+  course: ICourse;
+  setCourseFunc: (course: ICourse) => void;
   saveCourseFunc: () => void;
 }
+
+
 
 export default function CourseWizard(props: Props) {
   const category = "course";
@@ -40,10 +37,6 @@ export default function CourseWizard(props: Props) {
     state => state.context.status.endpointsLoaded
   );
 
-  const timezones = useTypedSelector(
-    state => state.context.lookups["timezones"]
-  );
-
   const [instructorIsYou, setInstructorIsYou] = useState(true);
   const navigate = useNavigate();
 
@@ -53,65 +46,10 @@ export default function CourseWizard(props: Props) {
       title: t('wizard.name_number_ttl'),
       saveValid: true,
       element: (
-        <>
-          <Container>
-            <Row>
-              <Col sm={12}>
-                <p>
-                  {t('wizard.name_number_desc')}
-                </p>
-
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={6}>
-                <InputText
-                  placeholder="Course Name"
-                  id="course-name"
-                  value={props.course.name}
-                  onChange={event => {
-                    props.setCourseFunc({ ...props.course, name: event.target.value });
-                  }}
-                />
-              </Col>
-              <Col sm={6}>
-
-                <InputText
-                  placeholder="Course Number"
-                  id="course-number"
-                  value={props.course.number}
-                  onChange={event => {
-                    props.setCourseFunc({ ...props.course, number: event.target.value });
-                  }}
-                />
-              </Col>
-
-            </Row>
-            <Row>
-              <Col sm={12}>
-                <p>
-                  {t('wizard.course_description_desc')}
-                </p>
-
-              </Col>
-              <Col sm={12}>
-                <InputTextarea
-                  placeholder="Course Description"
-                  id="course-description"
-                  value={props.course.description}
-                  onChange={event => {
-                    props.setCourseFunc({ ...props.course, description: event.target.value });
-                  }}
-                  rows={5}
-                  cols={30}
-                  autoResize={true}
-                />
-              </Col>
-
-            </Row>
-
-          </Container>
-        </>
+        <CourseNameAndNumberWizard
+          course={props.course}
+          setCourseFunc={props.setCourseFunc}
+          />
       )
     },
     {
@@ -120,80 +58,10 @@ export default function CourseWizard(props: Props) {
       saveValid: true,
       disabled: isNaN(props.course.id) && (props.course.name === '' || props.course.number === '' ),
       element: (
-        <>
-          <Container>
-            <Row>
-              <Col sm={12}>
-                <p>
-                  {t('wizard.dates_desc')}
-                </p>
-
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12}>
-                <Calendar
-                  id="course_dates"
-                  selectionMode={'range'}
-                  value={[props.course.start_date, props.course.end_date]}
-                  placeholder="Select a Date Range"
-                  showIcon={true}
-                  onChange={event => {
-                    const changeTo = event.value;
-                    if( null === changeTo ){
-                      return;
-                    }else if( 2 === changeTo.length ){
-                    props.setCourseFunc(
-                      {
-                        ...props.course,
-                        start_date: changeTo[0],
-                        end_date: changeTo[1]
-                      }
-                      );
-                    } else {
-                      props.setCourseFunc(
-                        {
-                          ...props.course,
-                          start_date: changeTo[0],
-                          end_date: changeTo[0]
-                        }
-                        );
-                    }
-
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12}>
-                <Inplace closable>
-                  <InplaceDisplay>
-                    <p>
-                      {parse(t('wizard.dates_timezone', { timezone: props.course.timezone }))}
-                    </p>
-                  </InplaceDisplay>
-                  <InplaceContent>
-                    {timezones.length > 0 ? (
-                      <Dropdown id="course_timezone"
-                        value={props.course.timezone}
-                        options={timezones}
-                        onChange={event => {
-                          props.setCourseFunc({ ...props.course, timezone: event.target.value });
-                        }}
-                        optionLabel="name"
-                        optionValue="name"
-                        placeholder="Select a Time Zone"
-                      />
-                    ) : (
-                      <Skeleton className={"mb-2"} height={'2rem'} />
-                    )}
-
-                  </InplaceContent>
-                </Inplace>
-              </Col>
-            </Row>
-          </Container>
-        </>
+        <CourseDatesWizard
+          course={props.course}
+          setCourseFunc={props.setCourseFunc}
+          />
       )
     },
     {

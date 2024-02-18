@@ -437,6 +437,7 @@ export default function WhyCoLab(props: Props) {
         stroke={"midnightblue"}
         fill={index <= curScene ? "#ffff00" : "midnightblue"}
         strokeWidth={1.5}
+        className="intro-nav"
         opacity={1}
         className="intro_nav"
         onClick={event => {
@@ -501,6 +502,7 @@ export default function WhyCoLab(props: Props) {
         cx={rightArrowLoc - NavSpecs.dotRad / 2}
         cy={NavSpecs.centerY}
         r={NavSpecs.dotRad * 1.75}
+        className="intro-nav"
         fill={"midnightblue"}
         stroke={"midnightblue"}
       />

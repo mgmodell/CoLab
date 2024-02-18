@@ -29,7 +29,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
 import ActivityList, { Activity } from "./ActivityList";
-import CourseWizard from "./CourseWizard";
+import CourseWizard from "./wizard/CourseWizard";
 
 interface IActivityLink {
   name: string;
@@ -482,4 +482,4 @@ export default function CourseDataAdmin() {
   );
 }
 
-export { ICourse as Course, IActivityLink }
+export { ICourse, IActivityLink }

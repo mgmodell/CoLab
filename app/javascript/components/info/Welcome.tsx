@@ -359,13 +359,9 @@ export default function Welcome(props: Props) {
          </text>
          <animated.g
             id="title_text"
+            className='intro-text'
             style={{
                x: 0,
-               // Learned this here:
-               // https://stackoverflow.com/questions/55127454/how-to-apply-transform-origin-to-svg-element
-               // https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events
-               pointerEvents: 'none',
-
                strokeWidth: .125,
                fill: 'white',
                stroke: 'black',
@@ -494,6 +490,7 @@ export default function Welcome(props: Props) {
                   cx="124"
                   cy="135"
                   r="82"
+               className="intro-nav"
                   fill="#00ff00"
                   className="intro_nav"
                   onClick={() => {
@@ -505,6 +502,7 @@ export default function Welcome(props: Props) {
                   cx="568"
                   cy="134"
                   r="80"
+               className="intro-nav"
                   fill="#ff2a2a"
                   className="intro_nav"
                   onClick={() => {
@@ -516,6 +514,7 @@ export default function Welcome(props: Props) {
                   cx="790"
                   cy="530"
                   r="85"
+               className="intro-nav"
                   fill="#ffff00"
                   className="intro_nav"
                   onClick={() => {
@@ -527,6 +526,7 @@ export default function Welcome(props: Props) {
                   cx="610"
                   cy="790"
                   r="81"
+               className="intro-nav"
                   fill="#ff6600"
                   className="intro_nav"
                   onClick={() => {
@@ -538,6 +538,7 @@ export default function Welcome(props: Props) {
                   cx="120"
                   cy="710"
                   r="80"
+               className="intro-nav"
                   fill="#ff00ff"
                   className="intro_nav"
                   onClick={() =>
@@ -548,6 +549,7 @@ export default function Welcome(props: Props) {
          </animated.g>
          <animated.g
             id='tooltips'
+            className='intro-text'
             style={{
                fontWeight: 'bold',
                fontSize: '11',
