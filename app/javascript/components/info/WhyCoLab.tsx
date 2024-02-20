@@ -443,7 +443,6 @@ export default function WhyCoLab(props: Props) {
         opacity={1}
         onClick={event => {
           setScene(index);
-          navigate(`why#${index}`);
         }}
       />
     );
@@ -481,10 +480,24 @@ export default function WhyCoLab(props: Props) {
   }, [curScene]);
 
   useEffect(() => {
+    const handleBrowserNav = (e: PopStateEvent) => {
+      const scenePath = location.pathname.split("/");
+
+      if (scenePath[scenePath.length - 1] === "why" && location.hash.length > 0 ) {
+        const targetScene =  location.hash.length > 1 ? parseInt(location.hash.substring(1)) : 0;
+        setScene( targetScene );
+      }
+    };
+    window.addEventListener('popstate', handleBrowserNav);
+
     if (location.hash.length < 1) {
       setScene(0);
     } else {
       setScene(parseInt(location.hash.substring(1)));
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleBrowserNav);
     }
   }, []);
 

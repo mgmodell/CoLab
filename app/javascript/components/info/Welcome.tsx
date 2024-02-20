@@ -284,9 +284,17 @@ export default function Welcome(props: Props) {
 
    }
 
-
-
    useEffect(() => {
+      const handleBrowserNav = (e: PopStateEvent) => {
+         const winLoc = window.location;
+         const scenePath = winLoc.pathname.split('/').filter((s: string) => s.length > 0)  ;
+
+         if (scenePath.length < 3) {
+            animateToScene(scenePath[scenePath.length - 1]);
+         }
+      }
+      window.addEventListener('popstate', handleBrowserNav);
+
       const sceneName = params['*'];
 
       animateToScene(sceneName);
@@ -298,6 +306,9 @@ export default function Welcome(props: Props) {
             from: location.state?.from,
          }
       });
+      return () => {
+         window.removeEventListener('popstate', handleBrowserNav);
+      }
    }, [])
 
 
