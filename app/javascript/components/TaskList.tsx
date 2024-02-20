@@ -71,9 +71,8 @@ export default function TaskList(props: Props) {
     t(`list.${OPT_COLS.CONSENT_LINK}`)
   ];
   const [visibleColumns, setVisibleColumns] = React.useState([
-    t(`list.${OPT_COLS.GROUP}`),
     t(`list.${OPT_COLS.STATUS}`),
-
+    t(`list.${OPT_COLS.NEXT_DATE}`),
   ]);
 
 
@@ -114,8 +113,8 @@ export default function TaskList(props: Props) {
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField={OPT_COLS.START_DATE}
-        sortOrder={-1}
+        sortField={OPT_COLS.NEXT_DATE}
+        sortOrder={1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
@@ -133,7 +132,6 @@ export default function TaskList(props: Props) {
           header={t("list.type")}
           field={'type'}
           sortable
-          filter
           key={'type'}
           body={(params) => {
             return iconForType(params.type)
@@ -171,7 +169,6 @@ export default function TaskList(props: Props) {
               header={t(`list.${(OPT_COLS.STATUS)}`)}
               field={'status'}
               sortable
-              filter
               key={'status'}
               body={(params) => {
                 let output = 'No status'
@@ -186,7 +183,7 @@ export default function TaskList(props: Props) {
                   case 'assignment':
                     output = `${params.status} submitted`;
                   default:
-                    output = `${params.status}%`;
+                    output = `${params.status}`;
                 }
                 return output;
               }}
@@ -199,7 +196,6 @@ export default function TaskList(props: Props) {
               header={t(`list.${OPT_COLS.START_DATE}`)}
               field={OPT_COLS.START_DATE}
               sortable
-              filter
               key={OPT_COLS.START_DATE}
               body={(params) => {
                 return <span>{params.start_date.toLocaleString(DateTime.DATETIME_MED)}</span>;
@@ -214,7 +210,6 @@ export default function TaskList(props: Props) {
               header={t(`list.${OPT_COLS.NEXT_DATE}`)}
               field={OPT_COLS.NEXT_DATE}
               sortable
-              filter
               key={OPT_COLS.NEXT_DATE}
               body={(params) => {
                 return <span>{params.next_date.toLocaleString(DateTime.DATETIME_MED)}</span>;
@@ -228,7 +223,6 @@ export default function TaskList(props: Props) {
               header={t(`list.${OPT_COLS.CONSENT_LINK}`)}
               field={'consent_link'}
               sortable
-              filter
               key={'consent_link'}
               body={(params) => {
                 const consent = null === params.consent_link ? (
