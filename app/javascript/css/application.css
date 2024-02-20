@@ -6,6 +6,7 @@ body {
   color: hsl(35, 50%, 20%);
   /* text-shadow: 0 1px 1px white; */
   font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
+  width: 100%;
 }
 
 a {
@@ -116,4 +117,12 @@ a:active {
 .intro_nav:hover {
   filter: brightness(150%);
   cursor: pointer;
+}
+
+.p-datatype-date {
+  max-width: 100%;
+}
+
+.content-table-data {
+  text-wrap: wrap;
 }

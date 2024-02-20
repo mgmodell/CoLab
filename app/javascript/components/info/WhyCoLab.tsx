@@ -9,6 +9,7 @@ import GroupDomination from "../svgs/GroupDomination";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import { Container, Row, Col } from "react-grid-system";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   height: number;
@@ -16,6 +17,9 @@ type Props = {
 };
 
 export default function WhyCoLab(props: Props) {
+  const category = 'intro';
+  const { t } = useTranslation( category);
+
   const viewBox = [0, 0, 400, 225].join(" ");
 
   const location = useLocation();
@@ -38,13 +42,11 @@ export default function WhyCoLab(props: Props) {
   }));
 
   const titles = [
-    <p >We dream of teamwork that looks like this</p>,
-    <p >But we often learn that&hellip;</p>,
-    <p >It feels like an inequitable experience</p>,
-    <p >And negative experiences take many shapes</p>,
-    <p >
-      Or possibly the results just feel cookie-cutter and boring?
-    </p>,
+    <p >{t('why_slides.captions.one')}</p>,
+    <p >{t('why_slides.captions.two')}</p>,
+    <p >{t('why_slides.captions.three')}</p>,
+    <p >{t('why_slides.captions.four')}</p>,
+    <p >{t('why_slides.captions.five')}</p>,
     <Container
       style={{
         color: "azure",
@@ -442,7 +444,6 @@ export default function WhyCoLab(props: Props) {
         className="intro_nav"
         onClick={event => {
           setScene(index);
-          navigate(`why#${index}`);
         }}
       />
     );
@@ -480,10 +481,24 @@ export default function WhyCoLab(props: Props) {
   }, [curScene]);
 
   useEffect(() => {
+    const handleBrowserNav = (e: PopStateEvent) => {
+      const scenePath = location.pathname.split("/");
+
+      if (scenePath[scenePath.length - 1] === "why" && location.hash.length > 0 ) {
+        const targetScene =  location.hash.length > 1 ? parseInt(location.hash.substring(1)) : 0;
+        setScene( targetScene );
+      }
+    };
+    window.addEventListener('popstate', handleBrowserNav);
+
     if (location.hash.length < 1) {
       setScene(0);
     } else {
       setScene(parseInt(location.hash.substring(1)));
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleBrowserNav);
     }
   }, []);
 

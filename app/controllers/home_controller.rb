@@ -45,7 +45,7 @@ class HomeController < ApplicationController
         supportAddress: 'Support@CoLab.online',
         logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
-        moreInfoUrl: 'welcome',
+        moreInfoUrl: '/',
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
         taskListUrl: task_list_path,

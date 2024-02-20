@@ -141,6 +141,7 @@ export default function CourseList(props) {
           field="name"
           sortable
           filter
+          className="content-table-data"
           key={"name"}
         />
         <Column

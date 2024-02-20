@@ -215,7 +215,7 @@ export default function RubricDataAdmin(props) {
           const rubric = data.rubric;
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
-            dispatch( addMessage(t('new_version_success'), new Date(), Priorities.INFO) );
+            dispatch(addMessage(t('new_version_success'), new Date(), Priorities.INFO));
             navigate(`../rubrics/${String(rubric.id)}`);
           } else {
             setRubricId(rubric.id);
@@ -314,7 +314,7 @@ export default function RubricDataAdmin(props) {
   };
 
   const detailsComponent = endpointStatus ? (
-    <Panel header={parseInt( rubricId ) > 0 ? t('edit.title') : t('new.title')}>
+    <Panel header={parseInt(rubricId) > 0 ? t('edit.title') : t('new.title')}>
       <span className="p-float-label">
         <InputText
           itemID="rubric-name"
@@ -374,6 +374,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.description")}
               field="description"
               key="description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -388,6 +389,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l1_description")}
               field="l1_description"
               key="l1_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -395,6 +397,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l2_description")}
               field="l2_description"
               key="l2_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -402,6 +405,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l3_description")}
               field="l3_description"
               key="l3_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -409,6 +413,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l4_description")}
               field="l4_description"
               key="l4_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -416,6 +421,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l5_description")}
               field="l5_description"
               key="l5_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
