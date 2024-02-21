@@ -130,6 +130,7 @@ export default function WhyCoLab(props: Props) {
     }
   ];
 
+  //Normally function group image
   const NF_SVG = [
     {
       x: 185,
@@ -175,6 +176,7 @@ export default function WhyCoLab(props: Props) {
     }
   ];
 
+  // Social Loafing Image
   const SL_SVG = [
     {
       x: 265,
@@ -219,6 +221,7 @@ export default function WhyCoLab(props: Props) {
       opacity: 0
     }
   ];
+  // Leave it to George image
   const LITG_SVG = [
     {
       x: 255,
@@ -263,6 +266,7 @@ export default function WhyCoLab(props: Props) {
       opacity: 0
     }
   ];
+  // Group domination image
   const GD_SVG = [
     {
       x: 155,
@@ -307,6 +311,7 @@ export default function WhyCoLab(props: Props) {
       opacity: 0
     }
   ];
+  //Division of Labor image
   const DL_SVG = [
     {
       x: 155,
@@ -352,6 +357,7 @@ export default function WhyCoLab(props: Props) {
     }
   ];
 
+  //Teacher and Student image
   const TS_SVG = [
     {
       x: 190,
