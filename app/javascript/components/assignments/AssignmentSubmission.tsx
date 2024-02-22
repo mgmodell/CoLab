@@ -16,7 +16,7 @@ import { Editor } from "primereact/editor";
 import { InputText } from "primereact/inputtext";
 
 import SubmissionList from "./SubmissionList";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
 import { Col, Container, Row } from "react-grid-system";
 
 type Props = {

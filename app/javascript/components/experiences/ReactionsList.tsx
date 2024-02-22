@@ -5,7 +5,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 
 import { OverlayPanel } from "primereact/overlaypanel";
 import { DataTable } from "primereact/datatable";

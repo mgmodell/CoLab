@@ -5,7 +5,7 @@ import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
 
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Toolbar } from "primereact/toolbar";
 import { Skeleton } from "primereact/skeleton";
 

@@ -18,7 +18,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";

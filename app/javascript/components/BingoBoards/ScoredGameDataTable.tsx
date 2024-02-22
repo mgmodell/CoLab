@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 
 enum OPT_COLS {
   TERM = "term",

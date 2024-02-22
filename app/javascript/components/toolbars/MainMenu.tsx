@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
-import { useTypedSelector } from "./infrastructure/AppReducers";
-import { signOut } from "./infrastructure/ContextSlice";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import { signOut } from "../infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
-import DiversityCheck from "./DiversityCheck";
-import Logo from "./Logo";
+import DiversityCheck from "../DiversityCheck";
+import Logo from "../Logo";
 
 type Props = {
   diversityScoreFor: string;

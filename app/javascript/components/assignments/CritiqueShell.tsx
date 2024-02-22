@@ -14,7 +14,7 @@ import { ISubmissionCondensed } from "./AssignmentViewer";
 
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
