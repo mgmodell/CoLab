@@ -31,6 +31,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 import { Container, Row, Col } from "react-grid-system";
+import { AutoComplete } from "primereact/autocomplete";
 
 type Props = {
   // profileId: number;
@@ -114,9 +115,17 @@ export default function ProfileDataAdmin(props: Props) {
 
   const [curTab, setCurTab] = useState(0);
   const [dirty, setDirty] = useState(false);
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
   const [curPanel, setCurPanel] = useState([0]);
+
+  const setMessages = msgs => {
+    Object.keys(msgs).forEach(key => {
+      if ("main" === key) {
+        dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
+      } else {
+        dispatch(addMessage(msgs[key], new Date(), Priorities.WARNING));
+      }
+    });
+  };
 
   const setProfileFirstName = first_name => {
     const temp = {};
@@ -298,11 +307,17 @@ export default function ProfileDataAdmin(props: Props) {
 
   useEffect(() => getStates(user.country), [user.country]);
 
+  //Support for AutoComplete
+  const [localProfileLanguage, setLocalProfileLanguage] = useState(languages.find(lang => lang.id === user.language_id).name );
+  const [suggestedLocalProfileLanguages, setSuggestedLocalProfileLanguages] = useState(languages);
+  const [localHomeLanguage, setLocalHomeLanguage] = useState(languages.find(lang => lang.id === user.primary_language_id).name );
+  const [suggestedLocalHomeLanguages, setSuggestedLocalHomeLanguages] = useState(languages);
+
   const saveButton = (
     <Button onClick={saveProfile} disabled={!dirty}>
       {null == user.id ? "Create" : "Save"} Profile
     </Button>
-  );
+  )
 
   const detailsComponent = lookupStatus ? (
     <Panel>
@@ -383,16 +398,31 @@ export default function ProfileDataAdmin(props: Props) {
             </Col>
             <Col md={6} xs={12}>
               <span className="p-float-label">
-                <Dropdown
+                <AutoComplete
                   id='profile_language'
                   inputId="profile_language"
                   itemID="profile_language"
                   name="profile_language"
-                  value={user.language_id || 0}
-                  options={languages}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileLanguage(Number(event.value))}
+                  value={localProfileLanguage}
+                  suggestions={suggestedLocalProfileLanguages}
+                  field="name"
+                  forceSelection
+                  dropdown
+                  completeMethod={event => {
+                    const query = event.query.toLocaleLowerCase();
+                    setSuggestedLocalProfileLanguages(
+                      languages.filter(lang => lang.name.toLowerCase().includes(query))
+                    );
+                  }}
+                  onChange={event => {
+                    if( typeof event.value === 'string' ) {
+                      setLocalProfileLanguage( event.value );
+                    } 
+                  }}
+                  onSelect={event => {
+                    setLocalProfileLanguage( event.value.name );
+                    setProfileLanguage( event.value.id );
+                  }}
                   placeholder={t("display_settings.language")}
                 />
                 <label htmlFor="profile_language">{t("display_settings.language")}</label>
@@ -537,16 +567,31 @@ export default function ProfileDataAdmin(props: Props) {
             <Row>
             <Col xs={12} >
               <span className="p-float-label">
-                <Dropdown
-                  id='profile_language'
-                  inputId="profile_language"
-                  itemID="profile_language"
-                  name="profile_language"
-                  value={user.primary_language_id || 0}
-                  options={languages}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileHomeLanguage(Number(event.value))}
+                <AutoComplete
+                  id='profile_home_language'
+                  inputId="profile_home_language"
+                  itemID="profile_home_language"
+                  name="profile_home_language"
+                  value={localHomeLanguage}
+                  suggestions={suggestedLocalHomeLanguages}
+                  field="name"
+                  forceSelection
+                  dropdown
+                  completeMethod={event => {
+                    const query = event.query.toLocaleLowerCase();
+                    setSuggestedLocalHomeLanguages(
+                      languages.filter(lang => lang.name.toLowerCase().includes(query))
+                    );
+                  }}
+                  onChange={event => {
+                    if( typeof event.value === 'string' ) {
+                      setLocalHomeLanguage( event.value );
+                    } 
+                  }}
+                  onSelect={event => {
+                    setLocalHomeLanguage( event.value.name );
+                    setProfileHomeLanguage( event.value.id );
+                  }}
                   placeholder={t("demographics.home_language")}
                 />
                 <label htmlFor="profile_language">{t("demographics.home_language")}</label>
