@@ -310,7 +310,11 @@ export default function ProfileDataAdmin(props: Props) {
   //Support for AutoComplete
   const [localProfileLanguage, setLocalProfileLanguage] = useState(languages.find(lang => lang.id === user.language_id).name );
   const [suggestedLocalProfileLanguages, setSuggestedLocalProfileLanguages] = useState(languages);
-  const [localHomeLanguage, setLocalHomeLanguage] = useState(languages.find(lang => lang.id === user.primary_language_id).name );
+
+  const [localHomeLanguage, setLocalHomeLanguage] = useState(
+    null ===  user.primary_language_id ? languages[0] :
+    languages.find(lang => lang.id === user.primary_language_id).name 
+    );
   const [suggestedLocalHomeLanguages, setSuggestedLocalHomeLanguages] = useState(languages);
 
   const saveButton = (
