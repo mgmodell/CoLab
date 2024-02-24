@@ -410,7 +410,7 @@ export default function ProfileDataAdmin(props: Props) {
                   value={localProfileLanguage}
                   suggestions={suggestedLocalProfileLanguages}
                   field="name"
-                  forceSelection
+                  forceSelection={true}
                   dropdown
                   completeMethod={event => {
                     const query = event.query.toLocaleLowerCase();
@@ -579,7 +579,7 @@ export default function ProfileDataAdmin(props: Props) {
                   value={localHomeLanguage}
                   suggestions={suggestedLocalHomeLanguages}
                   field="name"
-                  forceSelection
+                  forceSelection={true}
                   dropdown
                   completeMethod={event => {
                     const query = event.query.toLocaleLowerCase();
@@ -598,7 +598,7 @@ export default function ProfileDataAdmin(props: Props) {
                   }}
                   placeholder={t("demographics.home_language")}
                 />
-                <label htmlFor="profile_language">{t("demographics.home_language")}</label>
+                <label htmlFor="profile_home_language">{t("demographics.home_language")}</label>
               </span>
             </Col>
             <Col xs={12} sm={6}>
