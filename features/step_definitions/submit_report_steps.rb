@@ -45,6 +45,7 @@ Then(/^the user should see an error indicating that the installment request expi
 end
 
 When(/^user clicks the link to the project$/) do
+  step 'the user enables the "Group Name" table view option'
   find( :xpath, "//tbody/tr/td[text()='#{@project.group_for_user(@user).name}']" ).click
 
   wait_for_render
