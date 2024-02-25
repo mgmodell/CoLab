@@ -57,10 +57,12 @@ When 'the user is remembered group member {int}' do |index|
 end
 
 Then 'the user remembers group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance = page.find(:xpath, "//span[@id='performance']").text
 end
 
 Then 'the users performance matches original group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance.should eq page.find(:xpath, "//span[@id='performance']").text
 end
 
