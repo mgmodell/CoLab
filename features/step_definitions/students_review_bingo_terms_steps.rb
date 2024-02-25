@@ -17,7 +17,7 @@ Then(/^the user clicks the link to the concept list$/) do
   # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
   # props_string = x['data-react-props']
-  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Concepts found by class')]" ).click
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Bingo game builder')]" ).click
 
   # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
