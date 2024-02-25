@@ -133,8 +133,9 @@ Then(/^the assessment should show up as completed$/) do
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
+  step 'the user enables the "Group Name" table view option'
   page.should have_xpath("//tbody/tr/td[text()='#{group_name}']"),
-              'No link to assessment'
+              "No link to assessment for #{group_name} found"
   page.should have_xpath("//tbody/tr/td[text()='Completed']"),
               "No 'completed' message"
 end
