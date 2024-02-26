@@ -27,13 +27,21 @@ export default function WhyCoLab(props: Props) {
   const [curScene, setCurScene] = useState(0);
 
   const NavSpecs = {
-    navDots: 6,
+    navDots: 7,
     dotSpacing: 20,
     dotRad: 4,
     centerY: 215
   };
 
-  const [titleSpring, titleApi] = useSpring(() => ({
+  const [title1Spring, title1Api] = useSpring(() => ({
+    x: 10,
+    y: 100,
+    width: 175,
+    height: 200,
+    opacity: 1
+  }));
+  
+  const [title2Spring, title2Api] = useSpring(() => ({
     x: 10,
     y: 100,
     width: 175,
@@ -41,12 +49,13 @@ export default function WhyCoLab(props: Props) {
     opacity: 1
   }));
 
-  const titles = [
-    <p >{t('why_slides.captions.one')}</p>,
-    <p >{t('why_slides.captions.two')}</p>,
-    <p >{t('why_slides.captions.three')}</p>,
-    <p >{t('why_slides.captions.four')}</p>,
-    <p >{t('why_slides.captions.five')}</p>,
+  const titles_one = [
+    <p >{t('why_slides.captions.one_one')}</p>,
+    <p >{t('why_slides.captions.two_one')}</p>,
+    <p >{t('why_slides.captions.three_one')}</p>,
+    <p >{t('why_slides.captions.four_one')}</p>,
+    <p >{t('why_slides.captions.five_one')}</p>,
+    <p >{t('why_slides.captions.six_one')}</p>,
     <Container
       style={{
         color: "azure",
@@ -55,14 +64,14 @@ export default function WhyCoLab(props: Props) {
     >
       <Row>
         <Col sm={8}>
-          <p>CoLab.online can help!</p>
+          <p>{t('why_slides.captions.seven_one.title')}</p>
           <ul
             style={{
               fontSize: "10px"
             }}
           >
-            <li>Weekly self- and peer-assessment check-ins</li>
-            <li>Growth focused (not judgment)</li>
+            <li>{t('why_slides.captions.seven_one.check-ins')}</li>
+            <li>{t('why_slides.captions.seven_one.growth')}</li>
             <li>Visualizations</li>
             <li>Diversity-focused group composition</li>
             <li>Gamified collaborative reading</li>
@@ -84,11 +93,65 @@ export default function WhyCoLab(props: Props) {
       </Row>
     </Container>
   ];
+  const titles_two = [
+    <p >{t('why_slides.captions.one_two')}</p>,
+    <p >{t('why_slides.captions.two_two')}</p>,
+    <p >{t('why_slides.captions.three_two')}</p>,
+    <p >{t('why_slides.captions.four_two')}</p>,
+    <p >{t('why_slides.captions.five_two')}</p>,
+    <p >{t('why_slides.captions.six_two')}</p>,
+    <p >{t('why_slides.captions.seven_two')}</p>,
+  ];
 
-  const TXT = [
+  const TXT_1 = [
     {
       x: 10,
       y: 50,
+      width: 175,
+      height: 200,
+      opacity: 1
+    },
+    {
+      x: 10,
+      y: 100,
+      width: 175,
+      height: 125,
+      opacity: 1
+    },
+    {
+      x: 10,
+      y: 120,
+      width: 175,
+      height: 125,
+      opacity: 1
+    },
+    {
+      x: 5,
+      y: 160,
+      width: 350,
+      height: 50,
+      opacity: 1
+    },
+    {
+      x: 5,
+      y: 160,
+      width: 350,
+      height: 50,
+      opacity: 1
+    },
+    {
+      x: 5,
+      y: 10,
+      width: 350,
+      height: 210,
+      opacity: 1
+    }
+  ];
+
+  const TXT_TWO = [
+    {
+      x: 10,
+      y: 30,
       width: 175,
       height: 200,
       opacity: 1
@@ -447,7 +510,6 @@ export default function WhyCoLab(props: Props) {
         strokeWidth={1.5}
         className="intro-nav"
         opacity={1}
-        className="intro_nav"
         onClick={event => {
           setScene(index);
         }}
@@ -463,8 +525,11 @@ export default function WhyCoLab(props: Props) {
   };
 
   useEffect(() => {
-    titleApi.start({
-      to: TXT[curScene]
+    title1Api.start({
+      to: TXT_1[curScene]
+    });
+    title2Api.start({
+      to: TXT_TWO[curScene]
     });
     normallyFunctioningApi.start({
       to: NF_SVG[curScene]
@@ -627,13 +692,23 @@ export default function WhyCoLab(props: Props) {
       </animated.svg>
 
       <EmbeddedHTMLInSVG
-        width={titleSpring.width}
-        height={titleSpring.height}
-        x={titleSpring.x}
-        y={titleSpring.y}
+        width={title1Spring.width}
+        height={title1Spring.height}
+        x={title1Spring.x}
+        y={title1Spring.y}
       >
         <div className="intro">
-          {titles[curScene]}
+          {titles_one[curScene]}
+        </div>
+      </EmbeddedHTMLInSVG>
+      <EmbeddedHTMLInSVG
+        width={title2Spring.width}
+        height={title2Spring.height}
+        x={title2Spring.x}
+        y={title2Spring.y}
+      >
+        <div className="intro">
+          {titles_two[curScene]}
         </div>
       </EmbeddedHTMLInSVG>
       {curNav}
