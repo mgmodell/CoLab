@@ -196,8 +196,8 @@ export default function WhyCoLab(props: Props) {
   //Normally function group image
   const NF_SVG = [
     {
-      x: 185,
-      y: 20,
+      x: 200,
+      y: 150,
       height: 200,
       width: 200,
       opacity: 1
@@ -207,35 +207,35 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
+      opacity: 0
+    },
+    {
+      x: 265,
+      y: 38,
+      height: 57,
+      width: 57,
+      opacity: 0
+    },
+    {
+      x: 265,
+      y: 38,
+      height: 57,
+      width: 57,
+      opacity: 0
+    },
+    {
+      x: 265,
+      y: 38,
+      height: 57,
+      width: 57,
+      opacity: 0
+    },
+    {
+      x: 185,
+      y: 38,
+      height: 57,
+      width: 57,
       opacity: 1
-    },
-    {
-      x: 265,
-      y: 38,
-      height: 57,
-      width: 57,
-      opacity: 0
-    },
-    {
-      x: 265,
-      y: 38,
-      height: 57,
-      width: 57,
-      opacity: 0
-    },
-    {
-      x: 265,
-      y: 38,
-      height: 57,
-      width: 57,
-      opacity: 0
-    },
-    {
-      x: 265,
-      y: 38,
-      height: 57,
-      width: 57,
-      opacity: 0
     }
   ];
 
@@ -260,21 +260,21 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 1
+      opacity: 0
     },
     {
-      x: 10,
-      y: 19,
+      x: 200,
+      y: 150,
       height: 125,
       width: 125,
       opacity: 1
     },
     {
-      x: 10,
-      y: 19,
+      x: 185,
+      y: 38,
       height: 150,
       width: 150,
-      opacity: 0
+      opacity: 1
     },
     {
       x: 10,
@@ -301,18 +301,18 @@ export default function WhyCoLab(props: Props) {
       opacity: 0
     },
     {
-      x: 255,
-      y: 25,
+      x: 200,
+      y: 150,
       height: 150,
       width: 150,
-      opacity: 0
+      opacity: 1
     },
     {
       x: 255,
       y: 25,
       height: 120,
       width: 120,
-      opacity: 1
+      opacity: 0
     },
     {
       x: 255,
@@ -339,11 +339,11 @@ export default function WhyCoLab(props: Props) {
       opacity: 0
     },
     {
-      x: 255,
-      y: 25,
+      x: 200,
+      y: 150,
       height: 150,
       width: 150,
-      opacity: 0
+      opacity: 1
     },
     {
       x: 255,
@@ -357,7 +357,7 @@ export default function WhyCoLab(props: Props) {
       y: 35,
       height: 150,
       width: 150,
-      opacity: 1
+      opacity: 0
     },
     {
       x: 125,
@@ -409,7 +409,7 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 175,
       width: 175,
-      opacity: 1
+      opacity: 0
     },
     {
       x: 255,
@@ -434,35 +434,35 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
+      opacity: 0
+    },
+    {
+      x: 190,
+      y: 10,
+      height: 210,
+      width: 210,
+      opacity: 0
+    },
+    {
+      x: 190,
+      y: 10,
+      height: 210,
+      width: 210,
+      opacity: 0
+    },
+    {
+      x: 200,
+      y: 150,
+      height: 210,
+      width: 210,
       opacity: 1
     },
     {
-      x: 190,
-      y: 10,
+      x: 200,
+      y: 150,
       height: 210,
       width: 210,
       opacity: 1
-    },
-    {
-      x: 190,
-      y: 10,
-      height: 210,
-      width: 210,
-      opacity: 0
-    },
-    {
-      x: 190,
-      y: 10,
-      height: 210,
-      width: 210,
-      opacity: 0
-    },
-    {
-      x: 190,
-      y: 10,
-      height: 210,
-      width: 210,
-      opacity: 0
     }
   ];
 
