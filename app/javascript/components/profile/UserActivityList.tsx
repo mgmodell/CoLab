@@ -8,7 +8,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Panel } from "primereact/panel";

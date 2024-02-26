@@ -17,7 +17,7 @@ Then(/^the user clicks the link to the concept list$/) do
   # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
   # props_string = x['data-react-props']
-  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Concepts found by class')]" ).click
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Bingo game builder')]" ).click
 
   # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
@@ -57,10 +57,12 @@ When 'the user is remembered group member {int}' do |index|
 end
 
 Then 'the user remembers group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance = page.find(:xpath, "//span[@id='performance']").text
 end
 
 Then 'the users performance matches original group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance.should eq page.find(:xpath, "//span[@id='performance']").text
 end
 

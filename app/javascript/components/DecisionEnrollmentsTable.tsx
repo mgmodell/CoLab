@@ -12,7 +12,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "./toolbars/StandardListToolbar";
 
 type Props = {
   init_url: string;

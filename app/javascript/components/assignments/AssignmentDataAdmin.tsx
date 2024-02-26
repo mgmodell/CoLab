@@ -18,7 +18,7 @@ import { Checkbox } from "primereact/checkbox";
 
 import { useTranslation } from "react-i18next";
 
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";

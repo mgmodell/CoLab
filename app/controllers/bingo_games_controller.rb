@@ -81,7 +81,9 @@ class BingoGamesController < ApplicationController
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
-        feedback_id: c.candidate_feedback_id }
+        feedback_id: c.candidate_feedback_id,
+        credit: c.candidate_feedback.credit
+       }
     end
 
     render json: {

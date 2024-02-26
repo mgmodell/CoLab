@@ -17,7 +17,7 @@ import "primereact/resources/primereact.min.css"; // core css
 import "primeicons/primeicons.css"; //Prime icons
 
 import { Skeleton } from "primereact/skeleton";
-import AppHeader from "./AppHeader";
+import AppHeader from "./toolbars/AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";

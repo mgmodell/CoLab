@@ -1,9 +1,8 @@
-import i18n from "./i18n";
 import axios from "axios";
-import { startTask, endTask, Priorities } from "./StatusSlice";
+import { startTask, endTask } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
-import { I } from "@fullcalendar/core/internal-common";
+import i18n from "i18next";
 
 interface IUser {
   id: number;
@@ -122,11 +121,13 @@ export const setLocalLanguage = createAsyncThunk(
     const language = getState().context.lookups.languages.find(
       lang => lang.id === language_id
     );
+
+
     i18n.loadLanguages(language.code);
     i18n.changeLanguage(language.code);
     const user = Object.assign({}, getState().profile.user);
     user.language_id = language_id;
-    dispatch(setProfile(user));
+    return dispatch(setProfile(user));
   }
 );
 

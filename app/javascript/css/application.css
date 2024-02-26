@@ -41,7 +41,8 @@ a:active {
 .mainNav .p-toolbar-group-center {
   display: block;
   align-items: top;
-  width: 80%;
+  width: 70%;
+  word-wrap: normal;
 }
 .mainNav .p-toolbar-group-center .quotes {
   font-size: small;

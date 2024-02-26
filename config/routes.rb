@@ -196,7 +196,7 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :json }
     post 'diversity_score_for' => 'home#check_diversity_score',
          as: :check_diversity_score
-    get 'locales/:ns' => 'locales#get_resources', as: :i18n,
+    get 'locales/:lng/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
     get 'endpoints' => 'home#endpoints', as: :endpoints,
         constraints: ->(req) { req.format == :json }

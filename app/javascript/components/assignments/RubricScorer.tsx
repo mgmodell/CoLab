@@ -21,7 +21,7 @@ import { Slider } from "primereact/slider";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber, InputNumberChangeEvent } from "primereact/inputnumber";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
 
 type Props = {
   submission: ISubmissionData;

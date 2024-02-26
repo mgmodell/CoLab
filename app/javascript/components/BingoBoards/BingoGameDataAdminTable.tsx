@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Panel } from "primereact/panel";
 

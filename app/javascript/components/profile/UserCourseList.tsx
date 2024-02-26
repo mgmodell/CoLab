@@ -8,7 +8,7 @@ import axios from "axios";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import BingoDataRepresentation from "../BingoBoards/BingoDataRepresentation";
 import { useTranslation } from "react-i18next";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { Panel } from "primereact/panel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
