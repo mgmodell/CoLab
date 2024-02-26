@@ -15,25 +15,36 @@ en:
         instructor: CoLab features for instructors
     why_slides:
         captions:
-            one: >
+            one_one: >
                 Collaboration can look different for 
                 everyone. But have you ever experienced this in group projects?
-            two: >  
+            one_two: ''
+            two_one: >  
                 Group Domination: One person takes over and 
                 thinks everyone else's opinion is not good enough
-            three: > 
-                Have you ever been a George?
+            two_two: ''
+            three_one: Have you ever been a George?
+            three_two: > 
                 Leave it to George: One person does all the work and 
                 everyone else watches
-            four: >
-                Or... does this sound familiar? 
+            four_one: Or... does this sound familiar? 
+            four_two: >
                 Social loafers: One or more students slack off while 
                 everyone else does the work 
-            five: >
+            five_one: >
                 What would you do? Don't wait till the end of the semester to tell your professor! 
                 What if there was a way for your professor to help before things got out of hand? 
-                Now there is! 
-                CoLab can help! 
+            five_two: ''
+            six_one: Now there is! 
+            six_two: ''
+            seven_one: 
+                title: CoLab.online can help!
+                check-ins: Weekly self- and peer-assessment check-ins
+                growth: Growth focused (not judgment)
+            seven_two:
+                title: Are you a...
+                student: Student?
+                instructor: Instructor?
                 
     images:
         student_concern: Student talks to teacher
