@@ -66,9 +66,9 @@ class CandidateList < ApplicationRecord
 
   def status
     if bingo_game.reviewed
-      "Score: #{performance}"
+      performance
     else
-      "Progress: #{percent_completed}"
+      percent_completed
     end
   end
 

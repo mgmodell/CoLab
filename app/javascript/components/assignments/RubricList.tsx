@@ -12,7 +12,7 @@ import {
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";

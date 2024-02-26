@@ -45,7 +45,7 @@ class HomeController < ApplicationController
         supportAddress: 'Support@CoLab.online',
         logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
-        moreInfoUrl: 'welcome',
+        moreInfoUrl: '/',
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
         taskListUrl: task_list_path,
@@ -387,7 +387,7 @@ class HomeController < ApplicationController
                      end,
         other: case activity.type
                when 'Terms List'
-                 activity.candidate_list_for_user(current_user).get_concepts.size
+                 candidates_list = activity.candidate_list_for_user(current_user).status
                when 'Project'
                  activity.get_performance(current_user)
                when 'Group Experience'
@@ -459,7 +459,7 @@ class HomeController < ApplicationController
 
   # Data transport class
   class Event_
-    attr_accessor :id, :name, :task_link, :task_name_post, :type, :status, :group_name, :course_name, :start_time,
+    attr_accessor :id, :name, :task_link, :task_name_post, :type, :status, :group_name, :course_name, :start_date,
                   :close_date, :instructor_task, :next_date, :link
   end
 
@@ -479,7 +479,7 @@ class HomeController < ApplicationController
     e.status = t :not_started
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
-    e.start_time = 1.day.ago
+    e.start_date = 1.day.ago
     e.close_date = 3.days.from_now.end_of_day
     e.next_date = 1.day.ago
     e.link = "project/checkin/#{e.id}"
@@ -495,7 +495,7 @@ class HomeController < ApplicationController
     e.status = '50%'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
-    e.start_time = 1.week.ago
+    e.start_date = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
     e.next_date = e.close_date
     e.link = "bingo/enter_candidates/#{e.id}"
@@ -512,7 +512,7 @@ class HomeController < ApplicationController
     e.status = '0'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
-    e.start_time = 3.weeks.ago
+    e.start_date = 3.weeks.ago
     e.close_date = Time.zone.today.end_of_day
     e.next_date = e.close_date
     e.link = "bingo/review_candidates/#{e.id}"
@@ -521,7 +521,7 @@ class HomeController < ApplicationController
     @events << e
 
     e = Event_.new
-    e.id = -42
+    e.id = -88
     e.name = t('candidate_lists.play', task:
       t('candidate_lists.demo_bingo_topic'))
     e.task_link = bingo_demo_play_path
@@ -530,7 +530,7 @@ class HomeController < ApplicationController
     e.status = '42 concepts'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
-    e.start_time = 2.weeks.ago
+    e.start_date = 2.weeks.ago
     e.close_date = 1.day.from_now.end_of_day
     e.next_date = e.close_date
     e.link = "bingo/candidate_results/#{e.id}"

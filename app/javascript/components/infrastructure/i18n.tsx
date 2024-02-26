@@ -6,6 +6,21 @@ import { initReactI18next } from "react-i18next";
 import Cache from "i18next-localstorage-cache";
 import Fetch from "i18next-fetch-backend";
 
+const LANGUAGES = [
+  {
+    code: "en",
+    name: "English"
+  },
+  {
+    code: "es",
+    name: "Español"
+  },
+  {
+    code: "ko",
+    name: "한국어"
+  }
+];
+
 i18n
   .use(LngDetector) //language detector
   .use(Cache)
@@ -14,7 +29,7 @@ i18n
   .use(intervalPlural)
   .init({
     backend: {
-      loadPath: "/infra/locales/{{ns}}.json",
+      loadPath: "/infra/locales/{{lng}}/{{ns}}.json",
       // path to post missing resources
       addPath: "locales/add/{{ns}}",
       // define how to stringify the data when adding missing resources
@@ -33,3 +48,4 @@ i18n
   });
 
 export default i18n;
+export { LANGUAGES };

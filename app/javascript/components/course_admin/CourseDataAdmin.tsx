@@ -29,14 +29,14 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
 import ActivityList, { Activity } from "./ActivityList";
-import CourseWizard from "./CourseWizard";
+import CourseWizard from "./wizard/CourseWizard";
 
 interface IActivityLink {
   name: string;
   link: string;
 }
 
-type Course = {
+interface ICourse {
   id: number;
   name: string;
   number: string;
@@ -74,7 +74,7 @@ export default function CourseDataAdmin() {
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
 
-  const [course, setCourse] = useState<Course>({
+  const [course, setCourse] = useState<ICourse>({
     id: courseId,
     name: "",
     number: "",
@@ -122,7 +122,7 @@ export default function CourseDataAdmin() {
 
         const course = data.course;
 
-        const localCourse: Course = {
+        const localCourse: ICourse = {
           id: courseId,
           name: course.name || "",
           number: course.number || '',
@@ -175,7 +175,7 @@ export default function CourseDataAdmin() {
       .then(response => {
         const data = response.data;
         if (Object.keys(data.messages).length < 2) {
-          const localCourse: Course = Object.assign({},
+          const localCourse: ICourse = Object.assign({},
             data.course,
             {
               start_date: new Date(Date.parse(data.course.start_date)),
@@ -366,7 +366,6 @@ export default function CourseDataAdmin() {
         showIcon={true}
         onChange={event => {
           const changeTo = event.value;
-          console.log('change', event);
           if (null !== changeTo && changeTo.length > 1) {
             setCourse(course => {
               return {
@@ -483,4 +482,4 @@ export default function CourseDataAdmin() {
   );
 }
 
-export { Course, IActivityLink }
+export { ICourse, IActivityLink }

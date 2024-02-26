@@ -1,21 +1,18 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
 
 import ChartContainer from "./ChartContainer";
+import { Container, Row, Col } from "react-grid-system";
+import { Panel } from "primereact/panel";
 
 export default function ReportingAdmin(props) {
   const category = "graphing";
   const { t, i18n } = useTranslation(category);
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <h1>{t("instruction")}</h1>
-      </Grid>
+    <Panel header={t('instructions')}>
       <ChartContainer unitOfAnalysis="group" />
-      <Grid item xs={12} />
-    </Grid>
+    </Panel>
   );
 }
 

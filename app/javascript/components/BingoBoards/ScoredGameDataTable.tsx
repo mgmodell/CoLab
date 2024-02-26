@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 
 enum OPT_COLS {
   TERM = "term",
   DEFINITION = "definition",
   FEEDBACK = "feedback",
-  CONCEPT = "concept"
+  CONCEPT = "concept",
+  CREDIT = "credit"
 }
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
     term: string;
     feedback: string;
     feedback_id: number;
+    credit: number;
   }>;
 };
 
@@ -30,7 +32,8 @@ export default function ScoredGameDataTable(props: Props) {
   const optColumns = [
     t(`scored_game.${OPT_COLS.DEFINITION}`),
     t(`scored_game.${OPT_COLS.FEEDBACK}`),
-    t(`scored_game.${OPT_COLS.CONCEPT}`)
+    t(`scored_game.${OPT_COLS.CONCEPT}`),
+    t(`scored_game.${OPT_COLS.CREDIT}`)
   ];
   const [visibleColumns, setVisibleColumns] = useState(optColumns);
 
@@ -68,19 +71,17 @@ export default function ScoredGameDataTable(props: Props) {
         header={t(`scored_game.${OPT_COLS.TERM}`)}
         field="term"
         sortable
-        filter
         key="term"
       />
-      {visibleColumns.includes(t(OPT_COLS.DEFINITION)) ? (
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.DEFINITION}`)) ? (
         <Column
           header={t(`scored_game.${OPT_COLS.DEFINITION}`)}
           field="definition"
           sortable
-          filter
           key="definition"
         />
       ) : null}
-      {visibleColumns.includes(t(OPT_COLS.FEEDBACK)) ? (
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.FEEDBACK}`)) ? (
         <Column
           header={t(`scored_game.${OPT_COLS.FEEDBACK}`)}
           field="feedback"
@@ -89,15 +90,23 @@ export default function ScoredGameDataTable(props: Props) {
           key="feedback"
         />
       ) : null}
-      {visibleColumns.includes(t(OPT_COLS.CONCEPT)) ? (
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.CONCEPT}`)) ? (
         <Column
           header={t(`scored_game.${OPT_COLS.CONCEPT}`)}
           field="concept"
           sortable
-          filter
           key="concept"
         />
       ) : null}
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.CREDIT}`)) ? (
+        <Column
+          header={t(`scored_game.${OPT_COLS.CREDIT}`)}
+          field="credit"
+          sortable
+          filter
+          key="credit"
+        />
+        ) : null}
     </DataTable>
   );
 }

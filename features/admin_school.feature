@@ -17,6 +17,7 @@ Feature: School Administration
      And the user clicks the "New school" button
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+    Then close all messages
     Then the user clicks "Create School"
      And the user waits to see "successfully"
     Then close all messages
@@ -41,6 +42,7 @@ Feature: School Administration
      And the user will dismiss the error "Unable to save. Please resolve the issues and try again."
      #Now we complete it
      And the user sets the "Name" field to "life"
+    Then close all messages
     Then the user clicks "Create School"
      #We should have success now
      And the user waits to see "successfully"
@@ -71,6 +73,7 @@ Feature: School Administration
     # Then the user clicks "Edit school details"
      And the user sets the "Name" field to "Off"
      And the user sets the "Description" field to "blue is the best"
+    Then close all messages
     Then the user clicks "Save School"
     Then the user waits to see "School was updated successfully"
    Then close all messages

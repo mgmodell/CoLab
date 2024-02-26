@@ -2,28 +2,12 @@ import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
 import { Skeleton } from "primereact/skeleton";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
-
-import { DateTime } from "luxon";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
-
-// import makeStyles from "@mui/styles/makeStyles";
 
 import ConceptChips from "./ConceptChips";
 const BingoGameDataAdminTable = React.lazy(() =>
@@ -34,10 +18,16 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { InputSwitch } from "primereact/inputswitch";
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { Container, Row, Col } from "react-grid-system";
+import { C } from "@fullcalendar/core/internal-common";
 
 export default function BingoGameDataAdmin(props) {
-  //const classes = useStyles();
 
   const endpointSet = "bingo_game";
   const endpoints = useTypedSelector(
@@ -50,7 +40,7 @@ export default function BingoGameDataAdmin(props) {
   const { courseIdParam, bingoGameIdParam } = useParams();
   const dispatch = useDispatch();
 
-  const navigate = useNavigate( );
+  const navigate = useNavigate();
 
   const { t, i18n } = useTranslation("bingo_games");
 
@@ -71,10 +61,15 @@ export default function BingoGameDataAdmin(props) {
   const [gameSource, setGameSource] = useState("");
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
+
+  const now = new Date();
+  const [gameStartDate, setGameStartDate] = useState(now);
   const [gameEndDate, setGameEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
+    () => {
+      now.setMonth(now.getMonth() + 3);
+      return now;
+    }
   );
-  const [gameStartDate, setGameStartDate] = useState(DateTime.local());
   const [gameIndividualCount, setGameIndividualCount] = useState(0);
   const [gameLeadTime, setGameLeadTime] = useState(0);
   //Group parameters
@@ -128,8 +123,8 @@ export default function BingoGameDataAdmin(props) {
           description: gameDescriptionEditor,
           source: gameSource,
           active: gameActive,
-          start_date: gameStartDate.toISO(),
-          end_date: gameEndDate.toISO(),
+          start_date: gameStartDate,
+          end_date: gameEndDate,
           individual_count: gameIndividualCount,
           lead_time: gameLeadTime,
           group_option: gameGroupOption,
@@ -146,14 +141,14 @@ export default function BingoGameDataAdmin(props) {
         setMessages(data["messages"]);
 
         getBingoGameData();
-        navigate( `../${courseIdParam}/bingo_game/${bingoGameId}`, { replace: true } );
+        navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, { replace: true });
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      } ) ;
+      });
   };
 
   const initResultData = () => {
@@ -200,15 +195,12 @@ export default function BingoGameDataAdmin(props) {
         setGameDescriptionEditor(bingo_game.description || "");
         setGameSource(bingo_game.source || "");
         setGameActive(bingo_game.active || false);
-        var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
-          bingo_game.course.timezone
-        );
+
+        var receivedDate = new Date(Date.parse(bingo_game.start_date));
         setGameStartDate(receivedDate);
-        setGameEndDate(
-          DateTime.fromISO(bingo_game.end_date).setZone(
-            bingo_game.course.timezone
-          )
-        );
+        receivedDate = new Date(Date.parse(bingo_game.end_date));
+        setGameEndDate(receivedDate);
+
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
         //Group options
@@ -224,14 +216,9 @@ export default function BingoGameDataAdmin(props) {
       });
   };
 
-  const changeTab = (event, name) => {
-    setCurTab(name);
-  };
-
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
-        variant="contained"
         color="primary"
         //className={classes["button"]}
         onClick={saveBingoGame}
@@ -246,46 +233,37 @@ export default function BingoGameDataAdmin(props) {
   const group_options = gameGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <React.Fragment>
-        <Grid item xs={6}>
-          <TextField
-            id="bingo-name"
-            label={t("group_discount")}
-            type="number"
-            //className={classes.textField}
-            value={gameGroupDiscount}
-            onChange={event =>
-              setGameGroupDiscount(parseInt(event.target.value))
-            }
-            margin="normal"
-            error={null != messages["name"]}
-            helper={messages["name"]}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <FormControl
-            //className={classes.formControl}
-            >
-            <InputLabel shrink htmlFor="bingo_game_project_id">
-              {t("group_source")}
-            </InputLabel>
-            <Select
+        <Col xs={6}>
+          <span className="p-float-label">
+            <InputNumber
+              id="bingo-discount"
+              itemID="bingo-discount"
+              name="bingo-discount"
+              inputId="bingo-discount"
+              value={gameGroupDiscount}
+              onChange={event => {
+                setGameGroupDiscount(event.value);
+              }}
+            />
+            <label htmlFor="bingo-discount">{t("group_discount")}</label>
+          </span>
+        </Col>
+        <Col xs={6}>
+          <span className="p-float-label">
+            <Dropdown
               id="bingo_game_project_id"
+              inputId="bingo_game_project_id"
+              itemID="bingo_game_project_id"
               value={gameGroupProjectId}
-              onChange={event => setGameGroupProjectId(event.target.value)}
-              displayEmpty
-              name="bingo_game_project"
-              //className={classes.selectEmpty}
-            >
-              {gameProjects.map(project => {
-                return (
-                  <MenuItem value={project.id} key={project.id}>
-                    {project.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Grid>
+              options={gameProjects}
+              optionValue="id"
+              onChange={event => setGameGroupProjectId(event.value)}
+              optionLabel="name"
+              placeholder={t("group_source")}
+            />
+            <label htmlFor="bingo_game_project_id">{t("group_source")}</label>
+          </span>
+        </Col>
       </React.Fragment>
     </Suspense>
   ) : null;
@@ -297,151 +275,140 @@ export default function BingoGameDataAdmin(props) {
           onTabChange={event => setCurTab(event.index)}
         >
           <TabPanel header={t("game_details_pnl")}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="topic"
-                  label={t("topic")}
-                  //className={classes.textField}
-                  value={gameTopic}
-                  fullWidth
-                  onChange={event => setGameTopic(event.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Editor
-                  id="description"
-                  aria-label={t("description")}
-                  placeholder={t("description")}
-                  value={gameDescriptionEditor}
-                  headerTemplate={ <EditorToolbar /> }
-                  onTextChange={event => {
-                    setGameDescriptionEditor(event.htmlValue);
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="bingo-lead-time"
-                  label={t("lead_time")}
-                  //className={classes.lead_time}
-                  value={gameLeadTime}
-                  type="number"
-                  onChange={event => setGameLeadTime(event.target.value)}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="bingo-individual_count"
-                  label={t("ind_term_count")}
-                  //className={classes.textField}
-                  value={gameIndividualCount}
-                  type="number"
-                  onChange={event => setGameIndividualCount(event.target.value)}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  margin="normal"
-                  error={null != messages.individual_count}
-                  helperText={messages.individual_count}
-                />
-              </Grid>
-              <LocalizationProvider dateAdapter={AdapterLuxon}>
-                <Grid item xs={4}>
-                  <DatePicker
-                    variant="inline"
-                    autoOk={true}
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    label={t("open_date")}
-                    value={gameStartDate}
-                    onChange={setGameStartDate}
-                    slot={{
-                      TextField: TextField
-                    }}
-                    slotProps={{
-                      textField: {
-                        id: "bingo_game_start_date"
-                      }
-                    }}
-                  />
-                  {null != messages.start_date ? (
-                    <FormHelperText error={true}>
-                      {messages.start_date}
-                    </FormHelperText>
-                  ) : null}
-                </Grid>
-                <Grid item xs={4}>
-                  <DatePicker
-                    variant="inline"
-                    autoOk={true}
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    label={t("close_date")}
-                    value={gameEndDate}
-                    onChange={setGameEndDate}
-                    slot={{
-                      TextField: TextField
-                    }}
-                    slotProps={{
-                      textField: {
-                        id: "bingo_game_end_date"
-                      }
-                    }}
-                  />
-                  {null != messages.end_date ? (
-                    <FormHelperText error={true}>
-                      {messages.end_date}
-                    </FormHelperText>
-                  ) : null}
-                </Grid>
-              </LocalizationProvider>
-              <Grid item xs={4}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={gameActive}
-                      onChange={event => setGameActive(!gameActive)}
+            <Container>
+              <Row>
+                <Col xs={12}>
+                  <span className="p-float-label">
+                    <InputText
+                      id='topic'
+                      name="topic"
+                      itemID="topic"
+                      value={gameTopic}
+                      onChange={event => setGameTopic(event.target.value)}
                     />
-                  }
-                  label={t("active")}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Switch
-                  checked={gameGroupOption}
-                  id="group_option"
-                  onChange={event => setGameGroupOption(!gameGroupOption)}
-                  disabled={null == gameProjects || 2 > gameProjects.length}
-                />
-                <InputLabel htmlFor="group_option">
-                  {t("group_option")}
-                </InputLabel>
-              </Grid>
-              {group_options}
-            </Grid>
-            {save_btn} {messages.status}
-            <Typography>{saveStatus}</Typography>
+                    <label htmlFor="topic">{t("topic")}</label>
+                  </span>
+
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12}>
+                  <Editor
+                    id="description"
+                    aria-label={t("description")}
+                    placeholder={t("description")}
+                    value={gameDescriptionEditor}
+                    headerTemplate={<EditorToolbar />}
+                    onTextChange={event => {
+                      setGameDescriptionEditor(event.htmlValue);
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={6}>
+                  <span className="p-float-label">
+                    <InputNumber
+                      id='bingo-lead-time'
+                      name="bingo-lead-time"
+                      itemID="bingo-lead-time"
+                      inputId="bingo-lead-time"
+                      value={gameLeadTime}
+                      onChange={event => setGameLeadTime(event.value)}
+                    />
+                    <label htmlFor="bingo-lead-time">{t("lead_time")}</label>
+                  </span>
+
+                </Col>
+                <Col xs={6}>
+                  <span className="p-float-label">
+                    <InputNumber
+                      id='bingo-individual_count'
+                      name="bingo-individual_count"
+                      itemID="bingo-individual_count"
+                      inputId="bingo-individual_count"
+                      value={gameIndividualCount}
+                      onChange={event => setGameIndividualCount(event.value)}
+                    />
+                    <label htmlFor="bingo-individual_count">{t("ind_term_count")}</label>
+                  </span>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xs={4}>
+                  <span className="p-float-label">
+                    <Calendar
+                      id='bingo_game_dates'
+                      value={[gameStartDate, gameEndDate]}
+                      onChange={(event) => {
+                        const changeTo = event.value;
+                        if (null !== changeTo && changeTo.length > 1) {
+                          setGameStartDate(changeTo[0]);
+                          setGameEndDate(changeTo[1]);
+                        }
+                      }}
+                      selectionMode="range"
+                      showIcon={true}
+                      inputId="bingo_game_dates"
+                      name="bingo_game_dates"
+                    />
+                    <label htmlFor="bingo_game_dates">{t("game_dates")}</label>
+                  </span>
+                </Col>
+                <Col xs={4}>
+                  <InputSwitch
+                    checked={gameActive}
+                    onChange={event => setGameActive(!gameActive)}
+                    id='active'
+                    name='active'
+                    itemID="active"
+                    inputId="active"
+                  />
+                  <label htmlFor="active">{t("active")}</label>
+                </Col>
+                <Col xs={12}>
+                  <InputSwitch
+                    checked={gameGroupOption}
+                    id="group_option"
+                    name="group_option"
+                    itemID="group_option"
+                    onChange={event => setGameGroupOption(!gameGroupOption)}
+                    disabled={null == gameProjects || 2 > gameProjects.length}
+                  />
+                  <label htmlFor="group_option">{t("group_option")}</label>
+                </Col>
+                {group_options}
+
+              </Row>
+              <Row>
+                <Col xs={12}>
+
+
+                  {save_btn} {messages.status}
+                  <span>{saveStatus}</span>
+                </Col>
+
+              </Row>
+
+            </Container>
           </TabPanel>
           <TabPanel header={t("response_pnl")}>
-            <Grid container style={{ height: "100%" }}>
-              <Grid item xs={5}>
-                <ConceptChips concepts={concepts} />
-              </Grid>
-              <Grid item xs={7}>
-                <BingoGameDataAdminTable results_raw={resultData} />
-              </Grid>
-            </Grid>
+            <Container>
+              <Row>
+                <Col xs={5}>
+                  <ConceptChips concepts={concepts} />
+                </Col>
+                <Col xs={7}>
+                  <BingoGameDataAdminTable results_raw={resultData} />
+                </Col>
+
+              </Row>
+
+            </Container>
           </TabPanel>
         </TabView>
       </Panel>
     </Suspense>
   );
 }
-
-BingoGameDataAdmin.propTypes = {};

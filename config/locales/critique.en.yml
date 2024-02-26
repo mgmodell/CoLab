@@ -8,6 +8,9 @@ en:
         score.
     submissions_title: Submissions
     submitted: Assignment submission
+    submitted_text: Submitted text
+    submitted_link: Submitted link
+    submission_list_hidden: Click here to see the submissions list
     no_text: No text entered
     feedback: Overall feedback
     calculated_score_lbl: Calculated score

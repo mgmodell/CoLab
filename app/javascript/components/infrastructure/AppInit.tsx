@@ -1,13 +1,14 @@
 import React, { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
-import { getContext } from "./ContextSlice";
+import { getContext, setDebug } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
-import Skeleton from "@mui/material/Skeleton";
+import { Skeleton } from "primereact/skeleton";
 
 type Props = {
   children?: React.ReactNode;
-  endpointsUrl;
+  endpointsUrl: string;
+  debug?: boolean
 };
 
 export default function AppInit(props: Props) {
@@ -28,8 +29,12 @@ export default function AppInit(props: Props) {
     dispatch(getContext(props.endpointsUrl));
   }, []);
 
+  useEffect(() => {
+    dispatch( setDebug(props.debug) );
+  }, [props.debug]);
+
   return (
-    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+    <Suspense fallback={<Skeleton className={"mb-2"} />}>
       {props.children}
     </Suspense>
   );

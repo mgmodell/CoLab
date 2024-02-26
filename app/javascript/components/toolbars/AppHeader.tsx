@@ -1,15 +1,11 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 
-import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-
-import Logo from "./Logo";
 import MainMenu from "./MainMenu";
 import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
 
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Toolbar } from "primereact/toolbar";
 import { Skeleton } from "primereact/skeleton";
 

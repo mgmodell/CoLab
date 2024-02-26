@@ -11,7 +11,7 @@ import React, {
   createContext
 } from "react";
 
-interface ResizableSVGProps {
+interface Props {
   children: ReactNode;
   id: string;
   height: number;
@@ -20,7 +20,7 @@ interface ResizableSVGProps {
 
 export const SvgContext = createContext(null);
 
-const ResizableSVG: React.FC<ResizableSVGProps> = ({
+const ResizableSVG: React.FC<Props> = ({
   children,
   id,
   height,

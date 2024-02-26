@@ -2,40 +2,27 @@ import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
-import Switch from "@mui/material/Switch";
 
+import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
-
-import Skeleton from "@mui/material/Skeleton";
-
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
-import { DateTime } from "luxon";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { Editor } from "primereact/editor";
+import { Dropdown } from "primereact/dropdown";
+import { Skeleton } from "primereact/skeleton";
+import { InputText } from "primereact/inputtext";
+import { Calendar } from "primereact/calendar";
+import { InputSwitch } from "primereact/inputswitch";
+import { Checkbox } from "primereact/checkbox";
 
 import { useTranslation } from "react-i18next";
 
-//import makeStyles from "@mui/styles/makeStyles";
-
+import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import axios from "axios";
-import { Checkbox, FormLabel } from "@mui/material";
-import { Editor } from "primereact/editor";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import { Col, Container, Row } from "react-grid-system";
+
 
 export default function AssignmentDataAdmin(props) {
   //const classes = useStyles();
@@ -73,11 +60,15 @@ export default function AssignmentDataAdmin(props) {
     "new" === assignmentIdParam ? null : assignmentIdParam
   );
   const [assignmentActive, setAssignmentActive] = useState(false);
-  const [assignmentEndDate, setAssignmentEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
-  );
+  const now = new Date();
   const [assignmentStartDate, setAssignmentStartDate] = useState(
-    DateTime.local()
+    now
+  );
+  const [assignmentEndDate, setAssignmentEndDate] = useState(
+    () => {
+      now.setMonth(now.getMonth() + 3);
+      return now;
+    }
   );
   const [assignmentFileSub, setAssignmentFileSub] = useState(false);
   const [assignmentLinkSub, setAssignmentLinkSub] = useState(false);
@@ -196,12 +187,11 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentName(assignment.name || "");
     setAssignmentDescriptionEditor(assignment.description || "");
     setAssignmentActive(assignment.active || false);
-    var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
-      assignment.course.timezone
-    );
+    var receivedDate = new Date(Date.parse(assignment.start_date));
     setAssignmentStartDate(receivedDate);
+
     setAssignmentEndDate(
-      DateTime.fromISO(assignment.end_date).setZone(assignment.course.timezone)
+      new Date(Date.parse(assignment.end_date))
     );
     setAssignmentFileSub(assignment.file_sub);
     setAssignmentLinkSub(assignment.link_sub);
@@ -236,9 +226,8 @@ export default function AssignmentDataAdmin(props) {
   };
 
   const save_btn = dirty ? (
-    <Suspense fallback={<Skeleton variant="text" />}>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
-        variant="contained"
         color="primary"
         //className={classes["button"]}
         onClick={saveAssignment}
@@ -253,40 +242,29 @@ export default function AssignmentDataAdmin(props) {
   ) : null;
 
   const group_options = assignmentGroupOption ? (
-    <Suspense fallback={<Skeleton variant="text" />}>
-      <React.Fragment>
-        <Grid item xs={6}>
-          <FormControl
-          //className={classes.formControl}
-          >
-            <InputLabel shrink htmlFor="assignment_project_id">
-              {t("edit.group_source")}
-            </InputLabel>
-            <Select
-              id="assignment_project_id"
-              value={assignmentGroupProjectId}
-              onChange={event =>
-                setAssignmentGroupProjectId(event.target.value)
-              }
-              displayEmpty
-              name="assignment_project"
-            //className={classes.selectEmpty}
-            >
-              {assignmentProjects.map(project => {
-                return (
-                  <MenuItem value={project.id} key={project.id}>
-                    {project.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Grid>
-      </React.Fragment>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
+      <Col xs={6}>
+        <span className="p-float-label w-full">
+          <Dropdown
+            id="assignment_project_id"
+            value={assignmentGroupProjectId}
+            onChange={event =>
+              setAssignmentGroupProjectId(event.target.value)
+            }
+            name="assignment_project"
+            options={assignmentProjects}
+            optionLabel="name"
+            optionValue="id"
+          />
+          <label htmlFor="assignment_project_id">
+            {t("edit.group_source")}
+          </label>
+        </span>
+      </Col>
     </Suspense>
   ) : null;
   return (
-    <Suspense fallback={<Skeleton variant="text" />}>
+    <Suspense fallback={<Skeleton className="mb-2" />}>
       <Panel >
 
         <TabView
@@ -294,20 +272,20 @@ export default function AssignmentDataAdmin(props) {
           onTabChange={event => setCurTab(event.index)}
         >
           <TabPanel header={t("edit.assignment_details_pnl")}>
-            <React.Fragment>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="name"
-                    label={t("name")}
-                    //className={classes.textField}
-                    value={assignmentName}
-                    fullWidth
-                    onChange={event => setAssignmentName(event.target.value)}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={12}>
+            <Container>
+              <Row>
+                <Col xs={12}>
+                  <span className="p-float-label">
+                    <InputText
+                      id='name'
+                      value={assignmentName}
+                      onChange={event => setAssignmentName(event.target.value)}
+                      type="text"
+                    />
+                    <label htmlFor="name">{t("name")}</label>
+                  </span>
+                </Col>
+                <Col xs={12}>
                   <Editor
                     id="description"
                     aria-label={t("description")}
@@ -318,156 +296,115 @@ export default function AssignmentDataAdmin(props) {
                       setAssignmentDescriptionEditor(event.htmlValue);
                     }}
                   />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl
-                    component="fieldset"
-                    variant="standard"
-                    error={messages["submission_types"]}
-                  >
-                    <FormLabel component="legend">
-                      {t("edit.sub_type_select")}
-                    </FormLabel>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={assignmentTextSub}
-                            onChange={event =>
-                              updateSubmissionTypeSelection(event, "text")
-                            }
-                            id="sub_text"
-                            name="sub_text"
-                          />
+                </Col>
+                <Col xs={12}>
+                  <div className="flex flex-wrap justify-content-center gap-3">
+                    <div className="flex align-items-center">
+                      <Checkbox
+                        checked={assignmentTextSub}
+                        onChange={event =>
+                          updateSubmissionTypeSelection(event.value, "text")
                         }
-                        label={t("edit.text_sub")}
+                        id="sub_text"
+                        itemID="sub_text"
+                        name="sub_text"
                       />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={assignmentLinkSub}
-                            onChange={event =>
-                              updateSubmissionTypeSelection(event, "link")
-                            }
-                            id="sub_link"
-                            name="sub_link"
-                          />
+                      <label htmlFor="sub_text">{t("edit.text_sub")}</label>
+                    </div>
+                    <div className="flex align-items-center">
+                      <Checkbox
+                        checked={assignmentLinkSub}
+                        onChange={event =>
+                          updateSubmissionTypeSelection(event.value, "link")
                         }
-                        label={t("edit.link_sub")}
+                        id="sub_link"
+                        itemID="sub_link"
+                        name="sub_link"
                       />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={assignmentFileSub}
-                            onChange={event =>
-                              updateSubmissionTypeSelection(event, "file")
-                            }
-                            id="sub_file"
-                            name="sub_file"
-                          />
+                      <label htmlFor="sub_link">{t("edit.link_sub")}</label>
+                    </div>
+                    <div className="flex align-items-center">
+                      <Checkbox
+                        checked={assignmentFileSub}
+                        onChange={event =>
+                          updateSubmissionTypeSelection(event.value, "file")
                         }
-                        label={t("edit.file_sub")}
+                        id="sub_file"
+                        itemID="sub_file"
+                        name="sub_file"
                       />
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl
-                  //className={classes.formControl}
-                  >
-                    <InputLabel shrink htmlFor="assignment_rubric_id">
-                      {t("edit.select_rubric")}
-                    </InputLabel>
-                    <Select
+                      <label htmlFor="sub_file">{t("edit.file_sub")}</label>
+                    </div>
+                  </div>
+                </Col>
+                <Col xs={6}>
+                  <span className="p-float-label w-full">
+                    <Dropdown
                       id="assignment_rubric_id"
                       value={assignmentRubricId}
                       onChange={event =>
                         setAssignmentRubricId(event.target.value)
                       }
-                      displayEmpty
                       name="assignment_rubric"
-                    //className={classes.selectEmpty}
-                    >
-                      {availableRubrics.map(rubric => {
-                        return (
-                          <MenuItem
-                            value={rubric.id}
-                            selected={rubric.id == assignmentRubricId}
-                            key={rubric.id}
-                          >
-                            {rubric.name}{" "}
-                            {rubric.id > 0 ? `(${rubric.version})` : null}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <LocalizationProvider dateAdapter={AdapterLuxon}>
-                  <Grid item xs={4}>
-                    <DatePicker
-                      autoOk={true}
-                      format="MM/dd/yyyy"
-                      margin="normal"
-                      label={t("open_date")}
-                      value={assignmentStartDate}
-                      onChange={setAssignmentStartDate}
-                      slot={{
-                        TextField: TextField
+                      options={availableRubrics}
+                      itemTemplate={(selected) => {
+                        console.log(selected);
+                        const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
+                        return output;
                       }}
-                      slotProps={{
-                        textField: {
-                          id: "assignment_start_date"
-                        }
+                      valueTemplate={(selected, props) => {
+                        console.log(selected);
+                        const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
+                        return output;
                       }}
+                      optionValue="id"
+                      optionLabel="name"
                     />
-                    {null != messages.start_date ? (
-                      <FormHelperText error={true}>
-                        {messages.start_date}
-                      </FormHelperText>
-                    ) : null}
-                  </Grid>
-                  <Grid item xs={4}>
-                    <DatePicker
-                      autoOk={true}
-                      format="MM/dd/yyyy"
-                      margin="normal"
-                      label={t("close_date")}
-                      value={assignmentEndDate}
-                      onChange={setAssignmentEndDate}
-                      slot={{
-                        TextField: TextField
-                      }}
-                      slotProps={{
-                        textField: {
-                          id: "assignment_end_date"
+                    <label htmlFor="assignment_rubric_id">
+                      {t("edit.select_rubric")}
+                    </label>
+                  </span>
+
+                </Col>
+                <Col xs={4}>
+                  <span className="p-float-label">
+                    <Calendar
+                      id="assignment_dates"
+                      value={[assignmentStartDate, assignmentEndDate]}
+                      onChange={event => {
+                        const changeTo = event.value;
+                        if (null !== changeTo && changeTo.length > 1) {
+                          setAssignmentStartDate(changeTo[0]);
+                          setAssignmentEndDate(changeTo[1]);
                         }
-                      }}
+
+                      }
+                      }
+                      selectionMode="range"
+                      showIcon={true}
+                      inputId="assignment_start_date"
+                      name="assignment_start_date"
                     />
-                    {null != messages.end_date ? (
-                      <FormHelperText error={true}>
-                        {messages.end_date}
-                      </FormHelperText>
-                    ) : null}
-                  </Grid>
-                </LocalizationProvider>
-                <Grid item xs={4}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={assignmentActive}
-                        onChange={event =>
-                          setAssignmentActive(!assignmentActive)
-                        }
-                      />
-                    }
-                    label={t("active")}
+                    <label htmlFor="assignment_dates">
+                      Assignment Dates
+                    </label>
+                  </span>
+                </Col>
+                <Col xs={4}>
+                  <InputSwitch
+                    checked={assignmentActive}
+                    onChange={event => setAssignmentActive(!assignmentActive)}
+                    name="active"
+                    itemID="active"
+                    id="active"
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <Switch
+                  <label htmlFor="active">{t("active")}</label>
+                </Col>
+                <Col xs={12}>
+                  <InputSwitch
                     checked={assignmentGroupOption}
-                    id="group_option"
+                    id='group_option'
+                    itemID="group_option"
                     onChange={event =>
                       setAssignmentGroupOption(!assignmentGroupOption)
                     }
@@ -476,27 +413,30 @@ export default function AssignmentDataAdmin(props) {
                       2 > assignmentProjects.length
                     }
                   />
-                  <InputLabel htmlFor="group_option">
+                  <label htmlFor="group_option">
                     {t("edit.group_option")}
-                  </InputLabel>
-                </Grid>
+                  </label>
+
+                </Col>
                 {group_options}
-              </Grid>
-              {save_btn} {messages.status}
-              <Typography>{saveStatus}</Typography>
-            </React.Fragment>
+                <Col xs={12}>
+                  {save_btn} {messages.status}
+                  <span>{saveStatus}</span>
+                </Col>
+              </Row>
+            </Container>
           </TabPanel>
           <TabPanel header={t("edit.assignment_submissions_pnl")}>
-            <Grid container style={{ height: "100%" }}>
-              <Grid item xs={5}>
-                Nothing here yet
-              </Grid>
-            </Grid>
+            <Container>
+              <Row>
+                <Col xs={5}>
+                  <span>Nothing here yet</span>
+                </Col>
+              </Row>
+            </Container>
           </TabPanel>
         </TabView>
       </Panel>
     </Suspense>
   );
 }
-
-AssignmentDataAdmin.propTypes = {};

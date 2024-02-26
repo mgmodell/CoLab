@@ -12,11 +12,12 @@ import { DataTable } from "primereact/datatable";
 
 import CopyActivityButton from "./CopyActivityButton";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
+import { a } from "react-spring";
 
 export default function CourseList(props) {
   const category = "course";
@@ -40,8 +41,6 @@ export default function CourseList(props) {
   const { t } = useTranslation(`${category}s`);
 
   const user = useTypedSelector(state => state.profile.user);
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -81,8 +80,10 @@ export default function CourseList(props) {
   }, [endpointStatus]);
 
   const postNewMessage = msgs => {
-    setMessages(msgs);
-    setShowErrors(true);
+    const priority = msgs.length > 1 ? Priorities.INFO : Priorities.ERROR;
+    Object.keys( msgs ).forEach(key => {
+      dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
+    })
   };
 
   const dataTable = (
@@ -140,6 +141,7 @@ export default function CourseList(props) {
           field="name"
           sortable
           filter
+          className="content-table-data"
           key={"name"}
         />
         <Column

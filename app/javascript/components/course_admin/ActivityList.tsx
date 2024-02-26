@@ -30,7 +30,7 @@ enum ActivityType {
     Assignment = "assignment",
 };
 
-type Activity = {
+interface IActivity {
     id: number;
     name: string;
     active: boolean;
@@ -48,7 +48,7 @@ enum ACTIVITY_COLS {
 
 
 type Props = {
-    activities: Activity[];
+    activities: IActivity[];
     newActivityLinks: Array<IActivityLink>;
     refreshFunc: () => void;
 };
@@ -120,6 +120,7 @@ export default function ActivityList(props: Props) {
             <Column
                 header={t('activities.name_col')}
                 field="name"
+                className="content-table-data"
             />
             {optActivityColumns.includes(ACTIVITY_COLS.STATUS) ? (
                 <Column
@@ -142,7 +143,7 @@ export default function ActivityList(props: Props) {
                     header={t('activities.open_col')}
                     field="start_date"
                     body={(rowData) => {
-                        return <span>{DateTime.fromISO( rowData.start_date ).toLocaleString() }</span>;
+                        return <span>{DateTime.fromISO(rowData.start_date).toLocaleString()}</span>;
                     }}
                 />
             ) : null}
@@ -151,7 +152,7 @@ export default function ActivityList(props: Props) {
                     header={t('activities.close_col')}
                     field="end_date"
                     body={(rowData) => {
-                        return <span>{DateTime.fromISO( rowData.end_date ).toLocaleString( )}</span>;
+                        return <span>{DateTime.fromISO(rowData.end_date).toLocaleString()}</span>;
 
                     }}
                 />
@@ -174,9 +175,9 @@ export default function ActivityList(props: Props) {
                                     .then(response => {
                                         const data = response.data;
                                         props.refreshFunc();
-                                        dispatch( addMessage(
-                                                data.message, new Date(), Priorities.INFO
-                                            ));
+                                        dispatch(addMessage(
+                                            data.message, new Date(), Priorities.INFO
+                                        ));
                                         //setMessages(data.messages);
                                         dispatch(endTask("deleting"));
                                     })
@@ -196,4 +197,4 @@ export default function ActivityList(props: Props) {
     )
 }
 
-export { ActivityType, Activity };
+export { ActivityType, IActivity as Activity };

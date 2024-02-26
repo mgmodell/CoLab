@@ -16,3 +16,17 @@ en:
     performance_lbl: Performance
     topic_lbl: Topic
     description_lbl: Description
+    no_worksheet_msg: No worksheet
+    tabs:
+      builder:
+        builder_lbl: Bingo game builder
+        print_step: >
+          Print and complete this Practice Bingo Board then turn it in
+          before class begins.
+        regenerate: >
+          (Re)Generate your playable board until you get one you like
+          and then...
+        words_found: Concepts identified by the class
+      worksheet: Worksheet results
+      performance: Your performance
+

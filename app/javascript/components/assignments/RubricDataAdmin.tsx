@@ -11,15 +11,12 @@ import {
 } from "../infrastructure/StatusSlice";
 import { useNavigate, useParams } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-
 import { DataTable } from "primereact/datatable";
 
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { Typography } from "@mui/material";
 import RubricCriteriaToolbar from "./RubricCriteriaToolbar";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -109,7 +106,6 @@ export default function RubricDataAdmin(props) {
     )
   ]);
 
-  const [messages, setMessages] = useState({});
 
   const timezones = useTypedSelector(state => {
     return state.context.lookups["timezones"];
@@ -175,11 +171,9 @@ export default function RubricDataAdmin(props) {
 
           dispatch(setClean(category));
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
-          //setMessages(data.messages);
           dispatch(endTask("saving"));
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
-          setMessages(messages);
           dispatch(endTask(action));
         }
       })
@@ -221,7 +215,7 @@ export default function RubricDataAdmin(props) {
           const rubric = data.rubric;
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
-            setMessages({ main: "A new version was created" });
+            dispatch(addMessage(t('new_version_success'), new Date(), Priorities.INFO));
             navigate(`../rubrics/${String(rubric.id)}`);
           } else {
             setRubricId(rubric.id);
@@ -238,10 +232,9 @@ export default function RubricDataAdmin(props) {
             dispatch(setClean(category));
             dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           }
-          navigate( `../${rubricId}`, { replace: true } );
+          navigate(`../rubrics/${rubricId}`, { replace: true });
         } else {
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
-          setMessages(messages);
         }
       })
       .catch(error => {
@@ -249,7 +242,7 @@ export default function RubricDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      }) ;
+      });
   };
 
   useEffect(() => {
@@ -275,12 +268,11 @@ export default function RubricDataAdmin(props) {
         onClick={publishOrActivateRubric}
       >
         {t(
-          `${
-            rubricPublished
-              ? rubricActive
-                ? "Deactivate"
-                : "Activate"
-              : "Publish"
+          `${rubricPublished
+            ? rubricActive
+              ? "Deactivate"
+              : "Activate"
+            : "Publish"
           } Rubric`
         )}
       </Button>
@@ -322,35 +314,36 @@ export default function RubricDataAdmin(props) {
   };
 
   const detailsComponent = endpointStatus ? (
-    <Panel>
-      <TextField
-        label={t("name")}
-        id="rubric-name"
-        value={rubricName}
-        fullWidth={false}
-        onChange={event => setRubricName(event.target.value)}
-        error={null != messages["name"]}
-        helperText={messages["name"]}
-      />
+    <Panel header={parseInt(rubricId) > 0 ? t('edit.title') : t('new.title')}>
+      <span className="p-float-label">
+        <InputText
+          itemID="rubric-name"
+          id="rubric-name"
+          value={rubricName}
+          onChange={event => setRubricName(event.target.value)}
+        />
+        <label htmlFor="rubric-name">{t("name")}</label>
+      </span>
+
+
       &nbsp;
       <br />
-      <TextField
-        id="rubric-description"
-        placeholder="Enter a description of the rubric"
-        multiline={true}
-        minRows={2}
-        maxRows={4}
-        label={t("description")}
-        value={rubricDescription}
-        onChange={event => setRubricDescription(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
-      <Typography>Version {rubricVersion}</Typography>
-      <Typography>Published {rubricPublished ? "Yes" : "No"}</Typography>
-      <Typography>Active {rubricActive ? "Yes" : "No"}</Typography>
+      <span className="p-float-label">
+        <InputTextarea
+          itemID="rubric-description"
+          id="rubric-description"
+          placeholder="Enter a description of the rubric"
+          rows={2}
+          autoResize={true}
+          value={rubricDescription}
+          onChange={event => setRubricDescription(event.target.value)}
+        />
+        <label htmlFor="rubric-description">{t("description")}</label>
+      </span>
+
+      <p>Version {rubricVersion}</p>
+      <p>Published {rubricPublished ? "Yes" : "No"}</p>
+      <p>Active {rubricActive ? "Yes" : "No"}</p>
       <br />
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
@@ -381,6 +374,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.description")}
               field="description"
               key="description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -395,6 +389,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l1_description")}
               field="l1_description"
               key="l1_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -402,6 +397,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l2_description")}
               field="l2_description"
               key="l2_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -409,6 +405,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l3_description")}
               field="l3_description"
               key="l3_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -416,6 +413,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l4_description")}
               field="l4_description"
               key="l4_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />
@@ -423,6 +421,7 @@ export default function RubricDataAdmin(props) {
               header={t("criteria.l5_description")}
               field="l5_description"
               key="l5_description"
+              className="content-table-data"
               editor={options => cellEditor(options)}
               onCellEditComplete={editableTextValueSetter}
             />

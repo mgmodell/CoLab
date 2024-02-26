@@ -22,7 +22,7 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 
-import { ColumnMeta } from "../infrastructure/Types";
+import { IColumnMeta } from "../infrastructure/Types";
 import { Panel } from "primereact/panel";
 
 type Props = {
@@ -118,18 +118,19 @@ export default function CandidatesReviewTable(props: Props) {
 
     let filtered = concepts
       .filter(x => "" != x.concept.name)
-      .map(x => {
-        x.concept.name.toLowerCase();
-      });
+      .map(x =>
+        x.concept.name.toLowerCase()
+      );
+
 
     const unique_concepts = new Set(filtered).size;
     //Now for just the acceptable ones
     filtered = concepts
       .filter(
-        x =>
-          "" != x.concept.name &&
+        x => "" != x.concept.name &&
           "acceptable" ==
-            getById(feedbackOptions, x.candidate_feedback_id).critique
+          getById(feedbackOptions, x.candidate_feedback_id).critique
+
       )
       .map(x => x.concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
@@ -232,7 +233,7 @@ export default function CandidatesReviewTable(props: Props) {
     setCandidates(candidates_temp);
   };
 
-  const optColumns: Array<ColumnMeta> = [
+  const optColumns: Array<IColumnMeta> = [
     { field: "number", header: "#", sortable: true, key: "number" },
     {
       field: "completed",
@@ -313,7 +314,7 @@ export default function CandidatesReviewTable(props: Props) {
             <Row>
               <Col sm={3}>{t("description")}:</Col>
               <Col sm={9}>
-                <p>{parse(bingoGame.description)}</p>
+                {parse(bingoGame.description)}
               </Col>
             </Row>
           </Container>
@@ -341,7 +342,10 @@ export default function CandidatesReviewTable(props: Props) {
           <Column {...col} />
         ))}
         <Column field="term" header={t("review.term_col")} />
-        <Column field="definition" header={t("review.definition_col")} />
+        <Column
+          className="content-table-data"
+          field="definition"
+          header={t("review.definition_col")} />
         <Column
           field="candidate_feedback_id"
           header={t("review.feedback_col")}

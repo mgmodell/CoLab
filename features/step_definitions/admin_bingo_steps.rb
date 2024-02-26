@@ -30,10 +30,6 @@ Then(/^retrieve the latest Bingo! game from the db$/) do
   @bingo = BingoGame.last
 end
 
-Then(/^the user clicks by label "([^"]*)"$/) do |checkbox|
-  find('label', text: checkbox).click
-end
-
 Given(/^the course has a Bingo! game$/) do
   @bingo = @course.bingo_games.new(
     topic: "#{Faker::Company.industry} Topic",

@@ -239,7 +239,8 @@ Given('the user checks the review completed checkbox') do
 end
 
 Given(/^the user checks "([^"]*)"$/) do |checkbox_name|
-  find(:xpath, "//*[text()='#{checkbox_name}']").click
+  elem_id = find(:xpath, "//label[text()='#{checkbox_name}']")[:for]
+  find( 'div', id: elem_id ).click
 end
 
 Given(/^the user is the most recently created user$/) do

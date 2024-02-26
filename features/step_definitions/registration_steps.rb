@@ -49,14 +49,25 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     demographics = [
       { label: 'What is your gender?', value: 'Male' },
       { label: 'What are you studying?', value: 'Education' },
-      { label: 'What country and state do you call home?', value: 'Belize' },
+      { label: 'What country?', value: 'Belize' },
       { label: 'What language do you speak at home?', value: 'Avestan' }
     ]
 
     demographics.each do |demo_data|
       label = find(:xpath, "//label[text()='#{demo_data[:label]}']")[:for]
-      find(:xpath, "//div[@id='#{label}']").click
-      find(:xpath, "//li[text()='#{demo_data[:value]}']").click
+
+      if has_xpath? ( "//div[@id='#{label}']")
+        find(:xpath, "//div[@id='#{label}']").click
+      elsif has_xpath? ( "//span[@id='#{label}']/button")
+        find(:xpath, "//span[@id='#{label}']/button").click
+      else
+        true.should be( false), "No element found for #{label}"
+      end
+      if has_xpath? ( "//li[text()='#{demo_data[:value]}']")
+        find(:xpath, "//li[text()='#{demo_data[:value]}']").click
+      else
+        true.should be( false), "No element found for #{demo_data[:value]}"
+      end
     end
 
     demographics = [
