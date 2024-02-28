@@ -17,9 +17,9 @@ class RubricsController < ApplicationController
                end
 
     anon = current_user.anonymize?
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        resp = @rubrics.collect do |rubric|
+        resp = @rubrics.collect do | rubric |
           {
             id: rubric.id,
             name: rubric.name,
@@ -45,7 +45,7 @@ class RubricsController < ApplicationController
 
     logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         if !@rubric.errors.empty?
           @rubric.published = false
@@ -64,7 +64,7 @@ class RubricsController < ApplicationController
       @rubric.save
     end
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         if !@rubric.errors.empty?
           @rubric.active = !@rubric.active
@@ -80,7 +80,7 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/1 or /rubrics/1.json
   def show
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: standardized_response(@rubric)
       end
@@ -98,7 +98,7 @@ class RubricsController < ApplicationController
       school: @rubric.school,
       user: current_user
     )
-    @rubric.criteria.each do |criterium|
+    @rubric.criteria.each do | criterium |
       copied_rubric.criteria.new(
         description: criterium.description,
         weight: criterium.weight,
@@ -113,7 +113,12 @@ class RubricsController < ApplicationController
     copied_rubric.save
     logger.debug copied_rubric.errors.full_messages unless copied_rubric.errors.empty?
 
-    render json: standardized_response(copied_rubric, copied_rubric.errors)
+    messages = if copied_rubric.errors.empty?
+                 { main: t('rubrics.copy_success') }
+               else
+                 copied_rubric.errors
+               end
+    render json: standardized_response(copied_rubric, messages)
   end
 
   # GET /rubrics/new
@@ -127,7 +132,7 @@ class RubricsController < ApplicationController
   def create
     @rubric = Rubric.new(rubric_params)
 
-    respond_to do |format|
+    respond_to do | format |
       if @rubric.save
         render json: standardized_response(@rubric)
       else
@@ -138,38 +143,68 @@ class RubricsController < ApplicationController
 
   # PATCH/PUT /rubrics/1 or /rubrics/1.json
   def update
-    respond_to do |format|
+    respond_to do | format |
       if 'new' == params[:id]
         @rubric = Rubric.new(rubric_params)
         @rubric.user = current_user
         @rubric.school = current_user.school
         @rubric.save
       else
-        @rubric.update(rubric_params)
-        if !@rubric.errors.empty? && @rubric.errors[:published].present?
-          new_version = current_user.rubrics.new(
-            name: @rubric.name,
-            description: @rubric.description,
-            published: false,
-            version: (@rubric.version + 1),
-            active: false,
-            school: @rubric.school,
-            parent: @rubric
-          )
-          @rubric.criteria.each do |criterium|
-            new_version.criteria.new(
-              description: criterium.description,
-              weight: criterium.weight,
-              sequence: criterium.sequence,
-              l1_description: criterium.l1_description,
-              l2_description: criterium.l2_description,
-              l3_description: criterium.l3_description,
-              l4_description: criterium.l4_description,
-              l5_description: criterium.l5_description
+        @rubric.transaction do
+          # @rubric.update(rubric_params)
+          @rubric.name = params[:rubric][:name] if params[:rubric][:name].present?
+          @rubric.description = params[:rubric][:description] if params[:rubric][:description].present?
+          @rubric.published = params[:rubric][:published] if params[:rubric][:published].present?
+          @rubric.version = params[:rubric][:version] if params[:rubric][:version].present?
+          @rubric.active = params[:rubric][:active] if params[:rubric][:active].present?
+          @rubric.school_id = params[:rubric][:school_id] if params[:rubric][:school_id].present?
+          @rubric.parent = params[:rubric][:parent] if params[:rubric][:parent].present?
+          @rubric.user_id = params[:rubric][:user_id] if params[:rubric][:user_id].present?
+
+          @rubric.criteria.delete_all
+
+          # Manual assignment of criteria attributes is necessary to avoid
+          # sequence uniqueness constraint violations
+          params[:rubric][:criteria_attributes].each do | criterium |
+            @rubric.criteria.new(
+              id: criterium[:id],
+              description: criterium[:description],
+              weight: criterium[:weight],
+              sequence: criterium[:sequence],
+              l1_description: criterium[:l1_description],
+              l2_description: criterium[:l2_description],
+              l3_description: criterium[:l3_description],
+              l4_description: criterium[:l4_description],
+              l5_description: criterium[:l5_description]
             )
           end
-          @rubric = new_version
           @rubric.save
+
+          if !@rubric.errors.empty? && @rubric.errors[:published].present?
+            new_version = current_user.rubrics.new(
+              name: @rubric.name,
+              description: @rubric.description,
+              published: false,
+              version: (@rubric.version + 1),
+              active: false,
+              school: @rubric.school,
+              parent: @rubric
+            )
+            @rubric.criteria.each do | criterium |
+              new_version.criteria.new(
+                description: criterium.description,
+                weight: criterium.weight,
+                sequence: criterium.sequence,
+                l1_description: criterium.l1_description,
+                l2_description: criterium.l2_description,
+                l3_description: criterium.l3_description,
+                l4_description: criterium.l4_description,
+                l5_description: criterium.l5_description
+              )
+            end
+            @rubric = new_version
+            @rubric.save
+          end
         end
       end
       logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
@@ -191,8 +226,7 @@ class RubricsController < ApplicationController
   def destroy
     @rubric.destroy
 
-    respond_to do |format|
-      format.html { redirect_to rubrics_url, notice: 'Rubric was successfully destroyed.' }
+    respond_to do | format |
       format.json { head :no_content }
     end
   end
@@ -244,7 +278,7 @@ class RubricsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def rubric_params
-    params.require(:rubric).permit(:name, :description, :published,
+    params.require(:rubric).permit(:id, :name, :description, :published,
                                    criteria_attributes: %I[id description weight
                                                            sequence l1_description
                                                            l2_description l3_description

@@ -3,13 +3,14 @@
 require 'chronic'
 # frozen_string_literal: true
 Then(/^the user "([^"]*)" see an Admin button$/) do |admin|
-  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:id, 'main-menu-button').click
   if 'does' == admin
     page.should have_content('Administration')
   else
     page.should_not have_content('Administration')
   end
-  page.document.first(:id, 'home-menu-item').send_keys :escape
+  send_keys :escape
+
 end
 
 Given(/^the user is an admin$/) do
@@ -19,8 +20,8 @@ Given(/^the user is an admin$/) do
 end
 
 Then(/^the user clicks the Admin button$/) do
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="administration-menu"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'administration-menu').hover
 end
 
 Then(/^the user sees (\d+) course$/) do |course_count|
@@ -38,14 +39,15 @@ Then('retrieve the instructor user') do
 end
 
 Then(/^the user opens the course$/) do
-  elem = find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@course.get_name(@anon)}')]")
+  elem = find(:xpath, "//td[@role='cell' and text()='#{@course.get_name(@anon)}']" )
   elem.click
 end
 
 Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   wait_for_render
-  find(:xpath, '//button[@aria-label="Add Activity"]').click
-  find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
+  find(:xpath, "//button[@id='new_activity']" ).click
+  find( :xpath, "//ul[@role='menu']/li[contains(.,'#{link_or_button}')]" ).click
+
   wait_for_render
 end
 
@@ -86,6 +88,7 @@ Then('the user clicks {string}') do |link_or_button|
 end
 
 Then('the user adds a group named {string}') do |group_name|
+  ack_messages
   button = 'Add Group'
   find(:xpath, "//button[contains(.,'#{button}')]",
        match: :first,
@@ -95,20 +98,27 @@ Then('the user adds a group named {string}') do |group_name|
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
-  begin
-    click_link tab
-  rescue Capybara::ElementNotFound
-    find(:xpath, "//button[text()='#{tab}']").click
-  end
+  find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
   wait_for_render
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//button[@aria-label='Select columns']").click
-  inpt = find(:xpath, "//label[contains(.,'#{view_option}')]//input[@type='checkbox']", visible: :all)
-  inpt.click unless inpt.checked?
+  ack_messages
+  retries = 0
+  found = false
 
-  find(:xpath, '//body').click
+  option_xpath = "//ul[@role='listbox']/li[contains(.,'#{view_option}')]/div/div"
+
+  while retries < 4 && !found
+    find(:xpath, "//div[@data-pc-name='multiselect']" ).click
+    found = has_xpath?( option_xpath )
+  end
+  found.should be( true ), "No checkbox for #{view_option} found"
+
+  checkbox = find(:xpath, option_xpath )
+
+  checkbox.click if 'false' == checkbox['data-p-highlight']
+  send_keys :escape
 
 end
 
@@ -127,8 +137,22 @@ Then(/^the user sets the rich "([^"]*)" field to "([^"]*)"$/) do |field, value|
   send_keys value
 end
 
+Then('the user sets the {string} start date to {string} and the end date to {string}') do |item_type, start_date, end_date|
+  datefield = find(:xpath, "//span[@id='#{item_type}_dates']/input" )
+  datefield.click
+
+  send_keys :escape
+
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
+
+  dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
+
+  datefield.fill_in with: dates_string
+
+end
+
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  # find_field(field).click
   elem = find_field(field)
   elem.click
   send_keys [:command, 'a'], :backspace
@@ -143,16 +167,6 @@ Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
   # elem.set(value)
 end
 
-Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
-  field_name = 'start' == date_field_prefix ? 'Project start date' : 'Project end date'
-  find(:xpath, "//label[text()='#{field_name}']").click
-  new_year = Chronic.parse(date_value).strftime('%Y')
-  day_month = Chronic.parse(date_value).strftime('%m%d')
-  send_keys :right, :right
-  send_keys new_year
-  send_keys :left, :left
-  send_keys day_month
-end
 
 Then('the user selects {string} as {string}') do |value, field|
   id = find(:xpath,
@@ -209,9 +223,8 @@ Then(/^the project "([^"]*)" is "([^"]*)"$/) do |field, value|
 end
 
 Then('the user clicks on the existing project') do
-  click_link_or_button 'Activities'
-  elem = find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@project.get_name(@anon)}')]")
-  elem.click
+  find(:xpath, "//a[contains(.,'Activities')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{@project.get_name(@anon)}']").click
 end
 
 Then(/^the project Factor pack is "([^"]*)"$/) do |selected_factor_pack|
@@ -234,7 +247,11 @@ Then(/^set user (\d+) to group "([^"]*)"$/) do |user_number, group_name|
   group = Group.where(name: group_name).take
   button_id = "user_group_#{user.id}_#{group.id}"
 
-  find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
+  begin
+    find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+    find(:xpath, "//div[@id='#{button_id}']", visible: :all).click
+  end
 end
 
 Then(/^group "([^"]*)" has (\d+) user$/) do |group_name, user_count|
@@ -246,7 +263,10 @@ Then(/^group "([^"]*)" has (\d+) revision$/) do |group_name, revision_count|
 end
 
 Then('the user selects the {string} menu item') do |menu_item|
-  find(:xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
+  search_path = "//*[@id='#{menu_item.downcase}-menu-item']"
+  find(:xpath, "//*[@id='administration-menu']").click unless has_xpath?( search_path )
+
+  find(:xpath, search_path).click
 end
 
 Then('the user clicks the {string} button') do |button_name|

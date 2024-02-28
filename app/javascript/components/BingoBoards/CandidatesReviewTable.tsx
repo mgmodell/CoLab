@@ -2,20 +2,18 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Grid from "@mui/material/Grid";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 import { useTranslation } from "react-i18next";
-const RemoteAutosuggest = React.lazy(() => import("./RemoteAutosuggest"));
+import RemoteAutosuggest from "./RemoteAutosuggest";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
+import { Container, Row, Col } from "react-grid-system";
+
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
-import useResizeObserver from "resize-observer-hook";
 import { DataTable } from "primereact/datatable";
 
 import { Column } from "primereact/column";
@@ -24,16 +22,13 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 
-interface ColumnMeta {
-  field: string;
-  header: string;
-  sortable: boolean;
-  filterable?: boolean;
-  hidden?: boolean;
-  body?: (param) => ReactNode;
-  key?: string;
-}
-export default function CandidatesReviewTable(props) {
+import { IColumnMeta } from "../infrastructure/Types";
+import { Panel } from "primereact/panel";
+
+type Props = {
+  rootPath?: string;
+};
+export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
   // Inconsistent naming follows. This should be cleaned up.
@@ -45,7 +40,7 @@ export default function CandidatesReviewTable(props) {
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
-  const [ref, chartWidth, height] = useResizeObserver();
+  //const [ref, chartWidth, height] = useResizeObserver();
 
   const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
@@ -53,16 +48,15 @@ export default function CandidatesReviewTable(props) {
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
   const [feedbackOptions] = useState(
-        // Add a non-response for the UI
-    [{
-
-          credit: 0,
-          critique: "empty",
-          id: 0,
-          name: t("review.not_set_opt")
-    }, ...useTypedSelector(
-        state => state.context.lookups["candidate_feedbacks"]
-      )
+    // Add a non-response for the UI
+    [
+      {
+        credit: 0,
+        critique: "empty",
+        id: 0,
+        name: t("review.not_set_opt")
+      },
+      ...useTypedSelector(state => state.context.lookups["candidate_feedbacks"])
     ]
   );
   const [bingoGame, setBingoGame] = useState();
@@ -102,6 +96,7 @@ export default function CandidatesReviewTable(props) {
     if (fb_id != null) {
       item.completed = 100;
       const fb = getById(options, fb_id);
+
       if ("term_problem" != fb.critique && item.concept.name.length < 1) {
         item.completed = 50;
       }
@@ -123,16 +118,19 @@ export default function CandidatesReviewTable(props) {
 
     let filtered = concepts
       .filter(x => "" != x.concept.name)
-      .map(x => x.concept.name.toLowerCase());
+      .map(x =>
+        x.concept.name.toLowerCase()
+      );
+
 
     const unique_concepts = new Set(filtered).size;
     //Now for just the acceptable ones
     filtered = concepts
       .filter(
-        x =>
-          "" != x.concept.name &&
+        x => "" != x.concept.name &&
           "acceptable" ==
-            getById(feedbackOptions, x.candidate_feedback_id).critique
+          getById(feedbackOptions, x.candidate_feedback_id).critique
+
       )
       .map(x => x.concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
@@ -194,7 +192,6 @@ export default function CandidatesReviewTable(props) {
         ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
-    console.log("reviewed", reviewComplete);
     axios
       .patch(url, {
         candidates: candidates.filter(c => 0 < c.completed),
@@ -236,7 +233,7 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
-  const optColumns: Array<ColumnMeta> = [
+  const optColumns: Array<IColumnMeta> = [
     { field: "number", header: "#", sortable: true, key: "number" },
     {
       field: "completed",
@@ -244,7 +241,7 @@ export default function CandidatesReviewTable(props) {
       sortable: true,
       filterable: true,
       body: param => {
-        return 100 === param ? "*" : null;
+        return 100 === param.completed ? "*" : null;
       },
       key: "completed"
     },
@@ -304,26 +301,24 @@ export default function CandidatesReviewTable(props) {
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
-        <Grid container>
-          <Grid item xs={12} sm={3}>
-            {t("topic")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            {bingoGame.topic}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            {t("close_date")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            {bingoGame.end_date}
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            {t("description")}:
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <p>{parse(bingoGame.description)}</p>
-          </Grid>
-        </Grid>
+        <Panel>
+          <Container>
+            <Row>
+              <Col sm={3}>{t("topic")}:</Col>
+              <Col sm={9}>{bingoGame.topic}</Col>
+            </Row>
+            <Row>
+              <Col sm={3}>{t("close_date")}:</Col>
+              <Col sm={9}>{bingoGame.end_date}</Col>
+            </Row>
+            <Row>
+              <Col sm={3}>{t("description")}:</Col>
+              <Col sm={9}>
+                {parse(bingoGame.description)}
+              </Col>
+            </Row>
+          </Container>
+        </Panel>
       ) : (
         <Skeleton height={20} />
       )}
@@ -347,7 +342,10 @@ export default function CandidatesReviewTable(props) {
           <Column {...col} />
         ))}
         <Column field="term" header={t("review.term_col")} />
-        <Column field="definition" header={t("review.definition_col")} />
+        <Column
+          className="content-table-data"
+          field="definition"
+          header={t("review.definition_col")} />
         <Column
           field="candidate_feedback_id"
           header={t("review.feedback_col")}
@@ -400,4 +398,3 @@ export default function CandidatesReviewTable(props) {
     </ScrollPanel>
   );
 }
-export { ColumnMeta };

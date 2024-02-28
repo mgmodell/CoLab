@@ -94,7 +94,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     }
     user_email = params[:email]
     if EmailAddress.valid? user_email
-      user = User.joins( :emails ).where( emails: { email: user_email }).take
+      user = User.joins(:emails).find_by(emails: { email: user_email })
       if user.nil?
         passwd = SecureRandom.alphanumeric(10)
         user = User.create(

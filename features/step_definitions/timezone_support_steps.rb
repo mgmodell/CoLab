@@ -28,7 +28,8 @@ end
 Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_count|
   24.times do |_index|
     step "that the system's set_up_assessments process runs"
-    visit '/'
+    visit '/home'
+    wait_for_render
     step "user should see #{assessment_count} open task"
     @dest_date = DateTime.current + 30.minutes
     travel_to(@dest_date)
@@ -38,7 +39,8 @@ Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_c
     end
 
     step "that the system's set_up_assessments process runs"
-    visit '/'
+    visit '/home'
+    wait_for_render
     step "user should see #{assessment_count} open task"
     @dest_date = DateTime.current + 30.minutes
     travel_to(@dest_date)

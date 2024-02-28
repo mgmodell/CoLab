@@ -13,18 +13,14 @@ class Reaction < ApplicationRecord
 
   validates :other_name, length: { maximum: 255 }
 
-  def next_week
-    week = nil
-
-    # If we haven't yet decided on a narrative....
-    if narrative.nil?
-
-      found_narrative = NilClass
+  def assign_narrative
+    if self.narrative.nil?
       # If we've already been assigned at least one reaction
-      if user.reactions.count.positive? && user.reactions.count < Narrative.all.count
-        if user.reactions.where.not(narrative_id: nil).count < Scenario.all.count
+      # interrogate the user for their existing reactions
+      if self.user.reactions.count.positive? && self.user.reactions.count < Narrative.all.count
+        if self.user.reactions.where.not(narrative_id: nil).count < Scenario.all.count
           # If they haven't yet been assigned all possible scenarios
-          assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
+          assigned_scenarios = self.user.reactions.joins(:narrative).group(:scenario_id).count
           possible_narratives = if assigned_scenarios.empty?
                                   Narrative.all
                                 else
@@ -34,19 +30,27 @@ class Reaction < ApplicationRecord
 
         else
           # If they've been assigned all scenarios, but not all narratives
-          available_scenarios = user.reactions.group(:narrative_id).where.not(narrative_id: nil).count
+          available_scenarios = self.user.reactions.group(:narrative_id).where.not(narrative_id: nil).count
           possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
 
         end
-        found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
+        self.narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
-      # interrogate the user for their existing reactions
-      # check the extant proportions of the experience
-      # select a scenario/narrative
       else
-        found_narrative = experience.get_least_reviewed_narrative
+        # check the extant proportions of the experience
+        # select a scenario/narrative
+        self.narrative = experience.get_least_reviewed_narrative
       end
-      self.narrative = found_narrative
+    end
+  end
+
+  def next_week
+    week = nil
+
+    # If we haven't yet decided on a narrative....
+    if narrative.nil?
+
+      self.assign_narrative
       week = narrative.weeks.order('weeks.week_num').first
     else
       previous_diagnosis = diagnoses.joins(:week).order('weeks.week_num DESC').first

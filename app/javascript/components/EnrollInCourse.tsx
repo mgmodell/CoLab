@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
-import Button from "@mui/material/Button";
-
-import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import axios from "axios";
+
+import { Button } from "primereact/button";
+import { Panel } from "primereact/panel";
+import { Col, Container, Row } from "react-grid-system";
 
 export default function EnrollInCourse(props) {
   const category = "home";
@@ -34,7 +35,7 @@ export default function EnrollInCourse(props) {
 
   const enrollConfirm = (confirm: boolean) => {
     if (confirm) {
-      const url = `${endpoints.selfRegUrl}/${courseId}.json`;
+      const url = `${endpoints.selfRegUrl}${courseId}.json`;
       axios
         .post(url, {})
         .then(response => {
@@ -50,7 +51,6 @@ export default function EnrollInCourse(props) {
   const enrollButton = (
     <Button
       disabled={!endpointsLoaded || !enrollable}
-      variant="contained"
       onClick={() => {
         enrollConfirm(true);
       }}
@@ -60,7 +60,6 @@ export default function EnrollInCourse(props) {
   );
   const cancelButton = (
     <Button
-      variant="contained"
       onClick={() => {
         enrollConfirm(true);
       }}
@@ -93,7 +92,7 @@ export default function EnrollInCourse(props) {
   }, [endpointsLoaded]);
 
   return (
-    <Paper>
+    <Panel>
       <h1>{t(messageHeader)}</h1>
       <p>
         {t(message, {
@@ -101,15 +100,17 @@ export default function EnrollInCourse(props) {
           course_number: courseNumber
         })}
       </p>
-      <Grid container>
-        <Grid item xs={12} sm={6}>
-          {enrollButton}
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          {cancelButton}
-        </Grid>
-      </Grid>
-    </Paper>
+      <Container>
+        <Row>
+          <Col xs={12} sm={6}>
+            {enrollButton}
+          </Col>
+          <Col xs={12} sm={6}>
+            {cancelButton}
+          </Col>
+        </Row>
+      </Container>
+    </Panel>
   );
 }
 EnrollInCourse.propTypes = {};

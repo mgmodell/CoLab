@@ -1,5 +1,6 @@
 en:
   critiques:
+    critique_title: Critiques
     error:
       not_loaded: No submission loaded
       feedback_required: >
@@ -7,6 +8,9 @@ en:
         score.
     submissions_title: Submissions
     submitted: Assignment submission
+    submitted_text: Submitted text
+    submitted_link: Submitted link
+    submission_list_hidden: Click here to see the submissions list
     no_text: No text entered
     feedback: Overall feedback
     calculated_score_lbl: Calculated score
@@ -23,9 +27,11 @@ en:
     save_success_msg: Successfully saved your feedback
     save_fail_msg: Your feedback failed to save
     submissions:
+      id: Submission id
       score: Score
       calculated_score: Calculated score
       submitted: Submission date
       withdrawn: Withdrawn date
+      not_withdrawn: --
       submitter: Submitted by
       score_na: --

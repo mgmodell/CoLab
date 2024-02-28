@@ -40,9 +40,9 @@ en:
   group_names: Group names
   history: History
   about_you: About You
-  calc_diversity: Diversity
+  calc_diversity: Perspectives
   users: Users
-  diversity_score: Diversity Score
+  diversity_score: Perspective Points
   calc_diversity_sub: Tell me the score!
   clear: Clear
   calc_it: Calculate a Diversity Score
@@ -53,7 +53,6 @@ en:
   close_date: Close Date
   completion_date: Completion Date
   individual: Individual
-  group: Group
   type: Type
   expired: Expired
   bingo_game: Bingo! Game

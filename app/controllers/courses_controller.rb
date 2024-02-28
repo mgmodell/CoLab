@@ -3,26 +3,24 @@
 class CoursesController < ApplicationController
   include PermissionsCheck
 
-  layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
-  before_action :set_reg_course, only: %i[self_reg self_reg_confirm self_reg_init]
+  before_action :set_reg_course, only: %i[self_reg_init self_reg_confirm self_reg_init]
   before_action :check_admin, only: %i[new create]
-  before_action :check_editor, except: %i[next diagnose react accept_roster
+  before_action :check_editor, except: %i[accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  before_action :check_viewer, except: %i[next diagnose react accept_roster
+  before_action :check_viewer, except: %i[accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_confirm qr reg_requests
                                           self_reg_init ]
-  skip_before_action :authenticate_user!, only: %i[qr get_quote]
+  skip_before_action :authenticate_user!, only: %i[qr]
 
   def show
     @title = t('.title')
     respond_to do |format|
-      format.html { render :show }
       format.json do
         response = {
           course: @course.as_json(
@@ -115,7 +113,7 @@ class CoursesController < ApplicationController
 
   def qr
     require 'rqrcode'
-    qrcode = RQRCode::QRCode.new("#{root_url}course/#{params[:id]}/enroll")
+    qrcode = RQRCode::QRCode.new("#{root_url}home/course/#{params[:id]}/enroll")
     png = qrcode.as_png(
       bit_depth: 1,
       border_modules: 4,
@@ -134,7 +132,7 @@ class CoursesController < ApplicationController
   end
 
   def self_reg_confirm
-    roster = Roster.where(user: current_user, course: @course).take
+    roster = Roster.find_by(user: current_user, course: @course)
     if roster.nil?
       roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: current_user)
     elsif !((roster.enrolled_student? || roster.invited_student? ||
@@ -162,7 +160,7 @@ class CoursesController < ApplicationController
       response[:message] = 'self_enroll_course_closed_body'
 
     else
-      roster = Roster.includes(:course).where(user: current_user, course: @course).take
+      roster = Roster.includes(:course).find_by(user: current_user, course: @course)
 
       if roster.nil? || roster.dropped_student? ||
          roster.invited_student? || roster.declined_student?
@@ -321,8 +319,6 @@ class CoursesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html do
-      end
       format.json do
         resp = @courses.collect do |r|
           { id: r.id,
@@ -358,6 +354,11 @@ class CoursesController < ApplicationController
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
     @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
+#    respond_to do |format|
+#      format.json do
+#        render json: { course: @course.as_json }
+#      end
+#    end
   end
 
   def new_from_template
@@ -373,16 +374,12 @@ class CoursesController < ApplicationController
   end
 
   def create
-    @title = t('courses.new.title')
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
     if @course.save
       notice = t('courses.create_success')
       respond_to do |format|
-        format.html do
-          redirect_to courses_url, notice:
-        end
         format.json do
           response = {
             course: @course.as_json(
@@ -398,9 +395,6 @@ class CoursesController < ApplicationController
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do |format|
-        format.html do
-          render :new
-        end
         format.json do
           messages = @course.errors.as_json
           messages[:main] = 'Please review the problems below'
@@ -413,14 +407,9 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @title = t('courses.edit.title')
     if @course.update(course_params)
       notice = t('courses.create_success')
       respond_to do |format|
-        format.html do
-          @course.school = School.find(@course.school_id)
-          redirect_to course_path(@course), notice:
-        end
         format.json do
           response = {
             course: @course.as_json(
@@ -436,9 +425,6 @@ class CoursesController < ApplicationController
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do |format|
-        format.html do
-          render :edit
-        end
         format.json do
           messages = @course.errors.to_hash.store(:main, 'Please review the problems below')
           response = {
@@ -459,9 +445,6 @@ class CoursesController < ApplicationController
     count = @course.add_students_by_email params[:addresses]
     msg = t('courses.students_invited', count:)
     respond_to do |format|
-      format.html do
-        redirect_to @course, notice: msg
-      end
       format.json do
         render json: { messages: { main: msg } }
       end
@@ -472,9 +455,6 @@ class CoursesController < ApplicationController
     count = @course.add_instructors_by_email params[:addresses]
     msg = t('courses.instructor_invited', count:)
     respond_to do |format|
-      format.html do
-        redirect_to @course, notice: msg
-      end
       format.json do
         render json: { messages: { main: msg } }
       end
@@ -482,7 +462,7 @@ class CoursesController < ApplicationController
   end
 
   def accept_roster
-    r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    r = Roster.students.find_by(id: params[:roster_id], user: current_user)
     notice = 'Successfully accepted the course'
     if r.nil?
       notice = t('courses.accept_fail')
@@ -491,10 +471,6 @@ class CoursesController < ApplicationController
       r.save
     end
     respond_to do |format|
-      format.html do
-        flash.keep
-        redirect_to :root
-      end
       format.json do
         render json: {
           messages: { main: notice }
@@ -504,7 +480,7 @@ class CoursesController < ApplicationController
   end
 
   def decline_roster
-    r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    r = Roster.students.find_by(id: params[:roster_id], user: current_user)
     notice = 'Successfully declined the course'
     if r.nil?
       notice = t('courses.decline_fail')
@@ -513,10 +489,6 @@ class CoursesController < ApplicationController
       r.save
     end
     respond_to do |format|
-      format.html do
-        flash.keep
-        redirect_to :root
-      end
       format.json do
         render json: {
           messages: { main: notice }
@@ -549,9 +521,6 @@ class CoursesController < ApplicationController
     user = User.find(params[:user_id])
     AdministrativeMailer.re_invite(user).deliver_later
     respond_to do |format|
-      format.html do
-        redirect_to :admin
-      end
       format.json do
         render json: {
           messages: {
@@ -565,7 +534,6 @@ class CoursesController < ApplicationController
   def drop_student
     r = Roster.find(params[:roster_id])
     message = nil
-    destination = :root
     if r.nil?
       message = t('courses.no_roster')
     else
@@ -575,7 +543,7 @@ class CoursesController < ApplicationController
       else
         r.role = Roster.roles[:dropped_student]
         r.save
-        destination = course_path(r.course) if instructor_action
+        course_path(r.course) if instructor_action
       end
     end
     respond_to do |format|
@@ -585,13 +553,6 @@ class CoursesController < ApplicationController
             main: message || 'Successfully dropped'
           }
         }
-      end
-      format.html do
-        unless message.nil?
-          flash[:notice] = message
-          flash.keep
-        end
-        redirect_to destination
       end
     end
   end
@@ -604,7 +565,9 @@ class CoursesController < ApplicationController
       @course = if params[:id].blank? || 'new' == params[:id]
                   Course.new(
                     school_id: current_user.school_id,
-                    timezone: current_user.timezone
+                    timezone: current_user.timezone,
+                    start_date: Date.tomorrow.beginning_of_day,
+                    end_date: 1.month.from_now.end_of_day
                   )
                 else
                   Course.includes(:users).find(params[:id])
@@ -612,6 +575,7 @@ class CoursesController < ApplicationController
     else
       @course = Course.find_by id: params[:id]
       # TODO: This can't be right and must be fixed for security later
+      # This needs to throw a security error
       redirect_to :show if @course.nil?
     end
   end

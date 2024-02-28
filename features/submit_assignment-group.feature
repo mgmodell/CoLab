@@ -2,6 +2,7 @@ Feature: (Re)Submitting individual assignments
   Students must be able to (re)submit individual assignments
 
   Background:
+    Given a user has signed up
     Given there is a course with an assessed project
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course started "two months ago" and ended "two months from now"
@@ -12,7 +13,7 @@ Feature: (Re)Submitting individual assignments
     Given the course has an assignment
     Given the assignment "is" initialised as group-capable
     Given the assignment opening is "one month ago" and close is "one month from now"
-    Given there exists a rubric published by another user
+    # Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
     Given the assignment "is" active
     Given the user is the "random" user in the group

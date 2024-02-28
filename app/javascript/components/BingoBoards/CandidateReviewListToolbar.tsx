@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { ProgressBar } from "primereact/progressbar";
 import { Tooltip } from "primereact/tooltip";
 import { Toolbar } from "primereact/toolbar";
-import { ColumnMeta } from "./CandidatesReviewTable";
+import { IColumnMeta } from "../infrastructure/Types";
 import { MultiSelect } from "primereact/multiselect";
+import { Knob } from "primereact/knob";
 
 type Props = {
   progress: number;
@@ -20,8 +20,8 @@ type Props = {
   setReviewCompleteFunc: (boolean) => void;
   saveFeedbackFunc: () => void;
   reloadFunc: () => void;
-  optColumns: Array<ColumnMeta>;
-  visibleColumns: Array<ColumnMeta>;
+  optColumns: Array<IColumnMeta>;
+  visibleColumns: Array<IColumnMeta>;
   setVisibleColumnsFunc: (Array) => void;
 };
 
@@ -30,11 +30,7 @@ export default function CandidateReviewListToolbar(props: Props) {
   const { t } = useTranslation(category);
 
   const onColumnToggle = event => {
-    const selectedColumns = event.value;
     props.setVisibleColumnsFunc(event.value);
-
-    //const selectedOptColumns = props.optColumns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
-    //props.setVisibleColumnsFunc( selectedOptColumns );
   };
 
   const columnToggle = (
@@ -46,6 +42,7 @@ export default function CandidateReviewListToolbar(props: Props) {
       placeholder={t("review.toggle_columns_plc")}
       onChange={onColumnToggle}
       className="w-full sm:w-20rem"
+      display="chip"
     />
   );
 
@@ -83,11 +80,11 @@ export default function CandidateReviewListToolbar(props: Props) {
         })}
         data-pr-position="left"
       >
-        <ProgressBar
+        <Knob
           value={props.progress}
           showValue
-          unit="%"
-          mode="determinate"
+          size={50}
+          valueTemplate="{value}%"
         />
         {props.reviewStatus}
       </i>

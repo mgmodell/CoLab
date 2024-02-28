@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import { FormControlLabel, Checkbox } from "@mui/material";
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
 
-type Props = {
-  consentFormId: number;
-  parentUpdateFunc: () => void;
-};
+import { Button } from "primereact/button";
+import { Panel } from "primereact/panel";
+import { Checkbox } from "primereact/checkbox";
+import { Container, Row, Col } from "react-grid-system";
+
+interface Props {
+  consentFormId?: number;
+  parentUpdateFunc?: () => void;
+}
 
 export default function ConsentLog(props: Props) {
   const { t } = useTranslation("consent_logs");
@@ -99,42 +98,42 @@ export default function ConsentLog(props: Props) {
   }, [endpointStatus]);
 
   return (
-    <Paper>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h1">{t("edit.opening")}</Typography>
-          <Typography variant="h2">
+    <Panel>
+      <Container>
+        <Row>
+        <Col xs={12}>
+          <h1>{t("edit.opening")}</h1>
+          <h2>
             {t("edit.title")}: {formName}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
+          </h2>
+        </Col>
+        <Col xs={12}>
           <p>{t("edit.instructions")}</p>
           <p>
             {// Good candidate for dataloading API
-            parse(formText || "")}
+              parse(formText || "")}
           </p>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Link href={formPdfLink}>{t("edit.consent_dl")}</Link>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formAccepted}
-                onChange={() => setFormAccepted(!formAccepted)}
-              />
-            }
-            id="accepted"
-            label={t("edit.accept")}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button fullWidth onClick={updateLog}>
+        </Col>
+        <Col xs={12} sm={6}>
+          <a href={formPdfLink}>{t("edit.consent_dl")}</a>
+        </Col>
+        <Col xs={12} sm={6}>
+          <div className="flex align-items-center">
+            <Checkbox
+              id="accepted"
+              checked={formAccepted}
+              onChange={() => setFormAccepted(!formAccepted)}
+            />
+            <label htmlFor="accepted">{t("edit.accept")}</label>
+          </div>
+        </Col>
+        <Col xs={12}>
+          <Button onClick={updateLog}>
             {t("edit.submit_response")}
           </Button>
-        </Grid>
-      </Grid>
-    </Paper>
+        </Col>
+        </Row>
+      </Container>
+    </Panel>
   );
 }

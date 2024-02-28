@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.2.2'
+ruby '3.2.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.1.3.2'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '7.1.0'
+gem 'shakapacker', '7.2.2'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -88,11 +88,12 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.57.1', require: false
+  gem 'rubocop', '~> 1.60.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'rubocop-capybara'
   gem 'solargraph'
 end
 

@@ -28,25 +28,24 @@ Given('the submission has been withdrawn') do
 end
 
 Then('the user selects submission {int}') do |index|
-  row = find(:xpath, "//div[@data-rowindex='#{index - 1}']")
+  inplace_path = "//div[text()='Click here to see the submissions list']" 
+  find(:xpath, inplace_path ).click if has_xpath?( inplace_path )
+
+  row = find_all( :xpath, "//table/tbody/tr" )[index - 1]
   row.click
-  submission_id = row['data-id'].to_i
+  row.find_all(:xpath, "td" )[0]
+
+  submission_id = row.text.to_i
   @submission = Submission.find submission_id
   @submission.should be_present
   wait_for_render
 end
 
 Then('the user hides all but the {string} tab') do |tabname|
-  tabs = find_all( :xpath, "//div[@role='group']/button[not(text()='#{tabname}') " + 
-                            "and @aria-pressed='true']" )
-  tabs.each do |tab|
-    tab.click
-  end
-  tabs = find_all( :xpath, "//div[@role='group']/button[text()='#{tabname}' " + 
-                            "and @aria-pressed='false']" )
-  tabs.each do |tab|
-    tab.click
-  end
+  tabs = find_all(:xpath, "//div[@role='group']/button[not(text()='#{tabname}') and @aria-pressed='true']" )
+  tabs.each(&:click)
+  tabs = find_all(:xpath, "//div[@role='group']/button[text()='#{tabname}' and @aria-pressed='false']" )
+  tabs.each(&:click)
 end
 
 Then('the contents match the submission contents') do
@@ -121,18 +120,18 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
     score = 0
     case competence
     when 'proficient'
-      level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
-      proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size}')]")
+      level_elements = find_all(:xpath, "//td[contains(@id,'level-#{criterium.id}')]")
+      proficient_elem = find(:xpath, "//td[contains(@id,'level-#{criterium.id}-#{level_elements.size}')]")
       proficient_elem.click
       score = 100
     when 'competent'
-      level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
+      level_elements = find_all(:xpath, "//td[contains(@id,'level-#{criterium.id}')]")
       competent_level = level_elements.size > 1 ? level_elements.size - 1 : 1
-      competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
+      competent_elem = find(:xpath, "//td[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
       competent_elem.click
       score = ( (competent_level) * 100.0 / level_elements.size).round
     when 'novice'
-      elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
+      elem = find(:xpath, "//td[@id='minimum-#{criterium.id}']")
       elem.click
       score = 0
     when 'numbers', 'mixed'
@@ -182,40 +181,44 @@ Then('the db critique matches the data entered') do
     )
     db_rrfbks.size.should eq 1
     rrfbk.score.should eq db_rrfbks[0].score
-    rrfbk.feedback.should eq db_rrfbks[0].feedback
-
+    if rrfbk.feedback.blank?
+      db_rrfbks[0].feedback.should be_blank
+    else  
+      rrfbk.feedback.should eq db_rrfbks[0].feedback
+    end
   end
 end
 
 Then('the user selects the {string} submission') do |temporal_relation|
-  find(:xpath, '//div[contains(@class,"MuiDataGrid-columnHeaderTitleContainer") and contains(.,"Submission date")]' \
-                '//button[@title="Sort"]', visible: :all).hover
+  inplace_path = "//div[text()='Click here to see the submissions list']" 
+  find(:xpath, inplace_path ).click if has_xpath?( inplace_path )
 
+  id_col = 0
+  target_col = 0
+
+  find_all( :xpath, '//th').each_with_index do |th, index|
+    target_col = index + 1 if 'Submission date' == th.text
+    id_col = index + 1 if 'Submission id' == th.text
+  end
+
+  find( :xpath, "//th[#{id_col }]" ).click
+
+  row_index = 1
   case temporal_relation
   when 'latest'
-    sort_dir = 'Downward'
+    find( :xpath, "//th[#{target_col }]" ).click
+    find( :xpath, "//th[#{target_col }]" ).click
+  when 'earliest'
+    find( :xpath, "//th[#{target_col }]" ).click
   else
     log "Selecting the '#{temporal_relation}' item is not yet handled"
     pending
   end
-  svg_search = "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" \
-                "//button[@title='Sort']/*[contains(@data-testid,'#{sort_dir}')]"
 
-  unless has_xpath? svg_search
-    find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
-                  "//button[@title='Sort']", visible: :all).click
-    unless has_xpath? svg_search
-      find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
-                    "//button[@title='Sort']", visible: :all).click
-    end
-    true.should eq false unless has_xpath? svg_search
-  end
-  find(:xpath, '//div[@data-rowindex=0]').click
-
-  row = find(:xpath, '//div[@data-rowindex=0]')
-  row.click
-  submission_id = row['data-id'].to_i
+  id_cell = find(:xpath, "//table/tbody/tr[#{row_index}]/td[#{id_col}]" )
+  submission_id = id_cell.text.to_i
   @submission = Submission.find submission_id
+  id_cell.click
 
   wait_for_render
 end

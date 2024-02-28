@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
 import { iconForType } from "../ActivityLib";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import axios from "axios";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Panel } from "primereact/panel";
 
 interface IActivity {
   id: number;
@@ -32,6 +31,13 @@ type Props = {
   activitiesListUpdateFunc: (activitiesList: Array<IActivity>) => void;
 };
 
+enum OPT_COLS {
+  NAME = "name",
+  TYPE = "type",
+  COURSE_NAME = "course_name",
+  COURSE_NUMBER = "course_number"
+}
+
 export default function UserActivityList(props: Props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
@@ -40,6 +46,14 @@ export default function UserActivityList(props: Props) {
   const category = "profile";
   const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
+  const [filterText, setFilterText] = useState("");
+
+  const optColumns = [
+    t(`activities.${OPT_COLS.TYPE}`),
+    t(`activities.${OPT_COLS.COURSE_NAME}`),
+    t(`activities.${OPT_COLS.COURSE_NUMBER}`)
+  ];
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   const getActivities = () => {
     dispatch(startTask());
@@ -63,66 +77,84 @@ export default function UserActivityList(props: Props) {
     }
   }, []);
 
-  var activityColumns: GridColDef[] = [
-    {
-      headerName: t("activities.name"),
-      field: "name",
-      width: 250,
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("activities.type"),
-      field: "type",
-      width: 75,
-      renderCell: params => {
-        return iconForType(params.value);
-      }
-    },
-    {
-      headerName: t("activities.course_name"),
-      field: "course_name",
-      width: 250,
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("activities.course_number"),
-      field: "course_number",
-      renderCell: renderTextCellExpand
-    }
-  ];
-
   const activityList =
     undefined !== props.activitiesList ? (
-      <DataGrid
-        isCellEditable={() => false}
-        columns={activityColumns}
-        getRowId={row => {
-          return `${row.type}-${row.id}`;
+      <DataTable
+        value={props.activitiesList.filter(activity => {
+          return (
+            filterText.length === 0 ||
+            activity.course_name.includes(filterText) ||
+            activity.course_number.includes(filterText) ||
+            activity.name.includes(filterText)
+          );
+        })}
+        resizableColumns
+        tableStyle={{
+          minWidth: "50rem"
         }}
-        rows={props.activitiesList}
-        onCellClick={(params, event, details) => {
-          if (params.row.link !== null) {
-            navigate(params.row.link);
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={[5, 10, 20, props.activitiesList.length]}
+        header={
+          <StandardListToolbar
+            itemType={"activity"}
+            filtering={{
+              filterValue: filterText,
+              setFilterFunc: setFilterText
+            }}
+            columnToggle={{
+              optColumns: optColumns,
+              visibleColumns: visibleColumns,
+              setVisibleColumnsFunc: setVisibleColumns
+            }}
+          />
+        }
+        sortField="course_name"
+        sortOrder={-1}
+        paginatorDropdownAppendTo={"self"}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        //paginatorLeft={paginatorLeft}
+        //paginatorRight={paginatorRight}
+        dataKey="id"
+        onRowClick={event => {
+          if (event.data.link !== null) {
+            navigate(`/home/${event.data.link}`);
           }
         }}
-        slots={{
-          toolbar: StandardListToolbar
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 }
-          }
-        }}
-        pageSizeOptions={[5, 10, 100]}
-      />
+      >
+        <Column header={t("activities.name")} field="name" sortable filter />
+        <Column
+          header={t("activities.type")}
+          field="type"
+          sortable
+          filter
+          body={rowData => {
+            return iconForType(rowData.type);
+          }}
+        />
+        <Column
+          header={t("activities.course_name")}
+          field="course_name"
+          sortable
+          filter
+        />
+        <Column
+          header={t("activities.course_number")}
+          field="course_number"
+          sortable
+          filter
+        />
+      </DataTable>
     ) : (
       "The activities are loading"
     );
 
   return (
-    <Paper>
+    <Panel>
       <WorkingIndicator identifier="activity_list_loading" />
       {activityList}
-    </Paper>
+    </Panel>
   );
 }

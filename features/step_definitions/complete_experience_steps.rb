@@ -5,15 +5,7 @@ require 'faker'
 Then(/^the user clicks the link to the experience$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[text()='#{@experience.name}']").click
 end
 
 Then 'the {string} button will be disabled' do |button_name|
@@ -40,20 +32,26 @@ rescue Capybara::ElementNotFound => e
 end
 
 Then(/^they open the drawer for additional comments$/) do
+  wait_for_render
   find(:xpath,
-       "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
+       "//div/a[contains(.,'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
 Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
   label = find(:xpath, "//label[text()='#{fld}']")
-  element = find(:xpath, "//input[@id='#{label[:for]}']")
+  element = if has_xpath?("//input[@id='#{label[:for]}']")
+              find(:xpath, "//input[@id='#{label[:for]}']")
+            else
+              find(:xpath, "//textarea[@id='#{label[:for]}']")
+            end
+  # element = find(:xpath, "//textarea[@id='#{label[:for]}']")
   element.click
   element.send_keys txt
 end
 
 Then(/^in the field "([^"]*)" they will see "([^"]*)"$/) do |fld, value|
   label = find(:xpath, "//label[text()='#{fld}']")
-  panel = all(:xpath, "//input[@id='#{label[:for]}']")
+  panel = all(:xpath, "//textarea[@id='#{label[:for]}']")
   panel[0].click unless panel.empty?
   # click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
   field_value = panel[0].value

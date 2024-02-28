@@ -2,20 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-
-import CloseIcon from "@mui/icons-material/Close";
-
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+
+enum OPT_COLS {
+  STUDENTS = "students",
+  COURSES = "courses",
+  INSTRS = "instructors",
+  PROJS = "projects",
+  EXPS = "experiences",
+  BINGO = "bingo!"
+}
 
 export default function SchoolList(props) {
   const category = "school";
@@ -32,40 +35,19 @@ export default function SchoolList(props) {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const columns: GridColDef[] = [
-    {
-      headerName: t("index.name_lbl"),
-      field: "name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("index.courses_lbl"),
-      field: "courses",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("index.students_lbl"),
-      field: "students"
-    },
-    {
-      headerName: t("index.instructors_lbl"),
-      field: "instructors"
-    },
-    {
-      headerName: t("index.project_lbl"),
-      field: "projects"
-    },
-    {
-      headerName: t("index.experience_lbl"),
-      field: "experiences"
-    },
-    {
-      headerName: t("index.terms_list_lbl"),
-      field: "terms_lists"
-    }
-  ];
 
   const [schools, setSchools] = useState([]);
+  const [filterText, setFilterText] = useState("");
+
+  const optColumns = [
+    OPT_COLS.STUDENTS,
+    OPT_COLS.COURSES,
+    OPT_COLS.INSTRS,
+    OPT_COLS.PROJS,
+    OPT_COLS.EXPS,
+    OPT_COLS.BINGO
+  ];
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   const getSchools = () => {
     const url = endpoints.baseUrl + ".json";
@@ -91,45 +73,108 @@ export default function SchoolList(props) {
   };
 
   const schoolTable = (
-    <DataGrid
-      isCellEditable={() => false}
-      columns={columns}
-      rows={schools}
-      slots={{
-        toolbar: AdminListToolbar
+    <DataTable
+      value={schools.filter(school => {
+        return filterText.length === 0 || school.name.includes(filterText);
+      })}
+      resizableColumns
+      reorderableColumns
+      paginator
+      rows={5}
+      tableStyle={{
+        minWidth: "50rem"
       }}
-      slotProps={{
-        toolbar: {
-          itemType: category
-        }
+      rowsPerPageOptions={[5, 10, 20, schools.length]}
+      header={
+        <AdminListToolbar
+          itemType={category}
+          filtering={{
+            filterValue: filterText,
+            setFilterFunc: setFilterText
+          }}
+          columnToggle={{
+            setVisibleColumnsFunc: setVisibleColumns,
+            optColumns: optColumns,
+            visibleColumns: visibleColumns
+          }}
+        />
+      }
+      sortField="name"
+      sortOrder={1}
+      paginatorDropdownAppendTo={"self"}
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      dataKey="id"
+      onRowClick={event => {
+        navigate(String(event.data.id));
       }}
-      onCellClick={(params: GridCellParams) => {
-        navigate(String(params.row.id));
-      }}
-      pageSizeOptions={[5, 10, 100]}
-    />
+    >
+      <Column
+        header={t("index.name_lbl")}
+        field="name"
+        sortable
+        filter
+        key={"name"}
+      />
+      {visibleColumns.includes(OPT_COLS.COURSES) ? (
+        <Column
+          header={t("index.courses_lbl")}
+          field="courses"
+          sortable
+          filter
+          key={"courses"}
+        />
+      ) : null}
+      {visibleColumns.includes(OPT_COLS.STUDENTS) ? (
+        <Column
+          header={t("index.students_lbl")}
+          field="students"
+          sortable
+          filter
+          key={"students"}
+        />
+      ) : null}
+      {visibleColumns.includes(OPT_COLS.INSTRS) ? (
+        <Column
+          header={t("index.instructors_lbl")}
+          field="instructors"
+          sortable
+          filter
+          key={"instructors"}
+        />
+      ) : null}
+      {visibleColumns.includes(OPT_COLS.PROJS) ? (
+        <Column
+          header={t("index.project_lbl")}
+          field="project"
+          sortable
+          filter
+          key={"project"}
+        />
+      ) : null}
+      {visibleColumns.includes(OPT_COLS.EXPS) ? (
+        <Column
+          header={t("index.experience_lbl")}
+          field="experience"
+          sortable
+          filter
+          key={"experience"}
+        />
+      ) : null}
+      {visibleColumns.includes(OPT_COLS.BINGO) ? (
+        <Column
+          header={t("index.terms_list_lbl")}
+          field="terms_lists"
+          sortable
+          filter
+          key={"terms_list"}
+        />
+      ) : null}
+    </DataTable>
   );
 
   return (
     <React.Fragment>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"] || null}
-        </Alert>
-      </Collapse>
       <div style={{ maxWidth: "100%" }}>{schoolTable}</div>
     </React.Fragment>
   );

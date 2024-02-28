@@ -1,180 +1,112 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { SortDirection } from "react-virtualized";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
+import React, { useState } from "react";
 
-class ScoredGameDataTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sortBy: "term",
-      sortDirection: SortDirection.DESC,
-      columns: [
-        {
-          width: 100,
-          flexGrow: 1.0,
-          label: "Entered",
-          dataKey: "term",
-          numeric: false,
-          sortable: true,
-          visible: true,
-          render_func: c => {
-            return c.term;
-          }
-        },
-        {
-          width: 150,
-          flexGrow: 1.0,
-          label: "Definition",
-          dataKey: "definition",
-          numeric: false,
-          sortable: true,
-          visible: true,
-          render_func: c => {
-            return c.definition;
-          }
-        },
-        {
-          width: 100,
-          flexGrow: 1.0,
-          label: "Feedback",
-          dataKey: "feedback",
-          numeric: false,
-          sortable: true,
-          visible: true,
-          render_func: c => {
-            return c.feedback;
-          }
-        },
-        {
-          width: 100,
-          flexGrow: 1.0,
-          label: "Concept",
-          dataKey: "concept",
-          numeric: false,
-          sortable: true,
-          visible: true,
-          render_func: c => {
-            return c.concept;
-          }
-        }
-      ]
-    };
-  }
+import { useTranslation } from "react-i18next";
 
-  sortCandidates(key, direction, candidates) {
-    const dataKey = key;
-    const mod = direction == SortDirection.ASC ? -1 : 1;
-    if ("concept" == dataKey) {
-      candidates.sort((a, b) => {
-        const a_val = a["concept"] || "zz";
-        const b_val = b["concept"] || "zz";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 
-        return mod * a_val.localeCompare(b_val);
-      });
-    } else {
-      candidates.sort((a, b) => {
-        return mod * a[dataKey].localeCompare(b[dataKey]);
-      });
-    }
-  }
-
-  sortEvent(event, dataKey) {
-    const { sortBy, sortDirection } = this.state;
-    const { candidates } = this.props;
-
-    let direction = SortDirection.DESC;
-    if (dataKey == sortBy && direction == sortDirection) {
-      direction = SortDirection.ASC;
-    }
-    this.sortCandidates(dataKey, direction, candidates);
-    this.setState({
-      candidates: candidates,
-      sortDirection: direction,
-      sortBy: dataKey
-    });
-  }
-
-  render() {
-    const direction = {
-      [SortDirection.ASC]: "asc",
-      [SortDirection.DESC]: "desc"
-    };
-    const { columns } = this.state;
-    const { candidates } = this.props;
-    return (
-      <React.Fragment>
-        {candidates == null || 0 == candidates.length ? (
-          "No scored data"
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map(cell => {
-                  if (cell.visible) {
-                    const header = cell.sortable ? (
-                      <TableSortLabel
-                        active={cell.dataKey == this.state.sortBy}
-                        direction={direction[this.state.sortDirection]}
-                        onClick={() => this.sortEvent(event, cell.dataKey)}
-                      >
-                        {cell.label}
-                      </TableSortLabel>
-                    ) : (
-                      cell.label
-                    );
-                    return (
-                      <TableCell width={cell.width} key={"h_" + cell.dataKey}>
-                        {header}
-                      </TableCell>
-                    );
-                  }
-                })}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {null == candidates
-                ? null
-                : candidates.map(candidate => {
-                    return (
-                      <TableRow key={"r_" + candidate.id}>
-                        {columns.map(cell => {
-                          if (cell.visible) {
-                            return (
-                              <TableCell
-                                key={candidate.id + "_c" + cell.dataKey}
-                              >
-                                {cell.render_func(candidate)}
-                              </TableCell>
-                            );
-                          }
-                        })}
-                      </TableRow>
-                    );
-                  })}
-            </TableBody>
-          </Table>
-        )}
-      </React.Fragment>
-    );
-  }
+enum OPT_COLS {
+  TERM = "term",
+  DEFINITION = "definition",
+  FEEDBACK = "feedback",
+  CONCEPT = "concept",
+  CREDIT = "credit"
 }
 
-ScoredGameDataTable.propTypes = {
-  candidates: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      concept: PropTypes.string,
-      definition: PropTypes.string,
-      term: PropTypes.string,
-      feedback: PropTypes.string,
-      feedback_id: PropTypes.number
-    })
-  )
+type Props = {
+  candidates: Array<{
+    id: number;
+    concept: string;
+    definition: string;
+    term: string;
+    feedback: string;
+    feedback_id: number;
+    credit: number;
+  }>;
 };
-export default ScoredGameDataTable;
+
+export default function ScoredGameDataTable(props: Props) {
+  const category = "bingo_game";
+  const { t } = useTranslation(`${category}s`);
+  const optColumns = [
+    t(`scored_game.${OPT_COLS.DEFINITION}`),
+    t(`scored_game.${OPT_COLS.FEEDBACK}`),
+    t(`scored_game.${OPT_COLS.CONCEPT}`),
+    t(`scored_game.${OPT_COLS.CREDIT}`)
+  ];
+  const [visibleColumns, setVisibleColumns] = useState(optColumns);
+
+  return (
+    <DataTable
+      value={props.candidates}
+      resizableColumns
+      tableStyle={{
+        minWidth: "50rem"
+      }}
+      reorderableColumns
+      paginator
+      rows={5}
+      rowsPerPageOptions={[5, 10, 20, props.candidates.length]}
+      virtualScrollerOptions={{ itemSize: 100 }}
+      header={
+        <StandardListToolbar
+          itemType={t("scored_game.list_title")}
+          columnToggle={{
+            optColumns: optColumns,
+            visibleColumns: visibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns
+          }}
+        />
+      }
+      sortField="term"
+      paginatorDropdownAppendTo={"self"}
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      //paginatorLeft={paginatorLeft}
+      //paginatorRight={paginatorRight}
+      dataKey="id"
+    >
+      <Column
+        header={t(`scored_game.${OPT_COLS.TERM}`)}
+        field="term"
+        sortable
+        key="term"
+      />
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.DEFINITION}`)) ? (
+        <Column
+          header={t(`scored_game.${OPT_COLS.DEFINITION}`)}
+          field="definition"
+          sortable
+          key="definition"
+        />
+      ) : null}
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.FEEDBACK}`)) ? (
+        <Column
+          header={t(`scored_game.${OPT_COLS.FEEDBACK}`)}
+          field="feedback"
+          sortable
+          filter
+          key="feedback"
+        />
+      ) : null}
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.CONCEPT}`)) ? (
+        <Column
+          header={t(`scored_game.${OPT_COLS.CONCEPT}`)}
+          field="concept"
+          sortable
+          key="concept"
+        />
+      ) : null}
+      {visibleColumns.includes(t(`scored_game.${OPT_COLS.CREDIT}`)) ? (
+        <Column
+          header={t(`scored_game.${OPT_COLS.CREDIT}`)}
+          field="credit"
+          sortable
+          filter
+          key="credit"
+        />
+        ) : null}
+    </DataTable>
+  );
+}

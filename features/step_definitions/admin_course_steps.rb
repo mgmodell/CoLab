@@ -15,43 +15,19 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  label = 'Course Start Date'
-  begin
-    find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find(:xpath, "//input[@id='#{field_id}']")
-    field.click
-  end
 
-  if start_date.present?
-    new_year = Chronic.parse(start_date).strftime('%Y')
-    new_date = Chronic.parse(start_date).strftime('%m%d')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
-  else
-    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
-  end
+    datefield = find( :xpath, "//span[@id='course_dates']/input" )
+    datefield.click
 
-  label = 'Course End Date'
-  begin
-    find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find(:xpath, "//input[@id='#{field_id}']")
-    field.click
-  end
-  if end_date.present?
-    new_year = Chronic.parse(end_date).strftime('%Y')
-    new_date = Chronic.parse(end_date).strftime('%m%d')
-    send_keys :right, :right, new_year
-    send_keys :left, :left
-    send_keys new_date
-  else
-    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
-  end
+    send_keys :escape
+
+    send_keys [:command, 'a'], :backspace
+    send_keys [:control, 'a'], :backspace
+
+    dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
+
+    datefield.fill_in with: dates_string
+
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
@@ -190,14 +166,15 @@ end
 
 Then 'set the new course start date to {string}' do |new_date|
   label = find(:xpath, "//label[text()='New course start date?']")
-  elem = find(:xpath, "//input[@id='#{label[:for]}']")
+  elem = find(:xpath, "//*[@id='#{label[:for]}']/input")
 
   new_date = Chronic.parse(new_date)
 
   elem.click
-  send_keys new_date.strftime('%Y')
-  send_keys :left, :left
-  send_keys new_date.strftime('%m/%d')
+  elem.send_keys :escape
+  elem.send_keys :backspace
+  send_keys new_date.strftime('%m/%d/%Y')
+  elem.send_keys :escape
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
@@ -318,10 +295,10 @@ end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
   lbl = "#{type}s"
-  tab = find(:xpath, "//button[text()='#{lbl.capitalize}']")
+  tab = find(:xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']")
   tab.click
 
-  btn = find(:xpath, "//button[@aria-label='Add #{lbl}']")
+  btn = find(:xpath, "//button[text()='Add a #{type}']")
   btn.click
 
   inpt = find(:xpath, "//input[@id='addresses']")
@@ -342,16 +319,21 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
 
-  find_all(:xpath, '//div[contains(@class,"Pagination-select")]')[0].click
-  find(:xpath, '//li[text()="100"]').click
+  wait_for_render
+  find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
+  find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
 
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
   if 'user_list' == addresses
     @users.each do |_address|
       step 'the user enables the "Email" table view option'
-      elem = find(:xpath,
-                  "//div[div[a[@href='mailto:#{_address.email}']]]//button[@aria-label='Drop Student']")
+      wait_for_render
+      find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
+      find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+
+      xpression = "//tr/td/a[contains(.,'#{_address.email}')]/../../td/button[@aria-label='drop student']"
+      elem = find(:xpath, xpression )
       elem.click
       find(:xpath,
            "//button[text()='Drop the Student']").click
@@ -359,11 +341,13 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
     end
   else
     # Find the email
-    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']")
-    # Get the parent
-    elem = elem.ancestor(:xpath, '//div[@role="row"]')
-    # Get the button
-    elem = elem.find(:xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
+    wait_for_render
+    find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
+    find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+
+    drop_button_xpath = "//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='drop student']"
+
+    elem = find(:xpath, drop_button_xpath) 
 
     elem.click
 
@@ -374,11 +358,14 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
 end
 
 Then 'there are {int} students in the course' do |count|
-  @course.rosters.students.count.should eq count
+  wait_for_render
+  
+  @course.rosters.students.size.should eq count
 end
 
 Then 'there are {int} enrolled students in the course' do |count|
-  @course.rosters.enrolled.count.should eq count
+  wait_for_render
+  @course.rosters.enrolled.size.should eq count
 end
 
 Then 'there are {int} instructors in the course' do |count|
@@ -404,7 +391,7 @@ Then('the user sees self-registration image') do
 end
 
 Then 'the user opens the self-registration link for the course' do
-  self_reg_url = "course/#{@course.id}/enroll"
+  self_reg_url = "home/course/#{@course.id}/enroll"
   visit(self_reg_url)
   if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
@@ -426,7 +413,7 @@ Then 'the user submits credentials' do
 end
 
 Given('the user has {string} the course') do |action|
-  roster = Roster.where(course: @course, user: @user).take
+  roster = Roster.find_by( course: @course, user: @user )
   roster = @course.rosters.create(user: @user) if roster.nil?
   case action
   when 'declined'
@@ -471,7 +458,7 @@ Given('the course adds {int} {string} users') do |count, role|
 end
 
 Then('the user sees {int} enrollment request') do |count|
-  expect(all(:xpath, '//button[@label=\'Accept\']').size).to eq count
+  expect(all(:xpath, '//button[@id=\'Accept\']').size).to eq count
 end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
@@ -500,6 +487,6 @@ Then('close all messages') do
 end
 
 Then('the user selects the {string} activity') do |activity_name|
-  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{activity_name}')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
   wait_for_render
 end

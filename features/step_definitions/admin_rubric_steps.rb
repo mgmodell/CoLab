@@ -56,40 +56,66 @@ end
 
 Then('the user sees {int} rubrics') do |count|
   wait_for_render
-  rubrics = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
-  rubrics.size.should eq count
+  rubrics = find_all(:xpath, "//tbody/tr")
+  if 0 == count && 1 == rubrics.size
+    has_content?('No results found').should be true
+  else
+    rubrics.size.should eq count
+  end
 end
 
 Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
-  field = find_all(:xpath,
-                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field_num = case field_name.downcase
+              when 'description'
+                1
+              when 'weight'
+                2
+              when 'l1_description'
+                3
+              when 'l2_description'
+                4
+              when 'l3_description'
+                5
+              when 'l4_description'
+                6
+              when 'l5_description'
+                7
+              else
+                true.should be false
+              end
+  field = row.find_all( 'td' )[field_num]
+  field.click
+  
+  field = find( :id, field_name.downcase )
 
-  text = field.text
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys value
-  send_keys :enter
+  field.send_keys value
+  field.send_keys :enter
+
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
-  wait_for_render
-  field = find_all(:xpath,
-                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
-  text = field.text
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field_num = level + 2
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys value
-  send_keys :enter
+  field = row.find_all( 'td' )[field_num]
+  field.click
+
+  field = find_by_id("l#{level}_description")
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
+
+  field.send_keys value
+  field.send_keys :enter
 end
 
 Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']/div")[criteria_num - 1]
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[2]
+
   field.text.to_i.should eq weight
 end
 
@@ -99,8 +125,8 @@ end
 
 Then('the user will see an empty criteria {int}') do |criteria_num|
   wait_for_render
-  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='description']/div"
-  field = find_all(:xpath, path)[criteria_num - 1]
+  row = find_all( :xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[1]
   field.text.should eq 'New Criteria'
 end
 
@@ -118,15 +144,17 @@ Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, f
 end
 
 Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weight|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']")[criteria_num - 1]
-  text = field.text
+  row = find_all(:xpath, "//tbody/tr" )[criteria_num - 1]
+  field = row.find_all( 'td' )[2]
 
-  field.double_click
-  text.size.times do
-    send_keys :backspace
-  end
-  send_keys weight
-  send_keys :enter
+  field.click
+
+  field = find_by_id("weight")
+  field.send_keys [:control, 'a'], :backspace
+  field.send_keys [:command, 'a'], :backspace
+
+  field.send_keys weight
+  field.send_keys :enter
 end
 
 Then('retrieve the {string} rubric from the db') do |name|
@@ -190,7 +218,8 @@ Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
 end
 
 Then('the user searches for {string}') do |search_string|
-  field = find(:xpath, "//input[@type='search']")
+  field = find(:xpath, "//input[@id='rubric-search']")
+  ack_messages
   oldVal = field.value
   field.click
 
@@ -202,14 +231,9 @@ Then('the user searches for {string}') do |search_string|
 end
 
 Then('the user edits the {string} rubric') do |name|
-  xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div"
-  fields = find_all(:xpath, xpath)
-  found = false
-  fields.each do |field|
-    found = true
-    field.click if name == field.text
-  end
-  true.should be false unless found
+  xpath =  "//tbody/tr/td[text()='#{name}']"
+  field = find(:xpath, xpath)
+  field.click
 end
 
 Then('the rubric {string} published') do |is_published|
@@ -227,15 +251,8 @@ Given('the {string} rubric is published') do |name|
 end
 
 Then('the user copies the {string} rubric') do |rubric_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-  found = false
-  rows.each do |row|
-    if row.text == rubric_name
-      found = true
-      row.find(:xpath, "../..//button[@id='copy_rubric']").click
-    end
-  end
-  true.should be false unless found
+  row = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric']")
+  row.click
 end
 
 Then('the user copies criteria {int}') do |criteria_num|
@@ -298,8 +315,7 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
 end
 
 Then('the user adds a level to criteria {int}') do |criteria_num|
-  path = "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[contains(@data-field,'_description')]"
-  levels = find_all(:xpath, path)
+  levels = find_all(:xpath, "//tbody/tr[#{criteria_num - 1}]/td" )
 
   levels.each_with_index do |level, index|
     next if level.text.present?
@@ -366,14 +382,11 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
 end
 
 Then('the user deletes criteria {int}') do |criteria_num|
-  fields = find_all(:xpath,
-                    "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[@data-field='actions']/button[@id='delete_criteria']")
-  fields.size.should be 1
-  fields[0].click
+  find_all(:xpath, "//button[@id='delete_criteria']")[criteria_num - 1].click
 end
 
 Then('criteria {int} matches the remembered criteria') do |criteria_num|
-  test_criteria = @rubric.criteria[criteria_num]
+  test_criteria = @rubric.criteria[criteria_num - 1]
   test_criteria.description.should eq @criterium.description
   test_criteria.weight.should eq @criterium.weight
   test_criteria.l1_description.should eq @criterium.l1_description
@@ -385,36 +398,19 @@ end
 
 Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
   wait_for_render
-  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='actions']/button[@id='#{up_or_down}_criteria']"
-  field = find_all(:xpath, path)[criteria_num - 1]
-  field.click
+  find_all(:xpath, "//button[@id='#{up_or_down}_criteria']")[criteria_num - 1].click
 end
 
 Then('the user deletes the {string} rubric') do |rubric_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-  found = false
-  rows.each do |row|
-    next unless row.text == rubric_name
-
-    found = true
-    row.find(:xpath, "../..//button[@id='delete_rubric']").click
-    break
-  end
-  true.should be false unless found
+  row = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+  row.click
 end
 
 Then('the user can not {string} the {string} rubric') do |action, rubric_name|
   case action
   when 'delete'
-    rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-    found = false
-    rows.each do |row|
-      if row.text == rubric_name
-        found = true
-        row.find(:xpath, "../..//button[@id='delete_rubric']").disabled?.should be true
-      end
-    end
-    true.should be false unless found
+    button = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+    button.disabled?.should be true
   else
     true.should be false
   end

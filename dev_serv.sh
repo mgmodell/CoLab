@@ -151,7 +151,7 @@ if [ "$LOAD" = true ]; then
     echo "Loading"
     docker compose run --rm app "rails db:drop db:create COLAB_DB=db COLAB_DB_PORT=3306"
     mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
-    docker compose run --rm app "rails bin/rails db:environment:set RAILS_ENV=development"
+    docker compose run --rm app "rails db:environment:set RAILS_ENV=development"
     echo "Loaded"
   else
     echo "File does not exist: $LOAD_FILE"

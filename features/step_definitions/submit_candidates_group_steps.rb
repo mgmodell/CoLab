@@ -129,11 +129,6 @@ When('the user changes a random {int} {string} entries') do |count, field|
   balance_field = 'term' == field ? 'definition' : 'term'
 
   entries_array = []
-  # @entries_lists.keys.each do |user_id|
-  #   @entries_lists[user_id].each do |entry|
-  #     entries_array.push entry
-  #   end
-  # end
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
   count.to_i.times do |_index|

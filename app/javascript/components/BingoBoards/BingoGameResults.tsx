@@ -1,106 +1,85 @@
 import React, { useState } from "react";
-import Draggable from "react-draggable";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import { TabList, TabContext, TabPanel } from "@mui/lab";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
+
+import { TabView, TabPanel } from "primereact/tabview";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import { Container, Row, Col } from "react-grid-system";
 
 const ScoredGameDataTable = React.lazy(() => import("./ScoredGameDataTable"));
 
-function PaperComponent(props) {
-  return (
-    <Draggable>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
+interface ICandidate {
+  id: number;
+  concept: string;
+  definition: string;
+  term: string;
+  feedback: string;
+  feedback_id: number;
+};
 
-export default function BingoGameResults(props) {
-  const [curTab, setCurTab] = useState("key");
+type Props = {
+  open: boolean;
+  student: string;
+  board: Array<Array<string>>;
+  score: number;
+  close: Function;
+  candidates: Array<ICandidate>;
+};
+
+
+export default function BingoGameResults(props: Props) {
+  const [curTab, setCurTab] = useState(0);
 
   const renderBoard = board => {
     if (board == null || board.length == 0) {
       return <p>No board available</p>;
     } else {
       return (
-        <React.Fragment>
-          <Typography>
+        <Container>
+          <Row>
+            <Col xs={12}>
             <b>Score: </b>
             {null == props.score ? "unscored" : props.score}
-            <br />
-          </Typography>
-          <Table>
-            <TableBody>
+            </Col>
+          </Row>
+
+          <table>
+            <tbody>
               {props.board.map((row, r_ind) => (
-                <TableRow key={r_ind}>
+                <tr key={r_ind}>
                   {row.map((col, c_ind) => (
-                    <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
+                    <td key={r_ind + "_" + c_ind}>{col}</td>
                   ))}
-                </TableRow>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
-        </React.Fragment>
+            </tbody>
+          </table>
+        </Container>
       );
     }
   };
 
   return (
     <Dialog
-      open={props.open}
-      onClose={props.close}
-      PaperComponent={PaperComponent}
-      aria-labelledby="draggable-dialog-title"
-    >
-      <DialogTitle id="draggable-dialog-title">
+    header={
+      <span>
         Results for {props.student}
-      </DialogTitle>
-      <DialogContent>
-        <TabContext value={curTab}>
-          <Box>
-            <TabList value={curTab} onChange={setCurTab} centered>
-              <Tab value="results" label="Scored Results" />
-              <Tab value="key" label="Answer Key" />
-            </TabList>
-          </Box>
-          <TabPanel value="key">{renderBoard(props.board)}</TabPanel>
-          <TabPanel value="results">
+      </span>
+    }
+    visible={props.open}
+    onHide={() => props.close()}
+    footer={
+        <Button onClick={(event) => {props.close()}}>Done</Button>
+    }
+    >
+
+        <TabView activeIndex={curTab} onTabChange={(event)=>{setCurTab(event.index)}}>
+          <TabPanel header={"Scored Results"}>
+            {renderBoard(props.board)}
+          </TabPanel>
+          <TabPanel header={"Answer Key"}>
             <ScoredGameDataTable candidates={props.candidates} />
           </TabPanel>
-        </TabContext>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={props.close}>Done</Button>
-      </DialogActions>
+        </TabView>
     </Dialog>
   );
 }
-
-BingoGameResults.propTypes = {
-  open: PropTypes.bool.isRequired,
-  student: PropTypes.string,
-  board: PropTypes.array,
-  score: PropTypes.number,
-  close: PropTypes.func,
-  candidates: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      concept: PropTypes.string,
-      definition: PropTypes.string,
-      term: PropTypes.string,
-      feedback: PropTypes.string,
-      feedback_id: PropTypes.number
-    })
-  )
-};

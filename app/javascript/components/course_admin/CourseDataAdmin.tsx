@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate, useParams } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -11,43 +11,49 @@ import {
   addMessage,
   Priorities
 } from "../infrastructure/StatusSlice";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Skeleton from "@mui/material/Skeleton";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 
-import { iconForType } from "../ActivityLib";
 
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabPanel, TabList, TabContext } from "@mui/lab/";
-
-import { DateTime, Settings } from "luxon";
-const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
-
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useTranslation } from "react-i18next";
-import CourseAdminListToolbar from "../infrastructure/CourseAdminListToolbar";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
-export default function CourseDataAdmin(props) {
+const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
+import { useTranslation } from "react-i18next";
+import { Button } from "primereact/button";
+import { TabView } from "primereact/tabview";
+import { TabPanel } from "primereact/tabview";
+import { Skeleton } from "primereact/skeleton";
+import { Dropdown } from "primereact/dropdown";
+import { Panel } from "primereact/panel";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Message } from "primereact/message";
+import { Calendar } from "primereact/calendar";
+import ActivityList, { Activity } from "./ActivityList";
+import CourseWizard from "./wizard/CourseWizard";
+
+interface IActivityLink {
+  name: string;
+  link: string;
+}
+
+interface ICourse {
+  id: number;
+  name: string;
+  number: string;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  school_id: number;
+  consent_form_id: number;
+  timezone: string;
+  reg_link: string;
+  activities: Array<Activity>;
+};
+
+
+export default function CourseDataAdmin() {
   const category = "course";
-  const {t} = useTranslation( `${category}s`);
+  const { t } = useTranslation(`${category}s`);
 
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -55,14 +61,8 @@ export default function CourseDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
 
-  const navigate = useNavigate();
-
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
     return state.status.dirtyStatus[category];
   });
@@ -74,30 +74,34 @@ export default function CourseDataAdmin(props) {
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
 
-  const [courseName, setCourseName] = useState("");
-  const [courseNumber, setCourseNumber] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
+  const [course, setCourse] = useState<ICourse>({
+    id: courseId,
+    name: "",
+    number: "",
+    description: "",
+    start_date: new Date(),
+    end_date: new Date(),
+    school_id: null,
+    consent_form_id: null,
+    timezone: "UTC",
+    reg_link: "",
+    activities: []
+  });
+
   const [courseUsersList, setCourseUsersList] = useState(Array<StudentData>);
-  const [courseActivities, setCourseActivities] = useState([]);
-  const [courseStartDate, setCourseStartDate] = useState(DateTime.local());
+
   //Using this Luxon function for later i18n
-  const [courseEndDate, setCourseEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
-  );
-  const [courseSchoolId, setCourseSchoolId] = useState(0);
-  const [courseTimezone, setCourseTimezone] = useState("");
-  const [courseConsentFormId, setCourseConsentFormId] = useState(0);
-  const [courseRegImage, setCourseRegImage] = useState(null);
 
   const schools = useTypedSelector(state => state.context.lookups["schools"]);
   const timezones = useTypedSelector(
     state => state.context.lookups["timezones"]
   );
   const [consentForms, setConsentForms] = useState([]);
-  const [newActivityLinks, setNewActivityLinks] = useState([]);
+  const [newActivityLinks, setNewActivityLinks] = useState<Array<IActivityLink>>([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getCourse = () => {
     dispatch(startTask());
@@ -118,42 +122,29 @@ export default function CourseDataAdmin(props) {
 
         const course = data.course;
 
-        setCourseName(course.name || "");
-        setCourseNumber(course.number || "");
-        setCourseDescription(course.description || "");
+        const localCourse: ICourse = {
+          id: courseId,
+          name: course.name || "",
+          number: course.number || '',
+          description: course.description || '',
+          start_date: new Date(Date.parse(course.start_date)),
+          end_date: new Date(Date.parse(course.end_date)),
+          school_id: course.school_id,
+          consent_form_id: course.consent_form_id,
+          timezone: course.timezone || "UTC",
+          reg_link: course.reg_link,
+          activities: course.activities
+        }
+        setCourse(localCourse);
 
-        let receivedDate = DateTime.fromISO(course.start_date).setZone(
-          Settings.timezone
-        );
-        setCourseStartDate(receivedDate);
-        receivedDate = DateTime.fromISO(course.end_date).setZone(
-          Settings.timezone
-        );
-
-        setCourseEndDate(receivedDate);
-        setCourseRegImage(course.reg_link);
-        course.activities.forEach(activity => {
-          receivedDate = DateTime.fromISO(activity.end_date).setZone(
-            Settings.timezone
-          );
-          activity.end_date = receivedDate;
-          receivedDate = DateTime.fromISO(activity.start_date).setZone(
-            Settings.timezone
-          );
-          activity.start_date = receivedDate;
-        });
-        setCourseActivities(course.activities);
-        setCourseTimezone(course.timezone || "UTC");
-        setCourseConsentFormId(course.consent_form_id || 0);
-        setCourseSchoolId(course.school_id || 0);
-
-        dispatch(endTask("loading"));
         dispatch(setClean(category));
+
       })
       .catch(error => {
         console.log("error:", error);
+      }).finally(() => {
         dispatch(endTask("loading"));
-      });
+      })
   };
 
   const saveCourse = () => {
@@ -169,41 +160,33 @@ export default function CourseDataAdmin(props) {
       url: url,
       data: {
         course: {
-          name: courseName,
-          number: courseNumber,
           course_id: courseId,
-          description: courseDescription,
-          start_date: courseStartDate,
-          end_date: courseEndDate,
-          school_id: courseSchoolId,
-          consent_form_id: courseConsentFormId,
-          timezone: courseTimezone
+          name: course.name,
+          number: course.number,
+          description: course.description,
+          start_date: course.start_date,
+          end_date: course.end_date,
+          school_id: course.school_id,
+          consent_form_id: course.consent_form_id,
+          timezone: course.timezone
         }
       }
     })
       .then(response => {
         const data = response.data;
         if (Object.keys(data.messages).length < 2) {
-          setCourseId(data.course.id);
-          setCourseName(data.course.name);
-          setCourseNumber(data.course.number);
-          setCourseDescription(data.course.description);
-          setCourseTimezone(data.course.timezone);
-          setCourseConsentFormId(data.course.consent_form_id || 0);
-          setCourseSchoolId(data.course.school_id);
-
-          var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
-            tz_hash[ courseTimezone]
+          const localCourse: ICourse = Object.assign({},
+            data.course,
+            {
+              start_date: new Date(Date.parse(data.course.start_date)),
+              end_date: new Date(Date.parse(data.course.end_date))
+            }
           );
+          setCourse(localCourse);
+          setCourseId(localCourse.id);
+          navigate( `../${localCourse.id}`, { replace: true } );
 
-          setCourseStartDate(receivedDate);
 
-          receivedDate = DateTime.fromISO(data.course.end_date).setZone(
-            tz_hash[ courseTimezone ]
-          );
-          setCourseEndDate(receivedDate);
-
-          dispatch(endTask("saving"));
           dispatch(setClean(category));
         }
         postNewMessage(data.messages);
@@ -211,16 +194,18 @@ export default function CourseDataAdmin(props) {
       .catch(error => {
         console.log("error:", error);
         dispatch(endTask("saving"));
-      });
+      }).finally(() => {
+        dispatch(endTask("saving"));
+      })
   };
 
   useEffect(() => {
     if (schools.length > 0) {
-      const newSchoolTzHash = Object.assign( {}, schoolTzHash );
+      const newSchoolTzHash = Object.assign({}, schoolTzHash);
       schools.map(schoolData => {
         newSchoolTzHash[schoolData.id] = schoolData.timezone;
       });
-      setSchoolTzHash( newSchoolTzHash );
+      setSchoolTzHash(newSchoolTzHash);
     }
   }, [schools]);
 
@@ -234,13 +219,7 @@ export default function CourseDataAdmin(props) {
   useEffect(() => {
     dispatch(setDirty(category));
   }, [
-    courseName,
-    courseDescription,
-    courseTimezone,
-    courseSchoolId,
-    courseConsentFormId,
-    courseStartDate,
-    courseEndDate
+    course,
   ]);
 
   const postNewMessage = msgs => {
@@ -251,307 +230,197 @@ export default function CourseDataAdmin(props) {
   const saveButton = dirty ? (
     <React.Fragment>
       <hr />
-      <Button variant="contained" onClick={saveCourse}>
+      <Button onClick={saveCourse}>
         {Boolean(courseId) ? "Save" : "Create"} Course
       </Button>
     </React.Fragment>
   ) : null;
 
+  const setCourseValue = (field, value) => {
+    setCourse(course => {
+      return { ...course, [field]: value };
+    });
+  }
+
   const detailsComponent = (
-    <Paper>
-      <TextField
-        label="Course Number"
+    <Panel>
+      <label htmlFor="course-number" id="course-number_lbl">
+        Course Number
+      </label>
+      <InputText
+        placeholder="Course Number"
         id="course-number"
-        value={courseNumber}
-        fullWidth={false}
-        onChange={event => setCourseNumber(event.target.value)}
-        error={Boolean(messages["number"])}
-        helperText={messages["number"]}
+        value={course.number}
+        onChange={event => {
+          setCourseValue('number', event.target.value);
+        }}
       />
-      <TextField
-        label="Course Name"
+      {Boolean(messages['course_number']) ? (
+        <Message severity="error" text={messages['course_number']} />
+      ) : null}
+      <br />
+      <label htmlFor="course-name" id="course-name_lbl">
+        Course Name
+      </label>
+      <InputText
+        placeholder="Course Name"
         id="course-name"
-        value={courseName}
-        fullWidth={false}
-        onChange={event => setCourseName(event.target.value)}
-        error={Boolean(messages["name"])}
-        helperText={messages["name"]}
+        value={course.name}
+        onChange={event => {
+          setCourseValue('name', event.target.value);
+        }}
       />
+      {Boolean(messages['course_name']) ? (
+        <Message severity="error" text={messages['course_name']} />
+      ) : null}
       <br />
-      <TextField
-        label="Course Description"
+      <label htmlFor="course-description" id="course-description_lbl">
+        Course Description
+      </label>
+      <InputTextarea
+        placeholder="Course Description"
         id="course-description"
-        value={courseDescription}
-        fullWidth={true}
-        multiline={true}
-        onChange={event => setCourseDescription(event.target.value)}
-        error={Boolean(messages["description"])}
-        helperText={messages["description"]}
+        value={course.description}
+        onChange={event => {
+          setCourseValue('description', event.target.value);
+        }}
+        rows={5}
+        cols={30}
+        autoResize={true}
       />
+      {Boolean(messages['course_description']) ? (
+        <Message severity="error" text={messages['course_description']} />
+      ) : null}
       <br />
-      <br />
-      <FormControl>
-        <InputLabel htmlFor="course_school" id="course_school_lbl">
-          School
-        </InputLabel>
-        {schools.length > 0 ? (
-          <Select
-            id="course_school"
-            value={courseSchoolId}
-            onChange={event => {
-              const changeTo = Number(event.target.value);
-              setCourseSchoolId(changeTo);
-              setCourseTimezone(schoolTzHash[changeTo]);
-            }}
-          >
-            <MenuItem value={0}>None Selected</MenuItem>
-            {schools.map(school => {
-              return (
-                <MenuItem key={"school_" + school.id} value={school.id}>
-                  {school.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        ) : (
-          <Skeleton variant="rectangular" height={20} />
-        )}
-        <FormHelperText>Error schtuff</FormHelperText>
-      </FormControl>
-
-      <FormControl>
-        <InputLabel htmlFor="course_timezone" id="course_timezone_lbl">
-          Time Zone
-        </InputLabel>
-        {timezones.length > 0 ? (
-          <Select
-            id="course_timezone"
-            value={courseTimezone}
-            onChange={event => setCourseTimezone(String(event.target.value))}
-          >
-            {timezones.map(timezone => {
-              return (
-                <MenuItem key={timezone.name} value={timezone.name}>
-                  {timezone.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        ) : (
-          <Skeleton variant="rectangular" height={20} />
-        )}
-        <FormHelperText>More Error Schtuff</FormHelperText>
-      </FormControl>
-
-      <FormControl>
-        <InputLabel htmlFor="course_consent_form" id="course_consent_form_lbl">
-          Consent Form
-        </InputLabel>
-        <Select
-          id="course_consent_form"
-          value={courseConsentFormId}
-          onChange={event => setCourseConsentFormId(Number(event.target.value))}
-        >
-          <MenuItem value={0}>None Selected</MenuItem>
-          {consentForms.map(consent_form => {
-            return (
-              <MenuItem key={consent_form.id} value={consent_form.id}>
-                {consent_form.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText>More Error Schtuff</FormHelperText>
-      </FormControl>
-
-      <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
-        <DatePicker
-          autoOk={true}
-          inputFormat="MM/dd/yyyy"
-          margin="normal"
-          label="Course Start Date"
-          value={courseStartDate}
-          onChange={setCourseStartDate}
-          error={Boolean(messages["start_date"])}
-          helperText={messages["start_date"]}
-          slot={{
-            TextField: TextField
+      <label htmlFor="course_school" id="course_school_lbl">
+        School
+      </label>
+      {schools.length > 0 ? (
+        <Dropdown
+          id="course_school"
+          value={course.school_id}
+          options={schools}
+          onChange={event => {
+            const changeTo = Number(event.target.value);
+            setCourse(course => {
+              return {
+                ...course,
+                school_id: changeTo,
+                timezone: schoolTzHash[changeTo]
+              };
+            });
           }}
-          slotProps={{
-            textField: {
-              id: "course_start_date"
-            }
-          }}
-          //renderInput={props => <TextField id="course_start_date" {...props} />}
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select a School"
+          showClear={false}
         />
-        {Boolean(messages["start_date"]) ? (
-          <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
-        ) : null}
+      ) : (
+        <Skeleton className={"mb-2"} height={'2rem'} />
+      )}
 
-        <DatePicker
-          autoOk={true}
-          inputFormat="MM/dd/yyyy"
-          margin="normal"
-          label="Course End Date"
-          //value={courseEndDate}
-          onChange={setCourseEndDate}
-          error={Boolean(messages["end_date"])}
-          helperText={messages["end_date"]}
-          slot={{
-            TextField: TextField
+      <label htmlFor="course_timezone" id="course_timezone_lbl">
+        Time Zone
+      </label>
+      {timezones.length > 0 ? (
+        <Dropdown id="course_timezone"
+          value={course.timezone}
+          options={timezones}
+          onChange={event => {
+            setCourseValue('timezone', event.target.value);
           }}
-          slotProps={{
-            textField: {
-              id: "course_end_date"
-            }
-          }}
-
-          //renderInput={props => <TextField id="course_end_date" {...props} />}
+          optionLabel="name"
+          optionValue="name"
+          placeholder="Select a Time Zone"
+          showClear={false}
         />
-      </LocalizationProvider>
+      ) : (
+        <Skeleton className={"mb-2"} height={'2rem'} />
+      )}
+
+      <label htmlFor="course_consent_form" id="course_consent_form_lbl">
+        Consent Form
+      </label>
+      <Dropdown
+        id="course_consent_form"
+        value={course.consent_form_id}
+        options={consentForms}
+        onChange={event => {
+          setCourseValue('consent_form_id', event.target.value);
+        }}
+        optionValue="id"
+        optionLabel="name"
+        placeholder="Select a Consent Form"
+        showClear={true}
+      />
+
+      <p>All dates shown in {course.timezone} timezone.</p>
+      <label htmlFor="course_dates" id="course_dates_lbl">
+        Course Dates
+      </label>
+      <Calendar
+        id="course_dates"
+        selectionMode={'range'}
+        value={[course.start_date, course.end_date]}
+        placeholder="Select a Date Range"
+        showIcon={true}
+        onChange={event => {
+          const changeTo = event.value;
+          if (null !== changeTo && changeTo.length > 1) {
+            setCourse(course => {
+              return {
+                ...course,
+                start_date: changeTo[0],
+                end_date: changeTo[1]
+              };
+            })
+
+          }
+        }}
+
+      />
+      {Boolean(messages["start_date"]) ? (
+        <Message severity="error" text={messages["start_date"]} />
+      ) : null}
+
       {Boolean(messages["end_date"]) ? (
-        <FormHelperText error={true}>{messages["end_date"]}</FormHelperText>
+        <Message severity="error" text={messages["end_date"]} />
       ) : null}
       <br />
       {courseId != null && courseId > 0 ? (
-        <Link href={courseRegImage}>
-          <img src={courseRegImage} alt="Registration QR Code" />
+        <a href={course.reg_link} download>
+          <img src={course.reg_link} alt="Registration QR Code" />
           Download self-registration code
-        </Link>
+        </a>
       ) : null}
 
       <br />
-    </Paper>
+    </Panel>
   );
-  const activityColumns: GridColDef[] = [
-    {
-      headerName: t('activities.type_col'),
-      field: "type",
-      renderCell: (params) => {
-          return iconForType(params.row.type);
-      }
-    },
-    {
-      headerName: t('activities.name_col'),
-      field: "name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t('activities.status_col'),
-      field: "status",
-      
-      renderCell: (params) => {
-          if (params.row.end_date > DateTime.local()) {
-            return "Active";
-          } else {
-            return "Expired";
-          }
-      }
-    },
-    {
-      headerName: t('activities.open_col'),
-      field: "start_date",
-      renderCell: (params) => {
-        const dt = DateTime.fromISO(params.value);
-        return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
 
-      }
-    },
-    {
-      headerName: t('activities.close_col'),
-      field: "end_date",
-      renderCell: (params) => {
-          const dt = DateTime.fromISO(params.value);
-          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-
-      }
-    },
-    {
-      headerName: " ",
-      field: "link",
-      renderCell: (params) => {
-          const lbl = t('activities.delete_lbl');
-          return (
-            <Tooltip title={lbl}>
-              <IconButton
-                aria-label={lbl}
-                onClick={event => {
-                  dispatch(startTask("deleting"));
-
-                  axios
-                    // Is this right? Shouldn't it be params.value?
-                    .delete(user.drop_link, {})
-                    .then(response => {
-                      const data = response.data;
-                      getCourse();
-                      setMessages(data.messages);
-                      dispatch(endTask("deleting"));
-                    })
-                    .catch(error => {
-                      console.log("error:", error);
-                      dispatch(endTask("deleting"));
-                    });
-                }}
-                size="large"
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Tooltip>
-          );
-        }
-      }
-  ];
 
 
   const activityList =
     courseId != null && courseId > 0 ? (
-      <DataGrid
-        columns={activityColumns}
-        rows={courseActivities}
-        getRowId={(row) => {
-          return `${row.type}-${row.id}`;
-        }}
-        onCellClick={(params)=>{
-            if ("link" !== params.colDef.headerName ) {
-              const link = params.row.link; //courseActivities[cellMeta.dataIndex].link;
-              const activityId = params.row.id; // courseActivities[cellMeta.dataIndex].id;
-              navigate(`${link}/${activityId}`);
-            }
-          }
-        }
-        slots={{
-          toolbar: CourseAdminListToolbar
-        }}
-        slotProps={{
-          toolbar: {
-            newActivityLinks: newActivityLinks
-          }
-        }}
-        pageSizeOptions={[5, 10, 100 ]}
-        />
+      <ActivityList
+        activities={course.activities}
+        newActivityLinks={newActivityLinks}
+        refreshFunc={getCourse}
+      />
 
     ) : (
       <div>{t('activities.save_first_msg')}</div>
     );
 
-  return (
-    <Paper>
-      <TabContext value={curTab}>
-        <Box>
-          <TabList
-            centered
-            value={curTab}
-            onChange={(event, value) => setCurTab(value)}
-          >
-            <Tab label="Details" value="details" />
-            <Tab value="instructors" label="Instructors" />
-            <Tab value="students" label="Students" />
-            <Tab value="activities" label="Activities" />
-          </TabList>
-        </Box>
-        <TabPanel value="details">{detailsComponent}</TabPanel>
-        <TabPanel value="instructors">
+  const advancedCourseAdmin = (
+    <Panel>
+      <TabView
+        activeIndex={curTab}
+        onTabChange={(event) => setCurTab(event.index)}
+      >
+
+        <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
+        <TabPanel header={t("instructors_tab")} disabled={isNaN(courseId)}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -561,7 +430,7 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel value="students">
+        <TabPanel header={t("students_tab")} disabled={isNaN(courseId)}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -571,10 +440,46 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel value="activities">{activityList}</TabPanel>
-      </TabContext>
+        <TabPanel header={t("activities_tab")} disabled={isNaN(courseId)}>
+          {activityList}
+        </TabPanel>
+      </TabView>
+      <Button
+        label={t('wizard.wizard_switch')}
+        onClick={() => {
+          navigate( 'courseWizard' );
+        }}
+        />
       {saveButton}
       {messages["status"]}
-    </Paper>
+    </Panel>
+
+  )
+  return (
+    <Routes>
+      <Route path="/" element={<Outlet />}>
+        <Route
+          index
+          element={
+            advancedCourseAdmin
+          }
+        />
+        <Route
+          path={'courseWizard'}
+          element={
+            <CourseWizard
+              course={course}
+              setCourseFunc={setCourse}
+              saveCourseFunc={saveCourse}
+            />
+          }
+        />
+
+      </Route>
+
+
+    </Routes>
   );
 }
+
+export { ICourse, IActivityLink }

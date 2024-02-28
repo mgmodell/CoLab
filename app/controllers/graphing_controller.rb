@@ -13,7 +13,7 @@ class GraphingController < ApplicationController
       if @user.is_admin?
         current_users_projects = Project.all
       elsif @user.is_instructor?
-        Roster.instructor.where(user_id: @user.id).each do |roster|
+        Roster.instructor.where(user_id: @user.id).find_each do |roster|
           current_users_projects.concat roster.course.projects.to_a
         end
       end
@@ -214,9 +214,9 @@ class GraphingController < ApplicationController
     end
 
     factors = {}
-    dataset[:streams].values.each do |stream|
-      stream[:sub_streams].values.each do |substream|
-        substream[:factor_streams].values.each do |factor_stream|
+    dataset[:streams].each_value do |stream|
+      stream[:sub_streams].each_value do |substream|
+        substream[:factor_streams].each_value do |factor_stream|
           factors[factor_stream[:factor_id]] = {
             name: factor_stream[:factor_name],
             id: factor_stream[:factor_id]

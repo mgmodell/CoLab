@@ -83,10 +83,10 @@ class SubmissionsController < ApplicationController
     submission_id = params[:id].to_i
 
     @submission = if submission_id.positive?
-                    Submission.where(
+                    Submission.find_by(
                       user_id: @current_user,
                       id: submission_id
-                    ).take
+                    )
                   else
                     Submission.new(
                       user: @current_user

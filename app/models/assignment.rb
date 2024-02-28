@@ -44,7 +44,7 @@ class Assignment < ApplicationRecord
     is_faculty = course.rosters.where(user: current_user).faculty.size.positive?
 
     group = project.group_for_user(current_user) if project.present? && !is_faculty
-    link = is_faculty ? "assignment/critiques/#{id}" : "/#{get_link}/#{id}"
+    link = is_faculty ? "assignment/critiques/#{id}" : "#{get_link}/#{id}"
 
     log = course.get_consent_log(user: current_user)
     consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
@@ -82,7 +82,7 @@ class Assignment < ApplicationRecord
 
   def status_for_user(user)
     # TODO: check for graded
-    get_submissions_for_user(user).size.positive?
+    get_submissions_for_user(user).size
   end
 
   private

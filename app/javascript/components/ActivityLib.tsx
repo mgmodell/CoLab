@@ -1,39 +1,45 @@
 import React, { lazy } from "react";
-const AssignmentIcon = lazy(() => import("@mui/icons-material/Assignment"));
-const TuneIcon = lazy(() => import("@mui/icons-material/Tune"));
-const LocalLibraryIcon = lazy(() => import("@mui/icons-material/LocalLibrary"));
-const GridOffIcon = lazy(() => import("@mui/icons-material/GridOff"));
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import { Tooltip } from "@mui/material";
+import { Tooltip } from "primereact/tooltip";
 
 export function iconForType(type: string) {
-  var icon;
+  let icon: React.JSX.Element;
+  let className: string;
   switch (type.toLowerCase()) {
     case "group experience":
     case "experience":
     case "experiences":
-      icon = <LocalLibraryIcon />;
+      className = "experience";
+      icon = <span className={`${className} pi pi-book`} />;
       break;
     case "project":
     case "assessment":
     case "assessments":
-      icon = <TuneIcon />;
+      className = "assessment";
+      icon = <span className={`${className} pi pi-sliders-h`} />;
       break;
     case "terms list":
     case "bingo_game":
     case "bingo games":
-      icon = <GridOffIcon />;
+      className = "bingo_game";
+      icon = <span className={`${className} pi pi-table`} />;
       break;
     case "group assignment":
     case "assignment":
     case "Assignments":
-      icon = <AssignmentIcon />;
+      className = "assignment";
+      icon = <span className={`${className} pi pi-file-edit`} />;
       break;
     case "submission":
-      icon = <AssignmentTurnedInIcon />;
+      className = "submission";
+      icon = <span className={`${className} pi pi-file-export`} />;
       break;
     default:
       console.log(`No icon match for: ${type}`);
   }
-  return <Tooltip title={type}>{icon}</Tooltip>;
+  return (
+    <>
+      <Tooltip target={className} />
+      {icon}
+    </>
+  );
 }

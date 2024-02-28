@@ -8,15 +8,7 @@ Then(/^the user clicks the link to the concept list$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
 
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@bingo.get_name(@anon)}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[@role='cell' and text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
   # current_path = page.current_path
@@ -25,8 +17,7 @@ Then(/^the user clicks the link to the concept list$/) do
   # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
   # props_string = x['data-react-props']
-  elem = page.find(:xpath, "//button[contains(.,'Concepts found by class')]")
-  elem.click
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Bingo game builder')]" ).click
 
   # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
@@ -66,10 +57,12 @@ When 'the user is remembered group member {int}' do |index|
 end
 
 Then 'the user remembers group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance = page.find(:xpath, "//span[@id='performance']").text
 end
 
 Then 'the users performance matches original group performance' do
+  page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Your performance')]" ).click
   @performance.should eq page.find(:xpath, "//span[@id='performance']").text
 end
 

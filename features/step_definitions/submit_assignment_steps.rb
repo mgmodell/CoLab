@@ -86,15 +86,7 @@ end
 Then('the user opens the assignment task') do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
-  end
+  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
   wait_for_render
 end
 
@@ -106,15 +98,8 @@ end
 
 Then('the user opens the assignment history item') do
   wait_for_render
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
+
   wait_for_render
 end
 
@@ -122,9 +107,11 @@ Then('the user opens the {string} submissions tab') do |tab_name|
   wait_for_render
   case tab_name
   when 'Submissions'
-    click_link_or_button 'Responses'
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
+    tab.click
   when 'Grading'
-    click_link_or_button 'Progress'
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
+    tab.click
   else
     true.should be false
   end
@@ -151,13 +138,13 @@ end
 Then('the {string} tab {string} enabled') do |tab_name, enabled|
   case tab_name.downcase
   when 'submissions'
-    tab = find(:xpath, "//button[text()='Responses']")
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
   when 'grading'
-    tab = find(:xpath, "//button[text()='Progress']")
+    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
   else
     true.should be false
   end
-  ('true' == tab['disabled']).should be 'is' != enabled
+  (tab['class']).include?('disabled').should_not be 'is' != enabled
 end
 
 Then('the user creates a new submission') do
@@ -302,12 +289,10 @@ end
 
 Given('today is after the final deadline') do
   comprehensive_time_travel_to @assignment.end_date + 1
-  puts "Assignment: #{@assignment.end_date}\nCourse: #{@assignment.course.end_date}"
 end
 
 Then('the user withdraws submission {int}') do |assignment_ord|
-  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
-                              "/div[@data-field='submitted']/div")
+  target_sub = find_all( :xpath, "//tbody/tr" )[assignment_ord -1]
   target_sub.click
   wait_for_render
   click_link_or_button 'Withdraw revision'
@@ -336,16 +321,16 @@ Given('submission {int} {string} graded') do |index, graded_state|
 end
 
 Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
-  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
-                              "/div[@data-field='submitted']/div")
+  target_sub = find_all(:xpath, "//tbody/tr" )[ assignment_ord - 1 ]
   target_sub.click
   wait_for_render
-  button_count = find_all(:xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
+  button = find( :xpath, "//button[text()='Withdraw revision']" )
+
   case can.downcase
   when 'can'
-    button_count.should eq 1
+    button['disabled'].should eq 'false'
   when 'cannot'
-    button_count.should eq 0
+    button['disabled'].should eq 'true'
   else
     puts "'#{can}' is not a valid option"
     true.should be false

@@ -31,12 +31,12 @@ Given(/^the project started last month and lasts (\d+) weeks, opened yesterday a
 end
 
 When(/^the user submits the installment$/) do
-  click_link_or_button('Submit Weekly Installment')
+  click_link_or_button('Submit Weekly Check-In')
   wait_for_render
 end
 
 Then(/^there should be no error$/) do
-  page.should_not have_content('Unable to reconcile installment values.')
+  page.should_not have_content('Unable to reconcile check-in values.')
   page.should_not have_content('assessment has expired')
 end
 
@@ -45,16 +45,8 @@ Then(/^the user should see an error indicating that the installment request expi
 end
 
 When(/^user clicks the link to the project$/) do
-  find(:xpath, "//div[@data-field='group_name']/div/div[contains(.,'#{@project.group_for_user(@user).name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='group_name']/div/div[contains(.,'#{@project.group_for_user(@user).name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath,
-             "//div[contains(@class,'MuiBox') and contains(.,'#{@project.group_for_user(@user).name}')]")[0].click
-  end
+  step 'the user enables the "Group Name" table view option'
+  find( :xpath, "//tbody/tr/td[text()='#{@project.group_for_user(@user).name}']" ).click
 
   wait_for_render
 end
@@ -75,14 +67,15 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     end
   else
     # push the panel into debug mode
-    find(:xpath, '//input[@id="debug"]', visible: :all).click
     @project.factors.each do |factor|
       # Open the factor panel
-      find(:xpath, "//div[text( )='#{factor.name}']").click
+      find(:xpath, "//span[@factorId='#{factor[:id]}']").click
+
       elements = page
-                 .all(:xpath, "//input[@factor=#{factor.id}]",
+                 .all(:xpath, "//input[@data-factor-id=#{factor.id}]",
                       visible: false)
-      factor_vals = Hash[elements.collect { |element| [element[:contributor], element.value] }]
+
+      factor_vals = Hash[elements.collect { |element| [element['data-contributor-id'], element.value] }]
 
       actions = []
       rand(3..10).times do
@@ -95,15 +88,16 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
       actions.each_with_index do |action, _index|
         target = action[:target]
         increment = action[:increment]
-        contrib = find(:xpath, "//input[@factor='#{factor.id}'][@contributor='#{target}']")
+        contrib = find(:xpath, "//input[@data-factor-id='#{factor.id}'][@data-contributor-id='#{target}']")
 
         # let's do the allocation math - this doesn't have to be performant
         new_val = (increment + contrib.value.to_i).clamp(0, Installment::TOTAL_VAL)
         contrib.set new_val
 
         wait_for_render
-        sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
-          factor_vals[slider[:contributor]] = slider.value
+
+        sum = all(:xpath, "//input[@data-factor-id='#{factor.id}']").reduce(0) do |total, slider|
+          factor_vals[slider['data-contributor-id']] = slider.value
           total + slider.value.to_i
         end
         sum.should eq Installment::TOTAL_VAL
@@ -122,8 +116,16 @@ Then(/^the installment form should request factor x user values$/) do
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
-  page.all(:xpath,
-           '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
+  actual_count = 0
+  page.all(:xpath, "//div[@id='installments']//a[@role='button']" ).each do |tab|
+    tab.click unless 1 == tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]').size
+    wait_for_render
+    tab_count = tab.all(:xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]//div[@data-pc-name="slider"]').size
+    actual_count += tab_count
+  end
+
+  actual_count.should eq expected_count
+
 end
 
 Then(/^the assessment should show up as completed$/) do
@@ -131,9 +133,11 @@ Then(/^the assessment should show up as completed$/) do
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
-  page.should have_xpath("//div[@data-field='group_name']/div/div[contains(., '#{group_name}')]/.."),
-              'No link to assessment'
-  page.should have_xpath("//div/div/div[contains(., 'Completed')]"), "No 'completed' message"
+  step 'the user enables the "Group Name" table view option'
+  page.should have_xpath("//tbody/tr/td[text()='#{group_name}']"),
+              "No link to assessment for #{group_name} found"
+  page.should have_xpath("//tbody/tr/td[text()='Completed']"),
+              "No 'completed' message"
 end
 
 Then(/^the user logs in and submits an installment$/) do
@@ -151,8 +155,8 @@ end
 
 Then(/^the user logs out$/) do
   wait_for_render
-  find(:xpath, '//*[@id="main-menu-button"]').click
-  find(:xpath, '//*[@id="logout-menu-item"]').click
+  find(:id, 'main-menu-button').click
+  find(:id, 'logout-menu-item').click
   wait_for_render
   page.quit
 end
@@ -230,7 +234,7 @@ Then(/^the user enters a comment "([^"]*)" personally identifiable information$/
   end
 
   find(:xpath, '//*[text()="Would you like to add additional comments?"]').click
-  page.fill_in('Comments', with: @comment, visible: :all, disabled: :all)
+  page.fill_in('comments', with: @comment, visible: :all, disabled: :all)
 end
 
 Then(/^the comment matches what was entered$/) do
@@ -271,6 +275,6 @@ end
 
 Then(/^user will be presented with the installment form$/) do
   wait_for_render
-  page.should have_content 'Your weekly installment'
+  page.should have_content 'Your weekly check-in'
   page.should have_content @project.name
 end

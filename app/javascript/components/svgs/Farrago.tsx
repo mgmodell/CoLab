@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
 
-export default function Farrago(props) {
+type Props = {
+  height: number;
+  width: number;
+  framed: boolean;
+};
+
+export default function Farrago(props: Props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);
@@ -1178,8 +1183,3 @@ export default function Farrago(props) {
     </svg>
   );
 }
-Farrago.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-  framed: PropTypes.bool
-};

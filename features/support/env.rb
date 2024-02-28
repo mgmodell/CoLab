@@ -18,17 +18,20 @@ def wait_for_render
   times = 3000
 
   while !all(:xpath, "//*[@id='waiting']").empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
     sleep(0.01)
     times -= 1
   end
 end
 
 def ack_messages
-  retries ||= 3
-  all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-rescue Selenium::WebDriver::Error::ElementNotInteractableError
-  (retries += 1).should be < 10, 'Too many ack retries'
-  retry unless retries > 5
+  find_all(:xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']").each do |element|
+    element.click
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+    true.should( be_false, e.inspect )
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    true.should( be_false, e.inspect )
+  end
 end
 
 # Not sure I should really need this, but...

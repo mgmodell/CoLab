@@ -128,7 +128,7 @@ class ProjectsController < ApplicationController
                      .find_by(id: params[:id])
 
     group_hash = {}
-    params[:groups].values.each do |g|
+    params[:groups].each_value do |g|
       group = nil
       if (g[:id]).positive?
         group = project.groups.find_by id: g[:id]
@@ -139,7 +139,7 @@ class ProjectsController < ApplicationController
       group.users = []
       group_hash[g[:id]] = group
     end
-    params[:students].values.each do |s|
+    params[:students].each_value do |s|
       student = project.rosters.find_by(user_id: s[:id]).user
       group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
@@ -147,7 +147,7 @@ class ProjectsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        group_hash.values.each(&:save!)
+        group_hash.each_value(&:save!)
       end
     rescue StandardError
       # Post back a JSON error
@@ -215,7 +215,7 @@ class ProjectsController < ApplicationController
   end
 
   def rescore_group
-    group = @project.groups.where(id: params[:group_id]).take
+    group = @project.groups.find_by(id: params[:group_id])
     if group.present?
       group.calc_diversity_score
       group.save

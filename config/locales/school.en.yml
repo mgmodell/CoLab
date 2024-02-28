@@ -3,6 +3,7 @@ en:
     index:
       title: List of Schools
       name_lbl: Name
+      description_lbl: Description
       courses_lbl: Courses
       students_lbl: Student count
       instructor_lbl: Instructor count
