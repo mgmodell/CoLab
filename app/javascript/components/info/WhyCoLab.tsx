@@ -67,16 +67,16 @@ export default function WhyCoLab(props: Props) {
           <p>{t('why_slides.captions.seven_one.title')}</p>
           <ul
             style={{
-              fontSize: "10px"
+              fontSize: "16px"
             }}
           >
             <li>{t('why_slides.captions.seven_one.check-ins')}</li>
             <li>{t('why_slides.captions.seven_one.growth')}</li>
-            <li>Visualizations</li>
-            <li>Diversity-focused group composition</li>
-            <li>Gamified collaborative reading</li>
-            <li>Simulated team experiences</li>
-            <li>Iterative assignments</li>
+            <li>{t('why_slides.captions.seven_one.visualizations')}</li>
+            <li>{t('why_slides.captions.seven_one.diversity')}</li>
+            <li>{t('why_slides.captions.seven_one.gamification')}</li>
+            <li>{t('why_slides.captions.seven_one.simulations')}</li>
+            <li>{t('why_slides.captions.seven_one.iterative-assi')}</li>
           </ul>
         </Col>
         <Col sm={4}>

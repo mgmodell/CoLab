@@ -9,7 +9,7 @@ en:
         instructor: Instructor?
     titles:
         about: Who's behind CoLab?
-        why: What problem does CoLab solve?
+        why: How can CoLab help you?
         research: The research behind CoLab
         student: CoLab features for students
         instructor: CoLab features for instructors
@@ -17,12 +17,14 @@ en:
         captions:
             one_one: >
                 Collaboration can look different for 
-                everyone. But have you ever experienced this in group projects?
-            one_two: ''
-            two_one: >  
-                Group Domination: One person takes over and 
+                everyone. 
+            one_two: But have you ever experienced 1 or more of these scenarios
+             in group projects?
+            two_one: >
+                 Let's take a look at some examples of unequal group 
+                work participation...
+            two_two: Group Domination: One person takes over and 
                 thinks everyone else's opinion is not good enough
-            two_two: ''
             three_one: Have you ever been a George?
             three_two: > 
                 Leave it to George: One person does all the work and 
@@ -31,16 +33,19 @@ en:
             four_two: >
                 Social loafers: One or more students slack off while 
                 everyone else does the work 
-            five_one: >
-                What would you do? Don't wait till the end of the semester to tell your professor! 
-                What if there was a way for your professor to help before things got out of hand? 
-            five_two: ''
-            six_one: Now there is! 
-            six_two: ''
+            five_one: What would you do in these situations?     
+            five_two: Don't wait until the end of the semester to get help from your professor...
+            six_one: What if there was a way for your professor to help before things got out of hand? 
+            six_two: Now there is!
             seven_one: 
                 title: CoLab.online can help!
                 check-ins: Weekly self- and peer-assessment check-ins
                 growth: Growth focused (not judgment)
+                visualizations: Visualizations
+                diversity: Diversity-focused group composition
+                gamification: Gamified collaborative reading
+                simulations: Simulated team experience
+                iterative-assi: Iterative assignments
             seven_two:
                 title: Are you a...
                 student: Student?
