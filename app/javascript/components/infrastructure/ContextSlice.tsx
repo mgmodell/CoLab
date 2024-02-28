@@ -8,7 +8,8 @@ import { Cookies } from "react-cookie-consent";
 import {
   fetchProfile,
   setRetrievedProfile,
-  clearProfile
+  clearProfile,
+  setLocalLanguage
 } from "./ProfileSlice";
 import { addMessage, Priorities } from "./StatusSlice";
 import i18n from "./i18n";
@@ -147,6 +148,7 @@ const CONFIG = {
             })
           );
           dispatch(setRetrievedProfile(resp["data"]["profile"]["user"]));
+          dispatch( setLocalLanguage(resp["data"]["profile"]["user"]["language_id"]) ); 
           //dispatch( fetchProfile( ) );
         } else {
           dispatch(setLoggedOut({}));

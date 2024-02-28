@@ -12,7 +12,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import { TabView, TabPanel } from "primereact/tabview";
-import EditorToolbar from "../infrastructure/EditorToolbar";
+import EditorToolbar from "../toolbars/EditorToolbar";
 import { Calendar } from "primereact/calendar";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";

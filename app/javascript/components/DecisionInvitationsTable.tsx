@@ -11,7 +11,7 @@ import axios from "axios";
 
 import { DateTime } from "luxon";
 import { DataTable } from "primereact/datatable";
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "./toolbars/StandardListToolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 

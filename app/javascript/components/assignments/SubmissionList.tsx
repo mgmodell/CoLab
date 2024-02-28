@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import { DataTable } from "primereact/datatable";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
 
 type Props = {

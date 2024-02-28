@@ -6,9 +6,10 @@ import parse from "html-react-parser";
 import Joyride, { ACTIONS } from "react-joyride";
 
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
+import LangButton from "./LangButton";
 
 type Props = {
   lookupUrl: string;
@@ -150,6 +151,7 @@ export default function HelpMenu(props: Props) {
           }
         }}
       />
+      <LangButton />
       <Button
         id="help-menu-button"
         color="secondary"

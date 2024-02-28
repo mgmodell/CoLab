@@ -77,6 +77,7 @@ export default function HomeShell(props: Props) {
       .then(resp => {
         //Process the data
         const data = resp.data;
+
         data["tasks"].forEach((value, index, array) => {
           switch (value.type) {
             case "assessment":
@@ -97,6 +98,7 @@ export default function HomeShell(props: Props) {
           } else {
             value.url = `/${props.rootPath}/home/${value.link}`;
           }
+
           value.link = value.url;
           // Set the dates properly - close may need work
           value.start = value.next_date;

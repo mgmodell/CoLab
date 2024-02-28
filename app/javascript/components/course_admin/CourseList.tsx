@@ -15,7 +15,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
 import { a } from "react-spring";
 

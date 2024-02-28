@@ -7,7 +7,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "./toolbars/StandardListToolbar";
 
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";

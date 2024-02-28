@@ -247,8 +247,8 @@ export default function BingoBuilder(props: Props) {
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-    (null !== board.bingo_game.end_date &&
-      new Date(board.bingo_game.end_date) < new Date()) ? (
+      (null !== board.bingo_game.end_date &&
+        new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
         <a onClick={() => getPrintableBoard()}>{t("download_board_lnk")}</a>{" "}
         {t("play_msg")}
@@ -259,9 +259,9 @@ export default function BingoBuilder(props: Props) {
 
   const workSheetInstr = board.practicable ? (
     <li key={"practice"}>
-      Print and complete this&nbsp;
-      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn it in
-      before class begins.
+      <a onClick={() => getWorksheet()}>
+        {t('tabs.builder.print_step')}
+      </a>
     </li>
   ) : (
     <li key={"practice"}>{t("not_enough_entries_msg")}</li>
@@ -270,8 +270,7 @@ export default function BingoBuilder(props: Props) {
   const playableInstr = board.playable ? (
     <React.Fragment>
       <li key={"generate"}>
-        <a onClick={() => randomizeTiles()}>(Re)Generate your playable board</a>{" "}
-        until you get one you like and then&hellip;
+        <a onClick={() => randomizeTiles()}>{t('tabs.builder.regenerate')}</a>
       </li>
       <li key={"save_board"}>{saveBtn()}</li>
       <li key={"print_board"}>{printBtn}</li>
@@ -282,22 +281,14 @@ export default function BingoBuilder(props: Props) {
 
   return (
     <Panel>
-      <p>
-        <strong>{t("topic_lbl")}:</strong> {board.bingo_game.topic}
-      </p>
+      <h3>{t("topic_lbl")}:</h3> {board.bingo_game.topic}
       <div>
-        <strong>{t("description_lbl")}:</strong>{" "}
+        <h3>{t("description_lbl")}:</h3>{" "}
         <p>{parse(board.bingo_game.description || "")}</p>
       </div>
-      {null != candidateList && (
-        <p>
-          <strong>{t("performance_lbl")}:</strong>
-          <span id="performance">{candidateList.cached_performance}</span>
-        </p>
-      )}
       <hr />
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
-        <TabPanel header={"Bingo game builder"}>
+        <TabPanel header={t('tabs.builder.builder_lbl')} >
           <Panel>
             <br />
             <ol>
@@ -309,13 +300,26 @@ export default function BingoBuilder(props: Props) {
                 <BingoBoard board={board} />
               </div>
             ) : null}
+            <h3>{t('tabs.builder.words_found')}</h3>
+            <hr></hr>
+            <ConceptChips concepts={concepts} />
           </Panel>
         </TabPanel>
-        <TabPanel header={"Your performance"}>
-          <ScoredGameDataTable candidates={candidates} />
+        <TabPanel header={t('tabs.performance')}>
+          <Panel>
+            {null != candidateList && (
+              <>
+                <h3>{t("performance_lbl")}:</h3>
+                <span id="performance">{candidateList.cached_performance} / 100</span>
+              </>
+            )}
+            <ScoredGameDataTable
+              candidates={candidates}
+            />
+          </Panel>
         </TabPanel>
         <TabPanel
-          header={"Worksheet result"}
+          header={t('tabs.worksheet')}
           disabled={
             !board.practicable ||
             null == board.worksheet ||
@@ -331,16 +335,13 @@ export default function BingoBuilder(props: Props) {
                 <br />
               </p>
               {null != board.worksheet.result_img &&
-              "" != board.worksheet.result_img ? (
+                "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
             </Panel>
           ) : (
-            "No Worksheet"
+            t("no_worksheet_msg")
           )}
-        </TabPanel>
-        <TabPanel header={"Concepts found by class"}>
-          <ConceptChips concepts={concepts} />
         </TabPanel>
       </TabView>
     </Panel>

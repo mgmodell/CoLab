@@ -7,7 +7,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
