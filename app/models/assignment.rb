@@ -16,6 +16,7 @@ class Assignment < ApplicationRecord
   # before_validation :init_dates # From DateSanitySupportConcern
 
   validate :submission_type
+  validate :group_valid
 
   # Validations
   validates :passing, numericality: { in: 0..100 }
@@ -91,6 +92,12 @@ class Assignment < ApplicationRecord
     return if text_sub || link_sub || file_sub
 
     errors.add(:submission_types, I18n.t('assignments.error.submission_type'))
+  end
+
+  def group_valid
+    return if !group_enabled || project.present?
+
+    errors.add(:group_enabled, I18n.t('assignments.error.group_invalid'))
   end
 
   def anonymize

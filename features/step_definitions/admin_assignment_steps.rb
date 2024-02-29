@@ -90,6 +90,8 @@ end
 
 Then('the assignment {string} initialised as group-capable') do |is_group_enabled|
   @assignment.group_enabled = 'is' == is_group_enabled
+  @assignment.project = @course.projects[0]
+  @assignment.save
 end
 
 Then('the user sets the assignment project to the course project') do

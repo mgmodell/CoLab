@@ -13,31 +13,74 @@ Feature: (Re)Submitting individual assignments
     Given the course has an assignment
     Given the assignment "is" initialised as group-capable
     Given the assignment opening is "one month ago" and close is "one month from now"
-    # Given there exists a rubric published by another user
+    Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
-    Given the assignment "is" active
+    Given the assignment "is" initialized active
     Given the user is the "random" user in the group
     Given the user "has" had demographics requested
 
+  @javascript
   Scenario: User should not be able to see an inactive assignment
-    Given the assignment "is" active
+    Given the assignment "is not" initialized active
     Given the user logs in
     Then user should see 0 open task
+    Then the user logs out
+    Then the user is the "random" user in the group
+    Then the user "has" had demographics requested
+    Then the user logs in
+    Then user should see 0 open task
 
+  @javascript
   Scenario: User should not be able to see a closed group assignment
+    Given the course is shifted 2 'years' into the 'past'
+    Given the user logs in
+    Then user should see 0 open task
+    Then the user logs out
+    Given the user is the "random" user in the group
+    Given the user "has" had demographics requested
+    Then the user logs in
+    Then user should see 0 open task
+
+  @javascript
   Scenario: Group members can see the assginment's attached rubric
+    Given the user logs in
+     Then the user opens the assignment task
+  #   Then the user opens the 'grading' submissions tab
+      And the shown rubric matches the assignment rubric
+    Then the user logs out
+    Given the user is the "random" user in the group
+    Given the user "has" had demographics requested
+    Given the user logs in
+     Then the user opens the assignment task
+  #   Then the user opens the 'grading' submissions tab
+      And the shown rubric matches the assignment rubric
+
+  @javascript
   Scenario: Group member can open and submit text to a group assignment
+  @javascript
   Scenario: Group member can open and submit a file to a group assignment
+  @javascript
   Scenario: Group member can open and submit a link to a group assignment
+  @javascript
   Scenario: Group member can open and submit files to a group assignment
+  @javascript
   Scenario: Group member can open and submit links to a group assignment
+  @javascript
   Scenario: User can open and submit a combo to a group assignment
+  @javascript
   Scenario: User can submit a combo to a group assignment before the first deadline
+  @javascript
   Scenario: User can submit a combo to a group assignment after the first deadline but before the final
+  @javascript
   Scenario: User cannot submit to a group assignment after the final deadline
+  @javascript
   Scenario: Different users can submit and re-submit text" to a group assignment
+  @javascript
   Scenario: Different users can submit and re-submit a file to a group assignment
+  @javascript
   Scenario: Different users can submit and re-submit a link to a group assignment
+  @javascript
   Scenario: Different users can submit and re-submit a combo to a group assignment
+  @javascript
   Scenario: Different users can submit then withdraw a submitted assignment
 

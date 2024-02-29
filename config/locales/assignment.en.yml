@@ -74,5 +74,8 @@ en:
       update_failed: >
         Unable to save assignment. Please resolve the errors below
         and try again.
+      group_invalid: >
+        To enable groups, you must also select the projct from which to
+        pull them (the groups).
       no_update_error: Successfully saved the assignment.
       no_create_error: Successfully created the assignment.
