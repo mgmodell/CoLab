@@ -9,6 +9,30 @@ type Props = {
 
 export default function BingoBoard(props: Props) {
   const gameDate = new Date(props.board.bingo_game.end_date);
+
+  const tableCells = props.board.initialised ? props.board.bingo_cells.map((cell, index) => {
+    return (
+      <td key={index}>
+        <center>
+          <br />
+          <br />
+          {cell.concept.name}
+          <br />
+          <br />
+        </center>
+      </td>
+    )
+  }) : null;
+
+  const tableRows = [];
+  if (props.board.initialised) {
+    for (let i = 0; i < tableCells.length; i+=props.board.bingo_game.size) {
+      tableRows.push(<tr>
+        {tableCells.slice(i, i+props.board.bingo_game.size)}
+      </tr>);
+    }
+  }
+
   return (
     <Panel>
       <hr />
@@ -16,30 +40,14 @@ export default function BingoBoard(props: Props) {
         {props.board.bingo_game.topic}&nbsp; ({gameDate.toDateString()})
       </center>
       <hr />
-        {props.board.initialised ? (
-          <table>
-            <tbody>
-              <tr>
-                {props.board.bingo_cells.map((cell, index) => {
-                  const rowBreak = index % props.board.bingo_game.size === 0 ?
-                    <tr></tr> : null;
-                  return (
-                    <td key={index}>
-                      <center>
-                        <br />
-                        <br />
-                        {cell.concept.name}
-                        <br />
-                        <br />
-                      </center>
-                    </td>
-                  )
-                })}
-              </tr>
-            </tbody>
-          </table>
+      {props.board.initialised ? (
+        <table className="bingoBoardTable">
+          <tbody>
+            { tableRows }
+          </tbody>
+        </table>
 
-        ) : null}
+      ) : null}
       <hr />
     </Panel>
   );
