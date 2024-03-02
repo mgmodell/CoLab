@@ -73,8 +73,6 @@ export default function AssignmentViewer(props) {
 
   const [curTab, setCurTab] = useState(0);
 
-  const [submissions, setSubmissions] = useState([]);
-
   enum AssignmentActions {
     setAssignment = "SET ASSIGNMENT",
     setValue = "SET VALUE"
@@ -142,9 +140,6 @@ export default function AssignmentViewer(props) {
       });
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newTab: string) => {
-    setCurTab(newTab);
-  };
 
   let output = null;
   const curDate = DateTime.local();

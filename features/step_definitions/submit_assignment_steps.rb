@@ -154,7 +154,8 @@ Then('the user creates a new submission') do
     sub_link: '',
     assignment_id: @assignment.id,
     rubric_id: @assignment.rubric_id,
-    user_id: @user.id
+    user_id: @user.id,
+    creator_id: @user.id
   )
 end
 
@@ -246,14 +247,11 @@ Then('the {string} db submission data is accurate') do |placement|
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
   @submission.user_id.should eq @check_submission.user_id
+  @submission.creator_id.should eq @check_submission.creator_id
 end
 
 Then('the submission has no group') do
   @check_submission.group_id.should be nil
-end
-
-Then('the submission is attached to the user') do
-  @check_submission.user_id.should be @user.id
 end
 
 Given('the assignment already has {int} submission from the user') do |count|
@@ -354,4 +352,37 @@ Then('the {string} button is {string}') do |btn_name, state|
     puts "State '#{state}' not yet handled"
     pending # Write code here that turns the phrase above into concrete actions
   end
+end
+
+Then('the {string} is the {string} user') do |submitter_or_creator, current_or_remembered|
+  case submitter_or_creator
+  when 'submitter'
+    @submission.user.should eq 'current' == current_or_remembered ? @user : @assignment_submitter_user
+  when 'creator'
+    @submission.creator.should eq 'current' == current_or_remembered ? @user : @assignment_creator_user
+  else
+    puts "State '#{current_or_remembered}' not yet handled"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+end
+
+Then('remember the {string} user') do |submitter_or_creator|
+  case submitter_or_creator
+  when 'submitter'
+    @assignment_submitter_user = @user
+    @check_submission.user = @user unless @check_submission.nil?
+  when 'creator'
+    @assignment_creator_user = @user
+    @check_submission.creator = @user unless @check_submission.nil?
+  else
+    puts "State '#{current_or_remembered}' not yet handled"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+end
+
+Then('the user opens submission {int}') do |assignment_ord|
+  # Then('the user opens submission {float}') do |float|
+  target_sub = find_all( :xpath, "//tbody/tr" )[assignment_ord -1]
+  target_sub.click
+  wait_for_render
 end

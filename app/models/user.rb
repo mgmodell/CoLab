@@ -50,7 +50,6 @@ class User < ApplicationRecord
   validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects
-  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   before_save :anonymize
 

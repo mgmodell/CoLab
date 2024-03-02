@@ -2,7 +2,8 @@
 
 class Submission < ApplicationRecord
   belongs_to :assignment, inverse_of: :submissions
-  belongs_to :user, inverse_of: :submissions, optional: false
+  # Last submitter
+  belongs_to :user, optional: false
   belongs_to :creator, class_name: 'User', optional: false
   belongs_to :group, inverse_of: :submissions, optional: true
   belongs_to :rubric, inverse_of: :submissions
@@ -15,6 +16,9 @@ class Submission < ApplicationRecord
   before_validation :set_rubric
   validate :group_valid, :can_submit
 
+  validates :user, presence: true
+  validates :creator, presence: true
+
   delegate :end_date, to: :assignment
 
   def calculated_score
@@ -26,6 +30,14 @@ class Submission < ApplicationRecord
     end
 
     total <= 0 ? nil : total / sum_weights
+  end
+
+  def can_edit? user
+    if assignment.group_enabled
+      group.users.include? user
+    else
+      self.user == user
+    end
   end
 
   private

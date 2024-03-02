@@ -102,7 +102,7 @@ class AssignmentsController < ApplicationController
         end
       else
         errors = @assignment.errors
-        errors.add(:mail, I18n.t('assignments.errors.update_failed'))
+        errors.add(:main, I18n.t('assignments.errors.update_failed'))
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
