@@ -1,8 +1,8 @@
--- MariaDB dump 10.19-11.1.2-MariaDB, for osx10.18 (arm64)
+-- MariaDB dump 10.19-11.3.2-MariaDB, for osx10.19 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.1.2-MariaDB
+-- Server version	11.2.3-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -4972,7 +4972,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230521034701'),
 ('20230828001816'),
 ('20230905132419'),
-('20231023010656');
+('20231023010656'),
+('20240302002923');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5115,12 +5116,15 @@ CREATE TABLE `submissions` (
   `group_id` int(11) DEFAULT NULL,
   `assignment_id` bigint(20) NOT NULL,
   `rubric_id` bigint(20) NOT NULL,
+  `creator_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_submissions_on_user_id` (`user_id`),
   KEY `index_submissions_on_group_id` (`group_id`),
   KEY `index_submissions_on_assignment_id` (`assignment_id`),
   KEY `index_submissions_on_rubric_id` (`rubric_id`),
+  KEY `index_submissions_on_creator_id` (`creator_id`),
   CONSTRAINT `fk_rails_11ec1c51e8` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_rails_4501ec1416` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_5ebe306d72` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`),
   CONSTRAINT `fk_rails_61cac0823d` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`),
   CONSTRAINT `fk_rails_8d85741475` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -5504,4 +5508,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-22 21:42:13
+-- Dump completed on 2024-03-01 21:16:13
