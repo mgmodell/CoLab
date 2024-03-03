@@ -163,6 +163,17 @@ Feature: (Re)Submitting individual assignments
   
   @javascript
   Scenario: No team member can submit an assignment that is closed
+    Given the course is shifted 2 'months' into the 'future'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the 'Submissions' tab 'is not' enabled
+     Then the user logs out
+     # Teammate #2
+    Given the user is the "random" user in the group
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the 'Submissions' tab 'is not' enabled
   
   @javascript
   Scenario: No team member can see another team's submission

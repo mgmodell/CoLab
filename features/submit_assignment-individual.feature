@@ -347,3 +347,7 @@ Feature: (Re)Submitting individual assignments
      Then the user clicks 'Submit revision for grading'
      Then the assignment has 0 'draft' submission
      Then the assignment has 1 'submitted' submission
+
+  # Visibility
+  @javascript
+  Scenario: User can not see another user's submission
