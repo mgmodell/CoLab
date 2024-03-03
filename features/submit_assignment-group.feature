@@ -18,7 +18,6 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user is the "random" user in the group
     Given the users "have" had demographics requested
-    # Given the user "has" had demographics requested
 
   @javascript
   Scenario: User should not be able to see an inactive assignment
@@ -27,7 +26,6 @@ Feature: (Re)Submitting individual assignments
     Then user should see 0 open task
     Then the user logs out
     Then the user is the "random" user in the group
-    Then the user "has" had demographics requested
     Then the user logs in
     Then user should see 0 open task
 
@@ -38,7 +36,6 @@ Feature: (Re)Submitting individual assignments
     Then user should see 0 open task
     Then the user logs out
     Given the user is the "random" user in the group
-    #Given the user "has" had demographics requested
     Then the user logs in
     Then user should see 0 open task
 
@@ -50,7 +47,6 @@ Feature: (Re)Submitting individual assignments
       And the shown rubric matches the assignment rubric
     Then the user logs out
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the assignment task
   #   Then the user opens the 'grading' submissions tab
@@ -90,7 +86,6 @@ Feature: (Re)Submitting individual assignments
      Then the 'submitter' is the 'current' user
      Then the 'creator' is the 'remembered' user
      Then the user logs out
-    # Given the user "has" had demographics requested
     Given the user is the "random" user in the group
     Given the user logs in
      Then the user opens the assignment task
@@ -105,16 +100,15 @@ Feature: (Re)Submitting individual assignments
   Scenario: Any team member can withdraw a submitted assignment
     Given the user is the "random" user in the group
       And the assignment already has 4 submission from the user
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user withdraws submission 3
      Then the assignment has 1 'withdrawn' submission
      Then the assignment has 3 'active' submission
+     Then the user logs out
     # Teammate #2
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
@@ -128,7 +122,6 @@ Feature: (Re)Submitting individual assignments
     Given the assignment already has 4 submission from the user
       And submission 2 'is' graded
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
@@ -138,7 +131,6 @@ Feature: (Re)Submitting individual assignments
      Then the user logs out
      # Teammate #2
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
@@ -152,7 +144,6 @@ Feature: (Re)Submitting individual assignments
     Given the assignment already has 4 submission from the user
     Given today is after the final deadline
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then user should see 0 open task
      Then user opens their profile
@@ -162,7 +153,6 @@ Feature: (Re)Submitting individual assignments
      Then the user logs out
      # Teammate #2
     Given the user is the "random" user in the group
-    # Given the user "has" had demographics requested
     Given the user logs in
      Then user should see 0 open task
      Then user opens their profile
@@ -173,3 +163,6 @@ Feature: (Re)Submitting individual assignments
   
   @javascript
   Scenario: No team member can submit an assignment that is closed
+  
+  @javascript
+  Scenario: No team member can see another team's submission
