@@ -81,7 +81,9 @@ end
 
 Given(/^the user is "(.*?)" user$/) do |which|
   case which.downcase
-  when 'a random' then @user = @users.sample
+  when 'a random'
+    tmp_id = @user.id
+    @user = @users.sample while tmp_id == @user.id
   when 'the first' then @user = @users.first
   when 'the second' then @user = @users[1]
   when 'the third' then @user = @users[2]

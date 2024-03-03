@@ -391,3 +391,8 @@ Then('the user opens submission {int}') do |assignment_ord|
   target_sub.click
   wait_for_render
 end
+
+Then('the user sees {int} submissions') do |sub_count|
+  find( :xpath, "//a[@role='tab']/span[text()='Responses']" ).click
+  all(:xpath, "//div[@id='submissionList']/div/table/tbody/tr[not(@data-pc-section='emptymessage')]" ).size.should eq sub_count
+end

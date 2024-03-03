@@ -351,3 +351,21 @@ Feature: (Re)Submitting individual assignments
   # Visibility
   @javascript
   Scenario: User can not see another user's submission
+    Given the project has a group with 4 confirmed users
+    Given the user is the "first" user in the group
+    Given the assignment already has 3 submission from the user
+    Given the user is the "last" user in the group
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 0 submissions
+    Given the user logs out
+    Given the assignment already has 2 submission from the user
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 2 submissions
+    Given the user logs out
+    Given the user is the "first" user in the group
+    Given the assignment already has 1 submission from the user
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 4 submissions

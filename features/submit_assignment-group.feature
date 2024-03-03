@@ -177,3 +177,10 @@ Feature: (Re)Submitting individual assignments
   
   @javascript
   Scenario: No team member can see another team's submission
+    Given the assignment already has 4 submission from the user
+    Given the project has a group with 4 confirmed users
+    Given the user is the "random" user in the group
+    Given the assignment already has 4 submission from the user
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 4 submissions
