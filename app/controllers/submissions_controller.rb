@@ -15,18 +15,18 @@ class SubmissionsController < ApplicationController
 
   # PATCH/PUT /submissions/1 or /submissions/1.json
   def update
-    @submission.user = current_user
     sub_params = submission_params
     assignment = Assignment.find sub_params[:assignment_id]
-    @submission.rubric_id = assignment.rubric_id
 
+    @submission.user = current_user
+    @submission.rubric_id = assignment.rubric_id
     if assignment.group_enabled
       group = assignment.project.group_for_user(current_user)
       @submission.group = group
     end
-
     # Set this as submitted if requested
     @submission.submitted = DateTime.now if params[:submit]
+
     if @submission.update(sub_params)
       respond_to do |format|
         # if @submission.update(submission_params)

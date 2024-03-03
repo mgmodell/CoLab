@@ -246,7 +246,7 @@ Then('the {string} db submission data is accurate') do |placement|
   @submission.sub_text.should eq @check_submission.sub_text.delete("\n")
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
-  @submission.user_id.should eq @check_submission.user_id
+  @submission.user_id.should eq( @check_submission.user_id )
   @submission.creator_id.should eq @check_submission.creator_id
 end
 
@@ -266,10 +266,13 @@ Given('the assignment already has {int} submission from the user') do |count|
     travel 10.minutes
     submitted = DateTime.now
 
+    group = @assignment.project.group_for_user(@user) if @assignment.group_enabled
     submission = @assignment.submissions.new(
       submitted:,
       sub_text: sub_text_db,
       user: @user,
+      creator: @user,
+      group:,
       rubric: @assignment.rubric
     )
     submission.save
@@ -370,10 +373,12 @@ Then('remember the {string} user') do |submitter_or_creator|
   case submitter_or_creator
   when 'submitter'
     @assignment_submitter_user = @user
-    @check_submission.user = @user unless @check_submission.nil?
+    @submission.user = @user 
+    @submission.user_id = @user.id 
   when 'creator'
     @assignment_creator_user = @user
-    @check_submission.creator = @user unless @check_submission.nil?
+    @submission.creator = @user 
+    @submission.creator_id = @user.id 
   else
     puts "State '#{current_or_remembered}' not yet handled"
     pending # Write code here that turns the phrase above into concrete actions

@@ -97,7 +97,7 @@ class Assignment < ApplicationRecord
   def group_valid
     return if !group_enabled || project.present?
 
-    errors.add(:group_enabled, I18n.t('assignments.error.group_invalid'))
+    errors.add(:group_enabled, I18n.t('assignments.error.group_required'))
   end
 
   def anonymize
