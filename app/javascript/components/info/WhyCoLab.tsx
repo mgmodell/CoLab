@@ -76,7 +76,7 @@ export default function WhyCoLab(props: Props) {
             <li>{t('why_slides.captions.seven_one.diversity')}</li>
             <li>{t('why_slides.captions.seven_one.gamification')}</li>
             <li>{t('why_slides.captions.seven_one.simulations')}</li>
-            <li>{t('why_slides.captions.seven_one.iterative-assi')}</li>
+            <li>{t('why_slides.captions.seven_one.iterative_assignments')}</li>
           </ul>
         </Col>
         <Col sm={4}>
@@ -197,7 +197,7 @@ export default function WhyCoLab(props: Props) {
   const NF_SVG = [
     {
       x: 200,
-      y: 150,
+      y: 40,
       height: 200,
       width: 200,
       opacity: 1

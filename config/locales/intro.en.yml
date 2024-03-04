@@ -21,9 +21,10 @@ en:
             one_two: But have you ever experienced 1 or more of these scenarios
              in group projects?
             two_one: >
-                 Let's take a look at some examples of unequal group 
+                Let's take a look at some examples of unequal group 
                 work participation...
-            two_two: Group Domination: One person takes over and 
+            two_two: >
+                Group Domination: One person takes over and 
                 thinks everyone else's opinion is not good enough
             three_one: Have you ever been a George?
             three_two: > 
@@ -45,7 +46,7 @@ en:
                 diversity: Diversity-focused group composition
                 gamification: Gamified collaborative reading
                 simulations: Simulated team experience
-                iterative-assi: Iterative assignments
+                iterative_assignments: Iterative assignments
             seven_two:
                 title: Are you a...
                 student: Student?
