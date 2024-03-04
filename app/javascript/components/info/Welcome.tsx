@@ -146,7 +146,7 @@ export default function Welcome(props: Props) {
          rotate: 670,
       },
       why: {
-         x: 480,
+         x: 535,
          y: 45,
          scale: 0.07,
          rotate: 135,
