@@ -28,6 +28,7 @@ import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import BingoBuilder from "./BingoBoards/BingoBuilder";
+import AssignmentViewer from "./assignments/AssignmentViewer";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
@@ -93,6 +94,7 @@ export default function PageWrapper(props: Props) {
               path={`profile/bingo_game/:bingoGameId`}
               element={<BingoBuilder rootPath={props.rootPath} />}
             />
+            <Route path={`profile/assignment/:assignmentId`} element={<AssignmentViewer />} />
             <Route
               path="admin/*"
               element={

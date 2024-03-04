@@ -82,7 +82,7 @@ end
 Given(/^the user is "(.*?)" user$/) do |which|
   case which.downcase
   when 'a random'
-    tmp_id = @user.id
+    tmp_id = @user.nil? ? nil : @user.id 
     @user = @users.sample while tmp_id == @user.id
   when 'the first' then @user = @users.first
   when 'the second' then @user = @users[1]
