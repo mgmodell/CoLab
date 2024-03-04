@@ -55,7 +55,7 @@ en:
       response_tab_lbl: Responses
     progress:
       progress_tab_lbl: Progress
-      in_progress: Work in progress
+      in_progress_msg: Work in progress
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!
