@@ -41,6 +41,15 @@ en:
     edit:
       title: Edit Course Details
       self_reg_dwnld: Download self-registration code
+      number: Course Number
+      name: Course Name
+      description: Course Description
+      school: School
+      time_zone: Time Zone
+      consent: Consent Form
+      dates_tz: All dates shown in {{time_zone}} timezone.
+      dates: Course Dates
+      download_qr: Download self-registration code
     show:
       title: Course Details
       instructors: Course Instructors

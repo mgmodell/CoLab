@@ -245,7 +245,7 @@ export default function CourseDataAdmin() {
   const detailsComponent = (
     <Panel>
       <label htmlFor="course-number" id="course-number_lbl">
-        Course Number
+        {t('edit.number')}
       </label>
       <InputText
         placeholder="Course Number"
@@ -260,7 +260,7 @@ export default function CourseDataAdmin() {
       ) : null}
       <br />
       <label htmlFor="course-name" id="course-name_lbl">
-        Course Name
+        {t('edit.name')}
       </label>
       <InputText
         placeholder="Course Name"
@@ -275,7 +275,7 @@ export default function CourseDataAdmin() {
       ) : null}
       <br />
       <label htmlFor="course-description" id="course-description_lbl">
-        Course Description
+        {t('edit.description')}
       </label>
       <InputTextarea
         placeholder="Course Description"
@@ -293,7 +293,7 @@ export default function CourseDataAdmin() {
       ) : null}
       <br />
       <label htmlFor="course_school" id="course_school_lbl">
-        School
+        {t('edit.school')}
       </label>
       {schools.length > 0 ? (
         <Dropdown
@@ -320,7 +320,7 @@ export default function CourseDataAdmin() {
       )}
 
       <label htmlFor="course_timezone" id="course_timezone_lbl">
-        Time Zone
+        {t('edit.time_zone')}
       </label>
       {timezones.length > 0 ? (
         <Dropdown id="course_timezone"
@@ -339,7 +339,7 @@ export default function CourseDataAdmin() {
       )}
 
       <label htmlFor="course_consent_form" id="course_consent_form_lbl">
-        Consent Form
+        {t('edit.consent')}
       </label>
       <Dropdown
         id="course_consent_form"
@@ -354,9 +354,9 @@ export default function CourseDataAdmin() {
         showClear={true}
       />
 
-      <p>All dates shown in {course.timezone} timezone.</p>
+      <p>{t('edit.dates_tz', {time_zone: course.timezone})}</p>
       <label htmlFor="course_dates" id="course_dates_lbl">
-        Course Dates
+        {t('edit.dates')}
       </label>
       <Calendar
         id="course_dates"
@@ -390,7 +390,7 @@ export default function CourseDataAdmin() {
       {courseId != null && courseId > 0 ? (
         <a href={course.reg_link} download>
           <img src={course.reg_link} alt="Registration QR Code" />
-          Download self-registration code
+          {t('edit.download_qr')}
         </a>
       ) : null}
 
