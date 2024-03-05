@@ -86,6 +86,10 @@ class BingoGamesController < ApplicationController
        }
     end
 
+    words = candidate_list.bingo_game.candidates.collect do |c|
+      c.definition.split(' ')
+    end
+
     render json: {
       candidate_list: {
         id: candidate_list.id,
@@ -95,7 +99,8 @@ class BingoGamesController < ApplicationController
         group_id: candidate_list.group_id,
         user_id: candidate_list.user_id
       },
-      candidates:
+      candidates:,
+      found_words: Candidate.filter.filter( words.flatten!)
     }
   end
 

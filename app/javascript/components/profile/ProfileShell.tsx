@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import ProfileDataAdmin from "./ProfileDataAdmin";
+import AssignmentViewer from "../assignments/AssignmentViewer";
+import BingoBuilder from "../BingoBoards/BingoBuilder";
 
 
 type Props = {
@@ -19,14 +21,10 @@ export default function ProfileShell(props: Props) {
           <ProfileDataAdmin />
         } />
         <Route
-          path={`enter_candidates/:bingoGameId`}
-          element={<CandidateListEntry rootPath={props.rootPath} />}
+          path={`bingo_game/:bingoGameId`}
+          element={<BingoBuilder rootPath={props.rootPath} />}
         />
-            <Route
-              path={`profile/bingo_game/:bingoGameId`}
-              element={<BingoBuilder rootPath={props.rootPath} />}
-            />
-            <Route path={`profile/assignment/:assignmentId`} element={<AssignmentViewer />} />
+        <Route path={`assignment/:assignmentId`} element={<AssignmentViewer />} />
       </Routes>
     </React.Fragment>
   );

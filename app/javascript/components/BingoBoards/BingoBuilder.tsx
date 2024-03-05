@@ -8,6 +8,10 @@ import ScoredGameDataTable from "./ScoredGameDataTable";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
+import WordCloud from '@visx/wordcloud/lib/Wordcloud'
+import { scaleLog } from "@visx/scale";
+import { Text } from "@visx/text";
+
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
@@ -38,7 +42,10 @@ interface IBingoGame {
   size: number;
   end_date?: Date;
 };
-
+interface WordData {
+  text: string;
+  value: number;
+}
 export interface IBingoBoard {
   initialised: boolean;
   bingo_cells: IBingoCell[];
@@ -60,6 +67,29 @@ export default function BingoBuilder(props: Props) {
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState(0);
+  const [foundWords, setFoundWords] = useState([]);
+
+  const wordFreq = (words: string[]): WordData[] => {
+    const freqMap: Record<string, number> = {};
+
+    for (const w of words) {
+      if (!freqMap[w]) freqMap[w] = 0;
+      freqMap[w] += 1;
+    }
+    return Object.keys(freqMap).map((word) => ({ text: word, value: freqMap[word] }));
+  }
+
+  const fontScale = scaleLog({
+    domain: [Math.min(...foundWords.map((w) => w.value)), Math.max(...foundWords.map((w) => w.value))],
+    range: [10, 100],
+  });
+  const colors = [
+    '#477efd',
+    '#74d6fd',
+    '#3d5ef9',
+    '#2b378b',
+    '#1f2255'
+  ]
 
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -154,12 +184,15 @@ export default function BingoBuilder(props: Props) {
         const data = response.data;
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
+        setFoundWords(wordFreq(data.found_words));
         //}, this.randomizeTiles );
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error");
         return [{ id: -1, name: t("no_data_list_item") }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   const getBoard = () => {
@@ -197,6 +230,7 @@ export default function BingoBuilder(props: Props) {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
+          // TODO - this must move to the alert system
           setSaveStatus("Your board has been saved");
           setBoard(data);
         } else if ((data.id = -42)) {
@@ -342,6 +376,41 @@ export default function BingoBuilder(props: Props) {
           ) : (
             t("no_worksheet_msg")
           )}
+        </TabPanel>
+        <TabPanel
+          header={t('tabs.word_cloud')}
+        >
+          <WordCloud
+            height={400}
+            width={400}
+            words={foundWords}
+            spiral={'archimedean'}
+            font={'Impact'}
+            fontSize={(datum: WordData) => fontScale(datum.value)}
+            rotate={() => {
+              const rand = Math.random();
+              const degree = rand > 0.5 ? 60 : -60;
+              return rand * degree;
+            }}
+            random={Math.random}
+          >
+            {(cloudWords) =>
+              cloudWords.map((word,index) => (
+                <Text
+                  key={word.text}
+                  fill={colors[ index % colors.length]}
+                  textAnchor="middle"
+                  transform={`translate(${word.x}, ${word.y}) rotate(${word.rotate})`}
+                  fontSize={word.size}
+                  fontFamily={word.font}
+                >
+                  {word.text}
+                </Text>
+              ))
+            }
+          </WordCloud>
+
+
         </TabPanel>
       </TabView>
     </Panel>
