@@ -80,6 +80,7 @@ Given(/^the users "(.*?)" had demographics requested$/) do |with_demographics|
 end
 
 Given(/^the user is "(.*?)" user$/) do |which|
+  @users.size.should be > 1, 'There are not enough users to select from'
   case which.downcase
   when 'a random'
     tmp_id = @user&.id 

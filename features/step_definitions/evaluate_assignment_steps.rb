@@ -11,10 +11,12 @@ Given('{int} user has submitted to the assignment') do |count|
       rubric: @assignment.rubric,
       assignment: @assignment,
       user:,
+      creator: user,
       submitted:,
       recorded_score: nil
     )
     submission.save
+    submission.errors.size.should be(0), submission.errors.full_messages
   end
 end
 
