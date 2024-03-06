@@ -25,7 +25,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
-import DefinitionsWordCloud from "./DefinitionWordCloud";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 export default function BingoGameDataAdmin(props) {
 
@@ -408,7 +408,7 @@ export default function BingoGameDataAdmin(props) {
               <Row>
                 <Col xs={5}>
                   <ConceptChips concepts={concepts} />
-                  <DefinitionsWordCloud
+                  <ResponsesWordCloud
                     width={400}
                     height={400}
                     words={foundWords}

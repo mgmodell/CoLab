@@ -43,7 +43,9 @@ class AssignmentsController < ApplicationController
         submitted: submission.submitted,
         withdrawn: submission.withdrawn,
         recorded_score: submission.recorded_score || submission.calculated_score,
-        user: current_user.name(anon)
+        user: current_user.name(anon),
+        submission_feedbacks: submission.submission_feedback.as_json(only: %i[id feedback submitted]),
+        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json(only: %i[id feedback criterium_id])
       }
     end
 

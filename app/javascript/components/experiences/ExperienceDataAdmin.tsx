@@ -23,6 +23,7 @@ import { TabPanel, TabView } from "primereact/tabview";
 import { InputText } from "primereact/inputtext";
 import { InputSwitch } from "primereact/inputswitch";
 import { Calendar } from "primereact/calendar";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 interface IExperience {
   id: string;
@@ -70,7 +71,7 @@ export default function ExperienceDataAdmin(props) {
   //Using this Luxon function for later i18n
   const [experienceEndDate, setExperienceEndDate] = useState(
     () => {
-      now.setMonth( now.getMonth( )  + 3 );
+      now.setMonth(now.getMonth() + 3);
       return now;
     }
   );
@@ -79,6 +80,17 @@ export default function ExperienceDataAdmin(props) {
   const [reactionData, setReactionData] = useState();
   const [courseName, setCourseName] = useState("");
   const [courseTimezone, setCourseTimezone] = useState("UTC");
+
+  // For the word cloud
+  const [responseWords, setResponseWords] = useState([]);
+  const colors = [
+    '#477efd',
+    '#74d6fd',
+    '#3d5ef9',
+    '#2b378b',
+    '#1f2255'
+  ]
+
 
   const getExperience = () => {
     dispatch(startTask());
@@ -93,7 +105,7 @@ export default function ExperienceDataAdmin(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        const experience : IExperience = data.experience;
+        const experience: IExperience = data.experience;
         const course = data.course;
 
         setCourseName(course.name);
@@ -104,11 +116,13 @@ export default function ExperienceDataAdmin(props) {
         setExperienceActive(experience.active || false);
         setExperienceLeadTime(experience.lead_time || 3);
 
-        var receivedDate = new Date( Date.parse( experience.start_date ) );
+        var receivedDate = new Date(Date.parse(experience.start_date));
         setExperienceStartDate(receivedDate);
 
-        receivedDate = new Date( Date.parse( experience.end_date ) );
-        setExperienceEndDate( new Date( Date.parse( experience.end_date ) ))
+        receivedDate = new Date(Date.parse(experience.end_date));
+        setExperienceEndDate(new Date(Date.parse(experience.end_date)))
+
+        setResponseWords(data.response_words)
 
         dispatch(endTask());
         dispatch(setClean(category));
@@ -147,15 +161,15 @@ export default function ExperienceDataAdmin(props) {
       .then(response => {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const experience : IExperience = data.experience;
+          const experience: IExperience = data.experience;
           setExperienceId(experience.id);
           setExperienceName(experience.name);
           setExperienceActive(experience.active);
 
-          var receivedDate = new Date( Date.parse( experience.start_date ) );
+          var receivedDate = new Date(Date.parse(experience.start_date));
           setExperienceStartDate(receivedDate);
 
-          receivedDate = new Date( Date.parse( experience.end_date ) );
+          receivedDate = new Date(Date.parse(experience.end_date));
           setExperienceEndDate(receivedDate);
 
           const course = data.course;
@@ -172,14 +186,14 @@ export default function ExperienceDataAdmin(props) {
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
         }
-        navigate( `../${courseIdParam}/experience/${experienceId}`, { replace: true });
+        navigate(`../${courseIdParam}/experience/${experienceId}`, { replace: true });
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
-          dispatch(endTask("saving"));
-      }) ;
+        dispatch(endTask("saving"));
+      });
   };
 
   useEffect(() => {
@@ -223,13 +237,13 @@ export default function ExperienceDataAdmin(props) {
         <InputText
           id='experience-lead-time'
           value={experienceLeadTime.toString()}
-          onChange={event => setExperienceLeadTime(parseInt( event.target.value ))}
+          onChange={event => setExperienceLeadTime(parseInt(event.target.value))}
           type="number"
         />
         <label htmlFor="experience-lead-time">Days for instructor prep</label>
       </span>
 
-      
+
       <InputSwitch
         checked={experienceActive}
         onChange={() => toggleActive()}
@@ -238,18 +252,18 @@ export default function ExperienceDataAdmin(props) {
 
       <span>All dates shown in {courseTimezone} timezone.</span>
       <span className="p-float-label">
-      <Calendar
-        id="experience_dates"
-        value={[experienceStartDate, experienceEndDate]}
-        onChange={(event) =>{
-          const changeTo = event.value;
-          if( null !== changeTo && changeTo.length > 1){
-            setExperienceStartDate(changeTo[0]);
-            setExperienceEndDate(changeTo[1]);
-          }
-        } }
-        selectionMode="range"
-        showIcon={true}
+        <Calendar
+          id="experience_dates"
+          value={[experienceStartDate, experienceEndDate]}
+          onChange={(event) => {
+            const changeTo = event.value;
+            if (null !== changeTo && changeTo.length > 1) {
+              setExperienceStartDate(changeTo[0]);
+              setExperienceEndDate(changeTo[1]);
+            }
+          }}
+          selectionMode="range"
+          showIcon={true}
         />
         <label htmlFor="experience_start_date">Experience Dates</label>
       </span>
@@ -261,8 +275,6 @@ export default function ExperienceDataAdmin(props) {
     </Panel>
   );
 
-  console.log(reactionsUrl, reactionData);
-
   const reactionListing =
     reactionsUrl != undefined && experienceId > 0 ? (
       <ReactionsList
@@ -271,13 +283,25 @@ export default function ExperienceDataAdmin(props) {
         reactionsListUpdateFunc={setReactionData}
       />
     ) : (
-      "The Experience must be created before students can react to it."
+      <>
+        {t('errors.must_be_created')}
+      </>
     );
   return (
     <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-      <TabPanel header="Details">{detailsComponent}</TabPanel>
-      <TabPanel header="Results" disabled={null == experienceId}>
+      <TabPanel header={t('tabs.details')}>{detailsComponent}</TabPanel>
+      <TabPanel header={t('tabs.results')} disabled={null == experienceId}>
         {reactionListing}
+      </TabPanel>
+      <TabPanel
+        header={t('tabs.response_word_cloud')}
+      >
+        <ResponsesWordCloud
+          width={400}
+          height={400}
+          words={responseWords}
+          colors={colors}
+        />
       </TabPanel>
     </TabView>
   );

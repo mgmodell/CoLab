@@ -16,7 +16,7 @@ interface WordCloudProps {
   colors?: string[];
 }
 
-export default function DefinitionsWordCloud(props: WordCloudProps) {
+export default function ResponsesWordCloud(props: WordCloudProps) {
   const { words, width, height, colors } = props;
 
   const wordFreq = (words: string[]): WordData[] => {

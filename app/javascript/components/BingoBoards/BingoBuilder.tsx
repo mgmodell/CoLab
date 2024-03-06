@@ -14,7 +14,7 @@ import parse from "html-react-parser";
 
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
-import DefinitionsWordCloud from "./DefinitionWordCloud";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 type Props = {
   rootPath?: string;
@@ -61,7 +61,8 @@ export default function BingoBuilder(props: Props) {
 
   const [curTab, setCurTab] = useState(0);
 
-  // Word Cloud colors
+  // For the word cloud
+  const [foundWords, setFoundWords] = useState([]);
   const colors = [
     '#477efd',
     '#74d6fd',
@@ -85,7 +86,6 @@ export default function BingoBuilder(props: Props) {
       topic: t("no_game_msg")
     }
   });
-  const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -361,14 +361,12 @@ export default function BingoBuilder(props: Props) {
         <TabPanel
           header={t('tabs.word_cloud')}
         >
-          <DefinitionsWordCloud
+          <ResponsesWordCloud
             width={400}
             height={400}
             words={foundWords}
             colors={colors}
             />
-
-
         </TabPanel>
       </TabView>
     </Panel>
