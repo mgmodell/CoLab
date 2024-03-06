@@ -8,7 +8,7 @@ import ScoredGameDataTable from "./ScoredGameDataTable";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
@@ -211,18 +211,18 @@ export default function BingoBuilder(props: Props) {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
-          // TODO - this must move to the alert system
-          setSaveStatus("Your board has been saved");
+          dispatch( addMessage( t('save.success'), new Date(), Priorities.INFO));
           setBoard(data);
         } else if ((data.id = -42)) {
           board.bingo_cells = board.bingo_cells_attributes;
           board.id = -42;
           board.iteration = 0;
-          setSaveStatus("DEMO: Your board would have been saved");
+          dispatch( addMessage( t('save.demo_success'), new Date(), Priorities.INFO));
           setBoard(board);
         } else {
           board.bingo_cells = board.bingo_cells_attributes;
-          setSaveStatus("Save failed. Please try again or contact support");
+          dispatch( addMessage( t('save.failure'), new Date(), Priorities.ERROR));
+          setBoard(board);
           setBoard(board);
         }
         dispatch(endTask("saving"));

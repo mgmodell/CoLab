@@ -8,6 +8,10 @@ en:
     gen_and_save_msg: >
       If you generate a new board, you will be able to save it here.
     save_lnk: Save
+    save:
+      success: Your board has been saved
+      demo_success: "DEMO: Your board would have been saved"
+      failure: Save failed. Please try again or contact support
     gen_board_msg: the board you generated
     download_board_lnk: Download your Bingo Board
     play_msg: and play along in class!
