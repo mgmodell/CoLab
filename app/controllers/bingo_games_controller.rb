@@ -99,7 +99,7 @@ class BingoGamesController < ApplicationController
         user_id: candidate_list.user_id
       },
       candidates:,
-      found_words: Candidate.filter.filter( words.flatten!)
+      found_words: words.empty? ? [] : Candidate.filter.filter( words.flatten!)
     }
   end
 

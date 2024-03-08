@@ -27,7 +27,7 @@ class ExperiencesController < ApplicationController
           messages: {
             status: params[:notice]
           },
-          response_words: Candidate.filter.filter(words.flatten!)
+          response_words: words.empty? ? [] : Candidate.filter.filter(words.flatten!)
         }
         render json: response
       end
