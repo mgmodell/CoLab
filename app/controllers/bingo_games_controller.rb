@@ -599,7 +599,7 @@ class BingoGamesController < ApplicationController
     words = bingo_game.candidates.collect do |c|
       c.definition.split(' ')
     end
-    resp[:found_words] = Candidate.filter.filter( words.flatten!)
+    resp[:found_words] = words.empty? ? [] : Candidate.filter.filter(words.flatten!)
     resp
   end
 
