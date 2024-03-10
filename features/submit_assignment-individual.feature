@@ -369,3 +369,66 @@ Feature: (Re)Submitting individual assignments
     Given the user logs in
      Then the user opens the assignment task
      Then the user sees 4 submissions
+
+  # Viewing grades
+  @javascript
+  Scenario: User reviews a single graded assignment
+    Given the user logs in
+    Given the assignment already has 1 submission from the user
+   Given submission 1 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'line' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'area' view
+    Then we see a 'line' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'independent' 'bar' view
+    Then we see a 'line' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'bar' view
+    Then we see a 'line' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: User reviews one of 4 graded assignments
+    Given the user logs in
+    Given the assignment already has 4 submission from the user
+   Given submission 3 'is' graded
+   Given submission 2 'is' graded
+   Given submission 1 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'line' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'area' view
+    Then we see a 'line' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'independent' 'bar' view
+    Then we see a 'line' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'bar' view
+    Then we see a 'line' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: Instructor revises a previous evaluation
+    Given the user logs in
+   Given the assignment already has 4 submission from the user
+   Given submission 1 'is' graded
+   Given submission 2 'is' graded
+   Given submission 3 'is' graded
+   Given submission 4 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'line' graph with 4 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'area' view
+    Then we see a 'line' graph with 4 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'independent' 'bar' view
+    Then we see a 'bar' graph with 4 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'stacked' 'bar' view
+    Then we see a 'bar' graph with 4 time marker
+     And the chart levels equal the rubric criteria count

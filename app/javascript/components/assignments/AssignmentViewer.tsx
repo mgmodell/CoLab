@@ -7,8 +7,9 @@ import {
   startTask,
   endTask,
 } from "../infrastructure/StatusSlice";
+import parse from "html-react-parser";
 
-import RubricViewer, { CLEAN_RUBRIC } from "./RubricViewer";
+import RubricViewer, { CLEAN_RUBRIC, ICriteria } from "./RubricViewer";
 import { IRubricData } from "./RubricViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -21,6 +22,27 @@ import AssignmentSubmission from "./AssignmentSubmission";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
 import { Container, Col, Row } from "react-grid-system";
+import {
+  AnimatedAreaSeries,
+  AnimatedAreaStack,
+  AnimatedAxis,
+  AnimatedBarGroup,
+  AnimatedBarSeries,
+  AnimatedBarStack,
+  AnimatedGrid,
+  AreaSeries,
+  AreaStack,
+  Axis,
+  BarGroup,
+  BarSeries,
+  BarStack,
+  LineSeries,
+  Tooltip,
+  XYChart
+} from "@visx/xychart";
+
+import { scaleOrdinal } from '@visx/scale';
+import { schemeSet1 } from 'd3-scale-chromatic';
 
 interface ISubmissionCondensed {
   id: number;
@@ -29,8 +51,21 @@ interface ISubmissionCondensed {
   withdrawn: DateTime;
   user: string;
   group: string;
+  submission_feedback: ISubmissionFeedback;
+  rubric_row_feedbacks: Array<IRubricRowFeedback>;
 }
 
+interface ISubmissionFeedback {
+  feedback: string;
+  submitted: DateTime;
+}
+
+interface IRubricRowFeedback {
+  id: number;
+  feedback: string;
+  score: number;
+  criterium_id: number;
+}
 interface IAssignment {
   id: number | null;
   name: string;
@@ -54,8 +89,9 @@ const CLEAN_ASSIGNMENT: IAssignment = {
   linkSub: false,
   fileSub: false,
   submissions: [],
-  rubric: CLEAN_RUBRIC
+  rubric: CLEAN_RUBRIC,
 };
+
 
 export default function AssignmentViewer(props) {
   const endpointSet = "assignment";
@@ -72,6 +108,7 @@ export default function AssignmentViewer(props) {
   const [t, i18n] = useTranslation(`${endpointSet}s`);
 
   const [curTab, setCurTab] = useState(0);
+  const [progressData, setProgressData] = useState([]);
 
   enum AssignmentActions {
     setAssignment = "SET ASSIGNMENT",
@@ -131,7 +168,30 @@ export default function AssignmentViewer(props) {
           type: AssignmentActions.setAssignment,
           assignment: receivedAssignment
         });
+
+        //Prepare the progress data
+        const localProgressData = receivedAssignment.submissions.map((submission: ISubmissionCondensed) => {
+          const feedbacks = {};
+          if (submission.rubric_row_feedbacks.length > 0) {
+            submission.rubric_row_feedbacks.forEach((lFeedback: IRubricRowFeedback) => {
+              feedbacks[lFeedback.criterium_id] = {
+                feedback: lFeedback.feedback,
+                score: lFeedback.score,
+              }
+            });
+            return {
+              submitted: submission.submitted,
+              feedbacks: feedbacks,
+            };
+          } else {
+            return null;
+          }
+        }).filter((feedback) => {
+          return feedback !== null;
+        });
+        setProgressData(localProgressData);
       })
+
       .catch(error => {
         console.log("error", error);
       })
@@ -139,6 +199,24 @@ export default function AssignmentViewer(props) {
         dispatch(endTask());
       });
   };
+  const maxId = assignment.rubric.criteria.reduce((
+    (maximum, next) => {
+      return Math.max(maximum, next.id);
+    }
+  ), 0);
+  const minId = assignment.rubric.criteria.reduce((
+    (maximum, next) => {
+      return Math.min(maximum, next.id);
+    }
+  ), maxId);
+  const keys = [];
+  for (let i = minId; i <= maxId; i++) {
+    keys.push(i);
+  }
+  const colorScale = scaleOrdinal({
+    domain: keys,
+    range: schemeSet1,
+  });
 
 
   let output = null;
@@ -191,7 +269,85 @@ export default function AssignmentViewer(props) {
             assignment.startDate > curDate || assignment.endDate < curDate
           }
         >
-          {t("progress.in_progress_msg")}
+          <XYChart
+            xScale={{ type: "band" }}
+            yScale={{ type: "linear" }}
+            width={500}
+            height={300}
+          >
+            <AnimatedAxis
+              orientation='bottom'
+            />
+            <AnimatedAxis
+              orientation='left'
+            />
+            <AnimatedGrid
+              columns={true}
+              rows={true}
+            />
+            <Tooltip
+              snapTooltipToDatumX
+              snapTooltipToDatumY
+              showVerticalCrosshair
+              showSeriesGlyphs
+              showDatumGlyph
+              applyPositionStyle
+              renderTooltip={({ tooltipData, colorScale }) => {
+                const content = Object.values(tooltipData.nearestDatum.datum.feedbacks).map((feedback, index) => {
+                  return (
+                    <>
+                      <li><strong>
+                        {feedback.score}:
+                        </strong>
+                      {parse(feedback.feedback)} </li>
+                    </>
+                  )
+                });
+                return (
+                  <div>
+                    <p><strong>Date:</strong>{DateTime.fromISO(tooltipData.nearestDatum.datum.submitted).setZone(Settings.timezone).toLocaleString(DateTime.DATETIME_SHORT)}</p>
+                    <ul>
+                      {content}
+                    </ul>
+                  </div>
+                );
+              }}
+            />
+
+
+            <AnimatedAreaStack >
+              {
+                assignment.rubric.criteria.map((criterium: ICriteria, index) => {
+                  const criteriumId = criterium.id;
+                  return (
+                    <AnimatedAreaSeries
+                      xAccessor={d => {
+                        //console.log('submitted', d.submitted);
+                        //return d.submitted;
+                        return DateTime.fromISO(d.submitted).setZone(Settings.timezone).toLocaleString(DateTime.DATETIME_SHORT);
+                      }}
+                      yAccessor={(d: IRubricRowFeedback) => {
+                        //console.log('score', d.feedbacks[criteriumId].score);
+                        return d.feedbacks[criteriumId].score;
+                      }}
+                      key={criteriumId.toString()}
+                      dataKey={(d: IRubricRowFeedback) => {
+                        console.log('d', d);
+                        return d.id;
+                      }}
+                      data={progressData}
+                      colorAccessor={d => {
+                        console.log('color', d, colorScale(criterium.id));
+                        return colorScale(criterium.id)
+                      }
+                      }
+                    />
+
+                  )
+                })
+              }
+            </AnimatedAreaStack>
+          </XYChart>
         </TabPanel>
       </TabView>
     );

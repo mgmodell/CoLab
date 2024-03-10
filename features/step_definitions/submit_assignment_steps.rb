@@ -310,7 +310,7 @@ Given('submission {int} {string} graded') do |index, graded_state|
       )
       @assignment.rubric.criteria.each do |criterium|
         rubric_row_feedback = RubricRowFeedback.new(
-          score: 100,
+          score: rand(1..100),
           criterium:,
           feedback: "<p>#{Faker::Lorem.paragraph}</p>",
         )
@@ -395,4 +395,18 @@ end
 Then('the user sees {int} submissions') do |sub_count|
   find( :xpath, "//a[@role='tab']/span[text()='Responses']" ).click
   all(:xpath, "//div[@id='submissionList']/div/table/tbody/tr[not(@data-pc-section='emptymessage')]" ).size.should eq sub_count
+end
+
+Then('we see a {string} graph with {int} time marker') do | line_or_bar, marker_count |
+  # Then('we see a {string} graph with {float} time marker') do |string, float|
+  byebug
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then('the chart levels equal the rubric criteria count') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then('we switch to the {string} {string} view') do | stacked_or_layered, line_or_bar|
+  pending # Write code here that turns the phrase above into concrete actions
 end
