@@ -398,15 +398,20 @@ Then('the user sees {int} submissions') do |sub_count|
 end
 
 Then('we see a {string} graph with {int} time marker') do | line_or_bar, marker_count |
-  # Then('we see a {string} graph with {float} time marker') do |string, float|
-  byebug
-  pending # Write code here that turns the phrase above into concrete actions
+  all(:xpath, "//*[local-name()='g' and contains(@class,'x-tick')]").size.should eq( marker_count )
+
+  drop_down = find( :xpath, "//div[@id='chartType']" )
+  drop_down.text.should eq(line_or_bar), "Expected '#{line_or_bar}' but got '#{drop_down.text}'"
 end
 
 Then('the chart levels equal the rubric criteria count') do
-  pending # Write code here that turns the phrase above into concrete actions
+  criteria_count = @assignment.rubric.criteria.size
+  byebug unless all(:xpath, "//*[local-name()='path' and contains(@name,'criterium-')]").size == criteria_count 
+  all(:xpath, "//*[local-name()='path' and contains(@name,'criterium-')]").size.should eq( criteria_count )
 end
 
-Then('we switch to the {string} {string} view') do | stacked_or_layered, line_or_bar|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('we switch to the {string} view') do | stacked_or_layered |
+  drop_down = find( :xpath, "//div[@id='chartType']" )
+  drop_down.click
+  find( :xpath, "//li[text()='#{stacked_or_layered}']" ).click
 end

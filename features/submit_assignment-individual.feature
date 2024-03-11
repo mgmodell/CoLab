@@ -378,16 +378,10 @@ Feature: (Re)Submitting individual assignments
    Given submission 1 'is' graded
     Then the user opens the assignment task
     Then the user opens the "Grading" submissions tab
-    Then we see a 'line' graph with 1 time marker
+    Then we see a 'Stacked Area' graph with 1 time marker
      And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'area' view
-    Then we see a 'line' graph with 1 time marker
-     And the chart levels equal the rubric criteria count
-    Then we switch to the 'independent' 'bar' view
-    Then we see a 'line' graph with 1 time marker
-     And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'bar' view
-    Then we see a 'line' graph with 1 time marker
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 1 time marker
      And the chart levels equal the rubric criteria count
 
   @javascript
@@ -399,16 +393,13 @@ Feature: (Re)Submitting individual assignments
    Given submission 1 'is' graded
     Then the user opens the assignment task
     Then the user opens the "Grading" submissions tab
-    Then we see a 'line' graph with 3 time marker
+    Then we see a 'Stacked Area' graph with 3 time marker
      And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'area' view
-    Then we see a 'line' graph with 3 time marker
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 3 time marker
      And the chart levels equal the rubric criteria count
-    Then we switch to the 'independent' 'bar' view
-    Then we see a 'line' graph with 3 time marker
-     And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'bar' view
-    Then we see a 'line' graph with 3 time marker
+    Then we switch to the 'Line Chart' view
+    Then we see a 'Line Chart' graph with 3 time marker
      And the chart levels equal the rubric criteria count
 
   @javascript
@@ -421,14 +412,8 @@ Feature: (Re)Submitting individual assignments
    Given submission 4 'is' graded
     Then the user opens the assignment task
     Then the user opens the "Grading" submissions tab
-    Then we see a 'line' graph with 4 time marker
+    Then we see a 'Stacked Area' graph with 4 time marker
      And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'area' view
-    Then we see a 'line' graph with 4 time marker
-     And the chart levels equal the rubric criteria count
-    Then we switch to the 'independent' 'bar' view
-    Then we see a 'bar' graph with 4 time marker
-     And the chart levels equal the rubric criteria count
-    Then we switch to the 'stacked' 'bar' view
-    Then we see a 'bar' graph with 4 time marker
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 4 time marker
      And the chart levels equal the rubric criteria count
