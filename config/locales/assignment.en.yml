@@ -55,7 +55,12 @@ en:
       response_tab_lbl: Responses
     progress:
       progress_tab_lbl: Progress
-      in_progress: Work in progress
+      in_progress_msg: Work in progress
+    visualization:
+      label: Chart type
+      stacked_area: Stacked Area
+      layered_area: Layered Area
+      lines: Line Chart
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!
@@ -74,5 +79,8 @@ en:
       update_failed: >
         Unable to save assignment. Please resolve the errors below
         and try again.
+      group_required: >
+        To enable groups, you must also select the projct from which to
+        pull them (the groups).
       no_update_error: Successfully saved the assignment.
       no_create_error: Successfully created the assignment.

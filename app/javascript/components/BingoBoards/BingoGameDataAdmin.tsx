@@ -25,7 +25,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
-import { C } from "@fullcalendar/core/internal-common";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 export default function BingoGameDataAdmin(props) {
 
@@ -76,6 +76,15 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupOption, setGameGroupOption] = useState(false);
   const [gameGroupDiscount, setGameGroupDiscount] = useState(0);
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
+
+  const colors = [
+    '#477efd',
+    '#74d6fd',
+    '#3d5ef9',
+    '#2b378b',
+    '#1f2255'
+  ]
+  const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -207,6 +216,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupOption(bingo_game.group_option || false);
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
+        setFoundWords(data.found_words);
         setDirty(false);
         dispatch(endTask());
       })
@@ -398,6 +408,12 @@ export default function BingoGameDataAdmin(props) {
               <Row>
                 <Col xs={5}>
                   <ConceptChips concepts={concepts} />
+                  <ResponsesWordCloud
+                    width={400}
+                    height={400}
+                    words={foundWords}
+                    colors={colors}
+                  />
                 </Col>
                 <Col xs={7}>
                   <BingoGameDataAdminTable results_raw={resultData} />

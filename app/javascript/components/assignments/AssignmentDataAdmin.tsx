@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
 
 
@@ -43,7 +43,6 @@ export default function AssignmentDataAdmin(props) {
 
   const [dirty, setDirty] = useState(false);
   const [curTab, setCurTab] = useState(0);
-  const [messages, setMessages] = useState({});
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
   ]);
@@ -152,10 +151,8 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        //TODO: handle save errors
-        setSaveStatus(data["notice"]);
+        dispatch( addMessage( data.notice?.status, new Date(), Priorities.ERROR));
         setDirty(false);
-        setMessages(data["messages"]);
         navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
 
         //getAssignmentData();
@@ -420,7 +417,7 @@ export default function AssignmentDataAdmin(props) {
                 </Col>
                 {group_options}
                 <Col xs={12}>
-                  {save_btn} {messages.status}
+                  {save_btn}
                   <span>{saveStatus}</span>
                 </Col>
               </Row>

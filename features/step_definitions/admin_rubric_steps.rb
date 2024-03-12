@@ -424,7 +424,7 @@ Given('there exists a rubric published by another user') do
     description: Faker::JapaneseMedia::StudioGhibli.quote,
     user: another_user
   )
-  (rand(4)+1).times do |index|
+  (rand(10)+1).times do |index|
     levels = rand(5)
     criteria = @rubric.criteria.new(
       description: Faker::Company.industry,

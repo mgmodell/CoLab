@@ -182,7 +182,3 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
-
-  Scenario: Members view current grade and instructor feedback
-  Scenario: Members view assignment submission history
-

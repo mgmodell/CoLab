@@ -1,4 +1,13 @@
 en:
+  experience_admins:
+    errors:
+      must_be created: >
+        The Experience must be created before students can
+        react to it.
+    tabs:
+      details: Details
+      results: Results
+      response_word_cloud: Response Word Cloud  
   experiences:
     simulation: Collaboration experience simulation
     available: 'Simulation: %{task}'

@@ -15,23 +15,28 @@ class SubmissionsController < ApplicationController
 
   # PATCH/PUT /submissions/1 or /submissions/1.json
   def update
-    @submission.user = current_user
     sub_params = submission_params
     assignment = Assignment.find sub_params[:assignment_id]
-    @submission.rubric_id = assignment.rubric_id
 
+    @submission.user = current_user
+    @submission.rubric_id = assignment.rubric_id
+    if assignment.group_enabled
+      group = assignment.project.group_for_user(current_user)
+      @submission.group = group
+    end
     # Set this as submitted if requested
     @submission.submitted = DateTime.now if params[:submit]
+
     if @submission.update(sub_params)
       respond_to do |format|
         # if @submission.update(submission_params)
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('assignments.error.no_update_error') })
+          render json: standardized_response(@submission, { main: I18n.t('submissions.error.no_update_error') })
         end
       end
     else
       errors = @submission.errors
-      errors.add(:mail, I18n.t('submissions.error.update_failed'))
+      errors.add(:main, I18n.t('submissions.error.update_failed'))
       logger.debug @submission.errors.full_messages
       respond_to do |format|
         format.json { render json: standardized_response(@submission, @submission.errors) }
@@ -45,7 +50,7 @@ class SubmissionsController < ApplicationController
     if @submission.save
       respond_to do |format|
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('assignments.error.no_update_error') })
+          render json: standardized_response(@submission, { main: I18n.t('submissions.error.no_update_error') })
         end
       end
 
@@ -83,13 +88,12 @@ class SubmissionsController < ApplicationController
     submission_id = params[:id].to_i
 
     @submission = if submission_id.positive?
-                    Submission.find_by(
-                      user_id: @current_user,
-                      id: submission_id
-                    )
+                    temp_submission = Submission.find_by id: submission_id
+                    temp_submission.can_edit?(@current_user) ? temp_submission : nil
                   else
                     Submission.new(
-                      user: @current_user
+                      user: @current_user,
+                      creator: @current_user
                     )
                   end
   end

@@ -43,7 +43,9 @@ class AssignmentsController < ApplicationController
         submitted: submission.submitted,
         withdrawn: submission.withdrawn,
         recorded_score: submission.recorded_score || submission.calculated_score,
-        user: current_user.name(anon)
+        user: current_user.name(anon),
+        submission_feedback: submission.submission_feedback.as_json(only: %i[feedback submitted]),
+        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json(only: %i[id score feedback criterium_id])
       }
     end
 
@@ -102,7 +104,7 @@ class AssignmentsController < ApplicationController
         end
       else
         errors = @assignment.errors
-        errors.add(:mail, I18n.t('assignments.errors.update_failed'))
+        errors.add(:main, I18n.t('assignments.errors.update_failed'))
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end

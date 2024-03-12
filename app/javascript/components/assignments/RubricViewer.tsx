@@ -92,20 +92,22 @@ export default function RubricViewer(props: Props) {
                 });
 
                 return (
-                  <>
+                  <React.Fragment key={criterium.id}>
                     <tr>
-                      <hr />
+                      <td colSpan={70}>
+                        <hr />
+                      </td>
                     </tr>
-                    <tr key={criterium.id}>
+                    <tr >
                       <td colSpan={10}>{criterium.description}</td>
                       <td colSpan={span}>{t("status.rubric_minimum")}</td>
                       {renderedLevels}
                     </tr>
-                  </>
+                  </React.Fragment>
                 );
               })}
             <tr>
-              <td>
+              <td colSpan={70}>
                 <hr />
               </td>
             </tr>

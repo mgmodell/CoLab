@@ -11,7 +11,7 @@ export default function AssignmentShell() {
 
   return (
     <React.Fragment>
-      <WorkingIndicator identifier="play_bingo" />
+      <WorkingIndicator identifier="assignments" />
       <Routes>
         <Route path={`:assignmentId`} element={<AssignmentViewer />} />
         <Route

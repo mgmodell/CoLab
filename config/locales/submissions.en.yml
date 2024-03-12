@@ -7,6 +7,11 @@ en:
         submitted.
       no_changes_on_withdrawal: >
         You cannot make changes when withdrawing an assignment.
+      no_update_error: Successfully saved the submission.
+      no_create_error: Successfully created the submission.
       no_changes_once_submitted: >
         Once an assignment has been submitted, it cannot be modified.
         You must create a new submission.
+      update_failed: >
+        Unable to save assignment. Please resolve the errors below
+        and try again.

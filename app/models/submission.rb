@@ -2,7 +2,9 @@
 
 class Submission < ApplicationRecord
   belongs_to :assignment, inverse_of: :submissions
-  belongs_to :user, inverse_of: :submissions
+  # Last submitter
+  belongs_to :user, optional: false
+  belongs_to :creator, class_name: 'User', optional: false
   belongs_to :group, inverse_of: :submissions, optional: true
   belongs_to :rubric, inverse_of: :submissions
   has_many_attached :sub_files
@@ -13,6 +15,9 @@ class Submission < ApplicationRecord
 
   before_validation :set_rubric
   validate :group_valid, :can_submit
+
+  validates :user, presence: true
+  validates :creator, presence: true
 
   delegate :end_date, to: :assignment
 
@@ -27,12 +32,20 @@ class Submission < ApplicationRecord
     total <= 0 ? nil : total / sum_weights
   end
 
+  def can_edit? user
+    if assignment.group_enabled
+      group.users.include? user
+    else
+      self.user == user
+    end
+  end
+
   private
 
   def group_valid
-    return unless assignment.group_enabled && group.empty?
+    return unless assignment.group_enabled && group.nil?
 
-    errors.add(:group, I18n.t('submissions.group_required'))
+    errors.add(:group, I18n.t('assignments.error.group_required'))
   end
 
   def set_rubric

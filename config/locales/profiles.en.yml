@@ -8,6 +8,11 @@ en:
     first_name: First name
     last_name: Last name
     edit_profile: Edit your profile
+    tabs:
+      details: Details
+      courses: My Courses
+      history: History
+      research: Research Participation
     cancel: Cancel
     email_settings: Email settings
     emails:

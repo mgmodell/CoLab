@@ -8,12 +8,13 @@ import ScoredGameDataTable from "./ScoredGameDataTable";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 type Props = {
   rootPath?: string;
@@ -38,7 +39,6 @@ interface IBingoGame {
   size: number;
   end_date?: Date;
 };
-
 export interface IBingoBoard {
   initialised: boolean;
   bingo_cells: IBingoCell[];
@@ -60,6 +60,17 @@ export default function BingoBuilder(props: Props) {
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState(0);
+
+  // For the word cloud
+  const [foundWords, setFoundWords] = useState([]);
+  const colors = [
+    '#477efd',
+    '#74d6fd',
+    '#3d5ef9',
+    '#2b378b',
+    '#1f2255'
+  ]
+
 
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -154,12 +165,15 @@ export default function BingoBuilder(props: Props) {
         const data = response.data;
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
+        setFoundWords(data.found_words);
         //}, this.randomizeTiles );
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error");
         return [{ id: -1, name: t("no_data_list_item") }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   const getBoard = () => {
@@ -197,17 +211,18 @@ export default function BingoBuilder(props: Props) {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
-          setSaveStatus("Your board has been saved");
+          dispatch( addMessage( t('save.success'), new Date(), Priorities.INFO));
           setBoard(data);
         } else if ((data.id = -42)) {
           board.bingo_cells = board.bingo_cells_attributes;
           board.id = -42;
           board.iteration = 0;
-          setSaveStatus("DEMO: Your board would have been saved");
+          dispatch( addMessage( t('save.demo_success'), new Date(), Priorities.INFO));
           setBoard(board);
         } else {
           board.bingo_cells = board.bingo_cells_attributes;
-          setSaveStatus("Save failed. Please try again or contact support");
+          dispatch( addMessage( t('save.failure'), new Date(), Priorities.ERROR));
+          setBoard(board);
           setBoard(board);
         }
         dispatch(endTask("saving"));
@@ -342,6 +357,16 @@ export default function BingoBuilder(props: Props) {
           ) : (
             t("no_worksheet_msg")
           )}
+        </TabPanel>
+        <TabPanel
+          header={t('tabs.word_cloud')}
+        >
+          <ResponsesWordCloud
+            width={400}
+            height={400}
+            words={foundWords}
+            colors={colors}
+            />
         </TabPanel>
       </TabView>
     </Panel>
