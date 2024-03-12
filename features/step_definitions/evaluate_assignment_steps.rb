@@ -6,11 +6,13 @@ Given('{int} user has submitted to the assignment') do |count|
   count.times do
     user = @assignment.course.enrolled_students.sample
     submitted = DateTime.now
+    group = @assignment.group_enabled ? @assignment.project.group_for_user(user) : nil
     submission = Submission.new(
       sub_link: Faker::Internet.url,
       rubric: @assignment.rubric,
       assignment: @assignment,
       user:,
+      group:,
       creator: user,
       submitted:,
       recorded_score: nil

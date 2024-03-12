@@ -45,7 +45,7 @@ class Submission < ApplicationRecord
   def group_valid
     return unless assignment.group_enabled && group.nil?
 
-    errors.add(:group, I18n.t('assignments.errors.group_required'))
+    errors.add(:group, I18n.t('assignments.error.group_required'))
   end
 
   def set_rubric

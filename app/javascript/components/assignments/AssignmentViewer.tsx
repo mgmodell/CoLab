@@ -207,8 +207,9 @@ export default function AssignmentViewer(props) {
         </TabPanel>
         <TabPanel
           header={t("progress.progress_tab_lbl")}
-          disabled={
-            assignment.startDate > curDate || assignment.endDate < curDate
+          disabled={assignment.submissions.find((submission) => {
+            return submission.feedbacks?.length > 0;
+          })
           }
         >
           <FeedbackVisualization

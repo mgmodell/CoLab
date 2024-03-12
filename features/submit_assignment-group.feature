@@ -184,3 +184,82 @@ Feature: (Re)Submitting individual assignments
     Given the user logs in
      Then the user opens the assignment task
      Then the user sees 4 submissions
+
+  @javascript
+  Scenario: 2 team members view current grade and instructor feedback
+    Given the assignment already has 1 submission from the user
+    Given the user logs in
+   Given submission 1 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then the user logs out
+    # User 2
+    Given the user is the "random" user in the group
+    Given the user logs in
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: 2 team members view assignment submission history
+    Given the course is shifted 2 'years' into the 'past'
+    Given the assignment "is" initialized active
+    Given the assignment already has 1 submission from the user
+   Given submission 1 'is' graded
+    Given the user logs in
+    Then user should see 0 open task
+    Then user opens their profile
+    Then user sees the assignment in the history
+    Then the user opens the assignment history item
+     And the shown rubric matches the assignment rubric
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then the user logs out
+    # User 2
+    Given the user is the "random" user in the group
+    Given the user logs in
+    Then user should see 0 open task
+    Then user opens their profile
+    Then user sees the assignment in the history
+    Then the user opens the assignment history item
+     And the shown rubric matches the assignment rubric
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: 2 team members view assignment submission history
+    Given the assignment "is" initialized active
+    Given the assignment already has 1 submission from the user
+   Given submission 1 'is' graded
+    Given the user logs in
+    Then user should see 1 open task
+    Then user opens their profile
+    Then user sees the assignment in the history
+    Then the user opens the assignment history item
+     And the shown rubric matches the assignment rubric
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then the user logs out
+    # User 2
+    Given the user is the "random" user in the group
+    Given the user logs in
+    Then user should see 1 open task
+    Then user opens their profile
+    Then user sees the assignment in the history
+    Then the user opens the assignment history item
+     And the shown rubric matches the assignment rubric
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
