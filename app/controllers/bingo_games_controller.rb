@@ -45,9 +45,14 @@ class BingoGamesController < ApplicationController
         feedback_id: c.candidate_feedback_id }
     end
 
+    words = candidates.collect do |c|
+      c[:definition].split(' ')
+    end
+
     render json: {
       candidate_list:,
-      candidates:
+      candidates:,
+      found_words: words.empty? ? [] : Candidate.filter.filter( words.flatten!)
     }
   end
 
@@ -85,7 +90,7 @@ class BingoGamesController < ApplicationController
         credit: c.candidate_feedback.credit
        }
     end
-    words = candidate_list.bingo_game.candidates.collect do |c|
+    words = candidate_list.bingo_game.candidates.effortful.collect do |c|
       c.definition.split(' ')
     end
 
@@ -596,7 +601,7 @@ class BingoGamesController < ApplicationController
         name: c.name
       }
     end.as_json
-    words = bingo_game.candidates.collect do |c|
+    words = bingo_game.candidates.effortful.collect do |c|
       c.definition.split(' ')
     end
     resp[:found_words] = words.empty? ? [] : Candidate.filter.filter(words.flatten!)

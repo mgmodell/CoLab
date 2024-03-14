@@ -18,6 +18,8 @@ class Candidate < ApplicationRecord
   scope :reviewed, -> { where('candidate_feedback_id > 0 ') }
   scope :acceptable, -> { where(candidate_feedback_id: 1) }
 
+  scope :effortful, -> { where(candidate_feedback_id: [1,3]) }
+
   before_save :clean_data, :update_counts
   validate :concept_assigned
 
