@@ -124,7 +124,7 @@ Then 'the user enables the {string} table view option' do |view_option|
   rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
     # A timing artifact, I think
     puts e.inspect
-    retry if (retries += 1) < 4
+    retry if ( ( retries += 1) < 4 ) && has_xpath?( option_xpath ) 
   end
 end
 
