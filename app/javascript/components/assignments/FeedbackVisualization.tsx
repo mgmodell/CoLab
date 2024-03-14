@@ -10,7 +10,7 @@ import {
 } from "@visx/xychart";
 import { scaleOrdinal } from '@visx/scale';
 // import { schemeSet1 as colorScheme } from 'd3-scale-chromatic';
-import {interpolateTurbo as colorScheme} from 'd3-scale-chromatic';
+import { interpolateTurbo as colorScheme } from 'd3-scale-chromatic';
 
 import parse from "html-react-parser";
 import { ICriteria } from './RubricViewer';
@@ -167,13 +167,10 @@ export default function FeedbackVisualization(props: Props) {
                                     key={criteriumId.toString()}
                                     name={`criterium-${criteriumId}`}
                                     opacity={0.4}
-                                            dataKey={criteriumId.toString()}
+                                    dataKey={criteriumId.toString()}
                                     data={progressData}
-                                    
-                                    colorAccessor={d => {
-                                        return colorScale(criterium.id)
-                                    }
-                                    }
+
+                                    color={colorScale(criterium.id)}
                                 />
 
                             )
@@ -181,34 +178,31 @@ export default function FeedbackVisualization(props: Props) {
                         : null}
                 {
                     chartType === CHART_TYPES.LAYERED_AREA ?
-                    <AnimatedAreaStack>
-                        {
+                        <AnimatedAreaStack>
+                            {
 
-                        props.assignment.rubric.criteria.map((criterium: ICriteria, index) => {
-                            const criteriumId = criterium.id;
-                            return (
-                                <AnimatedAreaSeries
-                                    xAccessor={d => {
-                                        return DateTime.fromISO(d.submitted).setZone(Settings.timezone).toLocaleString(DateTime.DATETIME_SHORT);
-                                    }}
-                                    yAccessor={(d: IRubricRowFeedback) => {
-                                        return d.feedbacks[criteriumId].score;
-                                    }}
-                                    key={criteriumId.toString()}
-                                    name={`criterium-${criteriumId}`}
-                                    opacity={0.4}
+                                props.assignment.rubric.criteria.map((criterium: ICriteria, index) => {
+                                    const criteriumId = criterium.id;
+                                    return (
+                                        <AnimatedAreaSeries
+                                            xAccessor={d => {
+                                                return DateTime.fromISO(d.submitted).setZone(Settings.timezone).toLocaleString(DateTime.DATETIME_SHORT);
+                                            }}
+                                            yAccessor={(d: IRubricRowFeedback) => {
+                                                return d.feedbacks[criteriumId].score;
+                                            }}
+                                            key={criteriumId.toString()}
+                                            name={`criterium-${criteriumId}`}
+                                            opacity={0.4}
                                             dataKey={criteriumId.toString()}
-                                    data={progressData}
-                                    colorAccessor={d => {
-                                        return colorScale(criterium.id)
-                                    }
-                                    }
-                                />
+                                            data={progressData}
+                                            color={colorScale(criterium.id)}
+                                        />
 
-                            )
-                        })
-                        }
-                    </AnimatedAreaStack>
+                                    )
+                                })
+                            }
+                        </AnimatedAreaStack>
                         : null}
                 {
                     chartType === CHART_TYPES.STACKED_AREA ? (
@@ -225,14 +219,11 @@ export default function FeedbackVisualization(props: Props) {
                                                 return d.feedbacks[criteriumId].score;
                                             }}
                                             key={criteriumId.toString()}
-                                    name={`criterium-${criteriumId}`}
+                                            name={`criterium-${criteriumId}`}
                                             dataKey={criteriumId.toString()}
 
                                             data={progressData}
-                                            colorAccessor={d => {
-                                                return colorScale(criterium.id)
-                                            }
-                                            }
+                                            color={colorScale(criterium.id)}
                                         />
 
                                     )

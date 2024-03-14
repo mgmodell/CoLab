@@ -117,7 +117,7 @@ export default function UserActivityList(props: Props) {
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
         //paginatorLeft={paginatorLeft}
         //paginatorRight={paginatorRight}
-        dataKey="id"
+        //dataKey="id"
         onRowClick={event => {
           if (event.data.link !== null) {
             navigate(`/profile/${event.data.link}`);
