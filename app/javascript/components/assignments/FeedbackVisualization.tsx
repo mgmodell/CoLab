@@ -1,25 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import {
     AnimatedAreaSeries,
     AnimatedAreaStack,
     AnimatedAxis,
-    AnimatedBarGroup,
-    AnimatedBarSeries,
-    AnimatedBarStack,
     AnimatedGrid,
     AnimatedLineSeries,
-    AreaSeries,
-    AreaStack,
-    Axis,
-    BarGroup,
-    BarSeries,
-    BarStack,
-    LineSeries,
     Tooltip,
     XYChart
 } from "@visx/xychart";
 import { scaleOrdinal } from '@visx/scale';
-//import { schemeSet1 as colorScheme } from 'd3-scale-chromatic';
+// import { schemeSet1 as colorScheme } from 'd3-scale-chromatic';
 import {interpolateTurbo as colorScheme} from 'd3-scale-chromatic';
 
 import parse from "html-react-parser";
@@ -28,7 +18,6 @@ import { DateTime, Settings } from "luxon";
 import { IAssignment, IRubricRowFeedback, ISubmissionCondensed } from './AssignmentViewer';
 import { Dropdown } from 'primereact/dropdown';
 import { useTranslation } from 'react-i18next';
-import { cr } from '@fullcalendar/core/internal-common';
 
 type Props = {
     assignment: IAssignment
@@ -143,12 +132,12 @@ export default function FeedbackVisualization(props: Props) {
                     renderTooltip={({ tooltipData, colorScale }) => {
                         const content = Object.values(tooltipData.nearestDatum.datum.feedbacks).map((feedback, index) => {
                             return (
-                                <>
+                                <Fragment key={feedback.id}>
                                     <li><strong>
                                         {feedback.score}:
                                     </strong>
                                         {parse(feedback.feedback)} </li>
-                                </>
+                                </Fragment>
                             )
                         });
                         return (
@@ -210,7 +199,6 @@ export default function FeedbackVisualization(props: Props) {
                                     opacity={0.4}
                                             dataKey={criteriumId.toString()}
                                     data={progressData}
-                                    
                                     colorAccessor={d => {
                                         return colorScale(criterium.id)
                                     }
