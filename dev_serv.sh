@@ -12,7 +12,7 @@ print_help ( ) {
   echo " -c             Run the rails console (then terminate)"
   echo " -o             Monitor the running server"
   echo " -t             Open up a terminal on the dev server"
-  echo " -q             Open mysql terminal"
+  echo " -q [db]        Open mysql terminal to 'colab' or 'moodle'"
   echo " -m [task]      Run a migratify task (assumes -m)"
   echo " -e [task]      Run a tEsting task (then terminate;"
   echo "                assumes -m)"
@@ -67,10 +67,14 @@ else
 fi
 
 
-while getopts "a:cqdtosjxm:l:e:h" opt; do
+while getopts "a:cq:dtosjxm:l:e:h" opt; do
   case $opt in
     q)
-      mysql colab_dev -u test -ptest --protocol=TCP --port=31337
+      if [[ $OPTARG == "moodle" ]]; then
+        mysql moodle -u moodle -pmoodle --protocol=TCP --port=31337
+      else
+        mysql colab_dev -u test -ptest --protocol=TCP --port=31337
+      fi
       popd
       exit
       ;;
