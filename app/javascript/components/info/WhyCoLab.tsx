@@ -123,10 +123,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 3
     {
-      x: 10,
-      y: 80,
-      width: 200,
-      height: 125,
+      x: -10,
+      y: 10,
+      width: 400,
+      height: 300,
       opacity: 1
     },
     //SLIDE 4
@@ -156,7 +156,7 @@ export default function WhyCoLab(props: Props) {
   ];
 
   const TXT_TWO = [
-    //SLIDE 1
+    //SLIDE 1TXT
     {
       x: 100,
       y: 130,
@@ -176,7 +176,7 @@ export default function WhyCoLab(props: Props) {
     {
       x: 10,
       y: 120,
-      width: 175,
+      width: 500,
       height: 125,
       opacity: 1
     },
@@ -196,7 +196,7 @@ export default function WhyCoLab(props: Props) {
       height: 50,
       opacity: 1
     },
-    //SLIDE 6 
+    //SLIDE 6 TXT
     {
       x: 5,
       y: 10,
@@ -330,7 +330,7 @@ export default function WhyCoLab(props: Props) {
     //SLIDE 3 
     {
       x: 200,
-      y: 50,
+      y: 20,
       height: 200,
       width: 200,
       opacity: 1
