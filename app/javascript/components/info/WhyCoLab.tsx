@@ -103,7 +103,7 @@ export default function WhyCoLab(props: Props) {
     <p >{t('why_slides.captions.seven_two')}</p>,
   ];
 
-  const TXT_1 = [
+  const TXT_ONE = [
     {
       x: 10,
       y: 50,
@@ -150,8 +150,8 @@ export default function WhyCoLab(props: Props) {
 
   const TXT_TWO = [
     {
-      x: 10,
-      y: 30,
+      x: 100,
+      y: 130,
       width: 175,
       height: 200,
       opacity: 1
@@ -526,7 +526,7 @@ export default function WhyCoLab(props: Props) {
 
   useEffect(() => {
     title1Api.start({
-      to: TXT_1[curScene]
+      to: TXT_ONE[curScene]
     });
     title2Api.start({
       to: TXT_TWO[curScene]
