@@ -93,6 +93,7 @@ export default function WhyCoLab(props: Props) {
       </Row>
     </Container>
   ];
+  
   const titles_two = [
     <p >{t('why_slides.captions.one_two')}</p>,
     <p >{t('why_slides.captions.two_two')}</p>,
@@ -104,6 +105,7 @@ export default function WhyCoLab(props: Props) {
   ];
 
   const TXT_ONE = [
+    //Slide 1
     {
       x: 10,
       y: 50,
@@ -111,6 +113,7 @@ export default function WhyCoLab(props: Props) {
       height: 200,
       opacity: 1
     },
+    //Slide 2
     {
       x: 10,
       y: 100,
@@ -118,13 +121,15 @@ export default function WhyCoLab(props: Props) {
       height: 125,
       opacity: 1
     },
+    //SLIDE 3
     {
       x: 10,
-      y: 120,
-      width: 175,
+      y: 80,
+      width: 200,
       height: 125,
       opacity: 1
     },
+    //SLIDE 4
     {
       x: 5,
       y: 160,
@@ -132,6 +137,7 @@ export default function WhyCoLab(props: Props) {
       height: 50,
       opacity: 1
     },
+    //SLIDE 5
     {
       x: 5,
       y: 160,
@@ -139,6 +145,7 @@ export default function WhyCoLab(props: Props) {
       height: 50,
       opacity: 1
     },
+    //SLIDE 6 
     {
       x: 5,
       y: 10,
@@ -149,6 +156,7 @@ export default function WhyCoLab(props: Props) {
   ];
 
   const TXT_TWO = [
+    //SLIDE 1
     {
       x: 100,
       y: 130,
@@ -156,6 +164,7 @@ export default function WhyCoLab(props: Props) {
       height: 200,
       opacity: 1
     },
+    //SLIDE 2
     {
       x: 10,
       y: 100,
@@ -163,6 +172,7 @@ export default function WhyCoLab(props: Props) {
       height: 125,
       opacity: 1
     },
+    //SLIDE 3 
     {
       x: 10,
       y: 120,
@@ -170,6 +180,7 @@ export default function WhyCoLab(props: Props) {
       height: 125,
       opacity: 1
     },
+    //SLIDE 4 
     {
       x: 5,
       y: 160,
@@ -177,6 +188,7 @@ export default function WhyCoLab(props: Props) {
       height: 50,
       opacity: 1
     },
+    //SLIDE 5 
     {
       x: 5,
       y: 160,
@@ -184,6 +196,7 @@ export default function WhyCoLab(props: Props) {
       height: 50,
       opacity: 1
     },
+    //SLIDE 6 
     {
       x: 5,
       y: 10,
@@ -195,6 +208,7 @@ export default function WhyCoLab(props: Props) {
 
   //Normally function group image
   const NF_SVG = [
+  //SLIDE 1 
     {
       x: 200,
       y: 40,
@@ -202,6 +216,7 @@ export default function WhyCoLab(props: Props) {
       width: 200,
       opacity: 1
     },
+    //SLIDE 2 
     {
       x: 265,
       y: 38,
@@ -209,6 +224,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 3 
     {
       x: 265,
       y: 38,
@@ -216,6 +232,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 4 
     {
       x: 265,
       y: 38,
@@ -223,6 +240,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 5 
     {
       x: 265,
       y: 38,
@@ -230,6 +248,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 6 
     {
       x: 185,
       y: 38,
@@ -241,6 +260,7 @@ export default function WhyCoLab(props: Props) {
 
   // Social Loafing Image
   const SL_SVG = [
+    //SLIDE 1 
     {
       x: 265,
       y: 38,
@@ -248,6 +268,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 2 
     {
       x: 265,
       y: 38,
@@ -255,6 +276,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 3 
     {
       x: 265,
       y: 38,
@@ -262,6 +284,7 @@ export default function WhyCoLab(props: Props) {
       width: 57,
       opacity: 0
     },
+    //SLIDE 4 
     {
       x: 200,
       y: 150,
@@ -269,6 +292,7 @@ export default function WhyCoLab(props: Props) {
       width: 125,
       opacity: 1
     },
+    //SLIDE 5 
     {
       x: 185,
       y: 38,
@@ -276,6 +300,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 1
     },
+    //SLIDE 6 
     {
       x: 10,
       y: 19,
@@ -286,6 +311,7 @@ export default function WhyCoLab(props: Props) {
   ];
   // Leave it to George image
   const LITG_SVG = [
+    //SLIDE 1 
     {
       x: 255,
       y: 25,
@@ -293,6 +319,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 2 
     {
       x: 255,
       y: 25,
@@ -300,13 +327,15 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 3 
     {
       x: 200,
-      y: 100,
+      y: 50,
       height: 200,
       width: 200,
       opacity: 1
     },
+    //SLIDE 4 
     {
       x: 255,
       y: 25,
@@ -314,6 +343,7 @@ export default function WhyCoLab(props: Props) {
       width: 120,
       opacity: 0
     },
+    //SLIDE 5 
     {
       x: 255,
       y: 25,
@@ -321,6 +351,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 6 
     {
       x: 255,
       y: 25,
@@ -331,6 +362,7 @@ export default function WhyCoLab(props: Props) {
   ];
   // Group domination image
   const GD_SVG = [
+    //SLIDE 1 
     {
       x: 155,
       y: 25,
@@ -338,6 +370,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 2 
     {
       x: 200,
       y: 150,
@@ -345,6 +378,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 1
     },
+    //SLIDE 3 
     {
       x: 255,
       y: 25,
@@ -352,6 +386,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 4 
     {
       x: 125,
       y: 35,
@@ -359,6 +394,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 5 
     {
       x: 125,
       y: 35,
@@ -366,6 +402,7 @@ export default function WhyCoLab(props: Props) {
       width: 180,
       opacity: 0
     },
+    //SLIDE 6 
     {
       x: 125,
       y: 35,
@@ -376,6 +413,7 @@ export default function WhyCoLab(props: Props) {
   ];
   //Division of Labor image
   const DL_SVG = [
+    //SLIDE 1 
     {
       x: 155,
       y: 25,
@@ -383,6 +421,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 2 
     {
       x: 255,
       y: 25,
@@ -390,6 +429,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 3 
     {
       x: 255,
       y: 25,
@@ -397,6 +437,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 4 
     {
       x: 125,
       y: 35,
@@ -404,6 +445,7 @@ export default function WhyCoLab(props: Props) {
       width: 150,
       opacity: 0
     },
+    //SLIDE 5 
     {
       x: 120,
       y: 25,
@@ -411,6 +453,7 @@ export default function WhyCoLab(props: Props) {
       width: 175,
       opacity: 0
     },
+    //SLIDE 6 
     {
       x: 255,
       y: 25,
@@ -422,6 +465,7 @@ export default function WhyCoLab(props: Props) {
 
   //Teacher and Student image
   const TS_SVG = [
+    //SLIDE 1 
     {
       x: 190,
       y: 10,
@@ -429,6 +473,7 @@ export default function WhyCoLab(props: Props) {
       width: 210,
       opacity: 0
     },
+    //SLIDE 2 
     {
       x: 190,
       y: 10,
@@ -436,6 +481,7 @@ export default function WhyCoLab(props: Props) {
       width: 210,
       opacity: 0
     },
+    //SLIDE 3 
     {
       x: 190,
       y: 10,
@@ -443,6 +489,7 @@ export default function WhyCoLab(props: Props) {
       width: 210,
       opacity: 0
     },
+    //SLIDE 4 
     {
       x: 190,
       y: 10,
@@ -450,6 +497,7 @@ export default function WhyCoLab(props: Props) {
       width: 210,
       opacity: 0
     },
+    //SLIDE 5
     {
       x: 200,
       y: 150,
@@ -457,6 +505,7 @@ export default function WhyCoLab(props: Props) {
       width: 210,
       opacity: 1
     },
+    //SLIDE 6
     {
       x: 200,
       y: 150,
