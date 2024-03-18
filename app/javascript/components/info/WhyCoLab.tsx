@@ -123,7 +123,7 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 3
     {
-      x: -10,
+      x: -30,
       y: 10,
       width: 400,
       height: 300,
@@ -330,7 +330,7 @@ export default function WhyCoLab(props: Props) {
     //SLIDE 3 
     {
       x: 200,
-      y: 20,
+      y: 0,
       height: 200,
       width: 200,
       opacity: 1
