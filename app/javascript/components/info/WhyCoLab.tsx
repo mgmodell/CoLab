@@ -302,9 +302,9 @@ export default function WhyCoLab(props: Props) {
     },
     {
       x: 200,
-      y: 150,
-      height: 150,
-      width: 150,
+      y: 100,
+      height: 200,
+      width: 200,
       opacity: 1
     },
     {
