@@ -107,23 +107,23 @@ export default function WhyCoLab(props: Props) {
   const TXT_ONE = [
     //Slide 1
     {
-      x: 10,
+      x: -40,
       y: 50,
-      width: 175,
-      height: 200,
+      width: 200,
+      height: 100,
       opacity: 1
     },
     //Slide 2
     {
-      x: 10,
-      y: 100,
+      x: -20,
+      y: 40,
       width: 175,
       height: 125,
       opacity: 1
     },
     //SLIDE 3
     {
-      x: -30,
+      x: -80,
       y: 10,
       width: 400,
       height: 300,
@@ -131,8 +131,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4
     {
-      x: 5,
-      y: 160,
+      x: -30,
+      y: 50,
       width: 350,
       height: 50,
       opacity: 1
@@ -158,26 +158,26 @@ export default function WhyCoLab(props: Props) {
   const TXT_TWO = [
     //SLIDE 1TXT
     {
-      x: 100,
-      y: 130,
+      x: 250,
+      y: 20,
       width: 175,
       height: 200,
       opacity: 1
     },
     //SLIDE 2
     {
-      x: 10,
-      y: 100,
+      x: 260,
+      y: 30,
       width: 175,
       height: 125,
       opacity: 1
     },
     //SLIDE 3 
     {
-      x: 10,
-      y: 120,
-      width: 500,
-      height: 125,
+      x: 325,
+      y: 50,
+      width: 75,
+      height: 85,
       opacity: 1
     },
     //SLIDE 4 
@@ -210,8 +210,8 @@ export default function WhyCoLab(props: Props) {
   const NF_SVG = [
   //SLIDE 1 
     {
-      x: 200,
-      y: 40,
+      x: 100,
+      y: 10,
       height: 200,
       width: 200,
       opacity: 1
@@ -286,10 +286,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4 
     {
-      x: 200,
-      y: 150,
-      height: 125,
-      width: 125,
+      x: 150,
+      y: 10,
+      height: 200,
+      width: 200,
       opacity: 1
     },
     //SLIDE 5 
@@ -329,8 +329,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 3 
     {
-      x: 200,
-      y: 0,
+      x: 150,
+      y: 10,
       height: 200,
       width: 200,
       opacity: 1
@@ -372,10 +372,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 2 
     {
-      x: 200,
-      y: 150,
-      height: 150,
-      width: 150,
+      x: 100,
+      y: 10,
+      height: 200,
+      width: 200,
       opacity: 1
     },
     //SLIDE 3 
