@@ -131,10 +131,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4
     {
-      x: -30,
+      x: -20,
       y: 50,
-      width: 350,
-      height: 50,
+      width: 200,
+      height: 100,
       opacity: 1
     },
     //SLIDE 5
@@ -182,10 +182,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4 
     {
-      x: 5,
-      y: 160,
-      width: 350,
-      height: 50,
+      x: 260,
+      y: 50,
+      width: 200,
+      height: 100,
       opacity: 1
     },
     //SLIDE 5 
@@ -286,7 +286,7 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4 
     {
-      x: 150,
+      x: 110,
       y: 10,
       height: 200,
       width: 200,
