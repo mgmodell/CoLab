@@ -139,10 +139,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 5
     {
-      x: 5,
-      y: 160,
-      width: 350,
-      height: 50,
+      x: -30,
+      y: 50,
+      width: 200,
+      height: 100,
       opacity: 1
     },
     //SLIDE 6 
@@ -190,10 +190,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 5 
     {
-      x: 5,
-      y: 160,
-      width: 350,
-      height: 50,
+      x: 90,
+      y: 50,
+      width: 400,
+      height: 100,
       opacity: 1
     },
     //SLIDE 6 TXT
@@ -266,7 +266,8 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      opacity: 0,
+      floor: true,
     },
     //SLIDE 2 
     {
@@ -274,7 +275,8 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      opacity: 0,
+      floor: false,
     },
     //SLIDE 3 
     {
@@ -282,7 +284,8 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      opacity: 0,
+      floor: true,
     },
     //SLIDE 4 
     {
@@ -290,15 +293,17 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 200,
       width: 200,
-      opacity: 1
+      opacity: 1,
+      floor: true
     },
     //SLIDE 5 
     {
-      x: 185,
-      y: 38,
-      height: 150,
-      width: 150,
-      opacity: 1
+      x: 180,
+      y: 0,
+      height: 130,
+      width: 60,
+      opacity: 1,
+      floor: true
     },
     //SLIDE 6 
     {
@@ -306,7 +311,8 @@ export default function WhyCoLab(props: Props) {
       y: 19,
       height: 150,
       width: 150,
-      opacity: 0
+      opacity: 0,
+      floor: false
     }
   ];
   // Leave it to George image
@@ -499,8 +505,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 5
     {
-      x: 200,
-      y: 150,
+      x: 110,
+      y: 10,
       height: 210,
       width: 210,
       opacity: 1
@@ -701,7 +707,7 @@ export default function WhyCoLab(props: Props) {
         height={socialLoafingSpring.height}
         width={socialLoafingSpring.width}
       >
-        <SocialLoafing oliveColor={"olive"} />
+        <SocialLoafing oliveColor={"olive"} floor={false}/>
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6753, 5590].join(" ")}

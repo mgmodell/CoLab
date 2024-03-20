@@ -9,6 +9,7 @@ type Props = {
     scale: number;
   };
   framed?: boolean;
+  floor?: boolean;
   oliveColor?: string;
   bgColor?: string;
 };
@@ -16,6 +17,7 @@ type Props = {
 export default function SocialLoafing(props: Props) {
   const mounted = useRef(false);
   const framed = props.framed === undefined ? false : props.framed;
+  const floor = props.floor === undefined ? false : props.floor;
   const oliveColor =
     undefined === props.oliveColor ? "black" : props.oliveColor;
 
@@ -51,7 +53,7 @@ export default function SocialLoafing(props: Props) {
           id="path1017"
         />
       </g>
-      <g id="floor">
+      <g id="floor" opacity={floor ? 100 : 0}>
         <path
           d="m 642.43487,3601.0923 c 0,0 792.24033,-23.047 898.83263,8.6426 106.5923,31.6896 429.2502,28.8088 878.6665,31.6896 449.4163,2.8809 486.8677,-69.1409 898.8327,-14.4043"
           id="path983"
