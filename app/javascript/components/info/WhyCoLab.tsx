@@ -147,9 +147,9 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 6 
     {
-      x: 5,
-      y: 10,
-      width: 350,
+      x: -60,
+      y: 20,
+      width: 250,
       height: 210,
       opacity: 1
     }
@@ -198,8 +198,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 6 TXT
     {
-      x: 5,
-      y: 10,
+      x: 230,
+      y: 40,
       width: 350,
       height: 210,
       opacity: 1
@@ -243,7 +243,7 @@ export default function WhyCoLab(props: Props) {
     //SLIDE 5 
     {
       x: 265,
-      y: 38,
+      y: 30,
       height: 57,
       width: 57,
       opacity: 0
@@ -513,8 +513,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 6
     {
-      x: 200,
-      y: 150,
+      x: 110,
+      y: 10,
       height: 210,
       width: 210,
       opacity: 1
