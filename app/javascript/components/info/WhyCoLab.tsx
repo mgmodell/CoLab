@@ -30,7 +30,7 @@ export default function WhyCoLab(props: Props) {
     navDots: 7,
     dotSpacing: 20,
     dotRad: 4,
-    centerY: 215
+    centerY: 225
   };
 
   const [title1Spring, title1Api] = useSpring(() => ({
