@@ -3,8 +3,8 @@
 Rails.application.routes.draw do
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
-         as: :copy_course,
-         constraints: ->(req) { req.format == :json }
+        as: :copy_course,
+        constraints: ->(req) { req.format == :json }
     put 'courses/add_students' => 'courses#add_students',
         as: :add_students
     put 'courses/add_instructors' => 'courses#add_instructors',
@@ -262,6 +262,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # LTI Registration
+  post 'lti/tool_connect' => 'lti#register', 
+    constraints: ->(req) { req.format == :json }
+  get 'lti/tool_connect' => 'lti#register', 
+    constraints: ->(req) { req.format == :json }
 
   get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

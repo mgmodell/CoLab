@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.2.3-MariaDB
+-- Server version	11.3.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -4204,6 +4204,37 @@ LOCK TABLES `installments` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `keypairs`
+--
+
+DROP TABLE IF EXISTS `keypairs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `keypairs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `jwk_kid` varchar(255) NOT NULL,
+  `_keypair_ciphertext` text NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `not_before` datetime(6) NOT NULL,
+  `not_after` datetime(6) NOT NULL,
+  `expires_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_keypairs_on_jwk_kid` (`jwk_kid`),
+  KEY `index_keypairs_on_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `keypairs`
+--
+
+LOCK TABLES `keypairs` WRITE;
+/*!40000 ALTER TABLE `keypairs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `keypairs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `languages`
 --
 
@@ -4973,7 +5004,9 @@ INSERT INTO `schema_migrations` VALUES
 ('20230828001816'),
 ('20230905132419'),
 ('20231023010656'),
-('20240302002923');
+('20240302002923'),
+('20240322142846'),
+('20240322142847');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5508,4 +5541,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-01 21:16:13
+-- Dump completed on 2024-03-25 14:03:11
