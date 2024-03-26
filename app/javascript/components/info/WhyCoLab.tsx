@@ -11,10 +11,35 @@ import { Container, Row, Col } from "react-grid-system";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import { useTranslation } from "react-i18next";
 
+type TextPresentationProps = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  opacity: number;
+};
+
+type SVGPresentationProps = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  floor: number;
+  frame: number;
+  bgOpacity: number;
+  opacity: number;
+};
+
 type Props = {
   height: number;
   width: number;
 };
+
+/* NOTE: Group Domination and Division of Labor has an explicit color set
+  individually to make the layering clear.
+  */
+const BG_COLOR = 'azure';
+const CONTRAST_BG_COLOR = 'aliceblue';
 
 export default function WhyCoLab(props: Props) {
   const category = 'intro';
@@ -104,7 +129,7 @@ export default function WhyCoLab(props: Props) {
     <p >{t('why_slides.captions.seven_two')}</p>,
   ];
 
-  const TXT_ONE = [
+  const TXT_ONE : Array<TextPresentationProps> = [
     //Slide 1
     {
       x: -40,
@@ -155,7 +180,7 @@ export default function WhyCoLab(props: Props) {
     }
   ];
 
-  const TXT_TWO = [
+  const TXT_TWO : Array<TextPresentationProps> = [
     //SLIDE 1TXT
     {
       x: 250,
@@ -207,14 +232,17 @@ export default function WhyCoLab(props: Props) {
   ];
 
   //Normally function group image
-  const NF_SVG = [
+  const NF_SVG : Array<SVGPresentationProps> = [
   //SLIDE 1 
     {
       x: 100,
       y: 10,
       height: 200,
       width: 200,
-      opacity: 1
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 1,
     },
     //SLIDE 2 
     {
@@ -222,7 +250,10 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 3 
     {
@@ -230,7 +261,10 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 4 
     {
@@ -238,7 +272,10 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 0
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 5 
     {
@@ -246,7 +283,10 @@ export default function WhyCoLab(props: Props) {
       y: 30,
       height: 57,
       width: 57,
-      opacity: 0
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 6 
     {
@@ -254,20 +294,25 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
-      opacity: 1
+      floor: 1,
+      frame: 1,
+      bgOpacity: 0,
+      opacity: 1,
     }
   ];
 
   // Social Loafing Image
-  const SL_SVG = [
+  const SL_SVG : Array<SVGPresentationProps> = [
     //SLIDE 1 
     {
       x: 265,
       y: 38,
       height: 57,
       width: 57,
+      floor: 1,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 0,
-      floor: true,
     },
     //SLIDE 2 
     {
@@ -275,8 +320,10 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 0,
-      floor: false,
     },
     //SLIDE 3 
     {
@@ -284,8 +331,10 @@ export default function WhyCoLab(props: Props) {
       y: 38,
       height: 57,
       width: 57,
+      floor: 1,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 0,
-      floor: true,
     },
     //SLIDE 4 
     {
@@ -293,8 +342,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 200,
       width: 200,
+      floor: 1,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 1,
-      floor: true
     },
     //SLIDE 5 
     {
@@ -302,8 +353,10 @@ export default function WhyCoLab(props: Props) {
       y: 0,
       height: 130,
       width: 60,
+      floor: 1,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 1,
-      floor: true
     },
     //SLIDE 6 
     {
@@ -311,19 +364,24 @@ export default function WhyCoLab(props: Props) {
       y: 19,
       height: 150,
       width: 150,
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
       opacity: 0,
-      floor: false
     }
   ];
   // Leave it to George image
-  const LITG_SVG = [
+  const LITG_SVG : Array<SVGPresentationProps> = [
     //SLIDE 1 
     {
       x: 255,
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 2 
     {
@@ -331,7 +389,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 3 
     {
@@ -339,7 +400,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 200,
       width: 200,
-      opacity: 1
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 1,
     },
     //SLIDE 4 
     {
@@ -347,7 +411,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 120,
       width: 120,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 5 
     {
@@ -355,7 +422,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 6 
     {
@@ -363,18 +433,24 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     }
   ];
   // Group domination image
-  const GD_SVG = [
+  const GD_SVG : Array<SVGPresentationProps> = [
     //SLIDE 1 
     {
       x: 155,
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 2 
     {
@@ -382,7 +458,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 200,
       width: 200,
-      opacity: 1
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 1,
     },
     //SLIDE 3 
     {
@@ -390,7 +469,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 4 
     {
@@ -398,7 +480,10 @@ export default function WhyCoLab(props: Props) {
       y: 35,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 5 
     {
@@ -406,7 +491,10 @@ export default function WhyCoLab(props: Props) {
       y: 35,
       height: 180,
       width: 180,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 6 
     {
@@ -414,18 +502,24 @@ export default function WhyCoLab(props: Props) {
       y: 35,
       height: 180,
       width: 180,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     }
   ];
   //Division of Labor image
-  const DL_SVG = [
+  const DL_SVG : Array<SVGPresentationProps> = [
     //SLIDE 1 
     {
       x: 155,
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 2 
     {
@@ -433,7 +527,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 3 
     {
@@ -441,7 +538,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 4 
     {
@@ -449,7 +549,10 @@ export default function WhyCoLab(props: Props) {
       y: 35,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 5 
     {
@@ -457,7 +560,10 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 175,
       width: 175,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 6 
     {
@@ -465,19 +571,25 @@ export default function WhyCoLab(props: Props) {
       y: 25,
       height: 150,
       width: 150,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     }
   ];
 
   //Teacher and Student image
-  const TS_SVG = [
+  const TS_SVG : Array<SVGPresentationProps> = [
     //SLIDE 1 
     {
       x: 190,
       y: 10,
       height: 210,
       width: 210,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 2 
     {
@@ -485,7 +597,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 3 
     {
@@ -493,7 +608,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 4 
     {
@@ -501,7 +619,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
-      opacity: 0
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 0,
     },
     //SLIDE 5
     {
@@ -509,7 +630,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
-      opacity: 1
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 1,
     },
     //SLIDE 6
     {
@@ -517,7 +641,10 @@ export default function WhyCoLab(props: Props) {
       y: 10,
       height: 210,
       width: 210,
-      opacity: 1
+      floor: 0,
+      frame: 0,
+      bgOpacity: 0,
+      opacity: 1,
     }
   ];
 
@@ -683,7 +810,11 @@ export default function WhyCoLab(props: Props) {
         height={teacherStudentSpring.height}
         width={teacherStudentSpring.width}
       >
-        <StudentConcern framed />
+        <StudentConcern
+          bgOpacity={teacherStudentSpring.bgOpacity}
+          bgColor={BG_COLOR}
+          floor={teacherStudentSpring.floor}
+          frame={teacherStudentSpring.frame} />
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6761, 5583].join(" ")}
@@ -707,7 +838,12 @@ export default function WhyCoLab(props: Props) {
         height={socialLoafingSpring.height}
         width={socialLoafingSpring.width}
       >
-        <SocialLoafing oliveColor={"olive"} floor={false}/>
+        <SocialLoafing
+          oliveColor={"olive"}
+          bgOpacity={socialLoafingSpring.bgOpacity}
+          bgColor={BG_COLOR}
+          frame={socialLoafingSpring.frame}
+          floor={socialLoafingSpring.floor}/>
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6753, 5590].join(" ")}
@@ -719,7 +855,12 @@ export default function WhyCoLab(props: Props) {
         height={leaveItToGeorgeSpring.height}
         width={leaveItToGeorgeSpring.width}
       >
-        <LeaveItToGeorge />
+        <LeaveItToGeorge
+          bgColor={BG_COLOR}
+          bgOpacity={leaveItToGeorgeSpring.bgOpacity}
+          frame={leaveItToGeorgeSpring.frame}
+          floor={leaveItToGeorgeSpring.floor}
+         />
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6753, 5590].join(" ")}
@@ -731,7 +872,12 @@ export default function WhyCoLab(props: Props) {
         height={groupDominationSpring.height}
         width={groupDominationSpring.width}
       >
-        <GroupDomination bgColor={"aliceblue"} />
+        <GroupDomination
+          bgOpacity={groupDominationSpring.bgOpacity}
+          frame={groupDominationSpring.frame}
+          floor={groupDominationSpring.floor}
+          bgColor={CONTRAST_BG_COLOR}
+          />
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6753, 5590].join(" ")}
@@ -743,7 +889,12 @@ export default function WhyCoLab(props: Props) {
         height={divisionOfLaborSpring.height}
         width={divisionOfLaborSpring.width}
       >
-        <DivisionOfLabor bgColor={"aliceblue"} />
+        <DivisionOfLabor
+          bgOpacity={divisionOfLaborSpring.bgOpacity}
+          frame={divisionOfLaborSpring.frame}
+          floor={divisionOfLaborSpring.floor}
+          bgColor={CONTRAST_BG_COLOR}
+        />
       </animated.svg>
 
       <EmbeddedHTMLInSVG
