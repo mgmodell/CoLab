@@ -320,7 +320,7 @@ export default function Welcome(props: Props) {
          width={width}
       >
          {'why' === params['*'] ?
-            <WhyCoLab height={250} width={444} />
+            <WhyCoLab height={295} width={494} />
             : null
          }
          {'about' === params['*'] ?
