@@ -240,8 +240,8 @@ export default function WhyCoLab(props: Props) {
       height: 200,
       width: 200,
       floor: 1,
-      frame: 1,
-      bgOpacity: 0,
+      frame: 0,
+      bgOpacity: 1,
       opacity: 1,
     },
     //SLIDE 2 
@@ -251,7 +251,7 @@ export default function WhyCoLab(props: Props) {
       height: 57,
       width: 57,
       floor: 1,
-      frame: 1,
+      frame: 0,
       bgOpacity: 0,
       opacity: 0,
     },
@@ -262,7 +262,7 @@ export default function WhyCoLab(props: Props) {
       height: 57,
       width: 57,
       floor: 1,
-      frame: 1,
+      frame: 0,
       bgOpacity: 0,
       opacity: 0,
     },
@@ -273,7 +273,7 @@ export default function WhyCoLab(props: Props) {
       height: 57,
       width: 57,
       floor: 1,
-      frame: 1,
+      frame: 0,
       bgOpacity: 0,
       opacity: 0,
     },
@@ -284,7 +284,7 @@ export default function WhyCoLab(props: Props) {
       height: 57,
       width: 57,
       floor: 1,
-      frame: 1,
+      frame: 0,
       bgOpacity: 0,
       opacity: 0,
     },
@@ -295,7 +295,7 @@ export default function WhyCoLab(props: Props) {
       height: 57,
       width: 57,
       floor: 1,
-      frame: 1,
+      frame: 0,
       bgOpacity: 0,
       opacity: 1,
     }
@@ -826,7 +826,12 @@ export default function WhyCoLab(props: Props) {
         height={normallyFunctioningSpring.height}
         width={normallyFunctioningSpring.width}
       >
-        <NormallyFunctioningGroup />
+        <NormallyFunctioningGroup
+          bgOpacity={normallyFunctioningSpring.bgOpacity}
+          bgColor={BG_COLOR}
+          frame={normallyFunctioningSpring.frame}
+          floor={normallyFunctioningSpring.floor}
+        />
       </animated.svg>
       <animated.svg
         viewBox={[0, 0, 6761, 5583].join(" ")}
