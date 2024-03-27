@@ -107,7 +107,7 @@ export default function WhyCoLab(props: Props) {
   const TXT_ONE = [
     //Slide 1
     {
-      x: -40,
+      x: -35,
       y: 50,
       width: 200,
       height: 100,
@@ -158,7 +158,7 @@ export default function WhyCoLab(props: Props) {
   const TXT_TWO = [
     //SLIDE 1TXT
     {
-      x: 250,
+      x: 270,
       y: 20,
       width: 175,
       height: 200,
@@ -210,7 +210,7 @@ export default function WhyCoLab(props: Props) {
   const NF_SVG = [
   //SLIDE 1 
     {
-      x: 100,
+      x: 110,
       y: 10,
       height: 200,
       width: 200,
