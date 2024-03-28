@@ -191,7 +191,7 @@ export default function WhyCoLab(props: Props) {
   const TXT_TWO : Array<TextPresentationProps> = [
     //SLIDE 1TXT
     {
-      x: 270,
+      x: 265,
       y: 20,
       width: 175,
       height: 200,
