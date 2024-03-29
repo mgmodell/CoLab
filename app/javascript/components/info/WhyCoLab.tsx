@@ -10,6 +10,7 @@ import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import { Container, Row, Col } from "react-grid-system";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import { useTranslation } from "react-i18next";
+import { C } from "@fullcalendar/core/internal-common";
 
 type TextPresentationProps = {
   x: number;
@@ -84,15 +85,19 @@ export default function WhyCoLab(props: Props) {
     <Container
       style={{
         color: "azure",
-        fontSize: "16px"
+        fontSize: "100%"
       }}
     >
-      <Row>
-        <Col sm={8}>
+        <Row
+            style={{
+              fontSize: "0.75em"
+            }}
+            >
+          <Col>
           <p>{t('why_slides.captions.seven_one.title')}</p>
           <ul
             style={{
-              fontSize: "16px"
+              fontSize: "0.675em"
             }}
           >
             <li>{t('why_slides.captions.seven_one.check-ins')}</li>
@@ -103,19 +108,8 @@ export default function WhyCoLab(props: Props) {
             <li>{t('why_slides.captions.seven_one.simulations')}</li>
             <li>{t('why_slides.captions.seven_one.iterative_assignments')}</li>
           </ul>
-        </Col>
-        <Col sm={4}>
-          <p>Are you a&hellip;</p>
-          <ul>
-            <li>
-              <a href="/welcome/student">Student?</a>
-            </li>
-            <li>
-              <a href="/welcome/instructor">Instructor?</a>
-            </li>
-          </ul>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
     </Container>
   ];
   
@@ -126,7 +120,30 @@ export default function WhyCoLab(props: Props) {
     <p >{t('why_slides.captions.four_two')}</p>,
     <p >{t('why_slides.captions.five_two')}</p>,
     <p >{t('why_slides.captions.six_two')}</p>,
-    <p >{t('why_slides.captions.seven_two.title')}</p>,
+      <Container
+      style={{
+        color: "azure",
+        fontSize: "100%"
+      }}
+      >
+        <Row
+            style={{
+              fontSize: "0.75em"
+            }}
+        >
+          <Col>
+          <p >{t('why_slides.captions.seven_two.title')}</p>
+          <ul>
+            <li>
+              <a href="/welcome/student">{t('why_slides.captions.seven_two.student')}</a>
+            </li>
+            <li>
+              <a href="/welcome/instructor">{t('why_slides.captions.seven_two.instructor')}</a>
+            </li>
+          </ul>
+          </Col>
+        </Row>
+      </Container>
   ];
 
   const TXT_ONE : Array<TextPresentationProps> = [
