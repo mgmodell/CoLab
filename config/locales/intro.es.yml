@@ -4,7 +4,7 @@ en:
         welcome: Bienvenidos
         about: Sobre nosotros
         why: Porque CoLab?
-        research: Investigacion
+        research: Investigación
         student: Estudiante?
         instructor: Profesor?
     titles:
@@ -16,26 +16,23 @@ en:
     why_slides:
         captions:
             one_one: >
-                Collaboration can look different for 
-                everyone. 
-            one_two: But have you ever experienced 1 or more of these scenarios
-             in group projects?
+                Todos colaboramos de diferente manera 
+            one_two: En tu experencia trabajando en grupo, has pasadp por uno o mas de estas situaciones?    
             two_one: >
-                Let's take a look at some examples of unequal group 
-                work participation...
+                Veamos unos ejemplos de participacion disparejo en grupos de trabajo...
             two_two: >
-                Group Domination: One person takes over and 
-                thinks everyone else's opinion is not good enough
-            three_one: Have you ever been a George?
+                El dominador: Una persona cree que tiene la razon y 
+                no escucha a los demas
+            three_one: Te han tratado como Jorge?
             three_two: > 
-                Leave it to George: One person does all the work and 
-                everyone else watches
-            four_one: Or... does this sound familiar? 
+                Dejalo para Jorge: Una persona se queda haciendo el trabajo 
+                mientras todos se le queda mirando
+            four_one: O esto suena familiar? 
             four_two: >
-                Social loafers: One or more students slack off while 
-                everyone else does the work 
-            five_one: What would you do in these situations?     
-            five_two: Don't wait until the end of the semester to get help from your professor...
+                El holgazan social: Uno o mas de los estudiantes hacen nada
+                mientras los demas hacen el trabajo
+            five_one: Que harias en estas situaciones?     
+            five_two: No esperes hasta el fin del semestre para informarle a tu profesor de lo que ha pasado
             six_one: What if there was a way for your professor to help before things got out of hand? 
             six_two: Now there is!
             seven_one: 
