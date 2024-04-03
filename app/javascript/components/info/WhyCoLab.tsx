@@ -180,10 +180,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 7
     {
-      x: -60,
-      y: -30,
-      width: 250,
-      height: 215,
+      x: -70,
+      y: -50,
+      width: 315,
+      height: 240,
       opacity: 1
     }
   ];
