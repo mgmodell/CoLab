@@ -26,7 +26,7 @@ class InstallmentsController < ApplicationController
         @installment = Installment.new(
           assessment:,
           user: current_user,
-          inst_date: DateTime.current.in_time_zone(project.course.timezone),
+          inst_date: DateTime.current.in_time_zone(project.course_timezone),
           group:
         )
 
@@ -263,10 +263,4 @@ class InstallmentsController < ApplicationController
     )
   end
 
-  private
-
-  def i_params
-    params.require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id,
-                                        values_attributes: %i[factor_id user_id value])
-  end
 end

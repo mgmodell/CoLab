@@ -70,16 +70,16 @@ class Group < ApplicationRecord
       users.uniq.each do |user|
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
-            true == user.home_state.no_response
+            true == user.home_state_no_response
           country_hash[user.home_state.home_country] += 1 unless
-            true == user.home_state.home_country.no_response
+            true == user.home_state_home_country.no_response
         end
         cip_hash[user.cip_code] += 1 unless
-            user.cip_code.nil? || user.cip_code.gov_code.zero?
+            user.cip_code.nil? || user.cip_code_gov_code.zero?
         primary_lang_hash[user.primary_language] += 1 unless
-            user.primary_language.nil? || '__' == user.primary_language.code
+            user.primary_language.nil? || '__' == user.primary_language_code
         gender_hash[user.gender] += 1 unless
-            user.gender.nil? || '__' == user.gender.code
+            user.gender.nil? || '__' == user.gender_code
         user.reactions.each do |reaction|
           scenario_hash[reaction.narrative.member] += 1
         end
@@ -97,13 +97,13 @@ class Group < ApplicationRecord
       now = Date.current
       values = [].extend(DescriptiveStatistics)
       users.each do |user|
-        values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
+        values << now.year - user.date_of_birth.year unless user.date_of_birth?
       end
       age_sd = values.empty? ? 0 : values.standard_deviation
 
       values.clear
       users.each do |user|
-        values << now.year - user.started_school.year unless user.started_school.nil?
+        values << now.year - user.started_school.year unless user.started_school?
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 

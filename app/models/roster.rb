@@ -2,6 +2,8 @@
 
 class Roster < ApplicationRecord
   belongs_to :course, inverse_of: :rosters
+  delegate :name, to: :course, prefix: true
+
   belongs_to :user, inverse_of: :rosters
 
   after_update :clean_up_dropped

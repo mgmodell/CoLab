@@ -88,7 +88,6 @@ class AssignmentsController < ApplicationController
       else
         errors = @assignment.errors
         errors.add(:main, I18n.t('assignments.errors.create_failed'))
-        Rails.logger.debug @assignment.inspect
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
@@ -127,7 +126,7 @@ class AssignmentsController < ApplicationController
     response[:assignment][:description] = anon ? assignment.anon_description : assignment.description
 
     response[:assignment][:course] = {
-      timezone: ActiveSupport::TimeZone.new(assignment.course.timezone).tzinfo.name
+      timezone: ActiveSupport::TimeZone.new(assignment.course_timezone).tzinfo.name
     }
     response[:projects] = assignment.course.projects.as_json(
       only: %i[id name]

@@ -32,7 +32,7 @@ class CandidateListsController < ApplicationController
                                          user_id: current_user.id)
       end
 
-      if @candidate_list.bingo_game.reviewed
+      if @candidate_list.bingo_game_reviewed
         render :show
       elsif !@candidate_list.bingo_game.is_open?
         notice = t('candidate_lists.no_longer_available')

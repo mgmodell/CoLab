@@ -62,11 +62,11 @@ class ConsentLogsController < ApplicationController
     resp = current_user.consent_logs.collect do |consent_log|
       {
         id: consent_log.id,
-        name: consent_log.consent_form.name,
+        name: consent_log.consent_form_name,
         accepted: consent_log.accepted,
-        active: consent_log.consent_form.active,
-        open_date: consent_log.consent_form.start_date,
-        end_date: consent_log.consent_form.end_date,
+        active: consent_log.consent_form_active,
+        open_date: consent_log.consent_form_start_date,
+        end_date: consent_log.consent_form_end_date,
         link: edit_consent_log_path(consent_log.consent_form_id)
       }
     end

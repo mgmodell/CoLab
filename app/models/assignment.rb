@@ -6,6 +6,8 @@ class Assignment < ApplicationRecord
 
   belongs_to :rubric, inverse_of: :assignments, optional: true
   belongs_to :course, inverse_of: :assignments
+  delegate :timezone, to: :course, prefix: true
+
   belongs_to :project, optional: true
 
   has_many :submissions, inverse_of: :assignment, autosave: true, dependent: :destroy
@@ -27,10 +29,6 @@ class Assignment < ApplicationRecord
 
   def get_name(anonymous = false)
     anonymous ? anon_name : name
-  end
-
-  def get_type
-    'Assignment'
   end
 
   def type

@@ -15,8 +15,8 @@ class ExperiencesController < ApplicationController
       format.json do
         course_hash = {
           id: @experience.course_id,
-          name: @experience.course.name,
-          timezone: ActiveSupport::TimeZone.new(@experience.course.timezone).tzinfo.name
+          name: @experience.course_name,
+          timezone: ActiveSupport::TimeZone.new(@experience.course_timezone).tzinfo.name
         }
         response = {
           experience: @experience.as_json(

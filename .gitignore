@@ -41,3 +41,8 @@ yarn-debug.log*
 
 /config/master.key
 
+
+/config/credentials/production.key
+
+rails_best_practices_output.html
+reek.html

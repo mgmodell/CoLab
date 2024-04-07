@@ -16,8 +16,8 @@ class ProjectsController < ApplicationController
       format.json do
         course_hash = {
           id: @project.course_id,
-          name: @project.course.name,
-          timezone: ActiveSupport::TimeZone.new(@project.course.timezone).tzinfo.name
+          name: @project.course_name,
+          timezone: ActiveSupport::TimeZone.new(@project.course_timezone).tzinfo.name
         }
         response = {
           project: @project.as_json(

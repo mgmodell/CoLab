@@ -266,7 +266,6 @@ namespace :testing do
           puts submission.errors.empty? ?
               "New submission: #{submission.id}" :
               submission.errors.full_messages
-          
         end
       end
     end
@@ -364,7 +363,7 @@ namespace :testing do
 
         School.find_each do |school|
           school.name = school.anon_name
-          school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" if school.anon_name.blank?
+          school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" unless school.anon_name?
           school.save
         end
 
@@ -372,7 +371,7 @@ namespace :testing do
         User.find_each do |user|
           user.first_name = user.anon_first_name
           user.last_name = user.anon_last_name
-          Email.transaction do 
+          Email.transaction do
             user.emails.each do |email|
               email.email =
                 "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}@#{Faker::Internet.domain_name( subdomain:true, domain: 'example' )}"
@@ -380,10 +379,10 @@ namespace :testing do
               email.confirm
             end
           end
-          user.anon_first_name = Faker::Name.first_name if user.anon_first_name.blank?
-          user.anon_last_name = Faker::Name.last_name if user.anon_last_name.blank?
-          user.researcher = false unless user.researcher.present?
-            
+          user.anon_first_name = Faker::Name.first_name unless user.anon_first_name?
+          user.anon_last_name = Faker::Name.last_name unless user.anon_last_name?
+          user.researcher = false unless user.researcher?
+
           if user.provider == 'email'
             user.uid = user.email
           end
@@ -392,12 +391,12 @@ namespace :testing do
 
         Group.find_each do |group|
           group.name = group.anon_name
-          group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" if group.anon_name.blank?
+          group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" unless group.anon_name?
           group.save
         end
 
         BingoGame.find_each do |bingo_game|
-          if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
+          if !bingo_game.anon_topic? || (bingo_game.anon_topic.starts_with? 'Lorem')
             trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
             bingo_game.topic = bingo_game.anon_topic
             bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
@@ -407,7 +406,7 @@ namespace :testing do
 
         Experience.find_each do |experience|
           experience.name = experience.anon_name
-          experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" if experience.anon_name.blank?
+          experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" unless experience.anon_name?
           experience.save
         end
 
@@ -420,7 +419,7 @@ namespace :testing do
         ]
         Project.find_each do |project|
           project.name = project.anon_name
-          project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" if project.anon_name.blank?
+          project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" unless project.anon_name?
           project.save
         end
 
@@ -431,8 +430,8 @@ namespace :testing do
         Course.find_each do |course|
           course.name = course.anon_name
           course.number = course.anon_number
-          course.anon_name = "#{levels.sample} #{Faker::Company.industry}" if course.anon_name.blank?
-          course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+          course.anon_name = "#{levels.sample} #{Faker::Company.industry}" unless course.anon_name?
+          course.anon_number = "#{depts.sample}-#{rand(100..700)}" unless course.anon_number?
           course.save
         end
 

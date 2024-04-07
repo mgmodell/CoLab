@@ -42,9 +42,18 @@ Rails.application.routes.draw do
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
 
-    resources :concepts, except: %i[destroy create]
+    resources :concepts, except: %i[destroy create create destroy new]
 
-    resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+    resources :assignments,
+        except: %i[new create destroy]
+    resources :experiences, :bingo_games,
+        except: %i[new create edit]
+
+    resources :rubrics,
+        except: %i[new create edit]
+
+    resources :consent_forms, :schools, :courses, :projects,
+        except: %i[new create]
 
     resources :submissions, only: %i[update show]
 
@@ -236,7 +245,6 @@ Rails.application.routes.draw do
     scope 'api-backend' do
       # Demo paths
       get 'task_list' => 'home#demo_start', as: :demo_task_list
-  
       get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
       patch 'installments/:id' => 'installments#demo_update'
       get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
@@ -263,10 +271,11 @@ Rails.application.routes.draw do
   end
 
   # LTI Registration
-  post 'lti/tool_connect' => 'lti#register', 
-    constraints: ->(req) { req.format == :json }
-  get 'lti/tool_connect' => 'lti#register', 
-    constraints: ->(req) { req.format == :json }
+  # post 'lti/tool_connect' => 'lti#register'
+  get 'lti/tool_connect' => 'lti#register'
+  scope '.well-known' do
+    get :jwks, to: Keypairs::PublicKeysController.action(:index)
+  end
 
   get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

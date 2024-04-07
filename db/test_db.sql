@@ -5006,7 +5006,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20231023010656'),
 ('20240302002923'),
 ('20240322142846'),
-('20240322142847');
+('20240322142847'),
+('20240406181047');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5278,6 +5279,7 @@ CREATE TABLE `users` (
   KEY `index_users_on_language_id` (`language_id`),
   KEY `index_users_on_school_id` (`school_id`),
   KEY `index_users_on_theme_id` (`theme_id`),
+  KEY `index_users_on_primary_language_id` (`primary_language_id`),
   CONSTRAINT `fk_rails_342250fdc1` FOREIGN KEY (`theme_id`) REFERENCES `themes` (`id`),
   CONSTRAINT `fk_rails_3fa423ca74` FOREIGN KEY (`cip_code_id`) REFERENCES `cip_codes` (`id`),
   CONSTRAINT `fk_rails_45f4f12508` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`),
@@ -5541,4 +5543,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-25 14:03:11
+-- Dump completed on 2024-04-06 14:17:09

@@ -73,7 +73,7 @@ module Demoable
     end
     cl.candidates_count = cl.candidates.size
     cl.cached_performance = cl.candidates
-                              .reduce(0) { |sum, candidate| sum + candidate.candidate_feedback.credit } / 10
+                              .reduce(0) { |sum, candidate| sum + candidate.candidate_feedback_credit } / 10
     cl
   end
 

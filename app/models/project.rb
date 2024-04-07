@@ -18,6 +18,8 @@ class Project < ApplicationRecord
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
 
+  delegate :timezone, :name, :anon_offset, to: :course, prefix: true
+
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
@@ -64,14 +66,6 @@ class Project < ApplicationRecord
     'project'
   end
 
-  def get_activity_begin
-    start_date
-  end
-
-  def get_type
-    I18n.t(:project)
-  end
-
   def enrolled_user_rosters
     course.rosters.enrolled
   end
@@ -90,23 +84,6 @@ class Project < ApplicationRecord
 
   def get_name(anonymous)
     anonymous ? anon_name : name
-  end
-
-  def get_activity_on_date(date:, anon:)
-    day = date.wday
-    o_string = get_name(anon)
-    add_string = if has_inside_date_range?
-                   if day < start_dow || day > end_dow
-                     ' (work)'
-                   else
-                     ' (SAPA)'
-                   end
-                 elsif day < end_dow && day > start_dow
-                   ' (work)'
-                 else
-                   ' (SAPA)'
-                 end
-    o_string + add_string
   end
 
   def self.get_occurence_count_hash(input_array)

@@ -6,6 +6,8 @@ class BingoGame < ApplicationRecord
   include TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :bingo_games
+  delegate :start_date, :end_date, :timezone, to: :course, prefix: true
+
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games, optional: true
@@ -50,11 +52,6 @@ class BingoGame < ApplicationRecord
     get_concepts.size > (size * size)
   end
 
-  def practicable?
-    playable? &&
-      (candidates.acceptable.distinct(:concept_id).size >= 10)
-  end
-
   def get_concepts
     concepts.to_a.uniq
   end
@@ -65,10 +62,6 @@ class BingoGame < ApplicationRecord
 
   def get_name(anonymous)
     anonymous ? anon_topic : topic
-  end
-
-  def get_type
-    I18n.t(:terms_list)
   end
 
   def term_list_date
@@ -124,10 +117,6 @@ class BingoGame < ApplicationRecord
 
   def type
     'Terms List'
-  end
-
-  def get_activity_begin
-    term_list_date
   end
 
   def get_events(user:)
@@ -193,14 +182,6 @@ class BingoGame < ApplicationRecord
     events
   end
 
-  def get_activity_on_date(date:, anon:)
-    if date <= term_list_date
-      "#{I18n.t(:terms_list)} (#{get_name(anon)})"
-    else
-      "#{I18n.t(:terms_review)} (#{get_name(anon)})"
-    end
-  end
-
   def next_deadline
     if is_open?
       term_list_date
@@ -217,20 +198,6 @@ class BingoGame < ApplicationRecord
   def required_terms_for_contributors(contributor_count)
     remaining_percent = (100.0 - group_discount) / 100
     (contributor_count * individual_count * remaining_percent).floor
-  end
-
-  def get_current_lists_hash
-    candidate_lists = {}
-    course.rosters.enrolled_student.each do |roster|
-      student = roster.user
-      candidate_list = candidate_list_for_user(student)
-      if candidate_lists[candidate_list].nil?
-        candidate_lists[candidate_list] = [student]
-      else
-        candidate_lists[candidate_list] << student
-      end
-    end
-    candidate_lists
   end
 
   def awaiting_review?

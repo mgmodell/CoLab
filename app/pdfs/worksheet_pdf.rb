@@ -34,15 +34,15 @@ class WorksheetPdf
       # pos: [0 - 3, top - 43])
     end
     bounding_box([0, top], width: 210) do
-      text "Player: #{@bingo_board.user.first_name} #{@bingo_board.user.last_name}"
-      text "Game Date: #{@bingo_board.bingo_game.end_date.strftime('%b %e, %Y')}"
+      text "Player: #{@bingo_board.user_first_name} #{@bingo_board.user_last_name}"
+      text "Game Date: #{@bingo_board.bingo_game_end_date.strftime('%b %e, %Y')}"
     end
     bounding_box([220, top], width: 240) do
-      text "Class: #{@bingo_board.bingo_game.course.name}"
-      text "Number: #{@bingo_board.bingo_game.course.number}"
+      text "Class: #{@bingo_board.bingo_game_course.name}"
+      text "Number: #{@bingo_board.bingo_game_course.number}"
     end
     move_down 5
-    text "<b>Topic: #{@bingo_board.bingo_game.topic}</b>",
+    text "<b>Topic: #{@bingo_board.bingo_game_topic}</b>",
          align: :center, inline_format: true
   end
 
@@ -70,7 +70,7 @@ class WorksheetPdf
   end
 
   def gen_bingo_board
-    size = @bingo_board.bingo_game.size
+    size = @bingo_board.bingo_game_size
     data = Array.new(size) { Array.new(size) }
     @bingo_board.bingo_cells.each do |bc|
       data[bc.row][bc.column] = if '*' == bc.concept.name

@@ -38,7 +38,7 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/publish/1.json
   def publish
-    if current_user.is_admin? || current_user == @rubric.user
+    if current_user.is_admin?
       @rubric.published = true
       @rubric.save
     end
@@ -59,7 +59,7 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/activate/1.json
   def activate
-    if current_user.is_admin? || current_user == @rubric.user
+    if current_user.is_admin?
       @rubric.active = !@rubric.active
       @rubric.save
     end
@@ -145,8 +145,7 @@ class RubricsController < ApplicationController
   def update
     respond_to do | format |
       if 'new' == params[:id]
-        @rubric = Rubric.new(rubric_params)
-        @rubric.user = current_user
+        @rubric = current_user.rubrics.new(rubric_params)
         @rubric.school = current_user.school
         @rubric.save
       else
@@ -270,7 +269,7 @@ class RubricsController < ApplicationController
                   ]
                 )
               else
-                Rubric.includes(:criteria, :user).find(params[:id])
+                current_user.rubrics.includes(:criteria, :user).find(params[:id])
               end
     @rubric.school ||= current_user.school
     @rubric.user ||= current_user

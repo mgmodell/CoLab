@@ -14,6 +14,8 @@ class Course < ApplicationRecord
 
   has_many :experiences, inverse_of: :course, dependent: :destroy, autosave: true
 
+  delegate :active, to: :consent_form, prefix: true
+
   validates :timezone, :start_date, :end_date, presence: true
   validates :name, presence: true
   validate :date_sanity

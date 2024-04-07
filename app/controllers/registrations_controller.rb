@@ -186,7 +186,8 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   private
 
   def set_email
-    @email = Email.find(params[:email_id])
-    redirect_to root_path unless @email.user == current_user
+    @email = current_user.emails.find(params[:email_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path
   end
 end

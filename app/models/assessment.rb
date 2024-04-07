@@ -9,6 +9,8 @@ class Assessment < ApplicationRecord
   has_many :users, through: :project
   has_many :groups, through: :project
 
+  delegate :course_id, to: :project, prefix: true
+
   # Helpful scope
   scope :active_at, lambda { |date|
                       joins(:project)
@@ -119,7 +121,7 @@ class Assessment < ApplicationRecord
 
   # Create an assessment for a project if warranted
   def self.configure_current_assessment(project)
-    tz = ActiveSupport::TimeZone.new(project.course.timezone)
+    tz = ActiveSupport::TimeZone.new(project.course_timezone)
 
     init_date = DateTime.current
     init_date_in_tz = tz.parse(init_date.to_s).beginning_of_day

@@ -32,16 +32,6 @@ class Installment < ApplicationRecord
     pretty_comments
   end
 
-  def value_for_user_factor(user, factor)
-    if @value_hash.nil?
-      @value_hash = {}
-      values.each do |v|
-        @value_hash.store [v.user, v.factor], v
-      end
-    end
-    @value_hash[[user, factor]]
-  end
-
   def values_by_factor
     hash_hash = {}
 
@@ -50,17 +40,6 @@ class Installment < ApplicationRecord
       au_hash = {} if au_hash.nil?
       au_hash.store(v.user, v)
       hash_hash.store(v.factor, au_hash)
-    end
-    hash_hash
-  end
-
-  def values_by_user
-    hash_hash = {}
-    values.includes(:factor).find_each do |v|
-      b_hash = hash_hash[v.user]
-      b_hash = {} if b_hash.nil?
-      b_hash.store(v.factor, v)
-      hash_hash.store(v.user, b_hash)
     end
     hash_hash
   end
@@ -80,7 +59,7 @@ class Installment < ApplicationRecord
 
     # Phase 1 - convert to codes
     this_course = Course.readonly.includes(:school, :users, projects: :users)
-                        .find(assessment.project.course_id)
+                        .find(assessment.project_course_id)
 
     this_school = this_course.school
     working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]") if this_school.name.present?
@@ -88,15 +67,15 @@ class Installment < ApplicationRecord
     working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]") if this_course.number.present?
 
     this_course.projects.each do |project|
-      working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]") if project.name.present?
+      working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]") if project.name?
       project.groups.each do |group|
-        working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]") if group.name.present?
+        working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]") if group.name?
       end
     end
 
     this_course.users.each do |user|
-      working_space.gsub!(/\b#{user.first_name}\b/i, "[ufn_#{user.id}]") if user.first_name.present?
-      working_space.gsub!(/\b#{user.last_name}\b/i, "[uln_#{user.id}]") if user.last_name.present?
+      working_space.gsub!(/\b#{user.first_name}\b/i, "[ufn_#{user.id}]") if user.first_name?
+      working_space.gsub!(/\b#{user.last_name}\b/i, "[uln_#{user.id}]") if user.last_name?
     end
 
     # Phase 2 - convert from codes

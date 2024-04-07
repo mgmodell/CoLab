@@ -532,13 +532,13 @@ class CoursesController < ApplicationController
   end
 
   def drop_student
-    r = Roster.find(params[:roster_id])
+    r = user.rosters.find(params[:roster_id])
     message = nil
     if r.nil?
       message = t('courses.no_roster')
     else
       instructor_action = r.user != current_user
-      if !instructor_action && r.user != current_user
+      if !instructor_action
         message = t('courses.permission_fail')
       else
         r.role = Roster.roles[:dropped_student]

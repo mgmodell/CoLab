@@ -23,7 +23,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def board_for_game_demo
-    params[:bingo_game_id]
+    # params[:bingo_game_id]
     demo_project = Project.new(
       id: -1,
       name: (t :demo_project),
@@ -67,7 +67,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def board_for_game
-    params[:bingo_game_id]
+    # params[:bingo_game_id]
     bingo_game = BingoGame.find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
@@ -304,7 +304,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def update_demo
-    params[:bingo_game_id]
+    # params[:bingo_game_id]
     @board = BingoBoard.new(
       id: -42,
       iteration: 0,
@@ -390,7 +390,7 @@ class BingoBoardsController < ApplicationController
 
   def score_worksheet
     require 'image_processing/vips'
-    Rails.logger.debug "params: #{params}"
+    # Rails.logger.debug "params: #{params}"
 
     @bingo_board.performance = params[:performance]
 
@@ -446,26 +446,10 @@ class BingoBoardsController < ApplicationController
     end
   end
 
-  def bingo_board_params
-    params.require(:bingo_board).permit(:id, :iteration, :bingo_game_id,
-                                        bingo_cells_attributes:
-                                                %i[id concept_id
-                                                   selected row
-                                                   column])
-  end
-
   def check_editor
     unless current_user.is_admin? ||
            @bingo_board.bingo_game.course.rosters.instructor.where(user: current_user).present?
       redirect_to root_path
     end
-  end
-
-  def score_bingo_board_params
-    params.require(:bingo_board).permit(:id, :result_img, :performance)
-  end
-
-  def play_bingo_board_params
-    params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end
 end

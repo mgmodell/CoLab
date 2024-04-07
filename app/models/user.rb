@@ -24,15 +24,26 @@ class User < ApplicationRecord
   has_many :bingo_boards, inverse_of: :user, dependent: :destroy
   has_many :candidates, inverse_of: :user, dependent: :nullify
   has_many :concepts, through: :candidates
+
   belongs_to :gender, inverse_of: :users, optional: true
+  delegate :code, to: :gender, prefix: true
+
   belongs_to :theme, inverse_of: :users, optional: true
+
   has_one :home_country, through: :home_state
+  delegate :no_response, to: :home_country, prefix: true
+
   belongs_to :home_state, inverse_of: :users, optional: true
+  delegate :no_response, to: :home_state, prefix: true
+
   belongs_to :cip_code, inverse_of: :users, optional: true
+  delegate :zero, :gov_code, to: :cip_code, prefix: true
 
   belongs_to :language, inverse_of: :users, optional: true
   belongs_to :primary_language, inverse_of: :home_users,
                                 class_name: 'Language', optional: true
+  delegate :code, to: :primary_language, prefix: true
+
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
@@ -97,7 +108,7 @@ class User < ApplicationRecord
     courses.includes(consent_form: :consent_logs)
            .where('courses.consent_form_id IS NOT NULL')
            .find_each do |course|
-      if course.consent_form.active && logs[course.consent_form_id].nil?
+      if course.consent_form_active && logs[course.consent_form_id].nil?
         log = course.get_consent_log user: self
         logs[log.consent_form_id] = log unless log.nil?
       end
@@ -136,10 +147,6 @@ class User < ApplicationRecord
 
   def is_researcher?
     researcher
-  end
-
-  def active_for_authentication?
-    super && active?
   end
 
   def waiting_instructor_tasks

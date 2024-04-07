@@ -4,6 +4,8 @@ class Candidate < ApplicationRecord
   belongs_to :candidate_list, inverse_of: :candidates,
                               counter_cache: true
   belongs_to :candidate_feedback, inverse_of: :candidates, optional: true
+  delegate :critique, :credit, to: :candidate_feedback, prefix: true
+
   belongs_to :concept, inverse_of: :candidates,
                        optional: true, counter_cache: true
   belongs_to :user, inverse_of: :candidates
@@ -63,7 +65,7 @@ class Candidate < ApplicationRecord
   end
 
   def concept_assigned
-    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?) && !CandidateFeedback.find(candidate_feedback_id).term_prob && concept_id.nil?
+    if candidate_list.bingo_game_reviewed && (term.present? || definition.present?) && !CandidateFeedback.find(candidate_feedback_id).term_prob && concept_id.nil?
       errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
     end
   end

@@ -16,6 +16,8 @@ class CandidateList < ApplicationRecord
 
   accepts_nested_attributes_for :candidates
 
+  delegate :reviewed, to: :bingo_game, prefix: true
+
   before_save :cull_candidates
 
   def get_concepts
@@ -44,18 +46,6 @@ class CandidateList < ApplicationRecord
     performance
   end
 
-  def get_by_feedback(candidate_feedback)
-    candidates.where(candidate_feedback:)
-  end
-
-  def get_accepted_terms
-    candidates.joins(:candidate_feedback).where(candidate_feedbacks: { name: 'Accepted' })
-  end
-
-  def get_not_accepted_terms
-    candidates.joins(:candidate_feedback).includes(:candidate_feedback).where("candidate_feedbacks.name != 'Accepted' AND candidate_feedbacks.id IS NOT NULL")
-  end
-
   def expected_count
     if is_group
       bingo_game.required_terms_for_contributors(contributor_count)
@@ -72,9 +62,7 @@ class CandidateList < ApplicationRecord
     end
   end
 
-  delegate :end_date, to: :bingo_game
-
-  delegate :name, to: :bingo_game
+  delegate :end_date, :name, :reviewed, to: :bingo_game
 
   def others_requested_help
     requested_count = 0
@@ -96,7 +84,7 @@ class CandidateList < ApplicationRecord
 
   def cull_candidates
     candidates.each do |candidate|
-      candidate.delete if candidate.term.blank? && candidate.definition.blank?
+      candidate.delete if candidate.term? && candidate.definition?
     end
   end
 end

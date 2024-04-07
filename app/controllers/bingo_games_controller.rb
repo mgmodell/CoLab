@@ -241,8 +241,8 @@ class BingoGamesController < ApplicationController
   def new
     @title = t '.title'
     @bingo_game = Course.find(params[:course_id]).bingo_games.new
-    @bingo_game.start_date = @bingo_game.course.start_date
-    @bingo_game.end_date = @bingo_game.course.end_date
+    @bingo_game.start_date = @bingo_game.course_start_date
+    @bingo_game.end_date = @bingo_game.course_end_date
     respond_to do |format|
       format.json do
         resp = bingo_responder(bingo_game: @bingo_game, current_user:)
@@ -504,7 +504,7 @@ class BingoGamesController < ApplicationController
 
         # feedback_name = candidate.candidate_feedback.name_en
 
-        if 'term_problem' != candidate.candidate_feedback.critique
+        if 'term_problem' != candidate.candidate_feedback_critique
           entered_candidate[:concept][:name].present?
           concept_name = entered_candidate[:concept][:name]
           concept_name = Concept.standardize_name name: concept_name
@@ -570,7 +570,7 @@ class BingoGamesController < ApplicationController
   private
 
   def bingo_responder(bingo_game:, current_user:)
-    timezone = ActiveSupport::TimeZone.new(bingo_game.course.timezone).tzinfo.name
+    timezone = ActiveSupport::TimeZone.new(bingo_game.course_timezone).tzinfo.name
     resp = bingo_game.as_json(only:
       %i[ id description source group_option individual_count
           start_date end_date active lead_time group_discount

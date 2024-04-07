@@ -6,6 +6,8 @@ class Experience < ApplicationRecord
   include TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :experiences
+  delegate :timezone, :name, to: :course, prefix: true
+
   has_many :reactions, inverse_of: :experience, dependent: :destroy
 
   # validations
@@ -30,22 +32,8 @@ class Experience < ApplicationRecord
     'experience'
   end
 
-  def get_type
-    I18n.t(:experience)
-  end
-
   def next_deadline
     end_date - (1 + lead_time).days
-  end
-
-  def get_activity_on_date(date:, anon:)
-    get_name(anon)
-  end
-
-  # TODO: We should get rid of this with new calendaring
-  # TODO this is really more of a student activity end date
-  def get_activity_begin
-    student_end_date
   end
 
   def get_events(user:)
