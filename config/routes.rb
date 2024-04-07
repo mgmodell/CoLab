@@ -46,10 +46,8 @@ Rails.application.routes.draw do
 
     resources :assignments,
         except: %i[new create destroy]
-    resources :experiences, :bingo_games,
-        except: %i[new create edit]
 
-    resources :rubrics,
+    resources :experiences, :rubrics, :bingo_games,
         except: %i[new create edit]
 
     resources :consent_forms, :schools, :courses, :projects,

@@ -66,14 +66,6 @@ class Project < ApplicationRecord
     'project'
   end
 
-  def enrolled_user_rosters
-    course.rosters.enrolled
-  end
-
-  def number_of_weeks
-    (end_date - start_date).divmod(7)[0]
-  end
-
   def get_user_appearance_counts
     Project.get_occurence_count_hash users
   end

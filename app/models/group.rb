@@ -30,14 +30,6 @@ class Group < ApplicationRecord
     anonymous ? anon_name : name
   end
 
-  def has_user(user)
-    users.where('users.id = ?', user.id).any?
-  end
-
-  def users_changed?
-    users.select { |u| u.new_record? || u.marked_for_destruction? }.any?
-  end
-
   def calc_diversity_score
     self.diversity_score = Group.calc_diversity_score_for_group(
       users: users.includes(:gender, :primary_language,
