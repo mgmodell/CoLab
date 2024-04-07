@@ -89,13 +89,13 @@ class Group < ApplicationRecord
       now = Date.current
       values = [].extend(DescriptiveStatistics)
       users.each do |user|
-        values << now.year - user.date_of_birth.year unless user.date_of_birth?
+        values << now.year - user.date_of_birth.year if user.date_of_birth?
       end
       age_sd = values.empty? ? 0 : values.standard_deviation
 
       values.clear
       users.each do |user|
-        values << now.year - user.started_school.year unless user.started_school?
+        values << now.year - user.started_school.year if user.started_school?
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
