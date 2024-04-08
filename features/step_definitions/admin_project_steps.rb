@@ -176,7 +176,7 @@ end
 
 Then('the user selects {string} as {string}') do |value, field|
   id = find(:xpath,
-            "//label[contains(text(),'#{field}')]")[:for]
+            "//label[contains(.,'#{field}')]")[:for]
   begin
     retries ||= 0
     selectCtrl = find_all(:xpath, "//select[@id='#{id}']")
@@ -186,7 +186,7 @@ Then('the user selects {string} as {string}') do |value, field|
 
   if selectCtrl.empty?
     find(:xpath, "//div[@id='#{id}']", visible: :all).click
-    find(:xpath, "//li[contains(text(),'#{value}')]").click
+    find(:xpath, "//li[contains(.,'#{value}')]").click
     # sleep(0.3)
   else
     selectCtrl[0].select(value)

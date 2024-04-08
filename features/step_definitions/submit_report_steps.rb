@@ -265,7 +265,7 @@ Then 'the installment will successfully save' do
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
   waits = 0
-  unless !all(:xpath, "//div[contains(text(),'success')]").empty? || waits > 3
+  unless !all(:xpath, "//div[contains(.,'success')]").empty? || waits > 3
 
     sleep(0.3)
     waits += 1
