@@ -8,11 +8,11 @@ en:
         student: Estudiante?
         instructor: Profesor?
     titles:
-        about: Who's behind CoLab?
-        why: How can CoLab help you?
+        about: ¿Quién está detrás de CoLab?
+        why: ¿Cómo puede ayudarle CoLab?
         research: The research behind CoLab
-        student: CoLab features for students
-        instructor: CoLab features for instructors
+        student: Funciones de CoLab para estudiantes
+        instructor: Funciones de CoLab para instructores
     why_slides:
         captions:
             one_one: >
