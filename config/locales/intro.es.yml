@@ -37,13 +37,13 @@ en:
             six_two: Ahora lo hay!
             seven_one: 
                 title: CoLab.online te puede ayduar!
-                check-ins: Weekly self- and peer-assessment check-ins
-                growth: Growth focused (not judgment)
-                visualizations: Visualizations
-                diversity: Diversity-focused group composition
-                gamification: Gamified collaborative reading
-                simulations: Simulated team experience
-                iterative_assignments: Iterative assignments
+                check-ins: Evaluacion de si mismo y del grupo
+                growth: Enfoque en desarollo sin juzgar
+                visualizations: Visualizaciónes
+                diversity: Composición del grupo centrada en la diversidad
+                gamification: Lectura colaborativa gamificada
+                simulations: Experiencia de equipo simulada
+                iterative_assignments: Tareas itererativas
             seven_two:
                 title: Are you a...
                 student: Student?
