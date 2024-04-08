@@ -703,7 +703,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles,
                }}
             >
-               Research
+               {t('tooltips.research')}
             </text>
          </animated.g>
          <g
