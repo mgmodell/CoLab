@@ -48,7 +48,7 @@ Then 'the user sets the course timezone to {string}' do |timezone|
   elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
   elem.click
 
-  menu_item = find(:xpath, "//li[text()='#{timezone}']")
+  menu_item = find(:xpath, "//li[.='#{timezone}']")
   menu_item.click
 end
 
