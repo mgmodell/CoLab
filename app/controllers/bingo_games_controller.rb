@@ -23,7 +23,6 @@ class BingoGamesController < ApplicationController
   include Demoable
 
   def show
-    @title = t '.title'
     respond_to do |format|
       format.json do
         resp = bingo_responder(bingo_game: @bingo_game, current_user:)
@@ -226,7 +225,6 @@ class BingoGamesController < ApplicationController
   end
 
   def index
-    @title = t '.title'
     @bingo_games = []
     if current_user.is_admin?
       @bingo_games = BingoGame.includes(:course).all
@@ -239,7 +237,6 @@ class BingoGamesController < ApplicationController
   end
 
   def new
-    @title = t '.title'
     @bingo_game = Course.find(params[:course_id]).bingo_games.new
     @bingo_game.start_date = @bingo_game.course_start_date
     @bingo_game.end_date = @bingo_game.course_end_date
@@ -255,7 +252,6 @@ class BingoGamesController < ApplicationController
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       respond_to do |format|
-        @title = t 'bingo_games.new.title'
         format.json do
           resp = bingo_responder(bingo_game: @bingo_game, current_user:)
           resp[:messages] = { status: t('bingo_games.create_success') }
@@ -296,8 +292,6 @@ class BingoGamesController < ApplicationController
   end
 
   def review_candidates_demo
-    @title = t('demo_title', orig:
-      t('bingo_games.review_candidates.title'))
     @bingo_game = get_demo_bingo_game
 
     groups =
@@ -405,7 +399,6 @@ class BingoGamesController < ApplicationController
   end
 
   def review_candidates
-    @title = t '.title'
     check_bingo_editor bingo_game: @bingo_game
     respond_to do |format|
       format.json do
@@ -563,7 +556,6 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
 

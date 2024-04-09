@@ -3,7 +3,7 @@
 class CoursesController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_course, only: %i[show edit update destroy
+  before_action :set_course, only: %i[show update destroy
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
   before_action :set_reg_course, only: %i[self_reg_init self_reg_confirm self_reg_init]
@@ -19,7 +19,6 @@ class CoursesController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[qr]
 
   def show
-    @title = t('.title')
     respond_to do |format|
       format.json do
         response = {
@@ -105,10 +104,6 @@ class CoursesController < ApplicationController
         render json: response
       end
     end
-  end
-
-  def edit
-    @title = t('.title')
   end
 
   def qr
@@ -307,7 +302,6 @@ class CoursesController < ApplicationController
 
   # GET /admin/coures
   def index
-    @title = t('.title')
     @courses = []
     if current_user.admin?
       @courses = Course.includes(:school).all
@@ -343,7 +337,6 @@ class CoursesController < ApplicationController
   end
 
   def new
-    @title = t('.title')
     @course = nil
     @course = if current_user.school.nil?
                 Course.new

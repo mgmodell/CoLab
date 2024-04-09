@@ -412,5 +412,5 @@ end
 Then('we switch to the {string} view') do | stacked_or_layered |
   drop_down = find( :xpath, "//div[@id='chartType']" )
   drop_down.click
-  find( :xpath, "//li[text()='#{stacked_or_layered}']" ).click
+  find( :xpath, "//li[.='#{stacked_or_layered}']" ).click
 end

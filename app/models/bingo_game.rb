@@ -87,6 +87,11 @@ class BingoGame < ApplicationRecord
                "bingo/candidate_results/#{id}"
              end
            end
+    local_status = if awaiting_review?
+                     status
+                   else
+                     status_for_user(current_user)
+                   end
 
     log = course.get_consent_log(user: current_user)
     consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
@@ -96,7 +101,7 @@ class BingoGame < ApplicationRecord
       instructor_task:,
       name: get_name(false),
       group_name: group.present? ? group.get_name(false) : nil,
-      status:,
+      status: local_status,
       course_name: course.get_name(false),
       start_date:,
       end_date:,

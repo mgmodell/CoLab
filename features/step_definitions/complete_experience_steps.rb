@@ -14,21 +14,17 @@ Then 'the {string} button will be disabled' do |button_name|
   elem[:disabled].should eq 'true'
 end
 
-Then 'the user will see {string}' do |checkText|
+Then 'the user will see {string}' do |check_text|
   wait_for_render
-  page.should have_content(:all, checkText)
+  should have_content check_text
 end
 
-Then(/^the user presses hidden "([^"]*)"$/) do |linkOrButtonName|
-  click_link_or_button linkOrButtonName, visible: :all, disabled: :all
+Then(/^the user presses hidden "([^"]*)"$/) do |link_or_button_name|
+  click_link_or_button link_or_button_name, visible: :all, disabled: :all
 end
 
-Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
-  click_link_or_button linkOrButtonName
-rescue Capybara::ElementNotFound => e
-  puts linkOrButtonName
-  puts e
-  puts e.full_messages
+Then(/^the user presses "([^"]*)"$/) do |link_or_button_name|
+  click_link_or_button link_or_button_name
 end
 
 Then(/^they open the drawer for additional comments$/) do

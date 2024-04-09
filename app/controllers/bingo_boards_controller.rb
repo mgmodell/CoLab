@@ -16,7 +16,6 @@ class BingoBoardsController < ApplicationController
   ITEM_COUNT = 10
 
   def show
-    @title = t '.title'
     respond_to do |format|
       format.json { render json: @bingo_board }
     end
@@ -291,7 +290,6 @@ class BingoBoardsController < ApplicationController
 
   # GET /admin/bingo_board
   def index
-    @title = t '.title'
     # Narrow down to those available to the user
     @bingo_boards = BingoBoard.where user: current_user
     respond_to do |format|

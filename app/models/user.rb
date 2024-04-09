@@ -309,9 +309,8 @@ class User < ApplicationRecord
     waiting_experiences = Experience.active_at(cur_date)
                                     .includes(course: :consent_form)
                                     .joins(course: :rosters)
-                                    .where('rosters.user_id': id)
-                                    .where('rosters.role IN (?)',
-                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+                                    .where( rosters: {user_id: id })
+                                    .where( rosters: { role: [Roster.roles[:enrolled_student], Roster.roles[:invited_student]] })
                                     .to_a
 
     waiting_experiences.delete_if { |experience| !experience.is_open? }
@@ -321,9 +320,8 @@ class User < ApplicationRecord
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
                              .includes({ course: :consent_form }, :project)
-                             .where('rosters.user_id': id, 'bingo_games.active': true)
-                             .where('rosters.role = ? OR rosters.role = ?',
-                                    Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+                             .where( rosters: { user_id: id }, bingo_games: { active: true })
+                             .where( rosters: {role: [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ] })
                              .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
                              .to_a
 
@@ -332,9 +330,8 @@ class User < ApplicationRecord
 
     waiting_assignments = Assignment.joins(course: :rosters)
                                     .includes({ course: :consent_form }, :project)
-                                    .where('rosters.user_id': id, 'assignments.active': true)
-                                    .where('rosters.role = ? OR rosters.role = ?',
-                                           Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+                                    .where(rosters: {user_id: id }, assignments: {active: true })
+                                    .where(rosters: {role: [ Roster.roles[:enrolled_student], Roster.roles[:invited_student] ] })
                                     .where('assignments.end_date >= ? AND courses.start_date <= ?', cur_date, cur_date)
                                     .to_a
 

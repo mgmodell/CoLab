@@ -84,7 +84,7 @@ Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   # Enable max rows
   max_rows = @bingo.candidates.size
   find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
-  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[.='#{max_rows}']").click
 
   page.all(:xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all)
       .count.should eq candidate_count.to_i
@@ -132,7 +132,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   # Enable max rows
   max_rows = @bingo.candidates.size
   find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
-  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[.='#{max_rows}']").click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -175,7 +175,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     end
 
     begin
-      xpth_search = "//li[text()=\"#{feedback.name}\"]"
+      xpth_search = "//li[.=\"#{feedback.name}\"]"
       page.find(:xpath, xpth_search ).click
       begin
         if has_xpath?( xpth_search )
@@ -208,7 +208,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       puts e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
-                       "//li[text()=\"#{feedback.name}\"]")
+                       "//li[.=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
       elem.click
 
@@ -257,7 +257,7 @@ When(/^the user clicks the link to the candidate review$/) do
   # Enable max rows
   max_rows = @bingo.candidates.size
   find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
-  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[.='#{max_rows}']").click
 end
 
 Then(/^there will be (\d+) concepts$/) do |concept_count|

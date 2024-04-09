@@ -3,7 +3,7 @@
 class SchoolsController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_school, only: %i[show edit update destroy]
+  before_action :set_school, only: %i[show update destroy]
   before_action :check_admin
 
   def show
@@ -19,10 +19,6 @@ class SchoolsController < ApplicationController
         render json: response
       end
     end
-  end
-
-  def edit
-    @title = t '.title'
   end
 
   # GET /admin/school

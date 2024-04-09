@@ -4,7 +4,7 @@ class ConceptsController < ApplicationController
   include PermissionsCheck
 
   layout 'admin', except: %i[review_candidates update_review_candidates]
-  before_action :set_concept, only: %i[show edit update destroy]
+  before_action :set_concept, only: %i[show update destroy]
   before_action :check_admin,
                 except: %i[concepts_for_game concepts_for_game_demo]
   skip_before_action :authenticate_user!,
@@ -15,7 +15,6 @@ class ConceptsController < ApplicationController
   include Demoable
 
   def show
-    @title = t '.title'
     respond_to do |format|
       format.json do
         render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
@@ -23,13 +22,9 @@ class ConceptsController < ApplicationController
     end
   end
 
-  def edit
-    @title = t '.title'
-  end
 
   # GET /admin/concept
   def index
-    @title = t '.title'
     respond_to do |format|
       format.json do
         @concepts = Concept.all.order(:name)

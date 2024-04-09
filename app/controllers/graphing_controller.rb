@@ -4,7 +4,6 @@ class GraphingController < ApplicationController
   Unit_Of_Analysis = { group: 2, individual: 1 }.freeze
 
   def index
-    @title = 'Reports'
     @user = current_user
     current_users_projects = []
 

@@ -54,7 +54,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     ]
 
     demographics.each do |demo_data|
-      label = find(:xpath, "//label[text()='#{demo_data[:label]}']")[:for]
+      label = find(:xpath, "//label[.='#{demo_data[:label]}']")[:for]
 
       if has_xpath? ( "//div[@id='#{label}']")
         find(:xpath, "//div[@id='#{label}']").click
@@ -63,8 +63,8 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
       else
         true.should be( false), "No element found for #{label}"
       end
-      if has_xpath? ( "//li[text()='#{demo_data[:value]}']")
-        find(:xpath, "//li[text()='#{demo_data[:value]}']").click
+      if has_xpath? ( "//li[.='#{demo_data[:value]}']")
+        find(:xpath, "//li[.='#{demo_data[:value]}']").click
       else
         true.should be( false), "No element found for #{demo_data[:value]}"
       end
@@ -76,7 +76,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     ]
 
     demographics.each do |demo_data|
-      label = find(:xpath, "//label[text()='#{demo_data[:label]}']")[:for]
+      label = find(:xpath, "//label[.='#{demo_data[:label]}']")[:for]
       find(:xpath, "//input[@id='#{label}']").set(demo_data[:value].strftime('%m/%d/%Y'))
     end
 

@@ -2,7 +2,6 @@
 
 class ConsentLogsController < ApplicationController
   def update
-    @title = t('consent_logs.title')
     @consent_log = ConsentLog.find(params[:id])
 
     @consent_log.accepted = params[:consent_log][:accepted]
@@ -28,7 +27,6 @@ class ConsentLogsController < ApplicationController
   end
 
   def edit
-    @title = t('consent_logs.title')
     # validations here
     cf_id = params[:consent_form_id]
     u_id = current_user.id

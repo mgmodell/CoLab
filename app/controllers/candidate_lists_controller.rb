@@ -4,17 +4,11 @@ class CandidateListsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
   before_action :demo_user, only: %i[demo_play demo_entry]
 
-  before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
+  before_action :set_candidate_list, only: %i[edit show update request_collaboration ]
 
   include Demoable
 
-  def list_stats
-    @title = t '.title'
-  end
-
   def edit
-    @title = t '.title'
-
     consent_log = @candidate_list.course.get_consent_log user: current_user
 
     if consent_log.present? && !consent_log.presented?
@@ -73,7 +67,6 @@ class CandidateListsController < ApplicationController
   end
 
   def request_collaboration
-    @title = t '.title'
     desired = params[:desired].casecmp('true').zero?
     if desired
       @candidate_list.group_requested = true
@@ -141,7 +134,7 @@ class CandidateListsController < ApplicationController
 
         if @candidate_list.save
           @candidate_list.reload
-          notice = t 'candidate_lists.update_success'
+          message = t 'candidate_lists.update_success'
           format.json do
             render json: {
               id: @candidate_list.id,
@@ -152,7 +145,7 @@ class CandidateListsController < ApplicationController
               ),
               others_requested_help: @candidate_list.others_requested_help,
               help_requested: @candidate_list.group_requested,
-              messages: { main: notice }
+              messages: { main: message }
             }
           end
         else
@@ -178,15 +171,12 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    @title = t '.title'
     return if @candidate_list.bingo_game.reviewed
 
     redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review')
   end
 
   def demo_play
-    @title = t 'demo_title',
-               orig: (t 'candidate_lists.show.title')
     @candidate_list = CandidateList.new(id: -1,
                                         contributor_count: 1,
                                         is_group: false)

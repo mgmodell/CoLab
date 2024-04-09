@@ -84,7 +84,7 @@ class CandidateList < ApplicationRecord
 
   def cull_candidates
     candidates.each do |candidate|
-      candidate.delete if candidate.term? && candidate.definition?
+      candidate.delete unless candidate.term? || candidate.definition?
     end
   end
 end

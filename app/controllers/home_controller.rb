@@ -460,7 +460,6 @@ class HomeController < ApplicationController
   end
 
   def demo_start
-    @title = t 'titles.demonstration'
     if current_user.nil?
       current_user = User.new(first_name: t(:demo_surname_1),
                               last_name: t(:demo_fam_name_1),
