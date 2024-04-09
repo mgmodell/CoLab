@@ -532,7 +532,7 @@ class CoursesController < ApplicationController
   end
 
   def drop_student
-    r = user.rosters.find(params[:roster_id])
+    r = Roster.find(params[:roster_id])
     message = nil
     if r.nil?
       message = t('courses.no_roster')
