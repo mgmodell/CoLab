@@ -33,7 +33,7 @@ end
 Then 'the user selects {string} as the {string}' do |value, field|
   lbl = find(:xpath, "//label[text()='#{field}']")[:for]
   find(:xpath, "//*[@id='#{lbl}']").click
-  find(:xpath, "//li[text()='#{value}']").click
+  find(:xpath, "//li[.='#{value}']").click
 end
 
 Then 'the user will dismiss the error {string}' do |error_message|
