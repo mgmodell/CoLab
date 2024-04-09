@@ -91,6 +91,7 @@ export default function RubricList(props) {
             })}
             resizableColumns
             reorderableColumns
+            emptyMessage={t("index.empty")}
             paginator
             rows={5}
             tableStyle={{

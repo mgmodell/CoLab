@@ -57,8 +57,8 @@ end
 Then('the user sees {int} rubrics') do |count|
   wait_for_render
   rubrics = find_all(:xpath, "//tbody/tr")
-  if 0 == count && 1 == rubrics.size
-    has_content?('No results found').should be true
+  if count.zero? && 1 == rubrics.size
+    has_content?( 'No rubrics found' ).should be true
   else
     rubrics.size.should eq count
   end
