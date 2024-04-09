@@ -104,8 +104,10 @@ export default function ProjectGroups(props: Props) {
   };
 
   const setGroup = (student_id, group_id) => {
+
     const studentsWS = Object.assign({}, studentsRaw);
     studentsWS[student_id]["group_id"] = group_id;
+
     setDirty(true);
     setStudents(Object.values(studentsWS));
     setStudentsRaw(studentsWS);
@@ -355,7 +357,7 @@ export default function ProjectGroups(props: Props) {
               body={rowData => {
                 return (
                   <RadioButton
-                    onClick={() => setGroup(rowData.id, group.id)}
+                    onChange={(event) => setGroup(rowData.id, group.id) }
                     id={"user_group_" + rowData.id + "_" + group.id}
                     itemID={"user_group_" + rowData.id + "_" + group.id}
                     inputId={"user_group_" + rowData.id + "_" + group.id}
@@ -375,7 +377,7 @@ export default function ProjectGroups(props: Props) {
           return (
             <RadioButton
               id={"stu-" + rowData.id}
-              onClick={() => setGroup(rowData.id, null)}
+              onChange={(event) => setGroup(rowData.id, null)}
               checked={null == rowData.group_id}
             />
           )
