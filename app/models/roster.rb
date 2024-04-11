@@ -17,17 +17,17 @@ class Roster < ApplicationRecord
   validates :user_id, uniqueness: { scope: :course_id }
 
   scope :faculty, lambda {
-    where(role: [roles[:instructor],
-                 roles[:assistant]])
+    where( role: [roles[:instructor],
+                  roles[:assistant]] )
   }
   scope :students, lambda {
-    where(role: [roles[:enrolled_student],
-                 roles[:invited_student],
-                 roles[:declined_student]])
+    where( role: [roles[:enrolled_student],
+                  roles[:invited_student],
+                  roles[:declined_student]] )
   }
   scope :enrolled, lambda {
-    where(role: [roles[:enrolled_student],
-                 roles[:invited_student]])
+    where( role: [roles[:enrolled_student],
+                  roles[:invited_student]] )
   }
 
   private
@@ -36,13 +36,13 @@ class Roster < ApplicationRecord
   def clean_up_dropped
     if dropped_student?
       ActiveRecord::Base.transaction do
-        course.projects.includes(groups: :users).find_each do |project|
-          project.groups.each do |group|
-            next unless group.users.includes(user)
+        course.projects.includes( groups: :users ).find_each do | project |
+          project.groups.each do | group |
+            next unless group.users.includes( user )
 
             project = group.project
             activation_status = project.active
-            group.users.delete(user)
+            group.users.delete( user )
             group.save!
             logger.debug group.errors.full_messages unless group.errors.empty?
             project = group.project

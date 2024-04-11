@@ -23,11 +23,11 @@ class Assignment < ApplicationRecord
   # Validations
   validates :passing, numericality: { in: 0..100 }
 
-  def get_description(anonymous = false)
+  def get_description( anonymous = false )
     anonymous ? anon_description : description
   end
 
-  def get_name(anonymous = false)
+  def get_name( anonymous = false )
     anonymous ? anon_name : name
   end
 
@@ -39,29 +39,29 @@ class Assignment < ApplicationRecord
     'assignment'
   end
 
-  def task_data(current_user:)
-    is_faculty = course.rosters.where(user: current_user).faculty.size.positive?
+  def task_data( current_user: )
+    is_faculty = course.rosters.where( user: current_user ).faculty.size.positive?
 
-    group = project.group_for_user(current_user) if project.present? && !is_faculty
+    group = project.group_for_user( current_user ) if project.present? && !is_faculty
     link = is_faculty ? "assignment/critiques/#{id}" : "#{get_link}/#{id}"
 
-    log = course.get_consent_log(user: current_user)
-    consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
+    log = course.get_consent_log( user: current_user )
+    consent_link = ( "/research_information/#{log.consent_form_id}" if log.present? )
     status = if is_faculty
-               submissions.where(withdrawn: nil, recorded_score: nil)
-                          .and(Submission.where.not(submitted: nil))
+               submissions.where( withdrawn: nil, recorded_score: nil )
+                          .and( Submission.where.not( submitted: nil ) )
              else
-               status_for_user(current_user)
+               status_for_user( current_user )
              end
 
     {
       id:,
       type: is_faculty ? :submission : :assignment,
       instructor_task: is_faculty,
-      name: get_name(false),
-      group_name: group.present? ? group.get_name(false) : nil,
+      name: get_name( false ),
+      group_name: group.present? ? group.get_name( false ) : nil,
       status:,
-      course_name: course.get_name(false),
+      course_name: course.get_name( false ),
       start_date:,
       end_date:,
       next_date: start_date > Date.current ? start_date : end_date,
@@ -71,17 +71,17 @@ class Assignment < ApplicationRecord
     }
   end
 
-  def get_submissions_for_user(current_user)
+  def get_submissions_for_user( current_user )
     if group_enabled
-      submissions.where(group: project.group_for_user(current_user)).order(:submitted)
+      submissions.where( group: project.group_for_user( current_user ) ).order( :submitted )
     else
-      submissions.where(user: current_user).order(:submitted)
+      submissions.where( user: current_user ).order( :submitted )
     end
   end
 
-  def status_for_user(user)
+  def status_for_user( user )
     # TODO: check for graded
-    get_submissions_for_user(user).size
+    get_submissions_for_user( user ).size
   end
 
   private
@@ -89,13 +89,13 @@ class Assignment < ApplicationRecord
   def submission_type
     return if text_sub || link_sub || file_sub
 
-    errors.add(:submission_types, I18n.t('assignments.error.submission_type'))
+    errors.add( :submission_types, I18n.t( 'assignments.error.submission_type' ) )
   end
 
   def group_valid
     return if !group_enabled || project.present?
 
-    errors.add(:group_enabled, I18n.t('assignments.error.group_required'))
+    errors.add( :group_enabled, I18n.t( 'assignments.error.group_required' ) )
   end
 
   def anonymize
@@ -108,7 +108,6 @@ class Assignment < ApplicationRecord
   end
 
   def self.inform_instructors
-    # TODO build a reminder mechanism
-
+    # TODO: build a reminder mechanism
   end
 end
