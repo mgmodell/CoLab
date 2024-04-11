@@ -42,15 +42,17 @@ Rails.application.routes.draw do
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
 
-    resources :concepts, except: %i[destroy create create destroy new]
+    resources :concepts, only: %i[show update index]
 
     resources :assignments,
         except: %i[new create destroy]
 
-    resources :experiences, :rubrics, :bingo_games,
+    resources :experiences, except: %i[new edit]
+    resources :rubrics, :bingo_games,
         except: %i[new create edit]
 
-    resources :consent_forms, :schools, :courses, :projects,
+    resources :consent_forms, except: %i[new]
+    resources :schools, :courses, :projects,
         except: %i[new create]
 
     resources :submissions, only: %i[update show]
