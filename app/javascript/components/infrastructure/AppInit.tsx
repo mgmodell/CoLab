@@ -8,7 +8,7 @@ import { Skeleton } from "primereact/skeleton";
 type Props = {
   children?: React.ReactNode;
   endpointsUrl: string;
-  debug?: boolean
+  debug?: boolean;
 };
 
 export default function AppInit(props: Props) {
@@ -30,7 +30,7 @@ export default function AppInit(props: Props) {
   }, []);
 
   useEffect(() => {
-    dispatch( setDebug(props.debug) );
+    dispatch(setDebug(props.debug));
   }, [props.debug]);
 
   return (

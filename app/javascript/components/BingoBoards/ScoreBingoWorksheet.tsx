@@ -102,7 +102,7 @@ export default function ScoreBingoWorksheet(props) {
 
   const resultImage =
     null === resultImgUrl ? null : (
-      <Row >
+      <Row>
         <Col xs={12} sm={12}>
           <img src={resultImgUrl} />
         </Col>
@@ -153,7 +153,7 @@ export default function ScoreBingoWorksheet(props) {
           <Col xs={12} sm={6}>
             <span className="p-float-label">
               <InputText
-                id='score'
+                id="score"
                 value={performance.toString()}
                 type="number"
                 onChange={event => {
@@ -172,17 +172,13 @@ export default function ScoreBingoWorksheet(props) {
                 onChange={handleFileSelect}
                 type="file"
               />
-              <Button >
-                {t("file_select")}
-              </Button>
+              <Button>{t("file_select")}</Button>
             </label>
           </Col>
         </Row>
         <Row>
           <Col xs={12} sm={12}>
-            <Button onClick={submitScore}>
-              {t("submit_scores")}
-            </Button>
+            <Button onClick={submitScore}>{t("submit_scores")}</Button>
           </Col>
         </Row>
         {resultImage}

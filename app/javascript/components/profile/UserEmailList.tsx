@@ -119,7 +119,9 @@ export default function UserEmailList(props: Props) {
             sortable
             key={"confirmed"}
             body={params => {
-              const resp = params["confirmed?"] ? <i className="pi pi-check"></i> : null;
+              const resp = params["confirmed?"] ? (
+                <i className="pi pi-check" />
+              ) : null;
               return resp;
             }}
           />

@@ -143,4 +143,4 @@ export default function Logo(props: Props) {
       </g>
     </svg>
   );
-  }
+}

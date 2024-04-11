@@ -10,7 +10,7 @@ export default function ReportingAdmin(props) {
   const { t, i18n } = useTranslation(category);
 
   return (
-    <Panel header={t('instructions')}>
+    <Panel header={t("instructions")}>
       <ChartContainer unitOfAnalysis="group" />
     </Panel>
   );

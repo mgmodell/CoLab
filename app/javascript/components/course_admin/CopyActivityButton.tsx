@@ -79,7 +79,7 @@ export default function CopyActivityButton(props: Props) {
                 })
                 .then(response => {
                   const data = response.data;
-                  console.log( data );
+                  console.log(data);
                   props.addMessagesFunc(data.messages);
                   if (Boolean(props.itemUpdateFunc)) {
                     props.itemUpdateFunc();
@@ -92,7 +92,7 @@ export default function CopyActivityButton(props: Props) {
                 })
                 .finally(() => {
                   dispatch(endTask("copying_course"));
-                })
+                });
             }}
           >
             {t("copy_btn_txt")}

@@ -6,7 +6,12 @@ import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
@@ -125,7 +130,7 @@ export default function CandidateListEntry(props: Props) {
       })
       .then(response => {
         const data = response.data;
-        console.log("data.messages", data );
+        console.log("data.messages", data);
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -141,7 +146,7 @@ export default function CandidateListEntry(props: Props) {
         } else {
           data.messages.forEach(message => {
             dispatch(addMessage(message, new Date(), Priorities.ERROR));
-          } );
+          });
         }
       })
       .catch(error => {
@@ -149,7 +154,7 @@ export default function CandidateListEntry(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      } ) ;
+      });
   };
 
   useEffect(() => {
@@ -161,9 +166,7 @@ export default function CandidateListEntry(props: Props) {
   useEffect(() => setDirty(true), [candidates]);
 
   const saveButton = dirty ? (
-    <Button onClick={saveCandidateList}>
-      Save Candidates
-    </Button>
+    <Button onClick={saveCandidateList}>Save Candidates</Button>
   ) : null;
 
   const colabResponse = decision => {
@@ -238,66 +241,59 @@ export default function CandidateListEntry(props: Props) {
     <Panel>
       <Container>
         <Row>
-        <Col xs={12} sm={3}>
-          <span>{t("topic")}</span>
-        </Col>
-        <Col xs={12} sm={9}>
-          <span>{topic}</span>
-        </Col>
-        <Col xs={12} sm={3}>
-          <span>{t("description")}</span>
-        </Col>
-        <Col xs={12} sm={9}>
-          <span>{parse(description)}</span>
-        </Col>
-        <Col xs={12} sm={3}>
-          <span>For</span>
-        </Col>
-        <Col xs={12} sm={9}>
-          <span>{user.name}</span>
-        </Col>
-        <hr />
-        <Col xs={12}>
-          {groupComponent}
-        </Col>
-        {candidates.map((candidate, index) => {
-          return (
-            <React.Fragment key={index}>
-              <Col xs={12} sm={3}>
-                <span className="p-float-label">
-                  <InputText
-                    id={`term_${index}`}
-                    onChange={event => updateTerm(event, index)}
-                    value={candidate.term}
+          <Col xs={12} sm={3}>
+            <span>{t("topic")}</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{topic}</span>
+          </Col>
+          <Col xs={12} sm={3}>
+            <span>{t("description")}</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{parse(description)}</span>
+          </Col>
+          <Col xs={12} sm={3}>
+            <span>For</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{user.name}</span>
+          </Col>
+          <hr />
+          <Col xs={12}>{groupComponent}</Col>
+          {candidates.map((candidate, index) => {
+            return (
+              <React.Fragment key={index}>
+                <Col xs={12} sm={3}>
+                  <span className="p-float-label">
+                    <InputText
+                      id={`term_${index}`}
+                      onChange={event => updateTerm(event, index)}
+                      value={candidate.term}
                     />
-                  <label htmlFor={`term_${index}`}>Term</label>
+                    <label htmlFor={`term_${index}`}>Term</label>
                   </span>
-              </Col>
-              <Col xs={12} sm={9}>
-                <span className="p-float-label">
-                <InputTextarea
-                  width="90%"
-                  id={`definition_${index}`}
-                  onChange={event => updateDefinition(event, index)}
-                  value={candidate.definition}
-                  autoResize
-                />
-                <label htmlFor={`definition_${index}`}>Definition</label>
-                </span>
-              </Col>
-            </React.Fragment>
-          );
-        })}
-
+                </Col>
+                <Col xs={12} sm={9}>
+                  <span className="p-float-label">
+                    <InputTextarea
+                      width="90%"
+                      id={`definition_${index}`}
+                      onChange={event => updateDefinition(event, index)}
+                      value={candidate.definition}
+                      autoResize
+                    />
+                    <label htmlFor={`definition_${index}`}>Definition</label>
+                  </span>
+                </Col>
+              </React.Fragment>
+            );
+          })}
         </Row>
       </Container>
       {saveButton}
     </Panel>
   );
 
-  return (
-    <Panel>
-      {detailsComponent}
-    </Panel>
-  );
+  return <Panel>{detailsComponent}</Panel>;
 }

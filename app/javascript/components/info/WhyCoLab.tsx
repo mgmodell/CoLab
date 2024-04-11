@@ -17,8 +17,8 @@ type Props = {
 };
 
 export default function WhyCoLab(props: Props) {
-  const category = 'intro';
-  const { t } = useTranslation( category);
+  const category = "intro";
+  const { t } = useTranslation(category);
 
   const viewBox = [0, 0, 400, 225].join(" ");
 
@@ -42,11 +42,11 @@ export default function WhyCoLab(props: Props) {
   }));
 
   const titles = [
-    <p >{t('why_slides.captions.one')}</p>,
-    <p >{t('why_slides.captions.two')}</p>,
-    <p >{t('why_slides.captions.three')}</p>,
-    <p >{t('why_slides.captions.four')}</p>,
-    <p >{t('why_slides.captions.five')}</p>,
+    <p>{t("why_slides.captions.one")}</p>,
+    <p>{t("why_slides.captions.two")}</p>,
+    <p>{t("why_slides.captions.three")}</p>,
+    <p>{t("why_slides.captions.four")}</p>,
+    <p>{t("why_slides.captions.five")}</p>,
     <Container
       style={{
         color: "azure",
@@ -483,12 +483,16 @@ export default function WhyCoLab(props: Props) {
     const handleBrowserNav = (e: PopStateEvent) => {
       const scenePath = location.pathname.split("/");
 
-      if (scenePath[scenePath.length - 1] === "why" && location.hash.length > 0 ) {
-        const targetScene =  location.hash.length > 1 ? parseInt(location.hash.substring(1)) : 0;
-        setScene( targetScene );
+      if (
+        scenePath[scenePath.length - 1] === "why" &&
+        location.hash.length > 0
+      ) {
+        const targetScene =
+          location.hash.length > 1 ? parseInt(location.hash.substring(1)) : 0;
+        setScene(targetScene);
       }
     };
-    window.addEventListener('popstate', handleBrowserNav);
+    window.addEventListener("popstate", handleBrowserNav);
 
     if (location.hash.length < 1) {
       setScene(0);
@@ -497,8 +501,8 @@ export default function WhyCoLab(props: Props) {
     }
 
     return () => {
-      window.removeEventListener('popstate', handleBrowserNav);
-    }
+      window.removeEventListener("popstate", handleBrowserNav);
+    };
   }, []);
 
   curNav.push(
@@ -521,8 +525,9 @@ export default function WhyCoLab(props: Props) {
       />
       <animated.polyline
         points={`${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY -
-          NavSpecs.dotRad} ${rightArrowLoc},${NavSpecs.centerY
-          } ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY +
+          NavSpecs.dotRad} ${rightArrowLoc},${
+          NavSpecs.centerY
+        } ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY +
           NavSpecs.dotRad}`}
         x1={rightArrowLoc}
         y1={NavSpecs.centerY}
@@ -624,9 +629,7 @@ export default function WhyCoLab(props: Props) {
         x={titleSpring.x}
         y={titleSpring.y}
       >
-        <div className="intro">
-          {titles[curScene]}
-        </div>
+        <div className="intro">{titles[curScene]}</div>
       </EmbeddedHTMLInSVG>
       {curNav}
     </svg>

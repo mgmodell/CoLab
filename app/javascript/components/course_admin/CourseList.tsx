@@ -12,7 +12,12 @@ import { DataTable } from "primereact/datatable";
 
 import CopyActivityButton from "./CopyActivityButton";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
@@ -81,9 +86,9 @@ export default function CourseList(props) {
 
   const postNewMessage = msgs => {
     const priority = msgs.length > 1 ? Priorities.INFO : Priorities.ERROR;
-    Object.keys( msgs ).forEach(key => {
+    Object.keys(msgs).forEach(key => {
       dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
-    })
+    });
   };
 
   const dataTable = (

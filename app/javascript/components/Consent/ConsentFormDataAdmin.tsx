@@ -42,16 +42,12 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
-  const now = new Date()
-  const [consentFormStartDate, setConsentFormStartDate] = useState(
-    now
-  );
-  const [consentFormEndDate, setConsentFormEndDate] = useState(
-    () =>{
-      now.setFullYear(now.getFullYear() + 1);
-      return now;
-    }
-  );
+  const now = new Date();
+  const [consentFormStartDate, setConsentFormStartDate] = useState(now);
+  const [consentFormEndDate, setConsentFormEndDate] = useState(() => {
+    now.setFullYear(now.getFullYear() + 1);
+    return now;
+  });
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
   const [consentFormDoc, setConsentFormDoc] = useState(null);
@@ -84,10 +80,10 @@ export default function ConsentFormDataAdmin(props) {
         setConsentFormName(consentForm.name || "");
         setConsentFormActive(consentForm.active || false);
 
-        var receivedDate = new Date( Date.parse(consentForm.start_date) );
+        var receivedDate = new Date(Date.parse(consentForm.start_date));
         setConsentFormStartDate(receivedDate);
 
-        receivedDate = new Date( Date.parse(consentForm.end_date) );
+        receivedDate = new Date(Date.parse(consentForm.end_date));
         setConsentFormEndDate(receivedDate);
 
         setConsentFormFormTextEn(consentForm.form_text_en || "");
@@ -137,9 +133,9 @@ export default function ConsentFormDataAdmin(props) {
           setConsentFormName(consentForm.name);
 
           setConsentFormActive(consentForm.active || false);
-          var receivedDate = new Date( Date.parse(consentForm.start_date) );
+          var receivedDate = new Date(Date.parse(consentForm.start_date));
           setConsentFormStartDate(receivedDate);
-          var receivedDate = new Date( Date.parse(consentForm.end_date) );
+          var receivedDate = new Date(Date.parse(consentForm.end_date));
           setConsentFormEndDate(receivedDate);
 
           setConsentFormFormTextEn(consentForm.form_text_en || "");
@@ -184,52 +180,49 @@ export default function ConsentFormDataAdmin(props) {
     <Panel>
       <Container>
         <Row>
-
           <Col xs={12}>
             <span className="p-float-label">
-            <InputText
-              id='consent_form-name'
-              itemID="consent_form-name"
-              value={consentFormName}
-              onChange={event => setConsentFormName(event.target.value)}
+              <InputText
+                id="consent_form-name"
+                itemID="consent_form-name"
+                value={consentFormName}
+                onChange={event => setConsentFormName(event.target.value)}
               />
-              <label htmlFor="consent_form-name">{t('name')}</label>
+              <label htmlFor="consent_form-name">{t("name")}</label>
             </span>
-
           </Col>
           <Col xs={12} sm={5}>
             <span className="p-float-label">
               <Calendar
-                id='consent_form_dates'
+                id="consent_form_dates"
                 inputId="consent_form_dates"
                 name="consent_form_dates"
                 value={[consentFormStartDate, consentFormEndDate]}
-                onChange={(event) => {
+                onChange={event => {
                   const changeTo = event.value;
                   if (null != changeTo && changeTo.length > 1) {
                     setConsentFormStartDate(changeTo[0]);
                     setConsentFormEndDate(changeTo[1]);
-
                   }
                 }}
                 selectionMode="range"
                 showIcon={true}
               />
-              <label htmlFor="consent_form_dates">{t('study_dates')}</label>
+              <label htmlFor="consent_form_dates">{t("study_dates")}</label>
             </span>
           </Col>
           <Col xs={12} sm={2}>
             <InputSwitch
               checked={consentFormActive}
               onChange={() => setConsentFormActive(!consentFormActive)}
-              id='active'
+              id="active"
               name="active"
               inputId="active"
               itemID="active"
             />
-            <label htmlFor="active">{t('active')}</label>
+            <label htmlFor="active">{t("active")}</label>
           </Col>
-      </Row>
+        </Row>
       </Container>
       <TabView>
         <TabPanel header="English">
@@ -266,9 +259,7 @@ export default function ConsentFormDataAdmin(props) {
           onChange={handleFileSelect}
           type="file"
         />
-        <Button >
-          {t("edit.file_select_btn")}
-        </Button>
+        <Button>{t("edit.file_select_btn")}</Button>
       </label>
       <br />
       <br />
@@ -276,9 +267,5 @@ export default function ConsentFormDataAdmin(props) {
     </Panel>
   );
 
-  return (
-    <Panel>
-      {detailsComponent}
-    </Panel>
-  );
+  return <Panel>{detailsComponent}</Panel>;
 }

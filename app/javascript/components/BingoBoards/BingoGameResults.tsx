@@ -14,7 +14,7 @@ interface ICandidate {
   term: string;
   feedback: string;
   feedback_id: number;
-};
+}
 
 type Props = {
   open: boolean;
@@ -24,7 +24,6 @@ type Props = {
   close: Function;
   candidates: Array<ICandidate>;
 };
-
 
 export default function BingoGameResults(props: Props) {
   const [curTab, setCurTab] = useState(0);
@@ -37,8 +36,8 @@ export default function BingoGameResults(props: Props) {
         <Container>
           <Row>
             <Col xs={12}>
-            <b>Score: </b>
-            {null == props.score ? "unscored" : props.score}
+              <b>Score: </b>
+              {null == props.score ? "unscored" : props.score}
             </Col>
           </Row>
 
@@ -60,26 +59,32 @@ export default function BingoGameResults(props: Props) {
 
   return (
     <Dialog
-    header={
-      <span>
-        Results for {props.student}
-      </span>
-    }
-    visible={props.open}
-    onHide={() => props.close()}
-    footer={
-        <Button onClick={(event) => {props.close()}}>Done</Button>
-    }
+      header={<span>Results for {props.student}</span>}
+      visible={props.open}
+      onHide={() => props.close()}
+      footer={
+        <Button
+          onClick={event => {
+            props.close();
+          }}
+        >
+          Done
+        </Button>
+      }
     >
-
-        <TabView activeIndex={curTab} onTabChange={(event)=>{setCurTab(event.index)}}>
-          <TabPanel header={"Scored Results"}>
-            {renderBoard(props.board)}
-          </TabPanel>
-          <TabPanel header={"Answer Key"}>
-            <ScoredGameDataTable candidates={props.candidates} />
-          </TabPanel>
-        </TabView>
+      <TabView
+        activeIndex={curTab}
+        onTabChange={event => {
+          setCurTab(event.index);
+        }}
+      >
+        <TabPanel header={"Scored Results"}>
+          {renderBoard(props.board)}
+        </TabPanel>
+        <TabPanel header={"Answer Key"}>
+          <ScoredGameDataTable candidates={props.candidates} />
+        </TabPanel>
+      </TabView>
     </Dialog>
   );
 }

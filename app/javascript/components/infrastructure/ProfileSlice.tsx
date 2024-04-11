@@ -41,12 +41,12 @@ interface IUser {
   impairment_motor: boolean;
   impairment_cognitive: boolean;
   impairment_other: boolean;
-};
+}
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
   user: IUser;
-};
+}
 
 const initialState = {
   lastRetrieved: null,
@@ -69,12 +69,12 @@ const initialState = {
     anonymize: false,
 
     gender_id: "__",
-    date_of_birth: '',
+    date_of_birth: "",
     home_state_id: "",
     primary_language_id: "",
 
     school_id: "",
-    started_school: '',
+    started_school: "",
     cip_code_id: "",
 
     impairment_visual: false,
@@ -121,7 +121,6 @@ export const setLocalLanguage = createAsyncThunk(
     const language = getState().context.lookups.languages.find(
       lang => lang.id === language_id
     );
-
 
     i18n.loadLanguages(language.code);
     i18n.changeLanguage(language.code);
@@ -216,7 +215,7 @@ export const {
   setAnonymize,
   setProfileTheme,
   setProfileTimezone,
-  clearProfile,
+  clearProfile
 } = actions;
 export default reducer;
-export { IUser}
+export { IUser };

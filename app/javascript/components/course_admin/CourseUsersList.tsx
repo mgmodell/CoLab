@@ -52,7 +52,7 @@ interface IStudentData {
   last_name: string;
   reinvite_link: string;
   status: UserListType;
-};
+}
 
 type Props = {
   courseId: number;
@@ -131,17 +131,17 @@ export default function CourseUsersList(props: Props) {
       case "undetermined":
       case "invited_student":
       case "requesting_student":
-        icon = 'pi pi-question-circle' ;
+        icon = "pi pi-question-circle";
         break;
       case "dropped":
       case "rejected_student":
       case "dropped_student":
       case "declined_student":
-        icon = 'pi pi-ban';
+        icon = "pi pi-ban";
         break;
       case "instructor":
       case "assistant":
-        icon = 'pi pi-users'
+        icon = "pi pi-users";
         break;
       default:
         console.log("status not found: " + status);
@@ -300,7 +300,7 @@ export default function CourseUsersList(props: Props) {
                     <Button
                       tooltip={t("re-send_invitation")}
                       aria-label={t("re-send_invitation")}
-                      icon='pi pi-envelope'
+                      icon="pi pi-envelope"
                       onClick={event => {
                         dispatch(startTask("inviting"));
                         axios
@@ -335,7 +335,7 @@ export default function CourseUsersList(props: Props) {
                   btns.push(
                     <Button
                       tooltip={acceptLbl}
-                      icon='pi pi-check'
+                      icon="pi pi-check"
                       aria-label={acceptLbl}
                       onClick={event => {
                         dispatch(startTask("accepting_student"));
@@ -361,7 +361,7 @@ export default function CourseUsersList(props: Props) {
                     <Button
                       tooltip={lbl2}
                       aria-label={lbl2}
-                      icon='pi pi-times-circle'
+                      icon="pi pi-times-circle"
                       onClick={event => {
                         dispatch(startTask("decline_student"));
                         axios
@@ -390,7 +390,7 @@ export default function CourseUsersList(props: Props) {
                   btns.push(
                     <Button
                       tooltip={lbl}
-                      icon='pi pi-user-plus'
+                      icon="pi pi-user-plus"
                       aria-label={lbl}
                       onClick={event => {
                         dispatch(startTask("re-adding"));

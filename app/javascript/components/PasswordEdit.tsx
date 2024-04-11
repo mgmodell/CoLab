@@ -103,7 +103,6 @@ export default function PasswordEdit(props) {
             </span>
           </Col>
         </Row>
-
       </Container>
     </Panel>
   );

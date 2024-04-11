@@ -118,19 +118,16 @@ export default function CandidatesReviewTable(props: Props) {
 
     let filtered = concepts
       .filter(x => "" != x.concept.name)
-      .map(x =>
-        x.concept.name.toLowerCase()
-      );
-
+      .map(x => x.concept.name.toLowerCase());
 
     const unique_concepts = new Set(filtered).size;
     //Now for just the acceptable ones
     filtered = concepts
       .filter(
-        x => "" != x.concept.name &&
+        x =>
+          "" != x.concept.name &&
           "acceptable" ==
-          getById(feedbackOptions, x.candidate_feedback_id).critique
-
+            getById(feedbackOptions, x.candidate_feedback_id).critique
       )
       .map(x => x.concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
@@ -313,9 +310,7 @@ export default function CandidatesReviewTable(props: Props) {
             </Row>
             <Row>
               <Col sm={3}>{t("description")}:</Col>
-              <Col sm={9}>
-                {parse(bingoGame.description)}
-              </Col>
+              <Col sm={9}>{parse(bingoGame.description)}</Col>
             </Row>
           </Container>
         </Panel>
@@ -345,7 +340,8 @@ export default function CandidatesReviewTable(props: Props) {
         <Column
           className="content-table-data"
           field="definition"
-          header={t("review.definition_col")} />
+          header={t("review.definition_col")}
+        />
         <Column
           field="candidate_feedback_id"
           header={t("review.feedback_col")}

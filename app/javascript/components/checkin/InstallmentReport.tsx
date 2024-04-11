@@ -6,7 +6,12 @@ import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
@@ -23,11 +28,11 @@ interface IContribution {
   factorId: number;
   name: string;
   value: number;
-};
+}
 
 interface Props {
   rootPath?: string;
-};
+}
 
 export default function InstallmentReport(props: Props) {
   const endpointSet = "installment";
@@ -37,9 +42,7 @@ export default function InstallmentReport(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const debug = useTypedSelector(
-    state => state.context.config.debug
-  );
+  const debug = useTypedSelector(state => state.context.config.debug);
   const user = useTypedSelector(state => state.profile.user);
   const navigate = useNavigate();
 
@@ -203,7 +206,9 @@ export default function InstallmentReport(props: Props) {
           navigate(`..`);
         }
         if (data.messages.status !== undefined) {
-          dispatch(addMessage(data.messages.status, new Date(), Priorities.ERROR));
+          dispatch(
+            addMessage(data.messages.status, new Date(), Priorities.ERROR)
+          );
         }
         setDirty(false);
       })
@@ -212,7 +217,7 @@ export default function InstallmentReport(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-      })
+      });
   };
 
   return (
@@ -256,9 +261,7 @@ export default function InstallmentReport(props: Props) {
                     </Row>
                     {contributions[sliceId].map((contrib, index) => {
                       return (
-                        <Row
-                          key={"key_fs_" + sliceId + "_c_" + contrib.userId}
-                        >
+                        <Row key={"key_fs_" + sliceId + "_c_" + contrib.userId}>
                           <Col xs={12} md={3}>
                             <h5>{contrib.name}</h5>
                           </Col>
@@ -271,7 +274,15 @@ export default function InstallmentReport(props: Props) {
                               max={sliderSum}
                               min={0}
                               onChange={event => {
-                                updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, event.value));
+                                updateSlice(
+                                  sliceId,
+                                  distributeChange(
+                                    contributions[sliceId],
+                                    sliderSum,
+                                    index,
+                                    event.value
+                                  )
+                                );
                               }}
                             />
                             {debug ? (
@@ -280,18 +291,28 @@ export default function InstallmentReport(props: Props) {
                                 data-contributor-id={contrib.userId}
                                 data-factor-id={sliceId}
                                 value={contrib.value}
-                                id={"debug_fs_" + contrib.userId + "_c_" + contributions[sliceId].userId}
+                                id={
+                                  "debug_fs_" +
+                                  contrib.userId +
+                                  "_c_" +
+                                  contributions[sliceId].userId
+                                }
                                 onChange={event => {
-                                  updateSlice(sliceId, distributeChange(contributions[sliceId], sliderSum, index, parseInt(event.target.value)));
+                                  updateSlice(
+                                    sliceId,
+                                    distributeChange(
+                                      contributions[sliceId],
+                                      sliderSum,
+                                      index,
+                                      parseInt(event.target.value)
+                                    )
+                                  );
                                 }}
                               />
                             ) : null}
-
                           </Col>
                         </Row>
-
-                      )
-
+                      );
                     })}
                   </Container>
                 </AccordionTab>
@@ -312,9 +333,7 @@ export default function InstallmentReport(props: Props) {
                 autoResize={true}
                 onChange={updateComments}
               />
-              <label htmlFor="Comments">
-                {t("comment_input_prompt")}
-              </label>
+              <label htmlFor="Comments">{t("comment_input_prompt")}</label>
             </span>
           </AccordionTab>
         </Accordion>
@@ -329,9 +348,8 @@ export default function InstallmentReport(props: Props) {
           opacity: 0,
           border: "0px"
         }}
-      >
-      </div>
+      />
     </Panel>
   );
 }
-export { IContribution }
+export { IContribution };

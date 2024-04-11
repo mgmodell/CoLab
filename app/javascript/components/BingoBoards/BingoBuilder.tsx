@@ -8,7 +8,12 @@ import ScoredGameDataTable from "./ScoredGameDataTable";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
@@ -30,7 +35,7 @@ interface IBingoCell {
     id: number;
     name: string;
   };
-};
+}
 
 interface IBingoGame {
   id?: number;
@@ -38,13 +43,13 @@ interface IBingoGame {
   description?: string;
   size: number;
   end_date?: Date;
-};
+}
 export interface IBingoBoard {
   initialised: boolean;
   bingo_cells: IBingoCell[];
   iteration: number;
   bingo_game: IBingoGame;
-};
+}
 
 export default function BingoBuilder(props: Props) {
   const category = "candidate_results";
@@ -63,14 +68,7 @@ export default function BingoBuilder(props: Props) {
 
   // For the word cloud
   const [foundWords, setFoundWords] = useState([]);
-  const colors = [
-    '#477efd',
-    '#74d6fd',
-    '#3d5ef9',
-    '#2b378b',
-    '#1f2255'
-  ]
-
+  const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
 
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -211,17 +209,19 @@ export default function BingoBuilder(props: Props) {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
-          dispatch( addMessage( t('save.success'), new Date(), Priorities.INFO));
+          dispatch(addMessage(t("save.success"), new Date(), Priorities.INFO));
           setBoard(data);
         } else if ((data.id = -42)) {
           board.bingo_cells = board.bingo_cells_attributes;
           board.id = -42;
           board.iteration = 0;
-          dispatch( addMessage( t('save.demo_success'), new Date(), Priorities.INFO));
+          dispatch(
+            addMessage(t("save.demo_success"), new Date(), Priorities.INFO)
+          );
           setBoard(board);
         } else {
           board.bingo_cells = board.bingo_cells_attributes;
-          dispatch( addMessage( t('save.failure'), new Date(), Priorities.ERROR));
+          dispatch(addMessage(t("save.failure"), new Date(), Priorities.ERROR));
           setBoard(board);
           setBoard(board);
         }
@@ -262,8 +262,8 @@ export default function BingoBuilder(props: Props) {
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-      (null !== board.bingo_game.end_date &&
-        new Date(board.bingo_game.end_date) < new Date()) ? (
+    (null !== board.bingo_game.end_date &&
+      new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
         <a onClick={() => getPrintableBoard()}>{t("download_board_lnk")}</a>{" "}
         {t("play_msg")}
@@ -274,9 +274,7 @@ export default function BingoBuilder(props: Props) {
 
   const workSheetInstr = board.practicable ? (
     <li key={"practice"}>
-      <a onClick={() => getWorksheet()}>
-        {t('tabs.builder.print_step')}
-      </a>
+      <a onClick={() => getWorksheet()}>{t("tabs.builder.print_step")}</a>
     </li>
   ) : (
     <li key={"practice"}>{t("not_enough_entries_msg")}</li>
@@ -285,7 +283,7 @@ export default function BingoBuilder(props: Props) {
   const playableInstr = board.playable ? (
     <React.Fragment>
       <li key={"generate"}>
-        <a onClick={() => randomizeTiles()}>{t('tabs.builder.regenerate')}</a>
+        <a onClick={() => randomizeTiles()}>{t("tabs.builder.regenerate")}</a>
       </li>
       <li key={"save_board"}>{saveBtn()}</li>
       <li key={"print_board"}>{printBtn}</li>
@@ -303,7 +301,7 @@ export default function BingoBuilder(props: Props) {
       </div>
       <hr />
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
-        <TabPanel header={t('tabs.builder.builder_lbl')} >
+        <TabPanel header={t("tabs.builder.builder_lbl")}>
           <Panel>
             <br />
             <ol>
@@ -315,26 +313,26 @@ export default function BingoBuilder(props: Props) {
                 <BingoBoard board={board} />
               </div>
             ) : null}
-            <h3>{t('tabs.builder.words_found')}</h3>
-            <hr></hr>
+            <h3>{t("tabs.builder.words_found")}</h3>
+            <hr />
             <ConceptChips concepts={concepts} />
           </Panel>
         </TabPanel>
-        <TabPanel header={t('tabs.performance')}>
+        <TabPanel header={t("tabs.performance")}>
           <Panel>
             {null != candidateList && (
               <>
                 <h3>{t("performance_lbl")}:</h3>
-                <span id="performance">{candidateList.cached_performance} / 100</span>
+                <span id="performance">
+                  {candidateList.cached_performance} / 100
+                </span>
               </>
             )}
-            <ScoredGameDataTable
-              candidates={candidates}
-            />
+            <ScoredGameDataTable candidates={candidates} />
           </Panel>
         </TabPanel>
         <TabPanel
-          header={t('tabs.worksheet')}
+          header={t("tabs.worksheet")}
           disabled={
             !board.practicable ||
             null == board.worksheet ||
@@ -350,7 +348,7 @@ export default function BingoBuilder(props: Props) {
                 <br />
               </p>
               {null != board.worksheet.result_img &&
-                "" != board.worksheet.result_img ? (
+              "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
             </Panel>
@@ -358,15 +356,13 @@ export default function BingoBuilder(props: Props) {
             t("no_worksheet_msg")
           )}
         </TabPanel>
-        <TabPanel
-          header={t('tabs.word_cloud')}
-        >
+        <TabPanel header={t("tabs.word_cloud")}>
           <ResponsesWordCloud
             width={400}
             height={400}
             words={foundWords}
             colors={colors}
-            />
+          />
         </TabPanel>
       </TabView>
     </Panel>

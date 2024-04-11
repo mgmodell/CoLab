@@ -47,7 +47,7 @@ export default function MainMenu(props: Props) {
   enum MENUS {
     ADMIN = "admin",
     ABOUT = "about"
-  };
+  }
 
   const toggleMenu = (menu: MENUS) => {
     switch (menu) {
@@ -64,10 +64,9 @@ export default function MainMenu(props: Props) {
         setAdminOpen(false);
         break;
     }
-  }
+  };
 
   const dispatch = useDispatch();
-
 
   const navTo = url => {
     setMenuOpen(false);
@@ -193,7 +192,7 @@ export default function MainMenu(props: Props) {
           navTo(props.moreInfoUrl);
           //toggleMenu(MENUS.ABOUT);
         }
-      },
+      }
       /*
       {
         separator: true
@@ -215,7 +214,6 @@ export default function MainMenu(props: Props) {
 
     return builtMenu;
   };
-
 
   //  const menuItems = useMemo(() => {buildMyMenu()}, [user, isLoggedIn, i18n.language]);
 

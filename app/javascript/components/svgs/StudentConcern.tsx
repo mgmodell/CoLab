@@ -11,7 +11,7 @@ type Props = {
   framed?: boolean;
 };
 
-export default function StudentConcern(props : Props) {
+export default function StudentConcern(props: Props) {
   const mounted = useRef(false);
   const framed = props.framed === undefined ? true : props.framed;
 

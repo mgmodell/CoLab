@@ -106,7 +106,7 @@ export default function ScoredGameDataTable(props: Props) {
           filter
           key="credit"
         />
-        ) : null}
+      ) : null}
     </DataTable>
   );
 }
