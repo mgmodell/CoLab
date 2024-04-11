@@ -2,38 +2,36 @@
 
 require 'chronic'
 require 'faker'
-Given 'the project started {string} and ends {string}' do |start_date, end_date|
-  @project.start_date = Chronic.parse(start_date)
-  @project.end_date = Chronic.parse(end_date)
+Given 'the project started {string} and ends {string}' do | start_date, end_date |
+  @project.start_date = Chronic.parse( start_date )
+  @project.end_date = Chronic.parse( end_date )
   @project.save
 end
 
-Given "the user's school is {string}" do |school_name|
+Given "the user's school is {string}" do | school_name |
   school = School.find_by name: school_name
   @user.school = school
   @user.save
 end
 
-Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
+Then 'the user sets the start date to {string} and the end date to {string}' do | start_date, end_date |
+  datefield = find( :xpath, "//span[@id='course_dates']/input" )
+  datefield.click
 
-    datefield = find( :xpath, "//span[@id='course_dates']/input" )
-    datefield.click
+  send_keys :escape
 
-    send_keys :escape
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
 
-    send_keys [:command, 'a'], :backspace
-    send_keys [:control, 'a'], :backspace
+  dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
 
-    dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
-
-    datefield.fill_in with: dates_string
-
+  datefield.fill_in with: dates_string
 end
 
-Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
+Then 'the timezone {string} {string}' do | is_or_isnt, timezone |
   field_lbl = 'Time Zone'
-  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
-  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
+  lbl = find( :xpath, "//label[text()='#{field_lbl}']" )
+  elem = find( :xpath, "//*[@id='#{lbl[:for]}']" )
 
   if 'is' == is_or_isnt
     elem.text.should eq timezone
@@ -42,13 +40,13 @@ Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
   end
 end
 
-Then 'the user sets the course timezone to {string}' do |timezone|
+Then 'the user sets the course timezone to {string}' do | timezone |
   field_lbl = 'Time Zone'
-  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
-  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
+  lbl = find( :xpath, "//label[text()='#{field_lbl}']" )
+  elem = find( :xpath, "//*[@id='#{lbl[:for]}']" )
   elem.click
 
-  menu_item = find(:xpath, "//li[.='#{timezone}']")
+  menu_item = find( :xpath, "//li[.='#{timezone}']" )
   menu_item.click
 end
 
@@ -57,7 +55,7 @@ Then 'retrieve the latest course from the db' do
   @course = Course.last
 end
 
-Then 'the course {string} field is {string}' do |field_name, value|
+Then 'the course {string} field is {string}' do | field_name, value |
   case field_name.downcase
   when 'name'
     @course.name.should eq value
@@ -72,21 +70,21 @@ Then 'the course {string} field is {string}' do |field_name, value|
   end
 end
 
-Then 'the course start date is {string} and the end date is {string}' do |start_date, end_date|
-  course_tz = ActiveSupport::TimeZone.new(@course.timezone)
+Then 'the course start date is {string} and the end date is {string}' do | start_date, end_date |
+  course_tz = ActiveSupport::TimeZone.new( @course.timezone )
 
-  test_date = Chronic.parse(start_date)
-                     .getlocal(course_tz.utc_offset)
+  test_date = Chronic.parse( start_date )
+                     .getlocal( course_tz.utc_offset )
                      .beginning_of_day
-  @course.start_date.change(sec: 0).should eq test_date.change(sec: 0)
+  @course.start_date.change( sec: 0 ).should eq test_date.change( sec: 0 )
 
-  test_date = Chronic.parse(end_date)
-                     .getlocal(course_tz.utc_offset)
+  test_date = Chronic.parse( end_date )
+                     .getlocal( course_tz.utc_offset )
                      .end_of_day
-  @course.end_date.change(sec: 0).should eq test_date.change(sec: 0)
+  @course.end_date.change( sec: 0 ).should eq test_date.change( sec: 0 )
 end
 
-Then 'the course {string} is {string}' do |field_name, value|
+Then 'the course {string} is {string}' do | field_name, value |
   case field_name.downcase
   when 'name'
     @course.name = value
@@ -103,11 +101,11 @@ Then 'the course {string} is {string}' do |field_name, value|
   @course.save
 end
 
-Then 'the user does not see a {string} link' do |link_name|
-  page.has_link?(link_name).should eq false
+Then 'the user does not see a {string} link' do | link_name |
+  page.has_link?( link_name ).should eq false
 end
 
-Given 'the experience {string} is {string}' do |field_name, value|
+Given 'the experience {string} is {string}' do | field_name, value |
   case field_name.downcase
   when 'name'
     @experience.name = value
@@ -118,7 +116,7 @@ Given 'the experience {string} is {string}' do |field_name, value|
   @experience.save
 end
 
-Given 'the Bingo! {string} is {string}' do |field_name, value|
+Given 'the Bingo! {string} is {string}' do | field_name, value |
   case field_name.downcase
   when 'description'
     @bingo.description = value
@@ -133,7 +131,7 @@ Given 'the Bingo! {string} is {string}' do |field_name, value|
   @bingo.save
 end
 
-Given 'the Bingo! {string} is {int}' do |field_name, value|
+Given 'the Bingo! {string} is {int}' do | field_name, value |
   case field_name.downcase
   when 'terms count'
     @bingo.individual_count = value
@@ -144,7 +142,7 @@ Given 'the Bingo! {string} is {int}' do |field_name, value|
   @bingo.save
 end
 
-Given 'the Bingo! prep days is {int}' do |prep_days|
+Given 'the Bingo! prep days is {int}' do | prep_days |
   @bingo.lead_time = prep_days
   @bingo.save
 end
@@ -154,7 +152,7 @@ Given "the Bingo! project is the course's project" do
   @bingo.save
 end
 
-Given 'the Bingo! percent discount is {int}' do |group_discount|
+Given 'the Bingo! percent discount is {int}' do | group_discount |
   @bingo.group_discount = group_discount
   @bingo.save
 end
@@ -164,25 +162,25 @@ Given 'the Bingo! is active' do
   @bingo.save
 end
 
-Then 'set the new course start date to {string}' do |new_date|
-  label = find(:xpath, "//label[text()='New course start date?']")
-  elem = find(:xpath, "//*[@id='#{label[:for]}']/input")
+Then 'set the new course start date to {string}' do | new_date |
+  label = find( :xpath, "//label[text()='New course start date?']" )
+  elem = find( :xpath, "//*[@id='#{label[:for]}']/input" )
 
-  new_date = Chronic.parse(new_date)
+  new_date = Chronic.parse( new_date )
 
   elem.click
   elem.send_keys :escape
   elem.send_keys :backspace
-  send_keys new_date.strftime('%m/%d/%Y')
+  send_keys new_date.strftime( '%m/%d/%Y' )
   elem.send_keys :escape
 end
 
-Then 'the course has {int} instructor user' do |instructor_count|
+Then 'the course has {int} instructor user' do | instructor_count |
   @course.rosters.reload.instructor.count.should eq instructor_count
 end
 
 Then 'the user executes the copy' do
-  elem = find(:xpath, "//button[contains(.,'Make a Copy')]")
+  elem = find( :xpath, "//button[contains(.,'Make a Copy')]" )
   elem.click
 
   @orig_course = @course
@@ -193,7 +191,7 @@ Then 'the course instructor is the user' do
   @course.rosters.instructor.take.user.should eq @user
 end
 
-Then 'retrieve the {int} course {string}' do |index, activity|
+Then 'retrieve the {int} course {string}' do | index, activity |
   case activity.downcase
   when 'experience'
     @orig_experience = @experience
@@ -210,7 +208,7 @@ Then 'retrieve the {int} course {string}' do |index, activity|
   end
 end
 
-Then 'the Experience {string} is {string}' do |field, value|
+Then 'the Experience {string} is {string}' do | field, value |
   case field.downcase
   when 'name'
     @experience.name.should eq value
@@ -220,12 +218,12 @@ Then 'the Experience {string} is {string}' do |field, value|
   end
 end
 
-Then 'the {string} dates are {string} and {string}' do |activity, start_date_str, end_date_str|
-  course_tz = ActiveSupport::TimeZone.new(@course.timezone)
-  d = Chronic.parse(start_date_str)
-  start_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
-  d = Chronic.parse(end_date_str)
-  end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 59)
+Then 'the {string} dates are {string} and {string}' do | activity, start_date_str, end_date_str |
+  course_tz = ActiveSupport::TimeZone.new( @course.timezone )
+  d = Chronic.parse( start_date_str )
+  start_date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
+  d = Chronic.parse( end_date_str )
+  end_date = course_tz.local( d.year, d.month, d.day ).end_of_day.change( sec: 59 )
 
   case activity.downcase
   when 'experience'
@@ -249,7 +247,7 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
   end
 end
 
-Then 'the {string} is {string} active' do |activity, active_bool|
+Then 'the {string} is {string} active' do | activity, active_bool |
   is_active = 'is' == active_bool
 
   case activity.downcase
@@ -278,7 +276,7 @@ Then 'the new project metadata is the same as the old' do
   @project.start_dow.should eq @orig_project.start_dow
 end
 
-Then 'the project has {int} groups' do |group_count|
+Then 'the project has {int} groups' do | group_count |
   @project.groups.count.should eq group_count
 end
 
@@ -293,114 +291,114 @@ Then 'the new bingo metadata is the same as the old' do
   @bingo.group_discount.should eq @orig_bingo.group_discount
 end
 
-Then 'the user adds the {string} users {string}' do |type, addresses|
+Then 'the user adds the {string} users {string}' do | type, addresses |
   lbl = "#{type}s"
-  tab = find(:xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']")
+  tab = find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']" )
   tab.click
 
-  btn = find(:xpath, "//button[text()='Add a #{type}']")
+  btn = find( :xpath, "//button[text()='Add a #{type}']" )
   btn.click
 
-  inpt = find(:xpath, "//input[@id='addresses']")
+  inpt = find( :xpath, "//input[@id='addresses']" )
 
-  addresses = @users.map(&:email).join(', ') if 'user_list' == addresses
+  addresses = @users.map( &:email ).join( ', ' ) if 'user_list' == addresses
   inpt.click
   send_keys addresses
   # It seems that inpt.set doesn't work properly here for some reason
   # characters get eaten if I use the following:
   # inpt.set addresses
 
-  btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
+  btn = find( :xpath, "//button[contains(.,'Add #{lbl}!')]" )
   btn.click
   wait_for_render
 end
 
-Then 'the user drops the {string} users {string}' do |_type, addresses|
+Then 'the user drops the {string} users {string}' do | _type, addresses |
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
 
   wait_for_render
-  find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
-  find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+  find( :xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']" ).click
+  find_all( :xpath, "//ul[@role='listbox']/li" ).last.click
 
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
   if 'user_list' == addresses
-    @users.each do |_address|
+    @users.each do | _address |
       step 'the user enables the "Email" table view option'
       wait_for_render
-      find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
-      find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+      find( :xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']" ).click
+      find_all( :xpath, "//ul[@role='listbox']/li" ).last.click
 
       xpression = "//tr/td/a[contains(.,'#{_address.email}')]/../../td/button[@aria-label='drop student']"
-      elem = find(:xpath, xpression )
+      elem = find( :xpath, xpression )
       elem.click
-      find(:xpath,
-           "//button[text()='Drop the Student']").click
+      find( :xpath,
+            "//button[text()='Drop the Student']" ).click
       wait_for_render
     end
   else
     # Find the email
     wait_for_render
-    find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
-    find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
+    find( :xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']" ).click
+    find_all( :xpath, "//ul[@role='listbox']/li" ).last.click
 
     drop_button_xpath = "//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='drop student']"
 
-    elem = find(:xpath, drop_button_xpath) 
+    elem = find( :xpath, drop_button_xpath )
 
     elem.click
 
-    find(:xpath,
-         "//button[text()='Drop the Student']").click
+    find( :xpath,
+          "//button[text()='Drop the Student']" ).click
     wait_for_render
   end
 end
 
-Then 'there are {int} students in the course' do |count|
+Then 'there are {int} students in the course' do | count |
   wait_for_render
-  
+
   @course.rosters.students.size.should eq count
 end
 
-Then 'there are {int} enrolled students in the course' do |count|
+Then 'there are {int} enrolled students in the course' do | count |
   wait_for_render
   @course.rosters.enrolled.size.should eq count
 end
 
-Then 'there are {int} instructors in the course' do |count|
+Then 'there are {int} instructors in the course' do | count |
   @course.rosters.faculty.count.should eq count
 end
 
 Then 'the users are students' do
-  @users.each do |user|
-    @course.rosters.students.where(user_id: user.id)
+  @users.each do | user |
+    @course.rosters.students.where( user_id: user.id )
            .count.should eq 1
   end
 end
 
 Then 'the users are instructors' do
-  @users.each do |user|
-    @course.rosters.faculty.where(user_id: user.id)
+  @users.each do | user |
+    @course.rosters.faculty.where( user_id: user.id )
            .count.should eq 1
   end
 end
 
-Then('the user sees self-registration image') do
-  page.should have_xpath("//img[@alt='Registration QR Code']")
+Then( 'the user sees self-registration image' ) do
+  page.should have_xpath( "//img[@alt='Registration QR Code']" )
 end
 
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "home/course/#{@course.id}/enroll"
-  visit(self_reg_url)
-  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
+  visit( self_reg_url )
+  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?( 'http' )
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
   wait_for_render
 end
 
-Then 'the user sees {string}' do |string|
+Then 'the user sees {string}' do | string |
   wait_for_render
   page.should have_content string
 end
@@ -412,9 +410,9 @@ Then 'the user submits credentials' do
   click_link_or_button 'Log in!'
 end
 
-Given('the user has {string} the course') do |action|
+Given( 'the user has {string} the course' ) do | action |
   roster = Roster.find_by( course: @course, user: @user )
-  roster = @course.rosters.create(user: @user) if roster.nil?
+  roster = @course.rosters.create( user: @user ) if roster.nil?
   case action
   when 'declined'
     roster.declined_student!
@@ -422,13 +420,13 @@ Given('the user has {string} the course') do |action|
     roster.invited_student!
   else
     log "No '#{action}' option available"
-    expect(true).to be false
+    expect( true ).to be false
   end
   roster.save
   log roster.errors.full_messages unless roster.errors.empty?
 end
 
-Given('the course adds {int} {string} users') do |count, role|
+Given( 'the course adds {int} {string} users' ) do | count, role |
   count.times do
     user = User.new(
       first_name: Faker::Name.first_name,
@@ -437,56 +435,56 @@ Given('the course adds {int} {string} users') do |count, role|
       password_confirmation: 'password',
       email: Faker::Internet.email,
       timezone: 'UTC',
-      school: School.find(1),
+      school: School.find( 1 ),
       theme_id: 1
     )
     user.skip_confirmation!
     user.save
     log user.errors.full_messages unless user.errors.empty?
 
-    roster = @course.rosters.create(user:)
+    roster = @course.rosters.create( user: )
     case role
     when 'requesting student'
       roster.requesting_student!
     else
       log "Unsupported role: #{role}"
-      expect(true).to be false
+      expect( true ).to be false
     end
     roster.save
     log roster.errors.full_messages unless roster.errors.empty?
   end
 end
 
-Then('the user sees {int} enrollment request') do |count|
-  expect(all(:xpath, '//button[@id=\'Accept\']').size).to eq count
+Then( 'the user sees {int} enrollment request' ) do | count |
+  expect( all( :xpath, '//button[@id=\'Accept\']' ).size ).to eq count
 end
 
-Then('the user {string} {int} enrollment request') do |decision, count|
+Then( 'the user {string} {int} enrollment request' ) do | decision, count |
   action = 'approves' == decision ? 'Accept' : 'Reject'
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
-  buttons = all(:xpath, "//button[@aria-label='#{action}']")
+  buttons = all( :xpath, "//button[@aria-label='#{action}']" )
   unless buttons.size < count
 
     count.times do
-      button = all(:xpath, "//button[@aria-label='#{action}']").sample
+      button = all( :xpath, "//button[@aria-label='#{action}']" ).sample
       button.click
       waits = 0
-      until all(:xpath, "//div[@role='progressbar']").empty?
-        sleep(0.3)
+      until all( :xpath, "//div[@role='progressbar']" ).empty?
+        sleep( 0.3 )
         waits += 1
         waits.should be < 3
       end
-      sleep(0.3)
+      sleep( 0.3 )
     end
   end
 end
 
-Then('close all messages') do
+Then( 'close all messages' ) do
   ack_messages
 end
 
-Then('the user selects the {string} activity') do |activity_name|
-  find(:xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
+Then( 'the user selects the {string} activity' ) do | activity_name |
+  find( :xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
   wait_for_render
 end

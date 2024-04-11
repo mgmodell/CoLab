@@ -1,48 +1,47 @@
 # frozen_string_literal: true
 
-Then(/^user opens their profile$/) do
+Then( /^user opens their profile$/ ) do
   wait_for_render
-  find(:id, 'main-menu-button').click
-  find(:id, 'profile-menu-item').click
-  page.should have_content('Edit your profile')
+  find( :id, 'main-menu-button' ).click
+  find( :id, 'profile-menu-item' ).click
+  page.should have_content( 'Edit your profile' )
   text = "Tell us about yourself, #{@user.first_name} (optional)"
-  all(:xpath, "//div[contains(.,'#{text}')]").size.should be > 3
+  all( :xpath, "//div[contains(.,'#{text}')]" ).size.should be > 3
   # page.should have_content('Tell us about yourself, ' + @user.first_name)
-  find(:xpath, "//div[@data-pc-name='accordion']/div/div/a[contains(.,'Email settings')]").click
-  @user.emails.each do |email|
-    page.should have_content(email.email)
+  find( :xpath, "//div[@data-pc-name='accordion']/div/div/a[contains(.,'Email settings')]" ).click
+  @user.emails.each do | email |
+    page.should have_content( email.email )
   end
 end
 
-Then(/^the user sees the experience in the history$/) do
-  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
-  page.should have_content(@experience.get_name(false))
+Then( /^the user sees the experience in the history$/ ) do
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]" ).click
+  page.should have_content( @experience.get_name( false ) )
 end
 
-Then(/^user sees the Bingo! in the history$/) do
-  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
-  page.should have_content(@bingo.get_name(false))
+Then( /^user sees the Bingo! in the history$/ ) do
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]" ).click
+  page.should have_content( @bingo.get_name( false ) )
 end
 
-Then(/^user sees the assessed project in the history$/) do
+Then( /^user sees the assessed project in the history$/ ) do
   ack_messages
-  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]" ).click
   wait_for_render
-  page.should have_content(@project.get_name(false))
+  page.should have_content( @project.get_name( false ) )
 end
 
-Then(/^user sees the assignment in the history$/) do
-  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]").click
+Then( /^user sees the assignment in the history$/ ) do
+  find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]" ).click
   wait_for_render
-  page.should have_content(@assignment.get_name(false))
+  page.should have_content( @assignment.get_name( false ) )
 end
 
-When(/^the user logs in$/) do
+When( /^the user logs in$/ ) do
   visit '/login'
 
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
-
 
   ack_messages
   click_link_or_button 'Log in!'

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-Given(/^the Bingo! is group-enabled with the project and a (\d+) percent group discount$/) do |group_discount|
+Given( /^the Bingo! is group-enabled with the project and a (\d+) percent group discount$/ ) do | group_discount |
   @bingo.group_option = true
   @project.should_not be_nil
   @bingo.project = @project
   @bingo.group_discount = group_discount
 end
 
-Then(/^the user "([^"]*)" see collaboration was requested$/) do |collaboration_pending|
+Then( /^the user "([^"]*)" see collaboration was requested$/ ) do | collaboration_pending |
   wait_for_render
-  link_text = "Your teammates in #{@group.get_name(false)} want to collaborate"
+  link_text = "Your teammates in #{@group.get_name( false )} want to collaborate"
   case collaboration_pending.downcase
   when 'should'
     page.should have_content link_text
@@ -20,21 +20,21 @@ Then(/^the user "([^"]*)" see collaboration was requested$/) do |collaboration_p
   end
 end
 
-When(/^the user requests collaboration$/) do
+When( /^the user requests collaboration$/ ) do
   wait_for_render
-  link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
-  expect(page).to have_content link_text
-  link = find(:xpath, "//a[contains(.,'#{link_text}')]")
+  link_text = "Invite your teammates in #{@group.get_name( false )} to help?"
+  expect( page ).to have_content link_text
+  link = find( :xpath, "//a[contains(.,'#{link_text}')]" )
   link.click
 end
 
-When(/^group user (\d+) logs in$/) do |user_count|
+When( /^group user (\d+) logs in$/ ) do | user_count |
   @user = @group.users[user_count.to_i - 1]
   step 'the user "has" had demographics requested'
   step 'the user logs in'
 end
 
-Then(/^the user "([^"]*)" see they're waiting on a collaboration response$/) do |collaboration_pending|
+Then( /^the user "([^"]*)" see they're waiting on a collaboration response$/ ) do | collaboration_pending |
   case collaboration_pending.downcase
   when 'should'
     page.should have_content 'awaiting a response to your group help request'
@@ -45,14 +45,14 @@ Then(/^the user "([^"]*)" see they're waiting on a collaboration response$/) do 
   end
 end
 
-Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
+Then( /^the user "([^"]*)" the collaboration request$/ ) do | accept_or_decline |
   wait_for_render
   case accept_or_decline.downcase
   when 'accepts'
-    btn = find(:xpath, "//a[text()='Accept']")
+    btn = find( :xpath, "//a[text()='Accept']" )
     # click_link_or_button 'Accept'
   when 'declines'
-    btn = find(:xpath, "//a[text()='Decline']")
+    btn = find( :xpath, "//a[text()='Decline']" )
     # click_link_or_button 'Decline'
   else
     log "We didn't test anything there: #{accept_or_decline}"
@@ -60,7 +60,7 @@ Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
   btn.click
 end
 
-Then('the user {string} see collaboration request button') do |button_present|
+Then( 'the user {string} see collaboration request button' ) do | button_present |
   case button_present.downcase
   when 'should'
     page.should have_content 'Invite your group to help?'
@@ -71,7 +71,7 @@ Then('the user {string} see collaboration request button') do |button_present|
   end
 end
 
-When('the user populates {int} additional {string} entries') do |count, field|
+When( 'the user populates {int} additional {string} entries' ) do | count, field |
   # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
@@ -87,8 +87,8 @@ When('the user populates {int} additional {string} entries') do |count, field|
   existing_count = @entries_list.count
   index = 0
   counter = 0
-  while counter < count do
-    field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
+  while counter < count
+    field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']" )
     if @entries_list[existing_count + index].nil?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
@@ -98,18 +98,18 @@ When('the user populates {int} additional {string} entries') do |count, field|
                                                      else
                                                        Faker::Company.bs
                                                      end
-      balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+      balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']" )
       @entries_list[existing_count + index][balance_field] = balance_field_elem.value
       # field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
       field_elem.click
-      field_elem.send_keys [:command,'a'], :backspace
-      field_elem.send_keys [:control,'a'], :backspace
-      field_elem.send_keys  @entries_list[existing_count + index][field]
+      field_elem.send_keys [:command, 'a'], :backspace
+      field_elem.send_keys [:control, 'a'], :backspace
+      field_elem.send_keys @entries_list[existing_count + index][field]
       counter += 1
     else
       @entries_list[existing_count + index][field] = field_elem.value
     end
-    balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+    balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']" )
     @entries_list[existing_count + index][balance_field] = balance_field_elem.value
     entries_list_a[existing_count + index] = @entries_list[existing_count + index]
     index += 1
@@ -117,7 +117,7 @@ When('the user populates {int} additional {string} entries') do |count, field|
   end
 end
 
-When('the user changes a random {int} {string} entries') do |count, field|
+When( 'the user changes a random {int} {string} entries' ) do | count, field |
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
@@ -129,15 +129,15 @@ When('the user changes a random {int} {string} entries') do |count, field|
   balance_field = 'term' == field ? 'definition' : 'term'
 
   entries_array = []
-  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
+  field_count = page.all( :xpath, "//textarea[contains(@id, 'definition_')]" ).count
 
-  count.to_i.times do |_index|
+  count.to_i.times do | _index |
     # Index to the field to change
-    rand_ind = Random.rand(field_count) # - 1
+    rand_ind = Random.rand( field_count ) # - 1
 
     # Pull the existing values
-    existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
-    existing_def = page.find(:xpath, "//textarea[@id='definition_#{rand_ind}']").value
+    existing_term = page.find( :xpath, "//input[@id='term_#{rand_ind}']" ).value
+    existing_def = page.find( :xpath, "//textarea[@id='definition_#{rand_ind}']" ).value
 
     # Gen the new term
     new_val = if 'term' == field
@@ -147,13 +147,13 @@ When('the user changes a random {int} {string} entries') do |count, field|
               end
 
     if existing_term.blank? && existing_def.blank?
-      @entries_list.push({
-        field => new_val,
-        balance_field => ''
-      })
+      @entries_list.push( {
+                           field => new_val,
+                           balance_field => ''
+                         } )
     else
       found = false
-      entries_array.each do |entry|
+      entries_array.each do | entry |
         if 'term' == field && entry['definition'] == existing_def
           entry['term'] = new_val
           entry['definition'] = existing_def
@@ -163,7 +163,7 @@ When('the user changes a random {int} {string} entries') do |count, field|
           entry['term'] = existing_term
           found = true
         end
-        to_fill_elem = find( :xpath, "//*[@id='#{field}_#{rand_ind}']")
+        to_fill_elem = find( :xpath, "//*[@id='#{field}_#{rand_ind}']" )
         to_fill_elem.click
         send_keys [:command, 'a'], :backspace
         send_keys [:control, 'a'], :backspace
@@ -176,13 +176,13 @@ When('the user changes a random {int} {string} entries') do |count, field|
   end
 end
 
-Then(/^the candidate lists have been merged$/) do
+Then( /^the candidate lists have been merged$/ ) do
   @entries_lists = {} if @entries_lists.nil?
   combined_list = []
-  @bingo.project.group_for_user(@user).users.each do |user|
+  @bingo.project.group_for_user( @user ).users.each do | user |
     next if @entries_lists[user].blank?
 
-    @entries_lists[user].each do |list_item|
+    @entries_lists[user].each do | list_item |
       combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
     @entries_lists[user] = combined_list
@@ -190,9 +190,9 @@ Then(/^the candidate lists have been merged$/) do
   end
 end
 
-Then(/^all course users should see the terms list$/) do
+Then( /^all course users should see the terms list$/ ) do
   temp_user = @user
-  @course.users.each do |user|
+  @course.users.each do | user |
     @user = user
     step 'the user "has" had demographics requested'
     step 'the user logs in'
