@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'socket'
 
 class LtiController < ApplicationController
@@ -11,7 +12,7 @@ class LtiController < ApplicationController
     puts request.host_with_port
     puts request.port
     puts Rails.configuration.machine_name
-    puts "***************"
+    puts '***************'
 
     response = {
       issuer: "https://#{request.host_with_port}",
@@ -19,7 +20,7 @@ class LtiController < ApplicationController
       initiate_login_uri: "https://#{request.host_with_port}/users/sign_in",
       redirect_uris: ["https://#{request.host_with_port}/users/auth/lti/callback"],
       jwks_uri: "https://#{request.host_with_port}/.well-known/jwks.json",
-      scopes_supported: %w[openid profile email offline_access],
+      scopes_supported: %w[openid profile email offline_access]
     }
 
     render json: response

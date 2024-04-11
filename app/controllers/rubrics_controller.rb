@@ -75,7 +75,7 @@ class RubricsController < ApplicationController
           @rubric.active = !@rubric.active
           render json: standardized_response( @rubric, @rubric.errors )
         else
-          render json: standardized_response( @rubric, { main: t( message) } )
+          render json: standardized_response( @rubric, { main: t( message ) } )
         end
       end
     end

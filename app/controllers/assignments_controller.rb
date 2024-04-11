@@ -16,7 +16,7 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1/status or /assignments/1/status.json
   def status
     # TODO: Check if course owner
-    response = standardized_response(@assignment)
+    response = standardized_response( @assignment )
     response[:rubric] = @assignment.rubric.as_json(
       include: { criteria: {
         only: %i[ id description weight sequence
@@ -25,33 +25,33 @@ class AssignmentsController < ApplicationController
       only: %i[id name description version]
     )
     submissions = []
-    if current_user.is_admin? || @assignment.course.rosters.instructor.include?(current_user)
-      submissions = @assignment.submissions.includes(:user)
+    if current_user.is_admin? || @assignment.course.rosters.instructor.include?( current_user )
+      submissions = @assignment.submissions.includes( :user )
     elsif @assignment.group_enabled
-      group = @assignment.project.group_for_user(current_user)
+      group = @assignment.project.group_for_user( current_user )
 
-      submissions = @assignment.submissions.includes(:user).where(group:)
+      submissions = @assignment.submissions.includes( :user ).where( group: )
     else
-      submissions = @assignment.submissions.includes(:user).where(user: current_user)
+      submissions = @assignment.submissions.includes( :user ).where( user: current_user )
     end
 
     anon = current_user.anonymize?
     o_submissions = []
-    submissions.each do |submission|
+    submissions.each do | submission |
       o_submissions << {
         id: submission.id,
         submitted: submission.submitted,
         withdrawn: submission.withdrawn,
         recorded_score: submission.recorded_score || submission.calculated_score,
-        user: current_user.name(anon),
-        submission_feedback: submission.submission_feedback.as_json(only: %i[feedback submitted]),
-        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json(only: %i[id score feedback criterium_id])
+        user: current_user.name( anon ),
+        submission_feedback: submission.submission_feedback.as_json( only: %i[feedback submitted] ),
+        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json( only: %i[id score feedback criterium_id] )
       }
     end
 
     response[:submissions] = o_submissions.as_json
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: response
       end
@@ -61,9 +61,9 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1 or /assignments/1.json
   def show
     # TODO: Check if course owner
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        render json: standardized_response(@assignment)
+        render json: standardized_response( @assignment )
       end
     end
   end
@@ -78,41 +78,41 @@ class AssignmentsController < ApplicationController
 
   # POST /assignments or /assignments.json
   def create
-    @assignment = Assignment.new(assignment_params)
+    @assignment = Assignment.new( assignment_params )
 
-    respond_to do |format|
+    respond_to do | format |
       if @assignment.save
         format.json do
-          render json: standardized_response(@assignment, { main: I18n.t('assignments.errors.no_create_error') })
+          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.errors.no_create_error' ) } )
         end
       else
         errors = @assignment.errors
-        errors.add(:main, I18n.t('assignments.errors.create_failed'))
+        errors.add( :main, I18n.t( 'assignments.errors.create_failed' ) )
         Rails.logger.debug @assignment.errors.full_messages
-        format.json { render json: standardized_response(@assignment, @assignment.errors) }
+        format.json { render json: standardized_response( @assignment, @assignment.errors ) }
       end
     end
   end
 
   # PATCH/PUT /assignments/1 or /assignments/1.json
   def update
-    respond_to do |format|
-      if @assignment.update(assignment_params)
+    respond_to do | format |
+      if @assignment.update( assignment_params )
         format.json do
-          render json: standardized_response(@assignment, { main: I18n.t('assignments.errors.no_update_error') })
+          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.errors.no_update_error' ) } )
         end
       else
         errors = @assignment.errors
-        errors.add(:main, I18n.t('assignments.errors.update_failed'))
+        errors.add( :main, I18n.t( 'assignments.errors.update_failed' ) )
         Rails.logger.debug @assignment.errors.full_messages
-        format.json { render json: standardized_response(@assignment, @assignment.errors) }
+        format.json { render json: standardized_response( @assignment, @assignment.errors ) }
       end
     end
   end
 
   private
 
-  def standardized_response(assignment, messages = {})
+  def standardized_response( assignment, messages = {} )
     anon = current_user.anonymize?
     response = {
       assignment: assignment.as_json(
@@ -126,7 +126,7 @@ class AssignmentsController < ApplicationController
     response[:assignment][:description] = anon ? assignment.anon_description : assignment.description
 
     response[:assignment][:course] = {
-      timezone: ActiveSupport::TimeZone.new(assignment.course_timezone).tzinfo.name
+      timezone: ActiveSupport::TimeZone.new( assignment.course_timezone ).tzinfo.name
     }
     response[:projects] = assignment.course.projects.as_json(
       only: %i[id name]
@@ -134,9 +134,9 @@ class AssignmentsController < ApplicationController
     rubrics = if current_user.is_admin?
                 Rubric.for_admin
               else
-                Rubric.for_instructor(current_user)
+                Rubric.for_instructor( current_user )
               end
-    response[:rubrics] = rubrics.as_json(only: %i[id name version])
+    response[:rubrics] = rubrics.as_json( only: %i[id name version] )
     response[:messages] = messages
 
     response
@@ -152,14 +152,14 @@ class AssignmentsController < ApplicationController
         end_date: course.end_date
       )
     else
-      @assignment = Assignment.find(params[:id])
+      @assignment = Assignment.find( params[:id] )
     end
   end
 
   # Only allow a list of trusted parameters through.
   def assignment_params
-    params.require(:assignment).permit(:name, :description, :start_date, :end_date, :rubric_id, :group_enabled,
-                                       :file_sub, :link_sub, :text_sub,
-                                       :course_id, :project_id, :active)
+    params.require( :assignment ).permit( :name, :description, :start_date, :end_date, :rubric_id, :group_enabled,
+                                          :file_sub, :link_sub, :text_sub,
+                                          :course_id, :project_id, :active )
   end
 end
