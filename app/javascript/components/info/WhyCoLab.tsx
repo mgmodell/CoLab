@@ -97,7 +97,7 @@ export default function WhyCoLab(props: Props) {
           <p>{t('why_slides.captions.seven_one.title')}</p>
           <ul
             style={{
-              fontSize: "0.675em"
+              fontSize: "1.0em"
             }}
           >
             <li>{t('why_slides.captions.seven_one.check-ins')}</li>
