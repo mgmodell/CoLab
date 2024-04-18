@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 import UserEmailList from "./UserEmailList";
@@ -57,7 +57,10 @@ export default function ProfileDataAdmin(props: Props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
-  const user: IUser = useTypedSelector(state => state.profile.user);
+  const user: IUser = useTypedSelector(state => {
+    return state.profile.user
+  });
+
 
   const getImpairments = () => {
     const imp = [];
@@ -80,11 +83,16 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const setProfileImpairment = (imp: string[]) => {
-    setProfileImpVisual(imp.includes("visual"));
-    setProfileImpAuditory(imp.includes("auditory"));
-    setProfileImpMotor(imp.includes("motor"));
-    setProfileImpCognitive(imp.includes("cognitive"));
-    setProfileImpOther(imp.includes("other"));
+    const temp = {};
+    Object.assign(temp, user);
+
+    temp['impairment_visual'] = imp.includes("visual");
+    temp['impairment_auditory'] = imp.includes("auditory");
+    temp['impairment_motor'] = imp.includes("motor");
+    temp['impairment_cognitive'] = imp.includes("cognitive");
+    temp['impairment_other'] = imp.includes("other");
+
+    dispatch(setProfile(temp));
   };
 
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
@@ -199,36 +207,6 @@ export default function ProfileDataAdmin(props: Props) {
     temp.started_school = started_school.toString();
     dispatch(setProfile(temp));
   };
-  const setProfileImpVisual = impairment_visual => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_visual = impairment_visual;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpAuditory = impairment_auditory => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_auditory = impairment_auditory;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpMotor = impairment_motor => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_motor = impairment_motor;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpCognitive = impairment_cognitive => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_cognitive = impairment_cognitive;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpOther = impairment_other => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_other = impairment_other;
-    dispatch(setProfile(temp));
-  };
 
   //Display
   const setProfileLanguage = language_id => {
@@ -282,8 +260,9 @@ export default function ProfileDataAdmin(props: Props) {
 
   const getProfile = () => {
     dispatch(fetchProfile())
-      .then(setInitRetrieved(lastRetrieved))
-      .then(setDirty(false));
+    setDirty(false);
+      //.then(setInitRetrieved(lastRetrieved))
+      //.then(setDirty(false));
   };
   const saveProfile = () => {
     dispatch(persistProfile());
@@ -331,10 +310,32 @@ export default function ProfileDataAdmin(props: Props) {
     </Button>
   );
 
+  const emailPanel = useMemo(() => {
+    return(
+          <Container>
+            <Col xs={12}>
+              {0 < user.emails.length ? (
+                <UserEmailList
+                  emailList={user.emails}
+                  emailListUpdateFunc={setProfileEmails}
+                  addMessagesFunc={setMessages}
+                  addEmailUrl={endpoints["addEmailUrl"]}
+                  removeEmailUrl={endpoints["removeEmailUrl"]}
+                  primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
+                />
+              ) : null}
+            </Col>
+            <Col xs={12}>
+              <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
+            </Col>
+          </Container>
+    )
+  }, [user.emails]);
+
   const detailsComponent = lookupStatus ? (
     <Panel>
       <Accordion multiple activeIndex={curPanel}>
-        <AccordionTab header={t("edit_profile")} aria-label={t("edit_profile")}>
+        <AccordionTab key='edit_profile' header={t("edit_profile")} aria-label={t("edit_profile")}>
           <Container>
             <Row>
               <Col sm={6} xs={12}>
@@ -365,28 +366,14 @@ export default function ProfileDataAdmin(props: Props) {
           </Container>
         </AccordionTab>
         <AccordionTab
+          key='email_settings'
           header={t("email_settings")}
           aria-label={t("email_settings")}
         >
-          <Container>
-            <Col xs={12}>
-              {0 < user.emails.length ? (
-                <UserEmailList
-                  emailList={user.emails}
-                  emailListUpdateFunc={setProfileEmails}
-                  addMessagesFunc={setMessages}
-                  addEmailUrl={endpoints["addEmailUrl"]}
-                  removeEmailUrl={endpoints["removeEmailUrl"]}
-                  primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
-                />
-              ) : null}
-            </Col>
-            <Col xs={12}>
-              <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
-            </Col>
-          </Container>
+          {emailPanel}
         </AccordionTab>
         <AccordionTab
+          key='display_settings'
           header={t("display_settings.prompt")}
           aria-label={t("display_settings.prompt")}
         >
@@ -399,7 +386,7 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_theme"
                   name="profile_theme"
                   value={user.theme_id || 0}
-                  options={themes}
+                  options={Object.values( themes )}
                   optionValue="id"
                   optionLabel="name"
                   onChange={event => setProfileTheme(Number(event.value))}
@@ -418,14 +405,16 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_language"
                   name="profile_language"
                   value={localProfileLanguage}
-                  suggestions={suggestedLocalProfileLanguages}
+                  suggestions={Object.values( suggestedLocalProfileLanguages )}
                   field="name"
                   forceSelection={true}
                   dropdown
+
                   completeMethod={event => {
                     const query = event.query.toLocaleLowerCase();
                     setSuggestedLocalProfileLanguages(
                       languages.filter(lang =>
+                        ['en','ko', 'es'].includes(lang.code) &&
                         lang.name.toLowerCase().includes(query)
                       )
                     );
@@ -464,7 +453,7 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_timezone"
                   name="profile_timezone"
                   value={user.timezone || 0}
-                  options={timezones}
+                  options={Object.values( timezones )}
                   optionValue="name"
                   optionLabel="name"
                   onChange={event => setProfileTimezone(String(event.value))}
@@ -478,6 +467,7 @@ export default function ProfileDataAdmin(props: Props) {
           </Container>
         </AccordionTab>
         <AccordionTab
+          key='demographics'
           header={t("demographics.prompt", { first_name: user.first_name })}
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
         >
@@ -491,7 +481,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_school"
                     name="profile_school"
                     value={user.school_id || 0}
-                    options={schools}
+                    options={Object.values( schools )}
                     optionValue="id"
                     optionLabel="name"
                     onChange={event => setProfileSchool(Number(event.value))}
@@ -510,7 +500,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_cip_code"
                     name="profile_cip_code"
                     value={user.cip_code_id || 0}
-                    options={cipCodes}
+                    options={Object.values( cipCodes )}
                     optionValue="id"
                     optionLabel="name"
                     onChange={event => setProfileCipCode(Number(event.value))}
@@ -554,7 +544,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_country"
                     name="profile_country"
                     value={user.country || 0}
-                    options={countries}
+                    options={ Object.values( countries )}
                     optionValue="code"
                     optionLabel="name"
                     onChange={event => {
@@ -601,7 +591,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_home_language"
                     name="profile_home_language"
                     value={localHomeLanguage}
-                    suggestions={suggestedLocalHomeLanguages}
+                    suggestions={Object.values( suggestedLocalHomeLanguages )}
                     field="name"
                     forceSelection={true}
                     dropdown
@@ -637,7 +627,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_gender"
                     value={user.gender_id || 0}
                     onChange={event => setProfileGender(Number(event.value))}
-                    options={genders}
+                    options={Object.values( genders )}
                     optionLabel="name"
                     optionValue="id"
                     placeholder={t("demographics.gender")}
@@ -674,8 +664,12 @@ export default function ProfileDataAdmin(props: Props) {
                   name="impairments"
                   aria-label="impairments"
                   value={getImpairments()}
-                  onChange={event => setProfileImpairment(event.target.value)}
-                  multiple={true}
+                  options={impairmentOptions}
+                  onChange={event => {
+                    setProfileImpairment(event.target.value)
+                    event.originalEvent.currentTarget.blur( )
+                  }}
+                  multiple
                 />
               </Col>
             </Row>

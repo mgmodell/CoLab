@@ -4,17 +4,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
 import i18n from "i18next";
 
+interface IEmail {
+  id: number;
+  email: string;
+  primary: boolean;
+  confirmed?: boolean;
+}
 interface IUser {
   id: number;
   first_name: string;
   last_name: string;
   name: string;
-  emails: [
-    {
-      email: string;
-      primary: boolean;
-    }
-  ];
+  emails: Array<IEmail>;
 
   welcomed: boolean;
   is_instructor: boolean;
@@ -172,7 +173,7 @@ export const persistProfile = createAsyncThunk(
           "Content-Type": "application/json",
           Accepts: "application/json"
         },
-        body: {
+        user: {
           first_name: user.first_name,
           last_name: user.last_name,
           timezone: user.timezone,
@@ -218,4 +219,4 @@ export const {
   clearProfile
 } = actions;
 export default reducer;
-export { IUser };
+export { IUser, IEmail };

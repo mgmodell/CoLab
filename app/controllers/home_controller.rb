@@ -284,9 +284,10 @@ class HomeController < ApplicationController
   end
 
   def update_full_profile
-    params = profile_params.to_h
-    params[:welcomed] = true
-    if current_user.update( params )
+    submitted_params = profile_params.to_h
+
+    submitted_params[:welcomed] = true
+    if current_user.update( submitted_params )
       notice = 'Profile successfully updated'
       respond_to do | format |
         response = get_profile_hash
@@ -548,7 +549,7 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.permit(
+    params.require(:user).permit(
       :first_name, :last_name,
       :timezone, :language_id, :theme_id, :researcher,
       :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,

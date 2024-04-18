@@ -8,7 +8,6 @@ import {
   Navigate
 } from "react-router-dom";
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
 
 import { PrimeReactProvider } from "primereact/api";
@@ -50,9 +49,7 @@ type Props = {
 };
 
 export default function PageWrapper(props: Props) {
-  const store = configureStore({
-    reducer: appStatus
-  });
+  const store = appStatus;
 
   const router = createBrowserRouter(
     createRoutesFromElements(
