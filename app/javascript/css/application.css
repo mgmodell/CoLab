@@ -140,3 +140,7 @@ a:active {
 .fixedDrawer .p-icon{
   visibility: hidden;
 }
+.fixedDrawer a:hover, a:active, a:visited {
+  text-decoration: none;
+  color: hsl(246, 56%, 34%);
+}
