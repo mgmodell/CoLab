@@ -334,7 +334,10 @@ export default function ProfileDataAdmin(props: Props) {
 
   const detailsComponent = lookupStatus ? (
     <Panel>
-      <Accordion multiple activeIndex={curPanel}>
+      <Accordion multiple
+        onTabChange={event => setCurPanel([0,...(event.index.filter( i => i !== 0 ))])}
+        activeIndex={[...curPanel]}
+        >
         <AccordionTab key='edit_profile' header={t("edit_profile")} aria-label={t("edit_profile")}>
           <Container>
             <Row>
