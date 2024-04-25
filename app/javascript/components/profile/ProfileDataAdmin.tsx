@@ -338,7 +338,12 @@ export default function ProfileDataAdmin(props: Props) {
         onTabChange={event => setCurPanel([0,...(event.index.filter( i => i !== 0 ))])}
         activeIndex={[...curPanel]}
         >
-        <AccordionTab key='edit_profile' header={t("edit_profile")} aria-label={t("edit_profile")}>
+        <AccordionTab
+          key='edit_profile'
+          header={t("edit_profile")}
+          aria-label={t("edit_profile")}
+          className="fixedDrawer"
+          >
           <Container>
             <Row>
               <Col sm={6} xs={12}>

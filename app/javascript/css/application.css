@@ -133,3 +133,10 @@ a:active {
 .bingoBoardTable td {
   border: 1px solid #ddd;
 }
+
+.fixedDrawer a {
+  cursor: default;
+}
+.fixedDrawer .p-icon{
+  visibility: hidden;
+}
