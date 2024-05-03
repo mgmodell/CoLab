@@ -83,11 +83,11 @@ class AssignmentsController < ApplicationController
     respond_to do | format |
       if @assignment.save
         format.json do
-          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.errors.no_create_error' ) } )
+          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.error.no_create_error' ) } )
         end
       else
         errors = @assignment.errors
-        errors.add( :main, I18n.t( 'assignments.errors.create_failed' ) )
+        errors.add( :main, I18n.t( 'assignments.error.create_failed' ) )
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response( @assignment, @assignment.errors ) }
       end
@@ -99,11 +99,11 @@ class AssignmentsController < ApplicationController
     respond_to do | format |
       if @assignment.update( assignment_params )
         format.json do
-          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.errors.no_update_error' ) } )
+          render json: standardized_response( @assignment, { main: I18n.t( 'assignments.error.no_update_error' ) } )
         end
       else
         errors = @assignment.errors
-        errors.add( :main, I18n.t( 'assignments.errors.update_failed' ) )
+        errors.add( :main, I18n.t( 'assignments.error.update_failed' ) )
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response( @assignment, @assignment.errors ) }
       end

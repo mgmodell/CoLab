@@ -103,7 +103,7 @@ export default function ActivityList(props: Props) {
         navigate(`${link}/${activityId}`);
       }}
       currentPageReportTemplate="{first} to {last} of {totalRecords}"
-      dataKey="id"
+      dataKey="data_key"
     >
       <Column
         header={t("activities.type_col")}

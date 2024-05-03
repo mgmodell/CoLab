@@ -42,6 +42,7 @@ class CoursesController < ApplicationController
             ]
             activities = @course.get_activities.collect do | activity |
               {
+                data_key: "#{activity.type}-#{activity.id}",
                 id: activity.id,
                 name: activity.get_name( anon ),
                 active: activity.active,
