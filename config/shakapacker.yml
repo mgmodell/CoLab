@@ -32,6 +32,8 @@ development:
     # Hot Module Replacement updates modules while the application is running without a full reload
     hmr: true
     hot: true
+    watchOptions:
+      poll: true
     client:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
