@@ -1,0 +1,86 @@
+es:
+  assignments:
+    index:
+      title: List of Assignments
+    edit:
+      title: Edit Assignment
+      assignment_details_pnl: Assignment Details
+      assignment_submissions_pnl: Submissions
+      update_assignment_btn: Save Assignment
+      group_option: Make groups available?
+      group_source: Source of groups
+      select_rubric: Which rubric will be applied?
+      sub_type_select: Which types of submissions are allowable?
+      text_sub: Text entered directly into CoLab?
+      link_sub: Links (URLs) to the submissions?
+      file_sub: File uploads?
+      status_saving: Saving assignment
+    show:
+      title: Assignment Details
+      edit_string: Edit assignment details
+      published: Is published?
+      creator: Created by
+    new:
+      title: New Assignment
+      create_assignment_btn: Create Assignment
+    status:
+      name: Assignment Name
+      brief: Brief
+      eval_criteria: Evaluation Criteria
+      rubric_name: Rubric Title
+      rubric_version: Version
+      rubric_minimum: Minimum requirements not met
+    submissions:
+      new_header: New Response
+      edit_header: Edit Response
+      sub_text_lbl: Text Response
+      sub_text_placeholder: Click to enter your response
+      sub_link_lbl: Link to Response
+      sub_link_placehldr: Enter the link to the response
+      create: Create a New Response
+      save: Save Response as Draft
+      submit: Submit a New Response
+      past_header: Previous Responses
+      score: Score
+      id: Submission ID
+      user: Submitted by
+      submitted: Submission Date
+      withdrawn: Withdrawn Date
+      submitter: Submitted by
+      submit_revision_btn: Submit revision for grading
+      draft_revision_btn: Save revision for further editing
+      copy_submission_btn: Make a copy of this revision
+      withdraw_btn: Withdraw revision
+      new_btn: New response
+      response_tab_lbl: Responses
+    progress:
+      progress_tab_lbl: Progress
+      in_progress_msg: Work in progress
+    visualization:
+      label: Chart type
+      stacked_area: Stacked Area
+      layered_area: Layered Area
+      lines: Line Chart
+    create_success: Assignment was created successfully!
+    destroy_success: Assignment was destroyed successfully!
+    update_success: Assignment was updated successfully!
+    back: Back to the list of assignments
+    name: Assignment Name
+    open_date: Start Date
+    close_date: Close Date
+    description: Assignment Description
+    active: Is Active?
+    version: Version
+    error:
+      submission_type: At least one submission type must be selected
+      create_failed: >
+        Unable to create the new assignment. Please resolve the errors
+        below and try again.
+      update_failed: >
+        Unable to save assignment. Please resolve the errors below
+        and try again.
+      group_required: >
+        To enable groups, you must also select the projct from which to
+        pull them (the groups).
+      no_update_error: Successfully saved the assignment.
+      no_create_error: Successfully created the assignment.
