@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '14.0.2'
+gem 'react_on_rails', '14.0.3'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
