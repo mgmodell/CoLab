@@ -1,9 +1,9 @@
 es:
   assignments:
     index:
-      title: List of Assignments
+      title: Lista de Tareas
     edit:
-      title: Edit Assignment
+      title: Editar Tarea
       assignment_details_pnl: Assignment Details
       assignment_submissions_pnl: Submissions
       update_assignment_btn: Save Assignment
