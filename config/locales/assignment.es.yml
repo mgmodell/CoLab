@@ -4,46 +4,46 @@ es:
       title: Lista de Tareas
     edit:
       title: Editar Tarea
-      assignment_details_pnl: Assignment Details
-      assignment_submissions_pnl: Submissions
-      update_assignment_btn: Save Assignment
-      group_option: Make groups available?
-      group_source: Source of groups
-      select_rubric: Which rubric will be applied?
-      sub_type_select: Which types of submissions are allowable?
-      text_sub: Text entered directly into CoLab?
-      link_sub: Links (URLs) to the submissions?
-      file_sub: File uploads?
-      status_saving: Saving assignment
+      assignment_details_pnl: Detalles de la Tarea
+      assignment_submissions_pnl: Entregas
+      update_assignment_btn: Guardar Tarea
+      group_option: ¿Hacer grupos disponibles?
+      group_source: Origen de los grupos
+      select_rubric: ¿Qué rúbrica se aplicará?
+      sub_type_select: ¿Qué tipo de entregas están permitidas?
+      text_sub: ¿Texto ingresado directamente en CoLab?
+      link_sub: ¿Enlaces (URLs) a las entregas?
+      file_sub: ¿Carga de archivos?
+      status_saving: Guardando tarea
     show:
-      title: Assignment Details
-      edit_string: Edit assignment details
-      published: Is published?
-      creator: Created by
+      title: Detalles de la Tarea
+      edit_string: Editar detalles de la tarea
+      published: ¿Está publicado?
+      creator: Creado por
     new:
-      title: New Assignment
-      create_assignment_btn: Create Assignment
+      title: Nueva Tarea
+      create_assignment_btn: Crear Tarea
     status:
-      name: Assignment Name
-      brief: Brief
-      eval_criteria: Evaluation Criteria
-      rubric_name: Rubric Title
-      rubric_version: Version
-      rubric_minimum: Minimum requirements not met
+      name: Nombre de la Tarea
+      brief: Breve
+      eval_criteria: Criterios de Evaluación
+      rubric_name: Título de la rúbrica
+      rubric_version: Versión
+      rubric_minimum: Requisitos mínimos no cumplidos
     submissions:
-      new_header: New Response
-      edit_header: Edit Response
-      sub_text_lbl: Text Response
-      sub_text_placeholder: Click to enter your response
-      sub_link_lbl: Link to Response
-      sub_link_placehldr: Enter the link to the response
-      create: Create a New Response
-      save: Save Response as Draft
-      submit: Submit a New Response
-      past_header: Previous Responses
-      score: Score
-      id: Submission ID
-      user: Submitted by
+      new_header: Nueva Respuesta
+      edit_header: Editar Respuesta
+      sub_text_lbl: Texto de Respuesta
+      sub_text_placeholder: Haga clic para ingresar su respuesta
+      sub_link_lbl: Enlace a la respuesta
+      sub_link_placehldr: Ingresa el enlace a la respuesta
+      create: Crear una Nueva Respuesta
+      save: Guardar Respuesta como Borrador
+      submit: Enviar una nueva respuesta
+      past_header: Respuestas anteriores
+      score: Puntuación
+      id: Identificación de envío
+      user: Enviado por
       submitted: Submission Date
       withdrawn: Withdrawn Date
       submitter: Submitted by
