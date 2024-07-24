@@ -1,114 +1,114 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
-en:
+es:
   devise:
-    change_password_intro: Enter and confirm your new password
-    bingo_performance: Bingo! Performance
-    experience_performance: Experience Participation Level
-    assessment_performance: Assessment Participation Level
-    email_fld: Email
-    password_fld: Password
-    reset_btn: Clear
+    change_password_intro: Ingresa y confirma tu nueva contraseña
+    bingo_performance: ¡Bingo! Rendimiento
+    experience_performance: Nivel de participación en la experiencia
+    assessment_performance: Nivel de participación en la evaluación
+    email_fld: Correo electrónico
+    password_fld: Contraseña
+    reset_btn: Borrar
     confirmations:
-      confirmed: "Your email address has been successfully confirmed."
+      confirmed: "Tu dirección de correo electrónico ha sido confirmada con éxito."
       send_instructions: >
-        You will receive an email with instructions for how to confirm your email
-        address in a few minutes.
+        Recibirás un correo electrónico con instrucciones sobre cómo confirmar tu dirección de
+        correo electrónico en unos minutos.
       send_paranoid_instructions: >
-        If your email address exists in our database, you will receive an
-        email with instructions for how to confirm your email address in a few minutes.
-      no_instructions: "Didn't receive confirmation instructions?"
+        Si tu dirección de correo electrónico existe en nuestra base de datos, recibirás un
+        correo electrónico con instrucciones sobre cómo confirmar tu dirección de correo electrónico en unos minutos.
+      no_instructions: ¿No recibiste las instrucciones de confirmación?
       no_token: >
-        You can't access this page without coming from a confirmation email. If
-        you do have a confirmation email, please make sure you used the
-        full URL provided.
+        No puedes acceder a esta página sin venir de un correo electrónico de confirmación. Si
+        tienes un correo electrónico de confirmación, asegúrate de usar la
+        URL completa proporcionada.
     failure:
-      already_authenticated: "You are already signed in."
-      inactive: "Your account is not activated yet."
-      invalid: "Invalid %{authentication_keys} or password."
-      locked: "Your account is locked."
-      last_attempt: "You have one more attempt before your account is locked."
-      not_found_in_database: "Invalid %{authentication_keys} or password."
-      timeout: "Your session expired. Please sign in again to continue."
-      unauthenticated: "You need to sign in or sign up before continuing."
-      unconfirmed: "You have to confirm your email address before continuing."
+      already_authenticated: "Ya has iniciado sesión."
+      inactive: "Tu cuenta aún no está activada."
+      invalid: "Inválido %{authentication_keys} o contraseña."
+      locked: "Tu cuenta está bloqueada."
+      last_attempt: "Tienes un intento más antes de que tu cuenta se bloquee."
+      not_found_in_database: "Inválido %{authentication_keys} o contraseña."
+      timeout: Tu sesión ha expirado. Por favor, inicia sesión nuevamente para continuar."
+      unauthenticated: "Necesitas iniciar sesión o registrarte antes de continuar."
+      unconfirmed: "Debes confirmar tu dirección de correo electrónico antes de continuar."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "Instrucciones de confirmación"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Instrucciones para restablecer la contraseña"
       unlock_instructions:
-        subject: "Unlock instructions"
+        subject: "Instrucciones para desbloquear"
       password_change:
-        subject: "Password Changed"
+        subject: "Contraseña cambiada"
     omniauth_callbacks:
-      failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
-      success: "Successfully authenticated from %{kind} account."
-      google_auth: Sign in with Google
+      failure: "No pudimos autenticarte desde %{kind} porque \"%{reason}\"."
+      success: "Autenticado exitosamente desde la cuenta %{kind}."
+      google_auth: Iniciar sesión con Google
     passwords:
       no_token: >
-        You can't access this page without coming from a password reset email. If
-        you do come from a password reset email, please make sure you used the
-        full URL provided.
+        No puedes acceder a esta página sin venir de un correo electrónico de restablecimiento de contraseña. Si
+        vienes de un correo electrónico de restablecimiento de contraseña, asegúrate de usar
+        la URL completa proporcionada.
       send_instructions: >
-        You will receive an email at your primary email address with instructions
-        on how to reset your password in a few minutes. Please log out and use the
-        link in the email to reset your password.
+        Recibirás un correo electrónico en tu dirección de correo electrónico principal con instrucciones
+        sobre cómo restablecer tu contraseña en unos minutos. Por favor, cierra sesión y usa
+        el enlace en el correo electrónico para restablecer tu contraseña.
       send_paranoid_instructions: >
-        If that email address exists in our database, you will receive a password
-        recovery link at your primary email address in a few minutes. When you
-        receive it, be sure to log out before clicking the reset link.
-      updated: "Your password has been changed successfully. You are now signed in."
-      updated_not_active: "Your password has been changed successfully."
-      change_title: Change your password
-      new: New password
-      confirm: Confirm your new password
-      change_submit: Change my password
-      hint: "%{min} characters minimum"
-      forgot_title: Forgot your password?
-      forgot_submit: Send me reset password instructions
-      reset_tab: Forgot your password?
+        Si esa dirección de correo electrónico existe en nuestra base de datos, recibirás un enlace
+        de recuperación de contraseña en tu dirección de correo electrónico principal en unos minutos. Cuando
+        lo recibas, asegúrate de cerrar sesión antes de hacer clic en el enlace de restablecimiento.
+      updated: "Tu contraseña ha sido cambiada con éxito. Ahora has iniciado sesión."
+      updated_not_active: "Tu contraseña ha sido cambiada con éxito."
+      change_title: Cambia tu contraseña
+      new: Nueva contraseña
+      confirm: Confirma tu nueva contraseña
+      change_submit: Cambiar mi contraseña
+      hint: "%{min} caracteres mínimos"
+      forgot_title: ¿Olvidaste tu contraseña?
+      forgot_submit: Envíame las instrucciones para restablecer la contraseña
+      reset_tab: ¿Olvidaste tu contraseña?
     registrations:
-      first_name_fld: First name
-      last_name_fld: Last name
-      signup: Sign up
-      signup_tab: Sign up
-      signup_btn: Sign me up!
-      my_courses: My Courses
+      first_name_fld: Nombre
+      last_name_fld: Apellido
+      signup: Registrarse
+      signup_tab: Registrarse
+      signup_btn: ¡Regístrame!
+      my_courses: Mis cursos
       my_courses_count:
-        zero: You've not yet been involved in a CoLab course.
-        one: You've been involved in the following course.
-        other: You've been involved in the following %{count} courses.
-      hometown: Where did you spend most of your time growing up?
+        zero: Aún no has participado en un curso de CoLab.
+        one: Has participado en el siguiente curso.
+        other: Has participado en los siguientes %{count} cursos.
+      hometown: ¿Dónde pasaste la mayor parte de tu tiempo creciendo?
       impairments: >
-        Do you have any impairments which alter your perspective?
+        ¿Tienes alguna discapacidad que altere tu perspectiva?
         (optional)
       impairment_visual: Visual
-      impairment_auditory: Auditory
-      impairment_motor: Motor
-      impairment_cognitive: Cognitive
-      impairment_other: Other
-      account_info: Enter your account information
-      tell_about: Tell us about yourself (optional)
+      impairment_auditory: Auditiva
+      impairment_motor: Motora
+      impairment_cognitive: Cognitiva
+      impairment_other: Otra
+      account_info: Ingresa tu información de cuenta
+      tell_about: Cuéntanos sobre ti, (optional)
       tell_about_personalized: >
-        Tell us about yourself, %{name} (optional)
-      activity_history: History of Activities in Which You've Taken Part
-      no_activities: No activities yet
-      disp_stgs: Display Settings
-      new_profile_submit: Create my profile!
-      update_profile_submit: Update my profile!
-      your_info: Your account information
-      edit_profile: Edit your profile
-      reg_emails: Registered Emails
-      primary: Primary
-      study_title: Study Title
-      study_status: Your Participation Status
-      study_participant: Participating
-      study_non_participant: Not Participating
-      update_status: Review/Change
-      confirmed: Confirmed
-      waiting_confirmations: "Currently awaiting confirmation for:"
-      consent_history: Records of Currently Applicable Research Participation
+        Cuéntanos sobre ti, %{name} (optional)
+      activity_history: Historial de actividades en las que has participado
+      no_activities: Aún no hay actividades
+      disp_stgs: Configuración de pantalla
+      new_profile_submit: ¡Crear mi perfil!
+      update_profile_submit: ¡Actualizar mi perfil!
+      your_info: Tu información de cuenta
+      edit_profile: Editar tu perfil
+      reg_emails: Correos electrónicos registrados
+      primary: Principal
+      study_title: Título del estudio
+      study_status: Tu estado de participación
+      study_participant: Participando
+      study_non_participant: No participando
+      update_status: Revisar/Cambiar
+      confirmed: Confirmado
+      waiting_confirmations: "Actualmente esperando confirmación para:"
+      consent_history: Registros de participación en investigaciones actualmente aplicables
       password_change: Wan't to change your password? Click here and we'll email instructions.
       make_prim: Make Primary
       simulation_id: "Simulation ID: %{sim_id}"
