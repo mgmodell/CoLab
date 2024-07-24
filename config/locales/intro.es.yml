@@ -1,25 +1,25 @@
-en:
+es:
   intro:
     tooltips:
-        welcome: Welcome
-        about: About
-        why: Why CoLab?
-        research: Research
-        student: Student?
-        instructor: Instructor?
+        welcome: Bienvenido 
+        about: Acerca de
+        why: ¿Por qué CoLab?
+        research: Investigación
+        student: ¿Estudiante?
+        instructor: ¿Instructor?
     titles:
-        about: Who's behind CoLab?
-        why: What problem does CoLab solve?
-        research: The research behind CoLab
-        student: CoLab features for students
+        about: ¿Quién está detrás de CoLab?
+        why: ¿Qué problema resuelve CoLab?
+        research: La investigación detrás de CoLab
+        student: Función CoLab para los instructores
         instructor: CoLab features for instructors
     why_slides:
         captions:
-            one: We dream of teamwork that looks like this
-            two: But we often learn that...
-            three: ...it feels like an inequitable experience
-            four: And negative experiences take many shapes
-            five: Or possibly the results just feel cookie-cutter and boring?
+            one: Soñamos con un trabajo en equipo así
+            two: Pero muchas veces aprendemos que...
+            three: ...se siente como una experiencia injusta
+            four: Y las experiencias negativas toman muchas formas
+            five: ¿O tal vez los resultados parecen sencillos y aburridos?
     images:
-        student_concern: Student talks to teacher
-        normally_functioning: A group of students where all are engaged
+        student_concern: El estudiante habla con el profesor
+        normally_functioning: Un grupo de estudiantes en el que todos están comprometidos
