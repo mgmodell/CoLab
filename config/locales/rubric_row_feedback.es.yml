@@ -1,6 +1,6 @@
-en:
+es:
   rubric_row_feedbacks:
     error:
       feedback_required: >
-        Feedback is required for anything less than a perfect
-        score.
+        Si la puntuación no es perfecta, es necesario enviar un
+        comentario.

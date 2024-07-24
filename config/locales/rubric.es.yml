@@ -1,47 +1,47 @@
-en:
+es:
   rubrics:
     index:
-      title: List of Rubrics
+      title: Lista de Rúbricas
     edit:
-      title: Edit Rubric
-      deactivate: Deactivate Rubric
+      title: Editar Rúbrica
+      deactivate: Desactivar Rúbrica
       activate: Activate Rubric
     show:
-      title: Rubric Details
-      edit_string: Edit rubric details
-      published: Is published?
-      creator: Created by
+      title: Detalles de la rúbrica
+      edit_string: Editar detalles de la rúbrica
+      published: ¿Esta publicado?
+      creator: Creado por
     new:
-      title: New Rubric
-      criteria: New Criteria
-      criteria_l1: Bare minimum
-    create_success: Rubric was created successfully!
-    new_version_success: A new version was created.
-    destroy_success: Rubric was destroyed successfully!
-    update_success: Rubric was updated successfully!
-    publish_success: Rubric was published successfully!
-    activate_success: Rubric was activated
-    copy_success: Rubric was copied successfully!
-    deactivate_success: Rubric was deactivated
-    back: Back to the list of rubrics
-    name: Name
-    description: Description
-    version: Version
+      title: Nueva Rúbrica
+      criteria: Nuevos criterios
+      criteria_l1: Mínimo
+    create_success: ¡La rúbrica se creó exitosamente!
+    new_version_success: Una nueva versión fue creada
+    destroy_success: ¡La rúbrica fue destruida exitosamente!
+    update_success: ¡La rúbrica fue actualizada exitosamente!
+    publish_success: ¡La rúbrica se publicó exitosamente!
+    activate_success: Se activó la rúbrica
+    copy_success: ¡La rúbrica se copió correctamente!
+    deactivate_success: Rúbrica fue desactivada
+    back: Volver a la lista de rúbricas
+    name: Nombre
+    description: Descripción
+    version: Versión
     rubric:
-      copy: Copy rubric
-      delete: Remove this rubric
+      copy: Copiar rúbrica
+      delete: Eliminar esta rúbrica
     criteria:
-      new: New Criteria
-      sequence: sequence
-      description: Short criteria description
-      weight: Criteria weight
+      new: Nuevos criterios
+      sequence: Secuencia
+      description: Breve descripción de criterios
+      weight: Peso de los criterios
       l1_description: Minimum requirements
-      l2_description: Requirements for level 2 credit
-      l3_description: Requirements for level 3 credit
-      l4_description: Requirements for level 4 credit
-      l5_description: Requirements for level 5 credit
-      up: Move criteria up
-      down: Move criteria down
-      copy: Copy criteria
-      delete: Remove this criteria
+      l2_description: Requisitos para el crédito de nivel 2
+      l3_description: Requisitos para el crédito de nivel 3
+      l4_description: Requisitos para el crédito de nivel 4
+      l5_description: Requisitos para el crédito de nivel 5
+      up: Mover criterios hacia arriba
+      down: Mover criterios hacia abajo
+      copy: Criterios de copia
+      delete: Eliminar este criterio
 
