@@ -109,70 +109,70 @@ es:
       confirmed: Confirmado
       waiting_confirmations: "Actualmente esperando confirmación para:"
       consent_history: Registros de participación en investigaciones actualmente aplicables
-      password_change: Wan't to change your password? Click here and we'll email instructions.
-      make_prim: Make Primary
-      simulation_id: "Simulation ID: %{sim_id}"
-      experience_not_started: You must begin the experience first
-      unhappy: Are you unhappy? Email support about having your account removed.
-      cancel_acct_hdg: Cancelling your account
-      cancel_acct_link: Mark your account for removal
-      new_address_lbl: "New address:"
-      new_address_prompt: What is the new address?
+      password_change: ¿Quieres cambiar tu contraseña? Haz clic aquí y te enviaremos instrucciones por correo electrónico.
+      make_prim: Hacer principal
+      simulation_id: "Identificación de estimulación: %{sim_id}"
+      experience_not_started: Debes comenzar la experiencia primero
+      unhappy: ¿Estás insatisfecho? Envía un correo electrónico al soporte para que eliminen tu cuenta.
+      cancel_acct_hdg: Cancelando tu cuenta
+      cancel_acct_link: Marca tu cuenta para eliminación
+      new_address_lbl: "Nueva dirección:"
+      new_address_prompt: ¿Cuál es la nueva dirección?
       optional_demo: >
-        Supplying the following information about yourself is optional, but providing it may
-        help us to provide a smoother experience for you.
-      destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
-      signed_up: "Welcome! You have signed up successfully."
+        Proporcionar la siguiente información sobre ti es opcional, pero hacerlo puede
+        ayudarnos a brindarle una mejor experiencia.
+      destroyed: "¡Adiós! Tu cuenta ha sido cancelada con éxito. Esperamos verte pronto nuevamente."
+      signed_up: "¡Bienvenido! Te has registrado con éxito."
       signup_failed: >
-        We're sorry, but we were unable to create your account. Perhaps
-        the address is already signed up or the address itself is
-        invalid? Please contact support for assistance.
+        Lo sentimos, pero no pudimos crear tu cuenta. Tal vez
+        la dirección ya esté registrada o la dirección en sí sea
+        inválida. Por favor, contacta al soporte para obtener asistencia.
       signed_up_but_inactive: >
-        You have signed up successfully and your account is reserved. However, we could
-        not sign you in because your account is not yet activated.  Please check your
-        email and click the link there to verify and activate your new account.
+        Te has registrado con éxito y tu cuenta está reservada. Sin embargo,
+        no pudimos iniciar sesión porque tu cuenta aún no está activada. Por favor, revisa
+        tu correo electrónico y haz clic en el enlace para verificar y activar tu nueva cuenta.
       signed_up_but_locked: >
-        You have signed up successfully. However, we could not sign you in because your
-        account is locked.
+        Te has registrado con éxito. Sin embargo, no pudimos iniciar sesión porque tu
+        cuenta está bloqueada.
       signed_up_but_unconfirmed: >
-        A message with a confirmation link has been sent to your email address. Please
-        follow the link to activate your account.
+        Se ha enviado un mensaje con un enlace de confirmación a tu dirección de correo electrónico. Por favor,
+        sigue el enlace para activar tu cuenta.
       update_needs_confirmation: >
-        You updated your account successfully, but we need to verify your new email
-        address. Please check your email and follow the confirm link to confirm your
-        new email address.
-      email_add: Want to add an address?
-      updated: "Your account has been updated successfully."
-      email_added: The new email has successfully been added.
+        Has actualizado tu cuenta con éxito, pero necesitamos verificar tu nueva dirección
+        correo electrónico. Por favor, revisa tu correo electrónico y sigue el enlace de confirmación para confirmar tu
+        nueva dirección de correo electrónico.
+      email_add: ¿Quieres añadir una dirección?
+      updated: "Tu cuenta ha sido actualizada con éxito."
+      email_added: El nuevo correo electrónico se ha añadido con éxito.
       email_not_added: >
-        That email address could not be added. Perhaps it is already in use? Please 
-        contact support for assistance.
-      email_destroyed: That email address was completely removed from our records.
-      set_primary: Your primary email address has been set.
+        Esa dirección de correo electrónico no pudo ser añadida. ¿Quizás ya está en uso? Por favor, 
+        contacta al soporte para obtener asistencia.
+      email_destroyed: Esa dirección de correo electrónico fue completamente eliminada de nuestros registros.
+      set_primary: Tu dirección de correo electrónico principal ha sido establecida.
     sessions:
-      signed_in: "Welcome! You've signed in successfully."
-      signed_out: "Signed out successfully."
+      signed_in: "¡Bienvenido! Has iniciado sesión con éxito."
+      signed_out: "Has cerrado sesión con éxito."
       already_signed_out: "Signed out successfully."
-      login: Log in
-      login_submit: Log in!
+      login: Iniciar sesión
+      login_submit: ¡Iniciar sesión!
     unlocks:
       send_instructions: >
-        You will receive an email with instructions for how to unlock your account
-        in a few minutes.
+        Recibirás un correo electrónico con instrucciones sobre cómo desbloquear tu cuenta
+        en unos minutos.
       send_paranoid_instructions: >
-        If your account exists, you will receive an email with instructions for how
-        to unlock it in a few minutes.
-      unlocked: "Your account has been unlocked successfully. Please sign in to continue."
-      no_instructions: "Didn't receive unlock instructions?"
-      resend_title: Resend unlock instructions
-      resend_submit: Resend unlock instructions!
+        Si tu cuenta existe, recibirás un correo electrónico con instrucciones sobre cómo
+        desbloquearla en unos minutos.
+      unlocked: "Tu cuenta ha sido desbloqueada con éxito. Por favor, inicia sesión para continuar."
+      no_instructions: "¿No recibiste las instrucciones para desbloquear?"
+      resend_title: Reenviar instrucciones para desbloquear
+      resend_submit: ¡Reenviar instrucciones para desbloquear!
   errors:
     messages:
-      already_confirmed: "was already confirmed, please try signing in"
-      confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
-      expired: "has expired, please request a new one"
-      not_found: "not found"
-      not_locked: "was not locked"
+      already_confirmed: "ya fue confirmado, por favor intenta iniciar sesión"
+      confirmation_period_expired: "necesita ser confirmado dentro de %{period}, por favor solicita uno nuevo"
+      expired: "ha expirado, por favor solicita uno nuevo"
+      not_found: "no encontrado"
+      not_locked: "no estaba bloqueado"
       not_saved:
-        one: "1 error prohibited this %{resource} from being saved:"
-        other: "%{count} errors prohibited this %{resource} from being saved:"
+        one: "1 error impidió que este %{resource} fuera guardado:"
+        other: "%{count} errores impidieron que este %{resource} fuera guardado:"
