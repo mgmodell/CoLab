@@ -1,54 +1,54 @@
-en:
+es:
   projects:
-    create_success: Project was successfully created.
+    create_success: El proyecto fue creado exitosamente.
     create_success_inactive: >
-      Project was successfully created. Don't forget to activate it!
-    update_success: Project was successfully updated.
+      El proyecto fue creado exitosamente. ¡No olvides activarlo!
+    update_success: El proyecto se actualizó exitosamente.
     update_success_inactive: >
-      Project was successfully updated. Don't forget to activate it!
-    destroy_success: Project was successfully destroyed.
-    factor_pack: Factor pack
-    active_switch: Active
-    project_dates: Project Dates
-    name_lbl: Project Name
-    description_lbl: Project Description
-    group_create_success: Group successfully created.
-    group_save_success: Group data has been successfully updated.
-    group_save_failure: Failed to update group data. Contact an Support.
-    tz_warn: This project occurs in the %{time_zone} time zone and all dates reflect this.
-    start_date_lbl: Project start date
-    end_date_lbl: Project end date
-    opens: Opens every
-    no_group: unassigned
-    rescore: rescore
-    new_group: New group name
-    closes: Closes every
+      El proyecto se actualizó exitosamente. ¡No olvides activarlo!
+    destroy_success: El proyecto fue destruido exitosamente.
+    factor_pack: Paquete de factores
+    active_switch: Activo
+    project_dates: Fechas del proyecto
+    name_lbl: Nombre del proyecto
+    description_lbl: Descripción del proyecto
+    group_create_success: Grupo creado exitosamente.
+    group_save_success: Los datos del grupo se han actualizado correctamente.
+    group_save_failure: No se pudieron actualizar los datos del grupo. Póngase en contacto con soporte.
+    tz_warn: Este proyecto se produce en la %{time_zone} zona horaria y todas las fechas lo reflejan.
+    start_date_lbl: Fecha de inicio del proyecto
+    end_date_lbl: Fecha de finalización del proyecto
+    opens: Abre cada
+    no_group: No asignado
+    rescore: Volver a puntuar
+    new_group: Nuevo nombre del grupo
+    closes: Cierra cada
     groups_intro: >
-      This project currently contains %{group_count} groups as specified below. Their
-      respective perspective points are listed below their names. You may recalculate
-      any or all of those perspective points scores.
-    diversity_calculated: Perspective points calculated based on current data.
-    diversities_calculated: Perspective points calculated based on current data.
-    recalculate_diversities: Calculate all perspective points!
-    wrong_group: The specified group is not in this project.
+      Este proyecto contiene actualmente %{group_count} grupos como se especifica a continuación. Sus
+      respectivos puntos de perspectiva aparecen debajo de sus nombres. Puede volver a calcular
+      cualquiera o todas las puntuaciones de esos puntos de perspectiva.
+    diversity_calculated: Puntos de perspectiva calculados en base a datos actuales.
+    diversities_calculated: Puntos de perspectiva calculados en base a datos actuales.
+    recalculate_diversities: ¡Calcula todos los puntos de perspectiva!
+    wrong_group: El grupo especificado no está en este proyecto.
     performance_explained: >
-      This value reflects your rate of response to CoLab's weekly self-
-      and peer assessment requests.
+      Este valor refleja tu tasa de respuesta a las solicitudes de autoevaluación
+      y evaluación por pares semanales de CoLab.
     show:
-      title: Project Details
+      title: Detalles del proyecto
     edit:
-      title: Edit Project Details
-      editing: Editing Project
-      show: Show the project
+      title: Editar detalles del proyecto
+      editing: Proyecto de edición
+      show: Mostrar el proyecto
       date_summ: >
-        Between <strong>%{start_date}</strong> and <strong>%{end_date}</strong>, the
-        assessments will run weekly, opening each <strong>%{start_dow}</strong> and
-        running through <strong>%{end_dow}</strong>.
+        Entre <strong>%{start_date}</strong> y <strong>%{end_date}</strong>, las
+        evaluaciones se realizarán semanalmente, abriendo cada <strong>%{start_dow}</strong> y
+        corriendo por <strong>%{end_dow}</strong>.
     index:
-      title: List of Projects
+      title: Lista de proyectos
     create:
-      title: New Project
+      title: Nuevo proyecto
     new:
-      title: New Project
-    projects: Projects
-    diversity_scores: Perspective points
+      title: Nuevo proyecto
+    projects: Proyecto
+    diversity_scores: Puntos de perspectiva
