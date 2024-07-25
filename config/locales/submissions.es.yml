@@ -1,7 +1,7 @@
-en:
+es:
   submissions:
     error:
-      nothing_submitted: No assignment present
+      nothing_submitted: No hay tarea presente
       withdraw_requires_submit: >
          No puedes retirar una tarea que no ha sido realmente
         entregada.

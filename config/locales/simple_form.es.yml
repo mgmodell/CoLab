@@ -1,55 +1,55 @@
-en:
+es:
   simple_form:
-    "yes": 'Yes'
-    "no": 'No'
+    "Si": 'Si'
+    "No": 'No'
     required:
-      text: 'required'
+      text: 'Requerido'
       mark: '*'
       # You can uncomment the line below if you need to overwrite the whole required html.
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
     error_notification:
-      default_message: "Please review the problems below:"
+      default_message: "Por favor, revisa los problemas a continuación:"
     prompt:
       user:
-        gender: Select your gender
-        cip_code: Select your course of study
-        timezone: Select your time zone
-        school: Select your university
-        primary_language: Select the language you speak at home
-        theme: Select your UI theme
-        language: Select your UI language
+        gender: Selecciona tu género
+        cip_code: Selecciona tu curso de estudio
+        timezone: Selecciona tu zona horaria
+        school: Selecciona tu universidad
+        primary_language: Selecciona el idioma que hablas en casa
+        theme: Seleccione el tema de su interfaz de usuario
+        language: Seleccione el idioma de su interfaz de usuario
     labels:
       user:
-        first_name: Given name
-        last_name: Family name
-        gender: What is your gender?
-        date_of_birth: When were you born?
-        started_school: When did you begin university?
-        cip_code: What are you studying?
-        timezone: What time zone are you in?
-        school: Which school are you currently at?
-        primary_language: What language do you speak at home?
-        theme: What UI theme would you like to use?
-        language: What language would you like to use for CoLab?
-        researcher: Anonymize names?
+        first_name: Nombre de pila
+        last_name: Apellido
+        gender: ¿Cuál es tu género?
+        date_of_birth: ¿Cuándo naciste?
+        started_school: ¿Cuándo comenzaste la universidad?
+        cip_code: ¿Qué estás estudiando?
+        timezone: ¿En qué zona horaria estás?
+        school: ¿En qué escuela estás actualmente?
+        primary_language: ¿Qué idioma hablas en casa?
+        theme: ¿Qué tema de interfaz de usuario te gustaría usar?
+        language: ¿Qué idioma te gustaría usar para CoLab?
+        researcher: ¿Anonimizar nombres?
       consent_form:
-        name: Name of the Study
-        user: Lead Administrator of the Study
-        pdf: A PDF of the Study Consent Form
-        projects: Specific Projects to which this Form Applies
-        form_text: Consent Form Text
+        name: Nombre del estudio
+        user: Administrador principal del estudio
+        pdf: Un PDF del formulario de consentimiento del estudio
+        projects: Proyectos específicos a los que se aplica este formulario
+        form_text: Texto del formulario de consentimiento
       consent_log:
-        accepted: I Agree
+        accepted: Estoy de acuerdo
     hints:
       consent_form:
         name: >
-          This is the Title of the Study which will be presented
-          to each potential participant.
+          Este es el Título del Estudio que se presentará
+          a cada participante potencial.
 
         projects: >
-          If no projects are selected, this Consent Form will
-          apply to all CoLab projects.
+          Si no se seleccionan proyectos, este formulario de consentimiento se
+          aplicará a todos los proyectos de CoLab.
         form_text: >
-          This text will be presented to all potential study
-          participants. Please use basic html to format your text.
+          Este texto se presentará a todos los participantes potenciales del
+          estudio. Por favor, usa HTML básico para formatear tu texto.
