@@ -97,7 +97,7 @@ export default function WhyCoLab(props: Props) {
           <p>{t('why_slides.captions.seven_one.title')}</p>
           <ul
             style={{
-              fontSize: "1.0em"
+              fontSize: "0.9/0em"
             }}
           >
             <li>{t('why_slides.captions.seven_one.check-ins')}</li>
@@ -158,8 +158,8 @@ export default function WhyCoLab(props: Props) {
     //Slide 2
     {
       x: -20,
-      y: 40,
-      width: 175,
+      y: 30,
+      width: 160,
       height: 125,
       opacity: 1
     },
@@ -167,7 +167,7 @@ export default function WhyCoLab(props: Props) {
     {
       x: 250,
       y: 20,
-      width: 200,
+      width: 160,
       height: 200,
       opacity: 1
     },
@@ -175,15 +175,15 @@ export default function WhyCoLab(props: Props) {
     {
       x: -20,
       y: 50,
-      width: 200,
-      height: 100,
+      width: 150,
+      height: 125,
       opacity: 1
     },
     //SLIDE 5
     {
       x: -30,
       y: 50,
-      width: 200,
+      width: 185,
       height: 100,
       opacity: 1
     },
@@ -191,14 +191,14 @@ export default function WhyCoLab(props: Props) {
     {
       x: -40,
       y: 20,
-      width: 195,
+      width: 185,
       height: 200,
       opacity: 1
     },
     //SLIDE 7
     {
-      x: -70,
-      y: -50,
+      x: -50,
+      y: -20,
       width: 315,
       height: 240,
       opacity: 1
@@ -226,23 +226,23 @@ export default function WhyCoLab(props: Props) {
     {
       x: -35,
       y: -40,
-      width: 200,
+      width: 180,
       height: 400,
       opacity: 1
     },
     //SLIDE 4 
     {
-      x: 240,
+      x: 210,
       y: 20,
-      width: 200,
+      width: 240,
       height: 200,
       opacity: 1
     },
     //SLIDE 5 
     {
-      x: 260,
+      x: 265,
       y: 20,
-      width: 190,
+      width: 180,
       height: 220,
       opacity: 1
     },
@@ -256,8 +256,8 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 7 TXT
     {
-      x: 230,
-      y: 40,
+      x: 150,
+      y: 70,
       width: 350,
       height: 210,
       opacity: 1
@@ -331,6 +331,17 @@ export default function WhyCoLab(props: Props) {
       frame: 0,
       bgOpacity: 0,
       opacity: 1,
+    },
+    //SLIDE 7 
+    {
+      x: 225,
+      y: 32,
+      height: 90,
+      width: 90,
+      floor: 0,
+      frame: 0,
+      bgOpacity: 1,
+      opacity: 1,
     }
   ];
 
@@ -371,10 +382,10 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 4 
     {
-      x: 110,
-      y: 10,
-      height: 175,
-      width: 175,
+      x: 105,
+      y: 15,
+      height: 155,
+      width: 155,
       floor: 0,
       frame: 0,
       bgOpacity: 1,
@@ -429,7 +440,7 @@ export default function WhyCoLab(props: Props) {
     },
     //SLIDE 3 
     {
-      x: 115,
+      x: 105,
       y: 10,
       height: 180,
       width: 175,
@@ -678,6 +689,17 @@ export default function WhyCoLab(props: Props) {
       frame: 0,
       bgOpacity: 1,
       opacity: 1,
+    },
+    //SLIDE 7
+    {
+      x: 110,
+      y: 10,
+      height: 190,
+      width: 190,
+      floor: 0,
+      frame: 0,
+      bgOpacity: 1,
+      opacity: 0,
     }
   ];
 

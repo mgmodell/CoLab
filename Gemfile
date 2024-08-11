@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.2.3'
+ruby '3.3.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.1.3.2'
+gem 'rails', '~> 7.2'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '7.2.2'
+gem 'shakapacker', '8.0.1'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '13.4.0'
+gem 'react_on_rails', '14.0.4'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -88,7 +88,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.60.0', require: false
+  gem 'rubocop', '~> 1.65.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
