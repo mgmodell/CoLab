@@ -1,0 +1,178 @@
+# Additional translations at https://github.com/plataformatec/devise/wiki/I18n
+
+es:
+  devise:
+    change_password_intro: Ingresa y confirma tu nueva contraseña
+    bingo_performance: ¡Bingo! Rendimiento
+    experience_performance: Nivel de participación en la experiencia
+    assessment_performance: Nivel de participación en la evaluación
+    email_fld: Correo electrónico
+    password_fld: Contraseña
+    reset_btn: Borrar
+    confirmations:
+      confirmed: "Tu dirección de correo electrónico ha sido confirmada con éxito."
+      send_instructions: >
+        Recibirás un correo electrónico con instrucciones sobre cómo confirmar tu dirección de
+        correo electrónico en unos minutos.
+      send_paranoid_instructions: >
+        Si tu dirección de correo electrónico existe en nuestra base de datos, recibirás un
+        correo electrónico con instrucciones sobre cómo confirmar tu dirección de correo electrónico en unos minutos.
+      no_instructions: ¿No recibiste las instrucciones de confirmación?
+      no_token: >
+        No puedes acceder a esta página sin venir de un correo electrónico de confirmación. Si
+        tienes un correo electrónico de confirmación, asegúrate de usar la
+        URL completa proporcionada.
+    failure:
+      already_authenticated: "Ya has iniciado sesión."
+      inactive: "Tu cuenta aún no está activada."
+      invalid: "Inválido %{authentication_keys} o contraseña."
+      locked: "Tu cuenta está bloqueada."
+      last_attempt: "Tienes un intento más antes de que tu cuenta se bloquee."
+      not_found_in_database: "Inválido %{authentication_keys} o contraseña."
+      timeout: Tu sesión ha expirado. Por favor, inicia sesión nuevamente para continuar."
+      unauthenticated: "Necesitas iniciar sesión o registrarte antes de continuar."
+      unconfirmed: "Debes confirmar tu dirección de correo electrónico antes de continuar."
+    mailer:
+      confirmation_instructions:
+        subject: "Instrucciones de confirmación"
+      reset_password_instructions:
+        subject: "Instrucciones para restablecer la contraseña"
+      unlock_instructions:
+        subject: "Instrucciones para desbloquear"
+      password_change:
+        subject: "Contraseña cambiada"
+    omniauth_callbacks:
+      failure: "No pudimos autenticarte desde %{kind} porque \"%{reason}\"."
+      success: "Autenticado exitosamente desde la cuenta %{kind}."
+      google_auth: Iniciar sesión con Google
+    passwords:
+      no_token: >
+        No puedes acceder a esta página sin venir de un correo electrónico de restablecimiento de contraseña. Si
+        vienes de un correo electrónico de restablecimiento de contraseña, asegúrate de usar
+        la URL completa proporcionada.
+      send_instructions: >
+        Recibirás un correo electrónico en tu dirección de correo electrónico principal con instrucciones
+        sobre cómo restablecer tu contraseña en unos minutos. Por favor, cierra sesión y usa
+        el enlace en el correo electrónico para restablecer tu contraseña.
+      send_paranoid_instructions: >
+        Si esa dirección de correo electrónico existe en nuestra base de datos, recibirás un enlace
+        de recuperación de contraseña en tu dirección de correo electrónico principal en unos minutos. Cuando
+        lo recibas, asegúrate de cerrar sesión antes de hacer clic en el enlace de restablecimiento.
+      updated: "Tu contraseña ha sido cambiada con éxito. Ahora has iniciado sesión."
+      updated_not_active: "Tu contraseña ha sido cambiada con éxito."
+      change_title: Cambia tu contraseña
+      new: Nueva contraseña
+      confirm: Confirma tu nueva contraseña
+      change_submit: Cambiar mi contraseña
+      hint: "%{min} caracteres mínimos"
+      forgot_title: ¿Olvidaste tu contraseña?
+      forgot_submit: Envíame las instrucciones para restablecer la contraseña
+      reset_tab: ¿Olvidaste tu contraseña?
+    registrations:
+      first_name_fld: Nombre
+      last_name_fld: Apellido
+      signup: Registrarse
+      signup_tab: Registrarse
+      signup_btn: ¡Regístrame!
+      my_courses: Mis cursos
+      my_courses_count:
+        zero: Aún no has participado en un curso de CoLab.
+        one: Has participado en el siguiente curso.
+        other: Has participado en los siguientes %{count} cursos.
+      hometown: ¿Dónde pasaste la mayor parte de tu tiempo creciendo?
+      impairments: >
+        ¿Tienes alguna discapacidad que altere tu perspectiva?
+        (optional)
+      impairment_visual: Visual
+      impairment_auditory: Auditiva
+      impairment_motor: Motora
+      impairment_cognitive: Cognitiva
+      impairment_other: Otra
+      account_info: Ingresa tu información de cuenta
+      tell_about: Cuéntanos sobre ti, (optional)
+      tell_about_personalized: >
+        Cuéntanos sobre ti, %{name} (optional)
+      activity_history: Historial de actividades en las que has participado
+      no_activities: Aún no hay actividades
+      disp_stgs: Configuración de pantalla
+      new_profile_submit: ¡Crear mi perfil!
+      update_profile_submit: ¡Actualizar mi perfil!
+      your_info: Tu información de cuenta
+      edit_profile: Editar tu perfil
+      reg_emails: Correos electrónicos registrados
+      primary: Principal
+      study_title: Título del estudio
+      study_status: Tu estado de participación
+      study_participant: Participando
+      study_non_participant: No participando
+      update_status: Revisar/Cambiar
+      confirmed: Confirmado
+      waiting_confirmations: "Actualmente esperando confirmación para:"
+      consent_history: Registros de participación en investigaciones actualmente aplicables
+      password_change: ¿Quieres cambiar tu contraseña? Haz clic aquí y te enviaremos instrucciones por correo electrónico.
+      make_prim: Hacer principal
+      simulation_id: "Identificación de estimulación: %{sim_id}"
+      experience_not_started: Debes comenzar la experiencia primero
+      unhappy: ¿Estás insatisfecho? Envía un correo electrónico al soporte para que eliminen tu cuenta.
+      cancel_acct_hdg: Cancelando tu cuenta
+      cancel_acct_link: Marca tu cuenta para eliminación
+      new_address_lbl: "Nueva dirección:"
+      new_address_prompt: ¿Cuál es la nueva dirección?
+      optional_demo: >
+        Proporcionar la siguiente información sobre ti es opcional, pero hacerlo puede
+        ayudarnos a brindarle una mejor experiencia.
+      destroyed: "¡Adiós! Tu cuenta ha sido cancelada con éxito. Esperamos verte pronto nuevamente."
+      signed_up: "¡Bienvenido! Te has registrado con éxito."
+      signup_failed: >
+        Lo sentimos, pero no pudimos crear tu cuenta. Tal vez
+        la dirección ya esté registrada o la dirección en sí sea
+        inválida. Por favor, contacta al soporte para obtener asistencia.
+      signed_up_but_inactive: >
+        Te has registrado con éxito y tu cuenta está reservada. Sin embargo,
+        no pudimos iniciar sesión porque tu cuenta aún no está activada. Por favor, revisa
+        tu correo electrónico y haz clic en el enlace para verificar y activar tu nueva cuenta.
+      signed_up_but_locked: >
+        Te has registrado con éxito. Sin embargo, no pudimos iniciar sesión porque tu
+        cuenta está bloqueada.
+      signed_up_but_unconfirmed: >
+        Se ha enviado un mensaje con un enlace de confirmación a tu dirección de correo electrónico. Por favor,
+        sigue el enlace para activar tu cuenta.
+      update_needs_confirmation: >
+        Has actualizado tu cuenta con éxito, pero necesitamos verificar tu nueva dirección
+        correo electrónico. Por favor, revisa tu correo electrónico y sigue el enlace de confirmación para confirmar tu
+        nueva dirección de correo electrónico.
+      email_add: ¿Quieres añadir una dirección?
+      updated: "Tu cuenta ha sido actualizada con éxito."
+      email_added: El nuevo correo electrónico se ha añadido con éxito.
+      email_not_added: >
+        Esa dirección de correo electrónico no pudo ser añadida. ¿Quizás ya está en uso? Por favor, 
+        contacta al soporte para obtener asistencia.
+      email_destroyed: Esa dirección de correo electrónico fue completamente eliminada de nuestros registros.
+      set_primary: Tu dirección de correo electrónico principal ha sido establecida.
+    sessions:
+      signed_in: "¡Bienvenido! Has iniciado sesión con éxito."
+      signed_out: "Has cerrado sesión con éxito."
+      already_signed_out: "Signed out successfully."
+      login: Iniciar sesión
+      login_submit: ¡Iniciar sesión!
+    unlocks:
+      send_instructions: >
+        Recibirás un correo electrónico con instrucciones sobre cómo desbloquear tu cuenta
+        en unos minutos.
+      send_paranoid_instructions: >
+        Si tu cuenta existe, recibirás un correo electrónico con instrucciones sobre cómo
+        desbloquearla en unos minutos.
+      unlocked: "Tu cuenta ha sido desbloqueada con éxito. Por favor, inicia sesión para continuar."
+      no_instructions: "¿No recibiste las instrucciones para desbloquear?"
+      resend_title: Reenviar instrucciones para desbloquear
+      resend_submit: ¡Reenviar instrucciones para desbloquear!
+  errors:
+    messages:
+      already_confirmed: "ya fue confirmado, por favor intenta iniciar sesión"
+      confirmation_period_expired: "necesita ser confirmado dentro de %{period}, por favor solicita uno nuevo"
+      expired: "ha expirado, por favor solicita uno nuevo"
+      not_found: "no encontrado"
+      not_locked: "no estaba bloqueado"
+      not_saved:
+        one: "1 error impidió que este %{resource} fuera guardado:"
+        other: "%{count} errores impidieron que este %{resource} fuera guardado:"

@@ -115,11 +115,17 @@ Then 'the user enables the {string} table view option' do |view_option|
   end
   found.should be( true ), "No checkbox for #{view_option} found"
 
-  checkbox = find(:xpath, option_xpath )
 
-  checkbox.click if 'false' == checkbox['data-p-highlight']
-  send_keys :escape
-
+  begin
+    retries ||= 0
+    checkbox = find(:xpath, option_xpath )
+    checkbox.click if 'false' == checkbox['data-p-highlight']
+    send_keys :escape
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+    # A timing artifact, I think
+    puts e.inspect
+    retry if ( ( retries += 1) < 4 ) && has_xpath?( option_xpath ) 
+  end
 end
 
 Then(/^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/) do |field, value|

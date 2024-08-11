@@ -20,7 +20,7 @@ namespace :testing do
     if args[:tester].nil? || args[:tester].empty?
       puts '  This task sets up example objects for testers in CoLab test environments'
       puts '   Usage:   rake testing:examples[<user email>]'
-      puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
+      puts '   Example: rake testing:examples[john_smith@gmail.com]'
     else
       email = args[:tester]
       user = User.joins(:emails).where(emails: { email: email }).take

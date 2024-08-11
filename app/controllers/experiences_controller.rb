@@ -9,6 +9,9 @@ class ExperiencesController < ApplicationController
 
   def show
     respond_to do |format|
+      words = @experience.reactions.collect do |local_reaction|
+        local_reaction.improvements.nil? ? [] : local_reaction.improvements.split(' ')
+      end
       format.json do
         course_hash = {
           id: @experience.course_id,
@@ -23,7 +26,8 @@ class ExperiencesController < ApplicationController
           reactionsUrl: @experience.id.nil? ? nil : get_reactions_path(@experience),
           messages: {
             status: params[:notice]
-          }
+          },
+          response_words: words.empty? ? [] : Candidate.filter.filter(words.flatten!)
         }
         render json: response
       end

@@ -396,13 +396,9 @@ class HomeController < ApplicationController
                  activity.get_submissions_for_user(current_user).size
                end,
         link: case activity.type
-              when 'Terms List'
-                bingo_list_stats_path(activity.candidate_list_for_user(current_user))
-              when 'Project'
-                nil
-              when 'Assignment'
+              when 'Terms List', 'Assignment'
                 "#{activity.get_link}/#{activity.id}"
-              when 'Group Experience'
+              when 'Project', 'Group Experience'
                 nil
               end
       }

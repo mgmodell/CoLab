@@ -75,8 +75,9 @@ export default function SubmissionList(props: Props) {
             paginatorDropdownAppendTo={"self"}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
-            //paginatorLeft={paginatorLeft}
-            //paginatorRight={paginatorRight}
+            itemID="submissionList"
+            name="submissionList"
+            id="submissionList"
             dataKey="id"
             onRowClick={event => {
               props.selectSubmissionFunc(event.data.id);

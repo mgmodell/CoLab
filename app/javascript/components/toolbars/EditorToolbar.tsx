@@ -7,17 +7,14 @@ export default function EditorToolbar(props: Props) {
     return (
         <div id='toolbar'>
             <select className='ql-size'>
-                <option selected></option>
                 <option value='small'></option>
                 <option value='large'></option>
             </select>
             <select className='ql-header'>
                 <option value='1'></option>
                 <option value='2'></option>
-                <option selected></option>
             </select>
             <select className='ql-font'>
-                <option selected></option>
                 <option value='serif'></option>
                 <option value='monospace'></option>
             </select>
@@ -42,7 +39,6 @@ export default function EditorToolbar(props: Props) {
             <button className='ql-separator'></button>
 
             <select className='ql-align'>
-                <option selected></option>
                 <option value='center'></option>
                 <option value='right'></option>
                 <option value='justify'></option>

@@ -104,7 +104,7 @@ Feature: (Re)Submitting individual assignments
 
   # Submit assignments
   @javascript
-  Scenario: User can open and submit text to an assignment
+  Scenario: User can open, enter text, save text, and submit text to an assignment
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
@@ -116,13 +116,13 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 0 'submitted' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
      Then the user clicks 'Submit revision for grading'
      Then the assignment has 1 'submitted' submission
      Then the assignment has 0 'draft' submission
 
   @javascript
-  Scenario: User can open and submit text to an assignment
+  Scenario: User can open, submit and re-submit and then withdraw text from an assignment
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
@@ -138,7 +138,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 0 'submitted' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
       #User makes a change and re-saves
      Then the user enters a 'text' submission
      Then the 'Save revision for further editing' button is 'enabled'
@@ -199,7 +199,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 1 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
 
   @javascript
   Scenario: User can open and submit a combo to an assignment
@@ -217,7 +217,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 1 'draft' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
 
   # Deadline enforcement
   @javascript
@@ -238,7 +238,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
     
   @javascript
   Scenario: User can submit a combo to an assignment after the first deadline but before the final
@@ -256,7 +256,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
 
   @javascript
   Scenario: User cannot submit to an assignment after the final deadline
@@ -282,7 +282,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
-      And the submission is attached to the user
+     Then the 'submitter' is the 'current' user
 
   @javascript
   Scenario: User can withdraw a submitted assignment
@@ -316,3 +316,104 @@ Feature: (Re)Submitting individual assignments
      Then user sees the assignment in the history
      Then the user opens the assignment history item
      Then the 'Submissions' tab 'is not' enabled
+
+  # Editing
+  @javascript
+  Scenario: User can open and submit an existing draft combo assignment
+      And the init assignment 'does' accept 'links'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user opens the 'Submissions' submissions tab
+     Then the user creates a new submission
+     Then the user enters a 'text' submission
+     Then the user enters a 'link' submission
+     Then the user clicks 'Save revision for further editing'
+     Then the assignment has 1 'draft' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+     Then the 'submitter' is the 'current' user
+     Then the user logs out
+     # Reopen it
+     Then the user logs in
+     Then the user opens the assignment task
+     Then the user opens the 'Submissions' submissions tab
+      And the user opens submission 1
+     Then the user enters a 'text' submission
+     Then the user enters a 'link' submission
+     Then the user clicks 'Save revision for further editing'
+     Then the assignment has 1 'draft' submission
+     Then the user clicks 'Submit revision for grading'
+     Then the assignment has 0 'draft' submission
+     Then the assignment has 1 'submitted' submission
+
+  # Visibility
+  @javascript
+  Scenario: User can not see another user's submission
+    Given the project has a group with 4 confirmed users
+    Given the user is the "first" user in the group
+    Given the assignment already has 3 submission from the user
+    Given the user is the "last" user in the group
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 0 submissions
+    Given the user logs out
+    Given the assignment already has 2 submission from the user
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 2 submissions
+    Given the user logs out
+    Given the user is the "first" user in the group
+    Given the assignment already has 1 submission from the user
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user sees 4 submissions
+
+  # Viewing grades
+  @javascript
+  Scenario: User reviews a single graded assignment
+    Given the user logs in
+    Given the assignment already has 1 submission from the user
+   Given submission 1 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 1 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: User reviews one of 4 graded assignments
+    Given the user logs in
+    Given the assignment already has 4 submission from the user
+   Given submission 3 'is' graded
+   Given submission 2 'is' graded
+   Given submission 1 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Line Chart' view
+    Then we see a 'Line Chart' graph with 3 time marker
+     And the chart levels equal the rubric criteria count
+
+  @javascript
+  Scenario: Instructor revises a previous evaluation
+    Given the user logs in
+   Given the assignment already has 4 submission from the user
+   Given submission 1 'is' graded
+   Given submission 2 'is' graded
+   Given submission 3 'is' graded
+   Given submission 4 'is' graded
+    Then the user opens the assignment task
+    Then the user opens the "Grading" submissions tab
+    Then we see a 'Stacked Area' graph with 4 time marker
+     And the chart levels equal the rubric criteria count
+    Then we switch to the 'Layered Area' view
+    Then we see a 'Layered Area' graph with 4 time marker
+     And the chart levels equal the rubric criteria count

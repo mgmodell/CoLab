@@ -160,7 +160,7 @@ export default function WhyCoLab(props: Props) {
       x: -20,
       y: 30,
       width: 160,
-      height: 125,
+      height: 145,
       opacity: 1
     },
     //SLIDE 3

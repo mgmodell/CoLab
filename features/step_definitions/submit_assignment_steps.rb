@@ -154,7 +154,8 @@ Then('the user creates a new submission') do
     sub_link: '',
     assignment_id: @assignment.id,
     rubric_id: @assignment.rubric_id,
-    user_id: @user.id
+    user_id: @user.id,
+    creator_id: @user.id
   )
 end
 
@@ -245,15 +246,12 @@ Then('the {string} db submission data is accurate') do |placement|
   @submission.sub_text.should eq @check_submission.sub_text.delete("\n")
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
-  @submission.user_id.should eq @check_submission.user_id
+  @submission.user_id.should eq( @check_submission.user_id )
+  @submission.creator_id.should eq @check_submission.creator_id
 end
 
 Then('the submission has no group') do
   @check_submission.group_id.should be nil
-end
-
-Then('the submission is attached to the user') do
-  @check_submission.user_id.should be @user.id
 end
 
 Given('the assignment already has {int} submission from the user') do |count|
@@ -268,10 +266,13 @@ Given('the assignment already has {int} submission from the user') do |count|
     travel 10.minutes
     submitted = DateTime.now
 
+    group = @assignment.project.group_for_user(@user) if @assignment.group_enabled
     submission = @assignment.submissions.new(
       submitted:,
       sub_text: sub_text_db,
       user: @user,
+      creator: @user,
+      group:,
       rubric: @assignment.rubric
     )
     submission.save
@@ -309,7 +310,7 @@ Given('submission {int} {string} graded') do |index, graded_state|
       )
       @assignment.rubric.criteria.each do |criterium|
         rubric_row_feedback = RubricRowFeedback.new(
-          score: 100,
+          score: rand(1..100),
           criterium:,
           feedback: "<p>#{Faker::Lorem.paragraph}</p>",
         )
@@ -354,4 +355,63 @@ Then('the {string} button is {string}') do |btn_name, state|
     puts "State '#{state}' not yet handled"
     pending # Write code here that turns the phrase above into concrete actions
   end
+end
+
+Then('the {string} is the {string} user') do |submitter_or_creator, current_or_remembered|
+  case submitter_or_creator
+  when 'submitter'
+    @submission.user.should eq 'current' == current_or_remembered ? @user : @assignment_submitter_user
+  when 'creator'
+    @submission.creator.should eq 'current' == current_or_remembered ? @user : @assignment_creator_user
+  else
+    puts "State '#{current_or_remembered}' not yet handled"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+end
+
+Then('remember the {string} user') do |submitter_or_creator|
+  case submitter_or_creator
+  when 'submitter'
+    @assignment_submitter_user = @user
+    @submission.user = @user 
+    @submission.user_id = @user.id 
+  when 'creator'
+    @assignment_creator_user = @user
+    @submission.creator = @user 
+    @submission.creator_id = @user.id 
+  else
+    puts "State '#{current_or_remembered}' not yet handled"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+end
+
+Then('the user opens submission {int}') do |assignment_ord|
+  # Then('the user opens submission {float}') do |float|
+  target_sub = find_all( :xpath, "//tbody/tr" )[assignment_ord -1]
+  target_sub.click
+  wait_for_render
+end
+
+Then('the user sees {int} submissions') do |sub_count|
+  find( :xpath, "//a[@role='tab']/span[text()='Responses']" ).click
+  all(:xpath, "//div[@id='submissionList']/div/table/tbody/tr[not(@data-pc-section='emptymessage')]" ).size.should eq sub_count
+end
+
+Then('we see a {string} graph with {int} time marker') do | line_or_bar, marker_count |
+  all(:xpath, "//*[local-name()='g' and contains(@class,'x-tick')]").size.should eq( marker_count )
+
+  drop_down = find( :xpath, "//div[@id='chartType']" )
+  drop_down.text.should eq(line_or_bar), "Expected '#{line_or_bar}' but got '#{drop_down.text}'"
+end
+
+Then('the chart levels equal the rubric criteria count') do
+  criteria_count = @assignment.rubric.criteria.size
+  byebug unless all(:xpath, "//*[local-name()='path' and contains(@name,'criterium-')]").size == criteria_count 
+  all(:xpath, "//*[local-name()='path' and contains(@name,'criterium-')]").size.should eq( criteria_count )
+end
+
+Then('we switch to the {string} view') do | stacked_or_layered |
+  drop_down = find( :xpath, "//div[@id='chartType']" )
+  drop_down.click
+  find( :xpath, "//li[text()='#{stacked_or_layered}']" ).click
 end

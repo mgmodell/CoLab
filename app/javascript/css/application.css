@@ -127,3 +127,14 @@ a:active {
 .content-table-data {
   text-wrap: wrap;
 }
+
+.bingoBoardTable {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.bingoBoardTable td {
+  border: 1px solid #ddd;
+}

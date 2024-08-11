@@ -27,6 +27,7 @@ import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import ProfileShell from "./profile/ProfileShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
@@ -78,6 +79,12 @@ export default function PageWrapper(props: Props) {
               path={"login"}
               element={<Navigate to={"/welcome/login"} replace={true} />}
             />
+            <Route path="profile/*" element={
+              <RequireAuth>
+
+                <ProfileShell />
+              </RequireAuth>
+            } />
             <Route
               path="profile"
               element={
@@ -156,7 +163,7 @@ export default function PageWrapper(props: Props) {
   return (
     <Provider store={store}>
       <PrimeReactProvider>
-        <AppInit 
+        <AppInit
           endpointsUrl={props.getEndpointsUrl}
           debug={props.debug}
         >

@@ -1,0 +1,86 @@
+es:
+  assignments:
+    index:
+      title: Lista de Tareas
+    edit:
+      title: Editar Tarea
+      assignment_details_pnl: Detalles de la Tarea
+      assignment_submissions_pnl: Entregas
+      update_assignment_btn: Guardar Tarea
+      group_option: ¿Hacer grupos disponibles?
+      group_source: Origen de los grupos
+      select_rubric: ¿Qué rúbrica se aplicará?
+      sub_type_select: ¿Qué tipo de entregas están permitidas?
+      text_sub: ¿Texto ingresado directamente en CoLab?
+      link_sub: ¿Enlaces (URLs) a las entregas?
+      file_sub: ¿Carga de archivos?
+      status_saving: Guardando tarea
+    show:
+      title: Detalles de la Tarea
+      edit_string: Editar detalles de la tarea
+      published: ¿Está publicado?
+      creator: Creado por
+    new:
+      title: Nueva Tarea
+      create_assignment_btn: Crear Tarea
+    status:
+      name: Nombre de la Tarea
+      brief: Breve
+      eval_criteria: Criterios de Evaluación
+      rubric_name: Título de la rúbrica
+      rubric_version: Versión
+      rubric_minimum: Requisitos mínimos no cumplidos
+    submissions:
+      new_header: Nueva Respuesta
+      edit_header: Editar Respuesta
+      sub_text_lbl: Texto de Respuesta
+      sub_text_placeholder: Haga clic para ingresar su respuesta
+      sub_link_lbl: Enlace a la respuesta
+      sub_link_placehldr: Ingresa el enlace a la respuesta
+      create: Crear una Nueva Respuesta
+      save: Guardar Respuesta como Borrador
+      submit: Enviar una nueva respuesta
+      past_header: Respuestas anteriores
+      score: Puntuación
+      id: Identificación de envío
+      user: Enviado por
+      submitted: Fecha de entrega
+      withdrawn: Fecha de retiro
+      submitter: Enviado por
+      submit_revision_btn: Enviar revisión para calificar
+      draft_revision_btn: Guardar revisión para edición posterior
+      copy_submission_btn: Hacer una copia de esta revisión
+      withdraw_btn: Retirar revisión
+      new_btn: Retirar revisión
+      response_tab_lbl: Respuestas
+    progress:
+      progress_tab_lbl: Progreso
+      in_progress_msg: Trabajo en progreso
+    visualization:
+      label: Tipo de gráfico
+      stacked_area: Área en capas
+      layered_area: Layered Area
+      lines: Gráfico lineal
+    create_success: ¡La tarea se creó exitosamente!
+    destroy_success: ¡La tarea fue destruida exitosamente!
+    update_success: ¡La tarea se actualizó exitosamente!
+    back: Volver a la lista de tareas
+    name: Nombre de la Tarea
+    open_date: Fecha de inicio
+    close_date: Fecha de cierre
+    description: Descripción de la tarea
+    active: ¿Está activo? 
+    version: Versión
+    error:
+      submission_type: Se debe seleccionar al menos un tipo de envío
+      create_failed: >
+        No se ha podido crear la nueva tarea. Por favor resuelva los errores que se indican a
+        continuación e inténtelo de nuevo.
+      update_failed: >
+        No se ha podido guardar la tarea. Por favor resuelva los errores a continuación
+        e inténtelo de nuevo.
+      group_required: >
+        Para habilitar los grupos, también debe seleccionar el proyecto de cual
+        extraerlos (the groups).
+      no_update_error: La tarea se ha guardado exitosamente.
+      no_create_error: La tarea se ha creado correctamente.

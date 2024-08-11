@@ -27,6 +27,7 @@
     "@visx/curve": "^3.0.0",
     "@visx/scale": "^3.0.0",
     "@visx/shape": "^3.0.0",
+    "@visx/wordcloud": "^3.3.0",
     "@visx/xychart": "^3.7.0",
     "autosuggest-highlight": "^3.2.1",
     "axios": "^1.0.0",

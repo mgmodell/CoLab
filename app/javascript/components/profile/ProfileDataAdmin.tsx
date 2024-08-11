@@ -665,14 +665,14 @@ export default function ProfileDataAdmin(props: Props) {
         activeIndex={curTab}
         onTabChange={event => setCurTab(event.index)}
       >
-        <TabPanel header={"Details"} disabled={!profileReady}>
+        <TabPanel header={t('tabs.details')} disabled={!profileReady}>
           {profileReady ? (
             detailsComponent
           ) : (
             <Skeleton className="mb-2" height="10rem" width="100%" />
           )}
         </TabPanel>
-        <TabPanel header={"My Courses"} disabled={!existingProfile}>
+        <TabPanel header={t('tabs.courses')} disabled={!existingProfile}>
           <UserCourseList
             retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
             coursesList={courses}
@@ -680,7 +680,7 @@ export default function ProfileDataAdmin(props: Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={"History"} disabled={!existingProfile}>
+        <TabPanel header={t('tabs.history')} disabled={!existingProfile}>
           <UserActivityList
             retrievalUrl={endpoints["activitiesUrl"] + ".json"}
             activitiesList={activities}
@@ -688,7 +688,7 @@ export default function ProfileDataAdmin(props: Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={"Research Participation"} disabled={!existingProfile}>
+        <TabPanel header={t('tabs.research')} disabled={!existingProfile}>
           <ResearchParticipationList
             retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
             consentFormList={consentForms}

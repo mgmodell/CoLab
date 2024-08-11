@@ -55,6 +55,12 @@ export default function AssignmentSubmission(props: Props) {
     }
   }, [endpointStatus, submissionId]);
 
+  useEffect(() => {
+    if (endpointStatus) {
+      setDirty(true);
+    }
+  }, [submissionTextEditor, submissionLink]);
+
   const loadSubmission = () => {
     const url = `${endpoints.submissionUrl}${submissionId}.json`;
     axios
@@ -93,11 +99,6 @@ export default function AssignmentSubmission(props: Props) {
       });
   };
 
-  useEffect(() => {
-    if (endpointStatus) {
-      setDirty(true);
-    }
-  }, [submissionTextEditor, submissionLink]);
 
   const sub_text = props.assignment.textSub ? (
     <Row>

@@ -1,0 +1,17 @@
+es:
+  submissions:
+    error:
+      nothing_submitted: No hay tarea presente
+      withdraw_requires_submit: >
+        No puedes retirar una tarea que no ha sido realmente
+        entregada.
+      no_changes_on_withdrawal: >
+        No puedes hacer cambios al retirar una tarea.
+      no_update_error: La entrega se guardó con éxito
+      no_create_error: La entrega se creó con éxito.
+      no_changes_once_submitted: >
+        Una vez que se ha entregado una tarea, no se puede modificar.
+        Debes crear una nueva entrega.
+      update_failed: >
+        No se pudo guardar la tarea. Por favor, resuelve los errores a continuación
+        y vuelve a intentarlo.
