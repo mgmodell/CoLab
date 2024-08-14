@@ -63,8 +63,8 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
       else
         true.should be( false ), "No element found for #{label}"
       end
-      if has_xpath?( "//li[text()='#{demo_data[:value]}']" )
-        find( :xpath, "//li[text()='#{demo_data[:value]}']" ).click
+      if has_xpath?( "//li[contains(.,'#{demo_data[:value]}')]" )
+        find( :xpath, "//li[contains(.,'#{demo_data[:value]}')]" ).click
       else
         true.should be( false ), "No element found for #{demo_data[:value]}"
       end

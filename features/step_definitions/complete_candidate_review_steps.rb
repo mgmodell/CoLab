@@ -84,7 +84,7 @@ Then( /^the user sees (\d+) candidate items for review$/ ) do | candidate_count 
   # Enable max rows
   max_rows = @bingo.candidates.size
   find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 
   page.all( :xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all )
       .count.should eq candidate_count.to_i
@@ -132,7 +132,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
   # Enable max rows
   max_rows = @bingo.candidates.size
   find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -175,7 +175,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
     end
 
     begin
-      xpth_search = "//li[text()=\"#{feedback.name}\"]"
+      xpth_search = "//li[contains(.,\"#{feedback.name}\")]"
       page.find( :xpath, xpth_search ).click
       begin
         if has_xpath?( xpth_search )
@@ -207,7 +207,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
       puts e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find( :xpath,
-                        "//li[text()=\"#{feedback.name}\"]" )
+                        "//li[contains(.,\"#{feedback.name}\")]" )
       elem.scroll_to( elem )
       elem.click
 
@@ -249,14 +249,14 @@ end
 When( /^the user clicks the link to the candidate review$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 
   wait_for_render
 
   # Enable max rows
   max_rows = @bingo.candidates.size
   find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 end
 
 Then( /^there will be (\d+) concepts$/ ) do | concept_count |

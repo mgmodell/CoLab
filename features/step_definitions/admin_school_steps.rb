@@ -26,14 +26,14 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  row = find( :xpath, "//tbody/tr/td[text()='#{@school.name}']" )
+  row = find( :xpath, "//tbody/tr/td[contains(.,'#{@school.name}')]" )
   row.click
 end
 
 Then 'the user selects {string} as the {string}' do | value, field |
   lbl = find( :xpath, "//label[contains(.,'#{field}')]" )[:for]
   find( :xpath, "//*[@id='#{lbl}']" ).click
-  find( :xpath, "//li[text()='#{value}']" ).click
+  find( :xpath, "//li[contains(.,'#{value}')]" ).click
 end
 
 Then 'the user will dismiss the error {string}' do | error_message |

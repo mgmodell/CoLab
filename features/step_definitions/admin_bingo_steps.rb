@@ -22,7 +22,7 @@ end
 
 Then( 'the user clicks on the existing bingo game' ) do
   find( :xpath, "//a[contains(.,'Activities')]" ).click
-  find( :xpath, "//tbody/tr/td[text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
   wait_for_render
 end
 

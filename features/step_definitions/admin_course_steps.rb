@@ -293,10 +293,10 @@ end
 
 Then 'the user adds the {string} users {string}' do | type, addresses |
   lbl = "#{type}s"
-  tab = find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']" )
+  tab = find( :xpath, "//ul[@role='tablist']/li/a/span[contains(.,'#{lbl.capitalize}')]" )
   tab.click
 
-  btn = find( :xpath, "//button[text()='Add a #{type}']" )
+  btn = find( :xpath, "//button[contains(.,'Add a #{type}')]" )
   btn.click
 
   inpt = find( :xpath, "//input[@id='addresses']" )
@@ -334,7 +334,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
       elem = find( :xpath, xpression )
       elem.click
       find( :xpath,
-            "//button[text()='Drop the Student']" ).click
+            "//button[contains(.,'Drop the Student')]" ).click
       wait_for_render
     end
   else
@@ -350,7 +350,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
     elem.click
 
     find( :xpath,
-          "//button[text()='Drop the Student']" ).click
+          "//button[contains(.,'Drop the Student')]" ).click
     wait_for_render
   end
 end
@@ -485,6 +485,6 @@ Then( 'close all messages' ) do
 end
 
 Then( 'the user selects the {string} activity' ) do | activity_name |
-  find( :xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end
