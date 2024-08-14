@@ -17,7 +17,6 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
-import { a } from "react-spring";
 
 export default function CourseList(props) {
   const category = "course";

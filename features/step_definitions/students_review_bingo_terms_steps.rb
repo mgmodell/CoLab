@@ -8,7 +8,7 @@ Then( /^the user clicks the link to the concept list$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
 
-  find( :xpath, "//tbody/tr/td[@role='cell' and text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[@role='cell' and contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 
   wait_for_render
   # current_path = page.current_path
