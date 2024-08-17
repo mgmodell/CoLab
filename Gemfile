@@ -75,7 +75,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'derailed'
+  # gem 'derailed'
   # gem 'ruby-debug-ide'
   # gem 'debase'
   gem 'htmlbeautifier'

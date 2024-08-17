@@ -133,8 +133,8 @@ asdf plugin update --all
 asdf install
 echo "Installing gems"
 bundle install --quiet
-echo "Installing yarn packages"
-yarn install --silent
+echo "Installing pnpm packages"
+pnpm install --silent
 
 if [ "$DB_RESET" = true ]; then
   # Reset database

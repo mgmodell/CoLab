@@ -2,7 +2,7 @@ FROM mariadb
 
 COPY containers/initDBs.sql /docker-entrypoint-initdb.d/init-privs.sql
 
-ENV MYSQL_ROOT_PASSWORD test
+ENV MYSQL_ROOT_PASSWORD=test
 
 EXPOSE 3306
 

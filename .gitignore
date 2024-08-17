@@ -25,6 +25,7 @@ yarn-error.log*
 /public/packs
 /public/packs-test
 /node_modules
+.pnpm-store/
 yarn-debug.log*
 .yarn-integrity
 test_results.html

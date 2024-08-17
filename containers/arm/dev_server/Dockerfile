@@ -10,8 +10,7 @@ RUN apt -y install \
   vim \
   git \
   bash \
-  libmysqlclient-dev \
-  yarn 
+  libmysqlclient-dev
 
 RUN apt -y install \
   libyaml-dev
@@ -48,7 +47,7 @@ RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add bundler && \
   asdf plugin add nodejs && \
-  asdf plugin add yarn
+  asdf plugin add pnpm
 
 USER root
 
@@ -64,10 +63,10 @@ RUN mkdir -p /home/colab/src/app
 COPY containers/dev_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
 
-ENV DRIVER docker
+ENV DRIVER=docker
 ENV COLAB_DB=db
 ENV COLAB_DB_PORT=3306
-ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
+ENV CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 
 ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
 CMD -r
