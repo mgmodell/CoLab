@@ -406,7 +406,6 @@ end
 
 Then( 'the chart levels equal the rubric criteria count' ) do
   criteria_count = @assignment.rubric.criteria.size
-  byebug unless all( :xpath, "//*[local-name()='path' and contains(@name,'criterium-')]" ).size == criteria_count
   all( :xpath, "//*[local-name()='path' and contains(@name,'criterium-')]" ).size.should eq( criteria_count )
 end
 

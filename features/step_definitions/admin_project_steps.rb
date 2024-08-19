@@ -157,7 +157,6 @@ end
 
 Then( /^the user sets the "([^"]*)" field to "([^"]*)"$/ ) do | field, value |
   elem = find_field( field )
-  byebug
   elem.click
   send_keys [:command, 'a'], :backspace
   send_keys [:control, 'a'], :backspace
