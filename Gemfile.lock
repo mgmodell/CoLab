@@ -127,7 +127,6 @@ GEM
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.3.0)
-    benchmark-ips (2.13.0)
     bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.4)
@@ -194,26 +193,11 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     date (3.3.4)
-    dead_end (4.0.0)
     delayed_job (4.1.12)
       activesupport (>= 3.0, < 8.0)
     delayed_job_active_record (4.1.9)
       activerecord (>= 3.0, < 8.0)
       delayed_job (>= 3.0, < 5)
-    derailed (0.1.0)
-      derailed_benchmarks
-    derailed_benchmarks (2.1.2)
-      benchmark-ips (~> 2)
-      dead_end
-      get_process_mem (~> 0)
-      heapy (~> 0)
-      memory_profiler (>= 0, < 2)
-      mini_histogram (>= 0.3.0)
-      rack (>= 1)
-      rack-test
-      rake (> 10, < 14)
-      ruby-statistics (>= 2.1)
-      thor (>= 0.19, < 2)
     descriptive_statistics (2.5.1)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -266,13 +250,9 @@ GEM
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
-    get_process_mem (0.2.7)
-      ffi (~> 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
-    heapy (0.2.0)
-      thor
     htmlbeautifier (1.4.3)
     htmlentities (4.3.4)
     i18n (1.14.5)
@@ -313,14 +293,12 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.2)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2024.0806)
     mimemagic (0.3.10)
       nokogiri (~> 1)
       rake
-    mini_histogram (0.3.1)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
     minitest (5.25.1)
@@ -531,7 +509,6 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.13.0)
-    ruby-statistics (4.0.1)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
@@ -644,7 +621,6 @@ DEPENDENCIES
   d3-rails
   database_cleaner
   delayed_job_active_record
-  derailed
   descriptive_statistics (~> 2.5.1)
   devise-multi_email!
   devise_token_auth!
