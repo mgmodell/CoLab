@@ -1,0 +1,25 @@
+es:
+  intro:
+    tooltips:
+        welcome: Bienvenido 
+        about: Acerca de
+        why: ¿Por qué CoLab?
+        research: Investigación
+        student: ¿Estudiante?
+        instructor: ¿Instructor?
+    titles:
+        about: ¿Quién está detrás de CoLab?
+        why: ¿Qué problema resuelve CoLab?
+        research: La investigación detrás de CoLab
+        student: Función CoLab para los instructores
+        instructor: CoLab features for instructors
+    why_slides:
+        captions:
+            one: Soñamos con un trabajo en equipo así
+            two: Pero muchas veces aprendemos que...
+            three: ...se siente como una experiencia injusta
+            four: Y las experiencias negativas toman muchas formas
+            five: ¿O tal vez los resultados parecen sencillos y aburridos?
+    images:
+        student_concern: El estudiante habla con el profesor
+        normally_functioning: Un grupo de estudiantes en el que todos están comprometidos

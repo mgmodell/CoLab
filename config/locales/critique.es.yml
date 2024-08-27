@@ -1,0 +1,37 @@
+es:
+  critiques:
+    critique_title: Críticas
+    error:
+      not_loaded: No se ha cargado ningún envío
+      feedback_required: >
+        Si la puntuación no es perfecta, es necesario enviar
+        un comentario.
+    submissions_title: Entregas
+    submitted: Entrega de trabajo
+    submitted_text: Texto enviado
+    submitted_link: Enlace enviado
+    submission_list_hidden: Haga clic aquí para ver la lista de presentaciones
+    no_text: No se ingresó ningún texto
+    feedback: Comentarios generales
+    calculated_score_lbl: Puntuación calculada
+    override_option_lbl: ¿Anular puntuación?
+    override_score_lbl: Establecer puntuación
+    clear_override_btn: Borrar puntuación anulada
+    history: Envíos y comentarios anteriores
+    rubric:
+      name: Nombre
+      version: Versión
+      minimum: Requisitos mínimos no cumplidos.
+      criteria_feedback: Comentarios sobre los criterios
+    save_btn: Guardar comentarios
+    save_success_msg: Tus comentarios se guardaron correctamente
+    save_fail_msg: Tus comentarios no se pudieron guardar.
+    submissions:
+      id: Identificación de envío
+      score: Puntuación
+      calculated_score: Puntuación calculada
+      submitted: Fecha de entrega
+      withdrawn: Fecha de retiro
+      not_withdrawn: --
+      submitter: Entregado por
+      score_na: --
