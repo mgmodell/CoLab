@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.3.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.1.3.3'
+gem 'rails', '~> 7.2.1'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '14.0.4'
+gem 'react_on_rails', '14.0.5'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -75,7 +75,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'derailed'
+  # gem 'derailed'
   # gem 'ruby-debug-ide'
   # gem 'debase'
   gem 'htmlbeautifier'
