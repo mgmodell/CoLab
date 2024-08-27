@@ -271,6 +271,7 @@ export default function ProjectDataAdmin(props) {
             }
           }}
           showIcon={true}
+          showOnFocus={false}
           inputId="project_start_dates"
           name="project_start_dates"
         />

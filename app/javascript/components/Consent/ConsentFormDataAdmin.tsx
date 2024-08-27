@@ -206,6 +206,7 @@ export default function ConsentFormDataAdmin(props) {
                   }
                 }}
                 selectionMode="range"
+                showOnFocus={false}
                 showIcon={true}
               />
               <label htmlFor="consent_form_dates">{t("study_dates")}</label>

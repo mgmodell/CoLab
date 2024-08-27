@@ -41,6 +41,7 @@ export default function CourseDatesWizard(props: Props) {
             value={[props.course.start_date, props.course.end_date]}
             placeholder="Select a Date Range"
             showIcon={true}
+            showOnFocus={false}
             onChange={event => {
               const changeTo = event.value;
               if (null === changeTo) {

@@ -353,6 +353,7 @@ export default function BingoGameDataAdmin(props) {
                       }}
                       selectionMode="range"
                       showIcon={true}
+                      showOnFocus={false}
                       inputId="bingo_game_dates"
                       name="bingo_game_dates"
                     />

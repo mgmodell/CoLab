@@ -529,6 +529,7 @@ export default function ProfileDataAdmin(props: Props) {
                     onChange={date => setProfileStartedSchool(date)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
+                    showOnFocus={false}
                     monthNavigator={true}
                     showButtonBar={true}
                   />
@@ -656,6 +657,7 @@ export default function ProfileDataAdmin(props: Props) {
                     dateFormat="mm/dd/yy"
                     showIcon={true}
                     monthNavigator={true}
+                    showOnFocus={false}
                     showButtonBar={true}
                   />
                   <label htmlFor="profile_date_of_birth">

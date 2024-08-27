@@ -252,6 +252,7 @@ export default function ExperienceDataAdmin(props) {
             }
           }}
           selectionMode="range"
+          showOnFocus={false}
           showIcon={true}
         />
         <label htmlFor="experience_start_date">Experience Dates</label>

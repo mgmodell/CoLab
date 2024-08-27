@@ -109,6 +109,7 @@ export default function CopyActivityButton(props: Props) {
           value={newStartDate}
           id="newCourseStartDate"
           showIcon
+          showOnFocus={false}
           onChange={newValue => {
             setNewStartDate(newValue.value);
           }}

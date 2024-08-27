@@ -152,7 +152,6 @@ Then( 'the user sets the {string} start date to {string} and the end date to {st
   send_keys [:command, 'a'], :backspace
   send_keys [:control, 'a'], :backspace unless datefield.value.empty?
   send_keys dates_string
-
 end
 
 Then( /^the user sets the "([^"]*)" field to "([^"]*)"$/ ) do | field, value |
