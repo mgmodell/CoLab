@@ -49,10 +49,10 @@ Then( /^the user "([^"]*)" the collaboration request$/ ) do | accept_or_decline 
   wait_for_render
   case accept_or_decline.downcase
   when 'accepts'
-    btn = find( :xpath, "//a[text()='Accept']" )
+    btn = find( :xpath, "//a[contains(.,'Accept')]" )
     # click_link_or_button 'Accept'
   when 'declines'
-    btn = find( :xpath, "//a[text()='Decline']" )
+    btn = find( :xpath, "//a[contains(.,'Decline')]" )
     # click_link_or_button 'Decline'
   else
     log "We didn't test anything there: #{accept_or_decline}"

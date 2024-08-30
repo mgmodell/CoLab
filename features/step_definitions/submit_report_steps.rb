@@ -46,7 +46,7 @@ end
 
 When( /^user clicks the link to the project$/ ) do
   step 'the user enables the "Group Name" table view option'
-  find( :xpath, "//tbody/tr/td[text()='#{@project.group_for_user( @user ).name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@project.group_for_user( @user ).name}')]" ).click
 
   wait_for_render
 end
@@ -134,9 +134,9 @@ Then( /^the assessment should show up as completed$/ ) do
   step 'the user switches to the "Task View" tab'
 
   step 'the user enables the "Group Name" table view option'
-  page.should have_xpath( "//tbody/tr/td[text()='#{group_name}']" ),
+  page.should have_xpath( "//tbody/tr/td[contains(.,'#{group_name}')]" ),
               "No link to assessment for #{group_name} found"
-  page.should have_xpath( "//tbody/tr/td[text()='Completed']" ),
+  page.should have_xpath( "//tbody/tr/td[contains(.,'Completed')]" ),
               "No 'completed' message"
 end
 
@@ -233,7 +233,7 @@ Then( /^the user enters a comment "([^"]*)" personally identifiable information$
 
   end
 
-  find( :xpath, '//*[text()="Would you like to add additional comments?"]' ).click
+  find( :xpath, '//*[contains(.,"Would you like to add additional comments?")]' ).click
   page.fill_in( 'comments', with: @comment, visible: :all, disabled: :all )
 end
 

@@ -97,7 +97,7 @@ Then( 'the user adds a group named {string}' ) do | group_name |
 end
 
 Then( /^the user switches to the "([^"]*)" tab$/ ) do | tab |
-  find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
+  find( :xpath, "//ul[@role='tablist']/li/a/span[contains(.,'#{tab}')]" ).click
   wait_for_render
 end
 
@@ -171,7 +171,7 @@ end
 
 Then( 'the user selects {string} as {string}' ) do | value, field |
   id = find( :xpath,
-             "//label[contains(.,'#{field}')]" )[:for]
+             "//label[contains(text(),'#{field}')]" )[:for]
   begin
     retries ||= 0
     selectCtrl = find_all( :xpath, "//select[@id='#{id}']" )
@@ -181,7 +181,7 @@ Then( 'the user selects {string} as {string}' ) do | value, field |
 
   if selectCtrl.empty?
     find( :xpath, "//div[@id='#{id}']", visible: :all ).click
-    find( :xpath, "//li[contains(.,'#{value}')]" ).click
+    find( :xpath, "//li[contains(text(),'#{value}')]" ).click
     # sleep(0.3)
   else
     selectCtrl[0].select( value )
@@ -225,7 +225,7 @@ end
 
 Then( 'the user clicks on the existing project' ) do
   find( :xpath, "//a[contains(.,'Activities')]" ).click
-  find( :xpath, "//tbody/tr/td[text()='#{@project.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@project.get_name( @anon )}')]" ).click
 end
 
 Then( /^the project Factor pack is "([^"]*)"$/ ) do | selected_factor_pack |

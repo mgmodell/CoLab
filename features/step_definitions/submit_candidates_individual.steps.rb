@@ -25,7 +25,7 @@ end
 When( /^the user clicks the link to the candidate list$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 end
 
 Then( /^the user should see the Bingo candidate list$/ ) do
@@ -123,7 +123,7 @@ Given( 'the Bingo! {string} been activated' ) do | has_or_has_not |
 end
 
 Then( 'the {string} button is not available' ) do | button_name |
-  btns = all( :xpath, "//button[text()='#{button_name}']" )
+  btns = all( :xpath, "//button[contains(.,'#{button_name}')]" )
   btns.each do | btn |
     btn[:disabled].should be true
   end

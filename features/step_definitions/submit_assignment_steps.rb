@@ -86,7 +86,7 @@ end
 Then( 'the user opens the assignment task' ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@assignment.name}')]" ).click
   wait_for_render
 end
 
@@ -98,7 +98,7 @@ end
 
 Then( 'the user opens the assignment history item' ) do
   wait_for_render
-  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@assignment.name}')]" ).click
 
   wait_for_render
 end
@@ -148,7 +148,7 @@ Then( 'the {string} tab {string} enabled' ) do | tab_name, enabled |
 end
 
 Then( 'the user creates a new submission' ) do
-  find( :xpath, "//button[text()='New response']" )
+  find( :xpath, "//button[contains(.,'New response')]" )
   @submission = Submission.new(
     sub_text: '',
     sub_link: '',
@@ -324,7 +324,7 @@ Then( 'the user {string} withdraw submission {int}' ) do | can, assignment_ord |
   target_sub = find_all( :xpath, '//tbody/tr' )[assignment_ord - 1]
   target_sub.click
   wait_for_render
-  button = find( :xpath, "//button[text()='Withdraw revision']" )
+  button = find( :xpath, "//button[contains(.,'Withdraw revision')]" )
 
   case can.downcase
   when 'can'
@@ -340,15 +340,15 @@ end
 Then( 'the {string} button is {string}' ) do | btn_name, state |
   case state
   when 'enabled'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and not(@disabled)]" ).size
+    button_count = find_all( :xpath, "//button[contains(.,'#{btn_name}') and not(@disabled)]" ).size
     button_count.should eq 1
 
   when 'disabled'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and @disabled]" ).size
+    button_count = find_all( :xpath, "//button[contains(.,'#{btn_name}') and @disabled]" ).size
     button_count.should eq 1
 
   when 'hidden'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}']" ).size
+    button_count = find_all( :xpath, "//button[contains(.,'#{btn_name}')]" ).size
     button_count.should eq 0
   else
     puts "State '#{state}' not yet handled"
@@ -392,7 +392,7 @@ Then( 'the user opens submission {int}' ) do | assignment_ord |
 end
 
 Then( 'the user sees {int} submissions' ) do | sub_count |
-  find( :xpath, "//a[@role='tab']/span[text()='Responses']" ).click
+  find( :xpath, "//a[@role='tab']/span[contains(.,'Responses')]" ).click
   all( :xpath,
        "//div[@id='submissionList']/div/table/tbody/tr[not(@data-pc-section='emptymessage')]" ).size.should eq sub_count
 end
@@ -412,5 +412,5 @@ end
 Then( 'we switch to the {string} view' ) do | stacked_or_layered |
   drop_down = find( :xpath, "//div[@id='chartType']" )
   drop_down.click
-  find( :xpath, "//li[.='#{stacked_or_layered}']" ).click
+  find( :xpath, "//li[contains(.,'#{stacked_or_layered}')]" ).click
 end

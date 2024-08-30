@@ -14,7 +14,7 @@ RUN apt -y install \
   git \
   bash \
   libmysqlclient-dev \
-  yarn 
+  yarn
 
 RUN apt -y install \
   libyaml-dev
@@ -22,8 +22,8 @@ RUN apt -y install \
 RUN apt autoremove && \
     apt clean
 
-RUN groupadd -g $GID -r colab && \
-  useradd -u $UID -g $GID --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
+RUN ! grep -q $GID /etc/group && groupadd -g $GID -r colab
+RUN useradd -u $UID -g $GID --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
 WORKDIR /home/colab
 

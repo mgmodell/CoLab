@@ -5,7 +5,7 @@ require 'faker'
 Then( /^the user clicks the link to the experience$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[text()='#{@experience.name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@experience.name}')]" ).click
 end
 
 Then 'the {string} button will be disabled' do | button_name |
@@ -34,7 +34,7 @@ Then( /^they open the drawer for additional comments$/ ) do
 end
 
 Then( /^they enter "([^"]*)" in extant field "([^"]*)"$/ ) do | txt, fld |
-  label = find( :xpath, "//label[text()='#{fld}']" )
+  label = find( :xpath, "//label[contains(.,'#{fld}')]" )
   element = if has_xpath?( "//input[@id='#{label[:for]}']" )
               find( :xpath, "//input[@id='#{label[:for]}']" )
             else
@@ -46,7 +46,7 @@ Then( /^they enter "([^"]*)" in extant field "([^"]*)"$/ ) do | txt, fld |
 end
 
 Then( /^in the field "([^"]*)" they will see "([^"]*)"$/ ) do | fld, value |
-  label = find( :xpath, "//label[text()='#{fld}']" )
+  label = find( :xpath, "//label[contains(.,'#{fld}')]" )
   panel = all( :xpath, "//textarea[@id='#{label[:for]}']" )
   panel[0].click unless panel.empty?
   # click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'

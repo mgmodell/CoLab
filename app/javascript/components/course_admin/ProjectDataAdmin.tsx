@@ -27,6 +27,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
+import parse from 'html-react-parser';
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
@@ -219,7 +220,7 @@ export default function ProjectDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveProject}>
-      {null == projectId ? "Create" : "Save"} Project
+      {null == projectId ? t('create') : t('save')}
     </Button>
   ) : null;
 
@@ -257,7 +258,7 @@ export default function ProjectDataAdmin(props) {
       />
       <label htmlFor="active">{t("active_switch")}</label>
 
-      <span>All dates shown in {courseTimezone} timezone.</span>
+      <span>{t('timezone_warning', { timezone: courseTimezone } )}</span>
       <span className="p-float-label">
         <Calendar
           id="project_dates"

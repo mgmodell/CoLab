@@ -17,6 +17,6 @@ Then 'the experience start date is {string} and the end date is {string}' do | s
 end
 
 Then 'the user edits the existing experience' do
-  find( :xpath, "//tbody/tr/td[text()='#{@experience.name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@experience.name}')]" ).click
   wait_for_render
 end

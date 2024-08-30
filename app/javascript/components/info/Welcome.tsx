@@ -146,7 +146,7 @@ export default function Welcome(props: Props) {
          rotate: 670,
       },
       why: {
-         x: 480,
+         x: 535,
          y: 45,
          scale: 0.07,
          rotate: 135,
@@ -320,7 +320,7 @@ export default function Welcome(props: Props) {
          width={width}
       >
          {'why' === params['*'] ?
-            <WhyCoLab height={250} width={444} />
+            <WhyCoLab height={295} width={494} />
             : null
          }
          {'about' === params['*'] ?
@@ -495,7 +495,7 @@ export default function Welcome(props: Props) {
                cy="455"
                r="160"
                fill="#00ffff"
-               className="intro-nav"
+               className="intro_nav"
                onClick={() =>
                   goToScene('welcome') // To Welcome
                }
@@ -516,6 +516,7 @@ export default function Welcome(props: Props) {
                   r="82"
                   className="intro-nav"
                   fill="#00ff00"
+                  className="intro_nav"
                   onClick={() => {
                      goToScene('about');
                   }}
@@ -533,6 +534,7 @@ export default function Welcome(props: Props) {
                   r="80"
                   className="intro-nav"
                   fill="#ff2a2a"
+                  className="intro_nav"
                   onClick={() => {
                      goToScene('research');
                   }}
@@ -550,6 +552,7 @@ export default function Welcome(props: Props) {
                   r="85"
                   className="intro-nav"
                   fill="#ffff00"
+                  className="intro_nav"
                   onClick={() => {
                      goToScene('why');
                   }}
@@ -567,6 +570,7 @@ export default function Welcome(props: Props) {
                   r="81"
                   className="intro-nav"
                   fill="#ff6600"
+                  className="intro_nav"
                   onClick={() => {
                      goToScene('student');
                   }}
@@ -584,6 +588,7 @@ export default function Welcome(props: Props) {
                   r="80"
                   className="intro-nav"
                   fill="#ff00ff"
+                  className="intro_nav"
                   onClick={() =>
                      goToScene('instructor')
                   }
@@ -628,6 +633,9 @@ export default function Welcome(props: Props) {
                x="130"
                y="45"
                id="why_txt"
+               onClick={() => {
+                  goToScene('about');
+               }}
                style={{
                   stroke: "azure",
                   fill: 'midnightblue',
@@ -695,7 +703,7 @@ export default function Welcome(props: Props) {
                   ...tooltipRStyles,
                }}
             >
-               Research
+               {t('tooltips.research')}
             </text>
          </animated.g>
          <g

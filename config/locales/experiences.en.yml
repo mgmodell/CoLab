@@ -1,5 +1,12 @@
 en:
   experience_admins:
+    name: Experience name
+    lead_time_lbl: Days for instructor prep
+    active: Active
+    timezone_warning: All dates are in the {{timezone}} time zone.
+    date_range: Experience dates
+    create: Create Experience
+    save: Save Experience
     errors:
       must_be created: >
         The Experience must be created before students can
@@ -22,7 +29,6 @@ en:
     reaction_suggestions: Reaction Suggestions
     start_date_lbl: Experience start date
     end_date_lbl: Experience end date
-    lead_time_lbl: Days for instructor prep
     close_pnl: Close panel
     create_success: Experience was successfully created.
     update_success: Experience was successfully updated.

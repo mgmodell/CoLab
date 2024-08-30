@@ -32,7 +32,7 @@ Given( 'the submission has been withdrawn' ) do
 end
 
 Then( 'the user selects submission {int}' ) do | index |
-  inplace_path = "//div[text()='Click here to see the submissions list']"
+  inplace_path = "//div[contains(.,'Click here to see the submissions list')]"
   find( :xpath, inplace_path ).click if has_xpath?( inplace_path )
 
   row = find_all( :xpath, '//table/tbody/tr' )[index - 1]
@@ -46,9 +46,9 @@ Then( 'the user selects submission {int}' ) do | index |
 end
 
 Then( 'the user hides all but the {string} tab' ) do | tabname |
-  tabs = find_all( :xpath, "//div[@role='group']/button[not(text()='#{tabname}') and @aria-pressed='true']" )
+  tabs = find_all( :xpath, "//div[@role='group']/button[not(contains(.,'#{tabname}')) and @aria-pressed='true']" )
   tabs.each( &:click )
-  tabs = find_all( :xpath, "//div[@role='group']/button[text()='#{tabname}' and @aria-pressed='false']" )
+  tabs = find_all( :xpath, "//div[@role='group']/button[contains(.,'#{tabname}') and @aria-pressed='false']" )
   tabs.each( &:click )
 end
 
@@ -193,7 +193,7 @@ Then( 'the db critique matches the data entered' ) do
 end
 
 Then( 'the user selects the {string} submission' ) do | temporal_relation |
-  inplace_path = "//div[text()='Click here to see the submissions list']"
+  inplace_path = "//div[contains(.,'Click here to see the submissions list')]"
   find( :xpath, inplace_path ).click if has_xpath?( inplace_path )
 
   id_col = 0

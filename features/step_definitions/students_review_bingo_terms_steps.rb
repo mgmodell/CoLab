@@ -8,7 +8,7 @@ Then( /^the user clicks the link to the concept list$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
 
-  find( :xpath, "//tbody/tr/td[@role='cell' and text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[@role='cell' and contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 
   wait_for_render
   # current_path = page.current_path
@@ -35,7 +35,6 @@ Then( /^the concept list should match the list$/ ) do
 
   @bingo.concepts.where( 'concepts.id > 0' ).uniq.each do | concept |
     concept_names.include?( concept.name ).should be true
-    # page.find(:xpath, "//tr[@id='concept']/td[text()='#{concept.name}']").should_not be_nil
   end
 end
 

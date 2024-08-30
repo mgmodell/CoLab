@@ -30,7 +30,7 @@ end
 
 Then 'the timezone {string} {string}' do | is_or_isnt, timezone |
   field_lbl = 'Time Zone'
-  lbl = find( :xpath, "//label[text()='#{field_lbl}']" )
+  lbl = find( :xpath, "//label[contains(.,'#{field_lbl}')]" )
   elem = find( :xpath, "//*[@id='#{lbl[:for]}']" )
 
   if 'is' == is_or_isnt
@@ -42,11 +42,11 @@ end
 
 Then 'the user sets the course timezone to {string}' do | timezone |
   field_lbl = 'Time Zone'
-  lbl = find( :xpath, "//label[text()='#{field_lbl}']" )
+  lbl = find( :xpath, "//label[contains(.,'#{field_lbl}')]" )
   elem = find( :xpath, "//*[@id='#{lbl[:for]}']" )
   elem.click
 
-  menu_item = find( :xpath, "//li[.='#{timezone}']" )
+  menu_item = find( :xpath, "//li[contains(.,'#{timezone}')]" )
   menu_item.click
 end
 
@@ -163,7 +163,7 @@ Given 'the Bingo! is active' do
 end
 
 Then 'set the new course start date to {string}' do | new_date |
-  label = find( :xpath, "//label[text()='New course start date?']" )
+  label = find( :xpath, "//label[contains(.,'New course start date?')]" )
   elem = find( :xpath, "//*[@id='#{label[:for]}']/input" )
 
   new_date = Chronic.parse( new_date )
@@ -293,10 +293,10 @@ end
 
 Then 'the user adds the {string} users {string}' do | type, addresses |
   lbl = "#{type}s"
-  tab = find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']" )
+  tab = find( :xpath, "//ul[@role='tablist']/li/a/span[contains(.,'#{lbl.capitalize}')]" )
   tab.click
 
-  btn = find( :xpath, "//button[text()='Add a #{type}']" )
+  btn = find( :xpath, "//button[contains(.,'Add a #{type}')]" )
   btn.click
 
   inpt = find( :xpath, "//input[@id='addresses']" )
@@ -334,7 +334,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
       elem = find( :xpath, xpression )
       elem.click
       find( :xpath,
-            "//button[text()='Drop the Student']" ).click
+            "//button[contains(.,'Drop the Student')]" ).click
       wait_for_render
     end
   else
@@ -350,7 +350,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
     elem.click
 
     find( :xpath,
-          "//button[text()='Drop the Student']" ).click
+          "//button[contains(.,'Drop the Student')]" ).click
     wait_for_render
   end
 end
@@ -485,6 +485,6 @@ Then( 'close all messages' ) do
 end
 
 Then( 'the user selects the {string} activity' ) do | activity_name |
-  find( :xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end

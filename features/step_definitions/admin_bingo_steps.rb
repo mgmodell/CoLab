@@ -5,9 +5,9 @@ require 'faker'
 Then( /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ ) do | date_field_prefix, date_value |
   field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
   begin
-    find( :xpath, "//label[text()='#{field_name}']" ).click
+    find( :xpath, "//label[contains(.,'#{field_name}')]" ).click
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    field_id = find( :xpath, "//label[text()='#{label}']" )['for']
+    field_id = find( :xpath, "//label[contains(.,'#{label}')]" )['for']
     field = find( :xpath, "//input[@id='#{field_id}']" )
     field.click
   end
@@ -22,7 +22,7 @@ end
 
 Then( 'the user clicks on the existing bingo game' ) do
   find( :xpath, "//a[contains(.,'Activities')]" ).click
-  find( :xpath, "//tbody/tr/td[text()='#{@bingo.get_name( @anon )}']" ).click
+  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
   wait_for_render
 end
 

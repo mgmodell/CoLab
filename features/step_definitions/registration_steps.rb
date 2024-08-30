@@ -54,7 +54,7 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
     ]
 
     demographics.each do | demo_data |
-      label = find( :xpath, "//label[.='#{demo_data[:label]}']" )[:for]
+      label = find( :xpath, "//label[contains(.,'#{demo_data[:label]}')]" )[:for]
 
       if has_xpath?( "//div[@id='#{label}']" )
         find( :xpath, "//div[@id='#{label}']" ).click
@@ -63,8 +63,8 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
       else
         true.should be( false ), "No element found for #{label}"
       end
-      if has_xpath?( "//li[.='#{demo_data[:value]}']" )
-        find( :xpath, "//li[.='#{demo_data[:value]}']" ).click
+      if has_xpath?( "//li[contains(.,'#{demo_data[:value]}')]" )
+        find( :xpath, "//li[contains(.,'#{demo_data[:value]}')]" ).click
       else
         true.should be( false ), "No element found for #{demo_data[:value]}"
       end
@@ -76,7 +76,7 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
     ]
 
     demographics.each do | demo_data |
-      label = find( :xpath, "//label[.='#{demo_data[:label]}']" )[:for]
+      label = find( :xpath, "//label[contains(.,'#{demo_data[:label]}')]" )[:for]
       find( :xpath, "//input[@id='#{label}']" ).set( demo_data[:value].strftime( '%m/%d/%Y' ) )
     end
 
@@ -210,7 +210,7 @@ Then( /^the user does not see a task listing$/ ) do
 end
 
 Then( 'the user will see no enabled {string} button' ) do | button_name |
-  xpath_string = "/button[not(@disabled)]/*[contains(.,\"#{button_name}\")]/parent::button"
+  xpath_string = "/button[not(@disabled)]/*[contains(text(),\"#{button_name}\")]/parent::button"
   buttons = find_all( :xpath, xpath_string )
   buttons.size.should eq 0
 end

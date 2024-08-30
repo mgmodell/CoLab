@@ -230,7 +230,7 @@ Then( 'the user searches for {string}' ) do | search_string |
 end
 
 Then( 'the user edits the {string} rubric' ) do | name |
-  xpath = "//tbody/tr/td[text()='#{name}']"
+  xpath = "//tbody/tr/td[contains(.,'#{name}')]"
   field = find( :xpath, xpath )
   field.click
 end
@@ -250,7 +250,7 @@ Given( 'the {string} rubric is published' ) do | name |
 end
 
 Then( 'the user copies the {string} rubric' ) do | rubric_name |
-  row = find( :xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric']" )
+  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric')]" )
   row.click
 end
 
@@ -401,14 +401,14 @@ Then( 'the user moves criteria {int} {string}' ) do | criteria_num, up_or_down |
 end
 
 Then( 'the user deletes the {string} rubric' ) do | rubric_name |
-  row = find( :xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric')]" )
   row.click
 end
 
 Then( 'the user can not {string} the {string} rubric' ) do | action, rubric_name |
   case action
   when 'delete'
-    button = find( :xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+    button = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric')]" )
     button.disabled?.should be true
   else
     true.should be false
