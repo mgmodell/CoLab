@@ -169,8 +169,11 @@ Then 'set the new course start date to {string}' do | new_date |
   new_date = Chronic.parse( new_date )
 
   elem.click
-  elem.send_keys :escape
+
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
   elem.send_keys :backspace
+
   send_keys new_date.strftime( '%m/%d/%Y' )
   elem.send_keys :escape
 end

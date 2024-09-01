@@ -220,7 +220,7 @@ export default function ProjectDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveProject}>
-      {null == projectId ? t('create') : t('save')}
+      {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
   ) : null;
 

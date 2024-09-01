@@ -1,7 +1,7 @@
 en:
   projects:
-    create: Create Project
-    save: Save Project
+    create_btn: Create Project
+    save_btn: Save Project
     create_success: Project was successfully created.
     create_success_inactive: >
       Project was successfully created. Don't forget to activate it!

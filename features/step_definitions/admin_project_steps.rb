@@ -174,7 +174,7 @@ Then( 'the user selects {string} as {string}' ) do | value, field |
              "//label[contains(text(),'#{field}')]" )[:for]
   begin
     retries ||= 0
-    selectCtrl = find_all( :xpath, "//select[@id='#{id}']" )
+    selectCtrl = find_all( :xpath, "//*[@id='#{id}']" )
   rescue NoMethodError
     retry if ( retries += 1 ) < 4
   end
@@ -184,7 +184,9 @@ Then( 'the user selects {string} as {string}' ) do | value, field |
     find( :xpath, "//li[contains(text(),'#{value}')]" ).click
     # sleep(0.3)
   else
-    selectCtrl[0].select( value )
+    selectCtrl[0].click
+    find( :xpath, "//ul[@role='listbox']/li[@role='option' and .='#{value}']" ).click
+    # selectCtrl[0].select( value )
   end
 end
 
@@ -250,7 +252,7 @@ Then( /^set user (\d+) to group "([^"]*)"$/ ) do | user_number, group_name |
 
   begin
     find( :xpath, "//input[@id='#{button_id}']", visible: :all ).click
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError
     find( :xpath, "//div[@id='#{button_id}']", visible: :all ).click
   end
 end
