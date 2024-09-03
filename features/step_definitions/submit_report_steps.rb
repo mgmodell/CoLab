@@ -233,7 +233,7 @@ Then( /^the user enters a comment "([^"]*)" personally identifiable information$
 
   end
 
-  find( :xpath, '//*[contains(.,"Would you like to add additional comments?")]' ).click
+  find( :xpath, '//*[text()="Would you like to add additional comments?"]' ).click
   page.fill_in( 'comments', with: @comment, visible: :all, disabled: :all )
 end
 

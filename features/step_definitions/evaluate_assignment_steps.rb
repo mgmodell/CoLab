@@ -193,7 +193,7 @@ Then( 'the db critique matches the data entered' ) do
 end
 
 Then( 'the user selects the {string} submission' ) do | temporal_relation |
-  inplace_path = "//div[contains(.,'Click here to see the submissions list')]"
+  inplace_path = "//div[text()='Click here to see the submissions list']"
   find( :xpath, inplace_path ).click if has_xpath?( inplace_path )
 
   id_col = 0
