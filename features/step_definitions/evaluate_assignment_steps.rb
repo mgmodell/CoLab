@@ -32,7 +32,7 @@ Given( 'the submission has been withdrawn' ) do
 end
 
 Then( 'the user selects submission {int}' ) do | index |
-  inplace_path = "//div[contains(.,'Click here to see the submissions list')]"
+  inplace_path = "//div[text()='Click here to see the submissions list']"
   find( :xpath, inplace_path ).click if has_xpath?( inplace_path )
 
   row = find_all( :xpath, '//table/tbody/tr' )[index - 1]
