@@ -250,7 +250,7 @@ Given( 'the {string} rubric is published' ) do | name |
 end
 
 Then( 'the user copies the {string} rubric' ) do | rubric_name |
-  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric')]" )
+  row = find( :xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric']" )
   row.click
 end
 
@@ -401,7 +401,7 @@ Then( 'the user moves criteria {int} {string}' ) do | criteria_num, up_or_down |
 end
 
 Then( 'the user deletes the {string} rubric' ) do | rubric_name |
-  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric')]" )
+  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\")]/following-sibling::td/button[@id='delete_rubric']" )
   row.click
 end
 
