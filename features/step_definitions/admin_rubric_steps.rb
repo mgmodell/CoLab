@@ -408,7 +408,7 @@ end
 Then( 'the user can not {string} the {string} rubric' ) do | action, rubric_name |
   case action
   when 'delete'
-    button = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric')]" )
+    button = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\")]/following-sibling::td/button[@id='delete_rubric']" )
     button.disabled?.should be true
   else
     true.should be false
