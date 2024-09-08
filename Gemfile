@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.3.4'
+ruby '3.3.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 7.2.1'
@@ -102,7 +102,7 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'webdrivers', '~> 5.3.1', require: false
+  # gem 'webdrivers', '~> 5.3.1', require: false
   # gem 'selenium-webdriver'
   gem 'cucumber-rails', require: false
   gem 'capybara'

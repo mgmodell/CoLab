@@ -18,21 +18,22 @@ import parse from "html-react-parser";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Col, Container, Row } from "react-grid-system";
+import { di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   rootPath?: string;
 };
 
 export default function CandidateListEntry(props: Props) {
-  const endpointSet = "candidate_list";
+  const category = "candidate_list";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const { t, i18n } = useTranslation("candidate_lists");
+  const { t, i18n } = useTranslation(`${category}s`);
 
   const { bingoGameId } = useParams();
 
@@ -163,11 +164,15 @@ export default function CandidateListEntry(props: Props) {
     }
   }, [endpointStatus]);
 
-  useEffect(() => setDirty(true), [candidates]);
+  useEffect(() => {
+    setDirty(true)
+    console.log( 'dirty: ', dirty ? "dirty" : "clean")
+  } , [candidates]);
 
-  const saveButton = dirty ? (
-    <Button onClick={saveCandidateList}>Save Candidates</Button>
-  ) : null;
+  const saveButton = 
+         <Button disabled={!dirty} onClick={saveCandidateList}>
+          {t('student_entry.save')}
+        </Button>
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
@@ -237,7 +242,8 @@ export default function CandidateListEntry(props: Props) {
     tempList[index].definition = event.target.value;
     setCandidates(tempList);
   };
-  const detailsComponent = (
+
+  return (
     <Panel>
       <Container>
         <Row>
@@ -271,19 +277,18 @@ export default function CandidateListEntry(props: Props) {
                       onChange={event => updateTerm(event, index)}
                       value={candidate.term}
                     />
-                    <label htmlFor={`term_${index}`}>Term</label>
+                    <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
                   </span>
                 </Col>
                 <Col xs={12} sm={9}>
                   <span className="p-float-label">
                     <InputTextarea
-                      width="90%"
                       id={`definition_${index}`}
                       onChange={event => updateDefinition(event, index)}
                       value={candidate.definition}
                       autoResize
                     />
-                    <label htmlFor={`definition_${index}`}>Definition</label>
+                    <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
                   </span>
                 </Col>
               </React.Fragment>
@@ -291,9 +296,9 @@ export default function CandidateListEntry(props: Props) {
           })}
         </Row>
       </Container>
-      {saveButton}
+      {
+        saveButton
+      }
     </Panel>
   );
-
-  return <Panel>{detailsComponent}</Panel>;
 }
