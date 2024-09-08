@@ -102,7 +102,7 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  # gem 'webdrivers', '~> 5.3.1', require: false
+  gem 'webdrivers', '~> 5.3.1', require: false
   # gem 'selenium-webdriver'
   gem 'cucumber-rails', require: false
   gem 'capybara'

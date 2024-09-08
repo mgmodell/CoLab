@@ -8,7 +8,7 @@
 
 require 'cucumber/rails'
 require 'selenium/webdriver'
-# require 'webdrivers'
+require 'webdrivers'
 require 'simplecov'
 
 SimpleCov.start 'rails'
