@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_06_181047) do
+ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -427,7 +427,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_181047) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
-  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.string "jwk_kid", null: false
     t.text "_keypair_ciphertext", null: false
     t.datetime "created_at", null: false
