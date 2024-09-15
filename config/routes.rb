@@ -274,7 +274,7 @@ Rails.application.routes.draw do
   # post 'lti/tool_connect' => 'lti#register'
   get 'lti/tool_connect' => 'lti#register'
   scope '.well-known' do
-    get :jwks, to: Keypairs::PublicKeysController.action(:index)
+    # get :jwks, to: Keypairs::PublicKeysController.action(:index)
   end
 
   get 'graphing/index' => 'graphing#index', as: :graphing
