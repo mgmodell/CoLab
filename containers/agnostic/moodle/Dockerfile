@@ -14,7 +14,7 @@ RUN apk add --no-cache dcron libcap php82-sodium php82-exif php82-pecl-redis php
 
 # add a quick-and-dirty hack  to fix https://github.com/erseco/alpine-moodle/issues/26
 RUN apk add gnu-libiconv=1.15-r3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ --allow-untrusted
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 USER nobody
 
