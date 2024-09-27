@@ -65,7 +65,8 @@ export default function ProjectDataAdmin(props) {
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(
     Info.weekdays().map((day, index) => {
-      return { id: index, day: day };
+      //Not sure why there's an off-by-one error here, but this fixes it 9/26
+      return { id: index + 1, day: day };
     })
   );
   const [projectEndDate, setProjectEndDate] = useState(() => {
@@ -313,6 +314,7 @@ export default function ProjectDataAdmin(props) {
           itemID="style"
           value={projectStyleId}
           options={styles}
+          disabled
           onChange={event => setProjectStyleId(event.value)}
           optionLabel="name"
           optionValue="id"
