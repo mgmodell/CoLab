@@ -9,6 +9,8 @@ RUN apt -y install \
   ruby-build \
   vim \
   git \
+  autoconf \
+  gettext \
   bash \
   libmysqlclient-dev \
   yarn 
@@ -48,6 +50,7 @@ RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add bundler && \
   asdf plugin add nodejs && \
+  asdf plugin add git && \
   asdf plugin add yarn
 
 USER root

@@ -9,6 +9,8 @@ RUN apt-get -y --fix-missing -q install \
   ruby-build \
   vim \
   git \
+  autoconf \
+  gettext \
   bash \
   dialog \
   apt-utils \
@@ -53,6 +55,7 @@ RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add bundler && \
   asdf plugin add nodejs && \
+  asdf plugin add git && \
   asdf plugin add yarn
 
 USER root

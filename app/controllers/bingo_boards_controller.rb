@@ -279,7 +279,7 @@ class BingoBoardsController < ApplicationController
 
       respond_to do | format |
         format.pdf do
-          url = "#{root_url}bingo/score_bingo_worksheet/#{wksheet.id}"
+          url = "#{root_url}home/bingo/score_bingo_worksheet/#{wksheet.id}"
           # TODO: there's got to be a better way to do this.
           pdf = WorksheetPdf.new( wksheet, url: )
           send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
