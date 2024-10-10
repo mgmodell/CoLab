@@ -20,25 +20,65 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ko:
-  title: 코레브
-  column_select: Select columns&hellip;
+  time:
+    formats:
+      tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
+      short_date: "%a, %b %-d"
+      datestamp: "%Y%m%d"
+      date_field: "%Y-%m-%d"
+  title: CoLab
+  column_select: Show/Hide columns&hellip;
   task_name: Task Name
+  email: Email
+  email_redacted: [email redacted]
   status: Status
   course_name: Course Name
+  student: Student
+  student_names: Student names
   group: Group
+  groups: Groups
+  group_names: Group names
+  history: History
+  about_you: About You
+  calc_diversity: Perspectives
+  users: Users
+  diversity_score: Perspective Points
+  calc_diversity_sub: Tell me the score!
+  clear: Clear
+  calc_it: Calculate a Diversity Score
+  ds_emails_lbl: Enter the emails of the proposed team members
+  dates: Dates
   open_date: Open Date
   start_date: Start Date
   close_date: Close Date
+  completion_date: Completion Date
+  individual: Individual
+  type: Type
+  expired: Expired
+  bingo_game: Bingo! Game
+  experience: Group Experience
+  assignment: Assignment
+  other_info: Other information
+  start_dow: Start DOW
+  end_dow: End DOW
   end_date: End Date
+  task_view: Task View
+  month_view: Month View
+  week_view: Week View
+  activities: Activities
   consent_form: Consent Form
   actions: Actions
-  activate: Activate
+  activate: Activate?
   back: Back
+  next: Next
+  note: Note
   show: Show
   edit: Edit
   save: Save
-  profile: Profile
+  add: Add!
+  submit: Submit
   #toolbar
+  profile: Profile
   c_panel: Admin&hellip;
   reports: Reports
   administration: Administration
@@ -46,29 +86,97 @@ ko:
   resp_data: Response Data
   coming_soon: Coming soon!
   logout: Logout
+  login: login
+  none_selected: None selected
+  not_available: Not Available
+  #demo materials
+  demo_title: '%{orig} (DEMO)'
   demo: Demo
-  about: About
-  support: Support
+  demo_group: SuperStars
+  demo_project: Research Paper
+  demo_project_description: >
+    This project involves researching the topic decided in your class
+    and working with your team to author a paper thoroughly detailing
+    all you've learned on the topic.
+  demo_course_name: Advanced Collaborative Research
   #admin functions
+  about: About
+  back_to_course: Back to course
+  back_to_courses: Back to the list of courses
+  support: Support
+  avail_body: >
+    The %{activity_name} is now available for you on %{site_link}. Please
+    %{login_link} at your earliest convenience to have a look and complete
+    it.
+  course_invite_body: >
+    (1){You've been invited to participate in the following course:};
+    (2-inf){You've been invited to participate in the following {{count}} courses:}
+  course_invite_close: Please log in to %{site_link} accept or decline this enrollment.
+  reminder_body: >
+    This email is to serve as a friendly reminder that you have an open
+    task waiting for you at this time. Please login to %{site_link} at your
+    earliest convenience to complete what is available.
+  summary_body: >
+    Below is your students' completion report from the task %{task_name} in the
+    course %{course_name} which recently completed at %{site_link}.
+  enrolled_students:
+    one: There is only one student enrolled in the course.
+    other: There are %{count} students enrolled in the course.
+  email_close: Thank you!
+  support_formal: CoLab Support
+  support_menu: Contact Support
+  demo_surname_1: John
+  demo_fam_name_1: Smith
+  demo_user_tz: Seoul
+  copy: Copy
   destroy: Destroy
+  remove: Remove
   confirmation: Are you sure?
   accept: Accept
   decline: Decline
   waiting: Waiting
   project: Project
   complete: Completed
+  completed_at: Completed at
   incomplete: In Progress
   not_started: Not Started
   n_a: N/A
+  not_given: <not given>
+  not_set: Not set
   instructors: Instructors
   students: Students
-  projects: Projects
-  experiences: Experiences
+  student: Student
+  #roles
+  instructor: instructor
+  assistant: assistant
+  enrolled_student: enrolled student
+  invited_student: invited student
+  declined_student: declined student
+  dropped_student: dropped student
+  no_projects: No projects
+  exps: Experiences
   terms_lists: Terms Lists
-  courses: Courses
+  terms_list: Terms List
+  terms_review: Terms Review
+  course: Course
+  school: School
+  schools_edit: Schools
+  rubrics_edit: Rubrics
+  consent_forms_edit: Consent Forms
+  courses_edit: Courses
+  reporting: Reporting Center
+  experiences_edit: Experiences
+  bingo_games_edit: Terms lists
+  projects_edit: Projects
+  concepts_edit: Concepts
+  active: Active
+  inactive: Inactive
   details: Details
   description: Description
+  for: For
   name: Name
+  family_name: Family Name
+  given_name: Given Name
   number: Number
   member: Team Member
   titles:
@@ -77,20 +185,60 @@ ko:
     title: Home
     your_tasks: Your Tasks
     invited: You've been invited!
-    greeting: Hello %{name}
+    greeting: Hello {{name}}
+    greeting_unknown: Hello!
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
     task_type: Task Type
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
-    course_confirm: You've been added to %{course_list_text}, but sometimes instructors make mistakes, so please do confirm that you are actually enrolled in %{proper_course_list} listed below
-    courses: 
-      one: a course
-      other: '%{count} courses'
-    courses_proper:
-      one: the course
-      other: the %{count} courses
-    tasks:
-      zero: You do not currently have any tasks due. Check back later or contact your instructor.
-      one: You've got one task at the moment.
-      other: You've got %{count} tasks today.
+    course_confirm: >
+      You've been added to {{course_list_text}}, but sometimes instructors make
+      mistakes, so please do confirm that you are actually enrolled in
+      {{proper_course_list}} listed below
+    courses_interval: (1)[a course];(2-inf)[ {{count}} courses]
+    courses_proper_interval: (1)[the course];(2-inf)[the {{count}} courses]
+    test_zero: zilch
+    test_one: one
+    test_many: many
+    task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]
+    enroll_title: Enrollment confirmation
+    enroll_failed_title: Enrollment not possible
+    self_enroll_body: >
+      Would you like to join the {{course_name}} ({{course_number}})
+      course?
+    self_enroll_already_rejected_body: >
+      Please see the instructor for {{course_name}} ({{course_number}})
+      as they previously declined your enrollment request and they must
+      confirm your enrollment themselves.
+    self_enroll_already_requested_body: >
+      You have already requested enrollment in {{course_name}}
+      ({{course_number}}).  Now you must simply wait for an instructor to
+      accept the enrollment.
+    self_enroll_already_enrolled_body: >
+      You are already enrolled in {{course_name}} ({{course_number}}).
+    self_enroll_course_closed_body: >
+      The course {{course_name}} ({{course_number}}) is not currently
+      available and therefore you cannot enroll in it.
+    self_enroll_instructor_body: >
+      You are already an instructor (or assistant) in {{course_name}} ({{course_number}})
+      and you cannot enroll in your own course.
+    self_enroll: Enroll me!
+    self_enroll_cancel: Cancel and Return Home
+    list:
+      type: Type
+      task_name: Task Name
+      course_name: Course Name
+      group_name: Group Name
+      start_date: Open Date
+      next_date: Close Date
+      all_tasks: All
+      consent_form:
+        label: Consent Form
+        absent: Not for Research
+        present: Research Consent Form
+      instructor_task: Instructor Task
+      status:
+        label: Status
+        incomplete: Not Completed
+        complete: Completed
