@@ -19,26 +19,27 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-ko:
-  time:
-    formats:
+한국어:
+  시간:
+    포맷:
       tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
       short_date: "%a, %b %-d"
       datestamp: "%Y%m%d"
       date_field: "%Y-%m-%d"
-  title: CoLab
+  title: 코랩
+  column_select: 보이기/숨기기 columns&hellip;
   task_name: Task Name
-  email: Email
+  email: 이메일
   email_redacted: [email redacted]
-  status: Status
-  course_name: Course Name
-  student: Student
-  student_names: Student names
-  group: Group
-  groups: Groups
-  group_names: Group names
-  history: History
-  about_you: About You
+  status: 상태
+  course_name: 수업명
+  student: 학생
+  student_names: 학생 이름
+  group: 그룹
+  groups: 다그룹
+  group_names: 그룹명
+  history: 진행과정
+  about_you: 자기소개
   calc_diversity: Perspectives
   users: Users
   diversity_score: Perspective Points
@@ -46,18 +47,18 @@ ko:
   clear: Clear
   calc_it: Calculate a Diversity Score
   ds_emails_lbl: Enter the emails of the proposed team members
-  dates: Dates
-  open_date: Open Date
-  start_date: Start Date
-  close_date: Close Date
-  completion_date: Completion Date
-  individual: Individual
-  type: Type
-  expired: Expired
-  bingo_game: Bingo! Game
-  experience: Group Experience
-  assignment: Assignment
-  other_info: Other information
+  dates: 날짜
+  open_date: 개시 날짜
+  start_date: 시작일
+  close_date: 마감일
+  completion_date: 작업 완료 날짜
+  individual: 개인
+  type: 종류
+  expired: 기한초과
+  bingo_game: 빙고! 게임
+  experience: 그룹 활동
+  assignment: 과제
+  other_info: 기타 정보
   start_dow: Start DOW
   end_dow: End DOW
   end_date: End Date
