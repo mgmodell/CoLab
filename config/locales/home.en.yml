@@ -27,7 +27,6 @@ en:
       datestamp: "%Y%m%d"
       date_field: "%Y-%m-%d"
   title: CoLab
-  column_select: Show/Hide columns&hellip;
   task_name: Task Name
   email: Email
   email_redacted: [email redacted]
