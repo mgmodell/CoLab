@@ -22,10 +22,10 @@
 ko:
   time:
     formats:
-      tz_clarity: "%요일, %월 %-일 at %-l:%M%P %Z"
-      short_date: "%요일, %월 %-일"
-      datestamp: "%년%월%일"
-      date_field: "%년-%월-%일"
+      tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
+      short_date: "%a, %b %-d"
+      datestamp: "%Y%m%d"
+      date_field: "%Y-%m-%d"
   title: 코랩
   task_name: 이름
   email: 이메일
@@ -39,7 +39,7 @@ ko:
   group_names: 그룹명
   history: 진행 상황
   about_you: 자기 소개
-  calc_diversity: 견해 
+  calc_diversity: 견해
   users: 사용자
   diversity_score: 견해 점수
   calc_diversity_sub: 점수를 말해줘!
@@ -94,7 +94,7 @@ ko:
   demo_group: 수퍼스타들
   demo_project: 연구보고서
   demo_project_description: >
-    이 프로젝트는 수업에서 결정된 주제를 연구하고, 팀과 협력하여 
+    이 프로젝트는 수업에서 결정된 주제를 연구하고, 팀과 협력하여
     배운 내용을 자세히 설명하는 논문을 작성하는 것을 목표로 합니다.
   demo_course_name: 고급 협력 연구
   #admin functions
@@ -103,23 +103,23 @@ ko:
   back_to_courses: 코스 목록으로 돌아가기
   support: 지원
   avail_body: >
-    %{activity_name} 활동이 %{site_link}에서 사용 가능합니다. 가능한 빨리 
+    %{activity_name} 활동이 %{site_link}에서 사용 가능합니다. 가능한 빨리
     %{login_link}에 로그인하여 확인하고 완료해 주세요.
   course_invite_body: >
     (1){다음 수업에 참여하도록 초대되었습니다:};
     (2-inf){다음 {{count}}개의 수업에 참여하도록 초대되었습니다:}
   course_invite_close: %{site_link}에 로그인하여 이 등록을 수락하거나 거부하세요.
   reminder_body: >
-    이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다. 
+    이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다.
   reminder_body: >
-    이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다. 
+    이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다.
     가능한 한 빨리 %{site_link}에 로그인하여 완료해 주세요.
   summary_body: >
-    아래는 %{site_link}에서 최근 완료된 %{course_name}의 %{task_name} 과제에 대한 
+    아래는 %{site_link}에서 최근 완료된 %{course_name}의 %{task_name} 과제에 대한
     학생들의 완료 보고서입니다.
   enrolled_students:
-    one: 이 수업에는 한 명의 학생만 등록되어 있습니다. 
-    other: 이 수업에는 %{count}명의 학생이 등록되어 있습니다. 
+    one: 이 수업에는 한 명의 학생만 등록되어 있습니다.
+    other: 이 수업에는 %{count}명의 학생이 등록되어 있습니다.
   email_close: 감사합니다!
   support_formal: 코랩 지원
   support_menu: 지원 문의
@@ -191,7 +191,7 @@ ko:
     sapa: 자기 평가 및 동료 평가
     terms_list: 용어 목록 제출
     course_confirm: >
-      {{course_list_text}}에 추가되었지만, 때때로 강사들이 실수를 할 수 있으므로 
+      {{course_list_text}}에 추가되었지만, 때때로 강사들이 실수를 할 수 있으므로
       실제로 {{proper_course_list}}에 등록되었는지 확인하세요.
     courses_interval: (1)[한 개의 수업];(2-inf)[ {{count}}개의 수업]
     courses_proper_interval: (1)[그 수업];(2-inf)[그 {{count}}개의 수업]
@@ -204,17 +204,17 @@ ko:
     self_enroll_body: >
       {{course_name}} ({{course_number}}) 수업에 등록하시겠습니까?
     self_enroll_already_rejected_body: >
-      이전에 {{course_name}} ({{course_number}}) 수업 등록이 거부되었습니다. 
+      이전에 {{course_name}} ({{course_number}}) 수업 등록이 거부되었습니다.
       강사에게 문의해 수동으로 등록을 요청해야 합니다.
     self_enroll_already_requested_body: >
-      이미 {{course_name}} ({{course_number}}) 수업 등록을 요청했습니다. 
+      이미 {{course_name}} ({{course_number}}) 수업 등록을 요청했습니다.
       강사의 승인을 기다려 주세요.
     self_enroll_already_enrolled_body: >
       이미 {{course_name}} ({{course_number}}) 수업에 등록되어 있습니다.
     self_enroll_course_closed_body: >
       {{course_name}} ({{course_number}}) 수업이 현재 제공되지 않아 등록할 수 없습니다.
     self_enroll_instructor_body: >
-      이미 {{course_name}} ({{course_number}}) 수업의 강사(또는 조교)로 
+      이미 {{course_name}} ({{course_number}}) 수업의 강사(또는 조교)로
       등록되어 있어 자신의 수업에 등록할 수 없습니다.
     self_enroll: 나를 등록하세요!
     self_enroll_cancel: 추소하고 홈으로 돌아가기
