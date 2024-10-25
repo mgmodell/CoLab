@@ -51,9 +51,9 @@ export default function InstallmentReport(props: Props) {
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
-  const [t, i18n] = useTranslation("installments");
+  const [t] = useTranslation("installments");
 
-  const [initialised, setInitialised] = useState(false);
+  //const [initialised, setInitialised] = useState(false);
   // I need to fix this to use the standard
   const [curPanel, setCurPanel] = useState(0);
   const [group, setGroup] = useState({});
@@ -66,14 +66,14 @@ export default function InstallmentReport(props: Props) {
   const [installment, setInstallment] = useState({ comments: "" });
 
   const updateSlice = (id, update) => {
-    const lContributions = Object.assign({}, contributions);
+    const lContributions = { ...contributions};
 
     lContributions[id] = update;
     setContributions(lContributions);
   };
 
   const updateComments = event => {
-    const inst = Object.assign({}, installment);
+    const inst = { ...installment};
     inst.comments = event.target.value;
     setInstallment(inst);
   };
@@ -88,24 +88,13 @@ export default function InstallmentReport(props: Props) {
 
   //Use this to sort team members with the user on top
   const userCompare = (b, a) => {
-    var retVal = 0;
+    let retVal = 0;
     if (user.id == a.userId) {
       retVal = +1;
     } else {
       retVal = a.name.localeCompare(b.name);
     }
     return retVal;
-  };
-  const setPanel = panelId => {
-    //If the panel is already selected...
-    if (panelId == curPanel) {
-      //...close it.
-      setCurPanel(null);
-      //Otherwise...
-    } else {
-      //...open it
-      setCurPanel(panelId);
-    }
   };
 
   const saveButton = (
@@ -128,7 +117,7 @@ export default function InstallmentReport(props: Props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        const factorsData = Object.assign({}, data.factors);
+        const factorsData = { ...data.factors};
         setFactors(factorsData);
 
         setSliderSum(data.sliderSum);
@@ -203,7 +192,7 @@ export default function InstallmentReport(props: Props) {
             {}
           );
           setContributions(receivedContributions);
-          navigate(`..`);
+          navigate('/home');
         }
         if (data.messages.status !== undefined) {
           dispatch(

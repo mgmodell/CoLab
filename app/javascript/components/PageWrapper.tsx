@@ -26,7 +26,6 @@ import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import ProfileShell from "./profile/ProfileShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() =>
@@ -48,12 +47,11 @@ type Props = {
   debug?: boolean;
 };
 
-export default function PageWrapper(props: Props) {
+export default function PageWrapper(props: Readonly<Props>) {
   const store = appStatus;
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <React.Fragment>
         <Route
           element={
             <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
@@ -77,14 +75,6 @@ export default function PageWrapper(props: Props) {
             <Route
               path={"login"}
               element={<Navigate to={"/welcome/login"} replace={true} />}
-            />
-            <Route
-              path="profile/*"
-              element={
-                <RequireAuth>
-                  <ProfileShell />
-                </RequireAuth>
-              }
             />
             <Route
               path="profile"
@@ -157,7 +147,6 @@ export default function PageWrapper(props: Props) {
             />
           </Route>
         </Route>
-      </React.Fragment>
     )
   );
 
