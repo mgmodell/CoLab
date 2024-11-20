@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.3.5'
+ruby '3.3.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.2.1.2'
+gem 'rails', '~> 8.0.0'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -104,7 +104,7 @@ group :test do
   gem 'simplecov', require: false
   gem 'webdrivers', '~> 5.3.1', require: false
   # gem 'selenium-webdriver'
-  gem 'cucumber-rails', require: false
+  gem 'cucumber-rails',require: false
   gem 'capybara'
   gem 'database_cleaner'
 end
