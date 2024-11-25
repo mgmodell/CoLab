@@ -40,7 +40,7 @@
     "d3-scale-chromatic": "^3.0.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^5.0.5",
-    "i18next": "^23.7.18",
+    "i18next": "^24.0.2",
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-fetch-backend": "^6.0.0",
     "i18next-intervalplural-postprocessor": "^3.0.0",

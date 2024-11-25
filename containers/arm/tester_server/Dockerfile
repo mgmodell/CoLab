@@ -13,7 +13,7 @@ RUN apt -y install \
   git \
   bash \
   libmysqlclient-dev \
-  yarn 
+  yarn
 
 RUN apt -y install \
   libyaml-dev
@@ -45,7 +45,7 @@ RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\
   git config --global branch.autoSetupMerge true
 
-RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
+RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1 &&\
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile && \
     echo 'bundler' >> ~/.default-gems
