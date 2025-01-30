@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.3.6'
+ruby '3.4.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.0.1'
+gem 'rails', '~> 8.0.1'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '8.0.2'
+gem 'shakapacker', '8.1.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '14.0.5'
+gem 'react_on_rails', '14.1.1'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -102,8 +102,8 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'webdrivers', '~> 5.3.1', require: false
-  # gem 'selenium-webdriver'
+  # gem 'webdrivers', '~> 5.3.1', require: false
+  gem 'selenium-webdriver'
   gem 'cucumber-rails',require: false
   gem 'capybara'
   gem 'database_cleaner'
@@ -119,3 +119,5 @@ end
 
 
 
+
+gem "foreman", "~> 0.88.1"

@@ -54,6 +54,7 @@ class User < ApplicationRecord
   has_many :narratives, through: :experiences
 
   has_many :rubrics, inverse_of: :user, dependent: :nullify
+  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
@@ -358,8 +359,8 @@ class User < ApplicationRecord
   end
 
   def self.merge_users( predator:, prey: )
-    pred_u = User.find_by( email: predator )
-    prey_u = User.find_by( email: prey )
+    pred_u = Email.find_by( email: predator ).user
+    prey_u = Email.find_by( email: prey ).user
 
     if pred_u.present? && prey_u.present?
       # copy the demographic data
@@ -404,7 +405,18 @@ class User < ApplicationRecord
         prey_u.consent_logs.update_all user_id: pred_u.id
         prey_u.installments.update_all user_id: pred_u.id
         prey_u.reactions.update_all user_id: pred_u.id
-        prey_u.rosters.update_all user_id: pred_u.id
+
+        prey_u.rosters.each do | r |
+          if r.course.rosters.where( user_id: pred_u.id ).exists?
+            r.destroy!
+          else
+            r.user_id = pred_u.id
+            r.save!
+          end
+        end
+
+        prey_u.rubrics.update_all user_id: pred_u.id
+        prey_u.submissions.update_all user_id: pred_u.id
         Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
 
         # Ahoy email message tracking

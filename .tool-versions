@@ -1,5 +1,4 @@
-nodejs 22.8.0
-ruby 3.3.6
+nodejs 23.5.0
+ruby 3.4.1
 yarn 1.22.22
-bundler 2.5.13
-git 2.46.1
+bundler 2.6.2

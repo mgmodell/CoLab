@@ -1,10 +1,7 @@
 FROM ubuntu
 
-ARG UID=1000
-ARG GID=1000
-
-RUN apt update && apt upgrade -y
-RUN apt -y install \
+RUN apt update && apt upgrade -y && \
+  apt -y install --fix-missing \
   curl \
   imagemagick \
   libvips \
@@ -16,20 +13,20 @@ RUN apt -y install \
   gettext \
   bash \
   libmysqlclient-dev \
-  yarn
-
-RUN apt -y install \
-  libyaml-dev
+  libyaml-dev \
+  zsh
 
 RUN apt autoremove && \
     apt clean
 
-RUN ! grep -q $GID /etc/group && groupadd -g $GID -r colab
-RUN useradd -u $UID -g $GID --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
+RUN groupadd -r colab && \
+  useradd --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+
 
 WORKDIR /home/colab
 
 USER colab
+
 
 SHELL ["/bin/bash", "-l", "-c"]
 
@@ -51,7 +48,6 @@ RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add bundler && \
   asdf plugin add nodejs && \
-  asdf plugin add git && \
   asdf plugin add yarn
 
 USER root
@@ -63,15 +59,18 @@ RUN mkdir /home/colab/.asdf/shims && \
 
 USER colab
 
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 #Set up the app materials
+RUN sed -i 's/(git)/(\ngit\nasdf\nbundler\nrails\nyarn\nrake\n)/g' ~/.zshrc
 RUN mkdir -p /home/colab/src/app
 COPY containers/dev_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
 
 ENV DRIVER=docker
-ENV CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 ENV COLAB_DB=db
 ENV COLAB_DB_PORT=3306
+ENV CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 
-ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
-CMD -r
+# ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
+# CMD -r

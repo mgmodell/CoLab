@@ -1,8 +1,9 @@
--- MariaDB dump 10.19-11.3.2-MariaDB, for osx10.19 (arm64)
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.6.2-MariaDB, for osx10.20 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.3.2-MariaDB
+-- Server version	11.6.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -13,7 +14,7 @@
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
 --
 -- Table structure for table `active_storage_attachments`
@@ -4672,6 +4673,7 @@ CREATE TABLE `rosters` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `index_rosters_on_user_id_and_course_id` (`user_id`,`course_id`),
   KEY `index_rosters_on_course_id` (`course_id`),
   KEY `index_rosters_on_role` (`role`),
   KEY `index_rosters_on_user_id` (`user_id`),
@@ -5007,7 +5009,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20240302002923'),
 ('20240322142846'),
 ('20240322142847'),
-('20240406181047');
+('20240406181047'),
+('20250130032658');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5541,6 +5544,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2024-04-06 14:17:09
+-- Dump completed on 2025-01-29 22:30:57

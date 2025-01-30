@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -427,7 +427,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
-  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "jwk_kid", null: false
     t.text "_keypair_ciphertext", null: false
     t.datetime "created_at", null: false
@@ -508,6 +508,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["course_id"], name: "index_rosters_on_course_id"
     t.index ["role"], name: "index_rosters_on_role"
+    t.index ["user_id", "course_id"], name: "index_rosters_on_user_id_and_course_id", unique: true
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 

@@ -12,9 +12,9 @@ services:
       - redis
       - moodle
     volumes:
-      - ../../:/home/colab/src/app
-      - asdf-installs:/home/colab/.asdf/installs
-      - asdf-shims:/home/colab/.asdf/shims
+      - ../../:/home/colab/src/app:cached
+      - "${HOME}/.ssh:/root/.ssh-localhost:ro"
+    command: bash -c "sleep infinity"
   db:
     image: colab_db
     restart: unless-stopped
@@ -26,6 +26,26 @@ services:
   redis:
     image: redis:alpine
     restart: unless-stopped
+
+  # Docs at https://github.com/MRColorR/vnc-browser
+  browser:
+    container_name: vnc-browser
+    image: mrcolorrain/vnc-browser:debian
+    ports:
+      - 5909:5900
+      - 6080:6080
+    environment:
+      VNC_PASSWORD: "password"
+      AUTO_START_XTERM: false
+    restart: unless-stopped
+
+  selenium:
+    image: colab_browser
+    shm_size: '256mb'
+    ports:
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
 
   moodle:
     image: colab_moodle
@@ -65,10 +85,11 @@ services:
 
 
 volumes:
-  src:
-  asdf-installs:
-  asdf-shims:
+#  src:
+#  asdf-installs:
+#  asdf-shims:
   mariadb-data:
+  ffconfig:
   devdata:
   moodledata:
   moodlehtml:
