@@ -1,7 +1,7 @@
 FROM ubuntu
 
-RUN apt update && apt upgrade -y
-RUN apt -y install \
+RUN apt update && apt upgrade -y && \
+  apt -y install \
   curl \
   imagemagick \
   libvips \
