@@ -1,4 +1,4 @@
-FROM arm64v8/mariadb
+FROM mariadb
 
 COPY containers/initDBs.sql /docker-entrypoint-initdb.d/init-privs.sql
 
