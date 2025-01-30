@@ -54,7 +54,6 @@ RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add bundler && \
   asdf plugin add nodejs && \
-  asdf plugin add git && \
   asdf plugin add yarn
 
 USER root
