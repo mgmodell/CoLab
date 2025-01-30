@@ -15,6 +15,8 @@ services:
     image: colab_db
     tmpfs:
       - /var/lib/mysql
+    ports:
+      - 31337:3306
   selenium:
     image: colab_browser
     # The following inspired by:
