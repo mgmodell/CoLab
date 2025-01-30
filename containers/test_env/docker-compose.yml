@@ -10,7 +10,7 @@ services:
       - asdf-shims:/home/colab/.asdf/shims
     depends_on:
       - db
-      - browser
+      - selenium
   db:
     image: colab_db
     tmpfs:
