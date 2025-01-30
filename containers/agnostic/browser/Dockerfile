@@ -1,1 +1,1 @@
-FROM seleniarm/standalone-chromium
+FROM selenium/standalone-chromium
