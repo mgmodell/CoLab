@@ -45,7 +45,7 @@ en:
   diversity_score: Perspective Points
   calc_diversity_sub: Tell me the score!
   clear: Clear
-  calc_it: Calculate a Diversity Score
+  calc_it: Calculate Perspective Points
   ds_emails_lbl: Enter the emails of the proposed team members
   dates: Dates
   open_date: Open Date

@@ -58,7 +58,11 @@ export default function ProfileDataAdmin(props: Props) {
     state => state.context.status.lookupsLoaded
   );
   const user: IUser = useTypedSelector(state => {
-    return state.profile.user
+    const userProfile = state.profile.user;
+    return {
+      ...userProfile,
+      gender_id: Number(userProfile.gender_id)
+    };
   });
 
 
@@ -162,7 +166,7 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileGender = gender => {
     const temp = {};
     Object.assign(temp, user);
-    temp.gender = gender;
+    temp.gender_id = gender;
     dispatch(setProfile(temp));
   };
   const setProfileHomeCountry = homeCountry => {
@@ -198,6 +202,7 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
+
     temp.date_of_birth = date_of_birth.toString();
     dispatch(setProfile(temp));
   };
@@ -526,7 +531,7 @@ export default function ProfileDataAdmin(props: Props) {
                     inputId="profile_primary_start_school"
                     name="profile_primary_start_school"
                     value={new Date(Date.parse(user.started_school))}
-                    onChange={date => setProfileStartedSchool(date)}
+                    onChange={date => setProfileStartedSchool(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
                     showOnFocus={false}
@@ -653,7 +658,7 @@ export default function ProfileDataAdmin(props: Props) {
                     inputId="profile_date_of_birth"
                     name="profile_date_of_birth"
                     value={new Date(Date.parse(user.date_of_birth))}
-                    onChange={date => setProfileDOB(date)}
+                    onChange={date => setProfileDOB(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
                     monthNavigator={true}
