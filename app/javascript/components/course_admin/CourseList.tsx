@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 import { DateTime } from "luxon";
 

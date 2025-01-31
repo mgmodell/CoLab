@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSpring, animated, config } from "react-spring";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import SignIn from "../SignIn";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import ResizableSVG from "../infrastructure/ResizableSVG";

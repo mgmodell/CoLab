@@ -6,7 +6,7 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { DateTime } from "luxon";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { DataTable } from "primereact/datatable";

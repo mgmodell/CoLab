@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect, useReducer } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 
 import { Info } from "luxon";
 

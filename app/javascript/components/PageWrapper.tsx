@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
+import { RouterProvider } from 'react-router/dom';
 import {
   createBrowserRouter,
-  RouterProvider,
   Route,
   createRoutesFromElements,
   Outlet,
   Navigate
-} from "react-router-dom";
+} from "react-router";
 import { Provider } from "react-redux";
 import appStatus from "./infrastructure/AppReducers";
 
@@ -147,7 +147,12 @@ export default function PageWrapper(props: Readonly<Props>) {
             />
           </Route>
         </Route>
-    )
+    ), {
+      future: {
+        v7_relativeSplatPath: true,
+        v7_startTransition: true
+      },
+    }
   );
 
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CourseAdmin from "./course_admin/CourseAdmin";

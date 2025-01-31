@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { Skeleton } from "primereact/skeleton";

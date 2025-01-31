@@ -14,7 +14,7 @@ import {
   setClean
 } from "../infrastructure/StatusSlice";
 import { refreshSchools } from "../infrastructure/ContextSlice";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 //import i18n from './i18n';
 import { Panel } from "primereact/panel";

@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from "react";
-import { Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";

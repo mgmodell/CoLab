@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router";
 
 import HomeShell from "./HomeShell";
 import { Skeleton } from "primereact/skeleton";

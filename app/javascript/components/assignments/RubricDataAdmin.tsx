@@ -9,7 +9,7 @@ import {
   setDirty,
   setClean
 } from "../infrastructure/StatusSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { DataTable } from "primereact/datatable";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router";
 
 const CourseList = React.lazy(() => import("./CourseList"));
 const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));

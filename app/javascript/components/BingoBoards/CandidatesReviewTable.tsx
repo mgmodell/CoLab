@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect, ReactNode } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";

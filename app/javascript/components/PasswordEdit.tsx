@@ -5,7 +5,7 @@ import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 
 import { Panel } from "primereact/panel";
 
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { emailSignIn } from "./infrastructure/ContextSlice";
