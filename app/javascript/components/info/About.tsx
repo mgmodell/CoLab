@@ -10,8 +10,8 @@ export default function About(props: Props) {
         possible.
       </p>
       <p>
-        Please do review our <a href="privacy">Privacy policy</a> and our{" "}
-        <a href="terms">Terms of Service</a>.
+        Please do review our <a href="/privacy">Privacy policy</a> and our{" "}
+        <a href="/terms">Terms of Service</a>.
       </p>
     </div>
   );
