@@ -12,6 +12,7 @@ module.exports = function (api) {
         '@babel/preset-react',
         {
           development: !isProductionEnv,
+          "runtime": "automatic",
           useBuiltIns: true
         }
       ]
