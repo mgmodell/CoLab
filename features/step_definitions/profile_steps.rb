@@ -39,6 +39,7 @@ end
 
 When( /^the user logs in$/ ) do
   visit '/login'
+  wait_for_render
 
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'

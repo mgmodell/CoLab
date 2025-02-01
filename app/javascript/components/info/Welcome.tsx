@@ -11,6 +11,7 @@ import Research from "./Research";
 import ForStudents from "./ForStudents";
 import ForInstructors from "./ForInstructors";
 import { useTranslation } from "react-i18next";
+import { co } from "@fullcalendar/core/internal-common";
 
 type Props = {
 }
@@ -32,7 +33,7 @@ export default function Welcome(props: Props) {
    const width = 530;
    //const mounted = useRef(false);
 
-   const login = params['*'] === 'login' ?
+   const login = params['*'].startsWith( 'login' ) ?
       (
          <EmbeddedHTMLInSVG
             width={`${width * 4 / 5}rem`}
@@ -230,7 +231,6 @@ export default function Welcome(props: Props) {
 
    }
    const goToScene = (sceneName: string) => {
-
       if ('welcome' !== sceneName && `/${sceneName}` !== location.pathname) {
 
          setWelcomed(true);
@@ -299,13 +299,15 @@ export default function Welcome(props: Props) {
 
       animateToScene(sceneName);
       setWelcomed(true);
-      navigate(`${sceneName}${location.hash}`, {
-         relative: 'path',
-         replace: true,
-         state: {
-            from: location.state?.from,
-         }
-      });
+      if ('login' !== sceneName) {
+         navigate(`${sceneName}${location.hash}`, {
+            relative: 'path',
+            replace: true,
+            state: {
+               from: location.state?.from,
+            }
+         });
+      }
       return () => {
          window.removeEventListener('popstate', handleBrowserNav);
       }
