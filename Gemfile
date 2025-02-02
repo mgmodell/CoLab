@@ -86,7 +86,7 @@ group :development, :test do
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
-  gem 'rb-readline'
+  # gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
@@ -96,7 +96,7 @@ group :development, :test do
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
-  gem 'solargraph'
+  # gem 'solargraph'
   gem 'traceroute'
 end
 

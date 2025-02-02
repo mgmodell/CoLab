@@ -166,11 +166,10 @@ export default function CandidateListEntry(props: Props) {
 
   useEffect(() => {
     setDirty(true)
-    console.log( 'dirty: ', dirty ? "dirty" : "clean")
   } , [candidates]);
 
   const saveButton = 
-         <Button disabled={!dirty} onClick={saveCandidateList}>
+         <Button disabled={dirty != false } onClick={saveCandidateList}>
           {t('student_entry.save')}
         </Button>
 

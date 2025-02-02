@@ -125,6 +125,6 @@ end
 Then( 'the {string} button is not available' ) do | button_name |
   btns = all( :xpath, "//button[contains(.,'#{button_name}')]" )
   btns.each do | btn |
-    btn[:disabled].should be true
+    btn[:disabled].should eq 'true'
   end
 end
