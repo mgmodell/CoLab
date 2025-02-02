@@ -169,7 +169,7 @@ export default function CandidateListEntry(props: Props) {
   } , [candidates]);
 
   const saveButton = 
-         <Button disabled={dirty != false } onClick={saveCandidateList}>
+         <Button disabled={dirty !== false } onClick={saveCandidateList}>
           {t('student_entry.save')}
         </Button>
 
