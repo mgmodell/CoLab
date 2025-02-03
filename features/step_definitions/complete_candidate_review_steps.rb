@@ -180,7 +180,8 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
       begin
         if has_xpath?( xpth_search )
           page.find( :xpath, xpth_search ).click
-          send_keys :enter
+          wait_for_render
+          send_keys :enter, :escape
         end
       rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
         send_keys :escape
@@ -232,6 +233,8 @@ Given( /^the saved reviews match the list$/ ) do
 end
 
 Given( 'the user checks the review completed checkbox' ) do
+  puts find_all( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all ).size
+  # byebug if find_all( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all ).size < 1
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]
