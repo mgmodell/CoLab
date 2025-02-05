@@ -200,12 +200,12 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
         send_keys concept
       end
     rescue Selenium::WebDriver::Error::NoSuchElementError => e
-      puts e.message
+      log e.message
       ( retries += 1 ).should be < 20, 'Too many retries'
       retry unless retries > 5
     rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
       # Nothing needed
-      puts e.message
+      log e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find( :xpath,
                         "//li[contains(.,\"#{feedback.name}\")]" )
@@ -227,14 +227,11 @@ end
 
 Given( /^the saved reviews match the list$/ ) do
   @feedback_list.each do | key, value |
-    #   puts "#{Candidate.find( key ).concept.name}|#{value[:concept]}"
     Candidate.find( key ).concept.name.should eq value[:concept] if value[:concept].present?
   end
 end
 
 Given( 'the user checks the review completed checkbox' ) do
-  puts find_all( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all ).size
-  # byebug if find_all( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all ).size < 1
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]
