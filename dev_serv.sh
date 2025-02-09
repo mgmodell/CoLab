@@ -17,12 +17,21 @@ print_help ( ) {
   echo "                assumes -m)"
   echo ""
   echo " -h             Show this help and terminate"
-  
+
   exit 0;
 
 }
 
-echo "Arguments: '$@'"
+if [ -f /.dockerenv ]; then
+  # We're in a Docker container, so we're good!
+  echo "Arguments: '$@'"
+else
+  echo "These scripts only function properly inside a Docker"
+  echo "container and we're currently not running inside one."
+  echo "-----------"
+  print_help
+fi
+
 
 if [ "$#" -lt 1 ]; then
   echo "Please specify options"
