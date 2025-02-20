@@ -144,7 +144,7 @@ Then( 'the {string} tab {string} enabled' ) do | tab_name, enabled |
   else
     true.should be false
   end
-  ( tab['class'] ).include?( 'disabled' ).should_not be 'is' != enabled
+  tab['class'].include?( 'disabled' ).should_not be 'is' != enabled
 end
 
 Then( 'the user creates a new submission' ) do

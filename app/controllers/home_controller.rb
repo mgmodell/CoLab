@@ -388,7 +388,7 @@ class HomeController < ApplicationController
                      end,
         other: case activity.type
                when 'Terms List'
-                 candidates_list = activity.candidate_list_for_user( current_user ).status
+                 activity.candidate_list_for_user( current_user ).status
                when 'Project'
                  activity.get_performance( current_user )
                when 'Group Experience'
@@ -549,7 +549,7 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(
+    params.require( :user ).permit(
       :first_name, :last_name,
       :timezone, :language_id, :theme_id, :researcher,
       :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,

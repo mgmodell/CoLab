@@ -63,3 +63,24 @@ end
 Then( 'the user sees a success message' ) do
   page.should have_content( 'uccess' )
 end
+
+When( 'the user attempts login with wrong password' ) do
+  visit '/login'
+  wait_for_render
+
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'wrong-password'
+
+  ack_messages
+  click_link_or_button 'Log in!'
+end
+
+Then( 'the user should see a failed login message' ) do
+  wait_for_render
+  page.should have_content 'Invalid email or password'
+end
+
+Then( 'user should see login form' ) do
+  wait_for_render
+  page.should have_content 'Log in!'
+end

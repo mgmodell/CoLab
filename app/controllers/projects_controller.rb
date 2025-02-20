@@ -130,7 +130,7 @@ class ProjectsController < ApplicationController
     group_hash = {}
     params[:groups].each_value do | g |
       group = nil
-      if ( g[:id] ).positive?
+      if g[:id].positive?
         group = project.groups.find_by id: g[:id]
         group.name = g[:name]
       else
