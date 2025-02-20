@@ -194,9 +194,9 @@ export default function InstallmentReport(props: Props) {
           setContributions(receivedContributions);
           navigate('/home');
         }
-        if (data.messages.status !== undefined) {
+        if (data.messages?.status !== undefined) {
           dispatch(
-            addMessage(data.messages.status, new Date(), Priorities.ERROR)
+            addMessage(data.messages.status, new Date(), data.messages.error ? Priorities.ERROR : Priorities.INFO)
           );
         }
         setDirty(false);

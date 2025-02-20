@@ -59,3 +59,7 @@ When( /^the user logs in$/ ) do
     click_button 'setTimeBtn'
   end
 end
+
+Then( 'the user sees a success message' ) do
+  page.should have_content( 'uccess' )
+end

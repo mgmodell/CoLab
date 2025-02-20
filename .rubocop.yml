@@ -1,8 +1,10 @@
 require: 
   - rubocop-thread_safety
+  - rubocop-capybara
+
+plugins:
   - rubocop-performance
   - rubocop-rails
-  - rubocop-capybara
 
 AllCops:
   Include:
