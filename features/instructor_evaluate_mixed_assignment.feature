@@ -43,6 +43,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'proficient' and 'no' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -55,6 +56,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'competent' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -72,6 +74,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user sees 'Feedback is required'
     Then close all messages
     Then the user responds to all criteria with 'novice' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -84,6 +87,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'mixed' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -96,6 +100,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'numbers' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -110,6 +115,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'numbers' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -124,6 +130,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'numbers' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -133,6 +140,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'novice' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -142,6 +150,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'proficient' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -155,6 +164,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'numbers' and 'all' feedback
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
@@ -168,10 +178,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user enters overall feedback
     Then the user responds to all criteria with 'novice' and 'all' feedback
     Then the user sets score to 98
+    Then close all messages
     Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
-
-  Scenario: Members view current grade and instructor feedback
-  Scenario: Members view assignment submission history
-

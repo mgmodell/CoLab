@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.2.2'
+ruby '3.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.1.2'
+gem 'rails', '~> 8.0.1'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '7.2.1'
+gem 'shakapacker', '8.1.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '13.4.0'
+gem 'react_on_rails', '14.1.1'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -75,33 +75,36 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'derailed'
+  # gem 'derailed'
   # gem 'ruby-debug-ide'
   # gem 'debase'
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
-  gem 'paperclip'
+  # gem 'paperclip'
+  gem 'keypairs'
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
-  gem 'rb-readline'
+  # gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.59.0', require: false
+  gem 'rails_best_practices'
+  gem 'rubocop', '~> 1.66', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
-  gem 'solargraph'
+  # gem 'solargraph'
+  gem 'traceroute'
 end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'webdrivers', '~> 5.3.1', require: false
-  # gem 'selenium-webdriver'
-  gem 'cucumber-rails', require: false
+  # gem 'webdrivers', '~> 5.3.1', require: false
+  gem 'selenium-webdriver'
+  gem 'cucumber-rails',require: false
   gem 'capybara'
   gem 'database_cleaner'
 end
@@ -116,3 +119,5 @@ end
 
 
 
+
+gem "foreman", "~> 0.88.1"

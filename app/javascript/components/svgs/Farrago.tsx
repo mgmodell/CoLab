@@ -6,7 +6,7 @@ type Props = {
   framed: boolean;
 };
 
-export default function Farrago(props : Props) {
+export default function Farrago(props: Props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);

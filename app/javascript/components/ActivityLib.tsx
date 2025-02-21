@@ -8,29 +8,29 @@ export function iconForType(type: string) {
     case "group experience":
     case "experience":
     case "experiences":
-      className = 'experience';
+      className = "experience";
       icon = <span className={`${className} pi pi-book`} />;
       break;
     case "project":
     case "assessment":
     case "assessments":
-      className = 'assessment';
+      className = "assessment";
       icon = <span className={`${className} pi pi-sliders-h`} />;
       break;
     case "terms list":
     case "bingo_game":
     case "bingo games":
-      className = 'bingo_game';
+      className = "bingo_game";
       icon = <span className={`${className} pi pi-table`} />;
       break;
     case "group assignment":
     case "assignment":
     case "Assignments":
-      className = 'assignment';
-      icon = <span className={`${className} pi pi-file-edi`} />;
+      className = "assignment";
+      icon = <span className={`${className} pi pi-file-edit`} />;
       break;
     case "submission":
-      className = 'submission';
+      className = "submission";
       icon = <span className={`${className} pi pi-file-export`} />;
       break;
     default:
@@ -38,7 +38,8 @@ export function iconForType(type: string) {
   }
   return (
     <>
-      <Tooltip target={className}/>
+      <Tooltip target={className} />
       {icon}
-    </>)
+    </>
+  );
 }

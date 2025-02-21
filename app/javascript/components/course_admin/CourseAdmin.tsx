@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router";
 
 const CourseList = React.lazy(() => import("./CourseList"));
 const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));
@@ -37,7 +37,7 @@ export default function CourseAdmin(props) {
           path={`:courseIdParam/assignment/:assignmentIdParam`}
           element={<AssignmentDataAdmin />}
         />
-        <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
+        <Route path={`:courseIdParam/*`} element={<CourseDataAdmin />} />
         <Route index element={<CourseList />} />
       </Route>
     </Routes>

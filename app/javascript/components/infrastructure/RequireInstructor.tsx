@@ -1,6 +1,6 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { Skeleton } from "@mui/material";
+import { Navigate, useLocation } from "react-router";
+import { Skeleton } from "primereact/skeleton";
 import { useTypedSelector } from "./AppReducers";
 
 export default function RequireInstructor({ children }) {
@@ -13,7 +13,7 @@ export default function RequireInstructor({ children }) {
   if (user.is_instructor || user.is_admin) {
     return children;
   } else if (isLoggingIn) {
-    return <Skeleton variant="rectangular" height={300} />;
+    return <Skeleton className="mb-2" height={"50rem"} />;
   } else {
     return <Navigate to="/" replace />;
   }

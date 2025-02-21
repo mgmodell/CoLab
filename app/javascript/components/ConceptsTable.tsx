@@ -7,10 +7,9 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "./toolbars/StandardListToolbar";
 
 import { Button } from "primereact/button";
-import { Panel } from "primereact/panel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
@@ -41,9 +40,9 @@ export default function ConceptsTable() {
   const [concepts, setConcepts] = useState([]);
   const [filterText, setFilterText] = useState("");
   const optColumns = [
-    t( OPT_COLS.USE_COUNT ),
-    t( OPT_COLS.COURSES ),
-    t( OPT_COLS.GAMES )
+    t(OPT_COLS.USE_COUNT),
+    t(OPT_COLS.COURSES),
+    t(OPT_COLS.GAMES)
   ];
   const [visibleColumns, setVisibleColumns] = useState([]);
 
@@ -122,89 +121,80 @@ export default function ConceptsTable() {
     <React.Fragment>
       <DataTable
         value={concepts.filter(concept => {
-          return filterText.length === 0 || concept.cap_name.includes(filterText.toUpperCase());
+          return (
+            filterText.length === 0 ||
+            concept.cap_name.includes(filterText.toUpperCase())
+          );
         })}
         resizableColumns
         tableStyle={{
-          minWidth: '50rem'
+          minWidth: "50rem"
         }}
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, 100]
-        }
+        rowsPerPageOptions={[5, 10, 20, 100]}
         virtualScrollerOptions={{ itemSize: 100 }}
         onRowClick={drillDown}
         header={
           <StandardListToolbar
-          itemType={'invitation'}
-          filtering={
-            {
+            itemType={"invitation"}
+            filtering={{
               filterValue: filterText,
               setFilterFunc: setFilterText
-            }
-          }
-          columnToggle={{
-            optColumns: optColumns,
-            visibleColumns: visibleColumns,
-            setVisibleColumnsFunc: setVisibleColumns,
-          }}
-        />}
+            }}
+            columnToggle={{
+              optColumns: optColumns,
+              visibleColumns: visibleColumns,
+              setVisibleColumnsFunc: setVisibleColumns
+            }}
+          />
+        }
         sortField="name"
-        paginatorDropdownAppendTo={'self'}
+        paginatorDropdownAppendTo={"self"}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
         //paginatorLeft={paginatorLeft}
         //paginatorRight={paginatorRight}
         dataKey="id"
-        >
-          <Column
-            header={t("name")}
-            field="name"
-            sortable
-            filter
-            key="name"
-            />
-          { visibleColumns.includes(t(OPT_COLS.USE_COUNT)) ? (
+      >
+        <Column header={t("name")} field="name" sortable filter key="name" />
+        {visibleColumns.includes(t(OPT_COLS.USE_COUNT)) ? (
           <Column
             header={t("use_count")}
             field="times"
             sortable
             filter
             key="times"
-            />
-          ) : null
-          }
-          { visibleColumns.includes(t(OPT_COLS.COURSES)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.COURSES)) ? (
           <Column
             header={t("courses")}
             field="courses"
             sortable
             filter
             key="courses"
-            />
-          ) : null }
-          { visibleColumns.includes(t(OPT_COLS.GAMES)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.GAMES)) ? (
           <Column
             header={t("games")}
             field="bingos"
             sortable
             filter
             key="bingos"
-            />
-          ) : null }
-        </DataTable>
+          />
+        ) : null}
+      </DataTable>
       <Dialog
         visible={editing}
         onHide={() => setEditing(false)}
         aria-labelledby="edit"
         header={t("edit.title")}
-        footer={(
+        footer={
           <>
-            <Button onClick={() => setEditing(false)}>
-              {t("cancel")}
-            </Button>
+            <Button onClick={() => setEditing(false)}>{t("cancel")}</Button>
             <Button
               onClick={() => updateConcept(conceptId, conceptName)}
               disabled={!dirty}
@@ -212,10 +202,10 @@ export default function ConceptsTable() {
               {t("update_con")}
             </Button>
           </>
-        )}
+        }
       >
         <WorkingIndicator identifier="saving_concept" />
-        {t('concept_name')}
+        {t("concept_name")}
         <InputText
           value={conceptName}
           onChange={event => setName(event.target.value)}

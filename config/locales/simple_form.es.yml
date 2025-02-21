@@ -1,0 +1,55 @@
+es:
+  simple_form:
+    "Si": 'Si'
+    "No": 'No'
+    required:
+      text: 'Requerido'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Por favor, revisa los problemas a continuación:"
+    prompt:
+      user:
+        gender: Selecciona tu género
+        cip_code: Selecciona tu curso de estudio
+        timezone: Selecciona tu zona horaria
+        school: Selecciona tu universidad
+        primary_language: Selecciona el idioma que hablas en casa
+        theme: Seleccione el tema de su interfaz de usuario
+        language: Seleccione el idioma de su interfaz de usuario
+    labels:
+      user:
+        first_name: Nombre de pila
+        last_name: Apellido
+        gender: ¿Cuál es tu género?
+        date_of_birth: ¿Cuándo naciste?
+        started_school: ¿Cuándo comenzaste la universidad?
+        cip_code: ¿Qué estás estudiando?
+        timezone: ¿En qué zona horaria estás?
+        school: ¿En qué escuela estás actualmente?
+        primary_language: ¿Qué idioma hablas en casa?
+        theme: ¿Qué tema de interfaz de usuario te gustaría usar?
+        language: ¿Qué idioma te gustaría usar para CoLab?
+        researcher: ¿Anonimizar nombres?
+      consent_form:
+        name: Nombre del estudio
+        user: Administrador principal del estudio
+        pdf: Un PDF del formulario de consentimiento del estudio
+        projects: Proyectos específicos a los que se aplica este formulario
+        form_text: Texto del formulario de consentimiento
+      consent_log:
+        accepted: Estoy de acuerdo
+    hints:
+      consent_form:
+        name: >
+          Este es el Título del Estudio que se presentará
+          a cada participante potencial.
+
+        projects: >
+          Si no se seleccionan proyectos, este formulario de consentimiento se
+          aplicará a todos los proyectos de CoLab.
+        form_text: >
+          Este texto se presentará a todos los participantes potenciales del
+          estudio. Por favor, usa HTML básico para formatear tu texto.

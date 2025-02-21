@@ -1,8 +1,10 @@
 require: 
   - rubocop-thread_safety
+  - rubocop-capybara
+
+plugins:
   - rubocop-performance
   - rubocop-rails
-  - rubocop-capybara
 
 AllCops:
   Include:
@@ -25,3 +27,7 @@ Metrics/MethodLength:
     Enabled: false
 Style/YodaCondition:
   EnforcedStyle: require_for_equality_operators_only
+Layout/SpaceAroundBlockParameters:
+  EnforcedStyleInsidePipes: space
+Layout/SpaceInsideParens:
+  EnforcedStyle: space

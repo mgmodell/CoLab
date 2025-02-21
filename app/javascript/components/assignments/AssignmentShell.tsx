@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import RequireInstructor from "../infrastructure/RequireInstructor";
@@ -11,7 +11,7 @@ export default function AssignmentShell() {
 
   return (
     <React.Fragment>
-      <WorkingIndicator identifier="play_bingo" />
+      <WorkingIndicator identifier="assignments" />
       <Routes>
         <Route path={`:assignmentId`} element={<AssignmentViewer />} />
         <Route

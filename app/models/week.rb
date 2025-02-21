@@ -8,6 +8,6 @@ class Week < ApplicationRecord
   has_many :diagnoses, inverse_of: :week
 
   def percent_complete
-    (100 * ((week_num - 1).to_f / narrative.weeks.count)).to_i
+    ( 100 * ( ( week_num - 1 ).to_f / narrative.weeks.count ) ).to_i
   end
 end

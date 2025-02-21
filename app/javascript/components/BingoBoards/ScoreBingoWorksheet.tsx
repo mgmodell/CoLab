@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import { useTranslation } from "react-i18next";
 
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
+import { InputText } from "primereact/inputtext";
+import { Col, Container, Row } from "react-grid-system";
+import { Button } from "primereact/button";
+import { Panel } from "primereact/panel";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import axios from "axios";
 import parse from "html-react-parser";
 
 export default function ScoreBingoWorksheet(props) {
@@ -36,9 +36,6 @@ export default function ScoreBingoWorksheet(props) {
   const [newImgExt, setNewImgExt] = useState(null);
 
   const imgFileDataId = "result_photo";
-
-
-  const [courseName, setCourseName] = useState("loading");
 
   useEffect(() => {
     if (endpointsLoaded) {
@@ -105,78 +102,87 @@ export default function ScoreBingoWorksheet(props) {
 
   const resultImage =
     null === resultImgUrl ? null : (
-      <Grid item xs={12} sm={12}>
-        <img src={resultImgUrl} />
-      </Grid>
+      <Row>
+        <Col xs={12} sm={12}>
+          <img src={resultImgUrl} />
+        </Col>
+      </Row>
     );
 
   return (
-    <Paper>
-      <Grid container>
-        <Grid item xs={12} sm={6}>
-          <h2>{t("topic")}:</h2>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <h2>{topic}</h2>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <h2>{t("description")}:</h2>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <p>{parse(description)}</p>
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <table>
-            <tbody>
-              {worksheetAnswers.map((answerRow, outerIndex) => {
-                return (
-                  <tr key={outerIndex}>
-                    {answerRow.map((cell, innerIndex) => {
-                      return (
-                        <td key={`${outerIndex}-${innerIndex}`}>
-                          {null === cell ? "-" : cell}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="score"
-            label={t("score")}
-            value={performance}
-            type="number"
-            onChange={event => {
-              setPerformance(event.target.value);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <label htmlFor={imgFileDataId}>
-            <input
-              style={{ display: "none" }}
-              id={imgFileDataId}
-              name={imgFileDataId}
-              onChange={handleFileSelect}
-              type="file"
-            />
-            <Button variant="contained" component="span">
-              {t("file_select")}
-            </Button>
-          </label>
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <Button variant="contained" component="span" onClick={submitScore}>
-            {t("submit_scores")}
-          </Button>
-        </Grid>
+    <Panel>
+      <Container>
+        <Row>
+          <Col xs={12} sm={6}>
+            <h2>{t("topic")}:</h2>
+          </Col>
+          <Col xs={12} sm={6}>
+            <h2>{topic}</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={6}>
+            <h2>{t("description")}:</h2>
+          </Col>
+          <Col xs={12} sm={6}>
+            <p>{parse(description)}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={12}>
+            <table>
+              <tbody>
+                {worksheetAnswers.map((answerRow, outerIndex) => {
+                  return (
+                    <tr key={outerIndex}>
+                      {answerRow.map((cell, innerIndex) => {
+                        return (
+                          <td key={`${outerIndex}-${innerIndex}`}>
+                            {null === cell ? "-" : cell}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={6}>
+            <span className="p-float-label">
+              <InputText
+                id="score"
+                value={performance.toString()}
+                type="number"
+                onChange={event => {
+                  setPerformance(parseInt(event.target.value));
+                }}
+              />
+              <label htmlFor="score">{t("score")}</label>
+            </span>
+          </Col>
+          <Col xs={12} sm={6}>
+            <label htmlFor={imgFileDataId}>
+              <input
+                style={{ display: "none" }}
+                id={imgFileDataId}
+                name={imgFileDataId}
+                onChange={handleFileSelect}
+                type="file"
+              />
+              <Button>{t("file_select")}</Button>
+            </label>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={12}>
+            <Button onClick={submitScore}>{t("submit_scores")}</Button>
+          </Col>
+        </Row>
         {resultImage}
-      </Grid>
-    </Paper>
+      </Container>
+    </Panel>
   );
 }
-ScoreBingoWorksheet.propTypes = {};

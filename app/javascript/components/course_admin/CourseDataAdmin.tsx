@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate, useParams } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -15,13 +15,9 @@ import {
 
 import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { iconForType } from "../ActivityLib";
 
 const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 import { useTranslation } from "react-i18next";
-import CourseAdminListToolbar from "./CourseAdminListToolbar";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
@@ -32,13 +28,32 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
-import { set } from "mockdate";
+import ActivityList, { Activity } from "./ActivityList";
+import CourseWizard from "./wizard/CourseWizard";
 
-export default function CourseDataAdmin(props) {
+interface IActivityLink {
+  name: string;
+  link: string;
+}
+
+interface ICourse {
+  id: number;
+  name: string;
+  number: string;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  school_id: number;
+  consent_form_id: number;
+  timezone: string;
+  reg_link: string;
+  activities: Array<Activity>;
+};
+
+
+export default function CourseDataAdmin() {
   const category = "course";
   const { t } = useTranslation(`${category}s`);
-  const [filterText, setFilterText] = useState('');
-  const [optActivityColumns, setOptActivityColumns] = useState([]);
 
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -46,12 +61,6 @@ export default function CourseDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
-
-  const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
@@ -65,33 +74,34 @@ export default function CourseDataAdmin(props) {
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
 
-  const [courseName, setCourseName] = useState("");
-  const [courseNumber, setCourseNumber] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
+  const [course, setCourse] = useState<ICourse>({
+    id: courseId,
+    name: "",
+    number: "",
+    description: "",
+    start_date: new Date(),
+    end_date: new Date(),
+    school_id: null,
+    consent_form_id: null,
+    timezone: "UTC",
+    reg_link: "",
+    activities: []
+  });
+
   const [courseUsersList, setCourseUsersList] = useState(Array<StudentData>);
-  const [courseActivities, setCourseActivities] = useState([]);
-  
 
-  const [courseStartDate, setCourseStartDate] = useState(new Date);
   //Using this Luxon function for later i18n
-  const [courseEndDate, setCourseEndDate] = useState(
-    new Date( ( new Date ).setMonth ((new Date ).getMonth() + 3 ) )
-  );
-
-  const [courseSchoolId, setCourseSchoolId] = useState(0);
-  const [courseTimezone, setCourseTimezone] = useState("");
-  const [courseConsentFormId, setCourseConsentFormId] = useState(0);
-  const [courseRegImage, setCourseRegImage] = useState(null);
 
   const schools = useTypedSelector(state => state.context.lookups["schools"]);
   const timezones = useTypedSelector(
     state => state.context.lookups["timezones"]
   );
   const [consentForms, setConsentForms] = useState([]);
-  const [newActivityLinks, setNewActivityLinks] = useState([]);
+  const [newActivityLinks, setNewActivityLinks] = useState<Array<IActivityLink>>([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getCourse = () => {
     dispatch(startTask());
@@ -112,26 +122,23 @@ export default function CourseDataAdmin(props) {
 
         const course = data.course;
 
-        setCourseName(course.name || "");
-        setCourseNumber(course.number || "");
-        setCourseDescription(course.description || "");
-
-        setCourseStartDate(new Date( Date.parse(course.start_date) ));
-        setCourseEndDate(new Date( Date.parse(course.end_date) ));
-
-        setCourseRegImage(course.reg_link);
-        course.activities.forEach(activity => {
-
-          activity.end_date = new Date( Date.parse(activity.end_date) );
-          activity.start_date = new Date( Date.parse(activity.start_date) );
-        });
-        setCourseActivities(course.activities);
-        setCourseTimezone(course.timezone || "UTC");
-        setCourseConsentFormId(course.consent_form_id || 0);
-        setCourseSchoolId(course.school_id || 0);
+        const localCourse: ICourse = {
+          id: courseId,
+          name: course.name || "",
+          number: course.number || '',
+          description: course.description || '',
+          start_date: new Date(Date.parse(course.start_date)),
+          end_date: new Date(Date.parse(course.end_date)),
+          school_id: course.school_id,
+          consent_form_id: course.consent_form_id,
+          timezone: course.timezone || "UTC",
+          reg_link: course.reg_link,
+          activities: course.activities
+        }
+        setCourse(localCourse);
 
         dispatch(setClean(category));
-        
+
       })
       .catch(error => {
         console.log("error:", error);
@@ -153,32 +160,32 @@ export default function CourseDataAdmin(props) {
       url: url,
       data: {
         course: {
-          name: courseName,
-          number: courseNumber,
           course_id: courseId,
-          description: courseDescription,
-          start_date: courseStartDate,
-          end_date: courseEndDate,
-          school_id: courseSchoolId,
-          consent_form_id: courseConsentFormId,
-          timezone: courseTimezone
+          name: course.name,
+          number: course.number,
+          description: course.description,
+          start_date: course.start_date,
+          end_date: course.end_date,
+          school_id: course.school_id,
+          consent_form_id: course.consent_form_id,
+          timezone: course.timezone
         }
       }
     })
       .then(response => {
         const data = response.data;
         if (Object.keys(data.messages).length < 2) {
-          setCourseId(data.course.id);
-          setCourseName(data.course.name);
-          setCourseNumber(data.course.number);
-          setCourseDescription(data.course.description);
-          setCourseTimezone(data.course.timezone);
-          setCourseConsentFormId(data.course.consent_form_id || 0);
-          setCourseSchoolId(data.course.school_id);
+          const localCourse: ICourse = Object.assign({},
+            data.course,
+            {
+              start_date: new Date(Date.parse(data.course.start_date)),
+              end_date: new Date(Date.parse(data.course.end_date))
+            }
+          );
+          setCourse(localCourse);
+          setCourseId(localCourse.id);
+          navigate( `../${localCourse.id}`, { replace: true } );
 
-          setCourseStartDate(new Date( Date.parse(data.course.start_date) ));
-
-          setCourseEndDate(new Date( Date.parse(data.course.end_date) ));
 
           dispatch(setClean(category));
         }
@@ -212,13 +219,7 @@ export default function CourseDataAdmin(props) {
   useEffect(() => {
     dispatch(setDirty(category));
   }, [
-    courseName,
-    courseDescription,
-    courseTimezone,
-    courseSchoolId,
-    courseConsentFormId,
-    courseStartDate,
-    courseEndDate
+    course,
   ]);
 
   const postNewMessage = msgs => {
@@ -235,130 +236,162 @@ export default function CourseDataAdmin(props) {
     </React.Fragment>
   ) : null;
 
+  const setCourseValue = (field, value) => {
+    setCourse(course => {
+      return { ...course, [field]: value };
+    });
+  }
+
   const detailsComponent = (
     <Panel>
-        <label htmlFor="course-number" id="course-number_lbl">
-          Course Number
-        </label>
+      <label htmlFor="course-number" id="course-number_lbl">
+        {t('edit.number')}
+      </label>
       <InputText
         placeholder="Course Number"
         id="course-number"
-        value={courseNumber}
-        onChange={event => setCourseNumber(event.target.value)}
-        />
-        {Boolean(messages['course_number']) ? (
-          <Message severity="error" text={messages['course_number']} />
-        ) : null}
-        <br />
-        <label htmlFor="course-name" id="course-name_lbl">
-          Course Name
-          </label>
-          <InputText
-          placeholder="Course Name"
-          id="course-name"
-          value={courseName}
-          onChange={event => setCourseName(event.target.value)}
-        />
-        {Boolean(messages['course_name']) ? (
-          <Message severity="error" text={messages['course_name']} />
-        ) : null}
-        <br />
-        <label htmlFor="course-description" id="course-description_lbl">
-          Course Description
-        </label>
-        <InputTextarea
+        value={course.number}
+        onChange={event => {
+          setCourseValue('number', event.target.value);
+        }}
+      />
+      {Boolean(messages['course_number']) ? (
+        <Message severity="error" text={messages['course_number']} />
+      ) : null}
+      <br />
+      <label htmlFor="course-name" id="course-name_lbl">
+        {t('edit.name')}
+      </label>
+      <InputText
+        placeholder="Course Name"
+        id="course-name"
+        value={course.name}
+        onChange={event => {
+          setCourseValue('name', event.target.value);
+        }}
+      />
+      {Boolean(messages['course_name']) ? (
+        <Message severity="error" text={messages['course_name']} />
+      ) : null}
+      <br />
+      <label htmlFor="course-description" id="course-description_lbl">
+        {t('edit.description')}
+      </label>
+      <InputTextarea
         placeholder="Course Description"
         id="course-description"
-        value={courseDescription}
-        onChange={event => setCourseDescription(event.target.value)}
+        value={course.description}
+        onChange={event => {
+          setCourseValue('description', event.target.value);
+        }}
         rows={5}
         cols={30}
         autoResize={true}
-        />
-        {Boolean(messages['course_description']) ? (
-          <Message severity="error" text={messages['course_description']} />
-        ) : null}
-        <br />
-        <label htmlFor="course_school" id="course_school_lbl">
-          School
-        </label>
-        {schools.length > 0 ? (
-          <Dropdown
-            id="course_school"
-            value={courseSchoolId}
-            options={schools}
-            onChange={event => {
-              const changeTo = Number(event.target.value);
-              setCourseSchoolId(changeTo);
-              setCourseTimezone(schoolTzHash[changeTo]);
-            }}
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Select a School"
-            showClear={true}
-            />
-        ) : (
-          <Skeleton className={"mb-2"} height={'2rem'} />
-        )}
-
-        <label htmlFor="course_timezone" id="course_timezone_lbl">
-          Time Zone
-        </label>
-        {timezones.length > 0 ? (
-          <Dropdown id="course_timezone"
-            value={courseTimezone}
-            options={timezones}
-            onChange={event => setCourseTimezone(String(event.target.value))}
-            optionLabel="name"
-            optionValue="name"
-            placeholder="Select a Time Zone"
-            showClear={true}
-            />
-        ) : (
-          <Skeleton className={"mb-2"} height={'2rem'} />
-        )}
-
-        <label htmlFor="course_consent_form" id="course_consent_form_lbl">
-          Consent Form
-        </label>
+      />
+      {Boolean(messages['course_description']) ? (
+        <Message severity="error" text={messages['course_description']} />
+      ) : null}
+      <br />
+      <label htmlFor="course_school" id="course_school_lbl">
+        {t('edit.school')}
+      </label>
+      {schools.length > 0 ? (
         <Dropdown
-          id="course_consent_form"
-          value={courseConsentFormId}
-          options={consentForms}
-          onChange={event => setCourseConsentFormId(Number(event.target.value))}
-          optionValue="id"
+          id="course_school"
+          value={course.school_id}
+          options={schools}
+          onChange={event => {
+            const changeTo = Number(event.target.value);
+            setCourse(course => {
+              return {
+                ...course,
+                school_id: changeTo,
+                timezone: schoolTzHash[changeTo]
+              };
+            });
+          }}
           optionLabel="name"
-          placeholder="Select a Consent Form"
-          showClear={true}
-          />
+          optionValue="id"
+          placeholder="Select a School"
+          showClear={false}
+        />
+      ) : (
+        <Skeleton className={"mb-2"} height={'2rem'} />
+      )}
 
-      <p>All dates shown in {courseTimezone} timezone.</p>
-        <label htmlFor="course_dates" id="course_dates_lbl">
-          Course Dates
-        </label>
+      <label htmlFor="course_timezone" id="course_timezone_lbl">
+        {t('edit.time_zone')}
+      </label>
+      {timezones.length > 0 ? (
+        <Dropdown id="course_timezone"
+          value={course.timezone}
+          options={timezones}
+          onChange={event => {
+            setCourseValue('timezone', event.target.value);
+          }}
+          optionLabel="name"
+          optionValue="name"
+          placeholder="Select a Time Zone"
+          showClear={false}
+        />
+      ) : (
+        <Skeleton className={"mb-2"} height={'2rem'} />
+      )}
+
+      <label htmlFor="course_consent_form" id="course_consent_form_lbl">
+        {t('edit.consent')}
+      </label>
+      <Dropdown
+        id="course_consent_form"
+        value={course.consent_form_id}
+        options={consentForms}
+        onChange={event => {
+          setCourseValue('consent_form_id', event.target.value);
+        }}
+        optionValue="id"
+        optionLabel="name"
+        placeholder="Select a Consent Form"
+        showClear={true}
+      />
+
+      <p>{t('edit.dates_tz', {time_zone: course.timezone})}</p>
+      <label htmlFor="course_dates" id="course_dates_lbl">
+        {t('edit.dates')}
+      </label>
       <Calendar
         id="course_dates"
         selectionMode={'range'}
-        value={[courseStartDate, courseEndDate]}
+        value={[course.start_date, course.end_date]}
         placeholder="Select a Date Range"
+        showIcon={true}
+        showOnFocus={false}
         onChange={event => {
-          setCourseStartDate(event.value[0]);
-          setCourseEndDate(event.value[1]);
+          const changeTo = event.value;
+          if (null !== changeTo && changeTo.length > 1) {
+            setCourse(course => {
+              return {
+                ...course,
+                start_date: changeTo[0],
+                end_date: changeTo[1]
+              };
+            })
+
+          }
         }}
 
-        />
-        {Boolean(messages["start_date"]) ? (
-          <Message severity="error" text={messages["start_date"]} />
-        ) : null}
+      />
+      {Boolean(messages["start_date"]) ? (
+        <Message severity="error" text={messages["start_date"]} />
+      ) : null}
 
       {Boolean(messages["end_date"]) ? (
         <Message severity="error" text={messages["end_date"]} />
       ) : null}
       <br />
       {courseId != null && courseId > 0 ? (
-        <a href={courseRegImage} download>
-          <img src={courseRegImage} alt="Registration QR Code" />
-          Download self-registration code
+        <a href={course.reg_link} download>
+          <img src={course.reg_link} alt="Registration QR Code" />
+          {t('edit.download_qr')}
         </a>
       ) : null}
 
@@ -366,152 +399,21 @@ export default function CourseDataAdmin(props) {
     </Panel>
   );
 
-  enum ACTIVITY_COLS {
-    STATUS = "status",
-    OPEN = "open",
-    CLOSE = "close",
-  }
-
-  const optColumns = [
-    ACTIVITY_COLS.STATUS,
-    ACTIVITY_COLS.OPEN,
-    ACTIVITY_COLS.CLOSE,
-  ]
 
 
   const activityList =
     courseId != null && courseId > 0 ? (
-      <>
-        <DataTable
-          value={courseActivities.filter((activity) => {
-
-            //Add filtering here
-            return filterText.length === 0 || activity.name.includes(filterText);
-
-          })}
-          resizableColumns
-          reorderableColumns
-          paginator
-          rows={5}
-          tableStyle={{
-            minWidth: '50rem'
-          }}
-          rowsPerPageOptions={
-            [5, 10, 20, courseActivities.length]
-          }
-          header={
-            <CourseAdminListToolbar
-              newActivityLinks={newActivityLinks}
-              filtering={{
-                filterValue: filterText,
-                setFilterFunc: setFilterText,
-              }}
-              columnToggle={{
-                optColumns: optColumns,
-                visibleColumns: optActivityColumns,
-                setVisibleColumnsFunc: setOptActivityColumns,
-
-              }}
-            />}
-          sortOrder={-1}
-          paginatorDropdownAppendTo={'self'}
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          onRowClick={(event) => {
-            const link = event.data.link; //courseActivities[cellMeta.dataIndex].link;
-            const activityId = event.data.id; // courseActivities[cellMeta.dataIndex].id;
-            navigate(`${link}/${activityId}`);
-          }}
-          currentPageReportTemplate="{first} to {last} of {totalRecords}"
-          dataKey="id"
-        >
-          <Column
-            header={t('activities.type_col')}
-            field="type"
-            body={(rowData) => {
-              return iconForType(rowData.type);
-            }}
-          />
-          <Column
-            header={t('activities.name_col')}
-            field="name"
-          />
-          {optActivityColumns.includes(ACTIVITY_COLS.STATUS) ? (
-          <Column
-            header={t('activities.status_col')}
-            field="status"
-            body={(rowData) => {
-              if (!rowData.active) {
-                return 'Not Activated'
-              }
-              else if (rowData.end_date > new Date( )) {
-                return "Active";
-              } else {
-                return "Expired";
-              }
-            }}
-          /> ): null
-            }
-            {optActivityColumns.includes(ACTIVITY_COLS.OPEN) ? (
-          <Column
-            header={t('activities.open_col')}
-            field="start_date"
-            body={(rowData) => {
-              const dt = Date.parse(rowData.start_date);
-              return <span>{dt.toLocaleString( )}</span>;
-            }}
-          />
-              ):null }
-              {optActivityColumns.includes(ACTIVITY_COLS.CLOSE) ? (
-          <Column
-            header={t('activities.close_col')}
-            field="end_date"
-            body={(rowData) => {
-              const dt = Date.parse(rowData.end_date);
-              return <span>{dt.toLocaleString()}</span>;
-
-            }}
-          />
-                ): null}
-          <Column
-            header=''
-            field="link"
-            body={(rowData) => {
-              const lbl = t('activities.delete_lbl');
-              return (
-                <Button
-                  icon="pi pi-trash"
-                  aria-label="Delete"
-                  tooltip={lbl}
-                  onClick={event => {
-                    dispatch(startTask("deleting"));
-                    axios
-                      // Is this right? Shouldn't it be params.value?
-                      .delete(user.drop_link, {})
-                      .then(response => {
-                        const data = response.data;
-                        getCourse();
-                        setMessages(data.messages);
-                        dispatch(endTask("deleting"));
-                      })
-                      .catch(error => {
-                        console.log("error:", error);
-                      }).finally(() => {
-                        dispatch(endTask("deleting"));
-                      })
-                  }}
-                />
-              );
-            }}
-          />
-
-        </DataTable>
-      </>
+      <ActivityList
+        activities={course.activities}
+        newActivityLinks={newActivityLinks}
+        refreshFunc={getCourse}
+      />
 
     ) : (
       <div>{t('activities.save_first_msg')}</div>
     );
 
-  return (
+  const advancedCourseAdmin = (
     <Panel>
       <TabView
         activeIndex={curTab}
@@ -519,7 +421,7 @@ export default function CourseDataAdmin(props) {
       >
 
         <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
-        <TabPanel header={t("instructors_tab")}>
+        <TabPanel header={t("instructors_tab")} disabled={isNaN(courseId)}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -529,7 +431,7 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel header={t("students_tab")}>
+        <TabPanel header={t("students_tab")} disabled={isNaN(courseId)}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -539,10 +441,46 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel header={t("activities_tab")}>{activityList}</TabPanel>
+        <TabPanel header={t("activities_tab")} disabled={isNaN(courseId)}>
+          {activityList}
+        </TabPanel>
       </TabView>
+      <Button
+        label={t('wizard.wizard_switch')}
+        onClick={() => {
+          navigate( 'courseWizard' );
+        }}
+        />
       {saveButton}
       {messages["status"]}
     </Panel>
+
+  )
+  return (
+    <Routes>
+      <Route path="/" element={<Outlet />}>
+        <Route
+          index
+          element={
+            advancedCourseAdmin
+          }
+        />
+        <Route
+          path={'courseWizard'}
+          element={
+            <CourseWizard
+              course={course}
+              setCourseFunc={setCourse}
+              saveCourseFunc={saveCourse}
+            />
+          }
+        />
+
+      </Route>
+
+
+    </Routes>
   );
 }
+
+export { ICourse, IActivityLink }

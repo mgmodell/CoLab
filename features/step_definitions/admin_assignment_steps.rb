@@ -2,7 +2,7 @@
 
 require 'chronic'
 
-Given('the course has an assignment named {string} with an {string} rubric named {string}') do |assignment_name, rubric_published, rubric_name|
+Given( 'the course has an assignment named {string} with an {string} rubric named {string}' ) do | assignment_name, rubric_published, rubric_name |
   @rubric = @user.rubrics.new(
     name: rubric_name,
     description: Faker::GreekPhilosophers.quote,
@@ -29,74 +29,39 @@ Given('the course has an assignment named {string} with an {string} rubric named
   log @assignment.errors.full_messages if @assignment.errors.present?
 end
 
-Given('the assignment opening is {string} and close is {string}') do |start_date_string, end_date_string|
-  @assignment.start_date = Chronic.parse(start_date_string)
-  @assignment.end_date = Chronic.parse(end_date_string)
+Given( 'the assignment opening is {string} and close is {string}' ) do | start_date_string, end_date_string |
+  @assignment.start_date = Chronic.parse( start_date_string )
+  @assignment.end_date = Chronic.parse( end_date_string )
 
   @assignment.save
   log @assignment.errors.full_messages if @assignment.errors.present?
 end
 
-Then('the assignment rubric is {string}') do |rubric_name|
+Then( 'the assignment rubric is {string}' ) do | rubric_name |
   @assignment.rubric.name.should eq rubric_name
 end
 
-Then('the user sets the assignment {string} to {string}') do |field_name, value|
+Then( 'the user sets the assignment {string} to {string}' ) do | field_name, value |
+  chkbox_id = ''
+
   case field_name
-  when 'opening'
-    label = 'Start Date'
-    begin
-      find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-      field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find(:xpath, "//input[@id='#{field_id}']")
-      field.click
-    end
-    new_year = Chronic.parse(value).strftime('%Y')
-    new_date = Chronic.parse(value).strftime('%m%d%Y')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
-  when 'close'
-    label = 'Close Date'
-    begin
-      find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-      field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find(:xpath, "//input[@id='#{field_id}']")
-      field.click
-    end
-    new_year = Chronic.parse(value).strftime('%Y')
-    new_date = Chronic.parse(value).strftime('%m%d%Y')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
   when 'link'
-    if 'true' == value
-      check 'sub_link', visible: :all
-    else
-      uncheck 'sub_link', visible: :all
-    end
+    chkbox_id = 'sub_link'
   when 'text'
-    if 'true' == value
-      check 'sub_text', visible: :all
-    else
-      uncheck 'sub_text', visible: :all
-    end
+    chkbox_id = 'sub_text'
   when 'files'
-    if 'true' == value
-      check 'sub_file', visible: :all
-    else
-      uncheck 'sub_file', visible: :all
-    end
+    chkbox_id = 'sub_file'
   else
-    false.should be true
+    puts "No such field: #{field_name}"
+    pending
+  end
+
+  if value != find( :xpath, "//input[@name='#{chkbox_id}']", visible: :all )[:checked]
+    find( :xpath, "//div[@id='#{chkbox_id}']", visible: :all ).click
   end
 end
 
-Then('retrieve the {string} assignment from the db') do |which_assignment|
+Then( 'retrieve the {string} assignment from the db' ) do | which_assignment |
   @assignment = if 'latest' == which_assignment
                   Assignment.last
                 else
@@ -104,56 +69,58 @@ Then('retrieve the {string} assignment from the db') do |which_assignment|
                 end
 end
 
-Then('the assignment {string} field is {string}') do |field_name, value|
+Then( 'the assignment {string} field is {string}' ) do | field_name, value |
   case field_name.downcase
   when 'name'
     @assignment.name.should eq value
   when 'description'
     @assignment.description.should eq "<p>#{value}</p>"
   when 'opening'
-    @assignment.start_date.should eq Chronic.parse(value).to_date
+    @assignment.start_date.should eq Chronic.parse( value ).to_date
   when 'close'
-    @assignment.end_date.should eq Chronic.parse(value).end_of_day.change(sec: 59)
+    @assignment.end_date.should eq Chronic.parse( value ).end_of_day.change( sec: 59 )
   else
     true.should be false
   end
 end
 
-Then('the assignment {string} active') do |is_active|
-  @assignment.active.should eq('is' == is_active)
+Then( 'the assignment {string} active' ) do | is_active |
+  @assignment.active.should eq( 'is' == is_active )
 end
 
-Then('the assignment {string} initialised as group-capable') do |is_group_enabled|
+Then( 'the assignment {string} initialised as group-capable' ) do | is_group_enabled |
   @assignment.group_enabled = 'is' == is_group_enabled
+  @assignment.project = @course.projects[0]
+  @assignment.save
 end
 
-Then('the user sets the assignment project to the course project') do
+Then( 'the user sets the assignment project to the course project' ) do
   project = @assignment.course.projects[0]
   if has_select? 'Source of groups', visible: :all
-    page.select(project.name, from: 'Source of groups', visible: :all)
+    page.select( project.name, from: 'Source of groups', visible: :all )
   else
-    find('div', id: /assignment_project_id/).click
-    find('li', text: project.name).click
+    find( 'div', id: /assignment_project_id/ ).click
+    find( 'li', text: project.name ).click
 
   end
 end
 
-Then('the assignment project is the course project') do
+Then( 'the assignment project is the course project' ) do
   @assignment.project.should eq @course.projects[0]
 end
 
-Then('the user selects the {string} version {int} rubric') do |rubric_name, version|
-  rubric = Rubric.where(name: rubric_name, version:)[0]
+Then( 'the user selects the {string} version {int} rubric' ) do | rubric_name, version |
+  rubric = Rubric.where( name: rubric_name, version: )[0]
   if has_select? 'Which rubric will be applied?', visible: :all
-    page.select("#{rubric.name} (#{rubric.version})", from: 'Which rubric will be applied?', visible: :all)
+    page.select( "#{rubric.name} (#{rubric.version})", from: 'Which rubric will be applied?', visible: :all )
   else
-    find('div', id: /assignment_rubric_id/).click
-    find('li', text: "#{rubric.name} (#{rubric.version})").click
+    find( 'div', id: /assignment_rubric_id/ ).click
+    find( 'li', text: "#{rubric.name} v#{rubric.version}" ).click
 
   end
 end
 
-Given('the course has an assignment') do
+Given( 'the course has an assignment' ) do
   @assignment = @course.assignments.new(
     name: Faker::Company.industry,
     description: Faker::Quote.yoda,
@@ -165,16 +132,16 @@ Given('the course has an assignment') do
   @assignment.save
 end
 
-Given('the assignment {string} group capable') do |is_or_isnt|
+Given( 'the assignment {string} group capable' ) do | is_or_isnt |
   @assignment.group_enabled.should be 'is' == is_or_isnt
 end
 
-Then('the assignment rubric is {string} version {int}') do |rubric_name, rubric_version|
+Then( 'the assignment rubric is {string} version {int}' ) do | rubric_name, rubric_version |
   @assignment.rubric.name.should eq rubric_name
   @assignment.rubric.version.should eq rubric_version
 end
 
-Then('the new assignment metadata is the same as the old') do
+Then( 'the new assignment metadata is the same as the old' ) do
   @assignment.name.should eq @orig_assignment.name
   @assignment.description.should eq @orig_assignment.description
   @assignment.rubric.should eq @orig_assignment.rubric

@@ -1,29 +1,20 @@
 import React, { useState } from "react";
-import Draggable from "react-draggable";
 
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import { TabView, TabPanel } from "primereact/tabview";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import { Container, Row, Col } from "react-grid-system";
 
 const ScoredGameDataTable = React.lazy(() => import("./ScoredGameDataTable"));
 
-type Candidate = {
+interface ICandidate {
   id: number;
   concept: string;
   definition: string;
   term: string;
   feedback: string;
   feedback_id: number;
-};
+}
 
 type Props = {
   open: boolean;
@@ -31,18 +22,10 @@ type Props = {
   board: Array<Array<string>>;
   score: number;
   close: Function;
-  candidates: Array<Candidate>;
+  candidates: Array<ICandidate>;
 };
 
-function PaperComponent(props) {
-  return (
-    <Draggable>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
-
-export default function BingoGameResults(props : Props) {
+export default function BingoGameResults(props: Props) {
   const [curTab, setCurTab] = useState(0);
 
   const renderBoard = board => {
@@ -50,51 +33,58 @@ export default function BingoGameResults(props : Props) {
       return <p>No board available</p>;
     } else {
       return (
-        <React.Fragment>
-          <Typography>
-            <b>Score: </b>
-            {null == props.score ? "unscored" : props.score}
-            <br />
-          </Typography>
-          <Table>
-            <TableBody>
+        <Container>
+          <Row>
+            <Col xs={12}>
+              <b>Score: </b>
+              {null == props.score ? "unscored" : props.score}
+            </Col>
+          </Row>
+
+          <table>
+            <tbody>
               {props.board.map((row, r_ind) => (
-                <TableRow key={r_ind}>
+                <tr key={r_ind}>
                   {row.map((col, c_ind) => (
-                    <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
+                    <td key={r_ind + "_" + c_ind}>{col}</td>
                   ))}
-                </TableRow>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
-        </React.Fragment>
+            </tbody>
+          </table>
+        </Container>
       );
     }
   };
 
   return (
     <Dialog
-      open={props.open}
-      onClose={props.close}
-      PaperComponent={PaperComponent}
-      aria-labelledby="draggable-dialog-title"
+      header={<span>Results for {props.student}</span>}
+      visible={props.open}
+      onHide={() => props.close()}
+      footer={
+        <Button
+          onClick={event => {
+            props.close();
+          }}
+        >
+          Done
+        </Button>
+      }
     >
-      <DialogTitle id="draggable-dialog-title">
-        Results for {props.student}
-      </DialogTitle>
-      <DialogContent>
-        <TabView activeIndex={curTab} onTabChange={setCurTab}>
-          <TabPanel header={"Scored Results"}>
-            {renderBoard(props.board)}
-          </TabPanel>
-          <TabPanel header={'Answer Key'}>
-            <ScoredGameDataTable candidates={props.candidates} />
-          </TabPanel>
-        </TabView>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={props.close}>Done</Button>
-      </DialogActions>
+      <TabView
+        activeIndex={curTab}
+        onTabChange={event => {
+          setCurTab(event.index);
+        }}
+      >
+        <TabPanel header={"Scored Results"}>
+          {renderBoard(props.board)}
+        </TabPanel>
+        <TabPanel header={"Answer Key"}>
+          <ScoredGameDataTable candidates={props.candidates} />
+        </TabPanel>
+      </TabView>
     </Dialog>
   );
 }

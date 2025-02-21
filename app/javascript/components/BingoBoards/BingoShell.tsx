@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import CandidateListEntry from "./CandidateListEntry";
@@ -8,12 +8,10 @@ import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 
-
 type Props = {
-  rootPath?: string
-
-}
-export default function BingoShell( props: Props) {
+  rootPath?: string;
+};
+export default function BingoShell(props: Props) {
   const [working] = useState(true);
 
   return (
@@ -22,13 +20,13 @@ export default function BingoShell( props: Props) {
       <Routes>
         <Route
           path={`enter_candidates/:bingoGameId`}
-          element={<CandidateListEntry rootPath={props.rootPath}/>}
+          element={<CandidateListEntry rootPath={props.rootPath} />}
         />
         <Route
           path={`review_candidates/:bingoGameId`}
           element={
             <>
-              { undefined === props.rootPath ? (
+              {undefined === props.rootPath ? (
                 <RequireInstructor>
                   <CandidatesReviewTable rootPath={props.rootPath} />
                 </RequireInstructor>

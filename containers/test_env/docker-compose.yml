@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   app:
     image: colab_tester
@@ -11,12 +10,14 @@ services:
       - asdf-shims:/home/colab/.asdf/shims
     depends_on:
       - db
-      - browser
+      - selenium
   db:
     image: colab_db
     tmpfs:
       - /var/lib/mysql
-  browser:
+    ports:
+      - 31337:3306
+  selenium:
     image: colab_browser
     # The following inspired by:
     # https://medium.com/the-curve-tech-blog/dealing-with-cryptic-selenium-webdriver-error-invalidsessioniderror-errors-9c15abc68fdf

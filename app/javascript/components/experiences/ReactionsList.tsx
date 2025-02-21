@@ -5,7 +5,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import StandardListToolbar from "../StandardListToolbar";
+import StandardListToolbar from "../toolbars/StandardListToolbar";
 
 import { OverlayPanel } from "primereact/overlaypanel";
 import { DataTable } from "primereact/datatable";
@@ -38,7 +38,7 @@ enum OPT_COLS {
   NARRATIVE = "reactions.narrative_lbl",
   SCENARIO = "reactions.scenario_lbl",
   RESPONSE = "reactions.response_lbl",
-  IMPROVEMENTS = "reactions.improvements_lbl",
+  IMPROVEMENTS = "reactions.improvements_lbl"
 }
 
 export default function ReactionsList(props: Props) {
@@ -51,7 +51,7 @@ export default function ReactionsList(props: Props) {
     t(OPT_COLS.NARRATIVE),
     t(OPT_COLS.SCENARIO),
     t(OPT_COLS.RESPONSE),
-    t(OPT_COLS.IMPROVEMENTS),
+    t(OPT_COLS.IMPROVEMENTS)
   ];
   const [visibleColumns, setVisibleColumns] = useState([]);
 
@@ -84,114 +84,112 @@ export default function ReactionsList(props: Props) {
     }
   }, []);
 
-
-  return (
-    undefined !== props.reactionsList ? (
-        <React.Fragment>
+  return undefined !== props.reactionsList ? (
+    <React.Fragment>
       <DataTable
-        value={props.reactionsList.filter((reaction) => {
-          return filterText.length === 0 ||
-          reaction.course_name.includes(filterText) ||
-          reaction.course_number.includes(filterText) ||
-          reaction.name.includes(filterText);
+        value={props.reactionsList.filter(reaction => {
+          return (
+            filterText.length === 0 ||
+            reaction.course_name.includes(filterText) ||
+            reaction.course_number.includes(filterText) ||
+            reaction.name.includes(filterText)
+          );
         })}
         resizableColumns
         tableStyle={{
-          minWidth: '50rem'
+          minWidth: "50rem"
         }}
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, props.reactionsList.length]
-        }
+        rowsPerPageOptions={[5, 10, 20, props.reactionsList.length]}
         header={
           <StandardListToolbar
-          itemType={'activity'}
-          filtering={{
-            filterValue: filterText,
-            setFilterFunc: setFilterText
-          }}
-          columnToggle={{
-            optColumns: optColumns,
-            visibleColumns: visibleColumns,
-            setVisibleColumnsFunc: setVisibleColumns,
-          }}
-        />}
+            itemType={"activity"}
+            filtering={{
+              filterValue: filterText,
+              setFilterFunc: setFilterText
+            }}
+            columnToggle={{
+              optColumns: optColumns,
+              visibleColumns: visibleColumns,
+              setVisibleColumnsFunc: setVisibleColumns
+            }}
+          />
+        }
         sortField="course_name"
         sortOrder={-1}
-        paginatorDropdownAppendTo={'self'}
+        paginatorDropdownAppendTo={"self"}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
         //paginatorLeft={paginatorLeft}
         //paginatorRight={paginatorRight}
         dataKey="id"
-        >
-          <Column
-            header={t(OPT_COLS.USER)}
-            field="user"
-            sortable
-            filter
-            body={(rowData) => {
-              const user = rowData.user;
-              return <a href={`mailto:${user.email}`}>{user.name}</a>;
-            }}
-            />
-          {visibleColumns.includes(t(OPT_COLS.EMAIL)) ? (
+      >
+        <Column
+          header={t(OPT_COLS.USER)}
+          field="user"
+          sortable
+          filter
+          body={rowData => {
+            const user = rowData.user;
+            return <a href={`mailto:${user.email}`}>{user.name}</a>;
+          }}
+        />
+        {visibleColumns.includes(t(OPT_COLS.EMAIL)) ? (
           <Column
             header={t(OPT_COLS.EMAIL)}
             field="id"
             sortable
             filter
-            body={(rowData) => {
+            body={rowData => {
               const user = rowData.user;
               return <a href={`mailto:${user.email}`}>{user.email}</a>;
             }}
-            />
-
-          ) : null }
-          {visibleColumns.includes(t(OPT_COLS.STATUS)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.STATUS)) ? (
           <Column
             header={t(OPT_COLS.STATUS)}
-            field={'status'}
+            field={"status"}
             sortable
             filter
-            body={(rowData) => {
+            body={rowData => {
               return rowData.status + "%";
             }}
-            />
-
-          ) : null }
-          {visibleColumns.includes(t(OPT_COLS.NARRATIVE)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.NARRATIVE)) ? (
           <Column
             header={t(OPT_COLS.NARRATIVE)}
-            field={'narrative'}
+            field={"narrative"}
             sortable
             filter
-            />
-            ) : null }
-          {visibleColumns.includes(t(OPT_COLS.SCENARIO)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.SCENARIO)) ? (
           <Column
             header={t(OPT_COLS.SCENARIO)}
             field="scenario"
             sortable
             filter
-            />  
-            
-          ) : null }
-          {visibleColumns.includes(t(OPT_COLS.RESPONSE)) ? (
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.RESPONSE)) ? (
           <Column
             header={t(OPT_COLS.RESPONSE)}
             field="behavior"
             sortable
             filter
-            body={(rowData) => {
+            body={rowData => {
               if ("Other" == rowData.behavior) {
                 return (
-                  <a onClick={event => {
-                    setPopMsg(rowData.other_name);
-                    op.current.toggle(event);
-                  }}>
+                  <a
+                    onClick={event => {
+                      setPopMsg(rowData.other_name);
+                      op.current.toggle(event);
+                    }}
+                  >
                     {rowData.behavior}
                   </a>
                 );
@@ -199,23 +197,23 @@ export default function ReactionsList(props: Props) {
                 return rowData.behavior;
               }
             }}
-            />
-            
-          ) : null }
-          {visibleColumns.includes(t(OPT_COLS.IMPROVEMENTS)) ? (
-            
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.IMPROVEMENTS)) ? (
           <Column
             header={t(OPT_COLS.IMPROVEMENTS)}
             field="improvements"
             sortable
             filter
-            body={(rowData) => {
+            body={rowData => {
               if ("" != rowData.improvements) {
                 return (
-                  <a onClick={ (event) => {
-                    setPopMsg(rowData.improvements);
-                    op.current.toggle(event);
-                  }}>
+                  <a
+                    onClick={event => {
+                      setPopMsg(rowData.improvements);
+                      op.current.toggle(event);
+                    }}
+                  >
                     {t("reactions.suggestions_lbl")}
                   </a>
                 );
@@ -223,21 +221,19 @@ export default function ReactionsList(props: Props) {
                 return "N/A";
               }
             }}
-            />
-          ) : null  }
-
-          </DataTable>
-          <OverlayPanel
-            ref={op}
-            showCloseIcon
-            dismissable
-            style={{ width: "50rem" }}
-            >
-              <p>{popMsg}</p>
-            </OverlayPanel>
-        </React.Fragment>
-      
-    ) : (
-      <div>Loading...</div> ) );
-  
+          />
+        ) : null}
+      </DataTable>
+      <OverlayPanel
+        ref={op}
+        showCloseIcon
+        dismissable
+        style={{ width: "50rem" }}
+      >
+        <p>{popMsg}</p>
+      </OverlayPanel>
+    </React.Fragment>
+  ) : (
+    <div>Loading...</div>
+  );
 }

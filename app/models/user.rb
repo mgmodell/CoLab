@@ -24,15 +24,25 @@ class User < ApplicationRecord
   has_many :bingo_boards, inverse_of: :user, dependent: :destroy
   has_many :candidates, inverse_of: :user, dependent: :nullify
   has_many :concepts, through: :candidates
+
   belongs_to :gender, inverse_of: :users, optional: true
+  delegate :code, to: :gender, prefix: true
+
   belongs_to :theme, inverse_of: :users, optional: true
+
   has_one :home_country, through: :home_state
+  delegate :no_response, to: :home_country, prefix: true
+
   belongs_to :home_state, inverse_of: :users, optional: true
+  delegate :no_response, :home_country, to: :home_state, prefix: true
+
   belongs_to :cip_code, inverse_of: :users, optional: true
+  delegate :zero, :gov_code, to: :cip_code, prefix: true
 
   belongs_to :language, inverse_of: :users, optional: true
   belongs_to :primary_language, inverse_of: :home_users,
                                 class_name: 'Language', optional: true
+  delegate :code, to: :primary_language, prefix: true
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
@@ -44,36 +54,36 @@ class User < ApplicationRecord
   has_many :narratives, through: :experiences
 
   has_many :rubrics, inverse_of: :user, dependent: :nullify
+  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
   validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects
-  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   before_save :anonymize
 
   # Give us a standard form of the name
-  def name(anonymous)
+  def name( anonymous )
     if anonymous
       "#{anon_last_name}, #{anon_first_name}"
     elsif last_name.nil? && first_name.nil?
       email
     else
       name = "#{!last_name.nil? ? last_name : '[No Last Name Given]'}, "
-      name + (!first_name.nil? ? first_name : '[No First Name Given]')
+      name + ( !first_name.nil? ? first_name : '[No First Name Given]' )
     end
   end
 
-  def informal_name(anonymous)
+  def informal_name( anonymous )
     if anonymous
       "#{anon_first_name} #{anon_last_name}"
     elsif last_name.nil? && first_name.nil?
       email
     else
       name = "#{!first_name.nil? ? first_name : '[No First Name Given]'} "
-      name + (!last_name.nil? ? last_name : '[No Last Name Given]')
+      name + ( !last_name.nil? ? last_name : '[No Last Name Given]' )
     end
   end
 
@@ -89,16 +99,16 @@ class User < ApplicationRecord
     # Get logs tied to courses
     logs = {}
 
-    consent_logs.joins(:consent_form)
-                .where(consent_forms: { active: true })
-                .find_each do |consent_log|
+    consent_logs.joins( :consent_form )
+                .where( consent_forms: { active: true } )
+                .find_each do | consent_log |
       logs[consent_log.consent_form_id] = consent_log
     end
 
-    courses.includes(consent_form: :consent_logs)
-           .where('courses.consent_form_id IS NOT NULL')
-           .find_each do |course|
-      if course.consent_form.active && logs[course.consent_form_id].nil?
+    courses.includes( consent_form: :consent_logs )
+           .where( 'courses.consent_form_id IS NOT NULL' )
+           .find_each do | course |
+      if course.consent_form_active && logs[course.consent_form_id].nil?
         log = course.get_consent_log user: self
         logs[log.consent_form_id] = log unless log.nil?
       end
@@ -107,16 +117,16 @@ class User < ApplicationRecord
     now = Time.zone.today
     # Find those consent forms to which the user has not yet responded
     # We only want to do this for currently active consent forms
-    consent_forms = ConsentForm.global_active_at(now).to_a
+    consent_forms = ConsentForm.global_active_at( now ).to_a
 
-    consent_forms.each do |consent_form|
+    consent_forms.each do | consent_form |
       next unless logs[consent_form.id].nil?
 
-      log = consent_logs.create(consent_form_id: consent_form.id, presented: false)
+      log = consent_logs.create( consent_form_id: consent_form.id, presented: false )
       logs[consent_form.id] = log
     end
 
-    logs.values.delete_if(&:presented)
+    logs.values.delete_if( &:presented )
   end
 
   def is_admin?
@@ -139,207 +149,203 @@ class User < ApplicationRecord
     researcher
   end
 
-  def active_for_authentication?
-    super && active?
-  end
-
   def waiting_instructor_tasks
     waiting_tasks = []
 
-    BingoGame.joins(course: :rosters)
-             .includes(:course)
-             .where('rosters.user_id': id)
-             .and(Roster.faculty)
-             .find_each do |game|
+    BingoGame.joins( course: :rosters )
+             .includes( :course )
+             .where( 'rosters.user_id': id )
+             .and( Roster.faculty )
+             .find_each do | game |
       waiting_tasks << game if game.awaiting_review?
     end
 
     cur_date = DateTime.current
-    Assignment.joins(:submissions, course: :rosters)
-              .where('rosters.user_id': id)
-              .where('assignments.end_date >= ?', cur_date)
-              .and(Submission.where.not(submitted: nil))
-              .and(Submission.where(withdrawn: nil))
-              .and(Submission.where(recorded_score: nil))
+    Assignment.joins( :submissions, course: :rosters )
+              .where( 'rosters.user_id': id )
+              .where( 'assignments.end_date >= ?', cur_date )
+              .and( Submission.where.not( submitted: nil ) )
+              .and( Submission.where( withdrawn: nil ) )
+              .and( Submission.where( recorded_score: nil ) )
               # .and(Submission.where('recorded_score < 0'))
-              .and(Roster.faculty)
-              .find_each do |submission|
+              .and( Roster.faculty )
+              .find_each do | submission |
       waiting_tasks << submission
     end
 
-    waiting_tasks.sort_by(&:end_date)
+    waiting_tasks.sort_by( &:end_date )
   end
 
   def activity_history
     activities = []
     # Add in the candidate lists
-    BingoGame.joins(course: :rosters)
-             .includes(:course, :project)
-             .where(reviewed: true, 'rosters.user_id': id)
-             .and(Roster.enrolled)
-             .all.find_each do |bingo_game|
+    BingoGame.joins( course: :rosters )
+             .includes( :course, :project )
+             .where( reviewed: true, 'rosters.user_id': id )
+             .and( Roster.enrolled )
+             .all.find_each do | bingo_game |
       activities << bingo_game
     end
     # Add in the reactions
-    activities.concat experiences.includes(:course).all
+    activities.concat experiences.includes( :course ).all
 
     # Add in projects
-    activities.concat projects.includes(:course).all
+    activities.concat projects.includes( :course ).all
 
     # Add in assignments
-    Assignment.joins(course: :rosters)
-              .includes(:course, :submissions)
-              .where('rosters.user_id': id)
-              .and(Roster.enrolled)
-              .all.find_each do |assignment|
+    Assignment.joins( course: :rosters )
+              .includes( :course, :submissions )
+              .where( 'rosters.user_id': id )
+              .and( Roster.enrolled )
+              .all.find_each do | assignment |
       activities << assignment
     end
 
-    activities.sort_by(&:end_date)
+    activities.sort_by( &:end_date )
   end
 
-  def get_bingo_performance(course_id: 0)
+  def get_bingo_performance( course_id: 0 )
     my_candidate_lists = []
     if course_id.positive?
       my_candidate_lists.concat candidate_lists
-        .includes(candidates: :candidate_feedback,
-                  bingo_game: :project)
-        .joins(:bingo_game)
-        .where(bingo_games:
-                              { reviewed: true, course_id: })
+        .includes( candidates: :candidate_feedback,
+                   bingo_game: :project )
+        .joins( :bingo_game )
+        .where( bingo_games:
+                              { reviewed: true, course_id: } )
         .to_a
 
     else
       my_candidate_lists.concat candidate_lists
-        .includes(candidates: :candidate_feedback,
-                  bingo_game: :project)
-        .joins(:bingo_game)
-        .where(bingo_games:
-                              { reviewed: true })
+        .includes( candidates: :candidate_feedback,
+                   bingo_game: :project )
+        .joins( :bingo_game )
+        .where( bingo_games:
+                              { reviewed: true } )
         .to_a
     end
-    my_candidate_lists.each_with_index do |solo_cl, index|
+    my_candidate_lists.each_with_index do | solo_cl, index |
       next unless solo_cl.archived
 
       my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     total = 0
-    my_candidate_lists.each do |candidate_list|
+    my_candidate_lists.each do | candidate_list |
       total += candidate_list.performance
     end
-    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.size)
+    my_candidate_lists.empty? ? 100 : ( total / my_candidate_lists.size )
   end
 
-  def get_bingo_data(course_id: 0)
+  def get_bingo_data( course_id: 0 )
     my_candidate_lists = []
     if course_id.positive?
       my_candidate_lists.concat candidate_lists
-        .includes(candidates: :candidate_feedback,
-                  bingo_game: :project)
-        .joins(:bingo_game)
-        .where(bingo_games:
-                              { reviewed: true, course_id: })
+        .includes( candidates: :candidate_feedback,
+                   bingo_game: :project )
+        .joins( :bingo_game )
+        .where( bingo_games:
+                              { reviewed: true, course_id: } )
         .to_a
 
     else
       my_candidate_lists.concat candidate_lists
-        .includes(candidates: :candidate_feedback,
-                  bingo_game: :project)
-        .joins(:bingo_game)
-        .where(bingo_games:
-                              { reviewed: true })
+        .includes( candidates: :candidate_feedback,
+                   bingo_game: :project )
+        .joins( :bingo_game )
+        .where( bingo_games:
+                              { reviewed: true } )
         .to_a
     end
-    my_candidate_lists.each_with_index do |solo_cl, index|
+    my_candidate_lists.each_with_index do | solo_cl, index |
       next unless solo_cl.archived
 
       my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     data = []
-    my_candidate_lists.each do |candidate_list|
+    my_candidate_lists.each do | candidate_list |
       data << candidate_list.performance
     end
     data
   end
 
-  def get_experience_performance(course_id: 0)
+  def get_experience_performance( course_id: 0 )
     my_reactions = if course_id.positive?
-                     reactions.includes(:narrative).joins(:experience)
-                              .where(experiences: { course_id: })
+                     reactions.includes( :narrative ).joins( :experience )
+                              .where( experiences: { course_id: } )
                    else
                      reactions
                    end
 
     total = 0
-    my_reactions.includes(:behavior).find_each do |reaction|
+    my_reactions.includes( :behavior ).find_each do | reaction |
       total += reaction.status
     end
-    my_reactions.count.zero? ? 100 : (total / my_reactions.count)
+    my_reactions.count.zero? ? 100 : ( total / my_reactions.count )
   end
 
-  def get_assessment_performance(course_id: 0)
+  def get_assessment_performance( course_id: 0 )
     my_projects = if course_id.positive?
-                    projects.includes(:assessments).where(course_id:)
+                    projects.includes( :assessments ).where( course_id: )
                   else
-                    projects.includes(:assessments)
+                    projects.includes( :assessments )
                   end
 
     total = 0
-    my_projects.each do |project|
-      total += project.get_performance(self)
+    my_projects.each do | project |
+      total += project.get_performance( self )
     end
-    my_projects.count.zero? ? 100 : (total / my_projects.count)
+    my_projects.count.zero? ? 100 : ( total / my_projects.count )
   end
 
   def waiting_student_tasks
     cur_date = DateTime.current
-    waiting_tasks = assessments.includes(course: :consent_form).active_at(cur_date).to_a
+    waiting_tasks = assessments.includes( course: :consent_form ).active_at( cur_date ).to_a
 
     # Check available tasks for students
 
     # Add the experiences
-    waiting_experiences = Experience.active_at(cur_date)
-                                    .includes(course: :consent_form)
-                                    .joins(course: :rosters)
-                                    .where('rosters.user_id': id)
-                                    .where('rosters.role IN (?)',
-                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+    waiting_experiences = Experience.active_at( cur_date )
+                                    .includes( course: :consent_form )
+                                    .joins( course: :rosters )
+                                    .where( rosters: { user_id: id } )
+                                    .where( rosters: { role: [Roster.roles[:enrolled_student],
+                                                              Roster.roles[:invited_student]] } )
                                     .to_a
 
-    waiting_experiences.delete_if { |experience| !experience.is_open? }
+    waiting_experiences.delete_if { | experience | !experience.is_open? }
 
     waiting_tasks.concat waiting_experiences
 
     # Add the bingo games
-    waiting_games = BingoGame.joins(course: :rosters)
-                             .includes({ course: :consent_form }, :project)
-                             .where('rosters.user_id': id, 'bingo_games.active': true)
-                             .where('rosters.role = ? OR rosters.role = ?',
-                                    Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
+    waiting_games = BingoGame.joins( course: :rosters )
+                             .includes( { course: :consent_form }, :project )
+                             .where( rosters: { user_id: id }, bingo_games: { active: true } )
+                             .where( rosters: { role: [Roster.roles[:enrolled_student],
+                                                       Roster.roles[:invited_student]] } )
+                             .where( 'bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date )
                              .to_a
 
-    waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
+    waiting_games.delete_if { | game | !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
 
-    waiting_assignments = Assignment.joins(course: :rosters)
-                                    .includes({ course: :consent_form }, :project)
-                                    .where('rosters.user_id': id, 'assignments.active': true)
-                                    .where('rosters.role = ? OR rosters.role = ?',
-                                           Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                                    .where('assignments.end_date >= ? AND courses.start_date <= ?', cur_date, cur_date)
+    waiting_assignments = Assignment.joins( course: :rosters )
+                                    .includes( { course: :consent_form }, :project )
+                                    .where( rosters: { user_id: id }, assignments: { active: true } )
+                                    .where( rosters: { role: [Roster.roles[:enrolled_student],
+                                                              Roster.roles[:invited_student]] } )
+                                    .where( 'assignments.end_date >= ? AND courses.start_date <= ?', cur_date, cur_date )
                                     .to_a
 
     waiting_tasks.concat waiting_assignments
 
-    waiting_tasks.sort_by(&:end_date)
+    waiting_tasks.sort_by( &:end_date )
   end
 
-  def self.from_omniauth(access_token)
+  def self.from_omniauth( access_token )
     data = access_token
-    user = User.joins(:emails).where(emails: { email: data['email'] }).first
+    user = User.joins( :emails ).where( emails: { email: data['email'] } ).first
 
     user ||= User.create(
       email: data['email'],
@@ -352,9 +358,9 @@ class User < ApplicationRecord
     user
   end
 
-  def self.merge_users(predator:, prey:)
-    pred_u = User.find_by(email: predator)
-    prey_u = User.find_by(email: prey)
+  def self.merge_users( predator:, prey: )
+    pred_u = Email.find_by( email: predator ).user
+    prey_u = Email.find_by( email: prey ).user
 
     if pred_u.present? && prey_u.present?
       # copy the demographic data
@@ -383,27 +389,38 @@ class User < ApplicationRecord
         pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
         pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
 
-        prey_u.emails.each do |e|
+        prey_u.emails.each do | e |
           e.user_id = pred_u.id
           e.save!
         end
         # Remap all user_ids
-        prey_u.groups.each do |_g|
+        prey_u.groups.each do | _g |
           groups.users.delete prey_u
           groups.users << pred_u
         end
         prey_u.bingo_boards.update_all user_id: pred_u.id
         prey_u.candidate_lists.update_all user_id: pred_u.id
         prey_u.candidates.update_all user_id: pred_u.id
-        ConsentForm.where(user_id: prey_u.id).update_all user_id: pred_u.id
+        ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
         prey_u.consent_logs.update_all user_id: pred_u.id
         prey_u.installments.update_all user_id: pred_u.id
         prey_u.reactions.update_all user_id: pred_u.id
-        prey_u.rosters.update_all user_id: pred_u.id
-        Value.where(user_id: prey_u.id).update_all user_id: pred_u.id
+
+        prey_u.rosters.each do | r |
+          if r.course.rosters.where( user_id: pred_u.id ).exists?
+            r.destroy!
+          else
+            r.user_id = pred_u.id
+            r.save!
+          end
+        end
+
+        prey_u.rubrics.update_all user_id: pred_u.id
+        prey_u.submissions.update_all user_id: pred_u.id
+        Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
 
         # Ahoy email message tracking
-        Ahoy::Message.where(user_id: prey_u.id).update_all user_id: pred_u
+        Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
 
         pred_u.save!
         prey_u.save!

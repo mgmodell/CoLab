@@ -11,15 +11,15 @@ class RubricsController < ApplicationController
     @rubrics = if current_user.is_admin?
                  Rubric.for_admin
                else
-                 Rubric.for_instructor(current_user)
-                       .or(Rubric.where(user: current_user))
-                       .group(:name, :version)
+                 Rubric.for_instructor( current_user )
+                       .or( Rubric.where( user: current_user ) )
+                       .group( :name, :version )
                end
 
     anon = current_user.anonymize?
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        resp = @rubrics.collect do |rubric|
+        resp = @rubrics.collect do | rubric |
           {
             id: rubric.id,
             name: rubric.name,
@@ -27,7 +27,7 @@ class RubricsController < ApplicationController
             published: rubric.published,
             version: rubric.version,
             active: rubric.active,
-            user: rubric.user.informal_name(anon),
+            user: rubric.user.informal_name( anon ),
             mine: rubric.user == current_user
           }
         end
@@ -38,20 +38,23 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/publish/1.json
   def publish
-    if current_user.is_admin? || current_user == @rubric.user
+    message = t( 'rubrics.publish_no_permission' )
+    if current_user.is_admin? || @rubric.user == current_user
       @rubric.published = true
       @rubric.save
+      logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
+      message = t( 'rubrics.publish_success' )
+    else
+      # TODO: Make this an info or a warning
     end
 
-    logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
-
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         if !@rubric.errors.empty?
           @rubric.published = false
-          render json: standardized_response(@rubric, @rubric.errors)
+          render json: standardized_response( @rubric, @rubric.errors )
         else
-          render json: standardized_response(@rubric, { main: t('rubrics.publish_success') })
+          render json: standardized_response( @rubric, { main: message } )
         end
       end
     end
@@ -59,20 +62,20 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/activate/1.json
   def activate
-    if current_user.is_admin? || current_user == @rubric.user
+    message = t( 'rubrics.activate_no_permission' )
+    if current_user.is_admin? || @rubric.user == current_user
       @rubric.active = !@rubric.active
       @rubric.save
+      message = @rubric.active ? 'rubrics.activate_success' : 'rubrics.deactivate_success'
     end
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         if !@rubric.errors.empty?
           @rubric.active = !@rubric.active
-          render json: standardized_response(@rubric, @rubric.errors)
+          render json: standardized_response( @rubric, @rubric.errors )
         else
-          render json: standardized_response(@rubric, { main: t(
-            @rubric.active ? 'rubrics.activate_success' : 'rubrics.deactivate_success'
-          ) })
+          render json: standardized_response( @rubric, { main: t( message ) } )
         end
       end
     end
@@ -80,9 +83,9 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/1 or /rubrics/1.json
   def show
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        render json: standardized_response(@rubric)
+        render json: standardized_response( @rubric )
       end
     end
   end
@@ -98,7 +101,7 @@ class RubricsController < ApplicationController
       school: @rubric.school,
       user: current_user
     )
-    @rubric.criteria.each do |criterium|
+    @rubric.criteria.each do | criterium |
       copied_rubric.criteria.new(
         description: criterium.description,
         weight: criterium.weight,
@@ -113,7 +116,12 @@ class RubricsController < ApplicationController
     copied_rubric.save
     logger.debug copied_rubric.errors.full_messages unless copied_rubric.errors.empty?
 
-    render json: standardized_response(copied_rubric, copied_rubric.errors)
+    messages = if copied_rubric.errors.empty?
+                 { main: t( 'rubrics.copy_success' ) }
+               else
+                 copied_rubric.errors
+               end
+    render json: standardized_response( copied_rubric, messages )
   end
 
   # GET /rubrics/new
@@ -125,11 +133,11 @@ class RubricsController < ApplicationController
 
   # POST /rubrics or /rubrics.json
   def create
-    @rubric = Rubric.new(rubric_params)
+    @rubric = Rubric.new( rubric_params )
 
-    respond_to do |format|
+    respond_to do | format |
       if @rubric.save
-        render json: standardized_response(@rubric)
+        render json: standardized_response( @rubric )
       else
         format.json { render json: @rubric.errors, status: :unprocessable_entity }
       end
@@ -138,15 +146,14 @@ class RubricsController < ApplicationController
 
   # PATCH/PUT /rubrics/1 or /rubrics/1.json
   def update
-    respond_to do |format|
+    respond_to do | format |
       if 'new' == params[:id]
-        @rubric = Rubric.new(rubric_params)
-        @rubric.user = current_user
+        @rubric = current_user.rubrics.new( rubric_params )
         @rubric.school = current_user.school
         @rubric.save
       else
         @rubric.transaction do
-          #@rubric.update(rubric_params)
+          # @rubric.update(rubric_params)
           @rubric.name = params[:rubric][:name] if params[:rubric][:name].present?
           @rubric.description = params[:rubric][:description] if params[:rubric][:description].present?
           @rubric.published = params[:rubric][:published] if params[:rubric][:published].present?
@@ -160,7 +167,7 @@ class RubricsController < ApplicationController
 
           # Manual assignment of criteria attributes is necessary to avoid
           # sequence uniqueness constraint violations
-          params[:rubric][:criteria_attributes].each do |criterium|
+          params[:rubric][:criteria_attributes].each do | criterium |
             @rubric.criteria.new(
               id: criterium[:id],
               description: criterium[:description],
@@ -174,21 +181,18 @@ class RubricsController < ApplicationController
             )
           end
           @rubric.save
-          puts @rubric.errors.full_messages unless @rubric.errors.empty?
-
-          # Must figure out how to resequence criteria without violating uniqueness constraint
 
           if !@rubric.errors.empty? && @rubric.errors[:published].present?
             new_version = current_user.rubrics.new(
               name: @rubric.name,
               description: @rubric.description,
               published: false,
-              version: (@rubric.version + 1),
+              version: ( @rubric.version + 1 ),
               active: false,
               school: @rubric.school,
               parent: @rubric
             )
-            @rubric.criteria.each do |criterium|
+            @rubric.criteria.each do | criterium |
               new_version.criteria.new(
                 description: criterium.description,
                 weight: criterium.weight,
@@ -208,7 +212,7 @@ class RubricsController < ApplicationController
       logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
       if @rubric.errors.empty?
         format.json do
-          render json: standardized_response(@rubric, { main: 'Successfully saved rubric' })
+          render json: standardized_response( @rubric, { main: 'Successfully saved rubric' } )
         end
       else
         format.json do
@@ -224,14 +228,14 @@ class RubricsController < ApplicationController
   def destroy
     @rubric.destroy
 
-    respond_to do |format|
+    respond_to do | format |
       format.json { head :no_content }
     end
   end
 
   private
 
-  def standardized_response(rubric, messages = {})
+  def standardized_response( rubric, messages = {} )
     anon = current_user.anonymize?
 
     response = {
@@ -245,7 +249,7 @@ class RubricsController < ApplicationController
     }
     response[:rubric][:name] = anon ? rubric.anon_name : rubric.name
     response[:rubric][:description] = anon ? rubric.anon_description : rubric.description
-    response[:rubric][:user] = rubric.user.informal_name(anon)
+    response[:rubric][:user] = rubric.user.informal_name( anon )
     response
   end
 
@@ -261,14 +265,14 @@ class RubricsController < ApplicationController
                   criteria: [
                     Criterium.new(
                       id: -1,
-                      description: t('rubrics.new.criteria'),
+                      description: t( 'rubrics.new.criteria' ),
                       sequence: 1,
-                      l1_description: t('rubrics.new.criteria_l1')
+                      l1_description: t( 'rubrics.new.criteria_l1' )
                     )
                   ]
                 )
               else
-                Rubric.includes(:criteria, :user).find(params[:id])
+                Rubric.includes( :criteria, :user ).find( params[:id] )
               end
     @rubric.school ||= current_user.school
     @rubric.user ||= current_user
@@ -276,10 +280,10 @@ class RubricsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def rubric_params
-    params.require(:rubric).permit(:id, :name, :description, :published,
-                                   criteria_attributes: %I[id description weight
-                                                           sequence l1_description
-                                                           l2_description l3_description
-                                                           l4_description l5_description ])
+    params.require( :rubric ).permit( :id, :name, :description, :published,
+                                      criteria_attributes: %I[id description weight
+                                                              sequence l1_description
+                                                              l2_description l3_description
+                                                              l4_description l5_description ] )
   end
 end

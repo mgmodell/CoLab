@@ -1,8 +1,9 @@
--- MariaDB dump 10.19-11.1.2-MariaDB, for osx10.18 (arm64)
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.6.2-MariaDB, for osx10.20 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.1.2-MariaDB
+-- Server version	11.6.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -13,7 +14,7 @@
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
 --
 -- Table structure for table `active_storage_attachments`
@@ -4204,6 +4205,37 @@ LOCK TABLES `installments` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `keypairs`
+--
+
+DROP TABLE IF EXISTS `keypairs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `keypairs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `jwk_kid` varchar(255) NOT NULL,
+  `_keypair_ciphertext` text NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `not_before` datetime(6) NOT NULL,
+  `not_after` datetime(6) NOT NULL,
+  `expires_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_keypairs_on_jwk_kid` (`jwk_kid`),
+  KEY `index_keypairs_on_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `keypairs`
+--
+
+LOCK TABLES `keypairs` WRITE;
+/*!40000 ALTER TABLE `keypairs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `keypairs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `languages`
 --
 
@@ -4641,6 +4673,7 @@ CREATE TABLE `rosters` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `index_rosters_on_user_id_and_course_id` (`user_id`,`course_id`),
   KEY `index_rosters_on_course_id` (`course_id`),
   KEY `index_rosters_on_role` (`role`),
   KEY `index_rosters_on_user_id` (`user_id`),
@@ -4972,7 +5005,12 @@ INSERT INTO `schema_migrations` VALUES
 ('20230521034701'),
 ('20230828001816'),
 ('20230905132419'),
-('20231023010656');
+('20231023010656'),
+('20240302002923'),
+('20240322142846'),
+('20240322142847'),
+('20240406181047'),
+('20250130032658');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5115,12 +5153,15 @@ CREATE TABLE `submissions` (
   `group_id` int(11) DEFAULT NULL,
   `assignment_id` bigint(20) NOT NULL,
   `rubric_id` bigint(20) NOT NULL,
+  `creator_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_submissions_on_user_id` (`user_id`),
   KEY `index_submissions_on_group_id` (`group_id`),
   KEY `index_submissions_on_assignment_id` (`assignment_id`),
   KEY `index_submissions_on_rubric_id` (`rubric_id`),
+  KEY `index_submissions_on_creator_id` (`creator_id`),
   CONSTRAINT `fk_rails_11ec1c51e8` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_rails_4501ec1416` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_5ebe306d72` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`),
   CONSTRAINT `fk_rails_61cac0823d` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`),
   CONSTRAINT `fk_rails_8d85741475` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -5241,6 +5282,7 @@ CREATE TABLE `users` (
   KEY `index_users_on_language_id` (`language_id`),
   KEY `index_users_on_school_id` (`school_id`),
   KEY `index_users_on_theme_id` (`theme_id`),
+  KEY `index_users_on_primary_language_id` (`primary_language_id`),
   CONSTRAINT `fk_rails_342250fdc1` FOREIGN KEY (`theme_id`) REFERENCES `themes` (`id`),
   CONSTRAINT `fk_rails_3fa423ca74` FOREIGN KEY (`cip_code_id`) REFERENCES `cip_codes` (`id`),
   CONSTRAINT `fk_rails_45f4f12508` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`),
@@ -5502,6 +5544,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2023-10-22 21:42:13
+-- Dump completed on 2025-01-29 22:30:57

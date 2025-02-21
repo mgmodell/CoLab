@@ -1,22 +1,10 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Typography from "@mui/material/Typography";
-import FormHelperText from "@mui/material/FormHelperText";
+import { Info } from "luxon";
 
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
-import { DateTime, Info, Settings } from "luxon";
-
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useDispatch } from "react-redux";
 import {
   startTask,
@@ -28,10 +16,18 @@ import {
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { TabPanel, TabView } from "primereact/tabview";
+
+import { Button } from "primereact/button";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { InputSwitch } from "primereact/inputswitch";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { Panel } from "primereact/panel";
+import { Skeleton } from "primereact/skeleton";
+import { TabPanel, TabView } from "primereact/tabview";
+import parse from 'html-react-parser';
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
@@ -45,6 +41,7 @@ export default function ProjectDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const navigate = useNavigate();
   const { courseIdParam, projectIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
@@ -63,12 +60,19 @@ export default function ProjectDataAdmin(props) {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-  const [projectStartDate, setProjectStartDate] = useState(DateTime.local());
+  const now = new Date();
+  const [projectStartDate, setProjectStartDate] = useState(now);
   //Using this Luxon function for later i18n
-  const [daysOfWeek, setDaysOfWeek] = useState(Info.weekdays());
-  const [projectEndDate, setProjectEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
+  const [daysOfWeek, setDaysOfWeek] = useState(
+    Info.weekdays().map((day, index) => {
+      //Not sure why there's an off-by-one error here, but this fixes it 9/26
+      return { id: index + 1, day: day };
+    })
   );
+  const [projectEndDate, setProjectEndDate] = useState(() => {
+    now.setMonth(now.getMonth() + 3);
+    return now;
+  });
   const [projectStartDOW, setProjectStartDOW] = useState(5);
   const [projectEndDOW, setProjectEndDOW] = useState(1);
   const [projectActive, setProjectActive] = useState(false);
@@ -86,37 +90,37 @@ export default function ProjectDataAdmin(props) {
     } else {
       url = url + projectId + ".json";
     }
-    axios.get(url, {}).then(response => {
-      const data = response.data;
-      const project = response.data.project;
-      setFactorPacks(factorPacks.concat(data.factorPacks));
-      setStyles(styles.concat(data.styles));
+    axios
+      .get(url, {})
+      .then(response => {
+        const data = response.data;
+        const project = response.data.project;
+        setFactorPacks(factorPacks.concat(data.factorPacks));
+        setStyles(styles.concat(data.styles));
 
-      const course = data.course;
-      setCourseName(course.name);
-      setCourseTimezone(course.timezone);
-      //Settings.defaultZone = course.timezone;
+        const course = data.course;
+        setCourseName(course.name);
+        setCourseTimezone(course.timezone);
+        //Settings.defaultZone = course.timezone;
 
-      setProjectName(project.name || "");
-      setProjectDescription(project.description || "");
-      setProjectActive(project.active);
+        setProjectName(project.name || "");
+        setProjectDescription(project.description || "");
+        setProjectActive(project.active);
 
-      var receivedDate = DateTime.fromISO(project.start_date).setZone(
-        course.timezone
-      );
-      setProjectStartDate(receivedDate);
-      receivedDate = DateTime.fromISO(project.end_date).setZone(
-        course.timezone
-      );
-      setProjectEndDate(receivedDate);
-      setProjectFactorPackId(project.factor_pack_id);
-      setProjectStyleId(project.style_id);
-      setProjectStartDOW(project.start_dow);
-      setProjectEndDOW(project.end_dow);
-      dispatch(setClean(category));
-    }).finally(() => {
-      dispatch(endTask());
-    })
+        var receivedDate = new Date(Date.parse(project.start_date));
+        setProjectStartDate(receivedDate);
+
+        receivedDate = new Date(Date.parse(project.end_date));
+        setProjectEndDate(receivedDate);
+        setProjectFactorPackId(project.factor_pack_id);
+        setProjectStyleId(project.style_id);
+        setProjectStartDOW(project.start_dow);
+        setProjectEndDOW(project.end_dow);
+        dispatch(setClean(category));
+      })
+      .finally(() => {
+        dispatch(endTask());
+      });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
@@ -137,7 +141,7 @@ export default function ProjectDataAdmin(props) {
           course_id: courseIdParam,
           description: projectDescription,
           active: projectActive,
-          start_date: projectStartDate.toJSDate(),
+          start_date: projectStartDate,
           end_date: projectEndDate,
           start_dow: projectStartDOW,
           end_dow: projectEndDOW,
@@ -154,14 +158,12 @@ export default function ProjectDataAdmin(props) {
           setProjectName(project.name);
           setProjectDescription(project.description);
           setProjectActive(project.active);
-          var receivedDate = DateTime.fromISO(project.start_date).setZone(
-            courseTimezone
-          );
+          var receivedDate = new Date(Date.parse(project.start_date));
           setProjectStartDate(receivedDate);
-          receivedDate = DateTime.fromISO(project.end_date).setZone(
-            courseTimezone
-          );
+
+          receivedDate = new Date(Date.parse(project.end_date));
           setProjectEndDate(receivedDate);
+
           setProjectFactorPackId(project.factor_pack_id);
           setProjectStyleId(project.style_id);
           setProjectStartDOW(project.start_dow);
@@ -175,6 +177,9 @@ export default function ProjectDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
+          navigate(`../${courseIdParam}/project/${project.id}`, {
+            replace: true
+          });
         } else {
           setMessages(data.messages);
           dispatch(
@@ -184,9 +189,10 @@ export default function ProjectDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
-      }).finally(() => {
-        dispatch(endTask("saving"));
       })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      });
   };
   useEffect(() => {
     daysOfWeek.unshift(daysOfWeek.pop());
@@ -214,8 +220,8 @@ export default function ProjectDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveProject}>
-      {null == projectId ? "Create" : "Save"} Project
+    <Button onClick={saveProject}>
+      {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
   ) : null;
 
@@ -226,133 +232,108 @@ export default function ProjectDataAdmin(props) {
 
   const detailsComponent = (
     <Panel>
-      <TextField
-        label="Project Name"
-        id="name"
-        value={projectName}
-        fullWidth={true}
-        onChange={event => setProjectName(event.target.value)}
-        error={null != messages.name}
-        helperText={messages.name}
+      <span className="p-float-label">
+        <InputText
+          id="name"
+          itemID="name"
+          value={projectName}
+          onChange={event => setProjectName(event.target.value)}
+        />
+        <label htmlFor="name">{t("name_lbl")}</label>
+      </span>
+      <span className="p-float-label">
+        <InputTextarea
+          id="description"
+          itemID="description"
+          value={projectDescription}
+          onChange={event => setProjectDescription(event.target.value)}
+        />
+        <label htmlFor="description">{t("description_lbl")}</label>
+      </span>
+      <InputSwitch
+        checked={projectActive}
+        onChange={() => toggleActive()}
+        id="active"
+        itemID="active"
+        name="active"
       />
-      <TextField
-        label="Project Description"
-        id="description"
-        value={projectDescription}
-        fullWidth={true}
-        onChange={event => setProjectDescription(event.target.value)}
-        error={null != messages.description}
-        helperText={messages.description}
-      />
-      <FormControlLabel
-        control={
-          <Switch checked={projectActive} onChange={() => toggleActive()} />
-        }
-        label="Active"
-      />
+      <label htmlFor="active">{t("active_switch")}</label>
 
-      <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={"en-us"}>
-        <DatePicker
-          format="MM/dd/yyyy"
-          label={t("start_date_lbl")}
-          value={projectStartDate}
-          onChange={setProjectStartDate}
-          error={Boolean(messages["start_date"])}
-          helperText={messages["start_date"]}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "project_start_date"
+      <span>{t('timezone_warning', { timezone: courseTimezone } )}</span>
+      <span className="p-float-label">
+        <Calendar
+          id="project_dates"
+          value={[projectStartDate, projectEndDate]}
+          selectionMode="range"
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo && changeTo.length > 1) {
+              setProjectStartDate(changeTo[0]);
+              setProjectEndDate(changeTo[1]);
             }
           }}
+          showIcon={true}
+          showOnFocus={false}
+          inputId="project_start_dates"
+          name="project_start_dates"
         />
-        {null != messages.start_date ? (
-          <FormHelperText error={true}>{messages.start_date}</FormHelperText>
-        ) : null}
-
-        <DatePicker
-          format="MM/dd/yyyy"
-          label={t("end_date_lbl")}
-          value={projectEndDate}
-          onChange={setProjectEndDate}
-          error={Boolean(messages["end_date"])}
-          helperText={messages["end_date"]}
-          renderInput={props => <TextField id="project_end_date" {...props} />}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "project_end_date"
-            }
-          }}
-        />
-      </LocalizationProvider>
-      {null != messages.end_date ? (
-        <FormHelperText error={true}>{messages.end_date}</FormHelperText>
-      ) : null}
+        <label htmlFor="project_start_date">{t("project_dates")}</label>
+      </span>
       <br />
-      <InputLabel htmlFor="start_dow">Opens every</InputLabel>
-      <Select
-        id="start_dow"
-        onChange={event => setProjectStartDOW(event.target.value)}
-        value={projectStartDOW}
-      >
-        {daysOfWeek.map((day, index) => {
-          return (
-            <MenuItem key={index} value={index}>
-              {day}
-            </MenuItem>
-          );
-        })}
-      </Select>
-      <InputLabel htmlFor="end_dow">Closes every</InputLabel>
-      <Select
-        id="end_dow"
-        onChange={event => setProjectEndDOW(event.target.value)}
-        value={projectEndDOW}
-      >
-        {daysOfWeek.map((day, index) => {
-          return (
-            <MenuItem key={index} value={index}>
-              {day}
-            </MenuItem>
-          );
-        })}
-      </Select>
+      <span className="p-float-label w-full">
+        <Dropdown
+          id="start_dow"
+          itemID="start_dow"
+          inputId="start_dow"
+          value={projectStartDOW}
+          options={daysOfWeek}
+          onChange={event => setProjectStartDOW(event.value)}
+          optionLabel="day"
+          optionValue="id"
+        />
+        <label htmlFor="start_dow">{t("opens")}</label>
+      </span>
+      <span className="p-float-label w-full">
+        <Dropdown
+          id="end_dow"
+          inputId="end_dow"
+          itemID="end_dow"
+          value={projectEndDOW}
+          options={daysOfWeek}
+          onChange={event => setProjectEndDOW(event.value)}
+          optionLabel="day"
+          optionValue="id"
+        />
+        <label htmlFor="end_dow">{t("closes")}</label>
+      </span>
 
-      <InputLabel htmlFor="style">Style</InputLabel>
-      <Select
-        id="style"
-        disabled
-        onChange={event => setProjectStyleId(event.target.value)}
-        value={projectStyleId}
-      >
-        {styles.map(style => {
-          return (
-            <MenuItem key={style.id} value={style.id}>
-              {style.name}
-            </MenuItem>
-          );
-        })}
-      </Select>
-      <InputLabel htmlFor="factor_pack">Factor pack</InputLabel>
-      <Select
-        id="factor_pack"
-        onChange={event => setProjectFactorPackId(event.target.value)}
-        value={projectFactorPackId}
-      >
-        {factorPacks.map(factorPack => {
-          return (
-            <MenuItem key={factorPack.id} value={factorPack.id}>
-              {factorPack.name}
-            </MenuItem>
-          );
-        })}
-      </Select>
+      <span className="p-float-label">
+        <Dropdown
+          id="style"
+          inputId="style"
+          itemID="style"
+          value={projectStyleId}
+          options={styles}
+          disabled
+          onChange={event => setProjectStyleId(event.value)}
+          optionLabel="name"
+          optionValue="id"
+        />
+        <label htmlFor="style">{t("style")}</label>
+      </span>
+      <span className="p-float-label">
+        <Dropdown
+          id="factor_pack"
+          inputId="factor_pack"
+          itemID="factor_pack"
+          value={projectFactorPackId}
+          options={factorPacks}
+          onChange={event => setProjectFactorPackId(event.value)}
+          optionLabel="name"
+          optionValue="id"
+        />
+        <label htmlFor="factor_pack">{t("factor_pack")}</label>
+      </span>
       <br />
       {saveButton}
     </Panel>
@@ -360,7 +341,7 @@ export default function ProjectDataAdmin(props) {
   const chartContainer =
     0 < projectId && "" !== projectName ? (
       <React.Fragment>
-        <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>
+        <Suspense fallback={<Skeleton className="mb-2" />}>
           <ChartContainer
             unitOfAnalysis="group"
             anonymize={false}
@@ -372,20 +353,19 @@ export default function ProjectDataAdmin(props) {
     ) : null;
 
   return (
-      <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-        <TabPanel header="Details">{detailsComponent}</TabPanel>
-        <TabPanel header="Groups">
-          <ProjectGroups
-            projectId={projectId}
-            groupsUrl={endpoints.groupsUrl}
-            diversityCheckUrl={endpoints.diversityCheckUrl}
-            diversityRescoreGroup={endpoints.diversityRescoreGroup}
-            diversityRescoreGroups={endpoints.diversityRescoreGroups}
-          />
-        </TabPanel>
-        <TabPanel header="Reporting">{chartContainer}</TabPanel>
-      </TabView>
-
+    <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+      <TabPanel header="Details">{detailsComponent}</TabPanel>
+      <TabPanel header="Groups">
+        <ProjectGroups
+          projectId={projectId}
+          groupsUrl={endpoints.groupsUrl}
+          diversityCheckUrl={endpoints.diversityCheckUrl}
+          diversityRescoreGroup={endpoints.diversityRescoreGroup}
+          diversityRescoreGroups={endpoints.diversityRescoreGroups}
+        />
+      </TabPanel>
+      <TabPanel header="Reporting">{chartContainer}</TabPanel>
+    </TabView>
   );
 }
 

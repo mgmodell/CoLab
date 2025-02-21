@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
+import { useParams } from "react-router";
 
-import {DateTime, Settings} from 'luxon';
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
+
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import { TabView, TabPanel } from "primereact/tabview";
+import EditorToolbar from "../toolbars/EditorToolbar";
+import { Calendar } from "primereact/calendar";
+import { InputSwitch } from "primereact/inputswitch";
+import { InputText } from "primereact/inputtext";
+import { Col, Container, Row } from "react-grid-system";
 
 enum ConsentFormTabs {
   English = 1,
@@ -45,17 +39,15 @@ export default function ConsentFormDataAdmin(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [curTab, setCurTab] = useState(ConsentFormTabs.English);
-
   const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
-  const [consentFormStartDate, setConsentFormStartDate] = useState(
-    DateTime.local()
-    );
-  const [consentFormEndDate, setConsentFormEndDate] = useState(
-    DateTime.local().plus({year: 1})
-  );
+  const now = new Date();
+  const [consentFormStartDate, setConsentFormStartDate] = useState(now);
+  const [consentFormEndDate, setConsentFormEndDate] = useState(() => {
+    now.setFullYear(now.getFullYear() + 1);
+    return now;
+  });
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
   const [consentFormDoc, setConsentFormDoc] = useState(null);
@@ -87,16 +79,15 @@ export default function ConsentFormDataAdmin(props) {
 
         setConsentFormName(consentForm.name || "");
         setConsentFormActive(consentForm.active || false);
-        var receivedDate = DateTime.fromISO(consentForm.start_date).setZone(
-          Settings.timezone
-        );
+
+        var receivedDate = new Date(Date.parse(consentForm.start_date));
         setConsentFormStartDate(receivedDate);
-        var receivedDate = DateTime.fromISO(consentForm.end_date).setZone(
-          Settings.timezone
-        );
+
+        receivedDate = new Date(Date.parse(consentForm.end_date));
         setConsentFormEndDate(receivedDate);
-        setConsentFormFormTextEn( consentForm.form_text_en || '' );
-        setConsentFormFormTextKo( consentForm.form_text_ko || '' );
+
+        setConsentFormFormTextEn(consentForm.form_text_en || "");
+        setConsentFormFormTextKo(consentForm.form_text_ko || "");
 
         dispatch(endTask());
         setDirty(false);
@@ -122,7 +113,7 @@ export default function ConsentFormDataAdmin(props) {
     axios({
       method: method,
       url: url,
-      data:{
+      data: {
         consent_form: {
           name: consentFormName,
           start_date: consentFormStartDate,
@@ -130,7 +121,6 @@ export default function ConsentFormDataAdmin(props) {
           form_text_en: consentFormFormTextEn,
           form_text_ko: consentFormFormTextKo,
           active: consentFormActive
-          
         }
       }
     })
@@ -138,21 +128,18 @@ export default function ConsentFormDataAdmin(props) {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.consent_form;
-          console.log( response );
+          console.log(response);
           setConsentFormId(consentForm.id);
           setConsentFormName(consentForm.name);
 
           setConsentFormActive(consentForm.active || false);
-          var receivedDate = DateTime.fromISO(consentForm.start_date).setZone(
-            Settings.timezone
-          );
+          var receivedDate = new Date(Date.parse(consentForm.start_date));
           setConsentFormStartDate(receivedDate);
-          var receivedDate = DateTime.fromISO(consentForm.end_date).setZone(
-            Settings.timezone
-          );
+          var receivedDate = new Date(Date.parse(consentForm.end_date));
           setConsentFormEndDate(receivedDate);
-          setConsentFormFormTextEn( consentForm.form_text_en || '' );
-          setConsentFormFormTextKo( consentForm.form_text_ko || '' );
+
+          setConsentFormFormTextEn(consentForm.form_text_en || "");
+          setConsentFormFormTextKo(consentForm.form_text_ko || "");
 
           setShowErrors(true);
           setDirty(false);
@@ -184,110 +171,86 @@ export default function ConsentFormDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveConsentForm}>
-      {null == consentFormId ? t('edit.create_btn') : t('edit.save_btn')}
+    <Button onClick={saveConsentForm}>
+      {null == consentFormId ? t("edit.create_btn") : t("edit.save_btn")}
     </Button>
   ) : null;
 
   const detailsComponent = (
-    <Paper>
-      <Grid container spacing={3}>
-        <LocalizationProvider dateAdapter={AdapterLuxon}>
-          <Grid item xs={12}>
-            <TextField
-              label="Name of the study"
-              id="consent_form-name"
-              value={consentFormName}
-              fullWidth={true}
-              onChange={event => setConsentFormName(event.target.value)}
-              error={null != messages["name"]}
-              helperText={messages["name"]}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <DatePicker
-              disableToolbar
-              variant="inline"
-              autoOk={true}
-              format="MM/dd/yyyy"
-              margin="normal"
-              label="Study Start Date"
-              value={consentFormStartDate}
-              onChange={setConsentFormStartDate}
-              error={null != messages["start_date"]}
-              helperText={messages["start_date"]}
-              slot={{
-                TextField: TextField
-              }}
-              slotProps={{
-                textField: {
-                  id: "consent_form_start_date"
-                }
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <DatePicker
-              disableToolbar
-              variant="inline"
-              autoOk={true}
-              format="MM/dd/yyyy"
-              margin="normal"
-              label="Study End Date"
-              value={consentFormEndDate}
-              onChange={setConsentFormEndDate}
-              error={null != messages["end_date"]}
-              helperText={messages["end_date"]}
-              slot={{
-                TextField: TextField
-              }}
-              slotProps={{
-                textField: {
-                  id: "consent_form_end_date"
-                }
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={consentFormActive}
-                  onChange={event => setConsentFormActive(!consentFormActive)}
-                  name="active"
-                />
-              }
-              label="Active"
-            />
-          </Grid>
-        </LocalizationProvider>
-      </Grid>
-          <TabView>
-            <TabPanel header='English'>
-              <Editor
-                id='english_form'
-                placeholder={"en_form"}
-                aria-label={"en_form"}
-                onTextChange={(event) =>{
-                  setConsentFormFormTextEn( event.htmlValue)
+    <Panel>
+      <Container>
+        <Row>
+          <Col xs={12}>
+            <span className="p-float-label">
+              <InputText
+                id="consent_form-name"
+                itemID="consent_form-name"
+                value={consentFormName}
+                onChange={event => setConsentFormName(event.target.value)}
+              />
+              <label htmlFor="consent_form-name">{t("name")}</label>
+            </span>
+          </Col>
+          <Col xs={12} sm={5}>
+            <span className="p-float-label">
+              <Calendar
+                id="consent_form_dates"
+                inputId="consent_form_dates"
+                name="consent_form_dates"
+                value={[consentFormStartDate, consentFormEndDate]}
+                onChange={event => {
+                  const changeTo = event.value;
+                  if (null != changeTo && changeTo.length > 1) {
+                    setConsentFormStartDate(changeTo[0]);
+                    setConsentFormEndDate(changeTo[1]);
+                  }
                 }}
-                value={consentFormFormTextEn}
-                />
-
-            </TabPanel>
-            <TabPanel header='Korean'>
-              <Editor
-                id='korean_form'
-                placeholder={"ko_form"}
-                aria-label={"ko_form"}
-                onTextChange={(event)=>{
-                  setConsentFormFormTextKo( event.htmlValue)
-                }}
-                value={consentFormFormTextKo}
-                />
-            </TabPanel>
-
-          </TabView>
+                selectionMode="range"
+                showOnFocus={false}
+                showIcon={true}
+              />
+              <label htmlFor="consent_form_dates">{t("study_dates")}</label>
+            </span>
+          </Col>
+          <Col xs={12} sm={2}>
+            <InputSwitch
+              checked={consentFormActive}
+              onChange={() => setConsentFormActive(!consentFormActive)}
+              id="active"
+              name="active"
+              inputId="active"
+              itemID="active"
+            />
+            <label htmlFor="active">{t("active")}</label>
+          </Col>
+        </Row>
+      </Container>
+      <TabView>
+        <TabPanel header="English">
+          <Editor
+            id="english_form"
+            placeholder={"en_form"}
+            aria-label={"en_form"}
+            headerTemplate={<EditorToolbar />}
+            onTextChange={event => {
+              setConsentFormFormTextEn(event.htmlValue);
+            }}
+            value={consentFormFormTextEn}
+          />
+        </TabPanel>
+        <TabPanel header="Korean">
+          <Editor
+            id="korean_form"
+            placeholder={"ko_form"}
+            aria-label={"ko_form"}
+            headerTemplate={<EditorToolbar />}
+            onTextChange={event => {
+              setConsentFormFormTextKo(event.htmlValue);
+            }}
+            value={consentFormFormTextKo}
+          />
+        </TabPanel>
+      </TabView>
       &nbsp;
       <label htmlFor={consentFormDataId}>
         <input
@@ -297,38 +260,13 @@ export default function ConsentFormDataAdmin(props) {
           onChange={handleFileSelect}
           type="file"
         />
-        <Button variant="contained" component="span">
-          {t("edit.file_select_btn")}
-        </Button>
+        <Button>{t("edit.file_select_btn")}</Button>
       </label>
       <br />
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   );
 
-  return (
-    <Paper>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
-      {detailsComponent}
-    </Paper>
-  );
+  return <Panel>{detailsComponent}</Panel>;
 }

@@ -4,7 +4,7 @@ type Props = {
   height?: number;
   width?: number;
   spinning?: boolean;
-}
+};
 
 export default function Logo(props: Props) {
   const height = props.height || 72;
@@ -64,7 +64,7 @@ export default function Logo(props: Props) {
     if (!props.spinning) {
       for (let index = 0; index < 15; index++) {
         rotateColors();
-        await sleep(Math.log(index, 1000) * 100);
+        await sleep(Math.log(index) * 100);
       }
     }
   }
@@ -143,10 +143,4 @@ export default function Logo(props: Props) {
       </g>
     </svg>
   );
-
-  Logo.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number,
-    spinning: PropTypes.bool
-  };
 }

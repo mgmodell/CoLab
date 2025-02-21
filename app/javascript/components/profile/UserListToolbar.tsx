@@ -34,11 +34,11 @@ export default function UserListToolbar(props) {
     <Toolbar
       end={
         <React.Fragment>
-        <Button
-          label={t("emails.add_btn")}
-          icon="pi pi-plus"
-          onClick={() => setAddDialogOpen(true)}
-          className="p-button-success p-mr-2"
+          <Button
+            label={t("emails.add_btn")}
+            icon="pi pi-plus"
+            onClick={() => setAddDialogOpen(true)}
+            className="p-button-success p-mr-2"
           />
           <Dialog
             header={t("emails.add_dlg_title")}
@@ -70,10 +70,11 @@ export default function UserListToolbar(props) {
                       })
                       .catch(error => {
                         console.log("error", error);
-                      }).finally(() => {
+                      })
+                      .finally(() => {
                         dispatch(endTask("updating"));
                         closeDialog();
-                      })
+                      });
                   }}
                   autoFocus
                 />
@@ -91,7 +92,6 @@ export default function UserListToolbar(props) {
             />
             <br />
           </Dialog>
-
         </React.Fragment>
       }
     />

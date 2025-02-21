@@ -12,6 +12,7 @@ class SubmissionFeedback < ApplicationRecord
 
   def sufficent_feedback
     return unless feedback.length < 1
-    errors.add( :feedback, I18n.t( 'critiques.error.feedback_required'))
+
+    errors.add( :feedback, I18n.t( 'critiques.error.feedback_required' ) )
   end
 end

@@ -1,11 +1,9 @@
 import React, { Suspense, useState } from "react";
-import { Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import EmailValidator from "email-validator";
-
-import Grid from "@mui/material/Grid";
 
 
 import { useTranslation } from "react-i18next";
@@ -26,6 +24,7 @@ import { Password } from "primereact/password";
 
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { Container, Col, Row } from "react-grid-system";
 export default function SignIn(props) {
   const category = "devise";
   const { t }: { t: any } = useTranslation(category);
@@ -82,84 +81,96 @@ export default function SignIn(props) {
 
   const registerBlock = (
     <React.Fragment>
-      <Grid item xs={12} sm={6}>
-        <span className='p-float-label'>
-          <InputText
-            id="first_name"
-            value={firstName}
-            onChange={event => setFirstName(event.target.value)}
-          />
-          <label htmlFor="first_name">{t("registrations.first_name_fld")}</label>
-        </span>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <span className='p-float-label'>
-          <InputText
-            id="last_name"
-            value={lastName}
-            onChange={event => setLastName(event.target.value)}
-          />
-          <label htmlFor="last_name">{t("registrations.last_name_fld")}</label>
-        </span>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Button
-          disabled={"" === email || !endpointsLoaded}
-          onClick={() => {
-            dispatch(
-              emailSignUp({
-                email,
-                firstName,
-                lastName
-              })
-            ).then(navigate(from));
-          }}
-        >
-          {t("registrations.signup_btn")}
-        </Button>
-      </Grid>
+      <Row>
+
+        <Col xs={12} sm={12}>
+          <span className='p-float-label'>
+            <InputText
+              id="first_name"
+              value={firstName}
+              onChange={event => setFirstName(event.target.value)}
+            />
+            <label htmlFor="first_name">{t("registrations.first_name_fld")}</label>
+          </span>
+
+        </Col>
+      </Row>
+      <Row>
+
+        <Col xs={12} sm={12}>
+          <span className='p-float-label'>
+            <InputText
+              id="last_name"
+              value={lastName}
+              onChange={event => setLastName(event.target.value)}
+            />
+            <label htmlFor="last_name">{t("registrations.last_name_fld")}</label>
+          </span>
+
+        </Col>
+      </Row>
+      <Row>
+
+        <Col xs={12} sm={12}>
+          <Button
+            disabled={"" === email || !endpointsLoaded}
+            onClick={() => {
+              dispatch(
+                emailSignUp({
+                  email,
+                  firstName,
+                  lastName
+                })
+              ).then(navigate(from));
+            }}
+          >
+            {t("registrations.signup_btn")}
+          </Button>
+
+        </Col>
+      </Row>
     </React.Fragment>
   );
 
   const passwordResetBtn = (
-    <Grid item xs={12} sm={6}>
-      <Button
-        disabled={"" === email || !endpointsLoaded}
-        onClick={() => {
-          const url = profileEndpoints.passwordResetUrl + ".json";
+      <Col xs={12} sm={6}>
+        <Button
+          disabled={"" === email || !endpointsLoaded}
+          onClick={() => {
+            const url = profileEndpoints.passwordResetUrl + ".json";
 
-          axios
-            .post(url, {
-              email: email
-            })
-            .then(resp => {
-              const data = resp.data;
-              dispatch(
-                addMessage(t(data.message), new Date(), Priorities.INFO)
-              );
-            })
-            .catch(error => {
-              console.log("error", error);
-            });
-        }}
-      >
-        {t("passwords.forgot_submit")}
-      </Button>
-    </Grid>
+            axios
+              .post(url, {
+                email: email
+              })
+              .then(resp => {
+                const data = resp.data;
+                dispatch(
+                  addMessage(t(data.message), new Date(), Priorities.INFO)
+                );
+              })
+              .catch(error => {
+                console.log("error", error);
+              });
+          }}
+        >
+          {t("passwords.forgot_submit")}
+        </Button>
+      </Col>
   );
 
   const clearBtn = (
-    <Grid item xs={12} sm={6}>
-      <Button
-        disabled={"" === email && "" === password}
-        onClick={() => {
-          setPassword("");
-          setEmail("");
-        }}
-      >
-        {t("reset_btn")}
-      </Button>
-    </Grid>
+      <Col xs={12} sm={6}>
+        <Button
+          disabled={"" === email && "" === password}
+          onClick={() => {
+            setPassword("");
+            setEmail("");
+          }}
+        >
+          {t("reset_btn")}
+        </Button>
+      </Col>
   );
 
   const get_token_from_oauth = response => {
@@ -167,6 +178,7 @@ export default function SignIn(props) {
   };
 
   const oauthBtn = (
+    <Col xs={12}>
     <GoogleLogin
       onSuccess={get_token_from_oauth}
       onError={() => {
@@ -176,20 +188,21 @@ export default function SignIn(props) {
       context="use"
       text="continue_with"
     />
+    </Col>
   );
 
   const emailField = (
-    <Grid item xs={12}>
-      <span className='p-float-label'>
-        <InputText
-          id="email"
-          autoFocus
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-        />
-        <label htmlFor="email">{t("email_fld")}</label>
-      </span>
-    </Grid>
+      <Col xs={12}>
+        <span className='p-float-label'>
+          <InputText
+            id="email"
+            autoFocus
+            value={email}
+            onChange={event => setEmail(event.target.value)}
+          />
+          <label htmlFor="email">{t("email_fld")}</label>
+        </span>
+      </Col>
   );
 
   if (loggingIn || oauth_client_ids === undefined) {
@@ -205,41 +218,57 @@ export default function SignIn(props) {
             <TabView activeIndex={curTab} >
               <TabPanel
                 header={t("sessions.login")}  >
-                <Grid container>
+                <Container fluid>
+                  <Row>
                   {emailField}
-                  <Grid item xs={12} sm={9}>
-                    <span className='p-float-label'>
-                      <Password
-                        inputId="password"
-                        feedback={false}
-                        value={password}
-                        onChange={event => setPassword(event.target.value)}
-                        onKeyDown={submitOnEnter}
-                        toggleMask
-                      />
-                      <label htmlFor="password">{t("password_fld")}</label>
-                    </span>
-                  </Grid>
-                </Grid>
-                {enterLoginBtn}
-                {clearBtn}
-                {oauthBtn}
+                  </Row>
+                  <Row>
+                    <Col xs={12} >
+                      <span className='p-float-label'>
+                        <Password
+                          inputId="password"
+                          feedback={false}
+                          value={password}
+                          onChange={event => setPassword(event.target.value)}
+                          onKeyDown={submitOnEnter}
+                          toggleMask
+                        />
+                        <label htmlFor="password">{t("password_fld")}</label>
+                      </span>
+                    </Col>
+                  </Row>
+                  <Row>
+                    {enterLoginBtn}
+                    {clearBtn}
+                  </Row>
+                  <Row>
+                      {oauthBtn}
+                  </Row>
+                </Container>
               </TabPanel>
               <TabPanel
                 header={t("registrations.signup_tab")} >
-                <Grid container>
+                <Container>
+                  <Row>
                   {emailField}
+                  </Row>
                   {registerBlock}
-                  {clearBtn}
-                </Grid>
+                  <Row>
+                    {clearBtn}
+                  </Row>
+                </Container>
               </TabPanel>
               <TabPanel
                 header={t("passwords.reset_tab")} >
-                <Grid container>
+                <Container>
+                  <Row>
                   {emailField}
+                  </Row>
+                  <Row>
                   {passwordResetBtn}
                   {clearBtn}
-                </Grid>
+                  </Row>
+                </Container>
               </TabPanel>
             </TabView>
           </Panel>
@@ -248,4 +277,3 @@ export default function SignIn(props) {
     );
   }
 }
-SignIn.propTypes = {};

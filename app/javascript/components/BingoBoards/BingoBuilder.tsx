@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
@@ -8,18 +8,50 @@ import ScoredGameDataTable from "./ScoredGameDataTable";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
+import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 type Props = {
   rootPath?: string;
 };
 
-export default function BingoBuilder(props : Props) {
+interface IBingoCell {
+  id?: number;
+  row: number;
+  column: number;
+  selected: boolean;
+  concept_id: number;
+  concept?: {
+    id: number;
+    name: string;
+  };
+}
+
+interface IBingoGame {
+  id?: number;
+  topic: string;
+  description?: string;
+  size: number;
+  end_date?: Date;
+}
+export interface IBingoBoard {
+  initialised: boolean;
+  bingo_cells: IBingoCell[];
+  iteration: number;
+  bingo_game: IBingoGame;
+}
+
+export default function BingoBuilder(props: Props) {
   const category = "candidate_results";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -34,6 +66,10 @@ export default function BingoBuilder(props : Props) {
 
   const [curTab, setCurTab] = useState(0);
 
+  // For the word cloud
+  const [foundWords, setFoundWords] = useState([]);
+  const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
+
   const [saveStatus, setSaveStatus] = useState("");
 
   const [concepts, setConcepts] = useState([]);
@@ -45,7 +81,7 @@ export default function BingoBuilder(props : Props) {
     iteration: 0,
     bingo_game: {
       size: 5,
-      topic: t('no_game_msg')
+      topic: t("no_game_msg")
     }
   });
 
@@ -98,7 +134,7 @@ export default function BingoBuilder(props : Props) {
     setBoard(tmpBoard);
   };
 
-  const prefix = props.rootPath === undefined ? '' : `/${props.rootPath}`;
+  const prefix = props.rootPath === undefined ? "" : `/${props.rootPath}`;
 
   const getConcepts = () => {
     dispatch(startTask());
@@ -114,26 +150,28 @@ export default function BingoBuilder(props : Props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
       });
   };
 
   const getMyResults = () => {
     dispatch(startTask());
-    const url =
-      `${prefix}${endpoints.baseUrl}${bingoGameId}.json`
+    const url = `${prefix}${endpoints.baseUrl}${bingoGameId}.json`;
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
+        setFoundWords(data.found_words);
         //}, this.randomizeTiles );
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   const getBoard = () => {
@@ -152,7 +190,7 @@ export default function BingoBuilder(props : Props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item') }];
+        return [{ id: -1, name: t("no_data_list_item") }];
       });
   };
 
@@ -171,17 +209,20 @@ export default function BingoBuilder(props : Props) {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
-          setSaveStatus("Your board has been saved");
+          dispatch(addMessage(t("save.success"), new Date(), Priorities.INFO));
           setBoard(data);
         } else if ((data.id = -42)) {
           board.bingo_cells = board.bingo_cells_attributes;
           board.id = -42;
           board.iteration = 0;
-          setSaveStatus("DEMO: Your board would have been saved");
+          dispatch(
+            addMessage(t("save.demo_success"), new Date(), Priorities.INFO)
+          );
           setBoard(board);
         } else {
           board.bingo_cells = board.bingo_cells_attributes;
-          setSaveStatus("Save failed. Please try again or contact support");
+          dispatch(addMessage(t("save.failure"), new Date(), Priorities.ERROR));
+          setBoard(board);
           setBoard(board);
         }
         dispatch(endTask("saving"));
@@ -198,14 +239,11 @@ export default function BingoBuilder(props : Props) {
   };
 
   const saveBtn = () => {
-
     if (null === board.bingo_game.end_date) {
       //no op
-      return (<></>);
+      return <></>;
     } else if (new Date(board.bingo_game.end_date) < new Date()) {
-      return (
-        <em key='played_btn'>{t('already_played_msg')}</em>
-      )
+      return <em key="played_btn">{t("already_played_msg")}</em>;
     } else if (
       board.initialised &&
       board.iteration > 0 &&
@@ -213,76 +251,58 @@ export default function BingoBuilder(props : Props) {
     ) {
       return (
         <React.Fragment>
-          <a onClick={() => saveBoard()}>{t('save_lnk')}</a> {t('gen_board_msg')}&hellip;
+          <a onClick={() => saveBoard()}>{t("save_lnk")}</a>{" "}
+          {t("gen_board_msg")}&hellip;
         </React.Fragment>
       );
     } else {
-      return (
-        <em key='save_btn'>{t('gen_and_save_msg')}</em>
-      );
+      return <em key="save_btn">{t("gen_and_save_msg")}</em>;
     }
-  }
+  };
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-      (null !== board.bingo_game.end_date &&
-        new Date(board.bingo_game.end_date) < new Date()) ? (
+    (null !== board.bingo_game.end_date &&
+      new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
-        <a onClick={() => getPrintableBoard()}>
-          {t('download_board_lnk')}
-        </a>{" "}
-        {t('play_msg')}
+        <a onClick={() => getPrintableBoard()}>{t("download_board_lnk")}</a>{" "}
+        {t("play_msg")}
       </React.Fragment>
     ) : (
       "Save your board before this step"
     );
 
   const workSheetInstr = board.practicable ? (
-    <li key={'practice'}>
-      Print and complete this&nbsp;
-      <a onClick={() => getWorksheet()}>Practice Bingo Board</a> then turn
-      it in before class begins.
+    <li key={"practice"}>
+      <a onClick={() => getWorksheet()}>{t("tabs.builder.print_step")}</a>
     </li>
   ) : (
-    <li key={'practice'}>{t('not_enough_entries_msg')}</li>
+    <li key={"practice"}>{t("not_enough_entries_msg")}</li>
   );
 
   const playableInstr = board.playable ? (
     <React.Fragment>
-      <li key={'generate'}>
-        <a onClick={() => randomizeTiles()}>
-          (Re)Generate your playable board
-        </a>{" "}
-        until you get one you like and then&hellip;
+      <li key={"generate"}>
+        <a onClick={() => randomizeTiles()}>{t("tabs.builder.regenerate")}</a>
       </li>
-      <li key={'save_board'}>{saveBtn()}</li>
-      <li key={'print_board'}>{printBtn}</li>
+      <li key={"save_board"}>{saveBtn()}</li>
+      <li key={"print_board"}>{printBtn}</li>
     </React.Fragment>
   ) : (
-    <li>{t('not_enough_entries_msg')}</li>
+    <li>{t("not_enough_entries_msg")}</li>
   );
 
   return (
     <Panel>
-
-      <p>
-        <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
-      </p>
+      <h3>{t("topic_lbl")}:</h3> {board.bingo_game.topic}
       <div>
-        <strong>{t('description_lbl')}:</strong>{" "}
+        <h3>{t("description_lbl")}:</h3>{" "}
         <p>{parse(board.bingo_game.description || "")}</p>
       </div>
-      {null != candidateList && (
-        <p>
-          <strong>{t('performance_lbl')}:</strong>
-          <span id="performance">{candidateList.cached_performance}</span>
-        </p>
-      )}
       <hr />
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
-        <TabPanel header={'Bingo game builder'}>
+        <TabPanel header={t("tabs.builder.builder_lbl")}>
           <Panel>
-
             <br />
             <ol>
               {workSheetInstr}
@@ -293,21 +313,33 @@ export default function BingoBuilder(props : Props) {
                 <BingoBoard board={board} />
               </div>
             ) : null}
+            <h3>{t("tabs.builder.words_found")}</h3>
+            <hr />
+            <ConceptChips concepts={concepts} />
           </Panel>
-
         </TabPanel>
-        <TabPanel header={'Your performance'}>
-          <ScoredGameDataTable candidates={candidates} />
+        <TabPanel header={t("tabs.performance")}>
+          <Panel>
+            {null != candidateList && (
+              <>
+                <h3>{t("performance_lbl")}:</h3>
+                <span id="performance">
+                  {candidateList.cached_performance} / 100
+                </span>
+              </>
+            )}
+            <ScoredGameDataTable candidates={candidates} />
+          </Panel>
         </TabPanel>
         <TabPanel
-          header={'Worksheet result'}
+          header={t("tabs.worksheet")}
           disabled={
             !board.practicable ||
             null == board.worksheet ||
             (null == board.worksheet.performance &&
               null == board.worksheet.result_img)
           }
-          >
+        >
           {null != board.worksheet ? (
             <Panel>
               <p>
@@ -316,19 +348,23 @@ export default function BingoBuilder(props : Props) {
                 <br />
               </p>
               {null != board.worksheet.result_img &&
-                "" != board.worksheet.result_img ? (
+              "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
             </Panel>
           ) : (
-            "No Worksheet"
+            t("no_worksheet_msg")
           )}
         </TabPanel>
-        <TabPanel header={'Concepts found by class'}>
-          <ConceptChips concepts={concepts} />
+        <TabPanel header={t("tabs.word_cloud")}>
+          <ResponsesWordCloud
+            width={400}
+            height={400}
+            words={foundWords}
+            colors={colors}
+          />
         </TabPanel>
       </TabView>
-
     </Panel>
   );
 }

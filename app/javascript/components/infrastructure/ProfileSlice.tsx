@@ -1,49 +1,52 @@
-import i18n from "./i18n";
 import axios from "axios";
-import { addMessage, startTask, endTask, Priorities } from "./StatusSlice";
+import { startTask, endTask } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
+import i18n from "i18next";
+
+interface IEmail {
+  id: number;
+  email: string;
+  primary: boolean;
+  confirmed?: boolean;
+}
+interface IUser {
+  id: number;
+  first_name: string;
+  last_name: string;
+  name: string;
+  emails: Array<IEmail>;
+
+  welcomed: boolean;
+  is_instructor: boolean;
+  is_admin: boolean;
+  country: string;
+  timezone: string;
+  language_id: number;
+  theme_id: number;
+  admin: boolean;
+  researcher: boolean;
+  anonymize: boolean;
+
+  gender_id: number;
+  date_of_birth: string;
+  home_state_id: number;
+  primary_language_id: number;
+
+  school_id: number;
+  started_school: string;
+  cip_code_id: number;
+
+  impairment_visual: boolean;
+  impairment_auditory: boolean;
+  impairment_motor: boolean;
+  impairment_cognitive: boolean;
+  impairment_other: boolean;
+}
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
-  user: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    name: string;
-    emails: [
-      {
-        email: string;
-        primary: boolean;
-      }
-    ];
-
-    welcomed: boolean;
-    is_instructor: boolean;
-    is_admin: boolean;
-    country: string;
-    timezone: string;
-    language_id: number;
-    theme_id: number;
-    admin: boolean;
-    researcher: boolean;
-    anonymize: boolean;
-
-    gender_id: number;
-    date_of_birth: Date;
-    home_state_id: number;
-    primary_language_id: number;
-
-    school_id: number;
-    started_school: Date;
-    cip_code_id: number;
-
-    impairment_visual: boolean;
-    impairment_auditory: boolean;
-    impairment_motor: boolean;
-    impairment_cognitive: boolean;
-    impairment_other: boolean;
-  };
+  user: IUser;
 }
 
 const initialState = {
@@ -87,24 +90,24 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: initialState,
   reducers: {
-    setRetrievedProfile (state, action) {
-        state.user = action.payload;
-        state.lastRetrieved = Date.now();
+    setRetrievedProfile(state, action) {
+      state.user = action.payload;
+      state.lastRetrieved = Date.now();
     },
-    setProfile (state, action) {
-        state.user = action.payload;
+    setProfile(state, action) {
+      state.user = action.payload;
     },
-    setAnonymize (state, action) {
-        state.user.anonymize = action.payload;
+    setAnonymize(state, action) {
+      state.user.anonymize = action.payload;
     },
-    setProfileTimezone (state, action) {
-        state.user.timezone = action.payload;
+    setProfileTimezone(state, action) {
+      state.user.timezone = action.payload;
     },
-    setProfileTheme (state, action) {
-        state.user.theme_id = action.payload;
+    setProfileTheme(state, action) {
+      state.user.theme_id = action.payload;
     },
-    clearProfile (state, action) {
-        state = initialState;
+    clearProfile(state, action) {
+      state = initialState;
     }
   }
 });
@@ -119,11 +122,12 @@ export const setLocalLanguage = createAsyncThunk(
     const language = getState().context.lookups.languages.find(
       lang => lang.id === language_id
     );
+
     i18n.loadLanguages(language.code);
     i18n.changeLanguage(language.code);
     const user = Object.assign({}, getState().profile.user);
     user.language_id = language_id;
-    dispatch(setProfile(user));
+    return dispatch(setProfile(user));
   }
 );
 
@@ -139,8 +143,9 @@ export const fetchProfile = createAsyncThunk(
     axios
       .get(url, {})
       .then(response => {
-        const user: ProfilesRootState = response.data.user;
+        const user: IUser = response.data.user;
         dispatch(setRetrievedProfile(user));
+
         const tz_hash = getState().context.lookups["timezone_lookup"];
         Settings.defaultZone = tz_hash[user.timezone];
         dispatch(endTask("loading"));
@@ -168,7 +173,7 @@ export const persistProfile = createAsyncThunk(
           "Content-Type": "application/json",
           Accepts: "application/json"
         },
-        body: {
+        user: {
           first_name: user.first_name,
           last_name: user.last_name,
           timezone: user.timezone,
@@ -214,3 +219,4 @@ export const {
   clearProfile
 } = actions;
 export default reducer;
+export { IUser, IEmail };

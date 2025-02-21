@@ -1,14 +1,11 @@
 import React, { Suspense, useState, useEffect, useReducer } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setClean,
-  addMessage,
-  Priorities
 } from "../infrastructure/StatusSlice";
 
 import RubricViewer, { CLEAN_RUBRIC } from "./RubricViewer";
@@ -17,15 +14,15 @@ import { IRubricData } from "./RubricViewer";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { DateTime, Settings } from "luxon";
-import parse from "html-react-parser";
 
 import { useTranslation } from "react-i18next";
-
-import { Grid, Typography } from "@mui/material";
 
 import AssignmentSubmission from "./AssignmentSubmission";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
+import { Container, Col, Row } from "react-grid-system";
+
+import FeedbackVisualization from "./FeedbackVisualization";
 
 interface ISubmissionCondensed {
   id: number;
@@ -34,8 +31,21 @@ interface ISubmissionCondensed {
   withdrawn: DateTime;
   user: string;
   group: string;
+  submission_feedback: ISubmissionFeedback;
+  rubric_row_feedbacks: Array<IRubricRowFeedback>;
 }
 
+interface ISubmissionFeedback {
+  feedback: string;
+  submitted: DateTime;
+}
+
+interface IRubricRowFeedback {
+  id: number;
+  feedback: string;
+  score: number;
+  criterium_id: number;
+}
 interface IAssignment {
   id: number | null;
   name: string;
@@ -59,8 +69,9 @@ const CLEAN_ASSIGNMENT: IAssignment = {
   linkSub: false,
   fileSub: false,
   submissions: [],
-  rubric: CLEAN_RUBRIC
+  rubric: CLEAN_RUBRIC,
 };
+
 
 export default function AssignmentViewer(props) {
   const endpointSet = "assignment";
@@ -77,8 +88,7 @@ export default function AssignmentViewer(props) {
   const [t, i18n] = useTranslation(`${endpointSet}s`);
 
   const [curTab, setCurTab] = useState(0);
-
-  const [submissions, setSubmissions] = useState([]);
+  const [progressData, setProgressData] = useState([]);
 
   enum AssignmentActions {
     setAssignment = "SET ASSIGNMENT",
@@ -138,7 +148,10 @@ export default function AssignmentViewer(props) {
           type: AssignmentActions.setAssignment,
           assignment: receivedAssignment
         });
+
+        //Prepare the progress data
       })
+
       .catch(error => {
         console.log("error", error);
       })
@@ -147,9 +160,6 @@ export default function AssignmentViewer(props) {
       });
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newTab: string) => {
-    setCurTab(newTab);
-  };
 
   let output = null;
   const curDate = DateTime.local();
@@ -157,42 +167,55 @@ export default function AssignmentViewer(props) {
     output = <Skeleton className="mb-2" />;
   } else {
     output = (
-      <TabView activeIndex={curTab} onTabChange={(e) => setCurTab(e.index)}>
-        <TabPanel header={'Overview'} >
-          <Grid container spacing={1} columns={70}>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t("name")}:</Typography>
-            </Grid>
-            <Grid item xs={55}>
-              <Typography>{assignment.name}</Typography>
-            </Grid>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t("status.brief")}:</Typography>
-            </Grid>
-            <Grid>{parse(assignment.description)}</Grid>
-            <Grid item xs={70}>
-              <Typography variant="h6">{t("status.eval_criteria")}:</Typography>
-            </Grid>
-            <RubricViewer rubric={assignment.rubric} />
-          </Grid>
+      <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
+        <TabPanel header={"Overview"}>
+          <Container fluid>
+            <Row>
+              <Col xs={12} sm={3}>
+                <h6>{t("name")}:</h6>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span>{assignment.name}</span>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} sm={3}>
+                <h6>{t("status.brief")}:</h6>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span>{assignment.description}</span>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <h6>{t("status.eval_criteria")}:</h6>
 
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <RubricViewer rubric={assignment.rubric} />
+              </Col>
+            </Row>
+          </Container>
         </TabPanel>
-        <TabPanel
-          header={t('submissions.response_tab_lbl')}
-            >
+        <TabPanel header={t("submissions.response_tab_lbl")}>
           <AssignmentSubmission
             assignment={assignment}
             reloadCallback={loadAssignment}
           />
         </TabPanel>
-        <TabPanel header={t('progress.progress_tab_lbl')}
-            disabled={
-              assignment.startDate > curDate || assignment.endDate < curDate
-            }
-            >
-          {t('progress.in_progress_msg')}
+        <TabPanel
+          header={t("progress.progress_tab_lbl")}
+          disabled={assignment.submissions.find((submission) => {
+            return submission.feedbacks?.length > 0;
+          })
+          }
+        >
+          <FeedbackVisualization
+            assignment={assignment}
+          />
         </TabPanel>
-
       </TabView>
     );
   }
@@ -200,4 +223,4 @@ export default function AssignmentViewer(props) {
   return output;
 }
 
-export { IAssignment, ISubmissionCondensed, CLEAN_ASSIGNMENT };
+export { IAssignment, ISubmissionCondensed, CLEAN_ASSIGNMENT, IRubricRowFeedback };

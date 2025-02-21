@@ -7,10 +7,12 @@ en:
       definition: Definition
       feedback: Feedback
       concept: Concept
+      credit: Credit
     create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game
+    game_dates: Game availability dates
     open_date: Open date
     close_date: Game date
     lead_time: Days for instructor review

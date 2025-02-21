@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 //Redux store stuff
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+
 import {
   startTask,
   endTask,
@@ -10,22 +14,14 @@ import {
   setClean
 } from "../infrastructure/StatusSlice";
 import { refreshSchools } from "../infrastructure/ContextSlice";
-import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Paper from "@mui/material/Paper";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-
-import { Settings } from "luxon";
+import { useParams } from "react-router";
 
 //import i18n from './i18n';
-import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "../infrastructure/AppReducers";
-import axios from "axios";
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Dropdown } from "primereact/dropdown";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
@@ -128,9 +124,10 @@ export default function SchoolDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
-      }).finally(() => {
-        dispatch(endTask("saving"));
       })
+      .finally(() => {
+        dispatch(endTask("saving"));
+      });
   };
 
   useEffect(() => {
@@ -144,61 +141,55 @@ export default function SchoolDataAdmin(props) {
   }, [schoolTimezone, schoolName, schoolDescription]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool} disabled={!dirty}>
+    <Button onClick={saveSchool} disabled={!dirty}>
       {schoolId > 0 ? "Save" : "Create"} School
     </Button>
   ) : null;
 
   const detailsComponent = endpointStatus ? (
-    <Paper>
-      <TextField
-        label="School Name"
-        id="school-name"
-        value={schoolName}
-        fullWidth={false}
-        onChange={event => setSchoolName(event.target.value)}
-        error={null != messages["name"]}
-        helperText={messages["name"]}
-      />
+    <Panel header={t("edit.title")}>
+      <div className="p-float-label">
+        <InputText
+          id="school-name"
+          itemID="school-name"
+          value={schoolName}
+          onChange={event => setSchoolName(event.target.value)}
+        />
+        <label htmlFor="school-name">{t("index.name_lbl")}</label>
+      </div>
       &nbsp;
-      <FormControl>
-        <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          {t("time_zone")}
-        </InputLabel>
-        <Select
+      <span className="p-float-label">
+        <Dropdown
           id="school_timezone"
+          inputId="school_timezone"
           value={schoolTimezone}
-          onChange={event => setSchoolTimezone(String(event.target.value))}
-        >
-          {timezones.map(timezone => {
-            return (
-              <MenuItem key={timezone.name} value={timezone.name}>
-                {timezone.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
-      </FormControl>
+          options={timezones}
+          optionValue="name"
+          onChange={event => {
+            setSchoolTimezone(String(event.value));
+          }}
+          optionLabel="name"
+          placeholder={t("time_zone")}
+        />
+        <label htmlFor="school_timezone">{t("time_zone")}</label>
+      </span>
       <br />
-      <TextField
-        id="school-description"
-        placeholder="Enter a description of the school"
-        multiline={true}
-        minRows={2}
-        maxRows={4}
-        label="Description"
-        value={schoolDescription}
-        onChange={event => setSchoolDescription(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
+      <div className="p-float-label">
+        <InputTextarea
+          id="school-description"
+          placeholder="Enter a description of the school"
+          rows={4}
+          cols={30}
+          autoResize={true}
+          value={schoolDescription}
+          onChange={event => setSchoolDescription(event.target.value)}
+        />
+        <label htmlFor="school-description">{t("index.description_lbl")}</label>
+      </div>
       <br />
       {saveButton}
-    </Paper>
+    </Panel>
   ) : null;
 
-  return <Paper>{detailsComponent}</Paper>;
+  return <Panel>{detailsComponent}</Panel>;
 }

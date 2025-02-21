@@ -5,6 +5,11 @@
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' %>
+    <meta property="og:title" content="CoLab.online: Improving collaboration, one team at a time" />
+    <meta property="og:description" content="This collaboration-focused learning management system is designed to help instructors nurture spectacular team citizens." />
+    <meta property="og:image" content="https://CoLab.online/images/CoLab.png" />
+    <meta property="og:url" content="https://CoLab.online/welcome" />
+    <meta property="og:type" content='website' />
 
     <% if true && Rails.env.test? %>
       <%= javascript_pack_tag 'application', 'testing' %>
@@ -16,9 +21,9 @@
   </head>
   <body>
       <%= react_component "PageWrapper", props: {
-          token: form_authenticity_token,
-          getEndpointsUrl: endpoints_path
-
+          # token: form_authenticity_token,
+          getEndpointsUrl: endpoints_path,
+          debug: Rails.env.test?,
       }
       %>
     <% if true && Rails.env.test? %>

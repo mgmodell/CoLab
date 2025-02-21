@@ -6,18 +6,18 @@ module Demoable
   def demo_user
     return unless @current_user.nil?
 
-    @current_user = User.new(id: -7,
-                             first_name: t(:demo_surname_1),
-                             last_name: t(:demo_fam_name_1),
-                             timezone: t(:demo_user_tz))
+    @current_user = User.new( id: -7,
+                              first_name: t( :demo_surname_1 ),
+                              last_name: t( :demo_fam_name_1 ),
+                              timezone: t( :demo_user_tz ) )
   end
 
   def get_demo_project
     @project = ProjStub.new
-    @project.style = Style.find(2)
+    @project.style = Style.find( 2 )
     @project.name = t :demo_project
     @project.description = t :demo_project_description
-    @project.factor_pack = FactorPack.find(4).factors # Hard code AECT2023 Factor Pack
+    @project.factor_pack = FactorPack.find( 4 ).factors # Hard code AECT2023 Factor Pack
     @project
   end
 
@@ -32,40 +32,40 @@ module Demoable
 
     @group.users << @current_user
 
-    user_names.each_with_index do |name, idx|
-      u = User.new(id: -idx, last_name: name[0], first_name: name[1])
+    user_names.each_with_index do | name, idx |
+      u = User.new( id: -idx, last_name: name[0], first_name: name[1] )
       @group.users << u
     end
     @group
   end
 
   def get_demo_candidate_list
-    cl = CandidateList.new(id: -42,
-                           user_id: -11,
-                           group_id: nil,
-                           is_group: false,
-                           bingo_game_id: -42,
-                           group_requested: false,
-                           archived: false,
-                           contributor_count: 1,
-                           current_candidate_list: nil,
-                           candidates: [])
+    cl = CandidateList.new( id: -42,
+                            user_id: -11,
+                            group_id: nil,
+                            is_group: false,
+                            bingo_game_id: -42,
+                            group_requested: false,
+                            archived: false,
+                            contributor_count: 1,
+                            current_candidate_list: nil,
+                            candidates: [] )
 
     concepts = get_demo_game_concepts
     feedbacks = CandidateFeedback.all.to_a
-    rand(9..10).times do |index|
+    rand( 9..10 ).times do | index |
       # select a concept
-      term = concepts.delete(concepts.sample)
+      term = concepts.delete( concepts.sample )
       concept = term[0]
       definition = term[1]
       term = concept
 
-      feedback = rand(3) < 2 ? feedbacks[0] : feedbacks.sample
-      definition = concepts.delete(concepts.sample)[1] if 1 != feedback.id
+      feedback = rand( 3 ) < 2 ? feedbacks[0] : feedbacks.sample
+      definition = concepts.delete( concepts.sample )[1] if 1 != feedback.id
 
       cl.candidates << Candidate.new(
         id: - index,
-        concept: Concept.new(name: concept),
+        concept: Concept.new( name: concept ),
         definition:,
         term:,
         candidate_feedback: feedback
@@ -73,21 +73,21 @@ module Demoable
     end
     cl.candidates_count = cl.candidates.size
     cl.cached_performance = cl.candidates
-                              .reduce(0) { |sum, candidate| sum + candidate.candidate_feedback.credit } / 10
+                              .reduce( 0 ) { | sum, candidate | sum + candidate.candidate_feedback_credit } / 10
     cl
   end
 
   def get_demo_bingo_game
-    BingoGame.new(id: -11,
-                  topic: (t 'candidate_lists.demo_review_topic'),
-                  description: (t 'candidate_lists.demo_review_description'),
-                  end_date: Time.zone.today.end_of_day,
-                  size: 5,
-                  course: Course.new(
-                    name: (t 'demo_course_name'),
-                    number: 'xxx-673'
-                  ),
-                  individual_count: 10)
+    BingoGame.new( id: -11,
+                   topic: ( t 'candidate_lists.demo_review_topic' ),
+                   description: ( t 'candidate_lists.demo_review_description' ),
+                   end_date: Time.zone.today.end_of_day,
+                   size: 5,
+                   course: Course.new(
+                     name: ( t 'demo_course_name' ),
+                     number: 'xxx-673'
+                   ),
+                   individual_count: 10 )
   end
 
   def get_demo_installment
@@ -100,14 +100,14 @@ module Demoable
     i.user_id = -1
     i.assessment = a
     i.assessment_id = a.id
-    i.inst_date = DateTime.current.in_time_zone('UTC')
+    i.inst_date = DateTime.current.in_time_zone( 'UTC' )
     i
   end
 
   class InstallmentStub
     attr_accessor :id, :user_id, :assessment, :assessment_id, :group, :group_id, :values, :inst_date
 
-    def values_build(factor:, user:, value:)
+    def values_build( factor:, user:, value: )
       self.values = values || []
       v = Value.new
       v.factor = factor
@@ -134,7 +134,7 @@ module Demoable
   class ProjStub
     attr_accessor :id, :style, :name, :description, :factor_pack
 
-    def get_name(_anon)
+    def get_name( _anon )
       name
     end
   end
@@ -142,7 +142,7 @@ module Demoable
   class GroupStub
     attr_accessor :id, :name, :users, :project
 
-    def get_name(_anon)
+    def get_name( _anon )
       name
     end
   end

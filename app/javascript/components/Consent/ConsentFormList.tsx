@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
@@ -27,14 +26,11 @@ export default function ConsentFormList(props) {
 
   const user = useTypedSelector(state => state.profile.user);
   enum OPT_COLS {
-    NAME = 'name',
-    ACTIVE = 'active',
+    NAME = "name",
+    ACTIVE = "active"
   }
-  const [filterText, setFilterText] = useState('');
-  const optColumns = [
-    OPT_COLS.NAME,
-    OPT_COLS.ACTIVE,
-  ];
+  const [filterText, setFilterText] = useState("");
+  const optColumns = [OPT_COLS.NAME, OPT_COLS.ACTIVE];
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -71,21 +67,20 @@ export default function ConsentFormList(props) {
   };
 
   const dataTable = (
-      <DataTable
-        value={consentForms.filter((course) => {
-          return filterText.length === 0 || course.name.includes(filterText);
-        })}
-        resizableColumns
-        tableStyle={{
-          minWidth: '50rem'
-        }}
-        reorderableColumns
-        paginator
-        rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, consentForms.length]
-        }
-        header={<AdminListToolbar
+    <DataTable
+      value={consentForms.filter(course => {
+        return filterText.length === 0 || course.name.includes(filterText);
+      })}
+      resizableColumns
+      tableStyle={{
+        minWidth: "50rem"
+      }}
+      reorderableColumns
+      paginator
+      rows={5}
+      rowsPerPageOptions={[5, 10, 20, consentForms.length]}
+      header={
+        <AdminListToolbar
           itemType={category}
           filtering={{
             filterValue: filterText,
@@ -94,38 +89,38 @@ export default function ConsentFormList(props) {
           columnToggle={{
             optColumns: optColumns,
             visibleColumns: visibleColumns,
-            setVisibleColumnsFunc: setVisibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns
           }}
-        />}
-        sortField="name"
-        sortOrder={-1}
-        paginatorDropdownAppendTo={'self'}
-        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        dataKey="id"
-        onRowClick={(event) => {
-          navigate(String(event.data.id));
+        />
+      }
+      sortField="name"
+      sortOrder={-1}
+      paginatorDropdownAppendTo={"self"}
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      dataKey="id"
+      onRowClick={event => {
+        navigate(String(event.data.id));
+      }}
+    >
+      <Column
+        header={t("index.name_col")}
+        field={"name"}
+        sortable
+        filter={false}
+        key={"name"}
+      />
+      <Column
+        header={t("index.active_col")}
+        field={"active"}
+        sortable
+        filter
+        key={"active"}
+        body={param => {
+          return <Checkbox checked={param.active} disabled />;
         }}
-      >
-        <Column
-          header={t('index.name_col')}
-          field={'name'}
-          sortable
-          filter={false}
-          key={'name'}
-          />
-        <Column
-          header={t('index.active_col')}
-          field={'active'}
-          sortable
-          filter
-          key={'active'}
-          body={param =>{
-            return <Checkbox checked={param.active} disabled />
-          }}
-          />
-      </DataTable>
-
+      />
+    </DataTable>
   );
 
   return (

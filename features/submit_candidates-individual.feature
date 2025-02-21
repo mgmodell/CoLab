@@ -66,6 +66,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user should see the Bingo candidate list
     When the user populates 3 of the "term" entries
      And the user populates 3 of the "definition" entries
+    Then close all messages
     Then the user clicks "Save"
     Then the user will see "success"
     Then close all messages
@@ -73,6 +74,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the candidate list entries should match the list
     When the user populates 7 of the "term" entries
      And the user populates 7 of the "definition" entries
+    Then close all messages
     Then the user clicks "Save"
     Then the user will see "success"
     Then close all messages
@@ -91,6 +93,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user should see the Bingo candidate list
     When the user populates 7 of the "term" entries
      And the user populates 7 of the "definition" entries
+    Then close all messages
     Then the user clicks "Save"
     Then the user will see "success"
     Then close all messages

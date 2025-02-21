@@ -1,21 +1,17 @@
-import {
-  Paper,
-  Grid,
-  TextField,
-  IconButton,
-  InputAdornment,
-  Button
-} from "@mui/material";
+import React, { useState } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
-import React, { useState } from "react";
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+
+import { Panel } from "primereact/panel";
+
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import axios from "axios";
 import { emailSignIn } from "./infrastructure/ContextSlice";
+import { Password } from "primereact/password";
+import { Button } from "primereact/button";
+import { Col, Container, Row } from "react-grid-system";
 
 export default function PasswordEdit(props) {
   const dispatch = useDispatch();
@@ -26,7 +22,7 @@ export default function PasswordEdit(props) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const {state } = useLocation( );
+  const { state } = useLocation();
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -41,10 +37,9 @@ export default function PasswordEdit(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn({ email: string, password: string })).then( ()=>{
-        navigate(from)
-      }
-      );
+      dispatch(emailSignIn({ email: string, password: string })).then(() => {
+        navigate(from);
+      });
       evt.preventDefault();
     }
   };
@@ -57,7 +52,6 @@ export default function PasswordEdit(props) {
         passwordConfirm !== password ||
         !endpointsLoaded
       }
-      variant="contained"
       onClick={() => {
         const url = profileEndpoints.passwordUpdateUrl + ".json";
 
@@ -82,50 +76,34 @@ export default function PasswordEdit(props) {
     </Button>
   );
   return (
-    <Paper>
-      <Grid container>
-        <h1>{t("change_password_intro")}</h1>
-        <Grid item xs={12} sm={9}>
-          <TextField
-            label="Password"
-            id="password"
-            value={password}
-            variant="standard"
-            onChange={event => setPassword(event.target.value)}
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                    onMouseDown={event => {
-                      event.preventDefault;
-                    }}
-                    size="large"
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <TextField
-            label="Confirm your Password"
-            id="passwordConfirm"
-            value={passwordConfirm}
-            variant="standard"
-            onChange={event => setPasswordConfirm(event.target.value)}
-            onKeyDown={submitOnEnter}
-            type={showPassword ? "text" : "password"}
-          />
-        </Grid>
-        {updatePasswordBtn}
-      </Grid>
-    </Paper>
+    <Panel>
+      <Container>
+        <Row>
+          <Col xs={12}>
+            <span className="p-float-label">
+              <Password
+                id="password"
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+                toggleMask
+              />
+              <label htmlFor="password">{t("passwords.new")}</label>
+            </span>
+          </Col>
+          <Col xs={12}>
+            <span className="p-float-label">
+              <Password
+                id="passwordConfirm"
+                value={passwordConfirm}
+                onChange={event => setPasswordConfirm(event.target.value)}
+                onKeyDown={submitOnEnter}
+                toggleMask
+              />
+              <label htmlFor="password">{t("passwords.confirm")}</label>
+            </span>
+          </Col>
+        </Row>
+      </Container>
+    </Panel>
   );
 }

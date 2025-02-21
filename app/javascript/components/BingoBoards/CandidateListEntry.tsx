@@ -1,44 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
-import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import Grid from "@mui/material/Grid";
+import { useParams } from "react-router";
+
+import { Panel } from "primereact/panel";
+import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  endTask,
+  addMessage,
+  Priorities
+} from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { InputTextarea } from "primereact/inputtextarea";
+import { InputText } from "primereact/inputtext";
+import { Col, Container, Row } from "react-grid-system";
+import { di } from "@fullcalendar/core/internal-common";
 
 type Props = {
-  rootPath?: string,
-}
+  rootPath?: string;
+};
 
-export default function CandidateListEntry(props : Props) {
-  const endpointSet = "candidate_list";
+export default function CandidateListEntry(props: Props) {
+  const category = "candidate_list";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const { t, i18n } = useTranslation("candidate_lists");
+  const { t, i18n } = useTranslation(`${category}s`);
 
   const { bingoGameId } = useParams();
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");
@@ -60,7 +60,6 @@ export default function CandidateListEntry(props : Props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
-    
 
     axios
       .get(url, {})
@@ -115,10 +114,10 @@ export default function CandidateListEntry(props : Props) {
   const saveCandidateList = () => {
     dispatch(startTask("saving"));
 
-    const url = 
+    const url =
       props.rootPath === undefined
-        ? `${ endpoints.baseUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${ endpoints.baseUrl}${bingoGameId}.json`;
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
     axios
       .put(url, {
@@ -132,6 +131,7 @@ export default function CandidateListEntry(props : Props) {
       })
       .then(response => {
         const data = response.data;
+        console.log("data.messages", data);
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -141,18 +141,19 @@ export default function CandidateListEntry(props : Props) {
           setHelpRequested(data.help_requested);
           setOthersRequestedHelp(data.others_requested_help);
 
-          setShowErrors(true);
           setDirty(false);
-          setMessages(data.messages);
           dispatch(endTask("saving"));
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
-          setShowErrors(true);
-          setMessages(data.messages);
-          dispatch(endTask("saving"));
+          data.messages.forEach(message => {
+            dispatch(addMessage(message, new Date(), Priorities.ERROR));
+          });
         }
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("saving"));
       });
   };
@@ -163,20 +164,21 @@ export default function CandidateListEntry(props : Props) {
     }
   }, [endpointStatus]);
 
-  useEffect(() => setDirty(true), [candidates]);
+  useEffect(() => {
+    setDirty(true)
+  } , [candidates]);
 
-  const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveCandidateList}>
-      Save Candidates
-    </Button>
-  ) : null;
+  const saveButton = 
+         <Button disabled={dirty !== false } onClick={saveCandidateList}>
+          {t('student_entry.save')}
+        </Button>
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
-    const url = 
-      props.rootPath === undefined 
-        ?  `${requestCollaborationUrl}${decision}.json`
-        :  `/${props.rootPath}${requestCollaborationUrl}${decision}.json` ;
+    const url =
+      props.rootPath === undefined
+        ? `${requestCollaborationUrl}${decision}.json`
+        : `/${props.rootPath}${requestCollaborationUrl}${decision}.json`;
 
     axios
       .get(url, {})
@@ -239,83 +241,63 @@ export default function CandidateListEntry(props : Props) {
     tempList[index].definition = event.target.value;
     setCandidates(tempList);
   };
-  const detailsComponent = (
-    <Paper>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("topic")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{topic}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>{t("description")}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{parse(description)}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Typography>For</Typography>
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          <Typography>{user.name}</Typography>
-        </Grid>
-        <hr />
-        <Grid item xs={12}>
-          {groupComponent}
-        </Grid>
-        {candidates.map((candidate, index) => {
-          return (
-            <React.Fragment key={index}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Term"
-                  fullWidth
-                  id={`term_${index}`}
-                  onChange={event => updateTerm(event, index)}
-                  value={candidate.term}
-                />
-              </Grid>
-              <Grid item xs={12} sm={9}>
-                <TextareaAutosize
-                  label="Definition"
-                  width="90%"
-                  id={`definition_${index}`}
-                  onChange={event => updateDefinition(event, index)}
-                  value={candidate.definition}
-                />
-              </Grid>
-            </React.Fragment>
-          );
-        })}
-      </Grid>
-      {saveButton}
-    </Paper>
-  );
 
   return (
-    <Paper>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
-      {detailsComponent}
-    </Paper>
+    <Panel>
+      <Container>
+        <Row>
+          <Col xs={12} sm={3}>
+            <span>{t("topic")}</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{topic}</span>
+          </Col>
+          <Col xs={12} sm={3}>
+            <span>{t("description")}</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{parse(description)}</span>
+          </Col>
+          <Col xs={12} sm={3}>
+            <span>For</span>
+          </Col>
+          <Col xs={12} sm={9}>
+            <span>{user.name}</span>
+          </Col>
+          <hr />
+          <Col xs={12}>{groupComponent}</Col>
+          {candidates.map((candidate, index) => {
+            return (
+              <React.Fragment key={index}>
+                <Col xs={12} sm={3}>
+                  <span className="p-float-label">
+                    <InputText
+                      id={`term_${index}`}
+                      onChange={event => updateTerm(event, index)}
+                      value={candidate.term}
+                    />
+                    <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
+                  </span>
+                </Col>
+                <Col xs={12} sm={9}>
+                  <span className="p-float-label">
+                    <InputTextarea
+                      id={`definition_${index}`}
+                      onChange={event => updateDefinition(event, index)}
+                      value={candidate.definition}
+                      autoResize
+                    />
+                    <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
+                  </span>
+                </Col>
+              </React.Fragment>
+            );
+          })}
+        </Row>
+      </Container>
+      {
+        saveButton
+      }
+    </Panel>
   );
 }
-

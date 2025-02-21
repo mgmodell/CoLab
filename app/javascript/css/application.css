@@ -6,6 +6,7 @@ body {
   color: hsl(35, 50%, 20%);
   /* text-shadow: 0 1px 1px white; */
   font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
+  width: 100%;
 }
 
 a {
@@ -13,8 +14,8 @@ a {
   text-decoration: none;
 }
 
-
-a:hover, a:active {
+a:hover,
+a:active {
   color: hsl(246, 56%, 34%);
   text-decoration: underline;
 }
@@ -40,7 +41,8 @@ a:hover, a:active {
 .mainNav .p-toolbar-group-center {
   display: block;
   align-items: top;
-  width: 80%;
+  width: 70%;
+  word-wrap: normal;
 }
 .mainNav .p-toolbar-group-center .quotes {
   font-size: small;
@@ -52,11 +54,98 @@ a:hover, a:active {
 }
 
 .mainContent {
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
 .p-toast {
   z-index: 1500;
   width: 100%;
   margin-top: 3rem;
+}
+
+.intro-text {
+  /* Learned this here:
+  // https://stackoverflow.com/questions/55127454/how-to-apply-transform-origin-to-svg-element
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events
+  */
+  pointer-events: none;
+}
+
+.intro-nav {
+  /* Nothing here yet */
+}
+
+.intro-nav:hover {
+  cursor: pointer;
+  animation: navPulseActive;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  filter: drop-shadow(0 0 0.5rem white);
+}
+
+@keyframes navPulseActive {
+  0% {
+    filter: drop-shadow(0 0 0.5rem indigo);
+  }
+  100% {
+    filter: drop-shadow(0 0 0.5rem white);
+  }
+}
+
+.intro {
+  color: azure;
+}
+
+.intro a {
+  color: hsl(247, 41%, 69%);
+  text-decoration: none;
+}
+
+.intro a:hover,
+a:active {
+  color: hsl(247, 41%, 69%);
+  text-decoration: underline;
+}
+
+.p-inputtextarea {
+  width: 100%;
+}
+
+.p-datepicker-trigger {
+  background-color: rgb( 63, 81, 181 );
+}
+
+.intro_nav:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+.p-datatype-date {
+  max-width: 100%;
+}
+
+.content-table-data {
+  text-wrap: wrap;
+}
+
+.bingoBoardTable {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.bingoBoardTable td {
+  border: 1px solid #ddd;
+}
+
+.fixedDrawer a {
+  cursor: default;
+}
+.fixedDrawer .p-icon{
+  visibility: hidden;
+}
+.fixedDrawer a:hover, a:active, a:visited {
+  text-decoration: none;
+  color: hsl(246, 56%, 34%);
 }

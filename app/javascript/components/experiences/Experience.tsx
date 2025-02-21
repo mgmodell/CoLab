@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -12,9 +12,6 @@ import {
   Priorities
 } from "../infrastructure/StatusSlice";
 
-import Button from "@mui/material/Button";
-import Skeleton from "@mui/material/Skeleton";
-
 import { useTranslation } from "react-i18next";
 
 import ExperienceInstructions from "./ExperienceInstructions";
@@ -23,6 +20,8 @@ import ExperienceDiagnosis from "./ExperienceDiagnosis";
 const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { Button } from "primereact/button";
+import { Skeleton } from "primereact/skeleton";
 
 export default function Experience(props) {
   const endpointSet = "experience";
@@ -50,12 +49,6 @@ export default function Experience(props) {
       getNext();
     }
   }, [endpointsLoaded]);
-
-  const saveButton = (
-    <Button variant="contained" onClick={() => saveDiagnosis()}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t("submit")}</Suspense>
-    </Button>
-  );
 
   //Retrieve the latest data
   const getNext = () => {
@@ -138,7 +131,7 @@ export default function Experience(props) {
   var output = null;
 
   if (!endpointsLoaded) {
-    output = <Skeleton variant="rectangular" />;
+    output = <Skeleton className="mb-2" />;
   } else if (!instructed) {
     output = <ExperienceInstructions acknowledgeFunc={getNext} />;
   } else if (undefined === weekNum) {
@@ -155,5 +148,3 @@ export default function Experience(props) {
 
   return output;
 }
-
-Experience.propTypes = {};

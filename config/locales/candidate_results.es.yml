@@ -1,0 +1,37 @@
+es:
+  candidate_results:
+    not_enough_entries_msg: >
+      No hay sufiicentes entradas utilizables para generar un tablero de Bingo jugable;
+      anima a tus compañeros a completar sus tareas.
+    already_played_msg: >
+      Este juego ya ha sido jugado, por lo que no puedes guardar un nuevo tablero.
+    gen_and_save_msg: >
+      Si generas un nuevo tablero, podrás guardarlo aquí.
+    save_lnk: Guardar
+    save:
+      success: Tu tablero ha sido guardado
+      demo_success: "DEMO: Tu tablero se habría guardado"
+      failure: Error al guardar. Vuelva a intentarlo o póngase en contacto con el servicio de asistencia
+    gen_board_msg: el tablero que generaste
+    download_board_lnk: Descarga tu Tablero de Bingo
+    play_msg: ¡y sigue el juego en Clase!
+    no_data_list_item: sin datos
+    no_game_msg: sin juego
+    performance_lbl: Rendimiento
+    topic_lbl: Tema
+    description_lbl: Descripción
+    no_worksheet_msg: Sin hoja de trabajo 
+    tabs:
+      builder:
+        builder_lbl: Constructor de juegos de Bingo
+        print_step: >
+          Imprime y completa este Bingo de Prácticas y entrégalo
+          antes de que empiece la clase.
+        regenerate: >
+          (Re)Genera tu tablero jugable hasta que consigas un me gusta
+          y luego...
+        words_found: Conceptos identificados por la clase
+      worksheet: Resultados de la hoja de trabajo
+      performance: Tu rendimiento
+      word_cloud: Nube de palabras
+

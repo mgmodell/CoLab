@@ -7,6 +7,7 @@ const webpackConfig = generateWebpackConfig;
 
 const testOnly = (_clientWebpackConfig, _serverWebpackConfig) => {
   // place any code here that is for test only
+  /*
   devServer: {
     host: '0.0.0.0',
     port: 3010
@@ -16,6 +17,7 @@ const testOnly = (_clientWebpackConfig, _serverWebpackConfig) => {
     },
     hot: true,
   }
+  */
 }
 
 module.exports = webpackConfig(testOnly)

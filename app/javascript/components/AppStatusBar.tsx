@@ -8,7 +8,7 @@ import { Toast } from "primereact/toast";
 
 export default function AppStatusBar(props) {
   const messages = useTypedSelector(state => {
-    return state.status.messages
+    return state.status.messages;
   });
   const dispatch = useDispatch();
   const toast = React.useRef(null);
@@ -20,16 +20,12 @@ export default function AppStatusBar(props) {
           severity: message.priority,
           summary: message.priority,
           detail: message.text,
-          life: 30000,
+          life: 30000
         });
         dispatch(acknowledgeMsg(index));
-
       }
     });
   }, [messages]);
 
-  return (
-    <Toast 
-      ref={toast} />
-  );
+  return <Toast ref={toast} />;
 }

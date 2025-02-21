@@ -14,14 +14,14 @@ namespace :migratify do
       Concept.find_each do |concept|
         Concept.reset_counters( concept.id, :candidates )
       end
-      
+
       School.find_each do |school|
         School.reset_counters( school.id, :courses )
       end
       ConsentForm.find_each do |consent_form|
         ConsentForm.reset_counters( consent_form.id, :courses )
       end
-      
+
     end
   end
 
@@ -97,7 +97,7 @@ namespace :migratify do
       attr_accessor :text_en, :attribution
     end
     read_data = YAML.load_file(
-      'db/quotes.yml', 
+      'db/quotes.yml',
       permitted_classes: [Quote_])
     read_data.each do |quote|
       quote.text_en = quote.text_en.strip
@@ -119,7 +119,7 @@ namespace :migratify do
       if 1 == cf.size
         cf = cf[ 0 ]
         cf.name_en = 'Definition: Almost correct'
-        cf.definition_en = 
+        cf.definition_en =
           "You've identified an important term related to the stated topic and " +
           "provided a definition that is close to complete, but is lacking in " +
           "some crucial way(s)."
@@ -143,7 +143,7 @@ namespace :migratify do
         cf = cf[ 0 ]
         remap_to_id = cf.id
         cf.name_en = 'Term: Proper Name or Product Name'
-        cf.definition_en = 
+        cf.definition_en =
           "Proper names and products should not be used unless they are "+
           "dominant to the point of being synonymous with a class of " +
           "activity or a household name."
@@ -172,14 +172,14 @@ namespace :migratify do
     end
 
   end
-  
+
 
   desc 'Adding type to Candidate Feedback'
   task cf_type: :environment do
     CandidateFeedback.all.each do |cf|
       if 'Acceptable' == cf.name_en
         cf.critique = 1
-      
+
       elsif cf.name_en.start_with? 'Definition'
         cf.critique = 2
 
@@ -198,7 +198,7 @@ namespace :migratify do
       bg.save( validate: false )
       puts bg.errors.full_messages unless bg.errors.empty?
     end
-    
+
     # Update the lead times for bingo games
     Experience.all.each do |exp|
       exp.lead_time = 2
@@ -312,10 +312,10 @@ namespace :migratify do
       concept.courses_count = concept.courses.uniq.size
       concept.save
     end
-    
+
   end
 
-    
+
   desc 'Create the underpinnings for language support'
   task db_updates: :environment do
     Rake::Task['db:migrate'].invoke
@@ -659,19 +659,21 @@ namespace :migratify do
     # Make sure the DB is primed and ready!
 
     User.find_each do |user|
-      user.anon_first_name = Faker::Name.first_name if user.anon_first_name.blank?
-      user.anon_last_name = Faker::Name.last_name if user.anon_last_name.blank?
-      user.researcher = false unless user.researcher.present?
+      user.anon_first_name = Faker::Name.first_name unless user.anon_first_name?
+      user.anon_last_name = Faker::Name.last_name unless user.anon_last_name?
+      user.researcher = false unless user.researcher?
       user.save
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" if group.anon_name.blank?
+      unless group.anon_name?
+        group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
+      end
       group.save
     end
 
     BingoGame.find_each do |bingo_game|
-      if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
+      if !bingo_game.anon_topic? || (bingo_game.anon_topic.starts_with? 'Lorem')
         trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
         bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
         bingo_game.save
@@ -679,7 +681,7 @@ namespace :migratify do
     end
 
     Experience.find_each do |experience|
-      experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" if experience.anon_name.blank?
+      experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" unless experience.anon_name?
       experience.save
     end
 
@@ -691,12 +693,12 @@ namespace :migratify do
       Faker::Fantasy::Tolkien
     ]
     Project.find_each do |project|
-      project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" if project.anon_name.blank?
+      project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" unless project.anon_name?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" if school.anon_name.blank?
+      school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" unless school.anon_name?
       school.save
     end
 
@@ -704,8 +706,8 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV]
     levels = %w[Beginning Intermediate Advanced]
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Faker::Company.industry}" if course.anon_name.blank?
-      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+      course.anon_name = "#{levels.sample} #{Faker::Company.industry}" unless course.anon_name?
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}" unless course.anon_number?
       course.save
     end
   end

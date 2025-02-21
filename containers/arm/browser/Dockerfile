@@ -1,1 +1,0 @@
-FROM seleniarm/standalone-chromium

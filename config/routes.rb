@@ -3,8 +3,8 @@
 Rails.application.routes.draw do
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
-         as: :copy_course,
-         constraints: ->(req) { req.format == :json }
+        as: :copy_course,
+        constraints: ->(req) { req.format == :json }
     put 'courses/add_students' => 'courses#add_students',
         as: :add_students
     put 'courses/add_instructors' => 'courses#add_instructors',
@@ -42,9 +42,18 @@ Rails.application.routes.draw do
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
 
-    resources :concepts, except: %i[destroy create]
+    resources :concepts, only: %i[show update index]
 
-    resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+    resources :assignments,
+        except: %i[new create destroy]
+
+    resources :experiences, except: %i[new edit]
+    resources :rubrics, :bingo_games,
+        except: %i[new create edit]
+
+    resources :consent_forms, except: %i[new]
+    resources :schools, :courses, :projects,
+        except: %i[new create]
 
     resources :submissions, only: %i[update show]
 
@@ -196,7 +205,7 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :json }
     post 'diversity_score_for' => 'home#check_diversity_score',
          as: :check_diversity_score
-    get 'locales/:ns' => 'locales#get_resources', as: :i18n,
+    get 'locales/:lng/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
     get 'endpoints' => 'home#endpoints', as: :endpoints,
         constraints: ->(req) { req.format == :json }
@@ -236,7 +245,6 @@ Rails.application.routes.draw do
     scope 'api-backend' do
       # Demo paths
       get 'task_list' => 'home#demo_start', as: :demo_task_list
-  
       get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
       patch 'installments/:id' => 'installments#demo_update'
       get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
@@ -262,6 +270,12 @@ Rails.application.routes.draw do
     end
   end
 
+  # LTI Registration
+  # post 'lti/tool_connect' => 'lti#register'
+  get 'lti/tool_connect' => 'lti#register'
+  scope '.well-known' do
+    # get :jwks, to: Keypairs::PublicKeysController.action(:index)
+  end
 
   get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

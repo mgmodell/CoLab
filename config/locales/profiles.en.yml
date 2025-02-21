@@ -8,6 +8,11 @@ en:
     first_name: First name
     last_name: Last name
     edit_profile: Edit your profile
+    tabs:
+      details: Details
+      courses: My Courses
+      history: History
+      research: Research Participation
     cancel: Cancel
     email_settings: Email settings
     emails:
@@ -46,6 +51,7 @@ en:
       prompt: Display settings
       ui_theme: What UI theme would you like to use?
       language: What language would you like to use for CoLab?
+      time_zone: What time zone are you in?
       anonymize: Anonymize names?
     demographics: 
       prompt: >
@@ -58,7 +64,9 @@ en:
       born: When were you born?
       gender: What is your gender?
       home_language: What language do you speak at home?
-      home_town: What country and state do you call home?
+      home_town: Where do you call home?
+      home_country: What country?
+      home_state: What state?
       impairments:
         prompt: >
           Do you have any impairments which alter your
