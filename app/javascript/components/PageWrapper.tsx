@@ -26,6 +26,7 @@ import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import DiversityCheck from "./DiversityCheck";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() =>
@@ -137,6 +138,16 @@ export default function PageWrapper(props: Readonly<Props>) {
             <Route path="user/password/edit" element={<PasswordEdit />} />
             <Route path={`tos`} element={<TermsOfService />} />
             <Route path={`privacy`} element={<Privacy />} />
+            <Route
+              path={`perspective`}
+              element={
+                <Suspense fallback={<Skeleton className={"mb-2"} />}>
+                  <RequireAuth>
+                    <DiversityCheck />
+                  </RequireAuth>
+                </Suspense>
+              }
+            />
             <Route
               path="demo/*"
               element={

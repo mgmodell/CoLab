@@ -1,4 +1,5 @@
-import React, { Fragment } from "react";
+import { Panel } from "primereact/panel";
+import React from "react";
 
 /*
  * Original content generator by
@@ -6,8 +7,9 @@ import React, { Fragment } from "react";
  */
 export default function TermsOfService(props) {
   return (
-    <Fragment>
-      <h1>Website Terms and Conditions of Use</h1>
+    <Panel
+      header="Terms and Conditions of Use"
+    >
 
       <h2>1. Terms</h2>
 
@@ -128,6 +130,6 @@ export default function TermsOfService(props) {
         Any claim related to MMP Technologies, LLC's Website shall be governed
         by the laws of us without regards to its conflict of law provisions.
       </p>
-    </Fragment>
+    </Panel>
   );
 }

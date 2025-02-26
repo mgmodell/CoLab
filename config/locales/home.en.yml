@@ -40,7 +40,11 @@ en:
   group_names: Group names
   history: History
   about_you: About You
-  calc_diversity: Perspectives
+  calc_diversity_hdr: Perspectives
+  calc_diversity_instr: >
+    To calculate your diversity score, please enter the email addresses
+    of the people you are considering for your team.  You can enter
+    multiple emails, separated by commas or spaces.
   users: Users
   diversity_score: Perspective Points
   calc_diversity_sub: Tell me the score!

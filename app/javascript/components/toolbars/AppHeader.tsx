@@ -10,8 +10,8 @@ import { Toolbar } from "primereact/toolbar";
 import { Skeleton } from "primereact/skeleton";
 
 export default function AppHeader(props) {
-  const { t, i18n } = useTranslation();
   const endpointSet = "home";
+  const [t] = useTranslation( endpointSet);
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
   );

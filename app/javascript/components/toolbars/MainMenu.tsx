@@ -25,7 +25,7 @@ export default function MainMenu(props: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [t, i18n] = useTranslation();
+  const [t] = useTranslation();
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
 
@@ -69,6 +69,7 @@ export default function MainMenu(props: Props) {
   const dispatch = useDispatch();
 
   const navTo = url => {
+    console.log("navTo", url);
     setMenuOpen(false);
     navigate(url);
   };
@@ -89,6 +90,14 @@ export default function MainMenu(props: Props) {
         icon: "pi pi-fw pi-user",
         id: "profile-menu-item",
         command: () => navTo("/profile")
+      },
+      {
+        label: t("calc_diversity"),
+        icon: "pi pi-fw pi-calculator",
+        id: "diversity-menu-item",
+        command: () => {
+          navTo("/perspective");
+        },
       });
       if (user.is_instructor || user.is_admin) {
         let adminItems = [
@@ -161,9 +170,6 @@ export default function MainMenu(props: Props) {
     builtMenu.push(
       {
         separator: true
-      },
-      {
-        template: <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
       },
       {
         label: t("titles.demonstration"),
