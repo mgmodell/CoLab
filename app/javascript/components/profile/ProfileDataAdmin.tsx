@@ -57,14 +57,7 @@ export default function ProfileDataAdmin(props: Props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
-  const user: IUser = useTypedSelector(state => {
-    const userProfile = state.profile.user;
-    return {
-      ...userProfile,
-      gender_id: Number(userProfile.gender_id)
-    };
-  });
-
+  const user: IUser = useTypedSelector(state => state.profile.user);
 
   const getImpairments = () => {
     const imp = [];
@@ -100,6 +93,9 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
+  const dirty = useTypedSelector(state => {
+    return state.profile.lastRetrieved !== state.profile.lastSet;
+  });
   const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
 
   const profileReady = endpointStatus && lookupStatus;
@@ -125,7 +121,6 @@ export default function ProfileDataAdmin(props: Props) {
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState(0);
-  const [dirty, setDirty] = useState(false);
   const [curPanel, setCurPanel] = useState([0]);
 
   const setMessages = msgs => {
@@ -265,13 +260,9 @@ export default function ProfileDataAdmin(props: Props) {
 
   const getProfile = () => {
     dispatch(fetchProfile())
-    setDirty(false);
-      //.then(setInitRetrieved(lastRetrieved))
-      //.then(setDirty(false));
   };
   const saveProfile = () => {
     dispatch(persistProfile());
-    setDirty(false);
   };
 
   useEffect(() => {
@@ -280,13 +271,6 @@ export default function ProfileDataAdmin(props: Props) {
       getProfile();
     }
   }, [endpointStatus]);
-
-  useEffect(() => {
-    //TODO: Fix profiles are marked dirty on initial load.
-    if (initRetrieved !== lastRetrieved) {
-      setDirty(true);
-    }
-  }, [user]);
 
   useEffect(() => getStates(user.country), [user.country]);
 

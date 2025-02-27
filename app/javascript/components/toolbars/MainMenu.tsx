@@ -92,7 +92,7 @@ export default function MainMenu(props: Props) {
         command: () => navTo("/profile")
       },
       {
-        label: t("calc_diversity"),
+        label: t("calc_diversity_hdr"),
         icon: "pi pi-fw pi-calculator",
         id: "diversity-menu-item",
         command: () => {

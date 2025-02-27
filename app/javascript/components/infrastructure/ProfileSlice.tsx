@@ -46,11 +46,15 @@ interface IUser {
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
+  lastSet: Date;
   user: IUser;
 }
 
 const initialState = {
   lastRetrieved: null,
+  lastSet: null,
+  // Default user state
+  // This is the state of a user that has not logged in yet
   user: {
     id: -1,
     first_name: "",
@@ -93,18 +97,23 @@ const profileSlice = createSlice({
     setRetrievedProfile(state, action) {
       state.user = action.payload;
       state.lastRetrieved = Date.now();
+      state.lastSet = state.lastRetrieved;
     },
     setProfile(state, action) {
       state.user = action.payload;
+      state.lastSet = Date.now();
     },
     setAnonymize(state, action) {
       state.user.anonymize = action.payload;
+      state.lastSet = Date.now();
     },
     setProfileTimezone(state, action) {
       state.user.timezone = action.payload;
+      state.lastSet = Date.now();
     },
     setProfileTheme(state, action) {
       state.user.theme_id = action.payload;
+      state.lastSet = Date.now();
     },
     clearProfile(state, action) {
       state = initialState;
