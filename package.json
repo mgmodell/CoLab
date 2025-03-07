@@ -31,7 +31,7 @@
     "@visx/xychart": "^3.7.0",
     "autosuggest-highlight": "^3.2.1",
     "axios": "^1.0.0",
-    "babel-loader": "^9.1.0",
+    "babel-loader": "^10.0.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "compression-webpack-plugin": "^11.0.0",

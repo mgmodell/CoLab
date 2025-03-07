@@ -45,6 +45,8 @@ en:
     To calculate your diversity score, please enter the email addresses
     of the people you are considering for your team.  You can enter
     multiple emails, separated by commas or spaces.
+  found_users: Found Users
+  perspective_score: Perspective Score
   users: Users
   diversity_score: Perspective Points
   calc_diversity_sub: Tell me the score!

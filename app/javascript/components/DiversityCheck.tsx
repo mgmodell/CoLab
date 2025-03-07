@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -63,22 +63,29 @@ export default function DiversityCheck(props: Props) {
           </Col>
         </Row>
         {foundUsers.length > 0 ? (
-
-          <Row>
-            <Col>
-              {foundUsers.map(user => {
-                return (
-                  <a key={user.email} href={"mailto:" + user.email}>
-                    {user.name}
-                    <br />
-                  </a>
-                );
-              })}
-            </Col>
-            <Col>{diversityScore}</Col>
-          </Row>
-
+          <Fragment>
+            <Row>
+              <Col>{t("found_users")}</Col>
+              <Col>{t("perspective_score")}</Col>
+            </Row>
+            <Row>
+              <Col>
+                {foundUsers.map(user => {
+                  return (
+                    <a key={user.email} href={"mailto:" + user.email}>
+                      {user.name}
+                      <br />
+                    </a>
+                  );
+                })}
+              </Col>
+              <Col>{diversityScore}</Col>
+            </Row>
+          </Fragment>
         ) : null}
+        <Row>
+          <Col><br /></Col>
+        </Row>
         <Row>
           <Col>
             <Button onClick={calcDiversity}>{t("calc_diversity_sub")}</Button>
