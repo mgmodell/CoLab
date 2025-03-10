@@ -69,7 +69,6 @@ export default function MainMenu(props: Props) {
   const dispatch = useDispatch();
 
   const navTo = url => {
-    console.log("navTo", url);
     setMenuOpen(false);
     navigate(url);
   };

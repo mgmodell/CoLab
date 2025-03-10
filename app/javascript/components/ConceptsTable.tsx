@@ -100,7 +100,8 @@ export default function ConceptsTable() {
           name: name
         }
       })
-      .then(data => {
+      .then(resp => {
+        const data = resp.data;
         const tmpConcepts = Object.assign([], conceptsRaw);
         const updatedObject = tmpConcepts.find(element => element.id == id);
         updatedObject.name = data.name;
