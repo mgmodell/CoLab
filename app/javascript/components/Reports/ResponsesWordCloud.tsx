@@ -84,8 +84,8 @@ export default function ResponsesWordCloud(props: WordCloudProps) {
 
   return (
     <Fragment>
-      <Button label="Download Word Cloud" onClick={downloadWordCloudPng} />
-      <Button label={`Switch to ${archimedianSpiral ? 'rectangular' : 'archimedian'} spiral`} onClick={toggleSpiral} />
+      <Button label="Download as PNG" onClick={downloadWordCloudPng} />
+      <Button label={`Mix it up`} onClick={toggleSpiral} />
 
     <svg id="wordcloud" width={width} height={height}>
       <WordCloud
