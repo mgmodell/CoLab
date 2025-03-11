@@ -44,8 +44,14 @@ class BingoGamesController < ApplicationController
         feedback_id: c.candidate_feedback_id }
     end
 
+    words = candidate_list.candidates.collect do | c |
+      c.definition.split( ' ' )
+    end
+    found_words = words.empty? ? [] : Candidate.filter.filter( words.flatten! )
+
     render json: {
       candidate_list:,
+      found_words:,
       candidates:
     }
   end

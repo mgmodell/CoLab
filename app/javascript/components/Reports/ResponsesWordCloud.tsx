@@ -18,6 +18,7 @@ interface WordCloudProps {
 
 export default function ResponsesWordCloud(props: WordCloudProps) {
   const { words, width, height, colors } = props;
+  console.log("words", words);
 
   const wordFreq = (words: string[]): WordData[] => {
     const freqMap: Record<string, number> = {};
