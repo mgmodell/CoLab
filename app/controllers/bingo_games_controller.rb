@@ -390,6 +390,7 @@ class BingoGamesController < ApplicationController
       cl_map[u].candidates << candidate
       candidates << candidate
     end
+    candidates.sort_by! { | c | c.term }
 
     respond_to do | format |
       format.json do
