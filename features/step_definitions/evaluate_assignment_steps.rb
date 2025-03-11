@@ -18,7 +18,7 @@ Given( '{int} user has submitted to the assignment' ) do | count |
       recorded_score: nil
     )
     submission.save
-    submission.errors.size.should be( 0 ), submission.errors.full_messages
+    submission.errors.size.should be( 0 ) # , submission.errors.full_messages
   end
 end
 

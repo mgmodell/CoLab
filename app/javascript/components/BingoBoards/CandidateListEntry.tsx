@@ -165,13 +165,14 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    setDirty(true)
+    setDirty(true);
   } , [candidates]);
 
+  // TODO: Fix the check to see if the form is dirty
   const saveButton = 
-         <Button disabled={dirty !== false } onClick={saveCandidateList}>
+         <Button onClick={saveCandidateList}>
           {t('student_entry.save')}
-        </Button>
+        </Button> 
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));

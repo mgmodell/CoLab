@@ -53,8 +53,6 @@ export default function InstallmentReport(props: Props) {
 
   const [t] = useTranslation("installments");
 
-  //const [initialised, setInitialised] = useState(false);
-  // I need to fix this to use the standard
   const [curPanel, setCurPanel] = useState(0);
   const [group, setGroup] = useState({});
   const [factors, setFactors] = useState({});
@@ -146,7 +144,6 @@ export default function InstallmentReport(props: Props) {
         data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
-        setInitialised(true);
         dispatch(endTask());
       })
       .catch(error => {
@@ -197,6 +194,14 @@ export default function InstallmentReport(props: Props) {
         if (data.messages?.status !== undefined) {
           dispatch(
             addMessage(data.messages.status, new Date(), data.messages.error ? Priorities.ERROR : Priorities.INFO)
+          );
+        } else {
+          dispatch(
+            addMessage(
+              t("success"),
+              new Date(),
+              Priorities.INFO
+            )
           );
         }
         setDirty(false);
