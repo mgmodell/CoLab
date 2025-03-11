@@ -51,6 +51,16 @@ export interface IBingoBoard {
   bingo_game: IBingoGame;
 }
 
+export interface IBingoCandidate {
+  id: number;
+  concept: string;
+  definition: string;
+  term: string;
+  feedback: string;
+  feedback_id: number;
+  credit: number;
+}
+
 export default function BingoBuilder(props: Props) {
   const category = "candidate_results";
   const endpoints = useTypedSelector(

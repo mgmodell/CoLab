@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
+import { IBingoCandidate } from "./BingoBuilder";
 
 enum OPT_COLS {
   TERM = "term",
@@ -15,15 +16,7 @@ enum OPT_COLS {
 }
 
 type Props = {
-  candidates: Array<{
-    id: number;
-    concept: string;
-    definition: string;
-    term: string;
-    feedback: string;
-    feedback_id: number;
-    credit: number;
-  }>;
+  candidates: Array< IBingoCandidate >
 };
 
 export default function ScoredGameDataTable(props: Props) {
