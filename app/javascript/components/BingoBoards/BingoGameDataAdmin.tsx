@@ -75,6 +75,7 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
+  const [averageScore, setAverageScore] = useState(0);
   const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
@@ -161,6 +162,9 @@ export default function BingoGameDataAdmin(props) {
         .get(url, {})
         .then(response => {
           const data = response.data;
+          setAverageScore(data.reduce((total, next) => {
+            return total + next.performance;
+          }, 0) / data.length);
           setResultData(data);
           dispatch(endTask());
         })
@@ -397,15 +401,17 @@ export default function BingoGameDataAdmin(props) {
               <Row>
                 <Col xs={5}>
                   <ConceptChips concepts={concepts} />
+                </Col>
+                <Col xs={7}>
+                  <h5>{t("scored_game.average_score")}:&nbsp;{ Math.round( averageScore * 100 )/100}</h5>
+                  <BingoGameDataAdminTable results_raw={resultData} />
+                  <br />
                   <ResponsesWordCloud
                     width={400}
                     height={400}
                     words={foundWords}
                     colors={colors}
                   />
-                </Col>
-                <Col xs={7}>
-                  <BingoGameDataAdminTable results_raw={resultData} />
                 </Col>
               </Row>
             </Container>

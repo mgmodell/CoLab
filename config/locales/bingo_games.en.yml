@@ -8,6 +8,7 @@ en:
       feedback: Feedback
       concept: Concept
       credit: Credit
+      average_score: Average score
     create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
