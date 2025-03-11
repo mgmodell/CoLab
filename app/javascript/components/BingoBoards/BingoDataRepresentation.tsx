@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
@@ -74,11 +74,11 @@ export default function BingoDataRepresentation(props: Props) {
 
   var trendData = null;
   if (props.scores.length > 1) {
-    const leastSquaresCoeff = leastSquares(xSeries, props.scores);
+    const leastSquaresCoeff = useMemo( () => leastSquares(xSeries, props.scores), [xSeries, props.scores]);
     const ePerformance = Math.round(
-      avg * (1 + leastSquaresCoeff[0] / props.scores.length)
+      avg * ( 1 + ( leastSquaresCoeff[0] / 100 ) ) 
     );
-    var trendLineColor = leastSquaresCoeff[0] < 0 ? "red" : "green";
+    const trendLineColor = leastSquaresCoeff[0] < 0 ? "red" : "green";
     trendData = (
       <React.Fragment>
         <LinePath
