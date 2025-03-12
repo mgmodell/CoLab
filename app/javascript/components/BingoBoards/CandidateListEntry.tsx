@@ -15,10 +15,10 @@ import {
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { removeStopwords } from 'stopword'
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Col, Container, Row } from "react-grid-system";
-import { di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   rootPath?: string;
@@ -49,6 +49,7 @@ export default function CandidateListEntry(props: Props) {
   const [isGroup, setIsGroup] = useState(false);
   const [expectedCount, setExpectedCount] = useState(0);
   const [candidates, setCandidates] = useState([]);
+  const [candidateCountHash, setCandidateCountHash] = useState({});
   const [othersRequestedHelp, setOthersRequestedHelp] = useState(0);
   const [helpRequested, setHelpRequested] = useState(false);
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
@@ -86,6 +87,20 @@ export default function CandidateListEntry(props: Props) {
         console.log("error", error);
       });
   };
+  useEffect(() => {
+    const tmpCandidates = [...candidates];
+    const countHash = {};
+    for (var i = 0; i < tmpCandidates.length; i++) {
+      const cleaned = removeStopwords( tmpCandidates[i].term.toLowerCase().split(" ") ).join(" ");
+      if (countHash[cleaned] === undefined) {
+        countHash[cleaned] = 1;
+      } else {
+        countHash[cleaned]++;
+      }
+    }
+    setCandidateCountHash(countHash);
+  }, [candidates]);
+
   const prepCandidates = (candidates, expectedCount) => {
     const tmpCandidates = [...candidates];
     const candidate_count = candidates.length;
@@ -99,13 +114,14 @@ export default function CandidateListEntry(props: Props) {
       }
     });
 
+
     for (var count = candidate_count; count < expectedCount; count++) {
       tmpCandidates.push({
         id: null,
         term: "",
         definition: "",
         filtered_consistent: "",
-        candidate_feedback_id: null
+        candidate_feedback_id: null,
       });
     }
     return tmpCandidates;
@@ -131,7 +147,6 @@ export default function CandidateListEntry(props: Props) {
       })
       .then(response => {
         const data = response.data;
-        console.log("data.messages", data);
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -277,15 +292,20 @@ export default function CandidateListEntry(props: Props) {
         </Col>
         <Col xs={12}><hr /></Col>
         {candidates.map((candidate, index) => {
+          const cleaned = removeStopwords( candidate.term.toLowerCase().split(" ") ).join(" ");
+          const duplicated = cleaned.length > 0 && candidateCountHash[cleaned] > 1;
           return (
             <React.Fragment key={index}>
               <Col xs={12} sm={3}>
                 <span className="p-float-label">
                   <InputText
                     id={`term_${index}`}
+                    invalid={duplicated}
                     onChange={event => updateTerm(event, index)}
                     value={candidate.term}
+                    aria-describedby={`term_${index}_msg`}
                   />
+                  {duplicated && <small id={`term_${index}_msg`}>{t('edit.duplicate_msg')}</small>}
                   <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
                 </span>
               </Col>

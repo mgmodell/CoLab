@@ -75,6 +75,7 @@ en:
         terms, concepts and ideas and enter them, along with clues to help
         others identify the terms you're describing.
       behalf: on behalf of 
+      duplicate_msg: This term may be a duplicate.
       waiting: Still awaiting a response to your group help request
       req_rec: Your teammates in {{grp_name}} want to collaborate
       req_help: Invite your teammates in {{grp_name}} to help?
