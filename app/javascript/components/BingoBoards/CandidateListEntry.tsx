@@ -166,13 +166,13 @@ export default function CandidateListEntry(props: Props) {
 
   useEffect(() => {
     setDirty(true);
-  } , [candidates]);
+  }, [candidates]);
 
   // TODO: Fix the check to see if the form is dirty
-  const saveButton = 
-         <Button onClick={saveCandidateList}>
-          {t('student_entry.save')}
-        </Button> 
+  const saveButton =
+    <Button onClick={saveCandidateList}>
+      {t('student_entry.save')}
+    </Button>
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
@@ -247,58 +247,67 @@ export default function CandidateListEntry(props: Props) {
     <Panel>
       <Container>
         <Row>
-          <Col xs={12} sm={3}>
-            <span>{t("topic")}</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{topic}</span>
-          </Col>
-          <Col xs={12} sm={3}>
-            <span>{t("description")}</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{parse(description)}</span>
-          </Col>
-          <Col xs={12} sm={3}>
-            <span>For</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{user.name}</span>
-          </Col>
-          <hr />
-          <Col xs={12}>{groupComponent}</Col>
-          {candidates.map((candidate, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Col xs={12} sm={3}>
-                  <span className="p-float-label">
-                    <InputText
-                      id={`term_${index}`}
-                      onChange={event => updateTerm(event, index)}
-                      value={candidate.term}
-                    />
-                    <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
-                  </span>
-                </Col>
-                <Col xs={12} sm={9}>
-                  <span className="p-float-label">
-                    <InputTextarea
-                      id={`definition_${index}`}
-                      onChange={event => updateDefinition(event, index)}
-                      value={candidate.definition}
-                      autoResize
-                    />
-                    <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
-                  </span>
-                </Col>
-              </React.Fragment>
-            );
-          })}
-        </Row>
-      </Container>
+          <Col xs={12} sm={12}>
+            <Panel header={`${t('edit.topic')}: ${topic}`} toggleable>
+              <Container>
+                <Row>
+                  <Col xs={12} sm={3}>
+                    <h4>{t("edit.description")}</h4>
+                  </Col>
+                  <Col xs={12} sm={9}>
+                    {parse(description)}
+                  </Col>
+                  <Col xs={12} sm={3}>
+                    <h4>{t('edit.for')}</h4>
+                  </Col>
+                  <Col xs={12} sm={9}>
+                    <span>{user.name}</span>
+                  </Col>
+                  <Col xs={12}>{groupComponent}</Col>
+              </Row>
+            </Container>
+          </Panel>
+        </Col>
+        <Col xs={12} sm={12}>
+          <Panel
+            header={t("edit.instructions_title")}
+            toggleable>
+            {t("edit.instructions")}
+          </Panel>
+        </Col>
+        <Col xs={12}><hr /></Col>
+        {candidates.map((candidate, index) => {
+          return (
+            <React.Fragment key={index}>
+              <Col xs={12} sm={3}>
+                <span className="p-float-label">
+                  <InputText
+                    id={`term_${index}`}
+                    onChange={event => updateTerm(event, index)}
+                    value={candidate.term}
+                  />
+                  <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
+                </span>
+              </Col>
+              <Col xs={12} sm={9}>
+                <span className="p-float-label">
+                  <InputTextarea
+                    id={`definition_${index}`}
+                    onChange={event => updateDefinition(event, index)}
+                    value={candidate.definition}
+                    autoResize
+                  />
+                  <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
+                </span>
+              </Col>
+            </React.Fragment>
+          );
+        })}
+      </Row>
+    </Container>
       {
-        saveButton
-      }
-    </Panel>
+    saveButton
+  }
+    </Panel >
   );
 }
