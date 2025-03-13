@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.1'
+gem 'rails', '~> 8.0.2'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '8.1.0'
+gem 'shakapacker', '8.2.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'

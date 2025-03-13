@@ -305,7 +305,7 @@ export default function CandidateListEntry(props: Props) {
                     value={candidate.term}
                     aria-describedby={`term_${index}_msg`}
                   />
-                  {duplicated && <small id={`term_${index}_msg`}>{t('edit.duplicate_msg')}</small>}
+                  {duplicated && <small color="red" id={`term_${index}_msg`}>{t('edit.duplicate_msg')}</small>}
                   <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
                 </span>
               </Col>
