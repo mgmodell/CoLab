@@ -108,6 +108,9 @@ export default function ProfileDataAdmin(props: Props) {
   const schools = useTypedSelector(state => state.context.lookups.schools);
   const languages = useTypedSelector(state => state.context.lookups.languages);
   const themes = useTypedSelector(state => state.context.lookups.themes);
+  const [themeColor, setThemeColor] = useState("#000000");
+
+
 
   const [states, setStates] = useState([]);
 

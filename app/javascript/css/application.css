@@ -1,22 +1,27 @@
+:root {
+  --primary-color: hsl(240,86%, 45%);
+  --secondary-color: hsl(35, 50%, 20%);
+  --tertiary-color: hsl(246, 56%, 34%);
+}
 body {
   /* max-width: 50rem; */
   padding: 1rem;
   margin: auto;
-  background: hsl(240, 86%, 45%);
-  color: hsl(35, 50%, 20%);
+  background:var(--primary-color);
+  color: var(--secondary-color);
   /* text-shadow: 0 1px 1px white; */
   font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
   width: 100%;
 }
 
 a {
-  color: hsl(246, 56%, 34%);
+  color: var(--tertiary-color);
   text-decoration: none;
 }
 
 a:hover,
 a:active {
-  color: hsl(246, 56%, 34%);
+  color: var(--tertiary-color);
   text-decoration: underline;
 }
 
@@ -30,7 +35,7 @@ a:active {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: navy;
+  background-color: var(--secondary-color);
   color: azure;
 }
 .mainNav .p-toolbar-group-start {
