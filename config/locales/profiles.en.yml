@@ -49,7 +49,7 @@ en:
       instructions.
     display_settings:
       prompt: Display settings
-      ui_theme: What UI theme would you like to use?
+      ui_theme: What color scheme would you like to use?
       language: What language would you like to use for CoLab?
       time_zone: What time zone are you in?
       anonymize: Anonymize names?

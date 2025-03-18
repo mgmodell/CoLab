@@ -43,8 +43,7 @@ Given( /^the course has (\d+) confirmed users$/ ) do | user_count |
       email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find( 1 ),
-      welcomed: true,
-      theme_id: 1
+      welcomed: true
     )
     user.skip_confirmation!
     user.save!
@@ -130,8 +129,7 @@ Given( /^the user is in a group on the project$/ ) do
       password_confirmation: 'password',
       email: Faker::Internet.email,
       timezone: 'UTC',
-      school: School.find( 1 ),
-      theme_id: 1
+      school: School.find( 1 )
     )
     u.skip_confirmation!
     u.save!

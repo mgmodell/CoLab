@@ -28,8 +28,6 @@ class User < ApplicationRecord
   belongs_to :gender, inverse_of: :users, optional: true
   delegate :code, to: :gender, prefix: true
 
-  belongs_to :theme, inverse_of: :users, optional: true
-
   has_one :home_country, through: :home_state
   delegate :no_response, to: :home_country, prefix: true
 
@@ -58,7 +56,7 @@ class User < ApplicationRecord
 
   has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
-  validates :timezone, :theme, presence: true
+  validates :timezone, presence: true
 
   has_many :assessments, through: :projects
 
@@ -370,7 +368,7 @@ class User < ApplicationRecord
         pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
         pred_u.country = pred_u.country || prey_u.country
         pred_u.timezone = pred_u.timezone || prey_u.timezone
-        pred_u.theme_id = pred_u.theme_id || prey_u.theme_id
+        pred_u.theme = pred_u.theme || prey_u.theme
         pred_u.school_id = pred_u.school_id || prey_u.school_id
         pred_u.language_id = pred_u.language_id || prey_u.language_id
         pred_u.date_of_birth = pred_u.date_of_birth || prey_u.date_of_birth

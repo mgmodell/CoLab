@@ -316,8 +316,7 @@ namespace :testing do
             password_confirmation: 'password',
             email: email,
             timezone: 'UTC',
-            school: School.find( 1 ),
-            theme_id: 1
+            school: School.find( 1 )
           )
           # puts "User with email <#{email}> not found"
         end

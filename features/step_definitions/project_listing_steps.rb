@@ -54,8 +54,7 @@ Given( /^the project has a group with (\d+) confirmed users$/ ) do | user_count 
       email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find( 1 ),
-      welcomed: true,
-      theme_id: 1
+      welcomed: true
     )
     user.skip_confirmation!
     @users << user

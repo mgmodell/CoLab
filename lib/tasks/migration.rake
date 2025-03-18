@@ -508,21 +508,6 @@ namespace :migratify do
       g.save
     end
 
-    # Theme seed data
-    class Theme_
-      attr_accessor :code
-      attr_accessor :name_en, :name_ko
-    end
-    read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
-    read_data.each do |theme|
-      g = Theme.where(code: theme.code).take
-      g = Theme.new if g.nil?
-      g.code = theme.code unless g.code == theme.code
-      g.name_en = theme.name_en unless g.name_en == theme.name_en
-      g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
-      g.save
-    end
-
     class Style_
       attr_accessor :name_en, :name_ko
       attr_accessor :filename

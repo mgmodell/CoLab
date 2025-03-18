@@ -35,8 +35,12 @@ export default function AppInit(props: Props) {
   useEffect(() => {
     //dispatch( authConfig()  )
     const primaryColor =
-      user && user.primaryColor ? user.primaryColor : "#f07bff";
+      user && user.theme ? user.theme : "#007bff";
 
+    document.documentElement.style.setProperty(
+      "--tertiary-color",
+      chroma( primaryColor ).brighten(2).hex()
+    );
     document.documentElement.style.setProperty(
       "--secondary-color",
       chroma( primaryColor ).darken(2).hex()

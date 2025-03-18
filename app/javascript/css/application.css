@@ -19,6 +19,10 @@ a {
   text-decoration: none;
 }
 
+.p-button {
+  color: var(--tertiary-color);
+}
+
 a:hover,
 a:active {
   color: var(--tertiary-color);

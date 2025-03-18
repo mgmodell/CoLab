@@ -207,7 +207,6 @@ const initialState: ContextRootState = {
     languages: {},
     cip_codes: {},
     genders: {},
-    themes: {},
     timezones: {},
     schools: {}
   },

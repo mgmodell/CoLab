@@ -438,8 +438,7 @@ Given( 'the course adds {int} {string} users' ) do | count, role |
       password_confirmation: 'password',
       email: Faker::Internet.email,
       timezone: 'UTC',
-      school: School.find( 1 ),
-      theme_id: 1
+      school: School.find( 1 )
     )
     user.skip_confirmation!
     user.save

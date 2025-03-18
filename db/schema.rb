@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_17_224044) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -608,18 +608,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
     t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
-  create_table "themes", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.string "code"
-    t.string "name_en"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "name_ko"
-    t.string "primary"
-    t.string "secondary"
-    t.index ["code"], name: "index_themes_on_code", unique: true
-    t.index ["name_en"], name: "index_themes_on_name_en", unique: true
-  end
-
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -647,7 +635,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
     t.boolean "admin"
     t.boolean "welcomed"
     t.datetime "last_emailed", precision: nil
-    t.integer "theme_id", default: 1
     t.integer "school_id"
     t.string "anon_first_name"
     t.string "anon_last_name"
@@ -668,6 +655,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
     t.text "tokens"
     t.boolean "instructor", default: false, null: false
     t.boolean "active", default: true, null: false
+    t.string "theme", limit: 6
     t.index ["cip_code_id"], name: "index_users_on_cip_code_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["gender_id"], name: "index_users_on_gender_id"
@@ -676,7 +664,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
     t.index ["primary_language_id"], name: "index_users_on_primary_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
-    t.index ["theme_id"], name: "index_users_on_theme_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -770,7 +757,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_032658) do
   add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
-  add_foreign_key "users", "themes"
   add_foreign_key "values", "factors"
   add_foreign_key "values", "installments"
   add_foreign_key "values", "users"

@@ -32,6 +32,7 @@ import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 import { Container, Row, Col } from "react-grid-system";
 import { AutoComplete } from "primereact/autocomplete";
+import { ColorPicker } from "primereact/colorpicker";
 
 type Props = {
   // profileId: number;
@@ -107,10 +108,6 @@ export default function ProfileDataAdmin(props: Props) {
   const genders = useTypedSelector(state => state.context.lookups.genders);
   const schools = useTypedSelector(state => state.context.lookups.schools);
   const languages = useTypedSelector(state => state.context.lookups.languages);
-  const themes = useTypedSelector(state => state.context.lookups.themes);
-  const [themeColor, setThemeColor] = useState("#000000");
-
-
 
   const [states, setStates] = useState([]);
 
@@ -215,10 +212,10 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileLanguage = language_id => {
     dispatch(setLocalLanguage(language_id));
   };
-  const setProfileTheme = theme_id => {
+  const setProfileTheme = theme => {
     const temp = {};
     Object.assign(temp, user);
-    temp.theme_id = theme_id;
+    temp.theme = theme;
     dispatch(setProfile(temp));
   };
   const setProfileResearcher = researcher => {
@@ -379,23 +376,13 @@ export default function ProfileDataAdmin(props: Props) {
         >
           <Container>
             <Col md={6} xs={12}>
-              <span className="p-float-label">
-                <Dropdown
-                  id="profile_theme"
-                  inputId="profile_theme"
-                  itemID="profile_theme"
-                  name="profile_theme"
-                  value={user.theme_id || 0}
-                  options={Object.values( themes )}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileTheme(Number(event.value))}
-                  placeholder={t("display_settings.ui_theme")}
-                />
                 <label htmlFor="profile_theme">
                   {t("display_settings.ui_theme")}
                 </label>
-              </span>
+                <ColorPicker
+                  id='profile_theme'
+                  value={user.theme}
+                  onChange={event => setProfileTheme(event.value)} />
             </Col>
             <Col md={6} xs={12}>
               <span className="p-float-label">

@@ -219,13 +219,6 @@ class HomeController < ApplicationController
           code: gender.code
         }
       end,
-      themes: Theme.all.collect do | theme |
-        {
-          id: theme.id,
-          code: theme.code,
-          name: theme.name
-        }
-      end,
       timezones: HomeController::TIMEZONES,
       timezone_lookup: HomeController::TIMEZONE_HASH,
       oauth_ids: {
@@ -254,7 +247,7 @@ class HomeController < ApplicationController
     profile_hash = {
       user: current_user.as_json(
         only: %i[ id first_name last_name gender_id country
-                  timezone theme_id school_id language_id
+                  timezone theme school_id language_id
                   date_of_birth home_state_id cip_code_id
                   primary_language_id started_school researcher
                   impairment_visual impairment_auditory
@@ -339,7 +332,7 @@ class HomeController < ApplicationController
           name: @current_user.name( false ),
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
-          theme: @current_user.theme.code,
+          theme: @current_user.theme,
           welcomed: @current_user.welcomed,
           timezone: tz,
           language: @current_user.language.code,
@@ -551,7 +544,7 @@ class HomeController < ApplicationController
   def profile_params
     params.require( :user ).permit(
       :first_name, :last_name,
-      :timezone, :language_id, :theme_id, :researcher,
+      :timezone, :language_id, :theme, :researcher,
       :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
       :school_id, :cip_code_id, :started_school,
       :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other

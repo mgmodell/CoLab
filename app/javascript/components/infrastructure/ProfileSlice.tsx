@@ -23,19 +23,19 @@ interface IUser {
   country: string;
   timezone: string;
   language_id: number;
-  theme_id: number;
+  theme: string;
   admin: boolean;
   researcher: boolean;
   anonymize: boolean;
 
-  gender_id: number;
+  gender_id: number | string;
   date_of_birth: string;
-  home_state_id: number;
-  primary_language_id: number;
+  home_state_id: number | string;
+  primary_language_id: number | string;
 
-  school_id: number;
+  school_id: number | string;
   started_school: string;
-  cip_code_id: number;
+  cip_code_id: number | string;
 
   impairment_visual: boolean;
   impairment_auditory: boolean;
@@ -68,7 +68,7 @@ const initialState = {
     country: "",
     timezone: "UTC",
     language_id: 40,
-    theme_id: 0,
+    theme: '007bff',
     admin: false,
     researcher: false,
     anonymize: false,
@@ -112,7 +112,7 @@ const profileSlice = createSlice({
       state.lastSet = Date.now();
     },
     setProfileTheme(state, action) {
-      state.user.theme_id = action.payload;
+      state.user.theme = action.payload;
       state.lastSet = Date.now();
     },
     clearProfile(state, action) {
@@ -187,7 +187,7 @@ export const persistProfile = createAsyncThunk(
           last_name: user.last_name,
           timezone: user.timezone,
           language_id: user.language_id,
-          theme_id: user.theme_id,
+          theme: user.theme,
           researcher: user.researcher,
           gender_id: user.gender_id,
           date_of_birth: user.date_of_birth,
