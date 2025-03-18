@@ -5,6 +5,7 @@ print_help ( ) {
   echo "Valid options:"
   echo " -l [sql dump]  Load DB from dump"
   echo " -j             Load latest dev db dump"
+  echo " -t             Dump the test db"
   echo ""
   echo " -h             Show this help and terminate"
 
@@ -34,7 +35,7 @@ COUNT_OPTS=0
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "jl:h" opt; do
+while getopts "jl:ht" opt; do
   COUNT_OPTS=$(($COUNT_OPTS + 1))
   case $opt in
     l)
@@ -44,6 +45,11 @@ while getopts "jl:h" opt; do
     j)
       LOAD=true
       LOAD_FILE="../../db/dev_db.sql"
+      ;;
+    t)
+      popd
+      mysqldump colab_test_ -u test -ptest --port=31337 > db/test_db.sql
+      exit
       ;;
     h|\?) #Invalid option
       SHOW_HELP=true
@@ -58,7 +64,7 @@ fi
 # Handle Command Help Request
 if [ "$SHOW_HELP" = true ]; then
   print_help
-  exit 
+  exit
 fi
 
 DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
