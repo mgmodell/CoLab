@@ -38,16 +38,16 @@ export default function AppInit(props: Props) {
       user && user.theme ? user.theme : "#007bff";
 
     document.documentElement.style.setProperty(
-      "--tertiary-color",
+      "--lighter-color",
       chroma( primaryColor ).brighten(2).hex()
     );
     document.documentElement.style.setProperty(
-      "--secondary-color",
+      "--darker-color",
       chroma( primaryColor ).darken(2).hex()
     );
     document.documentElement.style.setProperty(
       "--primary-color",
-      primaryColor
+      chroma( primaryColor ).hex()
     );
   }, [user.theme]);
 

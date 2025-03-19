@@ -10,7 +10,6 @@ import { signOut } from "../infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
-import DiversityCheck from "../DiversityCheck";
 import Logo from "../Logo";
 
 type Props = {

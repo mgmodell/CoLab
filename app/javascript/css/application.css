@@ -1,34 +1,35 @@
 :root {
   --primary-color: hsl(240,86%, 45%);
-  --secondary-color: hsl(35, 50%, 20%);
-  --tertiary-color: hsl(246, 56%, 34%);
+  --darker-color: hsl(35, 50%, 20%);
+  --lighter-color: hsl(246, 56%, 34%);
 }
 body {
   /* max-width: 50rem; */
   padding: 1rem;
   margin: auto;
   background:var(--primary-color);
-  color: var(--secondary-color);
+  color: var(--darker-color);
   /* text-shadow: 0 1px 1px white; */
   font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
   width: 100%;
 }
 
 a {
-  color: var(--secondary-color);
+  color: var(--darker-color);
   text-decoration: none;
 }
 
 .p-button {
-  color: var(--tertiary-color);
+  color: var(--lighter-color);
+  background-color: var(--primary-color);
 }
 
 a:hover {
-  color: var(--tertiary-color);
+  color: var(--primary-color);
   text-decoration: underline;
 }
 a:active {
-  color: var(--tertiary-color);
+  color: var(--lighter-color);
   text-decoration: underline;
 }
 
@@ -42,7 +43,7 @@ a:active {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: var(--secondary-color);
+  background-color: var(--darker-color);
   color: azure;
 }
 .mainNav .p-toolbar-group-start {
@@ -65,10 +66,14 @@ a:active {
   clear: right;
 }
 
+.mainNav .p-button {
+  background-color: var(--darker-color);
+}
+
 .mainContent {
   margin-top: 4rem;
-  background-color: var(--tertiary-color);
-  color: var(--secondary-color);
+  background-color: var(--lighter-color);
+  color: var(--darker-color);
 }
 
 .p-toast {
@@ -126,7 +131,7 @@ a:active {
 }
 
 .p-datepicker-trigger {
-  background-color: rgb( 63, 81, 181 );
+  background-color: var(--primary-color)
 }
 
 .intro_nav:hover {
@@ -161,5 +166,5 @@ a:active {
 }
 .fixedDrawer a:hover, a:active, a:visited {
   text-decoration: none;
-  color: hsl(246, 56%, 34%);
+  color: var(--primary-color)
 }
