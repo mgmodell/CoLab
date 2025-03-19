@@ -465,7 +465,7 @@ class HomeController < ApplicationController
     e.name = t( :demo_group )
     e.task_name_post = "<br>(#{t :project}: #{t( :demo_project )})"
     e.type = :assessment
-    e.status = t :not_started
+    e.status = 0
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 1.day.ago
@@ -477,11 +477,11 @@ class HomeController < ApplicationController
     @events = [e]
     e = Event_.new
     e.id = -11
-    e.name = t( 'candidate_lists.enter', task: t( 'candidate_lists.demo_topic' ) )
+    e.name =  t( 'candidate_lists.demo_topic' ) 
     e.task_link = terms_demo_entry_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '50%'
+    e.status = 50
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 1.week.ago
@@ -493,12 +493,11 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -77
-    e.name = t( 'candidate_lists.review', task:
-      t( 'candidate_lists.demo_review_topic' ) )
+    e.name = t( 'candidate_lists.demo_review_topic' )
     e.task_link = bingo_demo_review_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '0'
+    e.status = 0
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 3.weeks.ago
@@ -511,12 +510,11 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -88
-    e.name = t( 'candidate_lists.play', task:
-      t( 'candidate_lists.demo_bingo_topic' ) )
+    e.name = t( 'candidate_lists.demo_bingo_topic' )
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '42 concepts'
+    e.status = -1
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 2.weeks.ago

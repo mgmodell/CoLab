@@ -195,6 +195,9 @@ en:
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
     task_type: Task Type
+    terms_lists:
+      insufficient_msg: Not enough terms
+      sufficient_msg: Ready to play
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
     course_confirm: >

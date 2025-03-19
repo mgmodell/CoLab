@@ -138,7 +138,7 @@ export default function TaskList(props: Props) {
         />
         <Column
           header={t("list.task_name")}
-          field={'name'}
+          field={'title'}
           sortable
           className="content-table-data"
           filter
@@ -173,14 +173,24 @@ export default function TaskList(props: Props) {
                 let output = 'No status'
                 switch (params.type) {
                   case 'assessment':
-                    if (0 == params.value) {
+                    if (0 === params.status) {
                       output = t('list.status.incomplete');
                     } else {
                       output = t('list.status.complete');
                     }
                     break;
+                  case 'bingo_game':
+                    if (params.status < 0) {
+                      output = params.status === -1 ? 
+                        t('terms_lists.sufficient_msg') :
+                        t('terms_lists.insufficient_msg');
+                    } else {
+                      output = `${params.status}%`;
+                    }
+                    break;
                   case 'assignment':
                     output = `${params.status} submitted`;
+                    break;
                   default:
                     output = `${params.status}%`;
                 }

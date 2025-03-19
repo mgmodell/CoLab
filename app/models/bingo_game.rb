@@ -94,8 +94,10 @@ class BingoGame < ApplicationRecord
            end
     local_status = if awaiting_review?
                      status
-                   else
+                   elsif is_open?
                      status_for_user( current_user )
+                   else
+                     practicable? ? -1 : -2
                    end
 
     log = course.get_consent_log( user: current_user )

@@ -11,9 +11,9 @@ en:
       zero: no points
       one: 1 point
       other: '%{count} points'
-    review: 'Review: %{task}'
-    enter: 'Enter terms: %{task}'
-    play: 'Play Bingo: %{task}'
+    review: 'Review: {{task}}'
+    enter: 'Enter terms: {{task}}'
+    play: 'Play Bingo: {{task}}'
     demo_term1: The group dynamics
     demo_def1: How members of a group work together
     demo_term2: Cooperation
