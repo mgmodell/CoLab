@@ -15,7 +15,7 @@ body {
 }
 
 a {
-  color: var(--tertiary-color);
+  color: var(--secondary-color);
   text-decoration: none;
 }
 
@@ -23,7 +23,10 @@ a {
   color: var(--tertiary-color);
 }
 
-a:hover,
+a:hover {
+  color: var(--tertiary-color);
+  text-decoration: underline;
+}
 a:active {
   color: var(--tertiary-color);
   text-decoration: underline;
@@ -64,6 +67,8 @@ a:active {
 
 .mainContent {
   margin-top: 4rem;
+  background-color: var(--tertiary-color);
+  color: var(--secondary-color);
 }
 
 .p-toast {

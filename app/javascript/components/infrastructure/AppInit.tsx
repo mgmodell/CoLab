@@ -49,7 +49,7 @@ export default function AppInit(props: Props) {
       "--primary-color",
       primaryColor
     );
-  }, [user]);
+  }, [user.theme]);
 
   useEffect(() => {
     dispatch(setDebug(props.debug));
