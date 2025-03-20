@@ -94,9 +94,8 @@ export default function HomeShell(props: Props) {
                 value.title = t( 'candidate_lists.enter', {task: value.name } );
               }
               break;
+            case "submission":
             case "assignment":
-              value.title = value.name;
-              break;
             case "experience":
               value.title = value.name;
               break;
