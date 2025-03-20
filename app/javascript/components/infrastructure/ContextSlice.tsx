@@ -327,7 +327,6 @@ export const emailSignIn = createAsyncThunk(
           password: params.password
         })
         .then(resp => {
-          console.log("resp", resp);
           if( !resp.data.error ) {
             //TODO resp contains the full user info
             dispatch(
