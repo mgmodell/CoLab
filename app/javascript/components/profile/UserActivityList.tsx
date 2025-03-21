@@ -120,7 +120,10 @@ export default function UserActivityList(props: Props) {
         dataKey="id"
         onRowClick={event => {
           if (event.data.link !== null) {
-            navigate(`/profile/${event.data.link}`);
+            navigate(
+              `/home/${event.data.link}`,
+              { relative: "route" }
+            );
           }
         }}
       >

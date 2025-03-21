@@ -35,17 +35,17 @@ export default function Admin(props) {
           }
         >
           <Route path={`courses/*`} element={<CourseAdmin />} />
-          <Route exact path={`rubrics`} element={<RubricList />} />
+          <Route path={`rubrics`} element={<RubricList />} />
           <Route
             path={`rubrics/:rubricIdParam`}
             element={<RubricDataAdmin />}
           />
-          <Route exact path={`schools`} element={<SchoolList />} />
+          <Route path={`schools`} element={<SchoolList />} />
           <Route
             path={`schools/:schoolIdParam`}
             element={<SchoolDataAdmin />}
           />
-          <Route exact path={`consent_forms`} element={<ConsentFormList />} />
+          <Route path={`consent_forms`} element={<ConsentFormList />} />
           <Route
             path={`consent_forms/:consentFormIDParam`}
             element={<ConsentFormDataAdmin />}

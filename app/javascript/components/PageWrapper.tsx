@@ -116,15 +116,18 @@ export default function PageWrapper(props: Readonly<Props>) {
                 path={`project/checkin/:installmentId`}
                 element={<InstallmentReport />}
               />
-              {/* Perhaps subgroup under Bingo */}
-              <Route path="bingo/*" element={<BingoShell />} />
+              <Route
+                path="bingo/*"
+                element={<BingoShell />} />
               {/* Perhaps subgroup under Experience */}
               <Route
                 path={`experience/:experienceId`}
                 element={<Experience />}
               />
               {/* Perhaps subgroup under Assignment */}
-              <Route path={`assignment/*`} element={<AssignmentShell />} />
+              <Route
+                path={`assignment/*`}
+                element={<AssignmentShell />} />
               <Route
                 path={`research_information/:consentFormId`}
                 element={<ConsentLog />}

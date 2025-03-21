@@ -19,7 +19,6 @@ import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Panel } from "primereact/panel";
-import { ToggleButton } from "primereact/togglebutton";
 import { Col, Container, Row } from "react-grid-system";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 import { SelectButton } from "primereact/selectbutton";
@@ -144,10 +143,9 @@ export default function CritiqueShell(props: Props) {
   const dispatch = useDispatch();
 
   const { assignmentId } = useParams();
-  const [filterText, setFilterText] = useState("");
   const [visibleColumns, setVisibleColumns] = useState([]);
 
-  const [t, i18n] = useTranslation(`${category}s`);
+  const [t] = useTranslation(`${category}s`);
   const [panels, setPanels] = useState(() => ['submissions'])
   const [submissionsIndex, setSubmissionsIndex] = useState(Array<ISubmissionCondensed>);
   const [assignmentAcceptsText, setAssignmentAcceptsText] = useState(false);

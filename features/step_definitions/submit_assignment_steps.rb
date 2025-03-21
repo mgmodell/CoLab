@@ -98,7 +98,7 @@ end
 
 Then( 'the user opens the assignment history item' ) do
   wait_for_render
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@assignment.name}')]" ).click
+  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
 
   wait_for_render
 end
