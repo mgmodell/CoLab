@@ -84,3 +84,61 @@ Then( 'user should see login form' ) do
   wait_for_render
   page.should have_content 'Log in!'
 end
+
+Given('there is a registered user') do
+  @user = User.new(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Faker::Internet.email,
+    timezone: 'UTC'
+  )
+  @user.skip_confirmation!
+  @user.save
+  log @user.errors.full_messages if @user.errors.present?
+end
+
+Given('the user {string} confirmed') do |confirmed_status|
+  @user.welcomed = confirmed_status == 'is' ? true : false
+  @user.save
+  log @user.errors.full_messages if @user.errors.present?
+end
+
+Then('the user {string} see the {string} page') do |landing_status, page_identifier|
+  has_text?( page_identifier ).should be landing_status == 'does'
+end
+
+Then('the user sets the {string} to {string}') do |field, value|
+  case field
+    when 'first name'
+      fill_in 'first-name', with: value
+      @user.first_name = value
+    when 'last name'
+      fill_in 'last-name', with: value
+      @user.last_name = value
+    else
+      true.should be false
+  end
+end
+
+Then('the user saves the profile') do
+  click_link_or_button 'Save Profile'
+  wait_for_render
+  has_text?( 'Profile saved' ).should be true
+end
+
+Then('the user sees the name {string} {string}') do |field, value|
+  find( :id, field ).value.should eq value
+end
+
+Then('the user {string} is {string}') do |field, value|
+  case field
+    when 'first name'
+      find( :id, 'first-name' ).value.should eq value
+    when 'last name'
+      find( :id, 'last-name' ).value.should eq value
+    else
+      true.should be false
+  end
+end

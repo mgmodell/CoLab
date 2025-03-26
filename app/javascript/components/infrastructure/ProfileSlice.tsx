@@ -1,5 +1,5 @@
 import axios from "axios";
-import { startTask, endTask } from "./StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
 import i18n from "i18next";
@@ -211,9 +211,11 @@ export const persistProfile = createAsyncThunk(
         Settings.defaultZone = tz_hash[user.timezone];
         dispatch(setRetrievedProfile(user));
         dispatch(endTask("loading"));
+        dispatch(addMessage("Profile saved", new Date(), Priorities.INFO ));
       })
       .catch(error => {
         console.log("error", error);
+        dispatch(addMessage("Profile not saved", new Date(), Priorities.ERROR ));
       });
   }
 );
