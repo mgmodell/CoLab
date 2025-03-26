@@ -1,5 +1,11 @@
 namespace :migratify do
 
+  desc 'Set default theme color'
+  task default_theme_colors_2025: :environment do
+    User.where( theme: nil ).update_all( theme: '007bff' )
+
+  end
+
   desc 'Updating the rails counter caches'
   task update_counters: :environment do
     ActiveRecord::Base.transaction do

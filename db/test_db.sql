@@ -5012,7 +5012,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20240322142847'),
 ('20240406181047'),
 ('20250130032658'),
-('20250317224044');
+('20250317224044'),
+('20250326133734');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5234,7 +5235,7 @@ CREATE TABLE `users` (
   `tokens` text DEFAULT NULL,
   `instructor` tinyint(1) NOT NULL DEFAULT 0,
   `active` tinyint(1) NOT NULL DEFAULT 1,
-  `theme` varchar(6) DEFAULT NULL,
+  `theme` varchar(255) NOT NULL DEFAULT '007bff',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_users_on_uid_and_provider` (`uid`,`provider`),
   UNIQUE KEY `index_users_on_confirmation_token` (`confirmation_token`),
@@ -5261,7 +5262,7 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'$2a$04$CaDetLlxhfe65uYCvlL91O7wEhBwXc5ucNtVlholavm2KpDmAmbzG',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2019-09-23 11:40:17','2020-08-11 03:13:58','Micah','Modell',NULL,NULL,'UTC',1,NULL,NULL,NULL,'Ashley','Welch',NULL,40,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'email','micah.modell@gmail.com',NULL,0,1,NULL);
+(1,'$2a$04$CaDetLlxhfe65uYCvlL91O7wEhBwXc5ucNtVlholavm2KpDmAmbzG',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2019-09-23 11:40:17','2020-08-11 03:13:58','Micah','Modell',NULL,NULL,'UTC',1,NULL,NULL,NULL,'Ashley','Welch',NULL,40,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'email','micah.modell@gmail.com',NULL,0,1,'007bff');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5508,4 +5509,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-17 22:14:05
+-- Dump completed on 2025-03-26  9:47:01
