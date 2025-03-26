@@ -117,6 +117,12 @@ Then('the user sets the {string} to {string}') do |field, value|
     when 'last name'
       fill_in 'last-name', with: value
       @user.last_name = value
+    when 'birth date'
+      fill_in 'profile_date_of_birth', with: value
+      @user.date_of_birth = Chronic.parse( value )
+    when 'start school date'
+      fill_in 'profile_primary_start_school', with: value
+      @user.started_school = Chronic.parse( value )
     else
       true.should be false
   end
@@ -132,13 +138,33 @@ Then('the user sees the name {string} {string}') do |field, value|
   find( :id, field ).value.should eq value
 end
 
-Then('the user {string} is {string}') do |field, value|
+Then('the user sees the {string} is {string}') do |field, value|
   case field
     when 'first name'
       find( :id, 'first-name' ).value.should eq value
     when 'last name'
       find( :id, 'last-name' ).value.should eq value
+    when 'birth date'
+      find( :xpath, '//input[@id="profile_date_of_birth"]' ).value.should eq value
+    when 'start school date'
+      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq value
     else
       true.should be false
   end
+end
+
+Then('the user opens the demographics pane') do
+  el = find( :xpath, "//a[contains(.,'Tell us about yourself')]" )
+  el.click if el['aria-expanded'] == 'false'
+end
+
+Then('the most recent user is the same as the current user') do
+  u = User.last
+  u.first_name.should eq @user.first_name
+  u.last_name.should eq @user.last_name
+  u.email.should eq @user.email
+  u.timezone.should eq @user.timezone
+  u.theme.should eq @user.theme
+  u.date_of_birth.should eq @user.date_of_birth
+  u.started_school.should eq @user.started_school
 end
