@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 const ReactionsList = React.lazy(() => import("./ReactionsList"));
 
@@ -25,6 +26,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { Calendar } from "primereact/calendar";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import parse from 'html-react-parser';
+import { FloatLabel } from "primereact/floatlabel";
 
 interface IExperience {
   id: string;
@@ -246,21 +248,40 @@ export default function ExperienceDataAdmin(props) {
 
       <span>{t('timezone_warning', {timezone: parse( courseTimezone ) } )}</span>
       <span className="p-float-label">
+      <FloatLabel>
         <Calendar
-          id="experience_dates"
-          value={[experienceStartDate, experienceEndDate]}
+          id="experience_start_date"
+          inputId="experience_start_date"
+          value={utcAdjustDate(experienceStartDate)}
           onChange={event => {
             const changeTo = event.value;
-            if (null !== changeTo && changeTo.length > 1) {
-              setExperienceStartDate(changeTo[0]);
-              setExperienceEndDate(changeTo[1]);
+            if (null !== changeTo) {
+              setExperienceStartDate(changeTo);
             }
-          }}
-          selectionMode="range"
+          }
+          }
           showOnFocus={false}
           showIcon={true}
         />
-        <label htmlFor="experience_start_date">{t('date_range')}</label>
+        <label htmlFor="experience_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel> {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="experience_end_date"
+          inputId="experience_end_date"
+          value={utcAdjustEndDate(experienceEndDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo) {
+              setExperienceEndDate(changeTo);
+            }
+          }
+          }
+          showOnFocus={false}
+          showIcon={true}
+        />
+        <label htmlFor="experience_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
       </span>
 
       <br />

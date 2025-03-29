@@ -54,9 +54,11 @@ Feature: Experience Administration
      And the experience "name" is "Jimmy Hendrix"
      And the experience "lead_time" is 3
      And the experience start date is "5/10/1976" and the end date is "tomorrow"
+    Then the user sees the 'experience' 'start date' is '05/10/1976'
+    Then the user sees the 'experience' 'end date' is 'tomorrow'
 
 @javascript
-  Scenario: Instructor creates a new Experience
+  Scenario: Instructor creates a new Experience and student can see it
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
@@ -71,9 +73,13 @@ Feature: Experience Administration
      And the user waits to see "success"
      Then close all messages
     #Let's check the values stored
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
 
 @javascript
   Scenario: Instructor edits an existing Experience
@@ -95,6 +101,8 @@ Feature: Experience Administration
      And the experience "name" is "Bob Marley"
      And the experience "lead_time" is 3
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
 
 @javascript
   Scenario: Instructor edits an existing Experience with lead time
@@ -117,4 +125,6 @@ Feature: Experience Administration
      And the experience "name" is "Bob Marley"
      And the experience "lead_time" is 5
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
 

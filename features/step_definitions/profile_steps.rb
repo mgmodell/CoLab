@@ -148,7 +148,9 @@ Then('the user sees the {string} is {string}') do |field, value|
     when 'birth date'
       find( :xpath, '//input[@id="profile_date_of_birth"]' ).value.should eq value
     when 'start school date'
-      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq value
+      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime('%m/%d/%Y')
+    when 'start date'
+      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime('%m/%d/%Y')
     else
       true.should be false
   end

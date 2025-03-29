@@ -19,7 +19,7 @@ import {
   setLocalLanguage,
   IUser
 } from "../infrastructure/ProfileSlice";
-import { utcAdjust } from "../infrastructure/Utilities";
+import { utcAdjustString } from "../infrastructure/Utilities";
 
 import { Button } from "primereact/button";
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -505,7 +505,7 @@ export default function ProfileDataAdmin(props: Props) {
                     id="profile_primary_start_school"
                     inputId="profile_primary_start_school"
                     name="profile_primary_start_school"
-                    value={utcAdjust(user.started_school)}
+                    value={utcAdjustString(user.started_school)}
                     onChange={date => setProfileStartedSchool(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
@@ -632,7 +632,7 @@ export default function ProfileDataAdmin(props: Props) {
                     id="profile_date_of_birth"
                     inputId="profile_date_of_birth"
                     name="profile_date_of_birth"
-                    value={utcAdjust(user.date_of_birth)}
+                    value={utcAdjustString(user.date_of_birth)}
                     onChange={date => setProfileDOB(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
