@@ -145,7 +145,6 @@ Then( 'the user sets the {string} start date to {string} and the end date to {st
   # datefield = find( :xpath, "//span[@id='#{item_type}_dates']/input" )
   # dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
 
-  byebug
   datefield = find( :xpath, "//span[@id='#{item_type}_start_date']/input" )
   date_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )}"
 
