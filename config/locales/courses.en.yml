@@ -18,6 +18,11 @@ en:
     new_activity: New Activity
     checkin_record: Check-in Record
     email: Email
+    start_date_lbl: Start Date
+    end_date_lbl: End Date
+    start_date_placeholder: Click to select the start date
+    end_date_placeholder: Click to select the close date
+    date_to_lbl: until
     experience_completion: Experience Completion
     actions: Actions
     copy_cancel_btn: Cancel

@@ -247,7 +247,6 @@ export default function ExperienceDataAdmin(props) {
       <label htmlFor="experience-active">{t('active')}</label><br />
 
       <span>{t('timezone_warning', {timezone: parse( courseTimezone ) } )}</span>
-      <span className="p-float-label">
       <FloatLabel>
         <Calendar
           id="experience_start_date"
@@ -282,7 +281,6 @@ export default function ExperienceDataAdmin(props) {
         />
         <label htmlFor="experience_end_date">{t('end_date_lbl')}</label>
       </FloatLabel>
-      </span>
 
       <br />
 

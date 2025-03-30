@@ -28,8 +28,10 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
+import { FloatLabel } from "primereact/floatlabel";
 import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 interface IActivityLink {
   name: string;
@@ -358,31 +360,42 @@ export default function CourseDataAdmin() {
       <label htmlFor="course_dates" id="course_dates_lbl">
         {t('edit.dates')}
       </label>
-      <Calendar
-        id="course_dates"
-        selectionMode={'range'}
-        value={[course.start_date, course.end_date]}
-        placeholder="Select a Date Range"
-        showIcon={true}
-        showOnFocus={false}
-        onChange={event => {
-          const changeTo = event.value;
-          if (null !== changeTo && changeTo.length > 1) {
-            setCourse(course => {
-              return {
-                ...course,
-                start_date: changeTo[0],
-                end_date: changeTo[1]
-              };
-            })
-
+      <FloatLabel>
+        <Calendar
+          id="course_start_date"
+          inputId="course_start_date"
+          value={utcAdjustDate(course.start_date)}
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo) {
+              setCourseValue('start_date', changeTo);
+            }
           }
-        }}
-
-      />
+          }
+          showOnFocus={false}
+          showIcon={true}
+        />
+        <label htmlFor="course_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel>
       {Boolean(messages["start_date"]) ? (
         <Message severity="error" text={messages["start_date"]} />
       ) : null}
+      {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="course_end_date"
+          inputId="course_end_date"
+          value={utcAdjustEndDate(course.end_date)}
+          onChange={event => {
+            const changeTo = event.value;
+            setCourseValue('end_date', changeTo);
+          }
+          }
+          showOnFocus={false}
+          showIcon={true}
+        />
+        <label htmlFor="course_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
 
       {Boolean(messages["end_date"]) ? (
         <Message severity="error" text={messages["end_date"]} />

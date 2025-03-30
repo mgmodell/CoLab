@@ -14,6 +14,11 @@ en:
       text_sub: Text entered directly into CoLab?
       link_sub: Links (URLs) to the submissions?
       file_sub: File uploads?
+      start_date_lbl: Start Date
+      start_date_placeholder: Click to select the start date
+      end_date_lbl: Close Date
+      end_date_placeholder: Click to select the close date
+      date_to_lbl: until
       status_saving: Saving assignment
     show:
       title: Assignment Details

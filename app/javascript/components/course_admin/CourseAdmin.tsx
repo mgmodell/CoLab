@@ -9,7 +9,7 @@ const BingoGameDataAdmin = React.lazy(() =>
 const ExperienceDataAdmin = React.lazy(() =>
   import("../experiences/ExperienceDataAdmin")
 );
-const ProjectDataAdmin = React.lazy(() => import("./ProjectDataAdmin"));
+const ProjectDataAdmin = React.lazy(() => import("../projects/ProjectDataAdmin"));
 const AssignmentDataAdmin = React.lazy(() =>
   import("../assignments/AssignmentDataAdmin")
 );

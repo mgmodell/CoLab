@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+import { FloatLabel } from "primereact/floatlabel";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -28,6 +29,7 @@ import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import parse from 'html-react-parser';
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
@@ -260,25 +262,42 @@ export default function ProjectDataAdmin(props) {
       <label htmlFor="active">{t("active_switch")}</label>
 
       <span>{t('timezone_warning', { timezone: courseTimezone } )}</span>
-      <span className="p-float-label">
+      <FloatLabel>
         <Calendar
-          id="project_dates"
-          value={[projectStartDate, projectEndDate]}
-          selectionMode="range"
+          id="project_start_date"
+          inputId="project_start_date"
+          value={utcAdjustDate(projectStartDate)}
           onChange={event => {
             const changeTo = event.value;
-            if (null !== changeTo && changeTo.length > 1) {
-              setProjectStartDate(changeTo[0]);
-              setProjectEndDate(changeTo[1]);
+            if (null !== changeTo) {
+              setProjectStartDate(changeTo);
             }
-          }}
-          showIcon={true}
+          }
+          }
           showOnFocus={false}
-          inputId="project_start_dates"
-          name="project_start_dates"
+          placeholder={t('start_date_placeholder')}
+          showIcon={true}
         />
-        <label htmlFor="project_start_date">{t("project_dates")}</label>
-      </span>
+        <label htmlFor="project_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel> {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="project_end_date"
+          inputId="project_end_date"
+          value={utcAdjustEndDate(projectEndDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo) {
+              setProjectEndDate(changeTo);
+            }
+          }
+          }
+          showOnFocus={false}
+          placeholder={t('end_date_placeholder')}
+          showIcon={true}
+        />
+        <label htmlFor="project_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
       <br />
       <span className="p-float-label w-full">
         <Dropdown

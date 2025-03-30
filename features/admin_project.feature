@@ -36,6 +36,8 @@ Feature: Project Administration
      And the user waits to see "success"
     Then close all messages
     #Let's check the values stored
+    Then the user sees the 'project' 'start date' is '02/29/1980'
+    Then the user sees the 'project' 'end date' is '07/10/2008'
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
     Then the project "Description" is "this is the coolest"
@@ -99,6 +101,8 @@ Feature: Project Administration
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
+    Then the user sees the 'project' 'start date' is '05/10/1976'
+    Then the user sees the 'project' 'end date' is '02/29/1980'
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -188,6 +192,8 @@ Feature: Project Administration
     Then the user clicks "Create Project"
      And the user waits to see "success"
     Then close all messages
+    Then the user sees the 'project' 'start date' is '02/29/1980'
+    Then the user sees the 'project' 'end date' is '07/10/2008'
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -211,6 +217,8 @@ Feature: Project Administration
     Then the user clicks "Save Project"
      And the user waits to see "success"
     Then close all messages
+    Then the user sees the 'project' 'start date' is '05/10/1976'
+    Then the user sees the 'project' 'end date' is '02/29/1980'
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db

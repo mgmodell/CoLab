@@ -35,6 +35,8 @@ Feature: Bingo Administration
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
     Then close all messages
+    Then the user sees the 'bingo_game' 'start date' is '02/29/1980'
+    Then the user sees the 'bingo_game' 'end date' is '07/10/2008'
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"

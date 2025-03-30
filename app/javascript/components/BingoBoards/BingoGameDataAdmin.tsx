@@ -20,12 +20,14 @@ import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { Calendar } from "primereact/calendar";
+import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
@@ -344,25 +346,42 @@ export default function BingoGameDataAdmin(props) {
 
               <Row>
                 <Col xs={4}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <Calendar
-                      id="bingo_game_dates"
-                      value={[gameStartDate, gameEndDate]}
+                      id="bingo_game_start_date"
+                      inputId="bingo_game_start_date"
+                      value={utcAdjustDate(gameStartDate)}
                       onChange={event => {
                         const changeTo = event.value;
-                        if (null !== changeTo && changeTo.length > 1) {
-                          setGameStartDate(changeTo[0]);
-                          setGameEndDate(changeTo[1]);
+                        if (null !== changeTo) {
+                          setGameStartDate(changeTo);
                         }
-                      }}
-                      selectionMode="range"
-                      showIcon={true}
+                      }
+                      }
                       showOnFocus={false}
-                      inputId="bingo_game_dates"
-                      name="bingo_game_dates"
+                      placeholder={t("start_date_placeholder")}
+                      showIcon={true}
                     />
-                    <label htmlFor="bingo_game_dates">{t("game_dates")}</label>
-                  </span>
+                    <label htmlFor="bingo_game_start_date">{t('start_date_lbl')}</label>
+                  </FloatLabel> {t('date_to_lbl')}
+                  <FloatLabel>
+                    <Calendar
+                      id="bingo_game_end_date"
+                      inputId="bingo_game_end_date"
+                      value={utcAdjustEndDate(gameEndDate)}
+                      onChange={event => {
+                        const changeTo = event.value;
+                        if (null !== changeTo) {
+                          setGameEndDate(changeTo);
+                        }
+                      }
+                      }
+                      showOnFocus={false}
+                      placeholder={t("end_date_placeholder")}
+                      showIcon={true}
+                    />
+                    <label htmlFor="bingo_game_end_date">{t('end_date_lbl')}</label>
+                  </FloatLabel>
                 </Col>
                 <Col xs={4}>
                   <InputSwitch
@@ -403,7 +422,7 @@ export default function BingoGameDataAdmin(props) {
                   <ConceptChips concepts={concepts} />
                 </Col>
                 <Col xs={7}>
-                  <h5>{t("scored_game.average_score")}:&nbsp;{ Math.round( averageScore * 100 )/100}</h5>
+                  <h5>{t("scored_game.average_score")}:&nbsp;{Math.round(averageScore * 100) / 100}</h5>
                   <BingoGameDataAdminTable results_raw={resultData} />
                   <br />
                   <ResponsesWordCloud

@@ -16,6 +16,9 @@ en:
     game_dates: Game availability dates
     open_date: Open date
     close_date: Game date
+    start_date_lbl: Start date
+    end_date_lbl: End date
+    date_to_lbl: until
     lead_time: Days for instructor review
     review_candidates:
       title: Candidate Terms for Review

@@ -162,6 +162,8 @@ Feature: Course Administration
     Then the user clicks "Save Course"
      And the user will see "successfully"
      Then close all messages
+    Then the user sees the 'course' 'start date' is '05/11/1976'
+    Then the user sees the 'course' 'end date' is 'next month'
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is "099"

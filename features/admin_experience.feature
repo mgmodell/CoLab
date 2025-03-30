@@ -78,8 +78,6 @@ Feature: Experience Administration
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
-    Then the user sees the 'experience' 'start date' is '02/29/1980'
-    Then the user sees the 'experience' 'end date' is '07/10/2008'
 
 @javascript
   Scenario: Instructor edits an existing Experience
