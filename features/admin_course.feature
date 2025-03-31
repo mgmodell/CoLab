@@ -62,7 +62,7 @@ Feature: Course Administration
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user sets the start date to "tomorrow" and the end date to "next month"
+     And the user sets the "course" start date to "tomorrow" and the end date to "next month"
      And the timezone "is" "Nairobi"
      And the timezone "isn't" "Mexico City"
     Then close all messages
@@ -117,7 +117,7 @@ Feature: Course Administration
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to ""
      And the user sets the "Description" field to ""
-     And the user sets the start date to "tomorrow" and the end date to "next month"
+     And the user sets the "course" start date to "tomorrow" and the end date to "next month"
      And the timezone "is" "Nairobi"
      And the timezone "isn't" "Mexico City"
     Then close all messages
@@ -155,7 +155,7 @@ Feature: Course Administration
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user sets the start date to "5/11/1976" and the end date to "next month"
+     And the user sets the "course" start date to "5/11/1976" and the end date to "next month"
      And the timezone "is" "Mexico City"
      And the user sets the course timezone to "Nairobi"
     Then close all messages

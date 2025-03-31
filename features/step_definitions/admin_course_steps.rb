@@ -14,20 +14,6 @@ Given "the user's school is {string}" do | school_name |
   @user.save
 end
 
-Then 'the user sets the start date to {string} and the end date to {string}' do | start_date, end_date |
-  datefield = find( :xpath, "//span[@id='course_dates']/input" )
-  datefield.click
-
-  send_keys :escape
-
-  send_keys [:command, 'a'], :backspace
-  send_keys [:control, 'a'], :backspace
-
-  dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
-
-  datefield.fill_in with: dates_string
-end
-
 Then 'the timezone {string} {string}' do | is_or_isnt, timezone |
   field_lbl = 'Time Zone'
   lbl = find( :xpath, "//label[contains(.,'#{field_lbl}')]" )

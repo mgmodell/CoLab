@@ -8,9 +8,12 @@ const utcAdjustString = (date: string) => {
 };
 
 const utcAdjustEndDate = (date: Date) => {
-  const tmpDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-  return new Date( tmpDate.setHours(tmpDate.getHours() - 23) - 59 * 60000 );
-
+  if (date == null) {
+    return date;
+  } else {
+    const tmpDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return new Date( tmpDate.setHours(tmpDate.getHours() - 23) - 59 * 60000 );
+  }
 }
 
 export { utcAdjustString, utcAdjustDate, utcAdjustEndDate }; 

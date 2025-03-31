@@ -163,8 +163,8 @@ Then( 'the user sets the {string} start date to {string} and the end date to {st
 
   send_keys :escape
 
-  send_keys [:command, 'a'], :backspace
-  send_keys [:control, 'a'], :backspace unless datefield.value.empty?
+  send_keys [:command, 'a'], :backspace 
+  send_keys [:control, 'a'], :backspace unless datefield.nil? || datefield.value.empty?
   send_keys date_string
 end
 
