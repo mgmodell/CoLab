@@ -5,6 +5,11 @@ en:
     multiple: Research Participation
     not_for_research: Not for Research
     consent_form: Research Consent Form
+    start_date_lbl: Start date
+    start_date_placeholder: Enter start date
+    end_date_placeholder: Enter end date
+    end_date_lbl: End date
+    date_to_lbl: until
     edit:
       title: Consent Form
       create_btn: Create consent form
