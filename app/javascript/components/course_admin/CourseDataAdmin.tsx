@@ -370,8 +370,7 @@ export default function CourseDataAdmin() {
             if (null !== changeTo) {
               setCourseValue('start_date', changeTo);
             }
-          }
-          }
+          } }
           showOnFocus={false}
           showIcon={true}
         />
@@ -389,8 +388,7 @@ export default function CourseDataAdmin() {
           onChange={event => {
             const changeTo = event.value;
             setCourseValue('end_date', changeTo);
-          }
-          }
+          } }
           showOnFocus={false}
           showIcon={true}
         />

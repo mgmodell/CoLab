@@ -89,7 +89,7 @@ Feature: Course Administration
      And the user sets the "Name" field to ""
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-    Then the user sets the "project" start date to "tomorrow" and the end date to "next month"
+    Then the user sets the "course" start date to "tomorrow" and the end date to "next month"
      And the timezone "is" "Nairobi"
      And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
