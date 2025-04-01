@@ -32,8 +32,8 @@ Feature: Assignment administration
     Then the user selects the "Ruby 2" version 1 rubric
     Then the user clicks "Create Assignment"
     Then close all messages
-    Then the user sees the 'project' 'start date' is '07/29/1984'
-    Then the user sees the 'project' 'end date' is '02/10/1985'
+    Then the user sees the 'assignment' 'start date' is '07/29/1984'
+    Then the user sees the 'assignment' 'end date' is '02/10/1985'
     #Csheck what was saved
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
@@ -77,8 +77,8 @@ Feature: Assignment administration
     Then the user clicks "Create Assignment"
     Then close all messages
     #Csheck what was saved
-    Then the user sees the 'project' 'start date' is '07/29/1984'
-    Then the user sees the 'project' 'end date' is '02/10/1985'
+    Then the user sees the 'assignment' 'start date' is '07/29/1984'
+    Then the user sees the 'assignment' 'end date' is '02/10/1985'
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
@@ -104,8 +104,8 @@ Feature: Assignment administration
     Then the user clicks "Create Assignment"
     Then close all messages
     #Check what was saved
-    Then the user sees the 'project' 'start date' is '07/29/1984'
-    Then the user sees the 'project' 'end date' is '02/10/1985'
+    Then the user sees the 'assignment' 'start date' is '07/29/1984'
+    Then the user sees the 'assignment' 'end date' is '02/10/1985'
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
@@ -213,8 +213,8 @@ Feature: Assignment administration
     Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
-    Then the user sees the 'project' 'start date' is '05/10/1976'
-    Then the user sees the 'project' 'end date' is '06/09/2000'
+    Then the user sees the 'assignment' 'start date' is '05/10/1976'
+    Then the user sees the 'assignment' 'end date' is '06/09/2000'
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment "close" field is "6/9/2000"
 
