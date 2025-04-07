@@ -219,15 +219,15 @@ export default function ExperienceDataAdmin(props) {
 
   const detailsComponent = (
     <Panel>
-      <span className="p-float-label">
+      <FloatLabel>
         <InputText
           id="experience-name"
           value={experienceName}
           onChange={event => setExperienceName(event.target.value)}
         />
         <label htmlFor="experience-name">{t('name')}</label>
-      </span>
-      <span className="p-float-label">
+      </FloatLabel>
+      <FloatLabel>
         <InputText
           id="experience-lead-time"
           value={experienceLeadTime.toString()}
@@ -237,7 +237,7 @@ export default function ExperienceDataAdmin(props) {
           type="number"
         />
         <label htmlFor="experience-lead-time">{t('lead_time_lbl')}</label>
-      </span>
+      </FloatLabel>
 
 
       <InputSwitch

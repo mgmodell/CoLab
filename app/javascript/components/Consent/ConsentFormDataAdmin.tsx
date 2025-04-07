@@ -183,7 +183,7 @@ export default function ConsentFormDataAdmin(props) {
       <Container>
         <Row>
           <Col xs={12}>
-            <span className="p-float-label">
+            <FloatLabel>
               <InputText
                 id="consent_form-name"
                 itemID="consent_form-name"
@@ -191,7 +191,7 @@ export default function ConsentFormDataAdmin(props) {
                 onChange={event => setConsentFormName(event.target.value)}
               />
               <label htmlFor="consent_form-name">{t("name")}</label>
-            </span>
+            </FloatLabel>
           </Col>
           <Col xs={12} sm={5}>
       <FloatLabel>

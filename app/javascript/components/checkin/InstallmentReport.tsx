@@ -22,6 +22,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
+import { FloatLabel } from "primereact/floatlabel";
 
 interface IContribution {
   userId: number;
@@ -318,7 +319,7 @@ export default function InstallmentReport(props: Props) {
         <br />
         <Accordion>
           <AccordionTab header={t("comment_prompt")}>
-            <span className="p-float-label">
+            <FloatLabel>
               <InputTextarea
                 value={installment.comments || ""}
                 name="comments"
@@ -328,7 +329,7 @@ export default function InstallmentReport(props: Props) {
                 onChange={updateComments}
               />
               <label htmlFor="Comments">{t("comment_input_prompt")}</label>
-            </span>
+            </FloatLabel>
           </AccordionTab>
         </Accordion>
       </Suspense>

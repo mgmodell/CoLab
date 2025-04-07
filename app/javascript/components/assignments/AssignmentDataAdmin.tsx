@@ -255,7 +255,7 @@ export default function AssignmentDataAdmin(props) {
   const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Col xs={6}>
-        <span className="p-float-label w-full">
+        <FloatLabel>
           <Dropdown
             id="assignment_project_id"
             value={assignmentGroupProjectId}
@@ -270,7 +270,7 @@ export default function AssignmentDataAdmin(props) {
           <label htmlFor="assignment_project_id">
             {t("edit.group_source")}
           </label>
-        </span>
+        </FloatLabel>
       </Col>
     </Suspense>
   ) : null;
@@ -286,7 +286,7 @@ export default function AssignmentDataAdmin(props) {
             <Container>
               <Row>
                 <Col xs={12}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputText
                       id='name'
                       value={assignmentName}
@@ -294,7 +294,7 @@ export default function AssignmentDataAdmin(props) {
                       type="text"
                     />
                     <label htmlFor="name">{t("name")}</label>
-                  </span>
+                  </FloatLabel>
                 </Col>
                 <Col xs={12}>
                   <Editor
@@ -349,7 +349,7 @@ export default function AssignmentDataAdmin(props) {
                   </div>
                 </Col>
                 <Col xs={6}>
-                  <span className="p-float-label w-full">
+                  <FloatLabel>
                     <Dropdown
                       id="assignment_rubric_id"
                       value={assignmentRubricId}
@@ -372,7 +372,7 @@ export default function AssignmentDataAdmin(props) {
                     <label htmlFor="assignment_rubric_id">
                       {t("edit.select_rubric")}
                     </label>
-                  </span>
+                  </FloatLabel>
 
                 </Col>
                 <Col xs={4}>

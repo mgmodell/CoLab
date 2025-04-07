@@ -14,6 +14,7 @@ import { Panel } from "primereact/panel";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import parse from "html-react-parser";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function ScoreBingoWorksheet(props) {
   const category = "bingo_game";
@@ -151,7 +152,7 @@ export default function ScoreBingoWorksheet(props) {
         </Row>
         <Row>
           <Col xs={12} sm={6}>
-            <span className="p-float-label">
+            <FloatLabel>
               <InputText
                 id="score"
                 value={performance.toString()}
@@ -161,7 +162,7 @@ export default function ScoreBingoWorksheet(props) {
                 }}
               />
               <label htmlFor="score">{t("score")}</label>
-            </span>
+            </FloatLabel>
           </Col>
           <Col xs={12} sm={6}>
             <label htmlFor={imgFileDataId}>

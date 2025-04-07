@@ -234,7 +234,7 @@ export default function ProjectDataAdmin(props) {
 
   const detailsComponent = (
     <Panel>
-      <span className="p-float-label">
+      <FloatLabel>
         <InputText
           id="name"
           itemID="name"
@@ -242,8 +242,8 @@ export default function ProjectDataAdmin(props) {
           onChange={event => setProjectName(event.target.value)}
         />
         <label htmlFor="name">{t("name_lbl")}</label>
-      </span>
-      <span className="p-float-label">
+      </FloatLabel>
+      <FloatLabel>
         <InputTextarea
           id="description"
           itemID="description"
@@ -251,7 +251,7 @@ export default function ProjectDataAdmin(props) {
           onChange={event => setProjectDescription(event.target.value)}
         />
         <label htmlFor="description">{t("description_lbl")}</label>
-      </span>
+      </FloatLabel>
       <InputSwitch
         checked={projectActive}
         onChange={() => toggleActive()}
@@ -299,7 +299,7 @@ export default function ProjectDataAdmin(props) {
         <label htmlFor="project_end_date">{t('end_date_lbl')}</label>
       </FloatLabel>
       <br />
-      <span className="p-float-label w-full">
+      <FloatLabel>
         <Dropdown
           id="start_dow"
           itemID="start_dow"
@@ -311,8 +311,8 @@ export default function ProjectDataAdmin(props) {
           optionValue="id"
         />
         <label htmlFor="start_dow">{t("opens")}</label>
-      </span>
-      <span className="p-float-label w-full">
+      </FloatLabel>
+      <FloatLabel>
         <Dropdown
           id="end_dow"
           inputId="end_dow"
@@ -324,9 +324,9 @@ export default function ProjectDataAdmin(props) {
           optionValue="id"
         />
         <label htmlFor="end_dow">{t("closes")}</label>
-      </span>
+      </FloatLabel>
 
-      <span className="p-float-label">
+      <FloatLabel>
         <Dropdown
           id="style"
           inputId="style"
@@ -339,8 +339,8 @@ export default function ProjectDataAdmin(props) {
           optionValue="id"
         />
         <label htmlFor="style">{t("style")}</label>
-      </span>
-      <span className="p-float-label">
+      </FloatLabel>
+      <FloatLabel>
         <Dropdown
           id="factor_pack"
           inputId="factor_pack"
@@ -352,7 +352,7 @@ export default function ProjectDataAdmin(props) {
           optionValue="id"
         />
         <label htmlFor="factor_pack">{t("factor_pack")}</label>
-      </span>
+      </FloatLabel>
       <br />
       {saveButton}
     </Panel>

@@ -14,6 +14,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { RadioButton } from "primereact/radiobutton";
 import { Container, Row, Col } from "react-grid-system";
 import { di } from "@fullcalendar/core/internal-common";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   reactionFunc: Function;
@@ -56,7 +57,7 @@ export default function ExperienceReaction(props: Props) {
   );
   const otherPnl =
     0 !== behaviorId && getById(behaviors, behaviorId).needs_detail ? (
-      <div className="p-float-label">
+      <FloatLabel>
         <InputText
           itemID="otherName"
           value={otherName}
@@ -65,7 +66,7 @@ export default function ExperienceReaction(props: Props) {
           }}
         />
         <label htmlFor="otherName">{t("next.other")}</label>
-      </div>
+      </FloatLabel>
     ) : null;
 
   const resetData = () => {
@@ -130,7 +131,7 @@ export default function ExperienceReaction(props: Props) {
         <Row>
           <Col xs={12}>
             <h3>{t("reaction.improve")}</h3>
-            <div className="p-float-label">
+            <FloatLabel>
               <InputTextarea
                 id="improvements"
                 itemID="improvements"
@@ -142,7 +143,7 @@ export default function ExperienceReaction(props: Props) {
                 cols={30}
               />
               <label htmlFor="improvements">{t("reaction.suggest")}</label>
-            </div>
+            </FloatLabel>
 
           </Col>
         </Row>

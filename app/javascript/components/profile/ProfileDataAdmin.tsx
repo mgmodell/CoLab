@@ -34,6 +34,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { Container, Row, Col } from "react-grid-system";
 import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   // profileId: number;
@@ -337,7 +338,7 @@ export default function ProfileDataAdmin(props: Props) {
           <Container>
             <Row>
               <Col sm={6} xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputText
                     id="first-name"
                     itemID="first-name"
@@ -346,10 +347,10 @@ export default function ProfileDataAdmin(props: Props) {
                     onChange={event => setProfileFirstName(event.target.value)}
                   />
                   <label htmlFor="first-name">{t("first_name")}</label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col sm={6} xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputText
                     id="last-name"
                     itemID="last-name"
@@ -358,7 +359,7 @@ export default function ProfileDataAdmin(props: Props) {
                     onChange={event => setProfileLastName(event.target.value)}
                   />
                   <label htmlFor="last-name">{t("last_name")}</label>
-                </span>
+                </FloatLabel>
               </Col>
             </Row>
           </Container>
@@ -386,7 +387,7 @@ export default function ProfileDataAdmin(props: Props) {
                   onChange={event => setProfileTheme(event.value)} />
             </Col>
             <Col md={6} xs={12}>
-              <span className="p-float-label">
+              <FloatLabel>
                 <AutoComplete
                   id="profile_language"
                   inputId="profile_language"
@@ -421,7 +422,7 @@ export default function ProfileDataAdmin(props: Props) {
                 <label htmlFor="profile_language">
                   {t("display_settings.language")}
                 </label>
-              </span>
+              </FloatLabel>
             </Col>
             <Col xs={3}>
               <InputSwitch
@@ -434,7 +435,7 @@ export default function ProfileDataAdmin(props: Props) {
               </label>
             </Col>
             <Col xs={9}>
-              <span className="p-float-label">
+              <FloatLabel>
                 <Dropdown
                   id="profile_timezone"
                   inputId="profile_timezone"
@@ -450,7 +451,7 @@ export default function ProfileDataAdmin(props: Props) {
                 <label htmlFor="profile_timezone">
                   {t("display_settings.time_zone")}
                 </label>
-              </span>
+              </FloatLabel>
             </Col>
           </Container>
         </AccordionTab>
@@ -462,7 +463,7 @@ export default function ProfileDataAdmin(props: Props) {
           <Container>
             <Row>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_school"
                     inputId="profile_school"
@@ -478,10 +479,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_school">
                     {t("demographics.school")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_cip_code"
                     inputId="profile_cip_code"
@@ -497,10 +498,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_cip_code">
                     {t("demographics.major")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Calendar
                     id="profile_primary_start_school"
                     inputId="profile_primary_start_school"
@@ -516,7 +517,7 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_primary_start_school">
                     {t("demographics.start_school")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
             </Row>
             <Row>
@@ -526,7 +527,7 @@ export default function ProfileDataAdmin(props: Props) {
             </Row>
             <Row>
               <Col xs={6} md={5}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_country"
                     inputId="profile_country"
@@ -545,11 +546,11 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_country">
                     {t("demographics.home_country")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={6}>
                 {states.length > 0 ? (
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <Dropdown
                       id="profile_state"
                       inputId="profile_state"
@@ -567,13 +568,13 @@ export default function ProfileDataAdmin(props: Props) {
                     <label htmlFor="profile_state">
                       {t("demographics.home_state")}
                     </label>
-                  </span>
+                  </FloatLabel>
                 ) : null}
               </Col>
             </Row>
             <Row>
               <Col xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <AutoComplete
                     id="profile_home_language"
                     inputId="profile_home_language"
@@ -606,10 +607,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_home_language">
                     {t("demographics.home_language")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_gender"
                     name="profile_gender"
@@ -624,10 +625,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_gender">
                     {t("demographics.gender")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6} md={3}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Calendar
                     id="profile_date_of_birth"
                     inputId="profile_date_of_birth"
@@ -643,7 +644,7 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_date_of_birth">
                     {t("demographics.born")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} md={12}>
                 <label htmlFor="impairments">

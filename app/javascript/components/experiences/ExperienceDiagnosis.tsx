@@ -15,6 +15,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { RadioButton } from "primereact/radiobutton";
 import { Container, Row, Col } from "react-grid-system";
 import { Panel } from "primereact/panel";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   diagnoseFunc: (
@@ -67,7 +68,7 @@ export default function ExperienceDiagnosis(props: Props) {
 
   const otherPnl =
     0 !== behaviorId && detailNeeded ? (
-      <span className="p-float-label">
+      <FloatLabel>
         <InputText
           itemID="other_name"
           id="other_name"
@@ -77,7 +78,7 @@ export default function ExperienceDiagnosis(props: Props) {
           }}
         />
         <label htmlFor="other_name">{t("next.other")}</label>
-      </span>
+      </FloatLabel>
     ) : null;
 
   const resetData = () => {
@@ -148,7 +149,7 @@ export default function ExperienceDiagnosis(props: Props) {
           <Col xs={12}>
             <Accordion>
               <AccordionTab header={t("next.click_for_comment")}>
-                <div className="p-float-label">
+                <FloatLabel>
                   <InputTextarea
                     itemID="comments"
                     id="comments"
@@ -161,7 +162,7 @@ export default function ExperienceDiagnosis(props: Props) {
                   />
                   <label htmlFor="comments">{t("next.comments")}</label>
 
-                </div>
+                </FloatLabel>
               </AccordionTab>
             </Accordion>
           </Col>

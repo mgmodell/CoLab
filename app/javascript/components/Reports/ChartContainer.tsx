@@ -9,6 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { Col, Container, Row } from "react-grid-system";
 import { Panel } from "primereact/panel";
+import { FloatLabel } from "primereact/floatlabel";
 
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
@@ -148,7 +149,7 @@ export default function ChartContainer(props: Props) {
     } else {
       const unit_code = unit_codes[props.unitOfAnalysis];
       return (
-        <span className="p-float-label">
+        <FloatLabel>
           <Dropdown
             id={`${props.unitOfAnalysis}_list`}
             value={selectedSubject}
@@ -163,7 +164,7 @@ export default function ChartContainer(props: Props) {
           <label htmlFor={`${props.unitOfAnalysis}_list`}>
             {t(`${props.unitOfAnalysis}_list`)}
           </label>
-        </span>
+        </FloatLabel>
       );
     }
   };
@@ -173,7 +174,7 @@ export default function ChartContainer(props: Props) {
       return <Skeleton className="mb-2" />;
     } else if (1 < projects.length) {
       return (
-        <span className="p-float-label">
+        <FloatLabel>
           <Dropdown
             id="project_list"
             value={selectedProject}
@@ -186,7 +187,7 @@ export default function ChartContainer(props: Props) {
             placeholder={t("projects_list")}
           />
           <label htmlFor="project_list">{t("projects_list")}</label>
-        </span>
+        </FloatLabel>
       );
     } else {
       return (

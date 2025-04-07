@@ -18,6 +18,7 @@ import { InputText } from "primereact/inputtext";
 import SubmissionList from "./SubmissionList";
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { Col, Container, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   assignment: IAssignment;
@@ -123,7 +124,7 @@ export default function AssignmentSubmission(props: Props) {
         <h6>{t("submissions.sub_link_lbl")}</h6>
       </Col>
       <Col xs={3}>
-        <span className="p-float-label">
+        <FloatLabel>
           <InputText
             value={submissionLink}
             id="sub_link"
@@ -134,7 +135,7 @@ export default function AssignmentSubmission(props: Props) {
             }}
           />
           <label htmlFor="sub_link">{t("submissions.sub_link_lbl")}</label>
-        </span>
+        </FloatLabel>
       </Col>
     </Row>
   ) : null;

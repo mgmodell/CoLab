@@ -19,6 +19,7 @@ import { removeStopwords } from 'stopword'
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Col, Container, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   rootPath?: string;
@@ -297,7 +298,7 @@ export default function CandidateListEntry(props: Props) {
           return (
             <React.Fragment key={index}>
               <Col xs={12} sm={3}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputText
                     id={`term_${index}`}
                     invalid={duplicated}
@@ -307,10 +308,10 @@ export default function CandidateListEntry(props: Props) {
                   />
                   {duplicated && <small color="red" id={`term_${index}_msg`}>{t('edit.duplicate_msg')}</small>}
                   <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={9}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputTextarea
                     id={`definition_${index}`}
                     onChange={event => updateDefinition(event, index)}
@@ -318,7 +319,7 @@ export default function CandidateListEntry(props: Props) {
                     autoResize
                   />
                   <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
-                </span>
+                </FloatLabel>
               </Col>
             </React.Fragment>
           );
