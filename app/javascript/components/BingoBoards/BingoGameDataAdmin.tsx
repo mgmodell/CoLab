@@ -140,10 +140,32 @@ export default function BingoGameDataAdmin(props) {
         const data = response.data;
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
-        setDirty(false);
         setMessages(data["messages"]);
+        setConcepts(data.concepts);
 
-        getBingoGameData();
+        //Set the bingo_game stuff
+        const bingo_game = data.bingo_game;
+        setBingoGameId(bingo_game.id);
+        setGameTopic(bingo_game.topic || "");
+        setGameDescriptionEditor(bingo_game.description || "");
+        setGameSource(bingo_game.source || "");
+        setGameActive(bingo_game.active || false);
+
+        var receivedDate = new Date(Date.parse(bingo_game.start_date));
+        setGameStartDate(receivedDate);
+        receivedDate = new Date(Date.parse(bingo_game.end_date));
+        setGameEndDate(receivedDate);
+
+        setGameIndividualCount(bingo_game.individual_count || 0);
+        setGameLeadTime(bingo_game.lead_time || 0);
+        //Group options
+        setGameGroupOption(bingo_game.group_option || false);
+        setGameGroupDiscount(bingo_game.group_discount || 0);
+        setGameGroupProjectId(bingo_game.project_id);
+        setFoundWords(data.found_words);
+
+        //getBingoGameData();
+        //setDirty(false);
         navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, {
           replace: true
         });
@@ -230,7 +252,10 @@ export default function BingoGameDataAdmin(props) {
       <Button
         color="primary"
         //className={classes["button"]}
-        onClick={saveBingoGame}
+        onClick={() => {
+          console.log("save_btn");
+          saveBingoGame();
+        }}
         id="save_bingo_game"
         value="save_bingo_game"
       >
@@ -243,7 +268,7 @@ export default function BingoGameDataAdmin(props) {
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <React.Fragment>
         <Col xs={6}>
-          <span className="p-float-label">
+          <FloatLabel>
             <InputNumber
               id="bingo-discount"
               itemID="bingo-discount"
@@ -255,10 +280,11 @@ export default function BingoGameDataAdmin(props) {
               }}
             />
             <label htmlFor="bingo-discount">{t("group_discount")}</label>
-          </span>
+
+          </FloatLabel>
         </Col>
         <Col xs={6}>
-          <span className="p-float-label">
+          <FloatLabel>
             <Dropdown
               id="bingo_game_project_id"
               inputId="bingo_game_project_id"
@@ -271,7 +297,7 @@ export default function BingoGameDataAdmin(props) {
               placeholder={t("group_source")}
             />
             <label htmlFor="bingo_game_project_id">{t("group_source")}</label>
-          </span>
+          </FloatLabel>
         </Col>
       </React.Fragment>
     </Suspense>
@@ -287,7 +313,7 @@ export default function BingoGameDataAdmin(props) {
             <Container>
               <Row>
                 <Col xs={12}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputText
                       id="topic"
                       name="topic"
@@ -296,7 +322,7 @@ export default function BingoGameDataAdmin(props) {
                       onChange={event => setGameTopic(event.target.value)}
                     />
                     <label htmlFor="topic">{t("topic")}</label>
-                  </span>
+                  </FloatLabel>
                 </Col>
               </Row>
               <Row>
@@ -315,7 +341,7 @@ export default function BingoGameDataAdmin(props) {
               </Row>
               <Row>
                 <Col xs={6}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputNumber
                       id="bingo-lead-time"
                       name="bingo-lead-time"
@@ -325,10 +351,11 @@ export default function BingoGameDataAdmin(props) {
                       onChange={event => setGameLeadTime(event.value)}
                     />
                     <label htmlFor="bingo-lead-time">{t("lead_time")}</label>
-                  </span>
+
+                  </FloatLabel>
                 </Col>
                 <Col xs={6}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputNumber
                       id="bingo-individual_count"
                       name="bingo-individual_count"
@@ -340,7 +367,7 @@ export default function BingoGameDataAdmin(props) {
                     <label htmlFor="bingo-individual_count">
                       {t("ind_term_count")}
                     </label>
-                  </span>
+                  </FloatLabel>
                 </Col>
               </Row>
 
