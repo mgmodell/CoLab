@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'hello_world', to: 'hello_world#index'
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
         as: :copy_course,

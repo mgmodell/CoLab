@@ -1,9 +1,9 @@
 // The source code including full typescript support is available at: 
 // https://github.com/shakacode/react_on_rails_demo_ssr_hmr/blob/master/config/webpack/development.js
 
-const { devServer, inliningCss, generateWebpackConfig } = require('shakapacker');
+const { devServer, inliningCss } = require('shakapacker');
 
-const webpackConfig = generateWebpackConfig;
+const webpackConfig = require('./webpackConfig');
 
 const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
   // plugins
@@ -14,15 +14,11 @@ const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
     // eslint-disable-next-line global-require
     const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
     clientWebpackConfig.plugins.push(
-      {options: {
-        jsc: {
-          transform: {
-            react: {
-              refresh: true
-            }
-          }
-        }
-      }}
+      new ReactRefreshWebpackPlugin({
+        overlay: {
+          sockPort: devServer.port,
+        },
+      }),
     );
   }
 };

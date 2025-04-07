@@ -12,13 +12,12 @@ module.exports = function (api) {
         '@babel/preset-react',
         {
           development: !isProductionEnv,
-          "runtime": "automatic",
           useBuiltIns: true
         }
       ]
     ].filter(Boolean),
     plugins: [
-      //process.env.WEBPACK_SERVE && 'react-refresh/babel',
+      process.env.WEBPACK_SERVE && 'react-refresh/babel',
       isProductionEnv && ['babel-plugin-transform-react-remove-prop-types',
         {
           removeImport: true
