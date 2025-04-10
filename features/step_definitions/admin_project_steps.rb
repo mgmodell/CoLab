@@ -142,11 +142,8 @@ Then( /^the user sets the rich "([^"]*)" field to "([^"]*)"$/ ) do | field, valu
 end
 
 Then( 'the user sets the {string} start date to {string} and the end date to {string}' ) do | item_type, start_date, end_date |
-  # datefield = find( :xpath, "//span[@id='#{item_type}_dates']/input" )
-  # dates_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )} - #{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
-
   datefield = find( :xpath, "//span[@id='#{item_type}_start_date']/input" )
-  date_string = "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )}"
+  date_string = start_date.blank? ? '' : "#{Chronic.parse( start_date ).strftime( '%m/%d/%Y' )}"
 
   datefield.click
 
@@ -157,7 +154,7 @@ Then( 'the user sets the {string} start date to {string} and the end date to {st
   send_keys date_string
 
   datefield = find( :xpath, "//span[@id='#{item_type}_end_date']/input" )
-  date_string = "#{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
+  date_string = end_date.blank? ? '' : "#{Chronic.parse( end_date ).strftime( '%m/%d/%Y' )}"
 
   datefield.click
 

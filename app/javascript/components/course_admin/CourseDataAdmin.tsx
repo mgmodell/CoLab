@@ -32,6 +32,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import {DateTime} from 'luxon';
 
 interface IActivityLink {
   name: string;
@@ -176,17 +177,24 @@ export default function CourseDataAdmin() {
     })
       .then(response => {
         const data = response.data;
+
         if (Object.keys(data.messages).length < 2) {
+          const timezoneAdjust = data.course.timezone
+          const timezone = timezones.find(tz => tz.name === timezoneAdjust);
+          const procStartDate = DateTime.fromISO(data.course.start_date, { zone: timezone.stdName });
+          const procEndDate = DateTime.fromISO(data.course.end_date, { zone: timezone.stdName });
+
+
           const localCourse: ICourse = Object.assign({},
             data.course,
             {
-              start_date: new Date(Date.parse(data.course.start_date)),
-              end_date: new Date(Date.parse(data.course.end_date))
+              start_date: procStartDate.plus( {minutes: procStartDate.offset }).toJSDate( ),
+              end_date: procEndDate.plus( {minutes: procEndDate.offset }).toJSDate( ),
             }
           );
           setCourse(localCourse);
           setCourseId(localCourse.id);
-          navigate( `../${localCourse.id}`, { replace: true } );
+          navigate(`../${localCourse.id}`, { replace: true });
 
 
           dispatch(setClean(category));
@@ -356,7 +364,7 @@ export default function CourseDataAdmin() {
         showClear={true}
       />
 
-      <p>{t('edit.dates_tz', {time_zone: course.timezone})}</p>
+      <p>{t('edit.dates_tz', { time_zone: course.timezone })}</p>
       <label htmlFor="course_dates" id="course_dates_lbl">
         {t('edit.dates')}
       </label>
@@ -370,7 +378,7 @@ export default function CourseDataAdmin() {
             if (null !== changeTo) {
               setCourseValue('start_date', changeTo);
             }
-          } }
+          }}
           showOnFocus={false}
           showIcon={true}
         />
@@ -388,7 +396,7 @@ export default function CourseDataAdmin() {
           onChange={event => {
             const changeTo = event.value;
             setCourseValue('end_date', changeTo);
-          } }
+          }}
           showOnFocus={false}
           showIcon={true}
         />
@@ -459,9 +467,9 @@ export default function CourseDataAdmin() {
       <Button
         label={t('wizard.wizard_switch')}
         onClick={() => {
-          navigate( 'courseWizard' );
+          navigate('courseWizard');
         }}
-        />
+      />
       {saveButton}
       {messages["status"]}
     </Panel>
