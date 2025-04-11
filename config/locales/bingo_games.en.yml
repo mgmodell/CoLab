@@ -64,6 +64,8 @@ en:
     #Term data
     topic: Topic
     description: Description
+    score: Score
+    file_select: Score Sheet Image
     definition: Definition
     feedback: Feedback
     concept: Concept
