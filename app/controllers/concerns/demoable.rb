@@ -4,7 +4,7 @@ module Demoable
   extend ActiveSupport::Concern
 
   def demo_user
-    return unless @current_user.nil?
+    return @current_user unless @current_user.nil?
 
     @current_user = User.new( id: -7,
                               first_name: t( :demo_surname_1 ),
@@ -104,6 +104,120 @@ module Demoable
     i
   end
 
+  def get_demo_submission( count )
+    s = SubmissionStub.new
+    s.id = count
+    s.submitted = 72.hours.ago + ( -count * 23 ).hours
+    s.withdrawn = nil
+    s.sub_text = Faker::Lorem.paragraphs( number: rand( 5 ) )
+    s.updated_at = 70.hours.ago + ( -count ).hours
+    s.user = demo_user.name( false )
+    s.sub_text = Faker::Lorem.paragraphs( number: 5, supplemental: true )
+                             .reduce('') do | html_output, paragraph |
+      html_output += "<p>#{paragraph}</p>"
+    end
+    s.sub_link = nil
+    s.submission_feedback = get_demo_submission_feedback( count )
+    rubric_row_feedbacks = []
+    get_demo_rubric_student.criteria.each_with_index do | c, idx |
+      rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, count )
+    end
+    s.rubric_row_feedbacks = rubric_row_feedbacks
+    # must actually calculate the score
+    s.calculated_score = 65 + ( -count * 3 )
+    s.recorded_score = s.calculated_score + rand( 10 )
+    s.group = get_demo_group
+    s
+  end
+
+  def get_demo_assignment
+    a = AssignmentStub.new
+    a.id = -99
+    a.name = t 'assignments.demo.student_title'
+    a.description = t 'assignments.demo.student_description'
+    a.file_sub = false
+    a.link_sub = false
+    a.text_sub = true
+    a.group_enabled = true
+    a.submissions = []
+    a.submissions << get_demo_submission( -1 )
+    a.submissions << get_demo_submission( -2 )
+    a.submissions << get_demo_submission( -3 )
+    a.course_timezone = 'UTC'
+    a.course = get_demo_course
+    a
+  end
+
+  def get_demo_course
+    c = CourseStub.new
+    c.id = -1
+    c.name = t 'demo_course_name'
+    c.number = 'xxx-673'
+    c.projects = [get_demo_project]
+    c
+  end
+
+  def get_demo_rubric_student
+    r = RubricStub.new
+    r.id = -1
+    r.name = t 'rubrics.demo.student_rubric_name'
+    r.description = t 'rubrics.demo.student_rubric_description'
+    r.version = 1
+    r.criteria = []
+    # 3 Criteria
+    c = CriteriumStub.new
+    c.id = -2
+    c.description = t 'rubrics.demo.rubric_criteria_1'
+    c.weight = 4
+    c.sequence = 1
+    c.l1_description = t 'rubrics.demo.rubric_criteria_1_level_1'
+    c.l2_description = t 'rubrics.demo.rubric_criteria_1_level_2'
+    c.l3_description = t 'rubrics.demo.rubric_criteria_1_level_3'
+    c.l4_description = ''
+    c.l5_description = ''
+    r.criteria << c
+    c = CriteriumStub.new
+    c.id = -3
+    c.description = t 'rubrics.demo.rubric_criteria_2'
+    c.weight = 4
+    c.sequence = 2
+    c.l1_description = t 'rubrics.demo.rubric_criteria_2_level_1'
+    c.l2_description = t 'rubrics.demo.rubric_criteria_2_level_2'
+    c.l3_description = t 'rubrics.demo.rubric_criteria_2_level_3'
+    c.l4_description = ''
+    c.l5_description = ''
+    r.criteria << c
+    c = CriteriumStub.new
+    c.id = -4
+    c.description = t 'rubrics.demo.rubric_criteria_3'
+    c.weight = 3
+    c.sequence = 3
+    c.l1_description = t 'rubrics.demo.rubric_criteria_3_level_1'
+    c.l2_description = t 'rubrics.demo.rubric_criteria_3_level_2'
+    c.l3_description = ''
+    c.l4_description = ''
+    c.l5_description = ''
+    r.criteria << c
+    r
+  end
+
+  def get_demo_submission_feedback( index )
+    sf = SubmissionFeedbackStub.new
+    sf.feedback = t "submissions.feedbacks.demo_feedback_#{index}"
+    sf.submitted = Time.zone.now
+    sf
+  end
+
+  def get_demo_rubric_row_feedback( index, count )
+    r = RubricRowFeedbackStub.new
+    r.id = -1
+
+    r.score = 50 + (7.5 * (index ^ count.abs ) ).floor
+    r.feedback = Faker::ChuckNorris.fact
+    r.criterium_id = index
+    r
+  end
+
   class InstallmentStub
     attr_accessor :id, :user_id, :assessment, :assessment_id, :group, :group_id, :values, :inst_date
 
@@ -119,6 +233,28 @@ module Demoable
     end
   end
 
+  class AssignmentStub
+    attr_accessor :id, :name, :description, :submissions,
+                  :file_sub, :link_sub, :text_sub, :group_enabled,
+                  :course_timezone, :course
+  end
+
+  class SubmissionStub
+    attr_accessor :id, :submitted, :withdrawn,
+                  :sub_text, :updated_at, :sub_link,
+                  :calculated_score, :recorded_score,
+                  :submission_feedback, :rubric_row_feedbacks,
+                  :user, :group
+  end
+
+  class SubmissionFeedbackStub
+    attr_accessor :feedback, :submitted
+  end
+
+  class RubricRowFeedbackStub
+    attr_accessor :id, :score, :feedback, :criterium_id
+  end
+
   class AssessmentStub
     attr_accessor :id, :project
   end
@@ -126,9 +262,25 @@ module Demoable
   class UserStub
     attr_accessor :id, :first_name, :last_name
 
-    def name
+    def name( _anonymize )
       "#{last_name}, #{first_name}"
     end
+  end
+
+  class RubricStub
+    attr_accessor :id, :name, :description, :version,
+                  :criteria, :assignment
+  end
+
+  class CriteriumStub
+    attr_accessor :id, :description, :weight, :sequence,
+                  :l1_description, :l2_description,
+                  :l3_description, :l4_description,
+                  :l5_description
+  end
+
+  class CourseStub
+    attr_accessor :id, :name, :number, :projects
   end
 
   class ProjStub

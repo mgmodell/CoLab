@@ -20,7 +20,6 @@ import ExperienceDiagnosis from "./ExperienceDiagnosis";
 const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { Button } from "primereact/button";
 import { Skeleton } from "primereact/skeleton";
 
 export default function Experience(props) {

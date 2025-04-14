@@ -33,6 +33,8 @@ export default function ChartContainer(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const user = useTypedSelector(state => state.profile.user);
+
   const { t, i18n } = useTranslation(category);
 
   const [projects, setProjects] = useState(props.projects || []);
@@ -45,7 +47,6 @@ export default function ChartContainer(props: Props) {
   const [forResearch, setForResearch] = useState(props.forResearch || false);
 
   const [charts, setCharts] = useState({});
-  const [open, setOpen] = useState(false);
 
   const getSubjectsForProject = projectId => {
     if (0 < selectedProject) {
@@ -206,7 +207,7 @@ export default function ChartContainer(props: Props) {
   };
 
   const forResearchBlock =
-    null == props.forResearch ? (
+    null == props.forResearch && (user.is_admin || user.is_instructor || user.researcher) ? (
       <Col xs={6}>
         <InputSwitch
           checked={forResearch}
@@ -229,7 +230,7 @@ export default function ChartContainer(props: Props) {
   };
 
   const anonymizeBlock =
-    null == props.anonymize ? (
+    ( null == props.anonymize && (user.is_admin || user.is_instructor) )  ? (
       <Col xs={6}>
         <InputSwitch
           checked={anonymize}

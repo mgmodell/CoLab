@@ -89,14 +89,14 @@ export default function MainMenu(props: Props) {
         id: "profile-menu-item",
         command: () => navTo("/profile")
       },
-      {
-        label: t("calc_diversity_hdr"),
-        icon: "pi pi-fw pi-calculator",
-        id: "diversity-menu-item",
-        command: () => {
-          navTo("/perspective");
-        },
-      });
+        {
+          label: t("calc_diversity_hdr"),
+          icon: "pi pi-fw pi-calculator",
+          id: "diversity-menu-item",
+          command: () => {
+            navTo("/perspective");
+          },
+        });
       if (user.is_instructor || user.is_admin) {
         let adminItems = [
           {
@@ -105,13 +105,6 @@ export default function MainMenu(props: Props) {
             id: "courses-menu-item",
             visible: adminOpen,
             command: () => navTo("/admin/courses")
-          },
-          {
-            label: t("reporting"),
-            icon: "pi pi-fw pi-chart-bar",
-            id: "reporting-menu-item",
-            visible: adminOpen,
-            command: () => navTo("/admin/reporting")
           },
           {
             label: t("rubrics_edit"),
@@ -174,6 +167,12 @@ export default function MainMenu(props: Props) {
         icon: "pi pi-fw pi-play",
         id: "demo-menu-item",
         command: () => navTo("/demo")
+      },
+      {
+        label: t("reporting"),
+        icon: "pi pi-fw pi-chart-bar",
+        id: "reporting-menu-item",
+        command: () => navTo("/reporting")
       },
       {
         label: t("support_menu"),

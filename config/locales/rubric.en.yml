@@ -30,6 +30,28 @@ en:
     name: Name
     description: Description
     version: Version
+    demo:
+      student_rubric_name: CHI Design Challenge
+      student_rubric_description: >
+        For evaluating Computer-Human Interaction design
+        competition-based project responses.
+
+      rubric_criteria_1: Grammar
+      rubric_criteria_1_level_1: More than 3 errors per page.
+      rubric_criteria_1_level_2: More than 1 error per page.
+      rubric_criteria_1_level_3: Less than 1 error per page.
+
+      rubric_criteria_2: Format
+      rubric_criteria_2_level_1: >
+        Neither title page nor correct borders and fonts.
+      rubric_criteria_2_level_2: >
+        Missing tlitle page or incorrect font and/or border width.
+      rubric_criteria_2_level_3: >
+        Complete title page with correct font and border width.
+
+      rubric_criteria_3: References
+      rubric_criteria_3_level_1: Present with some mistake.
+      rubric_criteria_3_level_2: Present with no noticeable mistakes.
     rubric:
       copy: Copy rubric
       delete: Remove this rubric

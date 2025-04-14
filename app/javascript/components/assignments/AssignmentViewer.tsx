@@ -73,6 +73,10 @@ const CLEAN_ASSIGNMENT: IAssignment = {
 };
 
 
+interface Props {
+  rootPath?: string;
+}
+
 export default function AssignmentViewer(props) {
   const endpointSet = "assignment";
   const endpoints = useTypedSelector(
@@ -118,7 +122,9 @@ export default function AssignmentViewer(props) {
 
   //Retrieve the latest data
   const loadAssignment = () => {
-    const url = `${endpoints.statusUrl}${assignmentId}.json`;
+    const url = props.rootPath === undefined 
+      ? `${endpoints.statusUrl}${assignmentId}.json`
+      : `/${props.rootPath}${endpoints.statusUrl}${assignmentId}.json`;
     dispatch(startTask());
     axios(url, {})
       .then(response => {
@@ -201,6 +207,7 @@ export default function AssignmentViewer(props) {
         </TabPanel>
         <TabPanel header={t("submissions.response_tab_lbl")}>
           <AssignmentSubmission
+            rootPath={props.rootPath}
             assignment={assignment}
             reloadCallback={loadAssignment}
           />

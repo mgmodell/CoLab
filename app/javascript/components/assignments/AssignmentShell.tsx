@@ -19,13 +19,13 @@ export default function AssignmentShell( props: Props) {
       <Routes>
         <Route
           path={`:assignmentId`}
-          element={<AssignmentViewer />}
+          element={<AssignmentViewer rootPath={props.rootPath} />}
         />
         <Route
           path={`critiques/:assignmentId`}
           element={
             <RequireInstructor>
-              <CritiqueShell />
+              <CritiqueShell rootPath={props.rootPath} />
             </RequireInstructor>
           }
         />

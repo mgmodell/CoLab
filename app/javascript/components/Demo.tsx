@@ -10,6 +10,7 @@ const InstallmentReport = React.lazy(() =>
 
 import BingoShell from "./BingoBoards/BingoShell";
 const Experience = React.lazy(() => import("./experiences/Experience"));
+import AssignmentShell from "./assignments/AssignmentShell";
 
 type Props = {
   rootPath: string;
@@ -37,6 +38,9 @@ export default function Demo(props: Props) {
           path={`experience/:experienceId`}
           element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
         />
+        <Route
+          path={`assignment/*`}
+          element={<AssignmentShell rootPath={props.rootPath}/>} />
         <Route index element={<HomeShell rootPath={"demo"} />} />
       </Route>
       <Route index element={<Navigate to={"home"} />} />

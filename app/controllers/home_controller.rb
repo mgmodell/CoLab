@@ -70,6 +70,11 @@ class HomeController < ApplicationController
       conceptsUrl: bingo_concepts_path( id: '' ),
       worksheetUrl: worksheet_for_bingo_path( bingo_game_id: '' )
     }
+    ep_hash[:graphing] = {
+      dataUrl: graphing_data_path,
+      subjectsUrl: graphing_subjects_path,
+      projectsUrl: graphing_projects_path
+    }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
@@ -148,11 +153,6 @@ class HomeController < ApplicationController
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
           consentFormCreateUrl: new_consent_form_path
-        }
-        ep_hash[:graphing] = {
-          dataUrl: graphing_data_path,
-          subjectsUrl: graphing_subjects_path,
-          projectsUrl: graphing_projects_path
         }
       end
     end
@@ -477,7 +477,7 @@ class HomeController < ApplicationController
     @events = [e]
     e = Event_.new
     e.id = -11
-    e.name =  t( 'candidate_lists.demo_topic' ) 
+    e.name = t( 'candidate_lists.demo_topic' )
     e.task_link = terms_demo_entry_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
@@ -523,6 +523,38 @@ class HomeController < ApplicationController
     e.link = "bingo/candidate_results/#{e.id}"
     e.instructor_task = false
     @events << e
+
+    e = Event_.new
+    e.id = -99
+    e.name = t( 'assignments.demo.student_title' )
+    e.task_link = bingo_demo_play_path
+    e.task_name_post = ''
+    e.type = :assignment
+    e.status = 3
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
+    e.start_date = 2.months.ago
+    e.close_date = 5.weeks.from_now.end_of_day
+    e.next_date = e.close_date
+    e.link = "assignment/#{e.id}"
+    e.instructor_task = false
+    @events << e
+
+    e = Event_.new
+    e.id = -109
+    e.name = t( 'assignments.demo.instructor_title' )
+    e.task_link = bingo_demo_play_path
+    e.task_name_post = ''
+    e.type = :submission
+    e.status = 2
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
+    e.start_date = 3.months.ago
+    e.close_date = 6.weeks.from_now.end_of_day
+    e.next_date = e.close_date
+    e.link = "assignment/critiques/#{e.id}"
+    e.instructor_task = true
+#    @events << e
 
     # Let's output this to JSON
     resp_hash = {

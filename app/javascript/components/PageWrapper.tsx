@@ -35,6 +35,7 @@ const InstallmentReport = React.lazy(() =>
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
+const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
 const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
 
 const Privacy = React.lazy(() => import("./info/Privacy"));
@@ -97,6 +98,7 @@ export default function PageWrapper(props: Readonly<Props>) {
                 </Suspense>
               }
             />
+          <Route path={"reporting"} element={<ReportingAdmin />} />
             <Route
               path={"home/*"}
               element={

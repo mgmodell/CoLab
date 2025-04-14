@@ -2,7 +2,8 @@
 
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: %i[show edit update destroy status]
-  include PermissionsCheck
+  skip_before_action :authenticate_user!, only: %i[demo_status]
+  include PermissionsCheck, Demoable
 
   before_action :check_editor, except: :status
 
@@ -44,12 +45,40 @@ class AssignmentsController < ApplicationController
         withdrawn: submission.withdrawn,
         recorded_score: submission.recorded_score || submission.calculated_score,
         user: current_user.name( anon ),
-        submission_feedback: submission.submission_feedback.as_json( only: %i[feedback submitted] ),
-        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json( only: %i[id score feedback criterium_id] )
+        submission_feedback: submission.submission_feedback.as_json( only: %w[feedback submitted] ),
+        rubric_row_feedbacks: submission.rubric_row_feedbacks.as_json( only: %w[id score feedback criterium_id] )
       }
     end
 
     response[:submissions] = o_submissions.as_json
+
+    respond_to do | format |
+      format.json do
+        render json: response
+      end
+    end
+  end
+
+  def demo_status
+    assignment = get_demo_assignment
+    response = {
+      assignment: assignment.as_json(
+        only: %w[id start_date end_date name
+                  description
+                 group_enabled project_id
+                 text_sub file_sub link_sub
+                 active]
+      )
+    }
+    response[:assignment][:course] = {
+      timezone: ActiveSupport::TimeZone.new( assignment.course_timezone ).tzinfo.name 
+    }
+    response[:rubric] = get_demo_rubric_student
+    submissions = []
+    3.times do | i |
+      submissions << get_demo_submission( -i )
+    end
+    response[:submissions] = submissions
 
     respond_to do | format |
       format.json do

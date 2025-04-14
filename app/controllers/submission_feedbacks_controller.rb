@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class SubmissionFeedbacksController < ApplicationController
-  include PermissionsCheck
+  include PermissionsCheck, Demoable
 
+  skip_before_action :authenticate_user!, only: %i[demo_show demo_index_for_assignment demo_update]
   before_action :set_submission, only: %i[show edit]
   before_action :set_submission_feedback, only: %i[update destroy]
   before_action :check_editor
@@ -33,6 +34,17 @@ class SubmissionFeedbacksController < ApplicationController
     end
   end
 
+  def demo_index_for_assignment
+    assignment = get_demo_assignment
+    respond_to do | format |
+      format.json do
+        render json: {
+          assignment: assignment
+        }
+      end
+    end
+  end
+
   # GET /submission_feedbacks/1 or /submission_feedbacks/1.json
   def show
     @submission.rubric = @submission.assignment.rubric if @submission.rubric_id.nil?
@@ -42,6 +54,9 @@ class SubmissionFeedbacksController < ApplicationController
         render json: standardized_response( @submission )
       end
     end
+  end
+
+  def demo_show
   end
 
   # POST /submission_feedbacks or /submission_feedbacks.json
@@ -99,6 +114,9 @@ class SubmissionFeedbacksController < ApplicationController
       end
     end
   end
+
+  # def demo_update
+  # end
 
   # DELETE /submission_feedbacks/1 or /submission_feedbacks/1.json
   def destroy

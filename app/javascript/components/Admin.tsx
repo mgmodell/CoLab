@@ -16,7 +16,6 @@ const ConsentFormDataAdmin = React.lazy(() =>
   import("./Consent/ConsentFormDataAdmin")
 );
 const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
-const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
@@ -51,7 +50,6 @@ export default function Admin(props) {
             element={<ConsentFormDataAdmin />}
           />
           <Route path={`concepts`} element={<ConceptsTable />} />
-          <Route path={"reporting"} element={<ReportingAdmin />} />
           <Route index element={<Navigate to="courses" replace />} />
         </Route>
       ) : (

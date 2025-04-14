@@ -122,6 +122,7 @@ interface ISubmissionData {
 }
 
 type Props = {
+  rootPath?: string;
 };
 
 enum OPT_COLS {
@@ -185,7 +186,9 @@ export default function CritiqueShell(props: Props) {
   //Retrieve the submission
   const loadSubmission = (submissionId: number) => {
     dispatch(startTask());
-    const url = `${endpoints.showUrl}${submissionId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.showUrl}${submissionId}.json`
+      : `/${props.rootPath}${endpoints.showUrl}${submissionId}.json`;
     axios.get(url)
       .then(response => {
         const data = response.data as {
@@ -215,7 +218,9 @@ export default function CritiqueShell(props: Props) {
 
   const getSubmissions = () => {
     dispatch(startTask());
-    const url = `${endpoints.baseUrl}${assignmentId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.baseUrl}${assignmentId}.json`
+      : `/${props.rootPath}${endpoints.baseUrl}${assignmentId}.json`;
     axios.get(url)
       .then(response => {
         const data = response.data;

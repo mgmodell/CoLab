@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[demo_withdraw show_demo]
   before_action :set_submission, only: %i[show update withdraw]
+
+  include Demoable
 
   # GET /submissions/1 or /submissions/1.json
   def show
@@ -9,6 +12,31 @@ class SubmissionsController < ApplicationController
     respond_to do | format |
       format.json do
         render json: standardized_response( @submission )
+      end
+    end
+  end
+
+  def show_demo
+    id = params[:id].to_i
+    submission = get_demo_submission( id )
+    assignment = get_demo_assignment
+    response = {
+      submission: {
+        id: submission.id,
+        submitted: submission.submitted,
+        withdrawn: submission.withdrawn,
+        recorded_score: submission.recorded_score || submission.calculated_score,
+        user: demo_user,
+        group: get_demo_group,
+        calculated_score: submission.calculated_score,
+        sub_text: submission.sub_text,
+        sub_link: submission.sub_link,
+        assignment: assignment
+      }
+    }
+    respond_to do | format |
+      format.json do
+        render json: response
       end
     end
   end
@@ -61,6 +89,8 @@ class SubmissionsController < ApplicationController
 
     end
   end
+
+  def demo_withdraw; end
 
   private
 
