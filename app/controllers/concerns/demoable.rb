@@ -120,11 +120,11 @@ module Demoable
     s.submission_feedback = get_demo_submission_feedback( count )
     rubric_row_feedbacks = []
     get_demo_rubric_student.criteria.each_with_index do | c, idx |
-      rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, count )
+      rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, count, c.weight )
     end
     s.rubric_row_feedbacks = rubric_row_feedbacks
     # must actually calculate the score
-    s.calculated_score = 65 + ( -count * 3 )
+    s.calculated_score
     s.recorded_score = s.calculated_score + rand( 10 )
     s.group = get_demo_group
     s
@@ -208,13 +208,14 @@ module Demoable
     sf
   end
 
-  def get_demo_rubric_row_feedback( index, count )
+  def get_demo_rubric_row_feedback( index, count, weight )
     r = RubricRowFeedbackStub.new
     r.id = -1
 
-    r.score = 50 + (7.5 * (index ^ count.abs ) ).floor
+    r.score = 44 + (7.5 * (index ^ count.abs ) ).floor
     r.feedback = Faker::ChuckNorris.fact
     r.criterium_id = index
+    r.rubric_row_weight = weight
     r
   end
 
@@ -242,9 +243,18 @@ module Demoable
   class SubmissionStub
     attr_accessor :id, :submitted, :withdrawn,
                   :sub_text, :updated_at, :sub_link,
-                  :calculated_score, :recorded_score,
+                  :recorded_score,
                   :submission_feedback, :rubric_row_feedbacks,
                   :user, :group
+    def calculated_score
+      weight_total = rubric_row_feedbacks.reduce( 0 ) do | sum, rubric_row_feedback |
+        sum + rubric_row_feedback.rubric_row_weight
+      end
+      raw_score = rubric_row_feedbacks.reduce( 0 ) do | sum, rubric_row_feedback |
+        sum + (rubric_row_feedback.rubric_row_weight) * rubric_row_feedback.score
+      end
+      raw_score / weight_total
+    end
   end
 
   class SubmissionFeedbackStub
@@ -252,7 +262,8 @@ module Demoable
   end
 
   class RubricRowFeedbackStub
-    attr_accessor :id, :score, :feedback, :criterium_id
+    attr_accessor :id, :score, :feedback, :criterium_id,
+                  :rubric_row_weight
   end
 
   class AssessmentStub
