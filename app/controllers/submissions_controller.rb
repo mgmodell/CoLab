@@ -53,6 +53,17 @@ class SubmissionsController < ApplicationController
       @submission.group = group
     end
     # Set this as submitted if requested
+    unless @submission.submitted.nil?
+      # Make a copy of the submission
+      new_copy = @submission.dup
+      new_copy.id = nil
+      new_copy.submitted = nil
+      new_copy.withdrawn = nil
+      new_copy.recorded_score = nil
+      @submission = new_copy
+    end
+
+
     @submission.submitted = DateTime.now if params[:submit]
 
     if @submission.update( sub_params )

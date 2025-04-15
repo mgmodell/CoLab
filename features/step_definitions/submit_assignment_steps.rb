@@ -221,7 +221,7 @@ end
 Then( 'the assignment has {int} {string} submission' ) do | qty, state |
   case state
   when 'draft'
-    Submission.where( submitted: nil ).where( withdrawn: nil ).size.should eq qty
+    Submission.where( submitted: nil, withdrawn: nil ).size.should eq qty
   when 'submitted', 'active'
     Submission.where.not( submitted: nil ).where( withdrawn: nil ).size.should eq qty
   when 'withdrawn'
@@ -243,7 +243,7 @@ Then( 'the {string} db submission data is accurate' ) do | placement |
   @check_submission = submission
   @submission.assignment_id.should eq @check_submission.assignment_id
 
-  @submission.sub_text.should eq @check_submission.sub_text.delete( "\n" )
+  @submission.sub_text.should eq @check_submission.sub_text # .delete( "\n" )
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
   @submission.user_id.should eq( @check_submission.user_id )

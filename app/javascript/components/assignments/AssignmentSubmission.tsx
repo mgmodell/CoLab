@@ -64,7 +64,7 @@ export default function AssignmentSubmission(props: Props) {
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
-    const url = props.rootPath === undefined 
+    const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${submissionId}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;
     dispatch(startTask("loading"));
@@ -107,13 +107,7 @@ export default function AssignmentSubmission(props: Props) {
       });
   };
 
-  const sub_text = useMemo(() => {
-    if (!props.assignment.textSub) {
-      return (
-        <></>
-      );
-    }else{
-      return (
+  const sub_text = props.assignment.textSub ? (
     <Row>
       <Col xs={12}>
         <Editor
@@ -129,10 +123,7 @@ export default function AssignmentSubmission(props: Props) {
         />
       </Col>
     </Row>
-      )
-
-    }
-  } , [props.assignment.textSub, submissionTextEditor, notSubmitted]);
+  ) : null;
 
   const subLink = props.assignment.linkSub ? (
     <Row>
@@ -157,10 +148,10 @@ export default function AssignmentSubmission(props: Props) {
   ) : null;
 
   const saveSubmission = (submitIt: boolean) => {
-      // If this is brand new, we have no ID and need a new one
-      // If this has already been submitted, then we must create a new submission
+    // If this is brand new, we have no ID and need a new one
+    // If this has already been submitted, then we must create a new submission
     const id = submissionId === null ? "new" : submissionId;
-    const url = props.rootPath === undefined 
+    const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${id}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${id}.json`;
 
