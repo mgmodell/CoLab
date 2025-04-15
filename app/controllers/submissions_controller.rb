@@ -101,8 +101,6 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  def demo_withdraw; end
-
   private
 
   def standardized_response( submission, messages = {} )

@@ -75,6 +75,11 @@ class HomeController < ApplicationController
       subjectsUrl: graphing_subjects_path,
       projectsUrl: graphing_projects_path
     }
+      ep_hash[:assignment] = {
+        statusUrl: assignment_status_path( id: '' ),
+        submissionUrl: submission_path( id: '' ),
+        submissionWithdrawalUrl: submission_withdraw_path( id: '' )
+      }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path

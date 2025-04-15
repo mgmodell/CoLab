@@ -5,7 +5,7 @@ class AssignmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_status]
   include PermissionsCheck, Demoable
 
-  before_action :check_editor, except: :status
+  before_action :check_editor, except: %i[status demo_status]
 
   before_action :check_admin, only: :index
 

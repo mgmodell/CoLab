@@ -286,9 +286,6 @@ Rails.application.routes.draw do
       'submission_feedbacks#demo_show',
            as: :critique_assignment_demo,
            constraints: ->(req) { req.format == :json }
-      get 'submissions/withdraw/:id' => 'submissions#demo_withdraw',
-           as: :submission_withdraw_demo,
-           constraints: ->(req) { req.format == :json }
     end
   end
 
