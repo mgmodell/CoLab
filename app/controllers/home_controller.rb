@@ -3,6 +3,7 @@
 class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
+  include Demoable
 
   def index; end
 
@@ -530,36 +531,38 @@ class HomeController < ApplicationController
     @events << e
 
     e = Event_.new
-    e.id = -99
-    e.name = t( 'assignments.demo.student_title' )
+    assignment = get_demo_student_assignment
+    e.id = assignment.id
+    e.name = assignment.name
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = :assignment
     e.status = 3
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
-    e.start_date = 2.months.ago
-    e.close_date = 5.weeks.from_now.end_of_day
+    e.start_date = assignment.start_date
+    e.close_date = assignment.end_date
     e.next_date = e.close_date
     e.link = "assignment/#{e.id}"
     e.instructor_task = false
     @events << e
 
     e = Event_.new
-    e.id = -109
-    e.name = t( 'assignments.demo.instructor_title' )
+    assignment = get_demo_instructor_assignment
+    e.id = assignment.id
+    e.name = assignment.name
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = :submission
-    e.status = 2
+    e.status = 3
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
-    e.start_date = 3.months.ago
-    e.close_date = 6.weeks.from_now.end_of_day
+    e.start_date = assignment.start_date
+    e.close_date = assignment.end_date
     e.next_date = e.close_date
     e.link = "assignment/critiques/#{e.id}"
     e.instructor_task = true
-#    @events << e
+    @events << e
 
     # Let's output this to JSON
     resp_hash = {

@@ -60,7 +60,7 @@ class AssignmentsController < ApplicationController
   end
 
   def demo_status
-    assignment = get_demo_assignment
+    assignment = get_demo_student_assignment
     response = {
       assignment: assignment.as_json(
         only: %w[id start_date end_date name

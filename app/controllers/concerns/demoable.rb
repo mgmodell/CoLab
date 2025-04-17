@@ -117,7 +117,7 @@ module Demoable
       html_output += "<p>#{paragraph}</p>"
     end
     s.sub_link = nil
-    s.submission_feedback = get_demo_submission_feedback( count )
+    s.submission_feedback = get_demo_submission_feedback( count.abs )
     rubric_row_feedbacks = []
     get_demo_rubric_student.criteria.each_with_index do | c, idx |
       rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, count, c.weight )
@@ -130,7 +130,7 @@ module Demoable
     s
   end
 
-  def get_demo_assignment
+  def get_demo_student_assignment
     a = AssignmentStub.new
     a.id = -99
     a.name = t 'assignments.demo.student_title'
@@ -138,7 +138,31 @@ module Demoable
     a.file_sub = false
     a.link_sub = false
     a.text_sub = true
+    a.project = get_demo_project
     a.group_enabled = true
+    a.start_date = 2.months.ago
+    a.end_date = 5.weeks.from_now.end_of_day
+    a.submissions = []
+    a.submissions << get_demo_submission( -1 )
+    a.submissions << get_demo_submission( -2 )
+    a.submissions << get_demo_submission( -3 )
+    a.course_timezone = 'UTC'
+    a.course = get_demo_course
+    a
+  end
+
+  def get_demo_instructor_assignment
+    a = AssignmentStub.new
+    a.id = -99
+    a.name = t 'assignments.demo.instructor_title'
+    a.description = t 'assignments.demo.instructor_description'
+    a.file_sub = false
+    a.link_sub = false
+    a.text_sub = true
+    a.project = get_demo_project
+    a.group_enabled = true
+    a.start_date = 3.months.ago
+    a.end_date = 6.weeks.from_now.end_of_day
     a.submissions = []
     a.submissions << get_demo_submission( -1 )
     a.submissions << get_demo_submission( -2 )
@@ -203,8 +227,13 @@ module Demoable
 
   def get_demo_submission_feedback( index )
     sf = SubmissionFeedbackStub.new
+    sf.id = -index
     sf.feedback = t "submissions.feedbacks.demo_feedback_#{index}"
     sf.submitted = Time.zone.now
+    sf.rubric_row_feedbacks = []
+    get_demo_rubric_student.criteria.each_with_index do | c, idx |
+      sf.rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, index, c.weight )
+    end
     sf
   end
 
@@ -216,6 +245,7 @@ module Demoable
     r.feedback = Faker::ChuckNorris.fact
     r.criterium_id = index
     r.rubric_row_weight = weight
+    r.submission_feedback_id = -count
     r
   end
 
@@ -237,6 +267,7 @@ module Demoable
   class AssignmentStub
     attr_accessor :id, :name, :description, :submissions,
                   :file_sub, :link_sub, :text_sub, :group_enabled,
+                  :start_date, :end_date, :project,
                   :course_timezone, :course
   end
 
@@ -258,12 +289,14 @@ module Demoable
   end
 
   class SubmissionFeedbackStub
-    attr_accessor :feedback, :submitted
+    attr_accessor :id, :feedback, :submitted,
+                  :rubric_row_feedbacks
   end
 
   class RubricRowFeedbackStub
     attr_accessor :id, :score, :feedback, :criterium_id,
-                  :rubric_row_weight
+                  :rubric_row_weight,
+                  :submission_feedback_id
   end
 
   class AssessmentStub

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class SubmissionFeedbacksController < ApplicationController
-  include PermissionsCheck, Demoable
+  include Demoable
+  include PermissionsCheck
 
   skip_before_action :authenticate_user!, only: %i[demo_show demo_index_for_assignment demo_update]
   before_action :set_submission, only: %i[show edit]
@@ -35,11 +36,46 @@ class SubmissionFeedbacksController < ApplicationController
   end
 
   def demo_index_for_assignment
-    assignment = get_demo_assignment
+    assignment = get_demo_instructor_assignment
     respond_to do | format |
       format.json do
         render json: {
-          assignment: assignment
+          assignment: {
+            id: assignment.id,
+            name: assignment.name,
+            file_sub: assignment.file_sub,
+            link_sub: assignment.link_sub,
+            text_sub: assignment.text_sub,
+            group_enabled: assignment.group_enabled,
+            submissions: assignment.submissions.map do | submission |
+              {
+                id: submission.id,
+                submitted: submission.submitted,
+                withdrawn: submission.withdrawn,
+                recorded_score: submission.recorded_score || submission.calculated_score,
+                user: demo_user.as_json(
+                  only: %w[first_name last_name email]
+                ),
+                group: if submission.group.present?
+                         {
+                           id: submission.group.id,
+                           name: submission.group.name,
+                           users: submission.group.users.map do | member |
+                             {
+                               id: member.id,
+                               first_name: member.first_name,
+                               last_name: member.last_name,
+                               email: member.email
+                             }
+                           end
+                         }
+                       end,
+                calculated_score: submission.calculated_score,
+                sub_text: submission.sub_text,
+                sub_link: submission.sub_link
+              }
+            end
+          }
         }
       end
     end
@@ -57,6 +93,73 @@ class SubmissionFeedbacksController < ApplicationController
   end
 
   def demo_show
+    id = params[:id].to_i
+    submission = get_demo_submission( id - 1 )
+    rubric = get_demo_rubric_student
+    response = {
+      submission: {
+        id: submission.id,
+        submitted: submission.submitted,
+        withdrawn: submission.withdrawn,
+        recorded_score: submission.recorded_score || submission.calculated_score,
+        user: demo_user.as_json(
+          only: %w[first_name last_name email]
+        ),
+        submission_feedback: {
+          id: submission.submission_feedback.id,
+          feedback: submission.submission_feedback.feedback,
+          rubric_row_feedbacks: submission.submission_feedback.rubric_row_feedbacks.map do | rubric_row_feedback |
+            {
+              id: rubric_row_feedback.id,
+              submission_feedback_id: rubric_row_feedback.submission_feedback_id,
+              score: rubric_row_feedback.score,
+              feedback: rubric_row_feedback.feedback,
+              criterium_id: rubric_row_feedback.criterium_id
+            }
+          end
+        },
+        group: if submission.group.present?
+                 {
+                   id: submission.group.id,
+                   name: submission.group.name,
+                   users: submission.group.users.map do | member |
+                     {
+                       id: member.id,
+                       first_name: member.first_name,
+                       last_name: member.last_name,
+                       email: member.email
+                     }
+                   end
+                 }
+               end,
+        calculated_score: submission.calculated_score,
+        sub_text: submission.sub_text,
+        sub_link: submission.sub_link,
+        rubric: {
+          name: rubric.name,
+          description: rubric.description,
+          version: rubric.version,
+          criteria: rubric.criteria.map do | criterion |
+            {
+              id: criterion.id,
+              description: criterion.description,
+              sequence: criterion.sequence,
+              weight: criterion.weight,
+              l1_description: criterion.l1_description,
+              l2_description: criterion.l2_description,
+              l3_description: criterion.l3_description,
+              l4_description: criterion.l4_description,
+              l5_description: criterion.l5_description
+            }
+          end
+        }
+      }
+    }
+    respond_to do | format |
+      format.json do
+        render json: response
+      end
+    end
   end
 
   # POST /submission_feedbacks or /submission_feedbacks.json
@@ -115,8 +218,7 @@ class SubmissionFeedbacksController < ApplicationController
     end
   end
 
-  # def demo_update
-  # end
+  def demo_update; end
 
   # DELETE /submission_feedbacks/1 or /submission_feedbacks/1.json
   def destroy

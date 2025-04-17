@@ -254,7 +254,6 @@ export default function CritiqueShell(props: Props) {
                 value={panels}
                 options={panelDefs}
                 onChange={(e) => {
-                  console.log(e.value, panels)
                   setPanels(e.value);
                 }}
                 optionLabel="label"
@@ -389,9 +388,7 @@ export default function CritiqueShell(props: Props) {
                       <h6>
                         {t('submitted_text')}:
                       </h6>
-                      <p id='sub_text'>
                         {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
-                      </p>
                     </React.Fragment>
                   ) : null}
                 </Panel>

@@ -19,7 +19,7 @@ class SubmissionsController < ApplicationController
   def show_demo
     id = params[:id].to_i
     submission = get_demo_submission( id )
-    assignment = get_demo_assignment
+    assignment = get_demo_student_assignment
     response = {
       submission: {
         id: submission.id,

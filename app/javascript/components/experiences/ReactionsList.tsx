@@ -66,7 +66,6 @@ export default function ReactionsList(props: Props) {
     axios
       .get(url, {})
       .then(response => {
-        console.log("response", response);
         const data = response.data;
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);

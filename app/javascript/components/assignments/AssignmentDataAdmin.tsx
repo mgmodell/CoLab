@@ -164,7 +164,6 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        console.log("data", data);
         setMessages( data.messages );
         setDirty(false);
         navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
