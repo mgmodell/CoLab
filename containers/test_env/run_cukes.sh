@@ -2,11 +2,12 @@
 
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
-. $HOME/.asdf/asdf.sh
 cd $HOME/src/app
 
 git pull --all
-asdf reshim
+mise reshim
+mise self-update
+mise cache clean
 
 print_help ( ) {
   echo "RunCukes: Script to launch automated tests"
@@ -129,8 +130,7 @@ CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 #RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
 
 echo "Installing platforms"
-asdf plugin update --all
-asdf install
+mise install
 echo "Installing gems"
 bundle install --quiet
 echo "Installing yarn packages"

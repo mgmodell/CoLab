@@ -85,9 +85,6 @@ services:
 
 
 volumes:
-#  src:
-#  asdf-installs:
-#  asdf-shims:
   mariadb-data:
   ffconfig:
   devdata:
