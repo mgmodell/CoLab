@@ -6,9 +6,6 @@ dir="$HOME/src/app/"
 
 #Set up the version managers
 echo "Setting the current working directory"
-mise reshim
-mise self-update
-mise cache clean
 
 cd $dir
 echo "Installing platforms"

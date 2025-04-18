@@ -5,9 +5,6 @@ echo "Setting the current working directory"
 cd $HOME/src/app
 
 git pull --all
-mise reshim
-mise self-update
-mise cache clean
 
 print_help ( ) {
   echo "RunCukes: Script to launch automated tests"
