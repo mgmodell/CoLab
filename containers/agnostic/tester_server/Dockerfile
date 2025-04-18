@@ -47,8 +47,9 @@ RUN git config --global pull.rebase false &&\
 
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
 ENV PATH="/home/colab/.local/bin:$PATH"
-RUN echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
-  echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc
+RUN mkdir -p /home/colab/.local/share/mise && \
+  echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
+  echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.bashrc
 
 USER colab
 
