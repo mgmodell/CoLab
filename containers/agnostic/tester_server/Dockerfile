@@ -45,23 +45,10 @@ RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\
   git config --global branch.autoSetupMerge true
 
-RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1 &&\
-    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
-    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile && \
-    echo 'bundler' >> ~/.default-gems
-
-RUN source ~/.bashrc && \
-  asdf plugin add ruby && \
-  asdf plugin add bundler && \
-  asdf plugin add nodejs && \
-  asdf plugin add yarn
-
-USER root
-
-RUN mkdir /home/colab/.asdf/shims && \
-  chown colab:colab /home/colab/.asdf/shims && \
-  mkdir /home/colab/.asdf/installs && \
-  chown colab:colab /home/colab/.asdf/installs
+RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
+ENV PATH="/home/colab/.local/bin:$PATH"
+RUN echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
+  echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc
 
 USER colab
 
