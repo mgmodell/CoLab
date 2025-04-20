@@ -31,7 +31,9 @@ RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
 ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc && \
-  echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc
+  echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
+  echo "bundler \n foreman \n rubocop" >> ~/.default-gems && \
+  mise install ruby yarn nodejs
 
 
 SHELL ["/bin/bash", "-l", "-c"]
@@ -43,7 +45,7 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export DISPLAY=:0" >> ~/.bashrc &&\
   echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
   echo -e "export DRIVER=docker" >> ~/.bashrc && \
-  echo -e "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
+  echo -e "export CUCUMBER_PUBLISH_TOKEN=b7e96979-5fe5-43a0-9eae-42cffb5e8c13"
 
 
 USER colab

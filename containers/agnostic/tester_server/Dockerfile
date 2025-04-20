@@ -28,7 +28,13 @@ RUN groupadd -r colab && \
 WORKDIR /home/colab
 
 USER colab
-
+RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
+ENV PATH="/home/colab/.local/bin:$PATH"
+RUN mkdir -p /home/colab/.local/share/mise && \
+  echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
+  echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.bashrc && \
+  echo "bundler \n foreman \n" >> ~/.default-gems && \
+  mise install ruby yarn nodejs
 
 SHELL ["/bin/bash", "-l", "-c"]
 
@@ -44,14 +50,6 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
 RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\
   git config --global branch.autoSetupMerge true
-
-RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
-ENV PATH="/home/colab/.local/bin:$PATH"
-RUN mkdir -p /home/colab/.local/share/mise && \
-  echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
-  echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.bashrc
-
-USER colab
 
 #Set up the app materials
 RUN mkdir -p /home/colab/src/app
