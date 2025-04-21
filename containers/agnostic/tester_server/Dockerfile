@@ -33,6 +33,7 @@ ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
   echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.bashrc && \
+  chmod u+x ~/.bashrc && \
   echo "bundler \n foreman \n" >> ~/.default-gems && \
   mise install ruby yarn nodejs
 
