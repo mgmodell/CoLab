@@ -128,6 +128,9 @@ CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 
 echo "Installing platforms"
 mise install
+echo "trying to activate"
+cd $HOME
+cd $HOME/src/app
 echo $(mise --version)
 echo $(ruby --version)
 echo "Installing gems"
