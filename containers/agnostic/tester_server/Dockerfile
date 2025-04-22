@@ -31,8 +31,11 @@ USER colab
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
 ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
-  echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/bashrc && \
+  echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/.bashrc && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
+  echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/subinteractive && \
+  echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/subinteractive && \
+  chmod u+x /home/colab/subinteractive && \
   echo "bundler \n foreman \n" >> /home/colab/default-gems && \
   mise install ruby yarn nodejs
 

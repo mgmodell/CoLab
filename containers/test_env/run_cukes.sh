@@ -3,6 +3,9 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
+echo "Sourcing the bashrc replacement"
+. ~/subinteractive
+
 
 git pull --all
 
