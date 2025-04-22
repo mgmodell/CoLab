@@ -3,8 +3,9 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
-echo "Sourcing the bashrc replacement"
-. ~/subinteractive
+#echo "Sourcing the bashrc replacement"
+#. ~/subinteractive
+PATH=$PATH:$HOME/.local/share/mise/shims:$PATH
 
 
 git pull --all
