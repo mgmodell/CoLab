@@ -13,6 +13,7 @@ RUN apt update && apt upgrade -y && \
   git \
   bash \
   libmysqlclient-dev \
+  libsecret-1-dev \
   yarn
 
 RUN apt -y install \

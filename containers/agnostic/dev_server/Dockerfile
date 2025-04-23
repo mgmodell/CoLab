@@ -14,6 +14,7 @@ RUN apt update && apt upgrade -y && \
   bash \
   libmysqlclient-dev \
   libyaml-dev \
+  libsecret-1-dev \
   zsh
 
 RUN apt autoremove && \
