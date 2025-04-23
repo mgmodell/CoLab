@@ -34,7 +34,9 @@ import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
 
-export default function ProjectDataAdmin(props) {
+interface ProjectDataAdminProps {}
+
+export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const category = "project";
   const { t, i18n } = useTranslation(`${category}s`);
   const endpoints = useTypedSelector(
@@ -387,5 +389,3 @@ export default function ProjectDataAdmin(props) {
     </TabView>
   );
 }
-
-ProjectDataAdmin.propTypes = {};

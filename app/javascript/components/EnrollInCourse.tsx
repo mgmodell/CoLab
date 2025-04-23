@@ -12,7 +12,9 @@ import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from "react-grid-system";
 
-export default function EnrollInCourse(props) {
+interface EnrollInCourseProps {}
+
+export default function EnrollInCourse(props: EnrollInCourseProps) {
   const category = "home";
   const dispatch = useDispatch();
   const endpoints = useTypedSelector(
@@ -113,4 +115,3 @@ export default function EnrollInCourse(props) {
     </Panel>
   );
 }
-EnrollInCourse.propTypes = {};

@@ -19,7 +19,9 @@ const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-export default function Admin(props) {
+interface AdminProps {}
+
+export default function Admin(props: AdminProps) {
   const user = useTypedSelector(state => state.profile.user);
 
   return (
@@ -58,5 +60,3 @@ export default function Admin(props) {
     </Routes>
   );
 }
-
-Admin.propTypes = {};

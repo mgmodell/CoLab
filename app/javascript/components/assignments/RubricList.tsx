@@ -18,7 +18,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-export default function RubricList(props) {
+interface RubricListProps {}
+
+export default function RubricList(props: RubricListProps) {
   const category = "rubric";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -227,5 +229,3 @@ export default function RubricList(props) {
     </React.Fragment>
   );
 }
-
-RubricList.propTypes = {};

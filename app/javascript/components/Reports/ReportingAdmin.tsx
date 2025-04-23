@@ -5,7 +5,9 @@ import ChartContainer from "./ChartContainer";
 import { Panel } from "primereact/panel";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-export default function ReportingAdmin(props) {
+interface ReportingAdminProps {}
+
+export default function ReportingAdmin(props: ReportingAdminProps) {
   const category = "graphing";
   const { t, i18n } = useTranslation(category);
   const user = useTypedSelector(state => state.profile.user);
@@ -24,5 +26,3 @@ export default function ReportingAdmin(props) {
     </Panel>
   );
 }
-
-ReportingAdmin.propTypes = {};
