@@ -28,6 +28,7 @@ import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Calendar } from "primereact/calendar";
+import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
@@ -36,6 +37,8 @@ import { Container, Row, Col } from "react-grid-system";
 import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
+import { useBlocker } from "react-router";
+import { co } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;
@@ -100,7 +103,20 @@ export default function ProfileDataAdmin(props: Props) {
   const dirty = useTypedSelector(state => {
     return state.profile.lastRetrieved !== state.profile.lastSet;
   });
-  const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
+
+  const blocker = useBlocker( ()=>{
+    if( !dirty ){
+      return false;
+    } else {
+      //TODO make this into a PrimeReact Dialog
+      if( window.confirm( t("confirm_leave") ) ){
+        resetProfile();
+        return false;
+      } else {
+        return true;
+      }
+    }
+  })
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;
@@ -684,8 +700,27 @@ export default function ProfileDataAdmin(props: Props) {
     </Panel>
   ) : null;
 
+  const confirmUnsavedChanges = () => {
+    let blockNavigation = true;
+    confirmDialog({
+      message: t("confirm_leave"),
+      header: t("confirm_leave_hdr"),
+      icon: "pi pi-exclamation-triangle",
+      modal: true,
+      accept: () => {
+        resetProfile();
+        blockNavigation = false;
+      },
+      reject: () => {
+        // Do nothing
+      }
+    });
+    return blockNavigation;
+  };
   return (
     <Panel>
+      <ConfirmDialog 
+      />
       <TabView
         activeIndex={curTab}
         onTabChange={event => setCurTab(event.index)}

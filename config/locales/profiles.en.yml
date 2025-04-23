@@ -9,6 +9,10 @@ en:
     last_name: Last name
     reset_btn: Undo Changes
     save_btn: Save Profile
+    confirm_leave_hdr: Leave with unsaved changes?
+    confirm_leave: >
+      Are you sure you want to leave this page? Your unsaved changes
+      will be lost.
     create_btn: Create Profile
     edit_profile: Edit your profile
     tabs:
