@@ -15,6 +15,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import {
   fetchProfile,
   setProfile,
+  restoreProfile,
   persistProfile,
   setLocalLanguage,
   IUser
@@ -266,6 +267,9 @@ export default function ProfileDataAdmin(props: Props) {
   const saveProfile = () => {
     dispatch(persistProfile());
   };
+  const resetProfile = () => {
+    dispatch(restoreProfile());
+  };
 
   useEffect(() => {
     if (endpointStatus) {
@@ -297,7 +301,12 @@ export default function ProfileDataAdmin(props: Props) {
 
   const saveButton = (
     <Button onClick={saveProfile} disabled={!dirty}>
-      {null == user.id ? "Create" : "Save"} Profile
+      {null == user.id ? t('create_btn') : t('save_btn')}
+    </Button>
+  );
+  const resetButton = (
+    <Button onClick={resetProfile} disabled={!dirty}>
+      {t("reset_btn")}
     </Button>
   );
 
@@ -671,6 +680,7 @@ export default function ProfileDataAdmin(props: Props) {
       <br />
       <br />
       {saveButton}
+      {resetButton}
     </Panel>
   ) : null;
 

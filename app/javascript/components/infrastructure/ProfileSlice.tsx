@@ -47,6 +47,8 @@ interface IUser {
 export interface ProfilesRootState {
   lastRetrieved: Date;
   lastSet: Date;
+  dirty: boolean;
+  user_persisted: IUser;
   user: IUser;
 }
 
@@ -87,6 +89,39 @@ const initialState = {
     impairment_motor: false,
     impairment_cognitive: false,
     impairment_other: false
+  },
+  user_persisted: {
+    id: -1,
+    first_name: "",
+    last_name: "",
+    name: "",
+    emails: [],
+
+    welcomed: false,
+    is_instructor: false,
+    is_admin: false,
+    country: "",
+    timezone: "UTC",
+    language_id: 40,
+    theme: '007bff',
+    admin: false,
+    researcher: false,
+    anonymize: false,
+
+    gender_id: "__",
+    date_of_birth: "",
+    home_state_id: "",
+    primary_language_id: "",
+
+    school_id: "",
+    started_school: "",
+    cip_code_id: "",
+
+    impairment_visual: false,
+    impairment_auditory: false,
+    impairment_motor: false,
+    impairment_cognitive: false,
+    impairment_other: false
   }
 };
 
@@ -96,6 +131,7 @@ const profileSlice = createSlice({
   reducers: {
     setRetrievedProfile(state, action) {
       state.user = action.payload;
+      state.user_persisted = {...action.payload};
       state.lastRetrieved = Date.now();
       state.lastSet = state.lastRetrieved;
     },
@@ -114,6 +150,11 @@ const profileSlice = createSlice({
     setProfileTheme(state, action) {
       state.user.theme = action.payload;
       state.lastSet = Date.now();
+    },
+    restoreProfile(state, action) {
+      state.lastSet = state.lastRetrieved;
+      state.user = Object.assign(
+        {}, state.user_persisted );
     },
     clearProfile(state, action) {
       state = initialState;
@@ -211,11 +252,11 @@ export const persistProfile = createAsyncThunk(
         Settings.defaultZone = tz_hash[user.timezone];
         dispatch(setRetrievedProfile(user));
         dispatch(endTask("loading"));
-        dispatch(addMessage("Profile saved", new Date(), Priorities.INFO ));
+        dispatch(addMessage("Profile saved", new Date(), Priorities.INFO));
       })
       .catch(error => {
         console.log("error", error);
-        dispatch(addMessage("Profile not saved", new Date(), Priorities.ERROR ));
+        dispatch(addMessage("Profile not saved", new Date(), Priorities.ERROR));
       });
   }
 );
@@ -227,6 +268,7 @@ export const {
   setAnonymize,
   setProfileTheme,
   setProfileTimezone,
+  restoreProfile,
   clearProfile
 } = actions;
 export default reducer;

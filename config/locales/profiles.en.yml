@@ -7,6 +7,9 @@ en:
       course_number: Course number
     first_name: First name
     last_name: Last name
+    reset_btn: Undo Changes
+    save_btn: Save Profile
+    create_btn: Create Profile
     edit_profile: Edit your profile
     tabs:
       details: Details
