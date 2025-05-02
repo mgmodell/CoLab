@@ -54,28 +54,25 @@ services:
       - db
       - redis
     environment:
-      - LANG=en_US.UTF-8
+      - MOODLE_LANG=en
       - LANGUAGE=en_US:en
-      - SITE_URL=http://localhost
-      - DB_TYPE=mariadb
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_NAME=moodle
-      - DB_USER=moodle
-      - DB_PASS=moodle
-      - DB_PREFIX=mdl_
-      - REDIS_HOST=redis
-      - REVERSEPROXY=false
-      - SSLPROXY=false
+      - MOODLE_DATABASE_TYPE=mariadb
+      - MOODLE_DATABASE_HOST=db
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_NAME=moodle
+      - MOODLE_DATABASE_USER=moodle
+      - MOODLE_DATABASE_PASSWORD=moodle
+
+      - MOODLE_REVERSEPROXY=false
+      - MOODLE_SSLPROXY=false
       - MOODLE_EMAIL=user@example.com
-      - MOODLE_LANGUAGE=en
-      - MOODLE_SITENAME=CoLab-Testing
+      - MOODLE_SITE_NAME=CoLab-Testing
       - MOODLE_USERNAME=moodleuser
       - MOODLE_PASSWORD=CHANGEME
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=micah.modell+moodle@gmail.com
-      - SMTP_PROTOCOL=tls
+
+      - MOODLE_SMTP_HOST=smtp.gmail.com
+      - MOODLE_SMTP_PORT_NUMBER=587
+      - MOODLE_SMTP_USER=micah.modell+moodle@gmail.com
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
     ports:
