@@ -38,7 +38,6 @@ import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
 import { useBlocker } from "react-router";
-import { co } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;
