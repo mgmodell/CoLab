@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/mgmodell/devise_token_auth
-  revision: 8ddb9fb8bd898da3704c09caed3ebbc5b1470ea6
+  revision: e4b9b1ac5c22da49a7179d12f1c42ef44758a09c
   specs:
     devise_token_auth (1.2.5)
       bcrypt (~> 3.0)
@@ -109,18 +109,18 @@ GEM
       safely_block (>= 0.4)
     ast (2.4.3)
     aws-eventstream (1.3.2)
-    aws-partitions (1.1095.0)
-    aws-sdk-core (3.222.3)
+    aws-partitions (1.1097.0)
+    aws-sdk-core (3.223.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.99.0)
+    aws-sdk-kms (1.100.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.184.0)
+    aws-sdk-s3 (1.185.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -549,7 +549,7 @@ GEM
     sdoc (2.6.1)
       rdoc (>= 5.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.31.0)
+    selenium-webdriver (4.32.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -557,7 +557,7 @@ GEM
       websocket (~> 1.0)
     semantic_range (3.1.0)
     sexp_processor (4.17.3)
-    shakapacker (8.2.0)
+    shakapacker (8.3.0)
       activesupport (>= 5.2)
       package_json
       rack-proxy (>= 0.6.1)
@@ -681,7 +681,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 8.2.0)
+  shakapacker (= 8.3.0)
   simplecov
   spring
   stopwords-filter2

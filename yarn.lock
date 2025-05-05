@@ -1288,30 +1288,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gilbarbara/deep-equal@npm:^0.1.1":
+  version: 0.1.2
+  resolution: "@gilbarbara/deep-equal@npm:0.1.2"
+  checksum: 10c0/ef441034a34d3e3a2fdcdd473b1082c4e8a324682c8a35cea100d60b5341fecb7249ae043eecf2ea9bdf736a1fe582b294a347095c3d48a1d9d04d7d6e4ad16a
+  languageName: node
+  linkType: hard
+
 "@gilbarbara/deep-equal@npm:^0.3.1":
   version: 0.3.1
   resolution: "@gilbarbara/deep-equal@npm:0.3.1"
   checksum: 10c0/009584aa912f13c59e98b35c3ebf99ff7fc7c5658d5394fd56d58570da61d68cbc6f7ec082ad2ef009ff72873cc1bd8b9b9fda9e39f7e6594fd643a915e0bc94
-  languageName: node
-  linkType: hard
-
-"@gilbarbara/hooks@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "@gilbarbara/hooks@npm:0.8.2"
-  dependencies:
-    "@gilbarbara/deep-equal": "npm:^0.3.1"
-  peerDependencies:
-    react: 16.8 - 18
-  checksum: 10c0/806f02fef628fe45b15e45c20b4d712fa8dd69f3c91b090790f26219a97d0614623e1720da0467b0a0a42eabf201225baf40bc71c4509937dd498c02abf44474
-  languageName: node
-  linkType: hard
-
-"@gilbarbara/types@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@gilbarbara/types@npm:0.2.2"
-  dependencies:
-    type-fest: "npm:^4.1.0"
-  checksum: 10c0/c998bfb41ff84b5640fcb0cd47d2bdf963c7d36792673edddc469d5a1752a5f7105697e79d34db69062562ae3506283c2474ca14785af652610d8abe17ddbef3
   languageName: node
   linkType: hard
 
@@ -1481,26 +1468,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pmmmwh/react-refresh-webpack-plugin@npm:^0.5.16":
-  version: 0.5.16
-  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.16"
+"@pmmmwh/react-refresh-webpack-plugin@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.6.0"
   dependencies:
-    ansi-html: "npm:^0.0.9"
+    anser: "npm:^2.1.1"
     core-js-pure: "npm:^3.23.3"
     error-stack-parser: "npm:^2.0.6"
     html-entities: "npm:^2.1.0"
-    loader-utils: "npm:^2.0.4"
     schema-utils: "npm:^4.2.0"
     source-map: "npm:^0.7.3"
   peerDependencies:
-    "@types/webpack": 4.x || 5.x
+    "@types/webpack": 5.x
     react-refresh: ">=0.10.0 <1.0.0"
     sockjs-client: ^1.4.0
     type-fest: ">=0.17.0 <5.0.0"
-    webpack: ">=4.43.0 <6.0.0"
-    webpack-dev-server: 3.x || 4.x || 5.x
+    webpack: ^5.0.0
+    webpack-dev-server: ^4.8.0 || 5.x
     webpack-hot-middleware: 2.x
-    webpack-plugin-serve: 0.x || 1.x
+    webpack-plugin-serve: 1.x
   peerDependenciesMeta:
     "@types/webpack":
       optional: true
@@ -1514,14 +1500,7 @@ __metadata:
       optional: true
     webpack-plugin-serve:
       optional: true
-  checksum: 10c0/800f9cea9a0cbceba14cd09eb684ca45d1e488f8e6d8c24f221f4ac920add09de12980ead71e0bebd84e06bc17569b9142101a29e0a366021c8de5b5862ef7b8
-  languageName: node
-  linkType: hard
-
-"@popperjs/core@npm:^2.11.8":
-  version: 2.11.8
-  resolution: "@popperjs/core@npm:2.11.8"
-  checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
+  checksum: 10c0/30b07073a47a912264161aeb7dc3ea309d44706405f4e763bb39ad177661762d175b9a11f849cbf25f9a6f9867329d0676a5605ed62afdf2b39768aca74328ee
   languageName: node
   linkType: hard
 
@@ -2944,21 +2923,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"anser@npm:^2.1.1":
+  version: 2.3.2
+  resolution: "anser@npm:2.3.2"
+  checksum: 10c0/e7cebc020d406cd14f004e1a70f45e05b66f3d14146d709f52a9c335ff1e2bbcdf389cd1b63d6444a7c679946ff1722d1c8e3f97f3dcd264e091f59e66e5c471
+  languageName: node
+  linkType: hard
+
 "ansi-html-community@npm:^0.0.8":
   version: 0.0.8
   resolution: "ansi-html-community@npm:0.0.8"
   bin:
     ansi-html: bin/ansi-html
   checksum: 10c0/45d3a6f0b4f10b04fdd44bef62972e2470bfd917bf00439471fa7473d92d7cbe31369c73db863cc45dda115cb42527f39e232e9256115534b8ee5806b0caeed4
-  languageName: node
-  linkType: hard
-
-"ansi-html@npm:^0.0.9":
-  version: 0.0.9
-  resolution: "ansi-html@npm:0.0.9"
-  bin:
-    ansi-html: bin/ansi-html
-  checksum: 10c0/4a5de9802fb50193e32b51a9ea48dc0d7e4436b860cb819d7110c62f2bfb1410288e1a2f9a848269f5eab8f903797a7f0309fe4c552f92a92b61a5b759ed52bd
   languageName: node
   linkType: hard
 
@@ -3017,7 +2994,7 @@ __metadata:
     "@fullcalendar/list": "npm:^6.0.3"
     "@fullcalendar/luxon": "npm:^6.0.3"
     "@fullcalendar/react": "npm:^6.0.4"
-    "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.5.16"
+    "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.6.0"
     "@react-oauth/google": "npm:^0.12.1"
     "@react-spring/parallax": "npm:^9.4.4"
     "@react-spring/types": "npm:^9.7.0"
@@ -3066,7 +3043,7 @@ __metadata:
     react-dom: "npm:^19.1.0"
     react-grid-system: "npm:^8.1.9"
     react-i18next: "npm:^15.0.1"
-    react-joyride: "npm:^3.0.0-7"
+    react-joyride: "npm:^2.9.3"
     react-on-rails: "npm:^14.2.1"
     react-redux: "npm:^9.0.1"
     react-refresh: "npm:^0.17.0"
@@ -3217,13 +3194,6 @@ __metadata:
   version: 0.6.1
   resolution: "batch@npm:0.6.1"
   checksum: 10c0/925a13897b4db80d4211082fe287bcf96d297af38e26448c857cee3e095c9792e3b8f26b37d268812e7f38a589f694609de8534a018b1937d7dc9f84e6b387c5
-  languageName: node
-  linkType: hard
-
-"big.js@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "big.js@npm:5.2.2"
-  checksum: 10c0/230520f1ff920b2d2ce3e372d77a33faa4fa60d802fe01ca4ffbc321ee06023fe9a741ac02793ee778040a16b7e497f7d60c504d1c402b8fdab6f03bb785a25f
   languageName: node
   linkType: hard
 
@@ -4153,10 +4123,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge-ts@npm:^7.1.0":
-  version: 7.1.5
-  resolution: "deepmerge-ts@npm:7.1.5"
-  checksum: 10c0/3a265a2086f334e3ecf43a7d4138c950cb99e0b39e816fa7fd7f5326161364e51b13010906908212667619066f5b48de738ed42543212323fbbb5d4ed7ebdc84
+"deep-diff@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "deep-diff@npm:1.0.2"
+  checksum: 10c0/cc3e315ba95963eba4bbb79ed88d0a37d80ba19bd3b0039b79d2ad0e19e48b0e15c692b49bcd617bbe0dcc7358d40464c993889313dd8bf806bb25978b12375d
   languageName: node
   linkType: hard
 
@@ -4342,13 +4312,6 @@ __metadata:
   version: 9.2.2
   resolution: "emoji-regex@npm:9.2.2"
   checksum: 10c0/af014e759a72064cf66e6e694a7fc6b0ed3d8db680427b021a89727689671cefe9d04151b2cad51dbaf85d5ba790d061cd167f1cf32eb7b281f6368b3c181639
-  languageName: node
-  linkType: hard
-
-"emojis-list@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "emojis-list@npm:3.0.0"
-  checksum: 10c0/7dc4394b7b910444910ad64b812392159a21e1a7ecc637c775a440227dcb4f80eff7fe61f4453a7d7603fa23d23d30cc93fe9e4b5ed985b88d6441cd4a35117b
   languageName: node
   linkType: hard
 
@@ -5347,6 +5310,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-lite@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "is-lite@npm:0.8.2"
+  checksum: 10c0/ed4b99d47ff12d0bf9730994cec8bcdee20bf46d68810f55e9e041797c76da664ab6d48a9ed2e7fb3aa52843a48ac4a083561a2235311a046551542504d995fd
+  languageName: node
+  linkType: hard
+
 "is-lite@npm:^1.2.1":
   version: 1.2.1
   resolution: "is-lite@npm:1.2.1"
@@ -5542,7 +5512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.2, json5@npm:^2.2.3":
+"json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
   bin:
@@ -5586,17 +5556,6 @@ __metadata:
   version: 4.3.0
   resolution: "loader-runner@npm:4.3.0"
   checksum: 10c0/a44d78aae0907a72f73966fe8b82d1439c8c485238bd5a864b1b9a2a3257832effa858790241e6b37876b5446a78889adf2fcc8dd897ce54c089ecc0a0ce0bf0
-  languageName: node
-  linkType: hard
-
-"loader-utils@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "loader-utils@npm:2.0.4"
-  dependencies:
-    big.js: "npm:^5.2.2"
-    emojis-list: "npm:^3.0.0"
-    json5: "npm:^2.1.2"
-  checksum: 10c0/d5654a77f9d339ec2a03d88221a5a695f337bf71eb8dea031b3223420bb818964ba8ed0069145c19b095f6c8b8fd386e602a3fc7ca987042bd8bb1dcc90d7100
   languageName: node
   linkType: hard
 
@@ -6335,6 +6294,13 @@ __metadata:
   dependencies:
     find-up: "npm:^4.0.0"
   checksum: 10c0/c56bda7769e04907a88423feb320babaed0711af8c436ce3e56763ab1021ba107c7b0cafb11cde7529f669cfc22bffcaebffb573645cbd63842ea9fb17cd7728
+  languageName: node
+  linkType: hard
+
+"popper.js@npm:^1.16.0":
+  version: 1.16.1
+  resolution: "popper.js@npm:1.16.1"
+  checksum: 10c0/1c1a826f757edb5b8c2049dfd7a9febf6ae1e9d0e51342fc715b49a0c1020fced250d26484619883651e097c5764bbcacd2f31496e3646027f079dd83e072681
   languageName: node
   linkType: hard
 
@@ -7238,18 +7204,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-floater@npm:^0.9.5-4":
-  version: 0.9.5-4
-  resolution: "react-floater@npm:0.9.5-4"
+"react-floater@npm:^0.7.9":
+  version: 0.7.9
+  resolution: "react-floater@npm:0.7.9"
   dependencies:
-    "@popperjs/core": "npm:^2.11.8"
-    deepmerge-ts: "npm:^7.1.0"
-    is-lite: "npm:^1.2.1"
-    tree-changes-hook: "npm:^0.11.2"
+    deepmerge: "npm:^4.3.1"
+    is-lite: "npm:^0.8.2"
+    popper.js: "npm:^1.16.0"
+    prop-types: "npm:^15.8.1"
+    tree-changes: "npm:^0.9.1"
   peerDependencies:
-    react: 16.8 - 19
-    react-dom: 16.8 - 19
-  checksum: 10c0/76c6f8db3646f422ad41dbaab308f7cdac3c673c959f1bb3e31aaa0f478f1e4403a631a1b24a1ed34ebb7af6868ef40a2336c09a07f640c44fce8cf701078fdd
+    react: 15 - 18
+    react-dom: 15 - 18
+  checksum: 10c0/3fa58e968a405fb95a004897ed19c87b4991e52ebd45d837b8577eb9175ddc1dfab223bb653a0fa73ffc22fc2b2a30f2d07e924f41f41a040299793e4d2decd4
   languageName: node
   linkType: hard
 
@@ -7302,24 +7269,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-joyride@npm:^3.0.0-7":
-  version: 3.0.0-7
-  resolution: "react-joyride@npm:3.0.0-7"
+"react-joyride@npm:^2.9.3":
+  version: 2.9.3
+  resolution: "react-joyride@npm:2.9.3"
   dependencies:
     "@gilbarbara/deep-equal": "npm:^0.3.1"
-    "@gilbarbara/hooks": "npm:^0.8.2"
-    "@gilbarbara/types": "npm:^0.2.2"
+    deep-diff: "npm:^1.0.2"
     deepmerge: "npm:^4.3.1"
     is-lite: "npm:^1.2.1"
-    react-floater: "npm:^0.9.5-4"
+    react-floater: "npm:^0.7.9"
     react-innertext: "npm:^1.1.5"
+    react-is: "npm:^16.13.1"
     scroll: "npm:^3.0.1"
     scrollparent: "npm:^2.1.0"
-    tree-changes-hook: "npm:^0.11.2"
+    tree-changes: "npm:^0.11.2"
+    type-fest: "npm:^4.27.0"
   peerDependencies:
-    react: 16.8 - 19
-    react-dom: 16.8 - 19
-  checksum: 10c0/03198f6f43f39dec0fb82bd38b59b1e4baa6f7024f09ad806ac3a126c60d91f6049326c82e2aef6da38f4503405ed169fcc8355dfb31cbd8be17c417069180aa
+    react: 15 - 18
+    react-dom: 15 - 18
+  checksum: 10c0/8045ef1cc14e1d48aebf46f9ecff43c1aecb6eacf3310f533844c5bf7b4d6390cdbed5f43424bb4d19c6a3351ca8d150d0a0e0c5c5e99138b70d52830276d554
   languageName: node
   linkType: hard
 
@@ -8482,25 +8450,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tree-changes-hook@npm:^0.11.2":
-  version: 0.11.3
-  resolution: "tree-changes-hook@npm:0.11.3"
-  dependencies:
-    "@gilbarbara/deep-equal": "npm:^0.3.1"
-    tree-changes: "npm:0.11.3"
-  peerDependencies:
-    react: 16.8 - 19
-  checksum: 10c0/6b5f979b2b3c25479a05cbb176a0685af0aa30fe2bae5de2983c8f5092a15d1e22c5160a897f3012f47aad20d0339bda5bbc6b9d169da71caa2d75ed46e5f5b1
-  languageName: node
-  linkType: hard
-
-"tree-changes@npm:0.11.3":
+"tree-changes@npm:^0.11.2":
   version: 0.11.3
   resolution: "tree-changes@npm:0.11.3"
   dependencies:
     "@gilbarbara/deep-equal": "npm:^0.3.1"
     is-lite: "npm:^1.2.1"
   checksum: 10c0/4479a54fb1589a0963a29e17959a6d13c5f60f962032bf23e84111b34d367d0abb56c6c17c5511a95aade7274b25eacccb651d1d88c6606151e6fdcd2e185feb
+  languageName: node
+  linkType: hard
+
+"tree-changes@npm:^0.9.1":
+  version: 0.9.3
+  resolution: "tree-changes@npm:0.9.3"
+  dependencies:
+    "@gilbarbara/deep-equal": "npm:^0.1.1"
+    is-lite: "npm:^0.8.2"
+  checksum: 10c0/e7a38ed3c22ed1195a78e800a8f08a01d44cd8f4abac421b2be6ae34f991dfbd60ce4235be4e002882f3debef95b8e0f7e027b3b758325e9b4bda905c34d3d8f
   languageName: node
   linkType: hard
 
@@ -8527,10 +8493,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^4.1.0":
-  version: 4.40.0
-  resolution: "type-fest@npm:4.40.0"
-  checksum: 10c0/b39d4da6f9a154e3db7e714cd05ccf56b53f4f0bbf74dd294cb6be4921b16ecca5cb00cb81b53ab621a31c8e8509c74b5101895ada47af9de368a317d24538a3
+"type-fest@npm:^4.27.0":
+  version: 4.40.1
+  resolution: "type-fest@npm:4.40.1"
+  checksum: 10c0/590cb7d4dcd3da83efe49b5b52cd041661f6fa29f18cb76650fe1fdeb4090688e92955656e9d981e606abb13d25c0418be8c6c6504d80e87fe18dc9ca0888392
   languageName: node
   linkType: hard
 
