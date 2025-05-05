@@ -1,5 +1,7 @@
 en:
   projects:
+    create_btn: Create Project
+    save_btn: Save Project
     create_success: Project was successfully created.
     create_success_inactive: >
       Project was successfully created. Don't forget to activate it!
@@ -7,7 +9,17 @@ en:
     update_success_inactive: >
       Project was successfully updated. Don't forget to activate it!
     destroy_success: Project was successfully destroyed.
-    factor_pack: Factor Pack
+    timezone_warning: All dates shown in the {{timezone}} time zone.
+    factor_pack: Factor pack
+    active_switch: Active
+    project_dates: Project Dates
+    start_date_lbl: Start Date
+    start_date_placeholder: Click to select the start date
+    end_date_placeholder: Click to select the close date
+    end_date_lbl: Close Date
+    date_to_lbl: until
+    name_lbl: Project Name
+    description_lbl: Project Description
     group_create_success: Group successfully created.
     group_save_success: Group data has been successfully updated.
     group_save_failure: Failed to update group data. Contact an Support.
@@ -15,17 +27,18 @@ en:
     start_date_lbl: Project start date
     end_date_lbl: Project end date
     opens: Opens every
+    style: Input style
     no_group: unassigned
     rescore: rescore
     new_group: New group name
     closes: Closes every
     groups_intro: >
       This project currently contains %{group_count} groups as specified below. Their
-      respective diversity scores are listed below their names. You may recalculate
-      any or all of those diversity scores.
-    diversity_calculated: Diversity score calculated based on current data.
-    diversities_calculated: Diversity scores calculated based on current data.
-    recalculate_diversities: Calculate all diversity scores!
+      respective perspective points are listed below their names. You may recalculate
+      any or all of those perspective points scores.
+    diversity_calculated: Perspective points calculated based on current data.
+    diversities_calculated: Perspective points calculated based on current data.
+    recalculate_diversities: Calculate all perspective points!
     wrong_group: The specified group is not in this project.
     performance_explained: >
       This value reflects your rate of response to CoLab's weekly self-
@@ -47,4 +60,4 @@ en:
     new:
       title: New Project
     projects: Projects
-    diversity_scores: Diversity scores
+    diversity_scores: Perspective points

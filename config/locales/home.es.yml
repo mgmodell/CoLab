@@ -40,7 +40,7 @@ es:
   group_names: Nombres de grupo
   history: Historia
   about_you: About You
-  calc_diversity: Diversidad
+  calc_diversity_hdr: Diversidad
   users: Usuarios
   diversity_score: Puntuación de Diversidad
   calc_diversity_sub: Dime el puntaje!
@@ -78,7 +78,6 @@ es:
   submit: Enviar
   #toolbar
   profile: Perfil
-  c_panel: Admin&hellip;
   reports: Informes
   administration: Administratión
   resp_summ: Resumen de Respuesta

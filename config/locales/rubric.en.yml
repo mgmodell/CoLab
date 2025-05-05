@@ -1,0 +1,72 @@
+en:
+  rubrics:
+    index:
+      title: List of Rubrics
+      empty: No rubrics found
+    edit:
+      title: Edit Rubric
+      deactivate: Deactivate Rubric
+      activate: Activate Rubric
+    show:
+      title: Rubric Details
+      edit_string: Edit rubric details
+      published: Is published?
+      creator: Created by
+    new:
+      title: New Rubric
+      criteria: New Criteria
+      criteria_l1: Bare minimum
+    create_success: Rubric was created successfully!
+    new_version_success: A new version was created.
+    destroy_success: Rubric was destroyed successfully!
+    update_success: Rubric was updated successfully!
+    publish_success: Rubric was published successfully!
+    publish_no_permission: You can only publish your own rubrics.
+    activate_success: Rubric was activated
+    activate_no_permission: You can only activate your own rubrics.
+    copy_success: Rubric was copied successfully!
+    deactivate_success: Rubric was deactivated
+    back: Back to the list of rubrics
+    name: Name
+    description: Description
+    version: Version
+    demo:
+      student_rubric_name: CHI Design Challenge
+      student_rubric_description: >
+        For evaluating Computer-Human Interaction design
+        competition-based project responses.
+
+      rubric_criteria_1: Grammar
+      rubric_criteria_1_level_1: More than 3 errors per page.
+      rubric_criteria_1_level_2: More than 1 error per page.
+      rubric_criteria_1_level_3: Less than 1 error per page.
+
+      rubric_criteria_2: Format
+      rubric_criteria_2_level_1: >
+        Neither title page nor correct borders and fonts.
+      rubric_criteria_2_level_2: >
+        Missing tlitle page or incorrect font and/or border width.
+      rubric_criteria_2_level_3: >
+        Complete title page with correct font and border width.
+
+      rubric_criteria_3: References
+      rubric_criteria_3_level_1: Present with some mistake.
+      rubric_criteria_3_level_2: Present with no noticeable mistakes.
+    rubric:
+      copy: Copy rubric
+      delete: Remove this rubric
+    criteria:
+      new: New Criteria
+      sequence: sequence
+      description: Short criteria description
+      weight: Criteria weight
+      l1_description: Minimum requirements
+      l2_description: Requirements for level 2 credit
+      l3_description: Requirements for level 3 credit
+      l4_description: Requirements for level 4 credit
+      l5_description: Requirements for level 5 credit
+      up: Move criteria up
+      down: Move criteria down
+      copy: Copy criteria
+      delete: Remove this criteria
+

@@ -3,12 +3,12 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
   skip_before_action :authenticate_user!,
-    only: %i[ create initiate_password_reset confirm password_change]
+                     only: %i[create initiate_password_reset confirm password_change]
 
   def set_primary_email
     found = false
-    msg = t('devise.registrations.set_primary_fail')
-    current_user.emails.each do |email|
+    msg = t( 'devise.registrations.set_primary_fail' )
+    current_user.emails.each do | email |
       if @email == email
         email.primary = true
         found = true
@@ -19,7 +19,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     # make sure
     if found
       current_user.save
-      msg = t('devise.registrations.set_primary')
+      msg = t( 'devise.registrations.set_primary' )
     else
       current_user.emails.reload
     end
@@ -33,7 +33,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 
     }
     # redirect_to edit_user_registration_path, notice: t('.set_primary')
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
@@ -42,13 +42,13 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 
   def add_email
     address = params[:email_address]
-    email = Email.create(email: address, user: current_user)
+    email = Email.create( email: address, user: current_user )
 
     logger.debug email.errors.full_messages unless email.errors.empty?
     msg = if email.errors.empty?
-            t('devise.registrations.email_added')
+            t( 'devise.registrations.email_added' )
           else
-            t('devise.registrations.email_not_added')
+            t( 'devise.registrations.email_not_added' )
           end
     # redirect_to edit_user_registration_path, notice: notice
 
@@ -60,7 +60,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       messages: { main: msg }
 
     }
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
@@ -74,11 +74,11 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
         only: %i[id email primary],
         methods: ['confirmed?']
       ),
-      messages: { main: t('devise.registrations.email_destroyed') }
+      messages: { main: t( 'devise.registrations.email_destroyed' ) }
 
     }
     # redirect_to edit_user_registration_path, notice: t('devise.registrations.email_destroyed')
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
@@ -94,7 +94,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     }
     user_email = params[:email]
     if EmailAddress.valid? user_email
-      user = User.find_by_email user_email
+      user = User.joins( :emails ).find_by( emails: { email: user_email } )
       if user.nil?
         passwd = SecureRandom.alphanumeric( 10 )
         user = User.create(
@@ -112,7 +112,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       end
     end
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
@@ -120,9 +120,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   end
 
   def confirm
-    resp = {
-      message: 'confirmations.no_token'
-    }
     token = params[:confirmation_token]
 
     # Because I'm using devise_multi-email, this will return
@@ -134,20 +131,15 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   end
 
   def initiate_password_reset
-
     resp = {
       message: current_user.present? ? 'passwords.send_instructions' : 'passwords.send_paranoid_instructions'
     }
 
-    reset_user = if current_user.present? 
-      current_user 
-    else
-      User.find_by_email params[:email]
-    end
+    reset_user = current_user.presence || User.find_by( email: params[:email] )
 
     reset_user.send_reset_password_instructions if reset_user.present?
 
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
@@ -167,8 +159,8 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       user = User.reset_password_by_token(
         {
           reset_password_token: token,
-          password: password,
-          password_confirmation: password_confirmation
+          password:,
+          password_confirmation:
         }
       )
       sign_in( user )
@@ -178,24 +170,24 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       resp[:error] = false
       resp[:message] = 'passwords.updated'
     end
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp
       end
     end
-
   end
 
   protected
 
-  def update_resource(resource, params)
-    resource.update_without_password(params)
+  def update_resource( resource, params )
+    resource.update_without_password( params )
   end
 
   private
 
   def set_email
-    @email = Email.find(params[:email_id])
-    redirect_to root_path unless @email.user == current_user
+    @email = current_user.emails.find( params[:email_id] )
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path
   end
 end

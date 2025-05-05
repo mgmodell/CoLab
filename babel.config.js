@@ -1,28 +1,28 @@
-// babel.config.js
+// The source code including full typescript support is available at: 
+// https://github.com/shakacode/react_on_rails_demo_ssr_hmr/blob/master/babel.config.js
+
 module.exports = function (api) {
   const defaultConfigFunc = require('shakapacker/package/babel/preset.js')
   const resultConfig = defaultConfigFunc(api)
-  const isDevelopmentEnv = api.env('development')
   const isProductionEnv = api.env('production')
-  const isTestEnv = api.env('test')
 
   const changesOnDefault = {
     presets: [
       [
         '@babel/preset-react',
         {
-          development: isDevelopmentEnv || isTestEnv,
+          development: !isProductionEnv,
           useBuiltIns: true
-        } 
+        }
       ]
     ].filter(Boolean),
     plugins: [
-      isProductionEnv && ['babel-plugin-transform-react-remove-prop-types', 
-        { 
-          removeImport: true 
+      process.env.WEBPACK_SERVE && 'react-refresh/babel',
+      isProductionEnv && ['babel-plugin-transform-react-remove-prop-types',
+        {
+          removeImport: true
         }
-      ],
-      process.env.WEBPACK_SERVE && 'react-refresh/babel'
+      ]
     ].filter(Boolean),
   }
 

@@ -2,9 +2,12 @@
 
 require 'faker'
 class BingoGame < ApplicationRecord
+  include DateSanitySupportConcern
   include TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :bingo_games
+  delegate :start_date, :end_date, :timezone, to: :course, prefix: true
+
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games, optional: true
@@ -15,6 +18,8 @@ class BingoGame < ApplicationRecord
 
   has_many :concepts, through: :candidates
 
+  # before_validation :init_dates # From DateSanitySupportConcern
+
   # validations
   validates :course, :topic, :end_date, :start_date, presence: true
   validates :group_discount, numericality:
@@ -23,23 +28,20 @@ class BingoGame < ApplicationRecord
       less_than_or_equal_to: 100,
       allow_nil: true }
   validates :individual_count, numericality: { only_integer: true }
-  validate :date_sanity
   validate :review_completed
 
   validate :group_components
 
-  validate :dates_within_course
   before_create :anonymize
-  # before_validation :init_dates
   before_save :reset_notification
 
-  def status_for_user(user)
-    candidate_list_for_user(user).status
+  def status_for_user( user )
+    candidate_list_for_user( user ).status
   end
 
   def status
     completed = candidates.completed.count
-    if completed > 0
+    if completed.positive?
       100 * candidates.reviewed.count / candidates.completed.count
     else
       0
@@ -47,61 +49,67 @@ class BingoGame < ApplicationRecord
   end
 
   def playable?
-    get_concepts.size > (size * size)
+    get_concepts.size > ( size * size )
   end
 
   def practicable?
     playable? &&
-      (candidates.acceptable.distinct(:concept_id).size >= 10)
+      ( candidates.acceptable.distinct( :concept_id ).size >= 10 )
   end
 
   def get_concepts
     concepts.to_a.uniq
   end
 
-  def get_topic(anonymous)
+  def get_topic( anonymous )
     anonymous ? anon_topic : topic
   end
 
-  def get_name(anonymous)
+  def get_name( anonymous )
     anonymous ? anon_topic : topic
-  end
-
-  def get_type
-    I18n.t(:terms_list)
   end
 
   def term_list_date
-    end_date - (1 + lead_time).days
+    end_date - ( 1 + lead_time ).days
   end
 
-  def task_data(current_user:)
+  def task_data( current_user: )
     # TODO: There's got to be a better way
-    group = project.group_for_user(current_user) if project.present?
+    group = project.group_for_user( current_user ) if project.present?
     # helpers = Rails.application.routes.url_helpers
+    instructor_task = false
     link = if awaiting_review?
              # helpers.review_bingo_candidates_path(self)
-             "/review_candidates/#{id}"
+             instructor_task = true
+             "bingo/review_candidates/#{id}"
            else
-             candidate_list = candidate_list_for_user(current_user)
+             candidate_list_for_user( current_user )
              if is_open?
                # helpers.edit_candidate_list_path(candidate_list)
-               "/enter_candidates/#{id}"
+               "bingo/enter_candidates/#{id}"
              elsif reviewed
                # helpers.candidate_list_path(candidate_list)
-               "/candidate_results/#{id}"
+               "bingo/candidate_results/#{id}"
              end
            end
+    local_status = if awaiting_review?
+                     status
+                   elsif is_open?
+                     status_for_user( current_user )
+                   else
+                     practicable? ? -1 : -2
+                   end
 
-    log = course.get_consent_log(user: current_user)
-    consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
+    log = course.get_consent_log( user: current_user )
+    consent_link = ( "/research_information/#{log.consent_form_id}" if log.present? )
     {
       id:,
       type: :bingo_game,
-      name: get_name(false),
-      group_name: group.present? ? group.get_name(false) : nil,
-      status:,
-      course_name: course.get_name(false),
+      instructor_task:,
+      name: get_name( false ),
+      group_name: group.present? ? group.get_name( false ) : nil,
+      status: local_status,
+      course_name: course.get_name( false ),
       start_date:,
       end_date:,
       next_date: next_deadline,
@@ -123,26 +131,22 @@ class BingoGame < ApplicationRecord
     'Terms List'
   end
 
-  def get_activity_begin
-    term_list_date
-  end
-
-  def get_events(user:)
+  def get_events( user: )
     helpers = Rails.application.routes.url_helpers
     events = []
-    user_role = course.get_user_role(user)
+    user_role = course.get_user_role( user )
 
     cl = nil
     edit_url = nil
     destroy_url = nil
-    if user_role == 'instructor'
-      edit_url = helpers.edit_bingo_game_path(self)
-      destroy_url = helpers.bingo_game_path(self)
-      cl = candidate_list_for_user(user)
+    if 'instructor' == user_role
+      edit_url = helpers.edit_bingo_game_path( self )
+      destroy_url = helpers.bingo_game_path( self )
+      cl = candidate_list_for_user( user )
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if ( active && 'enrolled_student' == user_role ) ||
+       ( 'instructor' == user_role )
       events << {
         type: 'bingo_game',
         id: "bg_#{id}",
@@ -161,15 +165,15 @@ class BingoGame < ApplicationRecord
             actor: if cl.nil?
                      'instructor'
                    else
-                     (cl.is_group? ? 'group' : 'solo')
+                     ( cl.is_group? ? 'group' : 'solo' )
                    end,
-            url: (helpers.edit_candidate_list_path(cl) if (is_open? && user_role) == 'enrolled_student')
+            url: ( helpers.edit_candidate_list_path( cl ) if 'enrolled_student' == ( is_open? && user_role ) )
           },
           {
             type: 'terms_list_review',
             start: term_list_date + 1.day,
             end: end_date,
-            actor: if user_role == 'enrolled_student' && reviewed
+            actor: if 'enrolled_student' == user_role && reviewed
                      'solo'
                    else
                      'instructor'
@@ -177,25 +181,17 @@ class BingoGame < ApplicationRecord
             url: if is_open?
                    nil
                  else
-                   (if user_role == 'instructor'
-                      helpers.review_bingo_candidates_path(self)
-                    else
-                      (reviewed ? helpers.candidate_list_path(cl) : nil)
-                    end)
+                   ( if 'instructor' == user_role
+                       helpers.review_bingo_candidates_path( self )
+                     else
+                       ( reviewed ? helpers.candidate_list_path( cl ) : nil )
+                     end )
                  end
           }
         ]
       }
     end
     events
-  end
-
-  def get_activity_on_date(date:, anon:)
-    if date <= term_list_date
-      "#{I18n.t(:terms_list)} (#{get_name(anon)})"
-    else
-      "#{I18n.t(:terms_review)} (#{get_name(anon)})"
-    end
   end
 
   def next_deadline
@@ -211,23 +207,9 @@ class BingoGame < ApplicationRecord
     start_date <= cur_date && term_list_date >= cur_date
   end
 
-  def required_terms_for_contributors(contributor_count)
-    remaining_percent = (100.0 - group_discount) / 100
-    discounted = (contributor_count * individual_count * remaining_percent).floor
-  end
-
-  def get_current_lists_hash
-    candidate_lists = {}
-    course.rosters.enrolled_student.each do |roster|
-      student = roster.user
-      candidate_list = candidate_list_for_user(student)
-      if candidate_lists[candidate_list].nil?
-        candidate_lists[candidate_list] = [student]
-      else
-        candidate_lists[candidate_list] << student
-      end
-    end
-    candidate_lists
+  def required_terms_for_contributors( contributor_count )
+    remaining_percent = ( 100.0 - group_discount ) / 100
+    ( contributor_count * individual_count * remaining_percent ).floor
   end
 
   def awaiting_review?
@@ -236,21 +218,21 @@ class BingoGame < ApplicationRecord
 
   def self.inform_instructors
     count = 0
-    BingoGame.includes(:course).where(instructor_notified: false).find_each do |bingo|
-      next unless bingo.end_date < DateTime.current + (1 + bingo.lead_time).days
+    BingoGame.includes( :course ).where( instructor_notified: false ).find_each do | bingo |
+      next unless bingo.end_date < DateTime.current + ( 1 + bingo.lead_time ).days
 
       completion_hash = {}
-      bingo.course.enrolled_students.each do |student|
-        candidate_list = bingo.candidate_list_for_user(student)
-        completion_hash[student.email] = { name: student.name(false),
-                                           status: candidate_list.percent_completed.to_s + '%' }
+      bingo.course.enrolled_students.each do | student |
+        candidate_list = bingo.candidate_list_for_user( student )
+        completion_hash[student.email] = { name: student.name( false ),
+                                           status: "#{candidate_list.percent_completed}%" }
       end
 
-      bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
-                                            bingo.course.pretty_name,
-                                            instructor,
-                                            completion_hash).deliver_later
+      bingo.course.instructors.each do | instructor |
+        AdministrativeMailer.summary_report( "#{bingo.get_name( false )} (terms list)",
+                                             bingo.course.pretty_name,
+                                             instructor,
+                                             completion_hash ).deliver_later
         count += 1
       end
       bingo.instructor_notified = true
@@ -259,8 +241,8 @@ class BingoGame < ApplicationRecord
     logger.debug "\n\t**#{count} Candidate Terms List reports sent to Instructors**"
   end
 
-  def candidate_list_for_user(user)
-    cl = candidate_lists.find_by_user_id user.id
+  def candidate_list_for_user( user )
+    cl = candidate_lists.find_by user_id: user.id
     if cl.nil?
       cl = CandidateList.new
       cl.user_id = user.id
@@ -272,9 +254,9 @@ class BingoGame < ApplicationRecord
       cl.current_candidate_list = nil
 
       individual_count.times do
-        cl.candidates << Candidate.new(term: '', definition: '', user:)
+        cl.candidates << Candidate.new( term: '', definition: '', user: )
       end
-      cl.save unless id == -1 # This unless supports the demonstration only
+      cl.save unless -1 == id # This unless supports the demonstration only
       logger.debug cl.errors.full_messages unless cl.errors.empty?
     elsif  cl.archived
       # TODO: I think I can fix this
@@ -289,49 +271,20 @@ class BingoGame < ApplicationRecord
     self.instructor_notified = false if end_date_changed? && instructor_notified && term_list_date <= end_date
   end
 
-  def init_dates
-    self.start_date ||= course.start_date
-    self.end_date ||= course.end_date
-  end
-
   # validation methods
-  def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
-  end
-
-  def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        msg = I18n.t('bingo_games.start_date_err',
-                     start_date:,
-                     course_start_date: course.start_date)
-        errors.add(:start_date, msg)
-      end
-      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        msg = I18n.t('bingo_games.end_date_err',
-                     end_date:,
-                     course_end_date: course.end_date)
-        errors.add(:end_date, msg)
-      end
-    end
-    errors
-  end
 
   def review_completed
-    if reviewed && candidates.reviewed.count < candidates.completed.count
-      errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
-    end
+    return unless reviewed && candidates.reviewed.count < candidates.completed.count
+
+    errors.add( :reviewed, I18n.t( 'bingo_games.reviewed_err' ) )
   end
 
   # We must validate group components {project and discount}
   def group_components
-    if group_option
-      errors.add(:project_id, I18n.t('bingo_games.group_requires_project')) if project.nil?
-      errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount')) if group_discount.nil?
-    end
+    return unless group_option
+
+    errors.add( :project_id, I18n.t( 'bingo_games.group_requires_project' ) ) if project.nil?
+    errors.add( :group_discount, I18n.t( 'bingo_games.group_requires_discount' ) ) if group_discount.nil?
   end
 
   def anonymize

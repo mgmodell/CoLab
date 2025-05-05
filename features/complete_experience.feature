@@ -28,8 +28,6 @@ Feature: Users can complete 'experiences'
      And the user presses "Next"
     Then the user will see "Week 1"
     Then the 'Save and continue' button will be disabled
-    # Then the user will see "Week 1"
-    # Then the user will see "You must select a behavior"
     Then user opens their profile
     Then the user sees the experience in the history
 
@@ -42,8 +40,6 @@ Feature: Users can complete 'experiences'
      And the user presses "Next"
     Then the user will see "Week 1"
     Then the 'Save and continue' button will be disabled
-    #Then the user will see "Week 1"
-    #Then the user will see "You must select a behavior"
     Then user opens their profile
     Then the user sees the experience in the history
 
@@ -64,8 +60,6 @@ Feature: Users can complete 'experiences'
     Then they open the drawer for additional comments
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments"
     Then the 'Save and continue' button will be disabled
-    # Then the user will see "Week 1"
-    # Then the user will see "You must select a behavior"
     Then in the field "Your comments" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
 @javascript
@@ -199,6 +193,7 @@ Feature: Users can complete 'experiences'
      And the database will show a reaction with "Social loafing" as the behavior
      And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
     Then the user will see "Your reaction to the experience was recorded"
+    Then close all messages
     Then user should see 1 open task
     Then the user will see "100%"
     Then there will be 1 reactions from 1 different scenarios recorded
@@ -227,7 +222,6 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then the 'Submit' button will be disabled
-    # Then the user will see "Reflection on possible improvements is required"
 
   @javascript
   Scenario: Interleaved users
@@ -280,14 +274,13 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then the 'Submit' button will be disabled
-    # Then the user will see "Reflection on possible improvements is required"
-    # Then the user will see "Overall Group Behavior"
     Then the user chooses the "Ganging up on the task" radio button
     Then they enter "first comment" in extant field "Your suggestions:"
     Then the user presses "Submit"
      And the database will show a reaction for the user with "Ganging up on the task" as the behavior
      And the database will show a reaction for the user with improvements of "first comment"
     Then the user will see "Your reaction to the experience was recorded"
+    Then close all messages
     Then user should see 1 open task
     Then the user will see "100%"
     Then user opens their profile
@@ -315,6 +308,7 @@ Feature: Users can complete 'experiences'
      And the database will show a reaction with "Group domination" as the behavior
      And the database will show a reaction with improvements of "second comment"
     Then the user will see "Your reaction to the experience was recorded"
+    Then close all messages
     Then user should see 1 open task
     Then the user will see "100%"
     

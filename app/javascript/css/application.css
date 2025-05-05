@@ -1,0 +1,170 @@
+:root {
+  --primary-color: hsl(240,86%, 45%);
+  --darker-color: hsl(35, 50%, 20%);
+  --lighter-color: hsl(246, 56%, 34%);
+}
+body {
+  /* max-width: 50rem; */
+  padding: 1rem;
+  margin: auto;
+  background:var(--primary-color);
+  color: var(--darker-color);
+  /* text-shadow: 0 1px 1px white; */
+  font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
+  width: 100%;
+}
+
+a {
+  color: var(--darker-color);
+  text-decoration: none;
+}
+
+.p-button {
+  color: var(--lighter-color);
+  background-color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+a:active {
+  color: var(--lighter-color);
+  text-decoration: underline;
+}
+
+.mainNav {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0rem;
+  margin-top: 0rem;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--darker-color);
+  color: azure;
+}
+.mainNav .p-toolbar-group-start {
+  display: block;
+  width: 9%;
+  align-items: center;
+}
+.mainNav .p-toolbar-group-center {
+  display: block;
+  align-items: top;
+  width: 70%;
+  word-wrap: normal;
+}
+.mainNav .p-toolbar-group-center .quotes {
+  font-size: small;
+}
+.mainNav .p-toolbar-group-end {
+  margin-left: auto;
+  float: right;
+  clear: right;
+}
+
+.mainNav .p-button {
+  background-color: var(--darker-color);
+}
+
+.mainContent {
+  margin-top: 4rem;
+  background-color: var(--lighter-color);
+  color: var(--darker-color);
+}
+
+.p-toast {
+  z-index: 1500;
+  width: 100%;
+  margin-top: 3rem;
+}
+
+.intro-text {
+  /* Learned this here:
+  // https://stackoverflow.com/questions/55127454/how-to-apply-transform-origin-to-svg-element
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events
+  */
+  pointer-events: none;
+}
+
+.intro-nav {
+  /* Nothing here yet */
+}
+
+.intro-nav:hover {
+  cursor: pointer;
+  animation: navPulseActive;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  filter: drop-shadow(0 0 0.5rem white);
+}
+
+@keyframes navPulseActive {
+  0% {
+    filter: drop-shadow(0 0 0.5rem indigo);
+  }
+  100% {
+    filter: drop-shadow(0 0 0.5rem white);
+  }
+}
+
+.intro {
+  color: azure;
+}
+
+.intro a {
+  color: hsl(247, 41%, 69%);
+  text-decoration: none;
+}
+
+.intro a:hover,
+a:active {
+  color: hsl(247, 41%, 69%);
+  text-decoration: underline;
+}
+
+.p-inputtextarea {
+  width: 100%;
+}
+
+.p-datepicker-trigger {
+  background-color: var(--primary-color)
+}
+
+.intro_nav:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+.p-datatype-date {
+  max-width: 100%;
+}
+
+.content-table-data {
+  text-wrap: wrap;
+}
+
+.bingoBoardTable {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.bingoBoardTable td {
+  border: 1px solid #ddd;
+}
+
+.fixedDrawer a {
+  cursor: default;
+}
+.fixedDrawer .p-icon{
+  visibility: hidden;
+}
+.fixedDrawer a:hover, a:active, a:visited {
+  text-decoration: none;
+  color: var(--primary-color)
+}

@@ -1,10 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
 
-export default function Logo(props) {
+type Props = {
+  height?: number;
+  width?: number;
+  spinning?: boolean;
+};
+
+export default function Logo(props: Props) {
   const height = props.height || 72;
   const width = props.width || 72;
-  const mounted = useRef( false );
+  const mounted = useRef(false);
 
   const viewBox = [0, 0, 1000, 1000].join(" ");
 
@@ -33,7 +38,7 @@ export default function Logo(props) {
   function rotateColors() {
     colors.push(colors.shift());
     setColors(colors);
-    if( mounted ){
+    if (mounted) {
       setGreen(colors[0]);
     }
   }
@@ -50,16 +55,16 @@ export default function Logo(props) {
   useEffect(() => {
     spinning();
     mounted.current = true;
-    return( )=>{
+    return () => {
       mounted.current = false;
-    }
+    };
   }, []);
 
   async function spinIt() {
     if (!props.spinning) {
       for (let index = 0; index < 15; index++) {
         rotateColors();
-        await sleep(Math.log(index, 1000) * 100);
+        await sleep(Math.log(index) * 100);
       }
     }
   }
@@ -81,7 +86,6 @@ export default function Logo(props) {
         y2="493"
         gradientUnits="userSpaceOnUse"
       >
-        >
         <stop offset="0" stopColor="#ffffff" stopOpacity="25%" />
         <stop offset="1" stopColor="#c8c8c8" stopOpacity="100%" />
       </linearGradient>
@@ -139,10 +143,4 @@ export default function Logo(props) {
       </g>
     </svg>
   );
-
-  Logo.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number,
-    spinning: PropTypes.bool
-  };
 }

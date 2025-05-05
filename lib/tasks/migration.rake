@@ -1,7 +1,85 @@
 namespace :migratify do
 
+  desc 'Set default theme color'
+  task default_theme_colors_2025: :environment do
+    User.where( theme: nil ).update_all( theme: '007bff' )
+
+  end
+
+  desc 'Updating the rails counter caches'
+  task update_counters: :environment do
+    ActiveRecord::Base.transaction do
+
+      Reaction.find_each do |reaction|
+        Reaction.reset_counters( reaction.id, :diagnoses )
+      end
+
+      CandidateList.find_each do |candidate_list|
+        CandidateList.reset_counters( candidate_list.id, :candidates )
+      end
+      Concept.find_each do |concept|
+        Concept.reset_counters( concept.id, :candidates )
+      end
+
+      School.find_each do |school|
+        School.reset_counters( school.id, :courses )
+      end
+      ConsentForm.find_each do |consent_form|
+        ConsentForm.reset_counters( consent_form.id, :courses )
+      end
+
+    end
+  end
+
+  desc 'Updating the DB to accommodate updated factors'
+  task factor_update: :environment do
+    # FactorPack seed data
+    class FactorPack_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    class Factor_
+      attr_accessor :fp
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    ActiveRecord::Base.transaction do
+      read_data = YAML.load_file(
+        'db/factor_pack.yml',
+        permitted_classes: [FactorPack_]
+        )
+      read_data.each do |factor_pack|
+        g = FactorPack.where(name_en: factor_pack.name_en).take
+        g = FactorPack.new if g.nil?
+        g.name_en = factor_pack.name_en unless g.name_en == factor_pack.name_en
+        g.name_ko = factor_pack.name_ko unless g.name_ko == factor_pack.name_ko
+        g.description_en = factor_pack.description_en unless g.description_en == factor_pack.description_en
+        g.description_ko = factor_pack.description_ko unless g.description_ko == factor_pack.description_ko
+        g.save
+      end
+
+
+      # Factor seed data
+      read_data = YAML.load_file(
+        'db/factor.yml',
+        permitted_classes: [Factor_]
+      )
+      read_data.each do |factor|
+        g = Factor.where(name_en: factor.name_en).take
+        g = Factor.new if g.nil?
+        fp = FactorPack.where(name_en: factor.fp).take
+        g.name_en = factor.name_en unless g.name_en == factor.name_en
+        g.name_ko = factor.name_ko unless g.name_ko == factor.name_ko
+        g.description_en = factor.description_en unless g.description_en == factor.description_en
+        g.description_ko = factor.description_ko unless g.description_ko == factor.description_ko
+        g.factor_pack = fp
+        g.save
+      end
+    end
+  end
+
   desc 'Applying for the react migration in the summer of 2020'
-  task react_su_2020: :environment do
+  task api_conversion: :environment do
     behavior = Behavior.find_by_name_en( 'Other' )
     behavior.needs_detail = true
     behavior.save
@@ -9,6 +87,11 @@ namespace :migratify do
     User.all.each do |u|
       u.update_instructor
       u.save
+    end
+
+    Course.all.each do |c|
+      c.anon_offset = - Random.rand(1000).days.to_i + 35
+      c.save
     end
 
   end
@@ -19,7 +102,9 @@ namespace :migratify do
     class Quote_
       attr_accessor :text_en, :attribution
     end
-    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data = YAML.load_file(
+      'db/quotes.yml',
+      permitted_classes: [Quote_])
     read_data.each do |quote|
       quote.text_en = quote.text_en.strip
       q = Quote.where(text_en: quote.text_en).take
@@ -40,7 +125,7 @@ namespace :migratify do
       if 1 == cf.size
         cf = cf[ 0 ]
         cf.name_en = 'Definition: Almost correct'
-        cf.definition_en = 
+        cf.definition_en =
           "You've identified an important term related to the stated topic and " +
           "provided a definition that is close to complete, but is lacking in " +
           "some crucial way(s)."
@@ -64,7 +149,7 @@ namespace :migratify do
         cf = cf[ 0 ]
         remap_to_id = cf.id
         cf.name_en = 'Term: Proper Name or Product Name'
-        cf.definition_en = 
+        cf.definition_en =
           "Proper names and products should not be used unless they are "+
           "dominant to the point of being synonymous with a class of " +
           "activity or a household name."
@@ -93,14 +178,14 @@ namespace :migratify do
     end
 
   end
-  
+
 
   desc 'Adding type to Candidate Feedback'
   task cf_type: :environment do
     CandidateFeedback.all.each do |cf|
       if 'Acceptable' == cf.name_en
         cf.critique = 1
-      
+
       elsif cf.name_en.start_with? 'Definition'
         cf.critique = 2
 
@@ -113,14 +198,14 @@ namespace :migratify do
 
   desc 'lead time fixes'
   task lead_time: :environment do
-    #update the lead times for bingo games
+    # Uupdate the lead times for bingo games
     BingoGame.all.each do |bg|
       bg.lead_time = bg.lead_time - 1
       bg.save( validate: false )
       puts bg.errors.full_messages unless bg.errors.empty?
     end
-    
-    #update the lead times for bingo games
+
+    # Update the lead times for bingo games
     Experience.all.each do |exp|
       exp.lead_time = 2
       exp.end_date = exp.end_date + exp.lead_time.days
@@ -143,6 +228,7 @@ namespace :migratify do
             user: u,
             bingo_game: cl.bingo_game )
           raise "Too many lists for u:#{u.id} b:#{cl.bingo_game_id}" unless cl_arch.size == 1
+
           cl_arch = cl_arch[ 0 ]
           cl_arch.archived = true
           cl_arch.is_group = false
@@ -154,9 +240,9 @@ namespace :migratify do
 
     CandidateList.where( 'user_id IS NOT NULL' ).where( is_group: true).each do |cl|
       group = GroupRevision
-        .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
-        .take
-        .group
+              .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
+              .take
+              .group
       g_cl = CandidateList.where(
         is_group: true,
         group: group,
@@ -232,10 +318,10 @@ namespace :migratify do
       concept.courses_count = concept.courses.uniq.size
       concept.save
     end
-    
+
   end
 
-    
+
   desc 'Create the underpinnings for language support'
   task db_updates: :environment do
     Rake::Task['db:migrate'].invoke
@@ -428,21 +514,6 @@ namespace :migratify do
       g.save
     end
 
-    # Theme seed data
-    class Theme_
-      attr_accessor :code
-      attr_accessor :name_en, :name_ko
-    end
-    read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
-    read_data.each do |theme|
-      g = Theme.where(code: theme.code).take
-      g = Theme.new if g.nil?
-      g.code = theme.code unless g.code == theme.code
-      g.name_en = theme.name_en unless g.name_en == theme.name_en
-      g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
-      g.save
-    end
-
     class Style_
       attr_accessor :name_en, :name_ko
       attr_accessor :filename
@@ -579,37 +650,46 @@ namespace :migratify do
     # Make sure the DB is primed and ready!
 
     User.find_each do |user|
-      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
-      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
-      user.researcher = false unless user.researcher.present?
+      user.anon_first_name = Faker::Name.first_name unless user.anon_first_name?
+      user.anon_last_name = Faker::Name.last_name unless user.anon_last_name?
+      user.researcher = false unless user.researcher?
       user.save
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s" if group.anon_name.blank?
+      unless group.anon_name?
+        group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
+      end
       group.save
     end
 
     BingoGame.find_each do |bingo_game|
-      if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
+      if !bingo_game.anon_topic? || (bingo_game.anon_topic.starts_with? 'Lorem')
         trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-        bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+        bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
         bingo_game.save
       end
     end
 
     Experience.find_each do |experience|
-      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
+      experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" unless experience.anon_name?
       experience.save
     end
 
+    locations = [
+      Faker::Games::Pokemon,
+      Faker::Games::Touhou,
+      Faker::Games::Overwatch,
+      Faker::Movies::HowToTrainYourDragon,
+      Faker::Fantasy::Tolkien
+    ]
     Project.find_each do |project|
-      project.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" unless project.anon_name?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute" if school.anon_name.blank?
+      school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" unless school.anon_name?
       school.save
     end
 
@@ -617,8 +697,8 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV]
     levels = %w[Beginning Intermediate Advanced]
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
-      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+      course.anon_name = "#{levels.sample} #{Faker::Company.industry}" unless course.anon_name?
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}" unless course.anon_number?
       course.save
     end
   end

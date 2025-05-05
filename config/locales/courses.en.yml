@@ -1,14 +1,60 @@
 en:
   courses:
+    dialog_title: Create a copy
+    btn_tooltip_title: Create a copy based on this course
+    copy_btn_aria: Make a copy
+    copy_btn_txt: Make a Copy
+    size_btn: large
+    date_picker_label: New course start date?
+    toggle_columns_plc: Show hidden columns
+    new_user: Add a {{user_type}}
+    add_lbl: Add {{user_type}}
+    bingo_performance: Bingo! Performance
+    activities_list_ttl: Activities
+    details_tab: Details
+    instructors_tab: Instructors
+    students_tab: Students
+    activities_tab: Activities
+    new_activity: New Activity
+    checkin_record: Check-in Record
+    email: Email
+    start_date_lbl: Start Date
+    end_date_lbl: End Date
+    start_date_placeholder: Click to select the start date
+    end_date_placeholder: Click to select the close date
+    date_to_lbl: until
+    experience_completion: Experience Completion
+    actions: Actions
+    copy_cancel_btn: Cancel
     index:
       title: List of Courses
       submit_copy: Copy this Course
       copy_new_start: When will this new course start?
       original_date: Existing course date
       copy_new_start_lbl: New course start date?
+      number_col: Number
+      name_col: Name
+      school_col: School
+      open_col: Open Date
+      close_col: Close Date
+      faculty_col: Faculty
+      students_col: Students
+      projects_col: Projects
+      experiences_col: Experiences
+      bingo_games_col: Bingo! Games
+      actions_col: Actions
     edit:
       title: Edit Course Details
       self_reg_dwnld: Download self-registration code
+      number: Course Number
+      name: Course Name
+      description: Course Description
+      school: School
+      time_zone: Time Zone
+      consent: Consent Form
+      dates_tz: All dates shown in {{time_zone}} timezone.
+      dates: Course Dates
+      download_qr: Download self-registration code
     show:
       title: Course Details
       instructors: Course Instructors
@@ -16,6 +62,7 @@ en:
       add_instructor_lbl: 'Add instructor by email:'
       add_student_lbl: 'Add student by email:'
       add: Add!
+      add_btn: Add {{user_type}}s!
       enrolled_count:
         one: There is one student enrolled.
         other: There are %{count} students enrolled.
@@ -46,7 +93,100 @@ en:
     no_roster: That user is not listed as a student in that course.
     editing: Editing Course
     participants: Participants
-    activities: Course Activities
+    wizard:
+      advanced_switch: Switch to advanced mode
+      wizard_switch: Switch to assist me mode
+      name_number_lbl: Description
+      name_number_ttl: What course is this?
+      name_number_desc: >
+        Please enter the course title and the course identifier. These
+        are how the course will be presented to you and your students.
+        You are free to enter whatever you'd like, but most schools have
+        both names and numbers that students and instructors will be
+        familiar with and these should be used here.
+      course_description_desc: >
+        Below you can enter a description of the course. It is rarely
+        shown to students or instructors, so this is optional and
+        primarily for your benefit.
+      dates_lbl: Dates
+      dates_ttl: When will this course run?
+      dates_desc: >
+        Please enter the start and end date for this course. All
+        course activities must fall within these dates as we use this
+        information to perform some sanity checks and make sure
+        activities aren't accidentally planned for dates that won't make
+        any sense.
+      dates_timezone: >
+        We assume that this course will run in the {{timezone}} timezone
+        just like your school. However, you can click here to change
+        this. Perhaps for a study abroad course?
+      confirm_create_lbl: Confirm and create
+      confirm_save_lbl: Summary
+      confirm_save_ttl: Is this all correct?
+      confirm_save_desc: >
+        Please review all the information we've captured so far to make
+        sure it's correct before we save it. If anything is incorrect,
+        click on it to go back and fix it. After the course is saved,
+        you'll be able to add activities and begin enrolling students.
+      confirm_save_name: Course Name
+      confirm_save_number: Course Number
+      confirm_save_description: Course Description
+      confirm_save_dates: >
+        The course will kick off on {{open_date}} and it will wrap up on
+        {{close_date}}. All of this will be in the {{timezone}} time
+        zone.
+      instructors_lbl: Instructors
+      instructors_ttl: Who will teach this course?
+      instructor_desc: >
+        Please add any instructors involved in teaching this course.
+      instructor_remove_desc: >
+        Note: Only a CoLab.online school administrator can remove themselves
+        from a course.
+      project_lbl: Add Project
+      project_ttl: Add a group project?
+      project_desc: >
+        By creating a project for your course, you can assign students
+        to teams and have them check-in on a weekly basis and give you
+        insight into how the team is doing. Would you like to create a
+        team now?
+      project_start_week: Which week should the project begin?
+      experience_sim_init: >
+        CoLab.online can take your students through a simulated teamwork
+        experience to help introduce teamwork and facilitate discussion
+        on what to expect of it. Would you like to offer this?
+      project_support_site: >
+        Would you like more information about what CoLab.online does,
+        more tools to make the most of what we offer and maybe a look at
+        some of the research we're based upon? Visit
+      readings_lbl: Readings
+      readings_ttl: Add gamified collaborative readings?
+      readings_desc: >
+        CoLab.online's reading assignments ask students to extract and
+        define terms from the readings that were meaningful to them and
+        then gives you, the instructor, an opportunity to provide them
+        with feedback. Then, our Bingo! worksheets let them review their
+        new vocabulary in the form of a game.
+      students_lbl: Students
+      students_ttl: Enroll students
+      students_desc: >
+        You may manually enroll students by entering their email
+        addresses in the box below, but it is usually easier to have
+        them scan the image at right to have them enroll themselves. You
+        can download the image for embedding within a syllabus by
+        clicking the image or the text under it.
+      enrollment_qr_lbl: Download the enrollment QR code
+      next_btn: Next
+      prev_btn: Previous
+      save_btn: Save
+      confirm_save_btn: This is all correct &mdash; let's create it!
+    activities: 
+      type_col: Type
+      name_col: Name
+      status_col: Status
+      open_col: Open date
+      close_col: Close date
+      delete_lbl: Delete
+      save_first_msg: You must save the course to have activities.
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
@@ -58,3 +198,17 @@ en:
     drop_cancel_btn: Cancel
     drop_tooltip_title: Drop Student
     drop_tooltip_aria: Drop Student
+    first_name: First Name
+    last_name: Last Name
+    email: Email
+    bingo_progress: Bingo Progress
+    assessment_progress: Assessment Progress
+    assessment_performance: Assessment Performance
+    experience_progress: Experience Progress
+    experience_performance: Experience Performance
+    status: Status
+    drop_student: Drop Student
+    accept_student: Accept Student
+    decline_student: Decline Student
+    cancel: Cancel
+    save_course_warning: You must save the Course to have students assigned to it

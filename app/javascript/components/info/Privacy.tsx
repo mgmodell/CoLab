@@ -1,4 +1,5 @@
-import React, { Fragment } from "react";
+import { Panel } from "primereact/panel";
+import React from "react";
 
 /*
  * Original content generator by
@@ -6,8 +7,7 @@ import React, { Fragment } from "react";
  */
 export default function Privacy(props) {
   return (
-    <Fragment>
-      <h1>Privacy Policy for MMP Technologies, LLC</h1>
+    <Panel header="Privacy Policy for MMP Technologies, LLC">
 
       <p>
         At CoLab.online, accessible from{" "}
@@ -228,6 +228,6 @@ export default function Privacy(props) {
         encourage you to contact us immediately and we will do our best efforts
         to promptly remove such information from our records.
       </p>
-    </Fragment>
+    </Panel>
   );
 }

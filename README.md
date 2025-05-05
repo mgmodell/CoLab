@@ -1,3 +1,7 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mgmodell/CoLab?style=flat-square)
+![GitHub language count](https://img.shields.io/github/languages/count/mgmodell/CoLab)
+[![CucumberReports: CoLab](https://messages.cucumber.io/api/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6/badge)](https://reports.cucumber.io/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6)
+
 # README #
 
 The CoLab system provides instructor support for collaborative learning
@@ -14,71 +18,51 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. I am using [Mac OS](http://www.Apple.com), [Linux
-Mint](https://www.linuxmint.com/download.php) and [Ubuntu on
-Windows](https://wiki.ubuntu.com/WSL) because I'm comfortable using the
-command line. That's just for context - GUIs can be powerful too and I
-can help you set them up if you run into difficulty.
-
+desktop OS. It requires [Docker](https://www.docker.com/)
+[git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
+support (native on MacOSX and Linux but may require additional
+download/installation on Windows). The current configuration uses [devContainers](https://containers.dev/) and I am using [VSCode](https://code.visualstudio.com/) for development. I recommend it. The instructions below assume the docker and vsCode are already installed.
+If you're installing Ubuntu, be sure to use the apt package for Docker rather than the snap version. Uninstall the snap version if it's present.
 
 ### Setting up ###
+1. You must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
+    1. mariadb-client
+    1. mysql-client
+1. (**Recommended**) Set up ssh-keys on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+1. Open a terminal and navigate to a directory where you'd like to
+  download the project.
+1. Run `git clone https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
+1. Navigate to the colab directory
+1. Run `./buildContainers.sh`
+1. Run `./db_load.sh -j`
+1. Open [vsCode](https://code.visualstudio.com) and do the rest from there.
+1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
+up the testing user with your email and a password of 'password' for
+testing purposes.
+1. Run `./dev_serv.sh -s` to start up the server.
+  1. Open http://localhost:3000 or use a [VNC application](https://en.wikipedia.org/wiki/VNC) to open [vnc://localhost:5909](vnc://localhost:5909)
 
-* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
-* [Learn Cucumber](https://cucumber.io/docs)
-* [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
-* Set up your environment:
-    * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
-    * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Open a terminal window
-        * On Windows launch Ubuntu (set up a username/password)
-        * On Mac, open the Terminal app
-        * On Linux, open any terminal app
-    * `mkdir dev`
-    * `cd dev`
-    * `ssh-keygen` (press enter for all questions)
-    * ``eval `ssh-agent` ``
-    * `ssh-add ~/.ssh/id_rsa`
-    * `cat ~/.ssh/id_rsa.pub`
-* Copy the output of the above command (`cat`)
-* Open [Bitbucket settings](https://bitbucket.org/account/settings/ssh-keys/)
-* Add Key
-* Paste the output into the window
-* Save
-* Back in Terminal:
-    * `git clone git@bitbucket.org:_performance/colab.git`
-    * `cd colab`
-    * __NOTE:__ The following installer will change your shell to zsh. If you are already
-      a *NIX user, you probably know this is the current trend in the industry, but that
-      it is a significant difference from other shells. Also, I recommend installing
-      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
-      enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
-      the `plugins` line in the file .zshrc in your home directory so that
-      you have something like:
-      `plugins=(rails git rake rake-fast yarn bundler)`
-      Feel free to ask me about this if you're interested. 
-    * `./setup_env` [enter your password when it is requested]
+The `dev_serve.sh` script is used to interact with the development/testing environment and it is recommended that you run each to see what options are available:
 
-# Launch the server
-* `foreman start -f Procfile.dev`
-* Open a browser window on [the test server](http://localhost:3000)
+If you want to run the full suite of tests, you will use `run_tests.sh` and it:
+* Should be run from a terminal outside vsCode.
+* Offers a listing of its features if run with no options.
 
 # Contribution instructions #
-* Review the issues
-* Find one that interests you
-* Assign it to yourself
-* Start working in your own branch
+1. Review the issues
+1. Find one that interests you
+1. Assign it to yourself
+1. Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
-* Create what you need
+1. Create what you need
     * Create your own user account (if auth is working)
-    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
-    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
-* Open [the test server](http://localhost:3000)
-* Play with it to understand the problem
-* Start writing tests
-* Run your tests (this may not work on all systems)
-    * `rake cucumber:rerun`
-* Check in your code
+    * Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"`
+    * Run `./dev_serv.sh -e "examples[`<yourEmail@something.com>`]"`
+1. Open [the test server](http://localhost:3000)
+1. Play with it to understand the problem
+1. Start writing tests
+1. Check in your code
     * `git add <file name>`
     * ``git commit -m `<meaningful message>` ``
     * `git push`
@@ -86,4 +70,7 @@ can help you set them up if you run into difficulty.
 ### Who do I talk to? ###
 
 * @micah_gideon
-* Ask on [Slack](https://suny-k.slack.com/messages/G4DNHKPMM)
+* Ask on [Slack](https://mountsaintmarycollege.slack.com/archives/G01269L9DAT)
+
+## Contributors
+My wife, Misun, and my two children have been instrumental in making this possible by putting up with me throughout.

@@ -16,3 +16,11 @@
   name_ko: 증류 한
   description_en: Distillation of factors from 23 sources
   description_ko: 23 개 출처의 요인 증류
+
+- !ruby/object:FactorPack_
+  name_en: AECT 2023
+  name_ko: 
+  description_en: >
+    Distillation of factors from 100+ sources. Presented at Association
+    for Educational Communications Technologists Annual Meeting, 2023.
+  description_ko: 

@@ -1,51 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import { acknowledgeMsg } from "./infrastructure/StatusActions";
+import { acknowledgeMsg } from "./infrastructure/StatusSlice";
 
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
-
-import CloseIcon from "@mui/icons-material/Close";
+import { Toast } from "primereact/toast";
 
 export default function AppStatusBar(props) {
   const messages = useTypedSelector(state => {
     return state.status.messages;
   });
   const dispatch = useDispatch();
+  const toast = React.useRef(null);
 
-  return (
-    <React.Fragment>
-      {messages.map((message, index) => {
-        return (
-          <Collapse key={`collapse_${index}`} in={!message["dismissed"]}>
-            <Alert
-              severity={message.priority}
-              id={`alert_${index}`}
-              action={
-                <IconButton
-                  aria-label={`${message.priority}-close`}
-                  id={`${message.priority}-close`}
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    dispatch(acknowledgeMsg(index));
-                    //statusActions.acknowledge(index);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {message["text"] || null}
-            </Alert>
-          </Collapse>
-        );
-      })}
-      <WorkingIndicator />
-    </React.Fragment>
-  );
+  useEffect(() => {
+    messages.forEach((message, index) => {
+      if (!message.dismissed) {
+        toast.current.show({
+          severity: message.priority,
+          summary: message.priority,
+          detail: message.text,
+          life: 30000
+        });
+        dispatch(acknowledgeMsg(index));
+      }
+    });
+  }, [messages]);
+
+  return <Toast ref={toast} />;
 }

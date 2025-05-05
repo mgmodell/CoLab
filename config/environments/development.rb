@@ -36,11 +36,11 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
+  config.hosts << "app:3000"
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :dev
 
-  config.react.variant = :development
   # Don't care if the mailer can't send.
   config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = false
@@ -67,6 +67,9 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  # Machine name for LTI registration
+  config.machine_name = 'colab.online'
 
   config.after_initialize do
     Bullet.enable = true

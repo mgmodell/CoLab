@@ -1,11 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { LinePath } from "@visx/shape";
+import React, { useMemo } from "react";
+
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
-import { Text } from "@visx/text";
+const LinePath = React.lazy(() => import("../Reports/visxLinePath"));
+const Text = React.lazy(() => import("../Reports/visxText"));
 
-export default function BingoDataRepresentation(props) {
+type Props = {
+  height: number;
+  width: number;
+  value: number;
+  scores: number[];
+};
+
+export default function BingoDataRepresentation(props: Props) {
   const getAvg = valueArray => {
     let total = 0;
     for (var i = 0; i < valueArray.length; i++) {
@@ -67,11 +74,11 @@ export default function BingoDataRepresentation(props) {
 
   var trendData = null;
   if (props.scores.length > 1) {
-    const leastSquaresCoeff = leastSquares(xSeries, props.scores);
+    const leastSquaresCoeff = useMemo( () => leastSquares(xSeries, props.scores), [xSeries, props.scores]);
     const ePerformance = Math.round(
-      avg * (1 + leastSquaresCoeff[0] / props.scores.length)
+      avg * ( 1 + ( leastSquaresCoeff[0] / 100 ) ) 
     );
-    var trendLineColor = leastSquaresCoeff[0] < 0 ? "red" : "green";
+    const trendLineColor = leastSquaresCoeff[0] < 0 ? "red" : "green";
     trendData = (
       <React.Fragment>
         <LinePath
@@ -141,10 +148,3 @@ export default function BingoDataRepresentation(props) {
     </React.Fragment>
   );
 }
-
-BingoDataRepresentation.propTypes = {
-  height: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-  scores: PropTypes.arrayOf(PropTypes.number).isRequired
-};

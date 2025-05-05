@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_26_133734) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -62,6 +62,29 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.boolean "instructor_updated", default: false, null: false
     t.boolean "active", default: true, null: false
     t.index ["project_id"], name: "index_assessments_on_project_id"
+  end
+
+  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "start_date", null: false
+    t.datetime "end_date", null: false
+    t.bigint "rubric_id"
+    t.boolean "group_enabled", default: false, null: false
+    t.integer "course_id", null: false
+    t.integer "project_id"
+    t.boolean "active", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "passing", default: 65
+    t.string "anon_name"
+    t.string "anon_description"
+    t.boolean "file_sub", default: false, null: false
+    t.boolean "link_sub", default: false, null: false
+    t.boolean "text_sub", default: true, null: false
+    t.index ["course_id"], name: "index_assignments_on_course_id"
+    t.index ["project_id"], name: "index_assignments_on_project_id"
+    t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
 
   create_table "behaviors", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -236,8 +259,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.string "anon_name"
     t.string "anon_number"
     t.integer "consent_form_id"
+    t.integer "anon_offset", default: 0, null: false
     t.index ["consent_form_id"], name: "fk_rails_469f90a775"
     t.index ["school_id"], name: "index_courses_on_school_id"
+  end
+
+  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.bigint "rubric_id", null: false
+    t.string "description"
+    t.integer "weight", default: 1, null: false
+    t.integer "sequence", null: false
+    t.text "l1_description"
+    t.text "l2_description"
+    t.text "l3_description"
+    t.text "l4_description"
+    t.text "l5_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubric_id", "sequence"], name: "index_criteria_on_rubric_id_and_sequence", unique: true
+    t.index ["rubric_id"], name: "index_criteria_on_rubric_id"
   end
 
   create_table "delayed_jobs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -387,6 +427,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "jwk_kid", null: false
+    t.text "_keypair_ciphertext", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "not_before", null: false
+    t.datetime "not_after", null: false
+    t.datetime "expires_at", null: false
+    t.index ["created_at"], name: "index_keypairs_on_created_at"
+    t.index ["jwk_kid"], name: "index_keypairs_on_jwk_kid", unique: true
+  end
+
   create_table "languages", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "name_en"
@@ -441,6 +493,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.integer "experience_id"
     t.boolean "instructed"
     t.string "other_name"
+    t.integer "diagnoses_count"
     t.index ["behavior_id"], name: "index_reactions_on_behavior_id"
     t.index ["experience_id"], name: "index_reactions_on_experience_id"
     t.index ["narrative_id"], name: "index_reactions_on_narrative_id"
@@ -455,7 +508,39 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["course_id"], name: "index_rosters_on_course_id"
     t.index ["role"], name: "index_rosters_on_role"
+    t.index ["user_id", "course_id"], name: "index_rosters_on_user_id_and_course_id", unique: true
     t.index ["user_id"], name: "index_rosters_on_user_id"
+  end
+
+  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.bigint "submission_feedback_id", null: false
+    t.float "score", default: 0.0, null: false
+    t.text "feedback"
+    t.bigint "criterium_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["criterium_id"], name: "index_rubric_row_feedbacks_on_criterium_id"
+    t.index ["submission_feedback_id"], name: "index_rubric_row_feedbacks_on_submission_feedback_id"
+  end
+
+  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "version", default: 1, null: false
+    t.boolean "published", default: false, null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.integer "school_id"
+    t.string "anon_name"
+    t.string "anon_description"
+    t.integer "anon_version"
+    t.boolean "active", default: false, null: false
+    t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
+    t.index ["parent_id"], name: "index_rubrics_on_parent_id"
+    t.index ["school_id"], name: "index_rubrics_on_school_id"
+    t.index ["user_id"], name: "index_rubrics_on_user_id"
   end
 
   create_table "scenarios", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -495,14 +580,32 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.index ["name_en"], name: "index_styles_on_name_en", unique: true
   end
 
-  create_table "themes", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.string "code"
-    t.string "name_en"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "name_ko"
-    t.index ["code"], name: "index_themes_on_code", unique: true
-    t.index ["name_en"], name: "index_themes_on_name_en", unique: true
+  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.bigint "submission_id", null: false
+    t.text "feedback"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["submission_id"], name: "index_submission_feedbacks_on_submission_id"
+  end
+
+  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.datetime "submitted"
+    t.datetime "withdrawn"
+    t.float "recorded_score"
+    t.text "sub_text"
+    t.string "sub_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.integer "group_id"
+    t.bigint "assignment_id", null: false
+    t.bigint "rubric_id", null: false
+    t.integer "creator_id", null: false
+    t.index ["assignment_id"], name: "index_submissions_on_assignment_id"
+    t.index ["creator_id"], name: "index_submissions_on_creator_id"
+    t.index ["group_id"], name: "index_submissions_on_group_id"
+    t.index ["rubric_id"], name: "index_submissions_on_rubric_id"
+    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -532,7 +635,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.boolean "admin"
     t.boolean "welcomed"
     t.datetime "last_emailed", precision: nil
-    t.integer "theme_id", default: 1
     t.integer "school_id"
     t.string "anon_first_name"
     t.string "anon_last_name"
@@ -552,14 +654,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.string "uid", default: "", null: false
     t.text "tokens"
     t.boolean "instructor", default: false, null: false
+    t.boolean "active", default: true, null: false
+    t.string "theme", default: "007bff", null: false
     t.index ["cip_code_id"], name: "index_users_on_cip_code_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["gender_id"], name: "index_users_on_gender_id"
     t.index ["home_state_id"], name: "index_users_on_home_state_id"
     t.index ["language_id"], name: "index_users_on_language_id"
+    t.index ["primary_language_id"], name: "index_users_on_primary_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
-    t.index ["theme_id"], name: "index_users_on_theme_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -590,6 +694,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assessments", "projects"
+  add_foreign_key "assignments", "courses"
+  add_foreign_key "assignments", "projects"
+  add_foreign_key "assignments", "rubrics"
   add_foreign_key "bingo_boards", "bingo_games"
   add_foreign_key "bingo_boards", "users"
   add_foreign_key "bingo_cells", "bingo_boards"
@@ -610,6 +717,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
   add_foreign_key "consent_logs", "users"
   add_foreign_key "courses", "consent_forms"
   add_foreign_key "courses", "schools"
+  add_foreign_key "criteria", "rubrics"
   add_foreign_key "diagnoses", "behaviors"
   add_foreign_key "diagnoses", "reactions"
   add_foreign_key "diagnoses", "weeks"
@@ -632,13 +740,23 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "users"
+  add_foreign_key "rubric_row_feedbacks", "criteria"
+  add_foreign_key "rubric_row_feedbacks", "submission_feedbacks"
+  add_foreign_key "rubrics", "rubrics", column: "parent_id"
+  add_foreign_key "rubrics", "schools"
+  add_foreign_key "rubrics", "users"
   add_foreign_key "scenarios", "behaviors"
+  add_foreign_key "submission_feedbacks", "submissions"
+  add_foreign_key "submissions", "assignments"
+  add_foreign_key "submissions", "groups"
+  add_foreign_key "submissions", "rubrics"
+  add_foreign_key "submissions", "users"
+  add_foreign_key "submissions", "users", column: "creator_id"
   add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
   add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
-  add_foreign_key "users", "themes"
   add_foreign_key "values", "factors"
   add_foreign_key "values", "installments"
   add_foreign_key "values", "users"

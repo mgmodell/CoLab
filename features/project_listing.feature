@@ -19,6 +19,14 @@ Feature: Assessment Listing
     Then user should see 1 open task
 
 @javascript
+  Scenario: User cannot log in using the wrong password
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the project has been activated
+    When the user attempts login with wrong password
+    Then the user should see a failed login message
+     And user should see login form
+
+@javascript
   Scenario: If the student drops the course, they shouldn't see the project
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Then the user is dropped from the course

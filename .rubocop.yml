@@ -1,7 +1,8 @@
-require: 
-  - rubocop-thread_safety
+plugins:
   - rubocop-performance
   - rubocop-rails
+  - rubocop-thread_safety
+  - rubocop-capybara
 
 AllCops:
   Include:
@@ -13,3 +14,18 @@ AllCops:
     - 'db/**/*'
     - 'config/**/*'
     - 'script/**/*'
+
+Metrics:
+    Enabled: false
+Metrics/ClassLength:
+    Enabled: false
+Metrics/BlockLength:
+    Enabled: false
+Metrics/MethodLength:
+    Enabled: false
+Style/YodaCondition:
+  EnforcedStyle: require_for_equality_operators_only
+Layout/SpaceAroundBlockParameters:
+  EnforcedStyleInsidePipes: space
+Layout/SpaceInsideParens:
+  EnforcedStyle: space

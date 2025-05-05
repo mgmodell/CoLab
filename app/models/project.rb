@@ -2,6 +2,7 @@
 
 require 'faker'
 class Project < ApplicationRecord
+  include DateSanitySupportConcern
   include TimezonesSupportConcern
   after_save :build_assessment
 
@@ -12,51 +13,50 @@ class Project < ApplicationRecord
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
-  has_many :installments, through: :assessments
+  has_many :installments, through: :assessments, dependent: :destroy
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
 
+  delegate :timezone, :name, :anon_offset, to: :course, prefix: true
+
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
-  before_validation :init_dates
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
     less_than_or_equal_to: 6
   }
 
-  # Let's be sure the dates are valid
-  validate :date_sanity
-  validate :dates_within_course
+  # Business rule validation checks
   validate :activation_status
 
   # Set default values
   after_initialize do
     if new_record?
       self.active = false
-      # Simple/Goldfinch factor pack is the default
-      self.factor_pack_id = 1
+      # AECT 2023 factor pack is the default
+      self.factor_pack_id ||= 4
       # Sliders style
-      self.style_id = 2
-      self.start_dow = 5
-      self.end_dow = 1
+      self.style_id ||= 2
+      self.start_dow ||= 5
+      self.end_dow ||= 1
 
     end
   end
 
-  def group_for_user(user)
-    if id == -1 # This hack supports demonstration of group term lists
-      Group.new(name: 'SuperStars', users: [user])
+  def group_for_user( user )
+    if -1 == id # This hack supports demonstration of group term lists
+      Group.new( name: 'SuperStars', users: [user] )
     else
-      groups.joins(:users).find_by(users: { id: user.id })
+      groups.joins( :users ).find_by( users: { id: user.id } )
     end
   end
 
-  def get_performance(user)
-    installments_count = installments.where(user:).count
-    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
+  def get_performance( user )
+    installments_count = installments.where( user: ).count
+    assessments.count.zero? ? 100 : 100 * installments_count / assessments.count
   end
 
   # TODO: Not ideal structuring for UI
@@ -64,22 +64,6 @@ class Project < ApplicationRecord
     # helpers = Rails.application.routes.url_helpers
     # helpers.project_path self
     'project'
-  end
-
-  def get_activity_begin
-    start_date
-  end
-
-  def get_type
-    I18n.t(:project)
-  end
-
-  def enrolled_user_rosters
-    course.rosters.enrolled
-  end
-
-  def number_of_weeks
-    (end_date - start_date).divmod(7)[0]
   end
 
   def get_user_appearance_counts
@@ -90,31 +74,13 @@ class Project < ApplicationRecord
     Project.get_occurence_count_hash groups
   end
 
-  def get_name(anonymous)
+  def get_name( anonymous )
     anonymous ? anon_name : name
   end
 
-  def get_activity_on_date(date:, anon:)
-    day = date.wday
-    o_string = get_name(anon)
-    add_string = ''
-    add_string = if has_inside_date_range?
-                   if day < start_dow || day > end_dow
-                     ' (work)'
-                   else
-                     ' (SAPA)'
-                   end
-                 elsif day < end_dow && day > start_dow
-                   ' (work)'
-                 else
-                   ' (SAPA)'
-                 end
-    o_string + add_string
-  end
-
-  def self.get_occurence_count_hash(input_array)
-    dup_hash = Hash.new(0)
-    input_array.each { |v| dup_hash.store(v.id, dup_hash[v.id] + 1) }
+  def self.get_occurence_count_hash( input_array )
+    dup_hash = Hash.new( 0 )
+    input_array.each { | v | dup_hash.store( v.id, dup_hash[v.id] + 1 ) }
     dup_hash
   end
 
@@ -128,9 +94,9 @@ class Project < ApplicationRecord
   # Check if the assessment is active, if we're in the date range and
   # within the day range.
   def is_available?
-    tz = ActiveSupport::TimeZone.new(course.timezone)
+    tz = ActiveSupport::TimeZone.new( course.timezone )
     is_available = false
-    init_date = tz.parse(DateTime.current.to_s)
+    init_date = tz.parse( DateTime.current.to_s )
     init_day = init_date.wday
 
     if active &&
@@ -149,7 +115,7 @@ class Project < ApplicationRecord
     'Project'
   end
 
-  def status_for_user(_user)
+  def status_for_user( _user )
     # get some sort of count of completion rates
     'Coming soon'
   end
@@ -161,34 +127,34 @@ class Project < ApplicationRecord
   def get_days_applicable
     days = []
     if has_inside_date_range?
-      start_dow.upto end_dow do |day_num|
+      start_dow.upto end_dow do | day_num |
         days << day_num
       end
     else
-      start_dow.upto 6 do |day_num|
+      start_dow.upto 6 do | day_num |
         days << day_num
       end
-      0.upto end_dow do |day_num|
+      0.upto end_dow do | day_num |
         days << day_num
       end
     end
     days
   end
 
-  def get_events(user:)
+  def get_events( user: )
     helpers = Rails.application.routes.url_helpers
     events = []
-    user_role = course.get_user_role(user)
+    user_role = course.get_user_role( user )
 
     edit_url = nil
     destroy_url = nil
-    if user_role == 'instructor'
-      edit_url = helpers.edit_project_path(self)
-      destroy_url = helpers.project_path(self)
+    if 'instructor' == user_role
+      edit_url = helpers.edit_project_path( self )
+      destroy_url = helpers.project_path( self )
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if ( active && 'enrolled_student' == user_role ) ||
+       ( 'instructor' == user_role )
 
       days = get_days_applicable
 
@@ -216,57 +182,32 @@ class Project < ApplicationRecord
   private
 
   # Validation check code
-  def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
-  end
-
-  def init_dates
-    self.start_date ||= course.start_date
-    self.end_date ||= course.end_date
-  end
-
-  def dates_within_course
-    if self.start_date < course.start_date
-      msg = 'The project cannot begin before the course has begun '
-      msg += "(#{start_date} < #{course.start_date})"
-      errors.add(:start_date, msg)
-    end
-    if self.end_date > course.end_date
-      msg = 'The project cannot continue after the course has ended '
-      msg += "(#{end_date} > #{course.end_date})"
-      errors.add(:end_date, msg)
-    end
-    errors
-  end
 
   def activation_status
     if active_before_last_save && active &&
-       (start_dow_changed? || end_dow_changed? ||
+       ( start_dow_changed? || end_dow_changed? ||
         start_date_changed? || end_date_changed? ||
-        factor_pack_id_changed? || style_id_changed?)
+        factor_pack_id_changed? || style_id_changed? )
       self.active = false
     elsif !active_before_last_save && active
 
-      get_user_appearance_counts.each do |user_id, count|
+      get_user_appearance_counts.each do | user_id, count |
         # Check the users
-        user = User.find(user_id)
-        if Roster.enrolled.where(user:, course:).count < 1
-          errors.add(:active, "#{user.name false} does not appear to be enrolled in this course.")
+        user = User.find( user_id )
+        if Roster.enrolled.where( user:, course: ).count < 1
+          errors.add( :active, "#{user.name false} does not appear to be enrolled in this course." )
         elsif count > 1
-          errors.add(:active, "#{user.name false} appears #{count} times in your project.")
+          errors.add( :active, "#{user.name false} appears #{count} times in your project." )
         end
       end
       # Check the groups
-      get_group_appearance_counts.each do |group_id, count|
+      get_group_appearance_counts.each do | group_id, count |
         if count > 1
-          group = Group.find(group_id)
-          errors.add(:active, "#{group.name false} (group) appears #{count} times in your project.")
+          group = Group.find( group_id )
+          errors.add( :active, "#{group.name false} (group) appears #{count} times in your project." )
         end
       end
-      errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated') if factor_pack.nil?
+      errors.add( :factor_pack, 'Factor Pack must be set before a project can be activated' ) if factor_pack.nil?
       # If this is an activation, we need to set up any necessary weeklies
       Assessment.configure_current_assessment self
     end

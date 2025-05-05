@@ -7,19 +7,20 @@ class School < ApplicationRecord
   has_many :projects, through: :courses
   has_many :experiences, through: :courses
   has_many :rosters, through: :courses
+  has_many :rubrics, inverse_of: :school, dependent: :nullify
 
   before_create :anonymize
   validates :name, :timezone, presence: true
 
   def instructors
-    rosters.instructor.collect(&:user).uniq
+    rosters.instructor.collect( &:user ).uniq
   end
 
   def enrolled_students
-    rosters.enrolled_student.collect(&:user).uniq
+    rosters.enrolled_student.collect( &:user ).uniq
   end
 
-  def get_name(anonymous)
+  def get_name( anonymous )
     anonymous ? anon_name : name
   end
 

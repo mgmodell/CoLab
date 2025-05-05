@@ -9,26 +9,29 @@ class Assessment < ApplicationRecord
   has_many :users, through: :project
   has_many :groups, through: :project
 
+  delegate :course_id, to: :project, prefix: true
+
   # Helpful scope
-  scope :active_at, lambda { |date|
-                      joins(:project)
-                        .where('assessments.end_date >= ?', date)
-                        .where('assessments.start_date <= ?', date)
-                        .where(assessments: { active: true })
-                        .where(projects: { active: true })
+  scope :active_at, lambda { | date |
+                      joins( :project )
+                        .where( 'assessments.end_date >= ?', date )
+                        .where( 'assessments.start_date <= ?', date )
+                        .where( assessments: { active: true } )
+                        .where( projects: { active: true } )
                     }
 
-  def is_completed_by_user(user)
-    user.installments.where(assessment: self).count != 0
+  def is_completed_by_user( user )
+    0 != user.installments.where( assessment: self ).count
   end
 
-  def task_data(current_user:)
+  def task_data( current_user: )
     helpers = Rails.application.routes.url_helpers
     # link = helpers.edit_installment_path(assessment_id: id)
-    link = "submit_installment/#{id}"
-    group = group_for_user(current_user)
+    link = "project/checkin/#{id}"
+    group = group_for_user( current_user )
+    instructor_task = false
 
-    log = course.get_consent_log(user: current_user)
+    log = course.get_consent_log( user: current_user )
     consent_link = if log.present?
                      helpers.edit_consent_log_path(
                        consent_form_id: log.consent_form_id
@@ -37,13 +40,14 @@ class Assessment < ApplicationRecord
     {
       id:,
       type: :assessment,
-      name: project.get_name(false),
-      group_name: group.get_name(false),
-      status: is_completed_by_user(current_user) ? 100 : 0,
-      course_name: course.get_name(false),
+      instructor_task:,
+      name: project.get_name( false ),
+      group_name: group.get_name( false ),
+      status: is_completed_by_user( current_user ) ? 100 : 0,
+      course_name: course.get_name( false ),
       start_date:,
       end_date:,
-      next_deadline:,
+      next_date: next_deadline,
       link:,
       consent_link:,
       active: project.active
@@ -54,9 +58,9 @@ class Assessment < ApplicationRecord
     end_date
   end
 
-  def group_for_user(user)
-    groups = self.groups.joins(:users).where(users: { id: user })
-    if groups.nil? || groups.count == 0
+  def group_for_user( user )
+    groups = self.groups.joins( :users ).where( users: { id: user } )
+    if groups.nil? || groups.count.zero?
       groups = nil
     else
       logger.debug 'Too many groups for this assessment' if groups.count > 1
@@ -69,8 +73,8 @@ class Assessment < ApplicationRecord
   def self.set_up_assessments
     init_date = DateTime.current
     logger.debug "\n\t**Populating Assessments**"
-    Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
-                                    init_date, init_date.end_of_day).find_each do |project|
+    Project.includes( :course ).where( 'active = true AND start_date <= ? AND end_date >= ?',
+                                       init_date, init_date.end_of_day ).find_each do | project |
       configure_current_assessment project if project.is_available?
     end
   end
@@ -80,32 +84,32 @@ class Assessment < ApplicationRecord
     count = 0
     date_now = DateTime.current
 
-    Assessment.joins(:project)
-              .includes(:installments)
-              .where(assessments: { active: true }, instructor_updated: false, projects: { active: true })
-              .where('assessments.end_date < ?', date_now)
-              .find_each do |assessment|
+    Assessment.joins( :project )
+              .includes( :installments )
+              .where( assessments: { active: true }, instructor_updated: false, projects: { active: true } )
+              .where( 'assessments.end_date < ?', date_now )
+              .find_each do | assessment |
       completion_hash = {}
       # Collect data for notification and anonymize comments
-      assessment.installments.each do |inst|
-        completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
+      assessment.installments.each do | inst |
+        completion_hash[inst.user.email] = { name: inst.user.name( false ), status: inst.inst_date.to_s }
         inst.anonymize_comments
         logger.debug inst.errors.full_messages unless inst.errors.empty?
       end
 
-      assessment.project.course.enrolled_students.each do |student|
+      assessment.project.course.enrolled_students.each do | student |
         if completion_hash[student.email].blank?
-          completion_hash[student.email] = { name: student.name(false), status: 'Incomplete' }
+          completion_hash[student.email] = { name: student.name( false ), status: 'Incomplete' }
         end
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
-      assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(assessment.project.get_name(false) + ' (assessment)',
-                                            assessment.project.course.pretty_name(false),
-                                            instructor,
-                                            completion_hash).deliver_later
+      assessment.project.course.instructors.each do | instructor |
+        AdministrativeMailer.summary_report( "#{assessment.project.get_name( false )} (assessment)",
+                                             assessment.project.course.pretty_name( false ),
+                                             instructor,
+                                             completion_hash ).deliver_later
         count += 1
       end
 
@@ -116,23 +120,23 @@ class Assessment < ApplicationRecord
   end
 
   # Create an assessment for a project if warranted
-  def self.configure_current_assessment(project)
-    tz = ActiveSupport::TimeZone.new(project.course.timezone)
+  def self.configure_current_assessment( project )
+    tz = ActiveSupport::TimeZone.new( project.course_timezone )
 
     init_date = DateTime.current
-    init_date_in_tz = tz.parse(init_date.to_s).beginning_of_day
+    init_date_in_tz = tz.parse( init_date.to_s ).beginning_of_day
     init_day = init_date_in_tz.wday
     assessment = Assessment.new
     assessment.active = true
 
     day_delta = init_day - project.start_dow
-    if day_delta == 0
+    if day_delta.zero?
       assessment.start_date = init_date_in_tz.beginning_of_day
     else
-      day_delta = 7 + day_delta if day_delta < 0
-      assessment.start_date = (init_date_in_tz - day_delta.days)
+      day_delta = 7 + day_delta if day_delta.negative?
+      assessment.start_date = ( init_date_in_tz - day_delta.days )
     end
-    assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
+    assessment.start_date = tz.parse( assessment.start_date.to_s ).beginning_of_day
 
     # calc period
     period = if project.end_dow > project.start_dow
@@ -142,7 +146,7 @@ class Assessment < ApplicationRecord
              end
 
     assessment.end_date = assessment.start_date + period.days
-    assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
+    assessment.end_date = tz.parse( assessment.end_date.to_s ).end_of_day.change( sec: 0 )
 
     existing_assessments = project.assessments.where(
       'start_date <= ? AND end_date >= ?',
@@ -158,7 +162,7 @@ class Assessment < ApplicationRecord
       assessment.save
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
-    elsif existing_assessments.count == 1
+    elsif 1 == existing_assessments.count
       existing_assessment = existing_assessments[0]
       if project.is_available?
         existing_assessment.start_date = assessment.start_date
@@ -173,8 +177,11 @@ class Assessment < ApplicationRecord
       existing_assessment.save
     else
       msg = "\n\tToo many current assessments for this project: "
-      msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
+      msg += "#{existing_assessments.count} #{existing_assessments.collect( &:id )}"
       logger.debug msg
     end
   end
+
+  delegate :name, to: :project
+  delegate :description, to: :project
 end

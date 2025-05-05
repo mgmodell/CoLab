@@ -1,0 +1,6 @@
+es:
+  rubric_row_feedbacks:
+    error:
+      feedback_required: >
+        Si la puntuación no es perfecta, es necesario enviar un
+        comentario.

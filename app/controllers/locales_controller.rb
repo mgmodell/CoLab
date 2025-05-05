@@ -5,10 +5,12 @@ class LocalesController < ApplicationController
 
   def get_resources
     ns = params[:ns]
-    texts = if ns == 'base'
-              I18n.t '.'
+    lng = params[:lng]
+
+    texts = if 'base' == ns
+              I18n.t '.', locale: lng
             else
-              I18n.t ns
+              I18n.t ns, locale: lng
             end
 
     render json: texts
