@@ -20,10 +20,12 @@
     "@react-spring/web": "^9.7.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@swc/core": "^1.7.0-nightly-20240714.1",
+    "@types/babel__core": "7",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/react-redux": "^7.1.23",
     "@types/stopword": "^2.0.3",
+    "@types/webpack": "5",
     "@visx/axis": "^3.0.1",
     "@visx/curve": "^3.0.0",
     "@visx/scale": "^3.0.0",
@@ -32,11 +34,11 @@
     "@visx/xychart": "^3.7.0",
     "autosuggest-highlight": "^3.2.1",
     "axios": "^1.0.0",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "10.0.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "chroma-js": "^3.1.2",
-    "compression-webpack-plugin": "^11.0.0",
+    "compression-webpack-plugin": "11.1.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "d3-color": "^3.1.0",
@@ -70,7 +72,7 @@
     "react-virtualized": "^9.22.3",
     "react_ujs": "^3.0.0",
     "resize-observer-hook": "^1.0.5",
-    "shakapacker": "^8.0.2",
+    "shakapacker": "8.3.0",
     "stopword": "^3.1.4",
     "style-loader": "^4.0.0",
     "swc-loader": "^0.2.3",
@@ -79,14 +81,15 @@
     "url": "^0.11.0",
     "webpack": "5",
     "webpack-assets-manifest": "5",
-    "webpack-cli": "^6.0.1",
-    "webpack-merge": "^6.0.1",
+    "webpack-cli": "6.0.1",
+    "webpack-merge": "6.0.1",
     "webpack-sources": "^3.2.3",
     "whatwg-fetch": "^3.6.2"
   },
   "version": "0.1.0",
   "babel": {
     "presets": [
+      "./node_modules/shakapacker/package/babel/preset.js",
       "./node_modules/shakapacker/package/babel/preset.js"
     ]
   },
@@ -96,6 +99,6 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
     "react-refresh": "^0.17.0",
-    "webpack-dev-server": "^5.0.1"
+    "webpack-dev-server": "5.2.1"
   }
 }
