@@ -91,7 +91,7 @@ fi
 if [ "$LOAD" = true ]; then
   if test -f "$LOAD_FILE"; then
     echo "Loading"
-    if[ "$MOODLE" = false ]; then
+    if [ "$MOODLE" = false ]; then
         mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
     else
         mysql moodle -u moodle -pmoodle --protocol=TCP --port=31337 < $LOAD_FILE
