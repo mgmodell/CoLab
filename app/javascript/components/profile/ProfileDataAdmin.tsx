@@ -37,7 +37,8 @@ import { Container, Row, Col } from "react-grid-system";
 import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
-import { useBlocker } from "react-router";
+import { useBlocker, useNavigate } from "react-router";
+import { bl, di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;
@@ -103,19 +104,35 @@ export default function ProfileDataAdmin(props: Props) {
     return state.profile.lastRetrieved !== state.profile.lastSet;
   });
 
-  const blocker = useBlocker( ()=>{
-    if( !dirty ){
+  const navigate = useNavigate();
+
+  const blocker = useBlocker( ( args )=>{
+    if( args.nextLocation.state === 'unblocked' || !dirty ){
       return false;
     } else {
-      //TODO make this into a PrimeReact Dialog
-      if( window.confirm( t("confirm_leave") ) ){
-        resetProfile();
-        return false;
-      } else {
-        return true;
-      }
+      confirmUnsavedChanges( args );
+      return true;
     }
   })
+  const confirmUnsavedChanges = ( args ) => {
+    confirmDialog({
+      message: t("confirm_leave"),
+      header: t("confirm_leave_hdr"),
+      icon: "pi pi-exclamation-triangle",
+      modal: true,
+      accept: () => {
+        resetProfile();
+        navigate( args.nextLocation.pathname,
+          {
+            state: 'unblocked'
+          }
+         );
+      },
+      reject: () => {
+        // Do nothing
+      }
+    });
+  };
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;
@@ -699,23 +716,6 @@ export default function ProfileDataAdmin(props: Props) {
     </Panel>
   ) : null;
 
-  const confirmUnsavedChanges = () => {
-    let blockNavigation = true;
-    confirmDialog({
-      message: t("confirm_leave"),
-      header: t("confirm_leave_hdr"),
-      icon: "pi pi-exclamation-triangle",
-      modal: true,
-      accept: () => {
-        resetProfile();
-        blockNavigation = false;
-      },
-      reject: () => {
-        // Do nothing
-      }
-    });
-    return blockNavigation;
-  };
   return (
     <Panel>
       <ConfirmDialog 
