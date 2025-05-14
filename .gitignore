@@ -27,7 +27,6 @@ yarn-error.log*
 /node_modules
 yarn-debug.log*
 .yarn-integrity
-.yarn/releases
 .yarn/install-state.gz
 test_results.html
 coverage
