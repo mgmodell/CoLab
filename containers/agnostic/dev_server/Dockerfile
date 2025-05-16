@@ -58,6 +58,8 @@ RUN sed -i 's/(git)/(\ngit\nmise\nbundler\nrails\nyarn\nrake\n)/g' ~/.zshrc
 RUN mkdir -p /home/colab/src/app
 COPY containers/dev_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
+RUN mise trust /home/colab/src/app/mise.toml && \
+  mise settings add idiomatic_version_file_enable_tools ruby
 
 ENV DRIVER=docker
 ENV COLAB_DB=db
