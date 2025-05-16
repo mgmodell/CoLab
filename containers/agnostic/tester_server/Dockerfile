@@ -58,6 +58,8 @@ RUN git config --global pull.rebase false &&\
 RUN mkdir -p /home/colab/src/app
 COPY containers/test_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
+RUN mise trust /home/colab/src/app/mise.toml && \
+  mise settings add idiomatic_version_file_enable_tools ruby
 
 ENV DRIVER=docker
 ENV CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
