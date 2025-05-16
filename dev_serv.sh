@@ -22,7 +22,7 @@ print_help ( ) {
 
 }
 
-if [ -f /.dockerenv ]; then
+if [ "$container" = 'podman' ]; then
   # We're in a Docker container, so we're good!
   echo "Arguments: '$@'"
 else

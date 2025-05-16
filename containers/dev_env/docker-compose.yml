@@ -73,6 +73,7 @@ services:
       - MOODLE_SMTP_HOST=smtp.gmail.com
       - MOODLE_SMTP_PORT_NUMBER=587
       - MOODLE_SMTP_USER=micah.modell+moodle@gmail.com
+      - MOODLE_SMTP_PASSWORD=CHANGEME
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
     ports:
