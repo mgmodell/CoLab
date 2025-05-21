@@ -1,6 +1,6 @@
 services:
   app:
-    image: colab_tester
+    image: localhost/colab_tester
     hostname: test-server-${HOSTNAME}
     environment:
       - PARENT=${HOSTNAME}

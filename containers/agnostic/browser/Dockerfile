@@ -1,1 +1,1 @@
-FROM selenium/standalone-chromium
+FROM docker.io/selenium/standalone-chromium

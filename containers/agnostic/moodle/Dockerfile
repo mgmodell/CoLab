@@ -1,2 +1,2 @@
-FROM bitnami/moodle
+FROM docker.io/bitnami/moodle
 

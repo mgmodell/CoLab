@@ -1,4 +1,4 @@
-FROM mariadb
+FROM docker.io/mariadb
 
 COPY containers/initDBs.sql /docker-entrypoint-initdb.d/init-privs.sql
 
