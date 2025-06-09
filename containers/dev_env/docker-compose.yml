@@ -37,7 +37,7 @@ services:
       - 6080:6080
     environment:
       VNC_PASSWORD: "password"
-      AUTO_START_XTERM: false
+      AUTO_START_XTERM: "false"
     restart: unless-stopped
 
   selenium:
