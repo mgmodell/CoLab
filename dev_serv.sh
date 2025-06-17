@@ -7,6 +7,7 @@ print_help ( ) {
   echo " -s             Start the server (cannot be combined)"
   echo " -f [features]  Specify specific features to run"
   echo ""
+  echo " -p             Prepare the DB (run db:prepare task)"
   echo " -d             Migrate the DB"
   echo " -c             Run the rails console (then terminate)"
   echo " -q [db]        Open mysql terminal to 'colab' or 'moodle'"
@@ -45,6 +46,7 @@ COLAB_DB_PORT=3306
 
 SHOW_HELP=false
 MIGRATE=false
+PREPARE=true
 RUN_TASK_M=false
 RUN_TASK_E=false
 RUN_TASK_A=false
@@ -55,7 +57,7 @@ STARTUP=false
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "a:cf:q:dtsm:e:h" opt; do
+while getopts "a:cf:q:dtsm:e:ph" opt; do
   case $opt in
     q)
       if [[ $OPTARG == "moodle" ]]; then
@@ -99,6 +101,9 @@ while getopts "a:cf:q:dtsm:e:h" opt; do
     h|\?) #Invalid option
       SHOW_HELP=true
       ;;
+    p)
+      PREPARE=true
+      ;;
   esac
 done
 
@@ -110,16 +115,16 @@ fi
 rails db:prepare
 
 
-# Migrate the DB
-if [ "$MIGRATE" = true ]; then
-  echo "Migrating the DB..."
-  rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306
-fi
-
 # Run a migratify task
 if [ "$RUN_TASK_M" = true ]; then
   echo 'Migratify Task'
   rails migratify:$RUN_TASK_M_NAME COLAB_DB=db COLAB_DB_PORT=3306
+fi
+
+# Migrate the DB
+if [ "$MIGRATE" = true ]; then
+  echo "Migrating the DB..."
+  rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
 # Run a testing task
