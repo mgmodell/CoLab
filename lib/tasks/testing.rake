@@ -350,9 +350,12 @@ namespace :testing do
   end
 
   desc 'Anonymize the current db contents'
-  task :anon_db_init => [:environment] do |_t, args|
+  task :anon_db_init, [:times] => [:environment] do |_t, args|
+  count = args[:times].to_i
+  count = 2 if count < 2
 
-    2.times do
+    count.times do |index|
+      puts "Anonymizing DB contents, pass #{index + 1} of #{count}"
       Installment.transaction do
         Installment.find_each do |installment|
           installment.comments = installment.anon_comments
@@ -370,13 +373,23 @@ namespace :testing do
         User.find_each do |user|
           user.first_name = user.anon_first_name
           user.last_name = user.anon_last_name
-          Email.transaction do
-            user.emails.each do |email|
-              email.email =
-                "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}@#{Faker::Internet.domain_name( subdomain:true, domain: 'example' )}"
-              email.save!
-              email.confirm
+          if user.emails.size > 0
+            Email.transaction do
+              user.emails.each_with_index do |email, index|
+                email.email =
+                  "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}_#{index}@#{Faker::Internet.domain_name( subdomain:true, domain: 'example' )}"
+                email.save!
+                email.confirm
+              end
             end
+          else
+            email = user.emails.new(
+              email: "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}@#{Faker::Internet.domain_name( subdomain:true, domain: 'example' )}"
+            )
+            user.emails << email
+            user.email = email.email
+            email.save!
+            email.confirm
           end
           user.anon_first_name = Faker::Name.first_name unless user.anon_first_name?
           user.anon_last_name = Faker::Name.last_name unless user.anon_last_name?

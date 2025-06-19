@@ -9,8 +9,6 @@ services:
       - 3035:3035
     depends_on:
       - db
-      - redis
-      - moodle
     volumes:
       - ../../:/home/colab/src/app:cached
       - "${HOME}/.ssh:/root/.ssh-localhost:ro"
@@ -23,10 +21,6 @@ services:
       - 31337:3306
     volumes:
       - devdata:/var/lib/mysql
-
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
 
   # Docs at https://github.com/MRColorR/vnc-browser
   browser:
@@ -52,7 +46,6 @@ services:
     image: colab_moodle
     depends_on:
       - db
-      - redis
     environment:
       - MOODLE_LANG=en
       - LANGUAGE=en_US:en
@@ -77,7 +70,7 @@ services:
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
     ports:
-      - 80:8080
+      - 8080:8080
     volumes:
       - moodledata:/var/www/moodledata
       - moodlehtml:/var/www/html
