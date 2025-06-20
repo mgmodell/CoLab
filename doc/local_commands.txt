@@ -1,0 +1,14 @@
+Local Commands:
+git status
+
+git add 
+
+git commit
+
+git checkout
+
+
+Remote Commands:
+git push 
+
+git pull 
