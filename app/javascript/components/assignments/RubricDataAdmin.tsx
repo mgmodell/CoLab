@@ -106,7 +106,6 @@ export default function RubricDataAdmin(props) {
     )
   ]);
 
-
   const timezones = useTypedSelector(state => {
     return state.context.lookups["timezones"];
   });
@@ -215,7 +214,9 @@ export default function RubricDataAdmin(props) {
           const rubric = data.rubric;
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
-            dispatch(addMessage(t('new_version_success'), new Date(), Priorities.INFO));
+            dispatch(
+              addMessage(t("new_version_success"), new Date(), Priorities.INFO)
+            );
             navigate(`../rubrics/${String(rubric.id)}`);
           } else {
             setRubricId(rubric.id);
@@ -268,11 +269,12 @@ export default function RubricDataAdmin(props) {
         onClick={publishOrActivateRubric}
       >
         {t(
-          `${rubricPublished
-            ? rubricActive
-              ? "Deactivate"
-              : "Activate"
-            : "Publish"
+          `${
+            rubricPublished
+              ? rubricActive
+                ? "Deactivate"
+                : "Activate"
+              : "Publish"
           } Rubric`
         )}
       </Button>
@@ -314,7 +316,7 @@ export default function RubricDataAdmin(props) {
   };
 
   const detailsComponent = endpointStatus ? (
-    <Panel header={parseInt(rubricId) > 0 ? t('edit.title') : t('new.title')}>
+    <Panel header={parseInt(rubricId) > 0 ? t("edit.title") : t("new.title")}>
       <span className="p-float-label">
         <InputText
           itemID="rubric-name"
@@ -324,8 +326,6 @@ export default function RubricDataAdmin(props) {
         />
         <label htmlFor="rubric-name">{t("name")}</label>
       </span>
-
-
       &nbsp;
       <br />
       <span className="p-float-label">
@@ -340,7 +340,6 @@ export default function RubricDataAdmin(props) {
         />
         <label htmlFor="rubric-description">{t("description")}</label>
       </span>
-
       <p>Version {rubricVersion}</p>
       <p>Published {rubricPublished ? "Yes" : "No"}</p>
       <p>Active {rubricActive ? "Yes" : "No"}</p>

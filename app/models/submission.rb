@@ -24,15 +24,15 @@ class Submission < ApplicationRecord
   def calculated_score
     total = 0
     sum_weights = 0
-    rubric_row_feedbacks.each do |rubric_row_feedback|
-      sum_weights += rubric_row_feedback.criterium.weight
-      total += rubric_row_feedback.criterium.weight * rubric_row_feedback.score
+    rubric_row_feedbacks.each do | rubric_row_feedback |
+      sum_weights += rubric_row_feedback.criterium_weight
+      total += rubric_row_feedback.criterium_weight * rubric_row_feedback.score
     end
 
     total <= 0 ? nil : total / sum_weights
   end
 
-  def can_edit? user
+  def can_edit?( user )
     if assignment.group_enabled
       group.users.include? user
     else
@@ -45,7 +45,7 @@ class Submission < ApplicationRecord
   def group_valid
     return unless assignment.group_enabled && group.nil?
 
-    errors.add(:group, I18n.t('assignments.error.group_required'))
+    errors.add( :group, I18n.t( 'assignments.error.group_required' ) )
   end
 
   def set_rubric
@@ -64,22 +64,22 @@ class Submission < ApplicationRecord
       self.withdrawn = nil
       self.submitted = DateTime.now
       found = false
-      found ||= (assignment.text_sub && sub_text.present?)
-      found ||= (assignment.link_sub && sub_link.present?)
-      found ||= (assignment.file_sub && sub_files.size.positive?)
-      errors.add :main, I18n.t('submissions.error.nothing_submitted') unless found
+      found ||=  assignment.text_sub && sub_text.present?
+      found ||=  assignment.link_sub && sub_link.present?
+      found ||=  assignment.file_sub && sub_files.size.positive?
+      errors.add :main, I18n.t( 'submissions.error.nothing_submitted' ) unless found
 
     elsif withdrawn_was.nil? && !withdrawn.nil?
       if submitted.nil?
-        errors.add :withdrawn, I18n.t('submissions.error.withdraw_requires_submit')
+        errors.add :withdrawn, I18n.t( 'submissions.error.withdraw_requires_submit' )
       elsif changes.size > 1
-        errors.add :withdrawn, I18n.t('submissions.error.no_changes_on_withdrawal')
+        errors.add :withdrawn, I18n.t( 'submissions.error.no_changes_on_withdrawal' )
       end
     elsif !submitted_was.nil?
       if recorded_score_changed? && changes.size > 1
-        errors.add :recorded_score, I18n.t('submissions.error.only_score_change_post_submission')
-      elsif (changes.size.positive? && !recorded_score_changed? ) || ( recorded_score_changed? && 1 < changes.size )
-        errors.add :recorded_score, I18n.t('submissions.error.no_changes_once_submitted')
+        errors.add :recorded_score, I18n.t( 'submissions.error.only_score_change_post_submission' )
+      elsif ( changes.size.positive? && !recorded_score_changed? ) || ( recorded_score_changed? && 1 < changes.size )
+        errors.add :recorded_score, I18n.t( 'submissions.error.no_changes_once_submitted' )
       end
     end
   end

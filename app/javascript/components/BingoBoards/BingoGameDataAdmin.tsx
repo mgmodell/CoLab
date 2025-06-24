@@ -28,7 +28,6 @@ import { Container, Row, Col } from "react-grid-system";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 
 export default function BingoGameDataAdmin(props) {
-
   const endpointSet = "bingo_game";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -64,12 +63,10 @@ export default function BingoGameDataAdmin(props) {
 
   const now = new Date();
   const [gameStartDate, setGameStartDate] = useState(now);
-  const [gameEndDate, setGameEndDate] = useState(
-    () => {
-      now.setMonth(now.getMonth() + 3);
-      return now;
-    }
-  );
+  const [gameEndDate, setGameEndDate] = useState(() => {
+    now.setMonth(now.getMonth() + 3);
+    return now;
+  });
   const [gameIndividualCount, setGameIndividualCount] = useState(0);
   const [gameLeadTime, setGameLeadTime] = useState(0);
   //Group parameters
@@ -77,13 +74,7 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupDiscount, setGameGroupDiscount] = useState(0);
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
-  const colors = [
-    '#477efd',
-    '#74d6fd',
-    '#3d5ef9',
-    '#2b378b',
-    '#1f2255'
-  ]
+  const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
   const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
@@ -150,7 +141,9 @@ export default function BingoGameDataAdmin(props) {
         setMessages(data["messages"]);
 
         getBingoGameData();
-        navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, { replace: true });
+        navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, {
+          replace: true
+        });
       })
       .catch(error => {
         console.log("error", error);
@@ -290,7 +283,7 @@ export default function BingoGameDataAdmin(props) {
                 <Col xs={12}>
                   <span className="p-float-label">
                     <InputText
-                      id='topic'
+                      id="topic"
                       name="topic"
                       itemID="topic"
                       value={gameTopic}
@@ -298,7 +291,6 @@ export default function BingoGameDataAdmin(props) {
                     />
                     <label htmlFor="topic">{t("topic")}</label>
                   </span>
-
                 </Col>
               </Row>
               <Row>
@@ -319,7 +311,7 @@ export default function BingoGameDataAdmin(props) {
                 <Col xs={6}>
                   <span className="p-float-label">
                     <InputNumber
-                      id='bingo-lead-time'
+                      id="bingo-lead-time"
                       name="bingo-lead-time"
                       itemID="bingo-lead-time"
                       inputId="bingo-lead-time"
@@ -328,19 +320,20 @@ export default function BingoGameDataAdmin(props) {
                     />
                     <label htmlFor="bingo-lead-time">{t("lead_time")}</label>
                   </span>
-
                 </Col>
                 <Col xs={6}>
                   <span className="p-float-label">
                     <InputNumber
-                      id='bingo-individual_count'
+                      id="bingo-individual_count"
                       name="bingo-individual_count"
                       itemID="bingo-individual_count"
                       inputId="bingo-individual_count"
                       value={gameIndividualCount}
                       onChange={event => setGameIndividualCount(event.value)}
                     />
-                    <label htmlFor="bingo-individual_count">{t("ind_term_count")}</label>
+                    <label htmlFor="bingo-individual_count">
+                      {t("ind_term_count")}
+                    </label>
                   </span>
                 </Col>
               </Row>
@@ -349,9 +342,9 @@ export default function BingoGameDataAdmin(props) {
                 <Col xs={4}>
                   <span className="p-float-label">
                     <Calendar
-                      id='bingo_game_dates'
+                      id="bingo_game_dates"
                       value={[gameStartDate, gameEndDate]}
-                      onChange={(event) => {
+                      onChange={event => {
                         const changeTo = event.value;
                         if (null !== changeTo && changeTo.length > 1) {
                           setGameStartDate(changeTo[0]);
@@ -360,6 +353,7 @@ export default function BingoGameDataAdmin(props) {
                       }}
                       selectionMode="range"
                       showIcon={true}
+                      showOnFocus={false}
                       inputId="bingo_game_dates"
                       name="bingo_game_dates"
                     />
@@ -370,8 +364,8 @@ export default function BingoGameDataAdmin(props) {
                   <InputSwitch
                     checked={gameActive}
                     onChange={event => setGameActive(!gameActive)}
-                    id='active'
-                    name='active'
+                    id="active"
+                    name="active"
                     itemID="active"
                     inputId="active"
                   />
@@ -389,18 +383,13 @@ export default function BingoGameDataAdmin(props) {
                   <label htmlFor="group_option">{t("group_option")}</label>
                 </Col>
                 {group_options}
-
               </Row>
               <Row>
                 <Col xs={12}>
-
-
                   {save_btn} {messages.status}
                   <span>{saveStatus}</span>
                 </Col>
-
               </Row>
-
             </Container>
           </TabPanel>
           <TabPanel header={t("response_pnl")}>
@@ -418,9 +407,7 @@ export default function BingoGameDataAdmin(props) {
                 <Col xs={7}>
                   <BingoGameDataAdminTable results_raw={resultData} />
                 </Col>
-
               </Row>
-
             </Container>
           </TabPanel>
         </TabView>

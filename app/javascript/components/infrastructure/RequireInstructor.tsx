@@ -13,7 +13,7 @@ export default function RequireInstructor({ children }) {
   if (user.is_instructor || user.is_admin) {
     return children;
   } else if (isLoggingIn) {
-    return <Skeleton className="mb-2" height={'50rem'} />;
+    return <Skeleton className="mb-2" height={"50rem"} />;
   } else {
     return <Navigate to="/" replace />;
   }

@@ -26,61 +26,53 @@ class Group < ApplicationRecord
 
   before_create :anonymize
 
-  def get_name(anonymous)
+  def get_name( anonymous )
     anonymous ? anon_name : name
-  end
-
-  def has_user(user)
-    users.where('users.id = ?', user.id).any?
-  end
-
-  def users_changed?
-    users.select { |u| u.new_record? || u.marked_for_destruction? }.any?
   end
 
   def calc_diversity_score
     self.diversity_score = Group.calc_diversity_score_for_group(
-      users: users.includes(:gender, :primary_language,
-                            :cip_code, reactions: :narrative,
-                                       home_state: [:home_country])
+      users: users.includes( :gender, :primary_language,
+                             :cip_code, reactions: :narrative,
+                                        home_state: [:home_country] )
     )
   end
 
-  def self.calc_diversity_score_for_proposed_group(emails:)
-    users = User.joins(:emails).where(emails: { email: emails.split(/\s*,\s*/) })
-                .includes(:gender, :primary_language,
-                          :cip_code, reactions: :narrative,
-                                     home_state: [:home_country])
+  def self.calc_diversity_score_for_proposed_group( emails: )
+    users = User.joins( :emails ).where( emails: { email: emails.split( /\s*,\s*/ ) } )
+                .includes( :gender, :primary_language,
+                           :cip_code, reactions: :narrative,
+                                      home_state: [:home_country] )
 
     Group.calc_diversity_score_for_group users:
   end
 
-  def self.calc_diversity_score_for_group(users:)
+  def self.calc_diversity_score_for_group( users: )
     ds = 0
     if users.count > 1
-      state_hash = Hash.new(0)
-      country_hash = Hash.new(0)
-      cip_hash = Hash.new(0)
-      gender_hash = Hash.new(0)
-      primary_lang_hash = Hash.new(0)
-      country_hash = Hash.new(0)
-      scenario_hash = Hash.new(0)
-      impairment_hash = Hash.new(0)
+      state_hash = Hash.new( 0 )
+      country_hash = Hash.new( 0 )
+      cip_hash = Hash.new( 0 )
+      gender_hash = Hash.new( 0 )
+      primary_lang_hash = Hash.new( 0 )
+      country_hash = Hash.new( 0 )
+      scenario_hash = Hash.new( 0 )
+      impairment_hash = Hash.new( 0 )
 
-      users.uniq.each do |user|
+      users.uniq.each do | user |
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
-            true == user.home_state.no_response
+            true == user.home_state_no_response
           country_hash[user.home_state.home_country] += 1 unless
-            true == user.home_state.home_country.no_response
+            true == user.home_state_home_country.no_response
         end
         cip_hash[user.cip_code] += 1 unless
-            user.cip_code.nil? || user.cip_code.gov_code.zero?
+            user.cip_code.nil? || user.cip_code_gov_code.zero?
         primary_lang_hash[user.primary_language] += 1 unless
-            user.primary_language.nil? || '__' == user.primary_language.code
+            user.primary_language.nil? || '__' == user.primary_language_code
         gender_hash[user.gender] += 1 unless
-            user.gender.nil? || '__' == user.gender.code
-        user.reactions.each do |reaction|
+            user.gender.nil? || '__' == user.gender_code
+        user.reactions.each do | reaction |
           scenario_hash[reaction.narrative.member] += 1
         end
         impairments = ''
@@ -95,24 +87,24 @@ class Group < ApplicationRecord
       end
 
       now = Date.current
-      values = [].extend(DescriptiveStatistics)
-      users.each do |user|
-        values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
+      values = [].extend( DescriptiveStatistics )
+      users.each do | user |
+        values << now.year - user.date_of_birth.year if user.date_of_birth?
       end
       age_sd = values.empty? ? 0 : values.standard_deviation
 
       values.clear
-      users.each do |user|
-        values << now.year - user.started_school.year unless user.started_school.nil?
+      users.each do | user |
+        values << now.year - user.started_school.year if user.started_school?
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
       ds = state_hash.keys.count +
            country_hash.keys.count +
            scenario_hash.keys.count +
-           (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count)) +
-           (age_sd + uni_years_sd).round +
-           (impairment_hash.keys.count > 1 ? impairment_hash.keys.count : 0)
+           ( 2 * ( gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count ) ) +
+           ( age_sd + uni_years_sd ).round +
+           ( impairment_hash.keys.count > 1 ? impairment_hash.keys.count : 0 )
     end
     ds
   end
@@ -121,7 +113,7 @@ class Group < ApplicationRecord
 
   def store_load_state
     @initial_member_state = ''
-    user_ids.sort.each do |user_id|
+    user_ids.sort.each do | user_id |
       @initial_member_state += "#{user_id} "
     end
   end
@@ -129,11 +121,11 @@ class Group < ApplicationRecord
   # Maintain a history of what has changed
   def update_history
     member_string = ''
-    user_ids.sort.each do |user_id|
+    user_ids.sort.each do | user_id |
       member_string += "#{user_id} "
     end
     if changed? || @initial_member_state != member_string
-      gr = group_revisions.new(name: name_was, group: self, members: member_string)
+      gr = group_revisions.new( name: name_was, group: self, members: member_string )
       calc_diversity_score if @initial_member_state != gr.members
     end
 
@@ -146,8 +138,8 @@ class Group < ApplicationRecord
 
   def validate_activation_status
     if persisted? && project_id_was != project_id
-      errors.add(:project,
-                 'It is not possible to move a group from one project to another.')
+      errors.add( :project,
+                  'It is not possible to move a group from one project to another.' )
     end
     return unless changed? || @dirty
 
@@ -155,7 +147,7 @@ class Group < ApplicationRecord
     project.save!
   end
 
-  def set_dirty(_user)
+  def set_dirty( _user )
     @dirty = true
   end
 

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //Redux store stuff
 
-
 import { useTypedSelector } from "../../infrastructure/AppReducers";
 
 const CourseUsersList = React.lazy(() => import("../CourseUsersList"));
@@ -16,14 +15,11 @@ import CourseNameAndNumberWizard from "./CourseNameAndNumberWizard";
 import CourseDatesWizard from "./CourseDatesWizard";
 import CourseSummaryWizard from "./CourseSummaryWizard";
 
-
 type Props = {
   course: ICourse;
   setCourseFunc: (course: ICourse) => void;
   saveCourseFunc: () => void;
-}
-
-
+};
 
 export default function CourseWizard(props: Props) {
   const category = "course";
@@ -41,8 +37,8 @@ export default function CourseWizard(props: Props) {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    if( isNaN(props.course.id) ) {
-      if ( '' === props.course.name && '' === props.course.number ) {
+    if (isNaN(props.course.id)) {
+      if ("" === props.course.name && "" === props.course.number) {
         setActiveStep(0);
       } else {
         setActiveStep(1);
@@ -50,78 +46,80 @@ export default function CourseWizard(props: Props) {
     } else {
       setActiveStep(2);
     }
-
   }, []);
 
   const steps = [
     {
-      label: t('wizard.name_number_lbl'),
-      title: t('wizard.name_number_ttl'),
-      saveValid: isNaN( props.course.id ),
+      label: t("wizard.name_number_lbl"),
+      title: t("wizard.name_number_ttl"),
+      saveValid: isNaN(props.course.id),
       element: (
         <CourseNameAndNumberWizard
           course={props.course}
           setCourseFunc={props.setCourseFunc}
-          />
+        />
       )
     },
     {
-      label: t('wizard.dates_lbl'),
-      title: t('wizard.dates_ttl'),
-      saveValid: isNaN( props.course.id ),
-      disabled: isNaN(props.course.id) && (props.course.name === '' || props.course.number === '' ),
+      label: t("wizard.dates_lbl"),
+      title: t("wizard.dates_ttl"),
+      saveValid: isNaN(props.course.id),
+      disabled:
+        isNaN(props.course.id) &&
+        (props.course.name === "" || props.course.number === ""),
       element: (
         <CourseDatesWizard
           course={props.course}
           setCourseFunc={props.setCourseFunc}
-          />
+        />
       )
     },
     {
-      label: isNaN( props.course.id ) ? 
-                  t('wizard.confirm_create_lbl') :
-                  t('wizard.confirm_save_lbl'),
-      title: t('wizard.confirm_save_ttl'),
+      label: isNaN(props.course.id)
+        ? t("wizard.confirm_create_lbl")
+        : t("wizard.confirm_save_lbl"),
+      title: t("wizard.confirm_save_ttl"),
       saveValid: true,
-      disabled: null === props.course.start_date ||
-                null === props.course.end_date ||
-                isNaN( props.course.start_date.getTime() ) ||
-                isNaN( props.course.end_date.getTime() ),
+      disabled:
+        null === props.course.start_date ||
+        null === props.course.end_date ||
+        isNaN(props.course.start_date.getTime()) ||
+        isNaN(props.course.end_date.getTime()),
       element: (
         <CourseSummaryWizard
           course={props.course}
           setCourseFunc={props.setCourseFunc}
           goToStepFunc={setActiveStep}
-          />
+        />
       )
     },
     {
-      label: t('wizard.instructors_lbl'),
-      title: t('wizard.instructors_ttl'),
+      label: t("wizard.instructors_lbl"),
+      title: t("wizard.instructors_ttl"),
       saveValid: true,
-      disabled: isNaN(props.course.id),
+      disabled: isNaN(props.course.id)
     },
     {
-      label: t('wizard.project_lbl'),
-      title: t('wizard.project_ttl'),
+      label: t("wizard.project_lbl"),
+      title: t("wizard.project_ttl"),
       saveValid: true,
-      disabled: isNaN(props.course.id),
+      disabled: isNaN(props.course.id)
     },
     {
-      label: t('wizard.readings_lbl'),
-      title: t('wizard.readings_ttl'),
+      label: t("wizard.readings_lbl"),
+      title: t("wizard.readings_ttl"),
       saveValid: true,
-      disabled: isNaN(props.course.id),
+      disabled: isNaN(props.course.id)
     },
     {
-      label: t('wizard.students_lbl'),
-      title: t('wizard.students_ttl'),
+      label: t("wizard.students_lbl"),
+      title: t("wizard.students_ttl"),
       saveValid: true,
-      disabled: isNaN(props.course.id),
+      disabled: isNaN(props.course.id)
     }
   ];
 
-  const savedSteps = steps.filter((step) => {
+  const savedSteps = steps.filter(step => {
     return step.saveValid;
   });
 
@@ -130,42 +128,44 @@ export default function CourseWizard(props: Props) {
       <Steps
         model={isNaN(props.course.id) ? steps : savedSteps}
         activeIndex={activeStep}
-        onSelect={(e) => {
+        onSelect={e => {
           setActiveStep(e.index);
         }}
         readOnly={false}
       />
-      { /*
+      {/*
         The following statement is ugly but it is compact and functional.
         1. Check which array I should use (ternary)
         2. index into that array with the activeStep
         3. get the title key from that step
       */}
-      <Panel header={(isNaN(props.course.id) ? steps : savedSteps)[activeStep].title} >
+      <Panel
+        header={(isNaN(props.course.id) ? steps : savedSteps)[activeStep].title}
+      >
         {steps[activeStep].element}
       </Panel>
       <Button
-        label={t('wizard.advanced_switch')}
+        label={t("wizard.advanced_switch")}
         onClick={() => {
-          navigate('../');
+          navigate("../");
         }}
       />
 
-      {0 < activeStep && (steps.length) > activeStep ? (
+      {0 < activeStep && steps.length > activeStep ? (
         <Button
-          iconPos={'left'}
-          icon={'pi pi-chevron-left'}
-          label={t('wizard.prev_btn')}
+          iconPos={"left"}
+          icon={"pi pi-chevron-left"}
+          label={t("wizard.prev_btn")}
           onClick={() => {
             setActiveStep(activeStep - 1);
           }}
         />
       ) : null}
-      {(steps.length - 1) > activeStep ? (
+      {steps.length - 1 > activeStep ? (
         <Button
-          iconPos={'right'}
-          icon={'pi pi-chevron-right'}
-          label={t('wizard.next_btn')}
+          iconPos={"right"}
+          icon={"pi pi-chevron-right"}
+          label={t("wizard.next_btn")}
           onClick={() => {
             if (steps[activeStep + 1].disabled === false) {
               setActiveStep(activeStep + 1);
@@ -175,15 +175,12 @@ export default function CourseWizard(props: Props) {
         />
       ) : (
         <Button
-          label={t('wizard.save_btn')}
+          label={t("wizard.save_btn")}
           onClick={() => {
             props.saveCourseFunc();
           }}
         />
-
-      )
-
-      }
+      )}
     </Panel>
   );
 }

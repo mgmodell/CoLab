@@ -1,25 +1,54 @@
 es:
   intro:
     tooltips:
-        welcome: Bienvenido 
-        about: Acerca de
-        why: ¿Por qué CoLab?
+        welcome: Bienvenidos
+        about: Sobre nosotros
+        why: Porque CoLab?
         research: Investigación
-        student: ¿Estudiante?
-        instructor: ¿Instructor?
+        student: Estudiante?
+        instructor: Profesor?
     titles:
         about: ¿Quién está detrás de CoLab?
-        why: ¿Qué problema resuelve CoLab?
+        why: ¿Cómo puede ayudarle CoLab?
         research: La investigación detrás de CoLab
-        student: Función CoLab para los instructores
-        instructor: CoLab features for instructors
+        student: Funciones de CoLab para estudiantes
+        instructor: Funciones de CoLab para instructores
     why_slides:
         captions:
-            one: Soñamos con un trabajo en equipo así
-            two: Pero muchas veces aprendemos que...
-            three: ...se siente como una experiencia injusta
-            four: Y las experiencias negativas toman muchas formas
-            five: ¿O tal vez los resultados parecen sencillos y aburridos?
+            one_one: >
+                Todos colaboramos de diferente manera 
+            one_two: En tu experencia trabajando en grupo, has pasadp por uno o mas de estas situaciones?    
+            two_one: >
+                Veamos unos ejemplos de participacion disparejo en grupos de trabajo...
+            two_two: >
+                El dominador: Una persona cree que tiene la razon y 
+                no escucha a los demas
+            three_one: Te han tratado como Jorge?
+            three_two: > 
+                Dejalo para Jorge: Una persona se queda haciendo el trabajo 
+                mientras todos se le queda mirando
+            four_one: O esto suena familiar? 
+            four_two: >
+                El holgazan social: Uno o mas de los estudiantes hacen nada
+                mientras los demas hacen el trabajo
+            five_one: Que harias en estas situaciones?     
+            five_two: No esperes hasta el fin del semestre para informarle a tu profesor de lo que ha pasado
+            six_one: Y si hubiera una forma de que tu profesor te pueda ayudar? 
+            six_two: Ahora lo hay!
+            seven_one: 
+                title: CoLab.online te puede ayduar!
+                check-ins: Controles semanales de autoevaluación y evaluación de pares
+                growth: Enfoque en desarollo sin juzgar
+                visualizations: Visualizaciónes
+                diversity: Composición del grupo centrada en la diversidad
+                gamification: Lectura colaborativa gamificada
+                simulations: Experiencia de equipo simulada
+                iterative_assignments: Tareas itererativas
+            seven_two:
+                title: Eres un...
+                student: Estudiante?
+                instructor: Instructor?
+                
     images:
-        student_concern: El estudiante habla con el profesor
-        normally_functioning: Un grupo de estudiantes en el que todos están comprometidos
+        student_concern: Student talks to teacher
+        normally_functioning: A group of students where all are engaged

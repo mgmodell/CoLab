@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 import UserEmailList from "./UserEmailList";
@@ -57,7 +57,10 @@ export default function ProfileDataAdmin(props: Props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
-  const user : IUser = useTypedSelector(state => state.profile.user);
+  const user: IUser = useTypedSelector(state => {
+    return state.profile.user
+  });
+
 
   const getImpairments = () => {
     const imp = [];
@@ -80,13 +83,17 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const setProfileImpairment = (imp: string[]) => {
-    setProfileImpVisual(imp.includes("visual"));
-    setProfileImpAuditory(imp.includes("auditory"));
-    setProfileImpMotor(imp.includes("motor"));
-    setProfileImpCognitive(imp.includes("cognitive"));
-    setProfileImpOther(imp.includes("other"));
-  };
+    const temp = {};
+    Object.assign(temp, user);
 
+    temp['impairment_visual'] = imp.includes("visual");
+    temp['impairment_auditory'] = imp.includes("auditory");
+    temp['impairment_motor'] = imp.includes("motor");
+    temp['impairment_cognitive'] = imp.includes("cognitive");
+    temp['impairment_other'] = imp.includes("other");
+
+    dispatch(setProfile(temp));
+  };
 
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
   const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
@@ -200,36 +207,6 @@ export default function ProfileDataAdmin(props: Props) {
     temp.started_school = started_school.toString();
     dispatch(setProfile(temp));
   };
-  const setProfileImpVisual = impairment_visual => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_visual = impairment_visual;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpAuditory = impairment_auditory => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_auditory = impairment_auditory;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpMotor = impairment_motor => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_motor = impairment_motor;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpCognitive = impairment_cognitive => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_cognitive = impairment_cognitive;
-    dispatch(setProfile(temp));
-  };
-  const setProfileImpOther = impairment_other => {
-    const temp = {};
-    Object.assign(temp, user);
-    temp.impairment_other = impairment_other;
-    dispatch(setProfile(temp));
-  };
 
   //Display
   const setProfileLanguage = language_id => {
@@ -283,8 +260,9 @@ export default function ProfileDataAdmin(props: Props) {
 
   const getProfile = () => {
     dispatch(fetchProfile())
-      .then(setInitRetrieved(lastRetrieved))
-      .then(setDirty(false));
+    setDirty(false);
+      //.then(setInitRetrieved(lastRetrieved))
+      //.then(setDirty(false));
   };
   const saveProfile = () => {
     dispatch(persistProfile());
@@ -308,58 +286,32 @@ export default function ProfileDataAdmin(props: Props) {
   useEffect(() => getStates(user.country), [user.country]);
 
   //Support for AutoComplete
-  const [localProfileLanguage, setLocalProfileLanguage] = useState(languages.find(lang => lang.id === user.language_id).name );
-  const [suggestedLocalProfileLanguages, setSuggestedLocalProfileLanguages] = useState(languages);
+  const [localProfileLanguage, setLocalProfileLanguage] = useState(
+    languages.find(lang => lang.id === user.language_id).name
+  );
+  const [
+    suggestedLocalProfileLanguages,
+    setSuggestedLocalProfileLanguages
+  ] = useState(languages);
 
   const [localHomeLanguage, setLocalHomeLanguage] = useState(
-    null ===  user.primary_language_id ? languages[0] :
-    languages.find(lang => lang.id === user.primary_language_id).name 
-    );
-  const [suggestedLocalHomeLanguages, setSuggestedLocalHomeLanguages] = useState(languages);
+    null === user.primary_language_id
+      ? languages[0]
+      : languages.find(lang => lang.id === user.primary_language_id).name
+  );
+  const [
+    suggestedLocalHomeLanguages,
+    setSuggestedLocalHomeLanguages
+  ] = useState(languages);
 
   const saveButton = (
     <Button onClick={saveProfile} disabled={!dirty}>
       {null == user.id ? "Create" : "Save"} Profile
     </Button>
-  )
+  );
 
-  const detailsComponent = lookupStatus ? (
-    <Panel>
-      <Accordion multiple activeIndex={curPanel}>
-        <AccordionTab header={t("edit_profile")} aria-label={t("edit_profile")}>
-          <Container>
-            <Row>
-              <Col sm={6} xs={12}>
-                <span className="p-float-label">
-                  <InputText
-                    id='first-name'
-                    itemID="first-name"
-                    name="first-name"
-                    value={user.first_name}
-                    onChange={event => setProfileFirstName(event.target.value)}
-                  />
-                  <label htmlFor="first-name">{t("first_name")}</label>
-                </span>
-              </Col>
-              <Col sm={6} xs={12}>
-                <span className="p-float-label">
-                  <InputText
-                    id='last-name'
-                    itemID="last-name"
-                    name="last-name"
-                    value={user.last_name}
-                    onChange={event => setProfileLastName(event.target.value)}
-                  />
-                  <label htmlFor="last-name">{t("last_name")}</label>
-                </span>
-              </Col>
-            </Row>
-          </Container>
-        </AccordionTab>
-        <AccordionTab
-          header={t("email_settings")}
-          aria-label={t("email_settings")}
-        >
+  const emailPanel = useMemo(() => {
+    return(
           <Container>
             <Col xs={12}>
               {0 < user.emails.length ? (
@@ -377,8 +329,59 @@ export default function ProfileDataAdmin(props: Props) {
               <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
             </Col>
           </Container>
+    )
+  }, [user.emails]);
+
+  const detailsComponent = lookupStatus ? (
+    <Panel>
+      <Accordion multiple
+        onTabChange={event => setCurPanel([0,...(event.index.filter( i => i !== 0 ))])}
+        activeIndex={[...curPanel]}
+        >
+        <AccordionTab
+          key='edit_profile'
+          header={t("edit_profile")}
+          aria-label={t("edit_profile")}
+          className="fixedDrawer"
+          >
+          <Container>
+            <Row>
+              <Col sm={6} xs={12}>
+                <span className="p-float-label">
+                  <InputText
+                    id="first-name"
+                    itemID="first-name"
+                    name="first-name"
+                    value={user.first_name}
+                    onChange={event => setProfileFirstName(event.target.value)}
+                  />
+                  <label htmlFor="first-name">{t("first_name")}</label>
+                </span>
+              </Col>
+              <Col sm={6} xs={12}>
+                <span className="p-float-label">
+                  <InputText
+                    id="last-name"
+                    itemID="last-name"
+                    name="last-name"
+                    value={user.last_name}
+                    onChange={event => setProfileLastName(event.target.value)}
+                  />
+                  <label htmlFor="last-name">{t("last_name")}</label>
+                </span>
+              </Col>
+            </Row>
+          </Container>
         </AccordionTab>
         <AccordionTab
+          key='email_settings'
+          header={t("email_settings")}
+          aria-label={t("email_settings")}
+        >
+          {emailPanel}
+        </AccordionTab>
+        <AccordionTab
+          key='display_settings'
           header={t("display_settings.prompt")}
           aria-label={t("display_settings.prompt")}
         >
@@ -386,50 +389,58 @@ export default function ProfileDataAdmin(props: Props) {
             <Col md={6} xs={12}>
               <span className="p-float-label">
                 <Dropdown
-                  id='profile_theme'
+                  id="profile_theme"
                   inputId="profile_theme"
                   itemID="profile_theme"
                   name="profile_theme"
                   value={user.theme_id || 0}
-                  options={themes}
+                  options={Object.values( themes )}
                   optionValue="id"
                   optionLabel="name"
                   onChange={event => setProfileTheme(Number(event.value))}
                   placeholder={t("display_settings.ui_theme")}
                 />
-                <label htmlFor="profile_theme">{t("display_settings.ui_theme")}</label>
+                <label htmlFor="profile_theme">
+                  {t("display_settings.ui_theme")}
+                </label>
               </span>
             </Col>
             <Col md={6} xs={12}>
               <span className="p-float-label">
                 <AutoComplete
-                  id='profile_language'
+                  id="profile_language"
                   inputId="profile_language"
                   itemID="profile_language"
                   name="profile_language"
                   value={localProfileLanguage}
-                  suggestions={suggestedLocalProfileLanguages}
+                  suggestions={Object.values( suggestedLocalProfileLanguages )}
                   field="name"
                   forceSelection={true}
                   dropdown
+
                   completeMethod={event => {
                     const query = event.query.toLocaleLowerCase();
                     setSuggestedLocalProfileLanguages(
-                      languages.filter(lang => lang.name.toLowerCase().includes(query))
+                      languages.filter(lang =>
+                        ['en','ko', 'es'].includes(lang.code) &&
+                        lang.name.toLowerCase().includes(query)
+                      )
                     );
                   }}
                   onChange={event => {
-                    if( typeof event.value === 'string' ) {
-                      setLocalProfileLanguage( event.value );
-                    } 
+                    if (typeof event.value === "string") {
+                      setLocalProfileLanguage(event.value);
+                    }
                   }}
                   onSelect={event => {
-                    setLocalProfileLanguage( event.value.name );
-                    setProfileLanguage( event.value.id );
+                    setLocalProfileLanguage(event.value.name);
+                    setProfileLanguage(event.value.id);
                   }}
                   placeholder={t("display_settings.language")}
                 />
-                <label htmlFor="profile_language">{t("display_settings.language")}</label>
+                <label htmlFor="profile_language">
+                  {t("display_settings.language")}
+                </label>
               </span>
             </Col>
             <Col xs={3}>
@@ -438,216 +449,239 @@ export default function ProfileDataAdmin(props: Props) {
                 onChange={event => setProfileResearcher(!profileResearcher)}
                 name="researcher"
               />
-              <label htmlFor="researcher">{t("display_settings.anonymize")}</label>
+              <label htmlFor="researcher">
+                {t("display_settings.anonymize")}
+              </label>
             </Col>
             <Col xs={9}>
               <span className="p-float-label">
                 <Dropdown
-                  id='profile_timezone'
+                  id="profile_timezone"
                   inputId="profile_timezone"
                   itemID="profile_timezone"
                   name="profile_timezone"
                   value={user.timezone || 0}
-                  options={timezones}
+                  options={Object.values( timezones )}
                   optionValue="name"
                   optionLabel="name"
                   onChange={event => setProfileTimezone(String(event.value))}
                   placeholder={t("display_settings.time_zone")}
                 />
-                <label htmlFor="profile_timezone">{t("display_settings.time_zone")}</label>
+                <label htmlFor="profile_timezone">
+                  {t("display_settings.time_zone")}
+                </label>
               </span>
             </Col>
           </Container>
         </AccordionTab>
         <AccordionTab
+          key='demographics'
           header={t("demographics.prompt", { first_name: user.first_name })}
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
         >
           <Container>
             <Row>
-            <Col xs={12} sm={6}>
-              <span className="p-float-label">
-                <Dropdown
-                  id='profile_school'
-                  inputId="profile_school"
-                  itemID="profile_school"
-                  name="profile_school"
-                  value={user.school_id || 0}
-                  options={schools}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileSchool(Number(event.value))}
-                  placeholder={t("demographics.school")}
-                />
-                <label htmlFor="profile_school">{t("demographics.school")}</label>
-              </span>
-            </Col>
-            <Col xs={12} sm={6}>
-              <span className="p-float-label">
-                <Dropdown
-                  id='profile_cip_code'
-                  inputId="profile_cip_code"
-                  itemID="profile_cip_code"
-                  name="profile_cip_code"
-                  value={user.cip_code_id || 0}
-                  options={cipCodes}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileCipCode(Number(event.value))}
-                  placeholder={t("demographics.major")}
-                />
-                <label htmlFor="profile_cip_code">{t("demographics.major")}</label>
-              </span>
-            </Col>
-            <Col xs={12} sm={6}>
-              <span className="p-float-label">
-                <Calendar
-                  id="profile_primary_start_school"
-                  inputId="profile_primary_start_school"
-                  name="profile_primary_start_school"
-                  value={new Date(Date.parse(user.started_school))}
-                  onChange={date => setProfileStartedSchool(date)}
-                  dateFormat="mm/dd/yy"
-                  showIcon={true}
-                  monthNavigator={true}
-                  showButtonBar={true}
-                />
-                <label htmlFor="profile_primary_start_school">
-                  {t('demographics.start_school')}
-                </label>
-              </span>
-            </Col>
-            </Row>
-            <Row>
-            <Col xs ={12} >
-              <h5>
-                {t("demographics.home_town")}
-              </h5>
-            </Col>
-            </Row>
-            <Row>
-            <Col xs={6} md={5} >
-              <span className="p-float-label">
-                <Dropdown
-                  id='profile_country'
-                  inputId="profile_country"
-                  itemID="profile_country"
-                  name="profile_country"
-                  value={user.country || 0}
-                  options={countries}
-                  optionValue="code"
-                  optionLabel="name"
-                  onChange={event => {
-                    const country = String(event.value);
-                    setProfileHomeCountry(country);
-                  }}
-                  placeholder={t("demographics.home_country")}
-                />
-                <label htmlFor="profile_country">{t("demographics.home_country")}</label>
-              </span>
-            </Col>
-            <Col xs={6} >
-              {states.length > 0 ? (
+              <Col xs={12} sm={6}>
                 <span className="p-float-label">
                   <Dropdown
-                    id='profile_state'
-                    inputId="profile_state"
-                    itemID="profile_state"
-                    name="profile_state"
-                    value={user.home_state_id || 0}
-                    options={states}
+                    id="profile_school"
+                    inputId="profile_school"
+                    itemID="profile_school"
+                    name="profile_school"
+                    value={user.school_id || 0}
+                    options={Object.values( schools )}
                     optionValue="id"
                     optionLabel="name"
-                    onChange={event => {
-                      setProfileHomeState(Number(event.value));
-                    }}
-                    placeholder={t("demographics.home_state")}
+                    onChange={event => setProfileSchool(Number(event.value))}
+                    placeholder={t("demographics.school")}
                   />
-                  <label htmlFor="profile_state">{t("demographics.home_state")}</label>
+                  <label htmlFor="profile_school">
+                    {t("demographics.school")}
+                  </label>
                 </span>
-              ) : null}
-            </Col>
+              </Col>
+              <Col xs={12} sm={6}>
+                <span className="p-float-label">
+                  <Dropdown
+                    id="profile_cip_code"
+                    inputId="profile_cip_code"
+                    itemID="profile_cip_code"
+                    name="profile_cip_code"
+                    value={user.cip_code_id || 0}
+                    options={Object.values( cipCodes )}
+                    optionValue="id"
+                    optionLabel="name"
+                    onChange={event => setProfileCipCode(Number(event.value))}
+                    placeholder={t("demographics.major")}
+                  />
+                  <label htmlFor="profile_cip_code">
+                    {t("demographics.major")}
+                  </label>
+                </span>
+              </Col>
+              <Col xs={12} sm={6}>
+                <span className="p-float-label">
+                  <Calendar
+                    id="profile_primary_start_school"
+                    inputId="profile_primary_start_school"
+                    name="profile_primary_start_school"
+                    value={new Date(Date.parse(user.started_school))}
+                    onChange={date => setProfileStartedSchool(date)}
+                    dateFormat="mm/dd/yy"
+                    showIcon={true}
+                    showOnFocus={false}
+                    monthNavigator={true}
+                    showButtonBar={true}
+                  />
+                  <label htmlFor="profile_primary_start_school">
+                    {t("demographics.start_school")}
+                  </label>
+                </span>
+              </Col>
             </Row>
             <Row>
-            <Col xs={12} >
-              <span className="p-float-label">
-                <AutoComplete
-                  id='profile_home_language'
-                  inputId="profile_home_language"
-                  itemID="profile_home_language"
-                  name="profile_home_language"
-                  value={localHomeLanguage}
-                  suggestions={suggestedLocalHomeLanguages}
-                  field="name"
-                  forceSelection={true}
-                  dropdown
-                  completeMethod={event => {
-                    const query = event.query.toLocaleLowerCase();
-                    setSuggestedLocalHomeLanguages(
-                      languages.filter(lang => lang.name.toLowerCase().includes(query))
-                    );
-                  }}
-                  onChange={event => {
-                    if( typeof event.value === 'string' ) {
-                      setLocalHomeLanguage( event.value );
-                    } 
-                  }}
-                  onSelect={event => {
-                    setLocalHomeLanguage( event.value.name );
-                    setProfileHomeLanguage( event.value.id );
-                  }}
-                  placeholder={t("demographics.home_language")}
-                />
-                <label htmlFor="profile_home_language">{t("demographics.home_language")}</label>
-              </span>
-            </Col>
-            <Col xs={12} sm={6}>
-              <span className="p-float-label">
-                <Dropdown
-                  id='profile_gender'
-                  name="profile_gender"
-                  itemID="profile_gender"
-                  value={user.gender_id || 0}
-                  onChange={event => setProfileGender(Number(event.value))}
-                  options={genders}
-                  optionLabel="name"
-                  optionValue="id"
-                  placeholder={t('demographics.gender')}
-                />
-                <label htmlFor="profile_gender">{t('demographics.gender')}</label>
-              </span>
-            </Col>
-            <Col xs={12} sm={6} md={3}>
-              <span className="p-float-label">
-                <Calendar
-                  id="profile_date_of_birth"
-                  inputId="profile_date_of_birth"
-                  name="profile_date_of_birth"
-                  value={ new Date( Date.parse( user.date_of_birth ) ) }
-                  onChange={date => setProfileDOB(date)}
-                  dateFormat="mm/dd/yy"
-                  showIcon={true}
-                  monthNavigator={true}
-                  showButtonBar={true}
-                />
-                <label htmlFor="profile_date_of_birth">
-                  {t('demographics.born')}
+              <Col xs={12}>
+                <h5>{t("demographics.home_town")}</h5>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={6} md={5}>
+                <span className="p-float-label">
+                  <Dropdown
+                    id="profile_country"
+                    inputId="profile_country"
+                    itemID="profile_country"
+                    name="profile_country"
+                    value={user.country || 0}
+                    options={ Object.values( countries )}
+                    optionValue="code"
+                    optionLabel="name"
+                    onChange={event => {
+                      const country = String(event.value);
+                      setProfileHomeCountry(country);
+                    }}
+                    placeholder={t("demographics.home_country")}
+                  />
+                  <label htmlFor="profile_country">
+                    {t("demographics.home_country")}
+                  </label>
+                </span>
+              </Col>
+              <Col xs={6}>
+                {states.length > 0 ? (
+                  <span className="p-float-label">
+                    <Dropdown
+                      id="profile_state"
+                      inputId="profile_state"
+                      itemID="profile_state"
+                      name="profile_state"
+                      value={user.home_state_id || 0}
+                      options={states}
+                      optionValue="id"
+                      optionLabel="name"
+                      onChange={event => {
+                        setProfileHomeState(Number(event.value));
+                      }}
+                      placeholder={t("demographics.home_state")}
+                    />
+                    <label htmlFor="profile_state">
+                      {t("demographics.home_state")}
+                    </label>
+                  </span>
+                ) : null}
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <span className="p-float-label">
+                  <AutoComplete
+                    id="profile_home_language"
+                    inputId="profile_home_language"
+                    itemID="profile_home_language"
+                    name="profile_home_language"
+                    value={localHomeLanguage}
+                    suggestions={Object.values( suggestedLocalHomeLanguages )}
+                    field="name"
+                    forceSelection={true}
+                    dropdown
+                    completeMethod={event => {
+                      const query = event.query.toLocaleLowerCase();
+                      setSuggestedLocalHomeLanguages(
+                        languages.filter(lang =>
+                          lang.name.toLowerCase().includes(query)
+                        )
+                      );
+                    }}
+                    onChange={event => {
+                      if (typeof event.value === "string") {
+                        setLocalHomeLanguage(event.value);
+                      }
+                    }}
+                    onSelect={event => {
+                      setLocalHomeLanguage(event.value.name);
+                      setProfileHomeLanguage(event.value.id);
+                    }}
+                    placeholder={t("demographics.home_language")}
+                  />
+                  <label htmlFor="profile_home_language">
+                    {t("demographics.home_language")}
+                  </label>
+                </span>
+              </Col>
+              <Col xs={12} sm={6}>
+                <span className="p-float-label">
+                  <Dropdown
+                    id="profile_gender"
+                    name="profile_gender"
+                    itemID="profile_gender"
+                    value={user.gender_id || 0}
+                    onChange={event => setProfileGender(Number(event.value))}
+                    options={Object.values( genders )}
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder={t("demographics.gender")}
+                  />
+                  <label htmlFor="profile_gender">
+                    {t("demographics.gender")}
+                  </label>
+                </span>
+              </Col>
+              <Col xs={12} sm={6} md={3}>
+                <span className="p-float-label">
+                  <Calendar
+                    id="profile_date_of_birth"
+                    inputId="profile_date_of_birth"
+                    name="profile_date_of_birth"
+                    value={new Date(Date.parse(user.date_of_birth))}
+                    onChange={date => setProfileDOB(date)}
+                    dateFormat="mm/dd/yy"
+                    showIcon={true}
+                    monthNavigator={true}
+                    showOnFocus={false}
+                    showButtonBar={true}
+                  />
+                  <label htmlFor="profile_date_of_birth">
+                    {t("demographics.born")}
+                  </label>
+                </span>
+              </Col>
+              <Col xs={12} md={12}>
+                <label htmlFor="impairments">
+                  {t("demographics.impairments.prompt")}
                 </label>
-              </span>
-            </Col>
-            <Col xs={12} md={12}>
-              <label htmlFor="impairments">
-                {t("demographics.impairments.prompt")}
-              </label>
-              <SelectButton
-                id="impairments"
-                name="impairments"
-                aria-label="impairments"
-                value={getImpairments()}
-                onChange={event => setProfileImpairment(event.target.value)}
-                multiple={true}
-              />
-            </Col>
+                <SelectButton
+                  id="impairments"
+                  name="impairments"
+                  aria-label="impairments"
+                  value={getImpairments()}
+                  options={impairmentOptions}
+                  onChange={event => {
+                    setProfileImpairment(event.target.value)
+                    event.originalEvent.currentTarget.blur( )
+                  }}
+                  multiple
+                />
+              </Col>
             </Row>
           </Container>
         </AccordionTab>
@@ -665,14 +699,14 @@ export default function ProfileDataAdmin(props: Props) {
         activeIndex={curTab}
         onTabChange={event => setCurTab(event.index)}
       >
-        <TabPanel header={t('tabs.details')} disabled={!profileReady}>
+        <TabPanel header={t("tabs.details")} disabled={!profileReady}>
           {profileReady ? (
             detailsComponent
           ) : (
             <Skeleton className="mb-2" height="10rem" width="100%" />
           )}
         </TabPanel>
-        <TabPanel header={t('tabs.courses')} disabled={!existingProfile}>
+        <TabPanel header={t("tabs.courses")} disabled={!existingProfile}>
           <UserCourseList
             retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
             coursesList={courses}
@@ -680,7 +714,7 @@ export default function ProfileDataAdmin(props: Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={t('tabs.history')} disabled={!existingProfile}>
+        <TabPanel header={t("tabs.history")} disabled={!existingProfile}>
           <UserActivityList
             retrievalUrl={endpoints["activitiesUrl"] + ".json"}
             activitiesList={activities}
@@ -688,7 +722,7 @@ export default function ProfileDataAdmin(props: Props) {
             addMessagesFunc={setMessages}
           />
         </TabPanel>
-        <TabPanel header={t('tabs.research')} disabled={!existingProfile}>
+        <TabPanel header={t("tabs.research")} disabled={!existingProfile}>
           <ResearchParticipationList
             retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
             consentFormList={consentForms}

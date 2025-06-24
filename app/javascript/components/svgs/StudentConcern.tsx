@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { SpringValue, animated } from "react-spring";
 
 type Props = {
   svgPos?: {
@@ -8,21 +9,27 @@ type Props = {
     width?: number;
     scale: number;
   };
-  framed?: boolean;
+  frame?: SpringValue<number>;
+  floor?: SpringValue<number>;
+  bgOpacity?: SpringValue<number>;
+  bgColor?: string;
 };
 
 export default function StudentConcern(props : Props) {
-  const mounted = useRef(false);
-  const framed = props.framed === undefined ? true : props.framed;
+  const frame = props.frame === undefined ? 0 : props.frame;
+  const floor = props.floor === undefined ? 0 : props.floor;
+  const bgOpacity = props.bgOpacity === undefined ? 0 : props.bgOpacity;
+  const bgColor = props.bgColor === undefined ? "azure" : props.bgColor;
+
 
   const content = (
     <g>
-      <rect
+      <animated.rect
         id="bg"
-        opacity={framed ? 100 : 0}
+        opacity={bgOpacity}
         height={5568}
         width={6780}
-        fill={"azure"}
+        fill={bgColor}
       />
 
       <g
@@ -119,7 +126,10 @@ export default function StudentConcern(props : Props) {
               id="path1416"
             />
           </g>
-          <g id="floor">
+          <animated.g
+            id="floor"
+            opacity={floor}
+            >
             <path
               d="m 280.72563,2596.7121 c 0,0 342.6504,-16.5133 388.0619,0 45.4115,16.5132 140.36281,-24.7699 218.80086,0 78.43804,24.7699 389.95701,29.0825 497.23181,21.7683 107.2748,-7.3141 268.187,17.0665 338.8909,0 70.7038,-17.0664 204.7973,7.3142 253.5586,-9.7522"
               id="path1418"
@@ -136,7 +146,7 @@ export default function StudentConcern(props : Props) {
               d="m 5166.2886,2614.2665 c 0,0 143.6411,14.3641 210.6735,9.5761 67.0325,-4.788 239.4017,-14.3641 282.494,0 43.0923,14.3641 201.0975,-19.1521 325.5864,-14.3641 124.4888,4.788 435.711,28.7282 497.9555,33.5162"
               id="path1424"
             />
-          </g>
+          </animated.g>
         </g>
         <g id="table">
           <g id="chairs">
@@ -903,9 +913,9 @@ export default function StudentConcern(props : Props) {
           </g>
         </g>
       </g>
-      <g
+      <animated.g
         id="frame"
-        opacity={framed ? 100 : 0}
+        opacity={frame}
         strokeWidth={7}
         stroke="#000000"
         fill="none"
@@ -918,7 +928,7 @@ export default function StudentConcern(props : Props) {
           d="m 6565.0413,148.36252 c 0,0 -44.5087,1528.13388 -7.4181,1928.71268 37.0906,400.5788 22.2544,1275.9177 -7.4181,1698.7508 -29.6725,422.8332 -7.4182,1453.9527 7.4181,1602.3152 0,0 -2203.1834,-14.8363 -2477.654,7.4181 -274.4707,22.2544 -2275.9498,3.5007 -2458.4013,-24.2131 -182.4515,-27.7138 -1087.46284,83.5581 -1413.86038,9.3769 0,0 -53.81994,-1899.5661 9.59909,-2336.7885 63.41902,-437.2225 -33.43179,-1997.5492 -8.35795,-2239.92969 25.07384,-242.38045 54.14371,-288.33121 6.17699,-645.64239"
           id="path3594"
         />
-      </g>
+      </animated.g>
     </g>
   );
   if (!props.svgPos) {

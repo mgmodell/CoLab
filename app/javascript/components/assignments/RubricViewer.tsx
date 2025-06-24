@@ -98,7 +98,7 @@ export default function RubricViewer(props: Props) {
                         <hr />
                       </td>
                     </tr>
-                    <tr >
+                    <tr>
                       <td colSpan={10}>{criterium.description}</td>
                       <td colSpan={span}>{t("status.rubric_minimum")}</td>
                       {renderedLevels}

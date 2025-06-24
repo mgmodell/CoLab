@@ -67,6 +67,9 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+  # Machine name for LTI registration
+  config.machine_name = 'colab.online'
+
   config.after_initialize do
     Bullet.enable = true
     Bullet.alert = false

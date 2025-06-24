@@ -21,11 +21,11 @@ class Rubric < ApplicationRecord
   validate :publish_logic
   validates :criteria, presence: { message: 'a rubric requires at least one criteria' }
 
-  scope :for_admin, -> { includes(:user).group(:name, :version) }
-  scope :for_instructor, lambda { |instructor|
-    includes(:user)
-      .where(school: instructor.school, published: true)
-      .group(:name, :version)
+  scope :for_admin, -> { includes( :user ).group( :name, :version ) }
+  scope :for_instructor, lambda { | instructor |
+    includes( :user )
+      .where( school: instructor.school, published: true )
+      .group( :name, :version )
   }
 
   def set_owner
@@ -42,7 +42,7 @@ class Rubric < ApplicationRecord
       supplemental: true,
       random_words_to_add: 9
     ).to_s
-    self.anon_version = version + (Random.rand * 11).floor
+    self.anon_version = version + ( Random.rand * 11 ).floor
   end
 
   def publish_logic
@@ -50,7 +50,7 @@ class Rubric < ApplicationRecord
       self.active = true
     elsif published_was
       unless ['active'] == changes.keys
-        errors.add(:published, 'A published rubric cannot be modified. A new version must be created.')
+        errors.add( :published, 'A published rubric cannot be modified. A new version must be created.' )
       end
     end
     errors

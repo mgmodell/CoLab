@@ -112,7 +112,12 @@ a:active {
 }
 
 .p-datepicker-trigger {
-  background-color: rgb(63, 81, 181);
+  background-color: rgb( 63, 81, 181 );
+}
+
+.intro_nav:hover {
+  filter: brightness(150%);
+  cursor: pointer;
 }
 
 .p-datatype-date {
@@ -132,4 +137,15 @@ a:active {
 
 .bingoBoardTable td {
   border: 1px solid #ddd;
+}
+
+.fixedDrawer a {
+  cursor: default;
+}
+.fixedDrawer .p-icon{
+  visibility: hidden;
+}
+.fixedDrawer a:hover, a:active, a:visited {
+  text-decoration: none;
+  color: hsl(246, 56%, 34%);
 }

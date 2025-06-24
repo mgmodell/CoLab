@@ -11,13 +11,10 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
 import { Panel } from "primereact/panel";
+import { IEmail } from "../infrastructure/ProfileSlice";
 
-interface IEmail {
-  id: number;
-  email: string;
-  primary: boolean;
-  confirmed?: boolean;
-}
+
+
 type Props = {
   emailList: Array<IEmail>;
   emailListUpdateFunc: (emails: Array<IEmail>) => void;
@@ -119,7 +116,9 @@ export default function UserEmailList(props: Props) {
             sortable
             key={"confirmed"}
             body={params => {
-              const resp = params["confirmed?"] ? <i className="pi pi-check"></i> : null;
+              const resp = params["confirmed?"] ? (
+                <i className="pi pi-check" />
+              ) : null;
               return resp;
             }}
           />

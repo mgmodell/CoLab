@@ -182,7 +182,7 @@ export default function TaskList(props: Props) {
                   case 'assignment':
                     output = `${params.status} submitted`;
                   default:
-                    output = `${params.status}`;
+                    output = `${params.status}%`;
                 }
                 return output;
               }}

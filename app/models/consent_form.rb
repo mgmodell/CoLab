@@ -13,16 +13,16 @@ class ConsentForm < ApplicationRecord
   has_many :consent_logs, inverse_of: :consent_form, dependent: :destroy
   has_many :courses, inverse_of: :consent_form, dependent: :nullify
 
-  scope :active_at, lambda { |date|
-                      where(active: true)
-                        .where('consent_forms.start_date <= ?', date)
-                        .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)
+  scope :active_at, lambda { | date |
+                      where( active: true )
+                        .where( 'consent_forms.start_date <= ?', date )
+                        .where( 'consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date )
                     }
 
-  scope :global_active_at, lambda { |date|
-                             where(active: true, courses_count: 0)
-                               .where('consent_forms.start_date <= ?', date)
-                               .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)
+  scope :global_active_at, lambda { | date |
+                             where( active: true, courses_count: 0 )
+                               .where( 'consent_forms.start_date <= ?', date )
+                               .where( 'consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date )
                            }
 
   def global?
@@ -31,6 +31,6 @@ class ConsentForm < ApplicationRecord
 
   def is_active?
     now = Time.zone.today
-    active && start_date <= now && (end_date.nil? || end_date >= now)
+    active && start_date <= now && ( end_date.nil? || end_date >= now )
   end
 end

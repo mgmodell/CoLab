@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_02_002923) do
+ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -427,6 +427,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_02_002923) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "jwk_kid", null: false
+    t.text "_keypair_ciphertext", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "not_before", null: false
+    t.datetime "not_after", null: false
+    t.datetime "expires_at", null: false
+    t.index ["created_at"], name: "index_keypairs_on_created_at"
+    t.index ["jwk_kid"], name: "index_keypairs_on_jwk_kid", unique: true
+  end
+
   create_table "languages", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "name_en"
@@ -658,6 +670,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_02_002923) do
     t.index ["gender_id"], name: "index_users_on_gender_id"
     t.index ["home_state_id"], name: "index_users_on_home_state_id"
     t.index ["language_id"], name: "index_users_on_language_id"
+    t.index ["primary_language_id"], name: "index_users_on_primary_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["theme_id"], name: "index_users_on_theme_id"

@@ -148,7 +148,9 @@ const CONFIG = {
             })
           );
           dispatch(setRetrievedProfile(resp["data"]["profile"]["user"]));
-          dispatch( setLocalLanguage(resp["data"]["profile"]["user"]["language_id"]) ); 
+          dispatch(
+            setLocalLanguage(resp["data"]["profile"]["user"]["language_id"])
+          );
           //dispatch( fetchProfile( ) );
         } else {
           dispatch(setLoggedOut({}));
@@ -197,7 +199,7 @@ const initialState: ContextRootState = {
   config: {
     localStorage: null,
     endpoint_url: null,
-    debug: false,
+    debug: false
   },
   lookups: {
     behaviors: {},

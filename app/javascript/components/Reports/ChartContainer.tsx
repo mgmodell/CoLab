@@ -15,7 +15,7 @@ const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 interface IProject {
   id: number;
   name: string;
-};
+}
 
 type Props = {
   unitOfAnalysis: string;
@@ -148,23 +148,22 @@ export default function ChartContainer(props: Props) {
     } else {
       const unit_code = unit_codes[props.unitOfAnalysis];
       return (
-          <span className="p-float-label">
-            <Dropdown
-              id={`${props.unitOfAnalysis}_list`}
-              value={selectedSubject}
-              options={subjects}
-              onChange={evt => {
-                selectSubject(evt.target.value);
-              }}
-              optionLabel="name"
-              optionValue="id"
-              placeholder={t(`${props.unitOfAnalysis}}_list`)}
-              />
-              <label htmlFor={`${props.unitOfAnalysis}_list`}>
-                {t(`${props.unitOfAnalysis}_list`)}
-              </label>
-          </span>
-
+        <span className="p-float-label">
+          <Dropdown
+            id={`${props.unitOfAnalysis}_list`}
+            value={selectedSubject}
+            options={subjects}
+            onChange={evt => {
+              selectSubject(evt.target.value);
+            }}
+            optionLabel="name"
+            optionValue="id"
+            placeholder={t(`${props.unitOfAnalysis}}_list`)}
+          />
+          <label htmlFor={`${props.unitOfAnalysis}_list`}>
+            {t(`${props.unitOfAnalysis}_list`)}
+          </label>
+        </span>
       );
     }
   };
@@ -174,20 +173,20 @@ export default function ChartContainer(props: Props) {
       return <Skeleton className="mb-2" />;
     } else if (1 < projects.length) {
       return (
-          <span className="p-float-label">
-            <Dropdown
-              id="project_list"
-              value={selectedProject}
-              options={projects}
-              onChange={evt => {
-                setSelectedProject(evt.target.value);
-              }}
-              optionLabel="name"
-              optionValue="id"
-              placeholder={t("projects_list")}
-              />
-              <label htmlFor="project_list">{t("projects_list")}</label>
-          </span>
+        <span className="p-float-label">
+          <Dropdown
+            id="project_list"
+            value={selectedProject}
+            options={projects}
+            onChange={evt => {
+              setSelectedProject(evt.target.value);
+            }}
+            optionLabel="name"
+            optionValue="id"
+            placeholder={t("projects_list")}
+          />
+          <label htmlFor="project_list">{t("projects_list")}</label>
+        </span>
       );
     } else {
       return (
@@ -248,41 +247,40 @@ export default function ChartContainer(props: Props) {
   return (
     <Container>
       <Row>
-      {forResearchBlock}
-      {anonymizeBlock}
+        {forResearchBlock}
+        {anonymizeBlock}
       </Row>
       <Row>
-      <Col xs={12} sm={6}>
-        {projectSelect()}
-      </Col>
-      <Col xs={12} sm={6}>
-        {subjectSelect()}
-      </Col>
+        <Col xs={12} sm={6}>
+          {projectSelect()}
+        </Col>
+        <Col xs={12} sm={6}>
+          {subjectSelect()}
+        </Col>
       </Row>
       <Row>
-      <Col xs={12}>
-        <Panel>
-
-        {Object.values(charts)
-          .sort((a, b) => {
-            a.index - b.index;
-          })
-          .map(chart => {
-            return (
-              <SubjectChart
-                key={chart.index}
-                subjectId={chart.subjectId}
-                projectId={selectedProject}
-                unitOfAnalysis={props.unitOfAnalysis}
-                forResearch={forResearch}
-                anonymize={anonymize}
-                hideFunc={() => hideChart(chart.subjectId)}
-                hidden={chart.hidden}
-              />
-            );
-          })}
-        </Panel>
-      </Col>
+        <Col xs={12}>
+          <Panel>
+            {Object.values(charts)
+              .sort((a, b) => {
+                a.index - b.index;
+              })
+              .map(chart => {
+                return (
+                  <SubjectChart
+                    key={chart.index}
+                    subjectId={chart.subjectId}
+                    projectId={selectedProject}
+                    unitOfAnalysis={props.unitOfAnalysis}
+                    forResearch={forResearch}
+                    anonymize={anonymize}
+                    hideFunc={() => hideChart(chart.subjectId)}
+                    hidden={chart.hidden}
+                  />
+                );
+              })}
+          </Panel>
+        </Col>
       </Row>
     </Container>
   );

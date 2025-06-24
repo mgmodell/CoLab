@@ -6,9 +6,9 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1 or /submissions/1.json
   def show
     # TODO: Check if owner or course owner
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        render json: standardized_response(@submission)
+        render json: standardized_response( @submission )
       end
     end
   end
@@ -21,25 +21,25 @@ class SubmissionsController < ApplicationController
     @submission.user = current_user
     @submission.rubric_id = assignment.rubric_id
     if assignment.group_enabled
-      group = assignment.project.group_for_user(current_user)
+      group = assignment.project.group_for_user( current_user )
       @submission.group = group
     end
     # Set this as submitted if requested
     @submission.submitted = DateTime.now if params[:submit]
 
-    if @submission.update(sub_params)
-      respond_to do |format|
+    if @submission.update( sub_params )
+      respond_to do | format |
         # if @submission.update(submission_params)
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('submissions.error.no_update_error') })
+          render json: standardized_response( @submission, { main: I18n.t( 'submissions.error.no_update_error' ) } )
         end
       end
     else
       errors = @submission.errors
-      errors.add(:main, I18n.t('submissions.error.update_failed'))
+      errors.add( :main, I18n.t( 'submissions.error.update_failed' ) )
       logger.debug @submission.errors.full_messages
-      respond_to do |format|
-        format.json { render json: standardized_response(@submission, @submission.errors) }
+      respond_to do | format |
+        format.json { render json: standardized_response( @submission, @submission.errors ) }
       end
     end
   end
@@ -48,15 +48,15 @@ class SubmissionsController < ApplicationController
   def withdraw
     @submission.withdrawn = DateTime.now
     if @submission.save
-      respond_to do |format|
+      respond_to do | format |
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('submissions.error.no_update_error') })
+          render json: standardized_response( @submission, { main: I18n.t( 'submissions.error.no_update_error' ) } )
         end
       end
 
     else
-      respond_to do |format|
-        format.json { render json: standardized_response(@submission, @submission.errors) }
+      respond_to do | format |
+        format.json { render json: standardized_response( @submission, @submission.errors ) }
       end
 
     end
@@ -64,7 +64,7 @@ class SubmissionsController < ApplicationController
 
   private
 
-  def standardized_response(submission, messages = {})
+  def standardized_response( submission, messages = {} )
     response = {
       submission: submission.as_json(
         user: { only: %i[first_name last_name email] },
@@ -89,7 +89,7 @@ class SubmissionsController < ApplicationController
 
     @submission = if submission_id.positive?
                     temp_submission = Submission.find_by id: submission_id
-                    temp_submission.can_edit?(@current_user) ? temp_submission : nil
+                    temp_submission.can_edit?( @current_user ) ? temp_submission : nil
                   else
                     Submission.new(
                       user: @current_user,
@@ -100,6 +100,6 @@ class SubmissionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def submission_params
-    params.require(:submission).permit(:sub_file, :sub_text, :sub_link, :assignment_id)
+    params.require( :submission ).permit( :sub_file, :sub_text, :sub_link, :assignment_id )
   end
 end

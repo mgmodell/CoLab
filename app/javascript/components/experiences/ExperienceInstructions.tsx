@@ -38,7 +38,7 @@ export default function Experience(props: Props) {
       <Suspense fallback={<Skeleton className="mb-2" />}>
         <p>{parse(t("inst_p3"))}</p>
       </Suspense>
-      <Suspense fallback={<Skeleton className="mb-2" height='30rem' />}>
+      <Suspense fallback={<Skeleton className="mb-2" height="30rem" />}>
         <h3>{t("instructions.behaviors_lbl")}</h3>
       </Suspense>
       <Suspense fallback={<Skeleton className="mb-2" />}>

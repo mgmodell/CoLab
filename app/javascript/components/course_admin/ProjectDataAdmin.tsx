@@ -27,6 +27,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
+import parse from 'html-react-parser';
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
@@ -60,19 +61,17 @@ export default function ProjectDataAdmin(props) {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const now = new Date();
-  const [projectStartDate, setProjectStartDate] = useState(now)
+  const [projectStartDate, setProjectStartDate] = useState(now);
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(
     Info.weekdays().map((day, index) => {
-      return { id: index, day: day }
+      return { id: index, day: day };
     })
   );
-  const [projectEndDate, setProjectEndDate] = useState(
-    () => {
-      now.setMonth(now.getMonth() + 3);
-      return now;
-    }
-  );
+  const [projectEndDate, setProjectEndDate] = useState(() => {
+    now.setMonth(now.getMonth() + 3);
+    return now;
+  });
   const [projectStartDOW, setProjectStartDOW] = useState(5);
   const [projectEndDOW, setProjectEndDOW] = useState(1);
   const [projectActive, setProjectActive] = useState(false);
@@ -177,7 +176,9 @@ export default function ProjectDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
-          navigate(`../${courseIdParam}/project/${project.id}`, { replace: true });
+          navigate(`../${courseIdParam}/project/${project.id}`, {
+            replace: true
+          });
         } else {
           setMessages(data.messages);
           dispatch(
@@ -219,7 +220,7 @@ export default function ProjectDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveProject}>
-      {null == projectId ? "Create" : "Save"} Project
+      {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
   ) : null;
 
@@ -232,12 +233,12 @@ export default function ProjectDataAdmin(props) {
     <Panel>
       <span className="p-float-label">
         <InputText
-          id='name'
+          id="name"
           itemID="name"
           value={projectName}
           onChange={event => setProjectName(event.target.value)}
         />
-        <label htmlFor="name">{t('name_lbl')}</label>
+        <label htmlFor="name">{t("name_lbl")}</label>
       </span>
       <span className="p-float-label">
         <InputTextarea
@@ -246,7 +247,7 @@ export default function ProjectDataAdmin(props) {
           value={projectDescription}
           onChange={event => setProjectDescription(event.target.value)}
         />
-        <label htmlFor="description">{t('description_lbl')}</label>
+        <label htmlFor="description">{t("description_lbl")}</label>
       </span>
       <InputSwitch
         checked={projectActive}
@@ -255,9 +256,9 @@ export default function ProjectDataAdmin(props) {
         itemID="active"
         name="active"
       />
-      <label htmlFor="active">{t('active_switch')}</label>
+      <label htmlFor="active">{t("active_switch")}</label>
 
-      <span>All dates shown in {courseTimezone} timezone.</span>
+      <span>{t('timezone_warning', { timezone: courseTimezone } )}</span>
       <span className="p-float-label">
         <Calendar
           id="project_dates"
@@ -271,29 +272,30 @@ export default function ProjectDataAdmin(props) {
             }
           }}
           showIcon={true}
+          showOnFocus={false}
           inputId="project_start_dates"
           name="project_start_dates"
         />
-        <label htmlFor="project_start_date">{t('project_dates')}</label>
+        <label htmlFor="project_start_date">{t("project_dates")}</label>
       </span>
       <br />
       <span className="p-float-label w-full">
         <Dropdown
-          id='start_dow'
+          id="start_dow"
           itemID="start_dow"
-          inputId='start_dow'
+          inputId="start_dow"
           value={projectStartDOW}
           options={daysOfWeek}
           onChange={event => setProjectStartDOW(event.value)}
           optionLabel="day"
           optionValue="id"
         />
-        <label htmlFor="start_dow">{t('opens')}</label>
+        <label htmlFor="start_dow">{t("opens")}</label>
       </span>
       <span className="p-float-label w-full">
         <Dropdown
-          id='end_dow'
-          inputId='end_dow'
+          id="end_dow"
+          inputId="end_dow"
           itemID="end_dow"
           value={projectEndDOW}
           options={daysOfWeek}
@@ -301,7 +303,7 @@ export default function ProjectDataAdmin(props) {
           optionLabel="day"
           optionValue="id"
         />
-        <label htmlFor="end_dow">{t('closes')}</label>
+        <label htmlFor="end_dow">{t("closes")}</label>
       </span>
 
       <span className="p-float-label">
@@ -315,7 +317,7 @@ export default function ProjectDataAdmin(props) {
           optionLabel="name"
           optionValue="id"
         />
-        <label htmlFor="style">{t('style')}</label>
+        <label htmlFor="style">{t("style")}</label>
       </span>
       <span className="p-float-label">
         <Dropdown
@@ -328,7 +330,7 @@ export default function ProjectDataAdmin(props) {
           optionLabel="name"
           optionValue="id"
         />
-        <label htmlFor="factor_pack">{t('factor_pack')}</label>
+        <label htmlFor="factor_pack">{t("factor_pack")}</label>
       </span>
       <br />
       {saveButton}

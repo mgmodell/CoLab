@@ -13,14 +13,14 @@ class School < ApplicationRecord
   validates :name, :timezone, presence: true
 
   def instructors
-    rosters.instructor.collect(&:user).uniq
+    rosters.instructor.collect( &:user ).uniq
   end
 
   def enrolled_students
-    rosters.enrolled_student.collect(&:user).uniq
+    rosters.enrolled_student.collect( &:user ).uniq
   end
 
-  def get_name(anonymous)
+  def get_name( anonymous )
     anonymous ? anon_name : name
   end
 

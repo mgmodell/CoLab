@@ -1,5 +1,7 @@
 en:
   projects:
+    create_btn: Create Project
+    save_btn: Save Project
     create_success: Project was successfully created.
     create_success_inactive: >
       Project was successfully created. Don't forget to activate it!
@@ -7,6 +9,7 @@ en:
     update_success_inactive: >
       Project was successfully updated. Don't forget to activate it!
     destroy_success: Project was successfully destroyed.
+    timezone_warning: All dates shown in the {{timezone}} time zone.
     factor_pack: Factor pack
     active_switch: Active
     project_dates: Project Dates

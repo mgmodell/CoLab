@@ -147,7 +147,7 @@ export default function SchoolDataAdmin(props) {
   ) : null;
 
   const detailsComponent = endpointStatus ? (
-    <Panel header={t('edit.title')}>
+    <Panel header={t("edit.title")}>
       <div className="p-float-label">
         <InputText
           id="school-name"
@@ -155,7 +155,7 @@ export default function SchoolDataAdmin(props) {
           value={schoolName}
           onChange={event => setSchoolName(event.target.value)}
         />
-        <label htmlFor="school-name">{t('index.name_lbl')}</label>
+        <label htmlFor="school-name">{t("index.name_lbl")}</label>
       </div>
       &nbsp;
       <span className="p-float-label">
@@ -166,9 +166,8 @@ export default function SchoolDataAdmin(props) {
           options={timezones}
           optionValue="name"
           onChange={event => {
-            setSchoolTimezone(String(event.value))
-          }
-          }
+            setSchoolTimezone(String(event.value));
+          }}
           optionLabel="name"
           placeholder={t("time_zone")}
         />
@@ -184,19 +183,13 @@ export default function SchoolDataAdmin(props) {
           autoResize={true}
           value={schoolDescription}
           onChange={event => setSchoolDescription(event.target.value)}
-
         />
-        <label htmlFor="school-description">{t('index.description_lbl')}</label>
+        <label htmlFor="school-description">{t("index.description_lbl")}</label>
       </div>
       <br />
       {saveButton}
     </Panel>
   ) : null;
 
-  return (
-    <Panel>
-      {detailsComponent}
-
-    </Panel>
-  );
+  return <Panel>{detailsComponent}</Panel>;
 }

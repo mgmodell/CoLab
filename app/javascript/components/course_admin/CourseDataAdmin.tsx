@@ -364,6 +364,7 @@ export default function CourseDataAdmin() {
         value={[course.start_date, course.end_date]}
         placeholder="Select a Date Range"
         showIcon={true}
+        showOnFocus={false}
         onChange={event => {
           const changeTo = event.value;
           if (null !== changeTo && changeTo.length > 1) {

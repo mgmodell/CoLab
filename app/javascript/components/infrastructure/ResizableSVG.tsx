@@ -20,12 +20,7 @@ interface Props {
 
 export const SvgContext = createContext(null);
 
-const ResizableSVG: React.FC<Props> = ({
-  children,
-  id,
-  height,
-  width
-}) => {
+const ResizableSVG: React.FC<Props> = ({ children, id, height, width }) => {
   const containerRef = useRef();
 
   const [curHeight, setCurHeight] = useState(height);

@@ -3,7 +3,7 @@ es:
     error:
       nothing_submitted: No hay tarea presente
       withdraw_requires_submit: >
-         No puedes retirar una tarea que no ha sido realmente
+        No puedes retirar una tarea que no ha sido realmente
         entregada.
       no_changes_on_withdrawal: >
         No puedes hacer cambios al retirar una tarea.

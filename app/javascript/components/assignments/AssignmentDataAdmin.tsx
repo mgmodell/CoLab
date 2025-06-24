@@ -69,6 +69,17 @@ export default function AssignmentDataAdmin(props) {
       return now;
     }
   );
+
+  const setMessages = msgs => {
+    Object.keys(msgs).forEach(key => {
+      if ("main" === key) {
+        dispatch(addMessage(msgs[key], new Date(), Priorities.INFO));
+      } else {
+        dispatch(addMessage(msgs[key], new Date(), Priorities.WARNING));
+      }
+    });
+  };
+
   const [assignmentFileSub, setAssignmentFileSub] = useState(false);
   const [assignmentLinkSub, setAssignmentLinkSub] = useState(false);
   const [assignmentTextSub, setAssignmentTextSub] = useState(false);
@@ -151,7 +162,8 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        dispatch( addMessage( data.notice?.status, new Date(), Priorities.ERROR));
+        console.log("data", data);
+        setMessages( data.messages );
         setDirty(false);
         navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
 
@@ -345,12 +357,10 @@ export default function AssignmentDataAdmin(props) {
                       name="assignment_rubric"
                       options={availableRubrics}
                       itemTemplate={(selected) => {
-                        console.log(selected);
                         const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
                         return output;
                       }}
                       valueTemplate={(selected, props) => {
-                        console.log(selected);
                         const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
                         return output;
                       }}
@@ -371,6 +381,9 @@ export default function AssignmentDataAdmin(props) {
                       onChange={event => {
                         const changeTo = event.value;
                         if (null !== changeTo && changeTo.length > 1) {
+                          console.log( event );
+                          console.log(changeTo[0], changeTo[1]);
+
                           setAssignmentStartDate(changeTo[0]);
                           setAssignmentEndDate(changeTo[1]);
                         }
@@ -379,6 +392,8 @@ export default function AssignmentDataAdmin(props) {
                       }
                       selectionMode="range"
                       showIcon={true}
+                      hideOnRangeSelection={true}
+                      showOnFocus={false}
                       inputId="assignment_start_date"
                       name="assignment_start_date"
                     />

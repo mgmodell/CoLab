@@ -8,7 +8,6 @@ import {
   Navigate
 } from "react-router-dom";
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
 
 import { PrimeReactProvider } from "primereact/api";
@@ -30,7 +29,9 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import ProfileShell from "./profile/ProfileShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const InstallmentReport = React.lazy(() => import("./checkin/InstallmentReport"));
+const InstallmentReport = React.lazy(() =>
+  import("./checkin/InstallmentReport")
+);
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
@@ -48,16 +49,14 @@ type Props = {
 };
 
 export default function PageWrapper(props: Props) {
-  const store = configureStore({
-    reducer: appStatus
-  });
+  const store = appStatus;
 
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
         <Route
           element={
-            <Suspense fallback={<Skeleton className='mb-2' height={'50rem'} />}>
+            <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
               <AppHeader />
               <WorkingIndicator />
               <br />
@@ -79,16 +78,18 @@ export default function PageWrapper(props: Props) {
               path={"login"}
               element={<Navigate to={"/welcome/login"} replace={true} />}
             />
-            <Route path="profile/*" element={
-              <RequireAuth>
-
-                <ProfileShell />
-              </RequireAuth>
-            } />
+            <Route
+              path="profile/*"
+              element={
+                <RequireAuth>
+                  <ProfileShell />
+                </RequireAuth>
+              }
+            />
             <Route
               path="profile"
               element={
-                <Suspense fallback={<Skeleton className='mb-2' />}>
+                <Suspense fallback={<Skeleton className="mb-2" />}>
                   <RequireAuth>
                     <ProfileDataAdmin />
                   </RequireAuth>
@@ -98,7 +99,7 @@ export default function PageWrapper(props: Props) {
             <Route
               path="admin/*"
               element={
-                <Suspense fallback={<Skeleton className={'mb-2'} />}>
+                <Suspense fallback={<Skeleton className={"mb-2"} />}>
                   <RequireAuth>
                     <Admin />
                   </RequireAuth>
@@ -163,10 +164,7 @@ export default function PageWrapper(props: Props) {
   return (
     <Provider store={store}>
       <PrimeReactProvider>
-        <AppInit
-          endpointsUrl={props.getEndpointsUrl}
-          debug={props.debug}
-        >
+        <AppInit endpointsUrl={props.getEndpointsUrl} debug={props.debug}>
           <CookieConsent>
             This website uses cookies to enhance the user experience.
           </CookieConsent>

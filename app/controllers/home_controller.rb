@@ -14,25 +14,25 @@ class HomeController < ApplicationController
     waiting_rosters = current_user.rosters.invited_student
 
     resp_hash = {
-      tasks: waiting_tasks.collect { |t| t.task_data(current_user:) },
-      consent_logs: waiting_consent_logs.collect do |cl|
+      tasks: waiting_tasks.collect { | t | t.task_data( current_user: ) },
+      consent_logs: waiting_consent_logs.collect do | cl |
                       {
                         id: cl.id,
                         consent_form_id: cl.consent_form_id
                       }
                     end,
-      waiting_rosters: waiting_rosters.collect do |r|
+      waiting_rosters: waiting_rosters.collect do | r |
                          {
                            id: r.id,
-                           name: r.course.get_name(false),
+                           name: r.course.get_name( false ),
                            startDate: r.course.start_date,
                            endDate: r.course.end_date,
-                           acceptPath: accept_roster_path(roster_id: r.id),
-                           declinePath: decline_roster_path(roster_id: r.id)
+                           acceptPath: accept_roster_path( roster_id: r.id ),
+                           declinePath: decline_roster_path( roster_id: r.id )
                          }
                        end
     }
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp_hash
       end
@@ -43,7 +43,7 @@ class HomeController < ApplicationController
     ep_hash = {
       home: {
         supportAddress: 'Support@CoLab.online',
-        logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
+        logoPath: ActionController::Base.helpers.asset_path( 'CoLab_small.png' ),
         quotePath: get_quote_path,
         moreInfoUrl: '/',
         diversityScoreFor: check_diversity_score_path,
@@ -53,27 +53,27 @@ class HomeController < ApplicationController
       }
     }
     ep_hash[:installment] = {
-      baseUrl: edit_installment_path(assessment_id: ''),
+      baseUrl: edit_installment_path( assessment_id: '' ),
       saveInstallmentUrl: installments_path
     }
     ep_hash[:candidate_list] = {
-      baseUrl: get_candidate_list_path(bingo_game_id: '')
+      baseUrl: get_candidate_list_path( bingo_game_id: '' )
     }
     ep_hash[:candidate_review] = {
-      baseUrl: review_bingo_candidates_path(id: ''),
-      reviewSaveUrl: update_bingo_candidates_review_path(id: ''),
-      conceptUrl: bingo_concepts_path(0)
+      baseUrl: review_bingo_candidates_path( id: '' ),
+      reviewSaveUrl: update_bingo_candidates_review_path( id: '' ),
+      conceptUrl: bingo_concepts_path( 0 )
     }
     ep_hash[:candidate_results] = {
-      baseUrl: my_results_path(id: ''),
-      boardUrl: board_for_game_path(bingo_game_id: ''),
-      conceptsUrl: bingo_concepts_path(id: ''),
-      worksheetUrl: worksheet_for_bingo_path(bingo_game_id: '')
+      baseUrl: my_results_path( id: '' ),
+      boardUrl: board_for_game_path( bingo_game_id: '' ),
+      conceptsUrl: bingo_concepts_path( id: '' ),
+      worksheetUrl: worksheet_for_bingo_path( bingo_game_id: '' )
     }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
-      ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
+      ep_hash[:home][ :selfRegUrl] = self_reg_init_path( id: '' )
 
       ep_hash[:profile] = {
         baseUrl: full_profile_path,
@@ -82,26 +82,26 @@ class HomeController < ApplicationController
         consentFormsUrl: user_consents_path,
 
         addEmailUrl: add_registered_email_path,
-        removeEmailUrl: remove_registered_email_path(email_id: ''),
-        setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
+        removeEmailUrl: remove_registered_email_path( email_id: '' ),
+        setPrimaryEmailUrl: set_primary_registered_email_path( email_id: '' ),
         passwordResetUrl: initiate_password_reset_path,
         passwordUpdateUrl: password_change_path,
         # infrastructure
-        statesForUrl: states_for_path(country_code: '')
+        statesForUrl: states_for_path( country_code: '' )
       }
       ep_hash[:experience] = {
-        baseUrl: next_experience_path(experience_id: ''),
+        baseUrl: next_experience_path( experience_id: '' ),
         diagnosisUrl: diagnose_path,
         reactionUrl: react_path
       }
       ep_hash[:consent_log] = {
-        baseUrl: edit_consent_log_path(consent_form_id: ''),
-        consentLogSaveUrl: consent_log_path(id: '')
+        baseUrl: edit_consent_log_path( consent_form_id: '' ),
+        consentLogSaveUrl: consent_log_path( id: '' )
       }
       ep_hash[:assignment] = {
-        statusUrl: assignment_status_path(id: ''),
-        submissionUrl: submission_path(id: ''),
-        submissionWithdrawalUrl: submission_withdraw_path(id: '')
+        statusUrl: assignment_status_path( id: '' ),
+        submissionUrl: submission_path( id: '' ),
+        submissionWithdrawalUrl: submission_withdraw_path( id: '' )
       }
 
       if current_user.is_admin? || current_user.is_instructor?
@@ -109,16 +109,16 @@ class HomeController < ApplicationController
           baseUrl: projects_path,
           activateProjectUrl: activate_project_path,
           diversityCheckUrl: check_diversity_score_path,
-          groupsUrl: groups_path(id: ''),
-          diversityRescoreGroup: rescore_group_path(id: ''),
-          diversityRescoreGroups: rescore_groups_path(id: '')
+          groupsUrl: groups_path( id: '' ),
+          diversityRescoreGroup: rescore_group_path( id: '' ),
+          diversityRescoreGroups: rescore_groups_path( id: '' )
         }
         ep_hash[ :course] = {
           baseUrl: courses_path,
           courseCreateUrl: new_course_path,
-          courseUsersUrl: get_users_path(id: ''),
-          scoresUrl: course_scores_path(id: ''),
-          courseCopyUrl: copy_course_path(id: '')
+          courseUsersUrl: get_users_path( id: '' ),
+          scoresUrl: course_scores_path( id: '' ),
+          courseCopyUrl: copy_course_path( id: '' )
         }
         ep_hash[ :school ] = {
           baseUrl: schools_path,
@@ -126,9 +126,9 @@ class HomeController < ApplicationController
         }
         ep_hash[:bingo_game] = {
           baseUrl: bingo_games_path,
-          gameResultsUrl: game_results_path(id: ''),
-          worksheetResultsUrl: ws_results_path(id: ''),
-          worksheetScoreUrl: ws_score_path(id: '')
+          gameResultsUrl: game_results_path( id: '' ),
+          worksheetResultsUrl: ws_results_path( id: '' ),
+          worksheetScoreUrl: ws_score_path( id: '' )
         }
         ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
@@ -141,9 +141,9 @@ class HomeController < ApplicationController
           baseUrl: rubrics_path
         }
         ep_hash[:critique] = {
-          baseUrl: assignment_critiques_path(id: ''),
-          showUrl: critique_assignment_path(submission_id: ''),
-          updateUrl: critique_update_path(submission_feedback_id: '')
+          baseUrl: assignment_critiques_path( id: '' ),
+          showUrl: critique_assignment_path( submission_id: '' ),
+          updateUrl: critique_update_path( submission_feedback_id: '' )
         }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
@@ -165,7 +165,7 @@ class HomeController < ApplicationController
     resources[:profile] = get_profile_hash if user_signed_in?
 
     # Provide the endpoints
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resources.as_json
       end
@@ -174,7 +174,7 @@ class HomeController < ApplicationController
 
   def get_lookups
     {
-      behaviors: Behavior.all.collect do |behavior|
+      behaviors: Behavior.all.collect do | behavior |
         {
           id: behavior.id,
           name: behavior.name,
@@ -182,7 +182,7 @@ class HomeController < ApplicationController
           needs_detail: behavior.needs_detail
         }
       end,
-      candidate_feedbacks: CandidateFeedback.all.collect do |candidate_feedback|
+      candidate_feedbacks: CandidateFeedback.all.collect do | candidate_feedback |
         {
           id: candidate_feedback.id,
           name: candidate_feedback.name,
@@ -191,35 +191,35 @@ class HomeController < ApplicationController
           critique: candidate_feedback.critique
         }
       end,
-      countries: HomeCountry.all.collect do |country|
+      countries: HomeCountry.all.collect do | country |
         {
           id: country.id,
           name: country.name,
           code: country.code
         }
       end,
-      languages: Language.all.collect do |language|
+      languages: Language.all.collect do | language |
         {
           id: language.id,
           name: language.name,
           code: language.code
         }
       end,
-      cip_codes: CipCode.all.collect do |cip_code|
+      cip_codes: CipCode.all.collect do | cip_code |
         {
           id: cip_code.id,
           code: cip_code.gov_code,
           name: cip_code.name
         }
       end,
-      genders: Gender.all.collect do |gender|
+      genders: Gender.all.collect do | gender |
         {
           id: gender.id,
           name: gender.name,
           code: gender.code
         }
       end,
-      themes: Theme.all.collect do |theme|
+      themes: Theme.all.collect do | theme |
         {
           id: theme.id,
           code: theme.code,
@@ -231,7 +231,7 @@ class HomeController < ApplicationController
       oauth_ids: {
         google: Rails.application.credentials.google.client_id
       },
-      schools: School.all.collect do |school|
+      schools: School.all.collect do | school |
         {
           id: school.id,
           name: school.name,
@@ -243,7 +243,7 @@ class HomeController < ApplicationController
 
   def lookups
     lookups = get_lookups
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: lookups.as_json
       end
@@ -266,7 +266,7 @@ class HomeController < ApplicationController
     }
     profile_hash[:user][:is_instructor] = current_user.is_instructor?
     profile_hash[:user][:is_admin] = current_user.is_admin?
-    profile_hash[:user][:name] = current_user.name(false)
+    profile_hash[:user][:name] = current_user.name( false )
 
     profile_hash[:user][:emails] = current_user.emails.as_json(
       only: %i[id email primary],
@@ -276,7 +276,7 @@ class HomeController < ApplicationController
   end
 
   def full_profile
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: get_profile_hash
       end
@@ -284,11 +284,12 @@ class HomeController < ApplicationController
   end
 
   def update_full_profile
-    params = profile_params.to_h
-    params[:welcomed] = true
-    if current_user.update(params)
+    submitted_params = profile_params.to_h
+
+    submitted_params[:welcomed] = true
+    if current_user.update( submitted_params )
       notice = 'Profile successfully updated'
-      respond_to do |format|
+      respond_to do | format |
         response = get_profile_hash
         response [:messages] = { main: notice }
         format.json do
@@ -297,9 +298,9 @@ class HomeController < ApplicationController
       end
     else
       logger.debug current_user.errors.full_messages
-      respond_to do |format|
+      respond_to do | format |
         format.json do
-          messages = current_user.errors.to_hash.store(:main, 'Please review the errors below')
+          messages = current_user.errors.to_hash.store( :main, 'Please review the errors below' )
           response = {
             messages:
           }
@@ -310,32 +311,32 @@ class HomeController < ApplicationController
   end
 
   # TimeZones constant
-  TIMEZONES ||= ActiveSupport::TimeZone.all.collect do |tz|
+  TIMEZONES ||= ActiveSupport::TimeZone.all.collect do | tz |
     {
       name: tz.name,
       stdName: tz.tzinfo.name
 
     }
   end
-  TIMEZONE_HASH = TIMEZONES.each_with_object({}) do |next_tz, tz_hash|
+  TIMEZONE_HASH = TIMEZONES.each_with_object( {} ) do | next_tz, tz_hash |
     tz_hash[next_tz[:name]] = next_tz[:stdName]
   end
 
   def get_quote
     quote = Quote.get_quote
 
-    respond_to do |format|
+    respond_to do | format |
       format.json { render json: quote }
     end
   end
 
   def simple_profile
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        tz = ActiveSupport::TimeZone.new(@current_user.timezone).tzinfo.name
+        tz = ActiveSupport::TimeZone.new( @current_user.timezone ).tzinfo.name
         render json: {
           id: @current_user.id,
-          name: @current_user.name(false),
+          name: @current_user.name( false ),
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
           theme: @current_user.theme.code,
@@ -350,50 +351,50 @@ class HomeController < ApplicationController
   end
 
   def user_courses
-    resp = current_user.rosters.enrolled.includes(:course).collect do |roster|
+    resp = current_user.rosters.enrolled.includes( :course ).collect do | roster |
       course = roster.course
       {
         id: course.id,
         number: course.number,
         name: course.name,
-        bingo_data: current_user.get_bingo_data(course_id: course.id),
-        bingo_performance: current_user.get_bingo_performance(course_id: course.id),
-        experience_performance: current_user.get_experience_performance(course_id: course.id),
-        assessment_performance: current_user.get_assessment_performance(course_id: course.id)
+        bingo_data: current_user.get_bingo_data( course_id: course.id ),
+        bingo_performance: current_user.get_bingo_performance( course_id: course.id ),
+        experience_performance: current_user.get_experience_performance( course_id: course.id ),
+        assessment_performance: current_user.get_assessment_performance( course_id: course.id )
       }
     end
-    respond_to do |format|
+    respond_to do | format |
       format.json { render json: resp }
     end
   end
 
   def user_activities
     anon = current_user.anonymize?
-    resp = current_user.activity_history.collect do |activity|
+    resp = current_user.activity_history.collect do | activity |
       {
         id: activity.id,
         type: activity.type,
-        course_name: activity.course.get_name(anon),
-        course_number: activity.course.get_number(anon),
-        name: activity.get_name(anon),
+        course_name: activity.course.get_name( anon ),
+        course_number: activity.course.get_number( anon ),
+        name: activity.get_name( anon ),
         close_date: activity.end_date,
         performance: case activity.type
                      when 'Terms List'
-                       activity.candidate_list_for_user(current_user).performance
+                       activity.candidate_list_for_user( current_user ).performance
                      when 'Project'
-                       current_user.get_assessment_performance(course_id: activity.course.id)
+                       current_user.get_assessment_performance( course_id: activity.course.id )
                      when 'Group Experience'
-                       current_user.get_experience_performance(course_id: activity.course.id)
+                       current_user.get_experience_performance( course_id: activity.course.id )
                      end,
         other: case activity.type
                when 'Terms List'
-                 candidates_list = activity.candidate_list_for_user(current_user).status
+                 candidates_list = activity.candidate_list_for_user( current_user ).status
                when 'Project'
-                 activity.get_performance(current_user)
+                 activity.get_performance( current_user )
                when 'Group Experience'
-                 activity.get_user_reaction(current_user).status
+                 activity.get_user_reaction( current_user ).status
                when 'Assignment'
-                 activity.get_submissions_for_user(current_user).size
+                 activity.get_submissions_for_user( current_user ).size
                end,
         link: case activity.type
               when 'Terms List', 'Assignment'
@@ -403,21 +404,21 @@ class HomeController < ApplicationController
               end
       }
     end
-    respond_to do |format|
+    respond_to do | format |
       format.json { render json: resp }
     end
   end
 
   def states_for_country
     country_code = params[:country_code]
-    country = HomeCountry.find_by(code: country_code)
+    country = HomeCountry.find_by( code: country_code )
 
     @states = country.nil? ? [] : country.home_states
 
     # Return the retrieved data
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        render json: @states.collect { |state|
+        render json: @states.collect { | state |
           {
             id: state.id,
             name: state.name,
@@ -431,19 +432,19 @@ class HomeController < ApplicationController
 
   def check_diversity_score
     emails = params[:emails]
-    users = User.joins(:emails).where(emails: { email: emails.split(/[\s,]+/) })
-                .includes(:gender, :primary_language,
-                          :cip_code, home_state: [:home_country],
-                                     reactions: [narrative: [:scenario]])
-    diversity_score = Group.calc_diversity_score_for_group(users:)
-    found_users = users.collect do |u|
+    users = User.joins( :emails ).where( emails: { email: emails.split( /[\s,]+/ ) } )
+                .includes( :gender, :primary_language,
+                           :cip_code, home_state: [:home_country],
+                                      reactions: [narrative: [:scenario]] )
+    diversity_score = Group.calc_diversity_score_for_group( users: )
+    found_users = users.collect do | u |
       { email: u.email,
-        name: u.informal_name(false),
+        name: u.informal_name( false ),
         family_name: u.last_name,
         given_name: u.first_name }
     end
     # Return the retrieved data
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: {
           found_users:,
@@ -460,21 +461,20 @@ class HomeController < ApplicationController
   end
 
   def demo_start
-    @title = t 'titles.demonstration'
     if current_user.nil?
-      current_user = User.new(first_name: t(:demo_surname_1),
-                              last_name: t(:demo_fam_name_1),
-                              timezone: t(:demo_user_tz))
+      current_user = User.new( first_name: t( :demo_surname_1 ),
+                               last_name: t( :demo_fam_name_1 ),
+                               timezone: t( :demo_user_tz ) )
     end
 
     e = Event_.new
     e.id = -42
-    e.name = t(:demo_group)
-    e.task_name_post = "<br>(#{t :project}: #{t(:demo_project)})"
+    e.name = t( :demo_group )
+    e.task_name_post = "<br>(#{t :project}: #{t( :demo_project )})"
     e.type = :assessment
     e.status = t :not_started
-    e.group_name = t(:demo_group)
-    e.course_name = t(:demo_course_name)
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_date = 1.day.ago
     e.close_date = 3.days.from_now.end_of_day
     e.next_date = 1.day.ago
@@ -484,13 +484,13 @@ class HomeController < ApplicationController
     @events = [e]
     e = Event_.new
     e.id = -11
-    e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic'))
-    e.task_link = terms_demo_entry_path(-1)
+    e.name = t( 'candidate_lists.enter', task: t( 'candidate_lists.demo_topic' ) )
+    e.task_link = terms_demo_entry_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
     e.status = '50%'
-    e.group_name = t(:demo_group)
-    e.course_name = t(:demo_course_name)
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_date = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
     e.next_date = e.close_date
@@ -500,14 +500,14 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -77
-    e.name = t('candidate_lists.review', task:
-      t('candidate_lists.demo_review_topic'))
-    e.task_link = bingo_demo_review_path(-1)
+    e.name = t( 'candidate_lists.review', task:
+      t( 'candidate_lists.demo_review_topic' ) )
+    e.task_link = bingo_demo_review_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
     e.status = '0'
-    e.group_name = t(:demo_group)
-    e.course_name = t(:demo_course_name)
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_date = 3.weeks.ago
     e.close_date = Time.zone.today.end_of_day
     e.next_date = e.close_date
@@ -518,14 +518,14 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -88
-    e.name = t('candidate_lists.play', task:
-      t('candidate_lists.demo_bingo_topic'))
+    e.name = t( 'candidate_lists.play', task:
+      t( 'candidate_lists.demo_bingo_topic' ) )
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = :bingo_game
     e.status = '42 concepts'
-    e.group_name = t(:demo_group)
-    e.course_name = t(:demo_course_name)
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_date = 2.weeks.ago
     e.close_date = 1.day.from_now.end_of_day
     e.next_date = e.close_date
@@ -539,7 +539,7 @@ class HomeController < ApplicationController
       current_user:,
       consent_logs: {}
     }
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         render json: resp_hash
       end
@@ -549,7 +549,7 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.permit(
+    params.require(:user).permit(
       :first_name, :last_name,
       :timezone, :language_id, :theme_id, :researcher,
       :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,

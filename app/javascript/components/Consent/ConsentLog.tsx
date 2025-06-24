@@ -101,37 +101,35 @@ export default function ConsentLog(props: Props) {
     <Panel>
       <Container>
         <Row>
-        <Col xs={12}>
-          <h1>{t("edit.opening")}</h1>
-          <h2>
-            {t("edit.title")}: {formName}
-          </h2>
-        </Col>
-        <Col xs={12}>
-          <p>{t("edit.instructions")}</p>
-          <p>
-            {// Good candidate for dataloading API
+          <Col xs={12}>
+            <h1>{t("edit.opening")}</h1>
+            <h2>
+              {t("edit.title")}: {formName}
+            </h2>
+          </Col>
+          <Col xs={12}>
+            <p>{t("edit.instructions")}</p>
+            <p>
+              {// Good candidate for dataloading API
               parse(formText || "")}
-          </p>
-        </Col>
-        <Col xs={12} sm={6}>
-          <a href={formPdfLink}>{t("edit.consent_dl")}</a>
-        </Col>
-        <Col xs={12} sm={6}>
-          <div className="flex align-items-center">
-            <Checkbox
-              id="accepted"
-              checked={formAccepted}
-              onChange={() => setFormAccepted(!formAccepted)}
-            />
-            <label htmlFor="accepted">{t("edit.accept")}</label>
-          </div>
-        </Col>
-        <Col xs={12}>
-          <Button onClick={updateLog}>
-            {t("edit.submit_response")}
-          </Button>
-        </Col>
+            </p>
+          </Col>
+          <Col xs={12} sm={6}>
+            <a href={formPdfLink}>{t("edit.consent_dl")}</a>
+          </Col>
+          <Col xs={12} sm={6}>
+            <div className="flex align-items-center">
+              <Checkbox
+                id="accepted"
+                checked={formAccepted}
+                onChange={() => setFormAccepted(!formAccepted)}
+              />
+              <label htmlFor="accepted">{t("edit.accept")}</label>
+            </div>
+          </Col>
+          <Col xs={12}>
+            <Button onClick={updateLog}>{t("edit.submit_response")}</Button>
+          </Col>
         </Row>
       </Container>
     </Panel>

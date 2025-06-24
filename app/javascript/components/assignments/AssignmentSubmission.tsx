@@ -99,7 +99,6 @@ export default function AssignmentSubmission(props: Props) {
       });
   };
 
-
   const sub_text = props.assignment.textSub ? (
     <Row>
       <Col xs={12}>
@@ -109,9 +108,7 @@ export default function AssignmentSubmission(props: Props) {
           aria-label={t("submissions.sub_text_placeholder")}
           readOnly={!notSubmitted}
           value={submissionTextEditor}
-          headerTemplate={
-            <EditorToolbar />
-          }
+          headerTemplate={<EditorToolbar />}
           onTextChange={e => {
             setSubmissionTextEditor(e.htmlValue);
           }}
@@ -148,7 +145,7 @@ export default function AssignmentSubmission(props: Props) {
       // If this is brand new, we have no ID and need a new one
       // If this has already been submitted, then we must create a new submission
       submissionId === null || submittedDate !== null ? "new" : submissionId
-      }.json`;
+    }.json`;
     const method = null === submissionId ? "PUT" : "PATCH";
 
     axios({
@@ -269,7 +266,7 @@ export default function AssignmentSubmission(props: Props) {
       <Row>
         <Col xs={12}>
           <h6>
-            {undefined === submissionId || 0 === parseInt( submissionId )
+            {undefined === submissionId || 0 === parseInt(submissionId)
               ? t("submissions.new_header")
               : t("submissions.edit_header")}
           </h6>

@@ -24,6 +24,7 @@ import { InputText } from "primereact/inputtext";
 import { InputSwitch } from "primereact/inputswitch";
 import { Calendar } from "primereact/calendar";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
+import parse from 'html-react-parser';
 
 interface IExperience {
   id: string;
@@ -33,7 +34,7 @@ interface IExperience {
   active: boolean;
   start_date: string;
   end_date: string;
-};
+}
 
 export default function ExperienceDataAdmin(props) {
   const category = "experience_admin";
@@ -65,16 +66,12 @@ export default function ExperienceDataAdmin(props) {
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
   const now = new Date();
-  const [experienceStartDate, setExperienceStartDate] = useState(
-    now
-  );
+  const [experienceStartDate, setExperienceStartDate] = useState(now);
   //Using this Luxon function for later i18n
-  const [experienceEndDate, setExperienceEndDate] = useState(
-    () => {
-      now.setMonth(now.getMonth() + 3);
-      return now;
-    }
-  );
+  const [experienceEndDate, setExperienceEndDate] = useState(() => {
+    now.setMonth(now.getMonth() + 3);
+    return now;
+  });
   const [experienceActive, setExperienceActive] = useState(false);
   const [reactionsUrl, setReactionsUrl] = useState();
   const [reactionData, setReactionData] = useState();
@@ -83,14 +80,7 @@ export default function ExperienceDataAdmin(props) {
 
   // For the word cloud
   const [responseWords, setResponseWords] = useState([]);
-  const colors = [
-    '#477efd',
-    '#74d6fd',
-    '#3d5ef9',
-    '#2b378b',
-    '#1f2255'
-  ]
-
+  const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
 
   const getExperience = () => {
     dispatch(startTask());
@@ -120,9 +110,9 @@ export default function ExperienceDataAdmin(props) {
         setExperienceStartDate(receivedDate);
 
         receivedDate = new Date(Date.parse(experience.end_date));
-        setExperienceEndDate(new Date(Date.parse(experience.end_date)))
+        setExperienceEndDate(new Date(Date.parse(experience.end_date)));
 
-        setResponseWords(data.response_words)
+        setResponseWords(data.response_words);
 
         dispatch(endTask());
         dispatch(setClean(category));
@@ -186,7 +176,9 @@ export default function ExperienceDataAdmin(props) {
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
         }
-        navigate(`../${courseIdParam}/experience/${experienceId}`, { replace: true });
+        navigate(`../${courseIdParam}/experience/${experienceId}`, {
+          replace: true
+        });
       })
       .catch(error => {
         console.log("error", error);
@@ -214,7 +206,7 @@ export default function ExperienceDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveExperience}>
-      {null == experienceId ? "Create" : "Save"} Experience
+      {null == experienceId ? t('create') : t('save')}
     </Button>
   ) : null;
 
@@ -231,16 +223,18 @@ export default function ExperienceDataAdmin(props) {
           value={experienceName}
           onChange={event => setExperienceName(event.target.value)}
         />
-        <label htmlFor="experience-name">Experience Name</label>
+        <label htmlFor="experience-name">{t('name')}</label>
       </span>
       <span className="p-float-label">
         <InputText
-          id='experience-lead-time'
+          id="experience-lead-time"
           value={experienceLeadTime.toString()}
-          onChange={event => setExperienceLeadTime(parseInt(event.target.value))}
+          onChange={event =>
+            setExperienceLeadTime(parseInt(event.target.value))
+          }
           type="number"
         />
-        <label htmlFor="experience-lead-time">Days for instructor prep</label>
+        <label htmlFor="experience-lead-time">{t('lead_time_lbl')}</label>
       </span>
 
 
@@ -248,14 +242,14 @@ export default function ExperienceDataAdmin(props) {
         checked={experienceActive}
         onChange={() => toggleActive()}
       />
-      <label htmlFor="experience-active">Active</label>
+      <label htmlFor="experience-active">{t('active')}</label><br />
 
-      <span>All dates shown in {courseTimezone} timezone.</span>
+      <span>{t('timezone_warning', {timezone: parse( courseTimezone ) } )}</span>
       <span className="p-float-label">
         <Calendar
           id="experience_dates"
           value={[experienceStartDate, experienceEndDate]}
-          onChange={(event) => {
+          onChange={event => {
             const changeTo = event.value;
             if (null !== changeTo && changeTo.length > 1) {
               setExperienceStartDate(changeTo[0]);
@@ -263,9 +257,10 @@ export default function ExperienceDataAdmin(props) {
             }
           }}
           selectionMode="range"
+          showOnFocus={false}
           showIcon={true}
         />
-        <label htmlFor="experience_start_date">Experience Dates</label>
+        <label htmlFor="experience_start_date">{t('date_range')}</label>
       </span>
 
       <br />
@@ -283,19 +278,15 @@ export default function ExperienceDataAdmin(props) {
         reactionsListUpdateFunc={setReactionData}
       />
     ) : (
-      <>
-        {t('errors.must_be_created')}
-      </>
+      <>{t("errors.must_be_created")}</>
     );
   return (
     <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-      <TabPanel header={t('tabs.details')}>{detailsComponent}</TabPanel>
-      <TabPanel header={t('tabs.results')} disabled={null == experienceId}>
+      <TabPanel header={t("tabs.details")}>{detailsComponent}</TabPanel>
+      <TabPanel header={t("tabs.results")} disabled={null == experienceId}>
         {reactionListing}
       </TabPanel>
-      <TabPanel
-        header={t('tabs.response_word_cloud')}
-      >
+      <TabPanel header={t("tabs.response_word_cloud")}>
         <ResponsesWordCloud
           width={400}
           height={400}

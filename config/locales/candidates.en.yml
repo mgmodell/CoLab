@@ -83,3 +83,7 @@ en:
       def: Clue
     show:
       title: Terms list for review
+    student_entry:
+      save: Save these terms
+      term: Term
+      definition: Definition

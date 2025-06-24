@@ -52,28 +52,23 @@ export default function DiversityScore(props: Props) {
         className="pi pi-calculator"
         onClick={() => calcDiversity()}
         size="small"
-        >
-          {props.documented}
-        </Button>
+      >
+        {props.documented}
+      </Button>
       {null != calculated && calculated != props.documented ? (
         <React.Fragment>
           /{" "}
           {props.parentDirty ? (
             calculated
           ) : (
-            <Button
-              className="pi pi-save"
-              onClick={() => save()}
-              size="small"
-              >
-                {calculated}
+            <Button className="pi pi-save" onClick={() => save()} size="small">
+              {calculated}
             </Button>
           )}
         </React.Fragment>
       ) : calculated == props.documented ? (
         " / " + calculated
       ) : null}
-
     </React.Fragment>
   );
 }

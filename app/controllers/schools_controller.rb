@@ -3,11 +3,11 @@
 class SchoolsController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_school, only: %i[show edit update destroy]
+  before_action :set_school, only: %i[show update destroy]
   before_action :check_admin
 
   def show
-    respond_to do |format|
+    respond_to do | format |
       format.json do
         response = {
           school: @school.as_json(
@@ -21,20 +21,16 @@ class SchoolsController < ApplicationController
     end
   end
 
-  def edit
-    @title = t '.title'
-  end
-
   # GET /admin/school
   def index
     schools = School.all
     anon = current_user.anonymize?
-    respond_to do |format|
+    respond_to do | format |
       format.json do
-        resp = schools.collect do |school|
+        resp = schools.collect do | school |
           {
             id: school.id,
-            name: school.get_name(anon),
+            name: school.get_name( anon ),
             courses: school.courses.size,
             students: school.enrolled_students.size,
             instructors: school.instructors.size,
@@ -49,10 +45,10 @@ class SchoolsController < ApplicationController
   end
 
   def create
-    @school = School.new(school_params)
+    @school = School.new( school_params )
     if @school.save
-      notice = t('schools.create_success')
-      respond_to do |format|
+      notice = t( 'schools.create_success' )
+      respond_to do | format |
         format.json do
           response = {
             school: @school.as_json(
@@ -65,7 +61,7 @@ class SchoolsController < ApplicationController
       end
     else
       logger.debug @school.errors.full_messages unless @school.errors.empty?
-      respond_to do |format|
+      respond_to do | format |
         format.json do
           messages = @school.errors.as_json
           messages[:main] = 'Please review the problems below'
@@ -78,9 +74,9 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    if @school.update(school_params)
-      notice = t('schools.update_success')
-      respond_to do |format|
+    if @school.update( school_params )
+      notice = t( 'schools.update_success' )
+      respond_to do | format |
         format.json do
           response = {
             school: @school.as_json(
@@ -93,10 +89,10 @@ class SchoolsController < ApplicationController
       end
     else
       logger.debug @school.errors.full_messages
-      respond_to do |format|
+      respond_to do | format |
         format.json do
           messages = @school.errors.to_hash
-          messages.store(:main, 'Unable to save. Please resolve the issues and try again.')
+          messages.store( :main, 'Unable to save. Please resolve the issues and try again.' )
           response = {
             messages:
           }
@@ -108,7 +104,7 @@ class SchoolsController < ApplicationController
 
   def destroy
     @school.destroy
-    redirect_to schools_url, notice: t('schools.destroy_success')
+    redirect_to schools_url, notice: t( 'schools.destroy_success' )
   end
 
   private
@@ -120,11 +116,11 @@ class SchoolsController < ApplicationController
                   timezone: current_user.timezone
                 )
               else
-                School.find(params[:id])
+                School.find( params[:id] )
               end
   end
 
   def school_params
-    params.require(:school).permit(:name, :description, :timezone)
+    params.require( :school ).permit( :name, :description, :timezone )
   end
 end

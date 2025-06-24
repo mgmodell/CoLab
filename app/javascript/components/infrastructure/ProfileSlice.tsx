@@ -4,17 +4,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Settings } from "luxon";
 import i18n from "i18next";
 
+interface IEmail {
+  id: number;
+  email: string;
+  primary: boolean;
+  confirmed?: boolean;
+}
 interface IUser {
   id: number;
   first_name: string;
   last_name: string;
   name: string;
-  emails: [
-    {
-      email: string;
-      primary: boolean;
-    }
-  ];
+  emails: Array<IEmail>;
 
   welcomed: boolean;
   is_instructor: boolean;
@@ -41,12 +42,12 @@ interface IUser {
   impairment_motor: boolean;
   impairment_cognitive: boolean;
   impairment_other: boolean;
-};
+}
 
 export interface ProfilesRootState {
   lastRetrieved: Date;
   user: IUser;
-};
+}
 
 const initialState = {
   lastRetrieved: null,
@@ -69,12 +70,12 @@ const initialState = {
     anonymize: false,
 
     gender_id: "__",
-    date_of_birth: '',
+    date_of_birth: "",
     home_state_id: "",
     primary_language_id: "",
 
     school_id: "",
-    started_school: '',
+    started_school: "",
     cip_code_id: "",
 
     impairment_visual: false,
@@ -121,7 +122,6 @@ export const setLocalLanguage = createAsyncThunk(
     const language = getState().context.lookups.languages.find(
       lang => lang.id === language_id
     );
-
 
     i18n.loadLanguages(language.code);
     i18n.changeLanguage(language.code);
@@ -173,7 +173,7 @@ export const persistProfile = createAsyncThunk(
           "Content-Type": "application/json",
           Accepts: "application/json"
         },
-        body: {
+        user: {
           first_name: user.first_name,
           last_name: user.last_name,
           timezone: user.timezone,
@@ -216,7 +216,7 @@ export const {
   setAnonymize,
   setProfileTheme,
   setProfileTimezone,
-  clearProfile,
+  clearProfile
 } = actions;
 export default reducer;
-export { IUser}
+export { IUser, IEmail };

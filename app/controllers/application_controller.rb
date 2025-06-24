@@ -14,32 +14,32 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys:
+    devise_parameter_sanitizer.permit( :sign_up, keys:
               %i[first_name last_name email password language_id
                  current_password timezone gender_id cip_code_id
                  welcomed theme_id school_id date_of_birth
                  started_school primary_language_id home_state_id
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive
-                 impairment_other])
-    devise_parameter_sanitizer.permit(:account_update, keys:
+                 impairment_other] )
+    devise_parameter_sanitizer.permit( :account_update, keys:
               %i[first_name last_name email password language_id
                  current_password timezone gender_id cip_code_id
                  welcomed theme_id school_id researcher date_of_birth
                  started_school primary_language_id home_state_id
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive
-                 impairment_other])
-    devise_parameter_sanitizer.permit(:validate, keys:
-              %i[id_token])
+                 impairment_other] )
+    devise_parameter_sanitizer.permit( :validate, keys:
+              %i[id_token] )
   end
 
-  def switch_locale(&action)
+  def switch_locale( &action )
     locale = if user_signed_in?
                current_user.language_code
              else
                params[:lang] || I18n.default_locale
              end
-    I18n.with_locale(locale, &action)
+    I18n.with_locale( locale, &action )
   end
 end

@@ -75,7 +75,6 @@ export default function ProjectGroups(props: Props) {
     setStudents(students);
   };
 
-
   const filter = event => {
     const filter_text = event.target.value;
     const filtered = Object.values(studentsRaw).filter(student =>
@@ -87,7 +86,6 @@ export default function ProjectGroups(props: Props) {
     setStudents(filtered);
     setFilterText(event.target.value);
   };
-
 
   useEffect(() => {
     getGroups();
@@ -106,6 +104,7 @@ export default function ProjectGroups(props: Props) {
   const setGroup = (student_id, group_id) => {
     const studentsWS = Object.assign({}, studentsRaw);
     studentsWS[student_id]["group_id"] = group_id;
+
     setDirty(true);
     setStudents(Object.values(studentsWS));
     setStudentsRaw(studentsWS);
@@ -241,8 +240,6 @@ export default function ProjectGroups(props: Props) {
         dataKey="id"
         scrollable
         className="p-datatable-striped p-datatable-gridlines"
-
-
         header={
           <Toolbar
             end={
@@ -254,40 +251,27 @@ export default function ProjectGroups(props: Props) {
                     onChange={filter}
                     value={filterText}
                   />
-
                 </span>
                 <span>
-                  Showing {students.length + " of " + Object.values(studentsRaw).length}
+                  Showing{" "}
+                  {students.length + " of " + Object.values(studentsRaw).length}
                 </span>
                 {dirty ? (
-                  <Button
-                    onClick={saveGroups}
-                    icon="pi pi-save"
-                  >
+                  <Button onClick={saveGroups} icon="pi pi-save">
                     Save
                   </Button>
                 ) : null}
-                <span>
-                  {message}
-                </span>
-                <Button
-                  onClick={recalcDiversity}
-                  icon="pi pi-calculator"
-                >
+                <span>{message}</span>
+                <Button onClick={recalcDiversity} icon="pi pi-calculator">
                   Recalculate Diversity
                 </Button>
-                <Button
-                  onClick={addGroup}
-                  icon='pi pi-users'
-                >
+                <Button onClick={addGroup} icon="pi pi-users">
                   Add Group
                 </Button>
               </>
             }
           />
-
         }
-
       >
         <Column
           header="Given Name"
@@ -306,10 +290,9 @@ export default function ProjectGroups(props: Props) {
         {groups.map(group => {
           return (
             <Column
-              header={
-                () => {
-                  return (
-                    <>
+              header={() => {
+                return (
+                  <>
                     <InputText
                       value={group.name}
                       onChange={event => setGroupName(event, group.id)}
@@ -318,68 +301,65 @@ export default function ProjectGroups(props: Props) {
                     />
                     <span
                       onClick={() => {
-                        const wip_students = [...students]
+                        const wip_students = [...students];
                         wip_students.sort((a, b) => {
                           return group.id === a.group_id ? -1 : 1;
-                        })
+                        });
                         setStudents(wip_students);
-                      }
-
-                      }
-                      >
-                        <i className="pi pi-sort-alt" />
-                      </span>
-                      {group.id < 0 ? (
-                        <Button
-                          onClick={() => removeGroup(event, group.id)}
-                          icon='pi pi-trash'
-                          rounded
-                          size="small"
-                        />
-                      ) : null}
-                      <DiversityScore
-                        groupId={group.id}
-                        parentDirty={dirty}
-                        documented={groupsRaw[group.id].diversity || 0}
-                        scoreReviewUrl={props.diversityCheckUrl}
-                        rescoreGroup={rescoreGroup}
-                        students={studentsRaw}
+                      }}
+                    >
+                      <i className="pi pi-sort-alt" />
+                    </span>
+                    {group.id < 0 ? (
+                      <Button
+                        onClick={() => removeGroup(event, group.id)}
+                        icon="pi pi-trash"
+                        rounded
+                        size="small"
                       />
-                    </>
-                  )
-                }
-              }
-              field={'id'}
+                    ) : null}
+                    <DiversityScore
+                      groupId={group.id}
+                      parentDirty={dirty}
+                      documented={groupsRaw[group.id].diversity || 0}
+                      scoreReviewUrl={props.diversityCheckUrl}
+                      rescoreGroup={rescoreGroup}
+                      students={studentsRaw}
+                    />
+                  </>
+                );
+              }}
+              field={"id"}
               columnKey={group.id}
               key={group.id}
               body={rowData => {
                 return (
                   <RadioButton
-                    onClick={() => setGroup(rowData.id, group.id)}
+                    onChange={event => setGroup(rowData.id, group.id)}
                     id={"user_group_" + rowData.id + "_" + group.id}
                     itemID={"user_group_" + rowData.id + "_" + group.id}
                     inputId={"user_group_" + rowData.id + "_" + group.id}
                     checked={group.id === rowData.group_id}
                   />
-                )
+                );
               }}
             />
           );
         })}
         <Column
-        header="No Group"
-        field="id"
-        filter
-        key="0"
-        body={rowData => {
-          return (
-            <RadioButton
-              id={"stu-" + rowData.id}
-              onClick={() => setGroup(rowData.id, null)}
-              checked={null == rowData.group_id}
-            />
-          )
-        }}
+          header="No Group"
+          field="id"
+          filter
+          key="0"
+          body={rowData => {
+            return (
+              <RadioButton
+                id={"stu-" + rowData.id}
+                onChange={event => setGroup(rowData.id, null)}
+                checked={null == rowData.group_id}
+              />
+            );
+          }}
         />
       </DataTable>
     </Panel>
