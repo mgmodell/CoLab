@@ -51,15 +51,15 @@ es:
       draft_revision_btn: Guardar revisión para edición posterior
       copy_submission_btn: Hacer una copia de esta revisión
       withdraw_btn: Retirar revisión
-      new_btn: Retirar revisión
+      new_btn: Nueva Respuesta
       response_tab_lbl: Respuestas
     progress:
       progress_tab_lbl: Progreso
       in_progress_msg: Trabajo en progreso
     visualization:
       label: Tipo de gráfico
-      stacked_area: Área en capas
-      layered_area: Layered Area
+      stacked_area: Área apilada
+      layered_area: Área en capas
       lines: Gráfico lineal
     create_success: ¡La tarea se creó exitosamente!
     destroy_success: ¡La tarea fue destruida exitosamente!
