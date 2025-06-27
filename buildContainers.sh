@@ -1,15 +1,13 @@
 #!/bin/bash
 
-echo 'building db'
+echo -e '\n\t*****\n\tbuilding db'
 podman build -f ./containers/agnostic/db/Dockerfile -t colab_db .
-echo 'building app tester'
+echo -e '\n\t*****\n\tbuilding app tester'
 podman build -f ./containers/agnostic/tester_server/Dockerfile -t colab_tester .
-echo 'building app dev'
+echo -e '\n\t*****\n\tbuilding app dev'
 podman build -f ./containers/agnostic/dev_server/Dockerfile -t colab_dev_server .
-echo 'building browser'
+echo -e '\n\t*****\n\tbuilding browser'
 podman build -f ./containers/agnostic/browser/Dockerfile -t colab_browser .
-pushd ./containers/agnostic/moodle
-echo 'building moodle'
-podman build -f ./Dockerfile -t colab_moodle .
-popd
+echo -e '\n\t*****\n\tbuilding moodle'
+podman build -f ./containers/agnostic/moodle/Dockerfile -t colab_moodle .
 

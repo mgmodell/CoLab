@@ -70,11 +70,11 @@ done
 
 pushd containers/test_env/
 if [ "$RUN_TERM" = true ]; then
-  podman compose run --rm --entrypoint='' app /bin/bash
+  podman compose run --rm --entrypoint='/bin/bash -l' app
 
 elif [ "$SHOW_FAILS" = true ]; then
   echo "Show previous run failures"
-  podman compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
+  podman compose run --rm --entrypoint='/bin/cat /home/colab/src/app/rerun.txt' app
   echo -e "\nEnd failure listing\n"
 
 elif [ "$DROP_SUPPORT" = true ]; then
