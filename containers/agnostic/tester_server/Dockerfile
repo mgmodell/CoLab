@@ -28,23 +28,20 @@ USER colab
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
 ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
-  echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/.bashrc && \
+  # echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/.bashrc && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
   mise activate --shims && \
-  echo "bundler \n foreman \n" >> /home/colab/default-gems && \
-  mise install ruby yarn nodejs
+  echo "bundler \n foreman \n" >> /home/colab/default-gems
 ENV PATH="/home/colab/.local/share/mise/shims:$PATH"
 
-SHELL ["/bin/bash", "-l", "-c"]
-
-RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
-  echo -e "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\
-  echo -e "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.bashrc &&\
-  echo -e "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
-  echo -e "export DISPLAY=:0" >> ~/.bashrc &&\
-  echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
-  echo -e "export DRIVER=docker" >> ~/.bashrc && \
-  echo -e "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
+RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
+  echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\
+  echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.bashrc &&\
+  echo "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
+  echo "export DISPLAY=:0" >> ~/.bashrc &&\
+  echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
+  echo "export DRIVER=docker" >> ~/.bashrc && \
+  echo "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
 
 RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\
