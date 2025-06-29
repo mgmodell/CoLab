@@ -1,7 +1,7 @@
 FROM ubuntu
 
-RUN apt update && apt upgrade -y && \
-  apt -y install \
+RUN apt-get update && apt-get upgrade -y && \
+  apt-get -y install \
   curl \
   imagemagick \
   libvips \
@@ -14,13 +14,9 @@ RUN apt update && apt upgrade -y && \
   bash \
   libmysqlclient-dev \
   libsecret-1-dev \
-  yarn
-
-RUN apt -y install \
-  libyaml-dev
-
-RUN apt autoremove && \
-    apt clean
+  libyaml-dev && \
+  apt-get autoremove -y && \
+  apt-get clean 
 
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab

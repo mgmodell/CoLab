@@ -23,8 +23,6 @@ RUN apt-get autoremove && \
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
 
-
-
 WORKDIR /home/colab
 
 USER colab
@@ -36,9 +34,6 @@ RUN mkdir -p /home/colab/.local/share/mise && \
   echo "bundler \n foreman \n rubocop" >> ~/.default-gems && \
   mise install ruby yarn nodejs
 
-
-SHELL ["/bin/bash", "-l", "-c"]
-
 RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\
   echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.bashrc &&\
@@ -47,7 +42,6 @@ RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
   echo "export DRIVER=docker" >> ~/.bashrc && \
   echo "export CUCUMBER_PUBLISH_TOKEN=b7e96979-5fe5-43a0-9eae-42cffb5e8c13"
-
 
 USER colab
 

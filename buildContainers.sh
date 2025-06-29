@@ -1,6 +1,13 @@
 #!/bin/bash
 
 # This script builds the containers for the Colab project using Podman.
+print_help ( ) {
+    echo "buildContainers: Script to build Colab containers using Podman"
+    echo "Valid options:"
+    echo " -n             Build containers without relying upon the cached layers"
+    echo " -h             Show this help and terminate"
+    exit 0;
+}
 
 # Function to test the result of the build command
 # Arguments:
@@ -19,22 +26,39 @@ test_result ( ) {
 
 }
 
+BUILD_OPTS=""
+while getopts "nh" opt; do
+  case $opt in
+    n)
+      echo "Building containers without cache"
+      BUILD_OPTS="--no-cache"
+      ;;
+    h)
+      print_help
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      print_help
+      ;;
+  esac
+done
+
 echo -e '\t*****\n\tbuilding db'
-podman build -f ./containers/agnostic/db/Dockerfile -t colab_db .
+podman build $BUILD_OPTS -f ./containers/agnostic/db/Dockerfile -t colab_db .
 test_result $? 'colab_db'
 
 echo -e '\n\t*****\n\tbuilding app tester'
-podman build -f ./containers/agnostic/tester_server/Dockerfile -t colab_tester .
+podman build $BUILD_OPTS -f ./containers/agnostic/tester_server/Dockerfile -t colab_tester .
 test_result $? 'colab_tester'
 
 echo -e '\n\t*****\n\tbuilding app dev'
-podman build -f ./containers/agnostic/dev_server/Dockerfile -t colab_dev_server .
+podman build $BUILD_OPTS -f ./containers/agnostic/dev_server/Dockerfile -t colab_dev_server .
 test_result $? 'colab_dev_server'
 
 echo -e '\n\t*****\n\tbuilding browser'
-podman build -f ./containers/agnostic/browser/Dockerfile -t colab_browser .
+podman build $BUILD_OPTS -f ./containers/agnostic/browser/Dockerfile -t colab_browser .
 test_result $? 'colab_browser'
 
 echo -e '\n\t*****\n\tbuilding moodle'
-podman build -f ./containers/agnostic/moodle/Dockerfile -t colab_moodle .
+podman build $BUILD_OPTS -f ./containers/agnostic/moodle/Dockerfile -t colab_moodle .
 test_result $? 'colab_moodle'
