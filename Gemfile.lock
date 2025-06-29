@@ -287,7 +287,7 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.12.2)
-    jwt (2.10.1)
+    jwt (2.10.2)
       base64
     keypairs (2.0.0)
       actionpack (>= 7.1, < 9)
@@ -553,7 +553,7 @@ GEM
     sdoc (2.6.1)
       rdoc (>= 5.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.33.0)
+    selenium-webdriver (4.34.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
