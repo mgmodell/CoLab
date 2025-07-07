@@ -32,7 +32,7 @@ es:
       (2010). A Design Case : Creating an Enhanced Version of the
       Diffusion Simulation Game. International Journal of Designs for
       Learning, 1(1), 301–310.
-    demo_bingo_topic: Gamificacion y educacion
+    demo_bingo_topic: Gamificación y educación
     demo_bingo_description: >
       Dichev, C., & Dicheva, D. (2017). Gamifying education: what is
       known, what is believed and what remains uncertain: a critical
@@ -46,15 +46,15 @@ es:
       Creativity and collaborative learning (pp. 1–21). Baltimore:
       Brookes Press.
     demo_success: Tu respuesta se habria guardado correctamente. La demostracion ha terminado.
-    demo_colab_success: La colaboracion se habria solicitado con exito. La demostracion ha terminado.
-    update_success: Tu lista se guardo con exito.
-    not_ready_for_review: Esta lista aun no esta lista para su revision.
-    no_longer_available: Esta lista ya no esta disponible para editar.
+    demo_colab_success: La colaboración se habria solicitado con exito. La demostracion ha terminado.
+    update_success: Tu lista se guardó con éxito.
+    not_ready_for_review: Esta lista aun no esta lista para su revisión.
+    no_longer_available: Esta lista ya no está disponible para editar.
     list_closed: >
-      Esta lista ya se cerro y ya no se puede editar.
+      Esta lista ya se cerró y ya no se puede editar.
     concepts_for_game: Todos los conceptos viables identificados
-    ind_sum_msg: You identified the following terms, resulting in %{con_count} unique concepts
-    term: Termino
+    ind_sum_msg: Identificaste los siguientes términos, resultando en %{con_count} conceptos únicos
+    term: Término
     terms: Terminos
     grp_sum_msg: >
       Tu y tu grupo, %{grp_name}, indentificaron lo siguientes terminos que resultan 
@@ -63,23 +63,27 @@ es:
       title: Estadisticas de la lista de candidatos
       def: Pista
     edit:
-      title: Completa la lista de terminos
+      title: Completa la lista de términos
       instructions: >
-        Please read up on the topic above, being sure to go through the
-        assigned readings, as well as to find your own materials. Make a
-        list of what you believe to be the most important and/or salient
-        terms and enter them, along with clues to help others identify the
-        terms you're describing.
-      behalf: a nombre de
-      waiting: Aun esperando una respuesta a su solicitud de ayada grupal
-      req_rec: Tus companeros en {{grp_name}} quieren colaborar.
-      req_help: Invite your teammates in {{grp_name}} to help?
-      confirm_accept: Are you sure? Did you save your changes? This cannot be undone.
-      confirm_decline: Are you sure? Did you save your changes?
-      accept: Acceptar
-      decline: Declinar
-      dup: Duplicado
-      term: Trimeste
+        Por favor, lea el tema anterior, asegurándose de revisar
+        las lecturas asignadas y de buscar su propio material. Haga
+        una lista de los términos que considere más importantes o relevantes
+        e introdúzcalos, junto con pistas para ayudar a
+        otros a identificar los términos que describe.
+      behalf: A nombre de
+      waiting: Aun esperando una respuesta a su solicitud de ayuda grupal
+      req_rec: Tus compañeros en {{grp_name}} quieren colaborar.
+      req_help: ¿Quieres invitar a tus compañeros en {{grp_name}} a ayudar?
+      confirm_accept: ¿Estás seguro? ¿Guardaste tus cambios? Esto no se puede deshacer.
+      confirm_decline: ¿Estás seguro? ¿Guardaste tus cambios?
+      accept: Aceptar
+      decline: Rechazar
+      dup: Posible duplicado
+      term: Término
       def: Pista
     show:
-      title: Lista de terminos para revision
+      title: Lista de términos para revision
+    student_entry:
+      save: Guardar estos términos
+      term: Término
+      definition: Definición
