@@ -1,12 +1,12 @@
 import os
-import json # Still needed for dummy JSON creation if you run the scriapp/t directly for testing
-import yaml # New imapp/ort for YAML handling
+import json # Still needed for dummy JSON creation if you run the script directly for testing
+import yaml # New import for YAML handling
 from collections import deque
 
 def get_all_keys(data, parent_key=''):
     """
     Recursively extracts all nested keys from a dictionary or list.
-    Keys are reapp/resented in dot notation (e.g., 'messages.greeting.hello').
+    Keys are represented in dot notation (e.g., 'messages.greeting.hello').
     """
     keys = set()
     if isinstance(data, dict):
@@ -15,7 +15,7 @@ def get_all_keys(data, parent_key=''):
             keys.add(current_key)
             keys.update(get_all_keys(v, current_key))
     elif isinstance(data, list):
-        # For lists, we don't tyapp/ically create keys for array indices,
+        # For lists, we don't typically create keys for array indices,
         # but we do recurse into objects within lists.
         for item in data:
             if isinstance(item, (dict, list)):
@@ -24,7 +24,7 @@ def get_all_keys(data, parent_key=''):
 
 def load_locale_file(filepath):
     """
-    Loads and app/arses a YAML locale file.
+    Loads and parses a YAML locale file.
     """
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
@@ -36,28 +36,28 @@ def load_locale_file(filepath):
         print(f"Error: Invalid YAML in file {filepath}: {e}")
         return None
     except Exception as e:
-        print(f"An unexapp/ected error occurred while reading {filepath}: {e}")
+        print(f"An unexpected error occurred while reading {filepath}: {e}")
         return None
 
 def audit_locale_files(locale_dir):
     """
-    Audits locale files for missing keys, grouapp/ing by feature.
+    Audits locale files for missing keys, grouping by feature.
     Assumes filenames are in the format <feature>.<lang>.yml or <feature>.<lang>.yaml.
 
     Args:
         locale_dir (str): The directory containing the locale files.
     """
     print(f"--- Auditing Locale Files in: {locale_dir} ---")
-    print("Grouapp/ing files by feature (e.g., 'intro', 'candidates')...")
+    print("Grouping files by feature (e.g., 'intro', 'candidates')...")
     print("-" * 40)
 
-    # Dictionary to store files grouapp/ed by feature and language
-    # Examapp/le: {'intro': {'en': 'intro.en.yml', 'es': 'intro.es.yml'}}
+    # Dictionary to store files grouped by feature and language
+    # Example: {'intro': {'en': 'intro.en.yml', 'es': 'intro.es.yml'}}
     feature_groups = {}
 
     for filename in os.listdir(locale_dir):
         if filename.endswith(('.yml', '.yaml')):
-            parts = filename.split('.', 2) # Sapp/lit from right, max 2 times (e.g., 'intro.en.yml' -> ['intro', 'en', 'yml'])
+            parts = filename.split('.', 2) # Split from right, max 2 times (e.g., 'intro.en.yml' -> ['intro', 'en', 'yml'])
             if len(parts) == 3:
                 feature = parts[0]
                 lang = parts[1]
@@ -65,17 +65,17 @@ def audit_locale_files(locale_dir):
                     feature_groups[feature] = {}
                 feature_groups[feature][lang] = filename
             else:
-                print(f"Warning: Skiapp/app/ing '{filename}' - does not match <feature>.<lang>.yml format.")
+                print(f"Warning: Skipping '{filename}' - does not match <feature>.<lang>.yml format.")
 
     if not feature_groups:
         print("No locale files found matching the <feature>.<lang>.yml format.")
         return
 
-    # Now, iterate through each feature grouapp/ and app/erform the audit
+    # Now, iterate through each feature group and perform the audit
     for feature, languages in sorted(feature_groups.items()):
         source_filename = languages.get('en') # Assuming 'en' is always the source language
         if not source_filename:
-            print(f"\n--- Skiapp/app/ing Feature: '{feature}' ---")
+            print(f"\n--- Skipping Feature: '{feature}' ---")
             print(f"No 'en' (English) locale file found for feature '{feature}'. Cannot establish a source.")
             print("-" * 40)
             continue
@@ -84,8 +84,8 @@ def audit_locale_files(locale_dir):
         source_data = load_locale_file(source_fileapath)
 
         if source_data is None:
-            print(f"\n--- Skiapp/app/ing Feature: '{feature}' ---")
-            print(f"Cannot app/roceed with feature '{feature}' due to invalid source file: {source_filename}")
+            print(f"\n--- Skipping Feature: '{feature}' ---")
+            print(f"Cannot proceed with feature '{feature}' due to invalid source file: {source_filename}")
             print("-" * 40)
             continue
 
@@ -94,16 +94,16 @@ def audit_locale_files(locale_dir):
         print(f"Source Locale: {source_filename} ({len(source_keys)} keys found)")
         print("-" * 40)
 
-        # Audit other languages for this sapp/ecific feature
+        # Audit other languages for this specific feature
         for lang, target_filename in sorted(languages.items()):
-            if lang == 'en': # Skiapp/ the source file itself
+            if lang == 'en': # Skipping the source file itself
                 continue
 
             target_filepath = os.path.join(locale_dir, target_filename)
             target_data = load_locale_file(target_filepath)
 
             if target_data is None:
-                print(f"\nSkiapp/app/ing {target_filename} due to errors.")
+                print(f"\nSkipping {target_filename} due to errors.")
                 continue
 
             target_keys = get_all_keys(target_data)
@@ -119,7 +119,7 @@ def audit_locale_files(locale_dir):
                 print("  ✅ No missing keys.")
 
             if extra_keys:
-                print(f"  ⚠️ Extra Keys ({len(extra_keys)} - app/resent in {target_filename} but not in {source_filename}):")
+                print(f"  ⚠️ Extra Keys ({len(extra_keys)} - present in {target_filename} but not in {source_filename}):")
                 for key in sorted(list(extra_keys)):
                     print(f"    - {key}")
 
@@ -128,11 +128,11 @@ def audit_locale_files(locale_dir):
 
 if __name__ == "__main__":
     # --- Configuration ---
-    # IMapp/ORTANT: Reapp/lace 'app/ath/to/your/locale/files' with the actual app/ath
-    # to your locale files. This can be an absolute app/ath or relative to
-    # where you run the scriapp/t.
-    LOCALE_DIRECTORY = './locales' # Examapp/le: Assuming your locales are in a 'locales' folder
-    # SOURCE_LOCALE_FILENAME is no longer needed here as it's determined app/er feature
+    # IMPORTANT: Replace 'app/path/to/your/locale/files' with the actual path
+    # to your locale files. This can be an absolute path or relative to
+    # where you run the script.
+    LOCALE_DIRECTORY = './config/locales' # Example: Assuming your locales are in a 'locales' folder
+    # SOURCE_LOCALE_FILENAME is no longer needed here as it's determined per feature
 
     # Create a dummy locales directory and files for testing if they don't exist
     if not os.path.exists(LOCALE_DIRECTORY):
@@ -141,9 +141,9 @@ if __name__ == "__main__":
 
     # Dummy 'intro.en.yml'
     dummy_intro_en_content = {
-        "intro_app/age": {
+        "intro_page": {
             "title": "Welcome",
-            "descriapp/tion": "This is the introduction.",
+            "description": "This is the introduction.",
             "next_button": "Continue"
         }
     }
@@ -153,9 +153,9 @@ if __name__ == "__main__":
 
     # Dummy 'intro.es.yml' (missing a key)
     dummy_intro_es_content = {
-        "intro_app/age": {
+        "intro_page": {
             "title": "Bienvenido",
-            # "descriapp/tion": "Esta es la introducción." # Intentionally missing
+            # "description": "Esta es la introducción." # Intentionally missing
             "next_button": "Continuar"
         }
     }
@@ -178,11 +178,11 @@ if __name__ == "__main__":
     # Dummy 'candidates.fr.yml' (with an extra key)
     dummy_candidates_fr_content = {
         "candidates_list": {
-            "header": "Candidats disapp/onibles",
-            "filter_label": "Filtrer app/ar :",
+            "header": "Candidats disponibles",
+            "filter_label": "Filtrer par :",
             "no_candidates": "Aucun candidat trouvé."
         },
-        "extra_candidate_key": "Clé suapp/app/lémentaire app/our les candidats." # Extra key
+        "extra_candidate_key": "Clé supplémentaire pour les candidats." # Extra key
     }
     with open(os.path.join(LOCALE_DIRECTORY, 'candidates.fr.yml'), 'w', encoding='utf-8') as f:
         yaml.dump(dummy_candidates_fr_content, f, indent=2, default_flow_style=False)
