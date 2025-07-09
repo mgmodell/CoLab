@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM docker.io/ubuntu
 
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install \
@@ -32,7 +32,7 @@ RUN mkdir -p /home/colab/.local/share/mise && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
   mise activate --shims && \
   echo "bundler \n foreman \n" >> /home/colab/default-gems
-ENV PATH="/home/colab/.local/share/mise/shims:$PATH"
+# ENV PATH="/home/colab/.local/share/mise/shims:$PATH"
 
 RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\

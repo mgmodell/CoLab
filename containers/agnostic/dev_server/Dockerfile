@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM docker.io/ubuntu
 
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \

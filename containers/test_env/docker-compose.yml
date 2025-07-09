@@ -6,7 +6,7 @@ services:
       - PARENT=${HOSTNAME}
     volumes:
       - src:/home/colab/src/app
-      - testmise:/home/colab/.local/share/mise
+      - testmise:/home/colab/.local
     depends_on:
       - db
       - selenium
