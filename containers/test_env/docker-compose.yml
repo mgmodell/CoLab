@@ -6,7 +6,7 @@ services:
       - PARENT=${HOSTNAME}
     volumes:
       - src:/home/colab/src/app
-      - testmise:/home/colab/.local
+      # - testmise:/home/colab/.local
     depends_on:
       - db
       - selenium
@@ -29,4 +29,4 @@ services:
 volumes:
   src:
   mariadb-data:
-  testmise:
+  # testmise:

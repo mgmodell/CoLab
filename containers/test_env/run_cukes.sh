@@ -129,6 +129,7 @@ CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 #RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
 
 echo "Installing platforms"
+eval "$(~/.local/bin/mise activate bash)"
 mise install
 echo "Installing gems"
 bundle install --quiet
