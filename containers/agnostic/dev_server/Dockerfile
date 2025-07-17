@@ -39,8 +39,7 @@ RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
   echo "export DISPLAY=:0" >> ~/.bashrc &&\
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
-  echo "export DRIVER=docker" >> ~/.bashrc && \
-  echo "export CUCUMBER_PUBLISH_TOKEN=b7e96979-5fe5-43a0-9eae-42cffb5e8c13"
+  echo "export DRIVER=docker" >> ~/.bashrc
 
 USER colab
 

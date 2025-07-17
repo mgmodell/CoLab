@@ -60,7 +60,7 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    active_storage_validations (3.0.0)
+    active_storage_validations (3.0.1)
       activejob (>= 6.1.4)
       activemodel (>= 6.1.4)
       activestorage (>= 6.1.4)
@@ -109,7 +109,7 @@ GEM
       safely_block (>= 0.5)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1125.0)
+    aws-partitions (1.1129.0)
     aws-sdk-core (3.226.2)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -120,7 +120,7 @@ GEM
     aws-sdk-kms (1.106.0)
       aws-sdk-core (~> 3, >= 3.225.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.192.0)
+    aws-sdk-s3 (1.193.0)
       aws-sdk-core (~> 3, >= 3.225.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -244,7 +244,7 @@ GEM
     email_address (0.2.5)
       base64
       simpleidn
-    erb (5.0.1)
+    erb (5.0.2)
     erubi (1.13.1)
     erubis (2.7.0)
     execjs (2.10.0)
@@ -277,7 +277,7 @@ GEM
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
       ruby-vips (>= 2.0.17, < 3)
-    io-console (0.8.0)
+    io-console (0.8.1)
     irb (1.15.2)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
@@ -287,12 +287,12 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.12.2)
-    jwt (2.10.2)
+    jwt (3.1.2)
       base64
-    keypairs (2.0.0)
+    keypairs (2.0.1)
       actionpack (>= 7.1, < 9)
       activerecord (>= 7.1, < 9)
-      jwt (~> 2.5)
+      jwt (>= 2.5, < 4)
       lockbox (>= 1.3, < 3.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
@@ -311,8 +311,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.3)
-    mini_magick (5.2.0)
-      benchmark
+    mini_magick (5.3.0)
       logger
     mini_mime (1.1.5)
     minitest (5.25.5)
@@ -522,7 +521,7 @@ GEM
       rubocop-ast (>= 1.45.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.45.1)
+    rubocop-ast (1.46.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
     rubocop-capybara (2.22.1)
@@ -572,7 +571,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.1)
+    simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.3)
     snaky_hash (2.0.3)
@@ -695,7 +694,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 3.4.4p34
+   ruby 3.4.5p51
 
 BUNDLED WITH
    2.6.9

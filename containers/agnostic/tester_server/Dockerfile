@@ -40,8 +40,7 @@ RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
   echo "export DISPLAY=:0" >> ~/.bashrc &&\
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
-  echo "export DRIVER=docker" >> ~/.bashrc && \
-  echo "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
+  echo "export DRIVER=docker" >> ~/.bashrc 
 
 RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\

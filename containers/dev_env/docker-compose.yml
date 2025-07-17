@@ -12,7 +12,6 @@ services:
     volumes:
       - ../../:/home/colab/src/app:cached
       - "${HOME}/.ssh:/root/.ssh-localhost:ro"
-      - devmise:/home/colab/.local/share/mise
     command: bash -c "sleep infinity"
   db:
     image: colab_db
@@ -82,5 +81,4 @@ volumes:
   devdata:
   moodledata:
   moodlehtml:
-  devmise:
 
