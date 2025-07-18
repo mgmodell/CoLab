@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from "react";
-import { Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import { Priorities, addMessage } from "./infrastructure/StatusSlice";
@@ -25,6 +25,7 @@ import { Password } from "primereact/password";
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { Container, Col, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
 export default function SignIn(props) {
   const category = "devise";
   const { t }: { t: any } = useTranslation(category);
@@ -84,28 +85,28 @@ export default function SignIn(props) {
       <Row>
 
         <Col xs={12} sm={12}>
-          <span className='p-float-label'>
+          <FloatLabel>
             <InputText
               id="first_name"
               value={firstName}
               onChange={event => setFirstName(event.target.value)}
             />
             <label htmlFor="first_name">{t("registrations.first_name_fld")}</label>
-          </span>
+          </FloatLabel>
 
         </Col>
       </Row>
       <Row>
 
         <Col xs={12} sm={12}>
-          <span className='p-float-label'>
+          <FloatLabel>
             <InputText
               id="last_name"
               value={lastName}
               onChange={event => setLastName(event.target.value)}
             />
             <label htmlFor="last_name">{t("registrations.last_name_fld")}</label>
-          </span>
+          </FloatLabel>
 
         </Col>
       </Row>
@@ -133,44 +134,44 @@ export default function SignIn(props) {
   );
 
   const passwordResetBtn = (
-      <Col xs={12} sm={6}>
-        <Button
-          disabled={"" === email || !endpointsLoaded}
-          onClick={() => {
-            const url = profileEndpoints.passwordResetUrl + ".json";
+    <Col xs={12} sm={6}>
+      <Button
+        disabled={"" === email || !endpointsLoaded}
+        onClick={() => {
+          const url = profileEndpoints.passwordResetUrl + ".json";
 
-            axios
-              .post(url, {
-                email: email
-              })
-              .then(resp => {
-                const data = resp.data;
-                dispatch(
-                  addMessage(t(data.message), new Date(), Priorities.INFO)
-                );
-              })
-              .catch(error => {
-                console.log("error", error);
-              });
-          }}
-        >
-          {t("passwords.forgot_submit")}
-        </Button>
-      </Col>
+          axios
+            .post(url, {
+              email: email
+            })
+            .then(resp => {
+              const data = resp.data;
+              dispatch(
+                addMessage(t(data.message), new Date(), Priorities.INFO)
+              );
+            })
+            .catch(error => {
+              console.log("error", error);
+            });
+        }}
+      >
+        {t("passwords.forgot_submit")}
+      </Button>
+    </Col>
   );
 
   const clearBtn = (
-      <Col xs={12} sm={6}>
-        <Button
-          disabled={"" === email && "" === password}
-          onClick={() => {
-            setPassword("");
-            setEmail("");
-          }}
-        >
-          {t("reset_btn")}
-        </Button>
-      </Col>
+    <Col xs={12} sm={6}>
+      <Button
+        disabled={"" === email && "" === password}
+        onClick={() => {
+          setPassword("");
+          setEmail("");
+        }}
+      >
+        {t("reset_btn")}
+      </Button>
+    </Col>
   );
 
   const get_token_from_oauth = response => {
@@ -179,30 +180,30 @@ export default function SignIn(props) {
 
   const oauthBtn = (
     <Col xs={12}>
-    <GoogleLogin
-      onSuccess={get_token_from_oauth}
-      onError={() => {
-        console.log("Login Failed");
-      }}
-      useOneTap
-      context="use"
-      text="continue_with"
-    />
+      <GoogleLogin
+        onSuccess={get_token_from_oauth}
+        onError={() => {
+          console.log("Login Failed");
+        }}
+        useOneTap
+        context="use"
+        text="continue_with"
+      />
     </Col>
   );
 
   const emailField = (
-      <Col xs={12}>
-        <span className='p-float-label'>
-          <InputText
-            id="email"
-            autoFocus
-            value={email}
-            onChange={event => setEmail(event.target.value)}
-          />
-          <label htmlFor="email">{t("email_fld")}</label>
-        </span>
-      </Col>
+    <Col xs={12}>
+      <FloatLabel>
+        <InputText
+          id="email"
+          autoFocus
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <label htmlFor="email">{t("email_fld")}</label>
+      </FloatLabel>
+    </Col>
   );
 
   if (loggingIn || oauth_client_ids === undefined) {
@@ -220,11 +221,11 @@ export default function SignIn(props) {
                 header={t("sessions.login")}  >
                 <Container fluid>
                   <Row>
-                  {emailField}
+                    {emailField}
                   </Row>
                   <Row>
                     <Col xs={12} >
-                      <span className='p-float-label'>
+                      <FloatLabel>
                         <Password
                           inputId="password"
                           feedback={false}
@@ -234,7 +235,7 @@ export default function SignIn(props) {
                           toggleMask
                         />
                         <label htmlFor="password">{t("password_fld")}</label>
-                      </span>
+                      </FloatLabel>
                     </Col>
                   </Row>
                   <Row>
@@ -242,7 +243,7 @@ export default function SignIn(props) {
                     {clearBtn}
                   </Row>
                   <Row>
-                      {oauthBtn}
+                    {oauthBtn}
                   </Row>
                 </Container>
               </TabPanel>
@@ -250,7 +251,7 @@ export default function SignIn(props) {
                 header={t("registrations.signup_tab")} >
                 <Container>
                   <Row>
-                  {emailField}
+                    {emailField}
                   </Row>
                   {registerBlock}
                   <Row>
@@ -262,11 +263,11 @@ export default function SignIn(props) {
                 header={t("passwords.reset_tab")} >
                 <Container>
                   <Row>
-                  {emailField}
+                    {emailField}
                   </Row>
                   <Row>
-                  {passwordResetBtn}
-                  {clearBtn}
+                    {passwordResetBtn}
+                    {clearBtn}
                   </Row>
                 </Container>
               </TabPanel>

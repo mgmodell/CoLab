@@ -1,7 +1,7 @@
-require: 
-  - rubocop-thread_safety
+plugins:
   - rubocop-performance
   - rubocop-rails
+  - rubocop-thread_safety
   - rubocop-capybara
 
 AllCops:

@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { useTranslation } from "react-i18next";
 import { DateTime } from "luxon";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import {
   startTask,

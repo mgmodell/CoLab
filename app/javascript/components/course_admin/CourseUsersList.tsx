@@ -12,6 +12,7 @@ import UserListAdminToolbar from "./UserListAdminToolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
+import { FilterMatchMode } from "primereact/api";
 
 const DropUserButton = React.lazy(() => import("./DropUserButton"));
 const BingoDataRepresentation = React.lazy(() =>
@@ -74,6 +75,13 @@ export default function CourseUsersList(props: Props) {
 
   const [filterText, setFilterText] = useState("");
   const [columnsToShow, setColumnsToShow] = useState([]);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS }, 
+        first_name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        last_name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        email: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    });
 
   const optColumns = [
     t(OPT_COLS.EMAIL),
@@ -154,18 +162,26 @@ export default function CourseUsersList(props: Props) {
       <>
         <DataTable
           value={props.usersList.filter(user => {
-            const checkType =
-              UserListType.instructor !== user.status &&
-              UserListType.assistant !== user.status;
-            return UserListType.instructor === props.userType
-              ? !checkType
-              : checkType;
+            if( UserListType.declined_student === user.status ||
+                UserListType.dropped_student === user.status ||
+                UserListType.rejected_student === user.status ){
+              return false;
+            } else {
+              const checkType =
+                UserListType.instructor !== user.status &&
+                UserListType.assistant !== user.status;
+              return UserListType.instructor === props.userType
+                ? !checkType
+                : checkType;
 
-            //Add filtering here
-            // return filterText.length === 0 ||  rubric.name.includes( filterText );
+            }
+
           })}
           resizableColumns
           reorderableColumns
+          globalFilterFields={["first_name", "last_name", "email", "status"]}
+          filters={filters}
+          filterDisplay="row"
           paginator
           rows={5}
           tableStyle={{
@@ -176,12 +192,18 @@ export default function CourseUsersList(props: Props) {
             10,
             20,
             props.usersList.filter(user => {
+            if( UserListType.declined_student === user.status ||
+                UserListType.dropped_student === user.status ||
+                UserListType.rejected_student === user.status ){
+              return false;
+            } else {
               const checkType =
                 UserListType.instructor !== user.status &&
                 UserListType.assistant !== user.status;
               return UserListType.instructor === props.userType
                 ? !checkType
                 : checkType;
+            }
             }).length
           ]}
           header={
@@ -288,7 +310,8 @@ export default function CourseUsersList(props: Props) {
           ) : null}
           <Column
             header={t("actions")}
-            field="id"
+            field="status"
+            sortable
             body={params => {
               const user = props.usersList.filter(user => {
                 return params.id === user.id;

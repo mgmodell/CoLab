@@ -5,13 +5,14 @@ import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 
 import { Panel } from "primereact/panel";
 
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { emailSignIn } from "./infrastructure/ContextSlice";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Col, Container, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function PasswordEdit(props) {
   const dispatch = useDispatch();
@@ -80,7 +81,7 @@ export default function PasswordEdit(props) {
       <Container>
         <Row>
           <Col xs={12}>
-            <span className="p-float-label">
+            <FloatLabel>
               <Password
                 id="password"
                 value={password}
@@ -88,10 +89,10 @@ export default function PasswordEdit(props) {
                 toggleMask
               />
               <label htmlFor="password">{t("passwords.new")}</label>
-            </span>
+            </FloatLabel>
           </Col>
           <Col xs={12}>
-            <span className="p-float-label">
+            <FloatLabel>
               <Password
                 id="passwordConfirm"
                 value={passwordConfirm}
@@ -100,7 +101,7 @@ export default function PasswordEdit(props) {
                 toggleMask
               />
               <label htmlFor="password">{t("passwords.confirm")}</label>
-            </span>
+            </FloatLabel>
           </Col>
         </Row>
       </Container>

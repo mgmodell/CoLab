@@ -8,12 +8,12 @@
 
 require 'cucumber/rails'
 require 'selenium/webdriver'
-require 'webdrivers'
+# require 'webdrivers'
 require 'simplecov'
 
 SimpleCov.start 'rails'
 
-Webdrivers.cache_time = 86_400
+# Webdrivers.cache_time = 86_400
 
 # require 'simplecov'
 # SimpleCov.start 'rails'
@@ -77,7 +77,7 @@ Capybara.register_driver( :remote_chrome ) do | app |
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
-    url: 'http://browser:4444/wd/hub',
+    url: 'http://selenium:4444/wd/hub',
     options:
   )
 end

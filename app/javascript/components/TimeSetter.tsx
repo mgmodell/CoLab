@@ -1,7 +1,9 @@
 import React, { useState, Fragment, useEffect } from "react";
 import MockDate from "mockdate";
 
-export default function TimeSetter(props) {
+interface TimeSetterProps {}
+
+export default function TimeSetter(props: TimeSetterProps) {
   const [newTime, setNewTime] = useState("");
   const [hitCount, setHitCount] = useState(0);
 
@@ -47,4 +49,3 @@ export default function TimeSetter(props) {
     </Fragment>
   );
 }
-TimeSetter.propTypes = {};

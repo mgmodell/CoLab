@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'hello_world', to: 'hello_world#index'
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
         as: :copy_course,
@@ -267,6 +268,24 @@ Rails.application.routes.draw do
       get 'bingo/my_results/:id' => 'bingo_games#demo_my_results',
           as: 'my_results_demo',
           constraints: ->(req) { req.format == :json }
+
+      get 'submissions/:id' => 'submissions#show_demo'
+      get 'assignment/:id' => 'assignments#demo_status',
+           as: :assignment_status_demo
+      get 'assignment/critiques/:id' => 'submission_feedbacks#demo_index_for_assignment',
+           as: :assignment_critiques_demo,
+           constraints: ->(req) { req.format == :json }
+      patch 'assignment/critique/:submission_feedback_id' =>
+      'submission_feedbacks#demo_update',
+           constraints: ->(req) { req.format == :json }
+      put 'assignment/critique/:submission_feedback_id' =>
+      'submission_feedbacks#demo_update',
+           as: :critique_update_demo,
+           constraints: ->(req) { req.format == :json }
+      get 'assignment/critique/:submission_id' =>
+      'submission_feedbacks#demo_show',
+           as: :critique_assignment_demo,
+           constraints: ->(req) { req.format == :json }
     end
   end
 
@@ -277,7 +296,7 @@ Rails.application.routes.draw do
     # get :jwks, to: Keypairs::PublicKeysController.action(:index)
   end
 
-  get 'graphing/index' => 'graphing#index', as: :graphing
+  # get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects
   post 'graphing/projects' => # /:for_research/:anonymous' =>
           'graphing#projects', as: :graphing_projects

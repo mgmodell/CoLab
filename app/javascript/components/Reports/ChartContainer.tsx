@@ -9,6 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { Col, Container, Row } from "react-grid-system";
 import { Panel } from "primereact/panel";
+import { FloatLabel } from "primereact/floatlabel";
 
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
@@ -32,6 +33,8 @@ export default function ChartContainer(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const user = useTypedSelector(state => state.profile.user);
+
   const { t, i18n } = useTranslation(category);
 
   const [projects, setProjects] = useState(props.projects || []);
@@ -44,7 +47,6 @@ export default function ChartContainer(props: Props) {
   const [forResearch, setForResearch] = useState(props.forResearch || false);
 
   const [charts, setCharts] = useState({});
-  const [open, setOpen] = useState(false);
 
   const getSubjectsForProject = projectId => {
     if (0 < selectedProject) {
@@ -148,7 +150,7 @@ export default function ChartContainer(props: Props) {
     } else {
       const unit_code = unit_codes[props.unitOfAnalysis];
       return (
-        <span className="p-float-label">
+        <FloatLabel>
           <Dropdown
             id={`${props.unitOfAnalysis}_list`}
             value={selectedSubject}
@@ -163,7 +165,7 @@ export default function ChartContainer(props: Props) {
           <label htmlFor={`${props.unitOfAnalysis}_list`}>
             {t(`${props.unitOfAnalysis}_list`)}
           </label>
-        </span>
+        </FloatLabel>
       );
     }
   };
@@ -173,7 +175,7 @@ export default function ChartContainer(props: Props) {
       return <Skeleton className="mb-2" />;
     } else if (1 < projects.length) {
       return (
-        <span className="p-float-label">
+        <FloatLabel>
           <Dropdown
             id="project_list"
             value={selectedProject}
@@ -186,7 +188,7 @@ export default function ChartContainer(props: Props) {
             placeholder={t("projects_list")}
           />
           <label htmlFor="project_list">{t("projects_list")}</label>
-        </span>
+        </FloatLabel>
       );
     } else {
       return (
@@ -205,7 +207,7 @@ export default function ChartContainer(props: Props) {
   };
 
   const forResearchBlock =
-    null == props.forResearch ? (
+    null == props.forResearch && (user.is_admin || user.is_instructor || user.researcher) ? (
       <Col xs={6}>
         <InputSwitch
           checked={forResearch}
@@ -228,7 +230,7 @@ export default function ChartContainer(props: Props) {
   };
 
   const anonymizeBlock =
-    null == props.anonymize ? (
+    ( null == props.anonymize && (user.is_admin || user.is_instructor) )  ? (
       <Col xs={6}>
         <InputSwitch
           checked={anonymize}

@@ -13,6 +13,11 @@ en:
     factor_pack: Factor pack
     active_switch: Active
     project_dates: Project Dates
+    start_date_lbl: Start Date
+    start_date_placeholder: Click to select the start date
+    end_date_placeholder: Click to select the close date
+    end_date_lbl: Close Date
+    date_to_lbl: until
     name_lbl: Project Name
     description_lbl: Project Description
     group_create_success: Group successfully created.
@@ -22,6 +27,7 @@ en:
     start_date_lbl: Project start date
     end_date_lbl: Project end date
     opens: Opens every
+    style: Input style
     no_group: unassigned
     rescore: rescore
     new_group: New group name

@@ -14,6 +14,11 @@ en:
       text_sub: Text entered directly into CoLab?
       link_sub: Links (URLs) to the submissions?
       file_sub: File uploads?
+      start_date_lbl: Start Date
+      start_date_placeholder: Click to select the start date
+      end_date_lbl: Close Date
+      end_date_placeholder: Click to select the close date
+      date_to_lbl: until
       status_saving: Saving assignment
     show:
       title: Assignment Details
@@ -71,6 +76,23 @@ en:
     description: Assignment Description
     active: Is Active?
     version: Version
+    demo:
+      student_title: Design Challenge
+      student_description: >
+        Contribute to the design space of GRATITUDE. Use human-centered
+        design approaches to develop a new way to express, share, or
+        deliver our gratitude, affection, kindness, or appreciation to
+        the broader communities at this critical time. Gratitude empowers
+        us, stimulates positivity in our thoughts, and enhances both our
+        physical and mental well-being.
+        (CHI 2022 Student Design Competition)
+      instructor_title: Favorite Vonnegut
+      instructor_description: >
+        An 8-10 page paper delving deeply into your favorite of Kurt Vonnegut's
+        works. The paper should include a summary of the work, a discussion
+        of the themes and ideas presented, and a discussion of how the work
+        relates to historical context within which it was authored and the
+        themes of this course.
     error:
       submission_type: At least one submission type must be selected
       create_failed: >

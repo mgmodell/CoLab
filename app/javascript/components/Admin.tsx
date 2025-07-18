@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CourseAdmin from "./course_admin/CourseAdmin";
@@ -16,11 +16,12 @@ const ConsentFormDataAdmin = React.lazy(() =>
   import("./Consent/ConsentFormDataAdmin")
 );
 const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
-const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-export default function Admin(props) {
+interface AdminProps {}
+
+export default function Admin(props: AdminProps) {
   const user = useTypedSelector(state => state.profile.user);
 
   return (
@@ -35,23 +36,22 @@ export default function Admin(props) {
           }
         >
           <Route path={`courses/*`} element={<CourseAdmin />} />
-          <Route exact path={`rubrics`} element={<RubricList />} />
+          <Route path={`rubrics`} element={<RubricList />} />
           <Route
             path={`rubrics/:rubricIdParam`}
             element={<RubricDataAdmin />}
           />
-          <Route exact path={`schools`} element={<SchoolList />} />
+          <Route path={`schools`} element={<SchoolList />} />
           <Route
             path={`schools/:schoolIdParam`}
             element={<SchoolDataAdmin />}
           />
-          <Route exact path={`consent_forms`} element={<ConsentFormList />} />
+          <Route path={`consent_forms`} element={<ConsentFormList />} />
           <Route
             path={`consent_forms/:consentFormIDParam`}
             element={<ConsentFormDataAdmin />}
           />
           <Route path={`concepts`} element={<ConceptsTable />} />
-          <Route path={"reporting"} element={<ReportingAdmin />} />
           <Route index element={<Navigate to="courses" replace />} />
         </Route>
       ) : (
@@ -60,5 +60,3 @@ export default function Admin(props) {
     </Routes>
   );
 }
-
-Admin.propTypes = {};

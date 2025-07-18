@@ -41,11 +41,18 @@ class BingoGamesController < ApplicationController
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
-        feedback_id: c.candidate_feedback_id }
+        feedback_id: c.candidate_feedback_id,
+        credit: c.candidate_feedback.credit }
     end
+
+    words = candidate_list.candidates.collect do | c |
+      c.definition.split( ' ' )
+    end
+    found_words = words.empty? ? [] : Candidate.filter.filter( words.flatten! )
 
     render json: {
       candidate_list:,
+      found_words:,
       candidates:
     }
   end
@@ -383,6 +390,7 @@ class BingoGamesController < ApplicationController
       cl_map[u].candidates << candidate
       candidates << candidate
     end
+    candidates.sort_by! { | c | c.term }
 
     respond_to do | format |
       format.json do

@@ -49,7 +49,7 @@ class Assignment < ApplicationRecord
     consent_link = ( "/research_information/#{log.consent_form_id}" if log.present? )
     status = if is_faculty
                submissions.where( withdrawn: nil, recorded_score: nil )
-                          .and( Submission.where.not( submitted: nil ) )
+                          .and( Submission.where.not( submitted: nil ) ).size
              else
                status_for_user( current_user )
              end

@@ -51,7 +51,6 @@ class Group < ApplicationRecord
     ds = 0
     if users.count > 1
       state_hash = Hash.new( 0 )
-      country_hash = Hash.new( 0 )
       cip_hash = Hash.new( 0 )
       gender_hash = Hash.new( 0 )
       primary_lang_hash = Hash.new( 0 )

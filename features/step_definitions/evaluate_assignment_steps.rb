@@ -18,7 +18,7 @@ Given( '{int} user has submitted to the assignment' ) do | count |
       recorded_score: nil
     )
     submission.save
-    submission.errors.size.should be( 0 ), submission.errors.full_messages
+    submission.errors.size.should be( 0 ) # , submission.errors.full_messages
   end
 end
 
@@ -119,6 +119,7 @@ Then( 'the user responds to all criteria with {string} and {string} feedback' ) 
     end
     send_keys feedback
     feedback = "<p>#{feedback}</p>" if feedback.length.positive?
+    wait_for_render
 
     score = 0
     case competence

@@ -7,6 +7,13 @@ en:
       course_number: Course number
     first_name: First name
     last_name: Last name
+    reset_btn: Undo Changes
+    save_btn: Save Profile
+    confirm_leave_hdr: Leave with unsaved changes?
+    confirm_leave: >
+      Are you sure you want to leave this page? Your unsaved changes
+      will be lost.
+    create_btn: Create Profile
     edit_profile: Edit your profile
     tabs:
       details: Details
@@ -49,7 +56,7 @@ en:
       instructions.
     display_settings:
       prompt: Display settings
-      ui_theme: What UI theme would you like to use?
+      ui_theme: What color scheme would you like to use?
       language: What language would you like to use for CoLab?
       time_zone: What time zone are you in?
       anonymize: Anonymize names?

@@ -28,8 +28,6 @@ class User < ApplicationRecord
   belongs_to :gender, inverse_of: :users, optional: true
   delegate :code, to: :gender, prefix: true
 
-  belongs_to :theme, inverse_of: :users, optional: true
-
   has_one :home_country, through: :home_state
   delegate :no_response, to: :home_country, prefix: true
 
@@ -54,10 +52,11 @@ class User < ApplicationRecord
   has_many :narratives, through: :experiences
 
   has_many :rubrics, inverse_of: :user, dependent: :nullify
+  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
-  validates :timezone, :theme, presence: true
+  validates :timezone, presence: true
 
   has_many :assessments, through: :projects
 
@@ -358,8 +357,8 @@ class User < ApplicationRecord
   end
 
   def self.merge_users( predator:, prey: )
-    pred_u = User.find_by( email: predator )
-    prey_u = User.find_by( email: prey )
+    pred_u = Email.find_by( email: predator ).user
+    prey_u = Email.find_by( email: prey ).user
 
     if pred_u.present? && prey_u.present?
       # copy the demographic data
@@ -369,7 +368,7 @@ class User < ApplicationRecord
         pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
         pred_u.country = pred_u.country || prey_u.country
         pred_u.timezone = pred_u.timezone || prey_u.timezone
-        pred_u.theme_id = pred_u.theme_id || prey_u.theme_id
+        pred_u.theme = pred_u.theme || prey_u.theme
         pred_u.school_id = pred_u.school_id || prey_u.school_id
         pred_u.language_id = pred_u.language_id || prey_u.language_id
         pred_u.date_of_birth = pred_u.date_of_birth || prey_u.date_of_birth
@@ -404,7 +403,18 @@ class User < ApplicationRecord
         prey_u.consent_logs.update_all user_id: pred_u.id
         prey_u.installments.update_all user_id: pred_u.id
         prey_u.reactions.update_all user_id: pred_u.id
-        prey_u.rosters.update_all user_id: pred_u.id
+
+        prey_u.rosters.each do | r |
+          if r.course.rosters.where( user_id: pred_u.id ).exists?
+            r.destroy!
+          else
+            r.user_id = pred_u.id
+            r.save!
+          end
+        end
+
+        prey_u.rubrics.update_all user_id: pred_u.id
+        prey_u.submissions.update_all user_id: pred_u.id
         Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
 
         # Ahoy email message tracking

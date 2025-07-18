@@ -9,7 +9,7 @@ import {
   setDirty,
   setClean
 } from "../infrastructure/StatusSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { DataTable } from "primereact/datatable";
 
@@ -23,6 +23,7 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function RubricDataAdmin(props) {
   const category = "rubric";
@@ -317,7 +318,7 @@ export default function RubricDataAdmin(props) {
 
   const detailsComponent = endpointStatus ? (
     <Panel header={parseInt(rubricId) > 0 ? t("edit.title") : t("new.title")}>
-      <span className="p-float-label">
+      <FloatLabel>
         <InputText
           itemID="rubric-name"
           id="rubric-name"
@@ -325,10 +326,10 @@ export default function RubricDataAdmin(props) {
           onChange={event => setRubricName(event.target.value)}
         />
         <label htmlFor="rubric-name">{t("name")}</label>
-      </span>
+      </FloatLabel>
       &nbsp;
       <br />
-      <span className="p-float-label">
+      <FloatLabel>
         <InputTextarea
           itemID="rubric-description"
           id="rubric-description"
@@ -339,7 +340,7 @@ export default function RubricDataAdmin(props) {
           onChange={event => setRubricDescription(event.target.value)}
         />
         <label htmlFor="rubric-description">{t("description")}</label>
-      </span>
+      </FloatLabel>
       <p>Version {rubricVersion}</p>
       <p>Published {rubricPublished ? "Yes" : "No"}</p>
       <p>Active {rubricActive ? "Yes" : "No"}</p>

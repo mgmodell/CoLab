@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
@@ -22,6 +22,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
+import { FloatLabel } from "primereact/floatlabel";
 
 interface IContribution {
   userId: number;
@@ -51,10 +52,8 @@ export default function InstallmentReport(props: Props) {
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
-  const [t, i18n] = useTranslation("installments");
+  const [t] = useTranslation("installments");
 
-  const [initialised, setInitialised] = useState(false);
-  // I need to fix this to use the standard
   const [curPanel, setCurPanel] = useState(0);
   const [group, setGroup] = useState({});
   const [factors, setFactors] = useState({});
@@ -66,14 +65,14 @@ export default function InstallmentReport(props: Props) {
   const [installment, setInstallment] = useState({ comments: "" });
 
   const updateSlice = (id, update) => {
-    const lContributions = Object.assign({}, contributions);
+    const lContributions = { ...contributions};
 
     lContributions[id] = update;
     setContributions(lContributions);
   };
 
   const updateComments = event => {
-    const inst = Object.assign({}, installment);
+    const inst = { ...installment};
     inst.comments = event.target.value;
     setInstallment(inst);
   };
@@ -88,24 +87,13 @@ export default function InstallmentReport(props: Props) {
 
   //Use this to sort team members with the user on top
   const userCompare = (b, a) => {
-    var retVal = 0;
+    let retVal = 0;
     if (user.id == a.userId) {
       retVal = +1;
     } else {
       retVal = a.name.localeCompare(b.name);
     }
     return retVal;
-  };
-  const setPanel = panelId => {
-    //If the panel is already selected...
-    if (panelId == curPanel) {
-      //...close it.
-      setCurPanel(null);
-      //Otherwise...
-    } else {
-      //...open it
-      setCurPanel(panelId);
-    }
   };
 
   const saveButton = (
@@ -128,7 +116,7 @@ export default function InstallmentReport(props: Props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        const factorsData = Object.assign({}, data.factors);
+        const factorsData = { ...data.factors};
         setFactors(factorsData);
 
         setSliderSum(data.sliderSum);
@@ -157,7 +145,6 @@ export default function InstallmentReport(props: Props) {
         data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
-        setInitialised(true);
         dispatch(endTask());
       })
       .catch(error => {
@@ -203,11 +190,19 @@ export default function InstallmentReport(props: Props) {
             {}
           );
           setContributions(receivedContributions);
-          navigate(`..`);
+          navigate('/home');
         }
-        if (data.messages.status !== undefined) {
+        if (data.messages?.status !== undefined) {
           dispatch(
-            addMessage(data.messages.status, new Date(), Priorities.ERROR)
+            addMessage(data.messages.status, new Date(), data.messages.error ? Priorities.ERROR : Priorities.INFO)
+          );
+        } else {
+          dispatch(
+            addMessage(
+              t("success"),
+              new Date(),
+              Priorities.INFO
+            )
           );
         }
         setDirty(false);
@@ -324,7 +319,7 @@ export default function InstallmentReport(props: Props) {
         <br />
         <Accordion>
           <AccordionTab header={t("comment_prompt")}>
-            <span className="p-float-label">
+            <FloatLabel>
               <InputTextarea
                 value={installment.comments || ""}
                 name="comments"
@@ -334,7 +329,7 @@ export default function InstallmentReport(props: Props) {
                 onChange={updateComments}
               />
               <label htmlFor="Comments">{t("comment_input_prompt")}</label>
-            </span>
+            </FloatLabel>
           </AccordionTab>
         </Accordion>
       </Suspense>

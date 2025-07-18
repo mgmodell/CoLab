@@ -32,8 +32,7 @@ Given( /^a user has signed up$/ ) do
     email: Faker::Internet.email,
     timezone: 'UTC',
     language: Language.find_by( code: 'en' ),
-    school: School.find( 1 ),
-    theme_id: 1
+    school: School.find( 1 )
   )
   @user.confirm
   @user.save
@@ -114,8 +113,7 @@ Given '{int} users' do | user_count |
       password: 'password',
       password_confirmation: 'password',
       email: Faker::Internet.email,
-      timezone: 'UTC',
-      theme_id: 1
+      timezone: 'UTC'
     )
     u.skip_confirmation!
     u.save

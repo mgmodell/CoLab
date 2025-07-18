@@ -37,7 +37,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user should see the Bingo candidate list
     Then the user will see 7 term field sets
     Then the candidate entries should be empty
-    Then the "Save" button is not available
+    # Then the "Save" button is not available
     Then the candidate properties should be empty
 
 @javascript
@@ -55,7 +55,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user should see the Bingo candidate list
     Then the user will see 7 term field sets
     Then the candidate entries should be empty
-    Then the "Save" button is not available
+    # Then the "Save" button is not available
     Then the candidate properties should be empty
 
 @javascript

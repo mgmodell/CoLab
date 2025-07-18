@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import axios from "axios";
 import parse from 'html-react-parser';
 
@@ -19,7 +19,6 @@ import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Panel } from "primereact/panel";
-import { ToggleButton } from "primereact/togglebutton";
 import { Col, Container, Row } from "react-grid-system";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 import { SelectButton } from "primereact/selectbutton";
@@ -123,6 +122,7 @@ interface ISubmissionData {
 }
 
 type Props = {
+  rootPath?: string;
 };
 
 enum OPT_COLS {
@@ -144,10 +144,9 @@ export default function CritiqueShell(props: Props) {
   const dispatch = useDispatch();
 
   const { assignmentId } = useParams();
-  const [filterText, setFilterText] = useState("");
   const [visibleColumns, setVisibleColumns] = useState([]);
 
-  const [t, i18n] = useTranslation(`${category}s`);
+  const [t] = useTranslation(`${category}s`);
   const [panels, setPanels] = useState(() => ['submissions'])
   const [submissionsIndex, setSubmissionsIndex] = useState(Array<ISubmissionCondensed>);
   const [assignmentAcceptsText, setAssignmentAcceptsText] = useState(false);
@@ -187,7 +186,9 @@ export default function CritiqueShell(props: Props) {
   //Retrieve the submission
   const loadSubmission = (submissionId: number) => {
     dispatch(startTask());
-    const url = `${endpoints.showUrl}${submissionId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.showUrl}${submissionId}.json`
+      : `/${props.rootPath}${endpoints.showUrl}${submissionId}.json`;
     axios.get(url)
       .then(response => {
         const data = response.data as {
@@ -217,7 +218,9 @@ export default function CritiqueShell(props: Props) {
 
   const getSubmissions = () => {
     dispatch(startTask());
-    const url = `${endpoints.baseUrl}${assignmentId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.baseUrl}${assignmentId}.json`
+      : `/${props.rootPath}${endpoints.baseUrl}${assignmentId}.json`;
     axios.get(url)
       .then(response => {
         const data = response.data;
@@ -251,7 +254,6 @@ export default function CritiqueShell(props: Props) {
                 value={panels}
                 options={panelDefs}
                 onChange={(e) => {
-                  console.log(e.value, panels)
                   setPanels(e.value);
                 }}
                 optionLabel="label"
@@ -386,9 +388,7 @@ export default function CritiqueShell(props: Props) {
                       <h6>
                         {t('submitted_text')}:
                       </h6>
-                      <p id='sub_text'>
                         {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
-                      </p>
                     </React.Fragment>
                   ) : null}
                 </Panel>

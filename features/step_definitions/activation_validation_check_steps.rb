@@ -23,8 +23,7 @@ Given( /^an additional user is in each group of the project$/ ) do
     password: 'password',
     password_confirmation: 'password',
     email: Faker::Internet.email,
-    timezone: 'UTC',
-    theme_id: 1
+    timezone: 'UTC'
   )
   user.skip_confirmation!
   user.save

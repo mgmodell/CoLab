@@ -97,9 +97,17 @@ class ConceptsController < ApplicationController
   end
 
   def update
-    respond_to do | format |
-      format.json do
-        render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+    if @concept.update( concept_params )
+      respond_to do | format |
+        format.json do
+          render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+        end
+      end
+    else
+      respond_to do | format |
+        format.json do
+          render json: { errors: @concept.errors.full_messages }, status: :unprocessable_entity
+        end
       end
     end
   end

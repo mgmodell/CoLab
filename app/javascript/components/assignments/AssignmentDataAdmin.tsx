@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import axios from "axios";
 
 
@@ -22,6 +22,8 @@ import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import { FloatLabel } from "primereact/floatlabel";
 
 
 export default function AssignmentDataAdmin(props) {
@@ -162,7 +164,6 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        console.log("data", data);
         setMessages( data.messages );
         setDirty(false);
         navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
@@ -253,7 +254,7 @@ export default function AssignmentDataAdmin(props) {
   const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Col xs={6}>
-        <span className="p-float-label w-full">
+        <FloatLabel>
           <Dropdown
             id="assignment_project_id"
             value={assignmentGroupProjectId}
@@ -268,7 +269,7 @@ export default function AssignmentDataAdmin(props) {
           <label htmlFor="assignment_project_id">
             {t("edit.group_source")}
           </label>
-        </span>
+        </FloatLabel>
       </Col>
     </Suspense>
   ) : null;
@@ -284,7 +285,7 @@ export default function AssignmentDataAdmin(props) {
             <Container>
               <Row>
                 <Col xs={12}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputText
                       id='name'
                       value={assignmentName}
@@ -292,7 +293,7 @@ export default function AssignmentDataAdmin(props) {
                       type="text"
                     />
                     <label htmlFor="name">{t("name")}</label>
-                  </span>
+                  </FloatLabel>
                 </Col>
                 <Col xs={12}>
                   <Editor
@@ -347,7 +348,7 @@ export default function AssignmentDataAdmin(props) {
                   </div>
                 </Col>
                 <Col xs={6}>
-                  <span className="p-float-label w-full">
+                  <FloatLabel>
                     <Dropdown
                       id="assignment_rubric_id"
                       value={assignmentRubricId}
@@ -370,37 +371,46 @@ export default function AssignmentDataAdmin(props) {
                     <label htmlFor="assignment_rubric_id">
                       {t("edit.select_rubric")}
                     </label>
-                  </span>
+                  </FloatLabel>
 
                 </Col>
                 <Col xs={4}>
-                  <span className="p-float-label">
-                    <Calendar
-                      id="assignment_dates"
-                      value={[assignmentStartDate, assignmentEndDate]}
-                      onChange={event => {
-                        const changeTo = event.value;
-                        if (null !== changeTo && changeTo.length > 1) {
-                          console.log( event );
-                          console.log(changeTo[0], changeTo[1]);
-
-                          setAssignmentStartDate(changeTo[0]);
-                          setAssignmentEndDate(changeTo[1]);
-                        }
-
-                      }
-                      }
-                      selectionMode="range"
-                      showIcon={true}
-                      hideOnRangeSelection={true}
-                      showOnFocus={false}
-                      inputId="assignment_start_date"
-                      name="assignment_start_date"
-                    />
-                    <label htmlFor="assignment_dates">
-                      Assignment Dates
-                    </label>
-                  </span>
+      <FloatLabel>
+        <Calendar
+          id="assignment_start_date"
+          inputId="assignment_start_date"
+          value={utcAdjustDate(assignmentStartDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo) {
+              setAssignmentStartDate(changeTo);
+            }
+          }
+          }
+          showOnFocus={false}
+          placeholder={t('start_date_placeholder')}
+          showIcon={true}
+        />
+        <label htmlFor="experience_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel> {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="assignment_end_date"
+          inputId="assignment_end_date"
+          value={utcAdjustEndDate(assignmentEndDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            if (null !== changeTo) {
+              setAssignmentEndDate(changeTo);
+            }
+          }
+          }
+          showOnFocus={false}
+          placeholder={t('end_date_placeholder')}
+          showIcon={true}
+        />
+        <label htmlFor="assignment_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
                 </Col>
                 <Col xs={4}>
                   <InputSwitch

@@ -43,11 +43,11 @@ module Users
     private
 
     def set_headers( tokens )
-      headers['access-token'] = ( tokens['access-token'] ).to_s
-      headers['client'] = ( tokens['client'] ).to_s
-      headers['expiry'] = ( tokens['expiry'] ).to_s
+      headers['access-token'] = tokens['access-token'].to_s
+      headers['client'] = tokens['client'].to_s
+      headers['expiry'] = tokens['expiry'].to_s
       headers['uid'] = @user.uid
-      headers['token-type'] = ( tokens['token-type'] ).to_s
+      headers['token-type'] = tokens['token-type'].to_s
     end
   end
 end

@@ -4,6 +4,8 @@ import { getContext, setDebug } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
 
 import { Skeleton } from "primereact/skeleton";
+import { IUser } from "./ProfileSlice";
+import chroma from "chroma-js";
 
 type Props = {
   children?: React.ReactNode;
@@ -21,6 +23,7 @@ export default function AppInit(props: Props) {
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const user: IUser = useTypedSelector(state => state.profile.user);
 
   const endpoints = useTypedSelector(state => state.context.endpoints);
 
@@ -28,6 +31,25 @@ export default function AppInit(props: Props) {
     //dispatch( authConfig()  )
     dispatch(getContext(props.endpointsUrl));
   }, []);
+
+  useEffect(() => {
+    //dispatch( authConfig()  )
+    const primaryColor =
+      user && user.theme ? user.theme : "#007bff";
+
+    document.documentElement.style.setProperty(
+      "--lighter-color",
+      chroma( primaryColor ).brighten(2).hex()
+    );
+    document.documentElement.style.setProperty(
+      "--darker-color",
+      chroma( primaryColor ).darken(2).hex()
+    );
+    document.documentElement.style.setProperty(
+      "--primary-color",
+      chroma( primaryColor ).hex()
+    );
+  }, [user.theme]);
 
   useEffect(() => {
     dispatch(setDebug(props.debug));

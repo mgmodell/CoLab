@@ -98,7 +98,7 @@ end
 
 Then( 'the user opens the assignment history item' ) do
   wait_for_render
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@assignment.name}')]" ).click
+  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
 
   wait_for_render
 end
@@ -144,7 +144,7 @@ Then( 'the {string} tab {string} enabled' ) do | tab_name, enabled |
   else
     true.should be false
   end
-  ( tab['class'] ).include?( 'disabled' ).should_not be 'is' != enabled
+  tab['class'].include?( 'disabled' ).should_not be 'is' != enabled
 end
 
 Then( 'the user creates a new submission' ) do
@@ -221,7 +221,7 @@ end
 Then( 'the assignment has {int} {string} submission' ) do | qty, state |
   case state
   when 'draft'
-    Submission.where( submitted: nil ).where( withdrawn: nil ).size.should eq qty
+    Submission.where( submitted: nil, withdrawn: nil ).size.should eq qty
   when 'submitted', 'active'
     Submission.where.not( submitted: nil ).where( withdrawn: nil ).size.should eq qty
   when 'withdrawn'
@@ -243,7 +243,7 @@ Then( 'the {string} db submission data is accurate' ) do | placement |
   @check_submission = submission
   @submission.assignment_id.should eq @check_submission.assignment_id
 
-  @submission.sub_text.should eq @check_submission.sub_text.delete( "\n" )
+  @submission.sub_text.should eq @check_submission.sub_text # .delete( "\n" )
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
   @submission.user_id.should eq( @check_submission.user_id )

@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
+import { RouterProvider } from 'react-router/dom';
 import {
   createBrowserRouter,
-  RouterProvider,
   Route,
   createRoutesFromElements,
   Outlet,
   Navigate
-} from "react-router-dom";
+} from "react-router";
 import { Provider } from "react-redux";
 import appStatus from "./infrastructure/AppReducers";
 
@@ -26,7 +26,7 @@ import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import ProfileShell from "./profile/ProfileShell";
+import DiversityCheck from "./DiversityCheck";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() =>
@@ -35,6 +35,7 @@ const InstallmentReport = React.lazy(() =>
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
+const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
 const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
 
 const Privacy = React.lazy(() => import("./info/Privacy"));
@@ -48,12 +49,11 @@ type Props = {
   debug?: boolean;
 };
 
-export default function PageWrapper(props: Props) {
+export default function PageWrapper(props: Readonly<Props>) {
   const store = appStatus;
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <React.Fragment>
         <Route
           element={
             <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
@@ -79,14 +79,6 @@ export default function PageWrapper(props: Props) {
               element={<Navigate to={"/welcome/login"} replace={true} />}
             />
             <Route
-              path="profile/*"
-              element={
-                <RequireAuth>
-                  <ProfileShell />
-                </RequireAuth>
-              }
-            />
-            <Route
               path="profile"
               element={
                 <Suspense fallback={<Skeleton className="mb-2" />}>
@@ -106,6 +98,7 @@ export default function PageWrapper(props: Props) {
                 </Suspense>
               }
             />
+          <Route path={"reporting"} element={<ReportingAdmin />} />
             <Route
               path={"home/*"}
               element={
@@ -125,15 +118,18 @@ export default function PageWrapper(props: Props) {
                 path={`project/checkin/:installmentId`}
                 element={<InstallmentReport />}
               />
-              {/* Perhaps subgroup under Bingo */}
-              <Route path="bingo/*" element={<BingoShell />} />
+              <Route
+                path="bingo/*"
+                element={<BingoShell />} />
               {/* Perhaps subgroup under Experience */}
               <Route
                 path={`experience/:experienceId`}
                 element={<Experience />}
               />
               {/* Perhaps subgroup under Assignment */}
-              <Route path={`assignment/*`} element={<AssignmentShell />} />
+              <Route
+                path={`assignment/*`}
+                element={<AssignmentShell />} />
               <Route
                 path={`research_information/:consentFormId`}
                 element={<ConsentLog />}
@@ -148,6 +144,16 @@ export default function PageWrapper(props: Props) {
             <Route path={`tos`} element={<TermsOfService />} />
             <Route path={`privacy`} element={<Privacy />} />
             <Route
+              path={`perspective`}
+              element={
+                <Suspense fallback={<Skeleton className={"mb-2"} />}>
+                  <RequireAuth>
+                    <DiversityCheck />
+                  </RequireAuth>
+                </Suspense>
+              }
+            />
+            <Route
               path="demo/*"
               element={
                 <Suspense fallback={<Skeleton className={""} />}>
@@ -157,8 +163,12 @@ export default function PageWrapper(props: Props) {
             />
           </Route>
         </Route>
-      </React.Fragment>
-    )
+    ), {
+      future: {
+        v7_relativeSplatPath: true,
+        v7_startTransition: true
+      },
+    }
   );
 
   return (

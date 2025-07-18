@@ -12,6 +12,9 @@ import { Calendar } from "primereact/calendar";
 import { useTypedSelector } from "../../infrastructure/AppReducers";
 import { Dropdown } from "primereact/dropdown";
 import { Skeleton } from "primereact/skeleton";
+import { FloatLabel } from "primereact/floatlabel";
+import { utcAdjustDate, utcAdjustEndDate } from "../../infrastructure/Utilities";
+import { co } from "@fullcalendar/core/internal-common";
 
 type Props = {
   course: ICourse;
@@ -35,32 +38,43 @@ export default function CourseDatesWizard(props: Props) {
       </Row>
       <Row>
         <Col sm={12}>
-          <Calendar
-            id="course_dates"
-            selectionMode={"range"}
-            value={[props.course.start_date, props.course.end_date]}
-            placeholder="Select a Date Range"
-            showIcon={true}
-            showOnFocus={false}
-            onChange={event => {
-              const changeTo = event.value;
-              if (null === changeTo) {
-                return;
-              } else if (2 === changeTo.length) {
-                props.setCourseFunc({
-                  ...props.course,
-                  start_date: changeTo[0],
-                  end_date: changeTo[1]
-                });
-              } else {
-                props.setCourseFunc({
-                  ...props.course,
-                  start_date: changeTo[0],
-                  end_date: changeTo[0]
-                });
-              }
-            }}
-          />
+      <FloatLabel>
+        <Calendar
+          id="course_start_date"
+          inputId="course_start_date"
+          value={utcAdjustDate(props.course.start_date)}
+          onChange={event => {
+            const changeTo = event.value;
+            props.setCourseFunc({
+              ...props.course,
+              start_date: changeTo
+            });
+          }
+          }
+          showOnFocus={false}
+          showIcon={true}
+        />
+        <label htmlFor="course_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel>
+      {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="course_end_date"
+          inputId="course_end_date"
+          value={utcAdjustEndDate(props.course.end_date)}
+          onChange={event => {
+            const changeTo = event.value;
+            props.setCourseFunc({
+              ...props.course,
+              end_date: changeTo
+            });
+          }
+          }
+          showOnFocus={false}
+          showIcon={true}
+        />
+        <label htmlFor="course_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
         </Col>
       </Row>
       <Row>

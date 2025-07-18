@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { Skeleton } from "primereact/skeleton";
@@ -20,12 +20,14 @@ import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { Calendar } from "primereact/calendar";
+import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
@@ -75,6 +77,7 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];
+  const [averageScore, setAverageScore] = useState(0);
   const [foundWords, setFoundWords] = useState([]);
 
   useEffect(() => {
@@ -137,10 +140,32 @@ export default function BingoGameDataAdmin(props) {
         const data = response.data;
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
-        setDirty(false);
         setMessages(data["messages"]);
+        setConcepts(data.concepts);
 
-        getBingoGameData();
+        //Set the bingo_game stuff
+        const bingo_game = data.bingo_game;
+        setBingoGameId(bingo_game.id);
+        setGameTopic(bingo_game.topic || "");
+        setGameDescriptionEditor(bingo_game.description || "");
+        setGameSource(bingo_game.source || "");
+        setGameActive(bingo_game.active || false);
+
+        var receivedDate = new Date(Date.parse(bingo_game.start_date));
+        setGameStartDate(receivedDate);
+        receivedDate = new Date(Date.parse(bingo_game.end_date));
+        setGameEndDate(receivedDate);
+
+        setGameIndividualCount(bingo_game.individual_count || 0);
+        setGameLeadTime(bingo_game.lead_time || 0);
+        //Group options
+        setGameGroupOption(bingo_game.group_option || false);
+        setGameGroupDiscount(bingo_game.group_discount || 0);
+        setGameGroupProjectId(bingo_game.project_id);
+        setFoundWords(data.found_words);
+
+        //getBingoGameData();
+        //setDirty(false);
         navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, {
           replace: true
         });
@@ -161,6 +186,9 @@ export default function BingoGameDataAdmin(props) {
         .get(url, {})
         .then(response => {
           const data = response.data;
+          setAverageScore(data.reduce((total, next) => {
+            return total + next.performance;
+          }, 0) / data.length);
           setResultData(data);
           dispatch(endTask());
         })
@@ -224,7 +252,10 @@ export default function BingoGameDataAdmin(props) {
       <Button
         color="primary"
         //className={classes["button"]}
-        onClick={saveBingoGame}
+        onClick={() => {
+          console.log("save_btn");
+          saveBingoGame();
+        }}
         id="save_bingo_game"
         value="save_bingo_game"
       >
@@ -237,7 +268,7 @@ export default function BingoGameDataAdmin(props) {
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <React.Fragment>
         <Col xs={6}>
-          <span className="p-float-label">
+          <FloatLabel>
             <InputNumber
               id="bingo-discount"
               itemID="bingo-discount"
@@ -249,10 +280,11 @@ export default function BingoGameDataAdmin(props) {
               }}
             />
             <label htmlFor="bingo-discount">{t("group_discount")}</label>
-          </span>
+
+          </FloatLabel>
         </Col>
         <Col xs={6}>
-          <span className="p-float-label">
+          <FloatLabel>
             <Dropdown
               id="bingo_game_project_id"
               inputId="bingo_game_project_id"
@@ -265,7 +297,7 @@ export default function BingoGameDataAdmin(props) {
               placeholder={t("group_source")}
             />
             <label htmlFor="bingo_game_project_id">{t("group_source")}</label>
-          </span>
+          </FloatLabel>
         </Col>
       </React.Fragment>
     </Suspense>
@@ -281,7 +313,7 @@ export default function BingoGameDataAdmin(props) {
             <Container>
               <Row>
                 <Col xs={12}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputText
                       id="topic"
                       name="topic"
@@ -290,7 +322,7 @@ export default function BingoGameDataAdmin(props) {
                       onChange={event => setGameTopic(event.target.value)}
                     />
                     <label htmlFor="topic">{t("topic")}</label>
-                  </span>
+                  </FloatLabel>
                 </Col>
               </Row>
               <Row>
@@ -309,7 +341,7 @@ export default function BingoGameDataAdmin(props) {
               </Row>
               <Row>
                 <Col xs={6}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputNumber
                       id="bingo-lead-time"
                       name="bingo-lead-time"
@@ -319,10 +351,11 @@ export default function BingoGameDataAdmin(props) {
                       onChange={event => setGameLeadTime(event.value)}
                     />
                     <label htmlFor="bingo-lead-time">{t("lead_time")}</label>
-                  </span>
+
+                  </FloatLabel>
                 </Col>
                 <Col xs={6}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <InputNumber
                       id="bingo-individual_count"
                       name="bingo-individual_count"
@@ -334,31 +367,48 @@ export default function BingoGameDataAdmin(props) {
                     <label htmlFor="bingo-individual_count">
                       {t("ind_term_count")}
                     </label>
-                  </span>
+                  </FloatLabel>
                 </Col>
               </Row>
 
               <Row>
                 <Col xs={4}>
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <Calendar
-                      id="bingo_game_dates"
-                      value={[gameStartDate, gameEndDate]}
+                      id="bingo_game_start_date"
+                      inputId="bingo_game_start_date"
+                      value={utcAdjustDate(gameStartDate)}
                       onChange={event => {
                         const changeTo = event.value;
-                        if (null !== changeTo && changeTo.length > 1) {
-                          setGameStartDate(changeTo[0]);
-                          setGameEndDate(changeTo[1]);
+                        if (null !== changeTo) {
+                          setGameStartDate(changeTo);
                         }
-                      }}
-                      selectionMode="range"
-                      showIcon={true}
+                      }
+                      }
                       showOnFocus={false}
-                      inputId="bingo_game_dates"
-                      name="bingo_game_dates"
+                      placeholder={t("start_date_placeholder")}
+                      showIcon={true}
                     />
-                    <label htmlFor="bingo_game_dates">{t("game_dates")}</label>
-                  </span>
+                    <label htmlFor="bingo_game_start_date">{t('start_date_lbl')}</label>
+                  </FloatLabel> {t('date_to_lbl')}
+                  <FloatLabel>
+                    <Calendar
+                      id="bingo_game_end_date"
+                      inputId="bingo_game_end_date"
+                      value={utcAdjustEndDate(gameEndDate)}
+                      onChange={event => {
+                        const changeTo = event.value;
+                        if (null !== changeTo) {
+                          setGameEndDate(changeTo);
+                        }
+                      }
+                      }
+                      showOnFocus={false}
+                      placeholder={t("end_date_placeholder")}
+                      showIcon={true}
+                    />
+                    <label htmlFor="bingo_game_end_date">{t('end_date_lbl')}</label>
+                  </FloatLabel>
                 </Col>
                 <Col xs={4}>
                   <InputSwitch
@@ -397,15 +447,17 @@ export default function BingoGameDataAdmin(props) {
               <Row>
                 <Col xs={5}>
                   <ConceptChips concepts={concepts} />
+                </Col>
+                <Col xs={7}>
+                  <h5>{t("scored_game.average_score")}:&nbsp;{Math.round(averageScore * 100) / 100}</h5>
+                  <BingoGameDataAdminTable results_raw={resultData} />
+                  <br />
                   <ResponsesWordCloud
                     width={400}
                     height={400}
                     words={foundWords}
                     colors={colors}
                   />
-                </Col>
-                <Col xs={7}>
-                  <BingoGameDataAdminTable results_raw={resultData} />
                 </Col>
               </Row>
             </Container>

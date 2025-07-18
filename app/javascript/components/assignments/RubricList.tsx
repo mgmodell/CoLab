@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import axios from "axios";
 
 import { useDispatch } from "react-redux";
@@ -18,7 +18,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-export default function RubricList(props) {
+interface RubricListProps {}
+
+export default function RubricList(props: RubricListProps) {
   const category = "rubric";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -227,5 +229,3 @@ export default function RubricList(props) {
     </React.Fragment>
   );
 }
-
-RubricList.propTypes = {};

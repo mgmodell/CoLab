@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSpring, animated, config } from "react-spring";
 import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import StudentConcern from "../svgs/StudentConcern";
 import SocialLoafing from "../svgs/SocialLoafing";
 import LeaveItToGeorge from "../svgs/LeaveItToGeorge";

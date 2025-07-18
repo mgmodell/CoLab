@@ -1,39 +1,33 @@
 # frozen_string_literal: true
 
 class GraphingController < ApplicationController
+  skip_before_action :authenticate_user!
   Unit_Of_Analysis = { group: 2, individual: 1 }.freeze
-
-  def index
-    @user = current_user
-    current_users_projects = []
-
-    # Get the assessments administered by the current user
-    if @user.is_instructor?
-      if @user.is_admin?
-        current_users_projects = Project.all
-      elsif @user.is_instructor?
-        Roster.instructor.where( user_id: @user.id ).find_each do | roster |
-          current_users_projects.concat roster.course.projects.to_a
-        end
-      end
-      current_users_projects
-    else
-      redirect_to root_url
-    end
-  end
+  Open_Projects = [24, 5, 6, 7, 19, 22, 23].freeze
 
   def projects
-    params[:for_research]
-    anon_req = params[:anonymous]
-    anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
-    project_list = if current_user.admin || current_user.is_researcher?
-                     Project.all.to_a
-                   else
-                     Project.joins( course: :rosters )
-                            .where( 'rosters.user': current_user,
-                                    'rosters.role': Roster.roles[:instructor] )
-                            .uniq.to_a
-                   end
+    project_list = []
+    anonymize = true
+    if current_user.nil? || !( current_user.is_admin? ||
+                              current_user.is_instructor? ||
+                              current_user.is_researcher? )
+      project_list = Project.where( id: Open_Projects ).to_a
+    else
+      anon_req = params[:anonymous]
+      anonymize = current_user.anonymize? ||
+                  current_user.is_researcher? || anon_req ||
+                  !( current_user.is_admin? || current_user.is_instructor? )
+      project_list = if current_user.admin || current_user.is_researcher?
+                       Project.all.to_a
+                     elsif current_user.is_instructor?
+                       Project.joins( course: :rosters )
+                              .where( 'rosters.user': current_user,
+                                      'rosters.role': Roster.roles[:instructor] )
+                              .uniq.to_a
+                     else
+                       Project.all.to_a
+                     end
+    end
     project_list.collect! { | project | { id: project.id, name: project.get_name( anonymize ) } }
 
     project_list.sort_by! { | a | a[:name] }
@@ -44,30 +38,40 @@ class GraphingController < ApplicationController
 
   # Support the app by providing the subject instances
   def subjects
+    anonymize = true
+    subjects = []
     unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
     for_research = params[:for_research]
     anon_req = params[:anonymous]
-    anonymize = current_user.anonymize? || anon_req
+    if ( current_user.nil? || !( current_user.is_admin? ||
+                              current_user.is_instructor? ||
+                              current_user.is_researcher? ) ) &&
+       !Open_Projects.include?( project_id )
+      # NOOP
+    else
 
-    subjects = []
-    case unit_of_analysis
-    when Unit_Of_Analysis[:individual]
-      subjects = if for_research
-                   User.joins( :consent_logs, :projects )
-                       .where( consent_logs: { accepted: true }, projects: { id: project_id } )
-                       .collect { | user | [user.name( anonymize ), user.id] }
-                 else
-                   Project.find( project_id ).users.collect { | user | { name: user.name( anonymize ), id: user.id } }
-                 end
-    when Unit_Of_Analysis[:group]
-      subjects = Project.find( project_id ).groups.collect do | group |
-        { name: group.get_name( anonymize ), id: group.id }
+      anonymize = current_user.nil? || current_user.anonymize? || anon_req
+
+      subjects = []
+      case unit_of_analysis
+      when Unit_Of_Analysis[:individual]
+        subjects = if for_research
+                     User.joins( :consent_logs, :projects )
+                         .where( consent_logs: { accepted: true }, projects: { id: project_id } )
+                         .collect { | user | [user.name( anonymize ), user.id] }
+                   else
+                     Project.find( project_id ).users.collect { | user | { name: user.name( anonymize ), id: user.id } }
+                   end
+      when Unit_Of_Analysis[:group]
+        subjects = Project.find( project_id ).groups.collect do | group |
+          { name: group.get_name( anonymize ), id: group.id }
+        end
+
       end
 
+      subjects.sort_by! { | a | a[:name] }
     end
-
-    subjects.sort_by! { | a | a[:name] }
     # Return the retrieved data
     respond_to do | format |
       format.json { render json: subjects }
@@ -76,29 +80,41 @@ class GraphingController < ApplicationController
 
   def data
     unit_of_analysis = params[:unit_of_analysis].to_i
-    project = Project.find( params[:project] )
     subject = params[:subject]
-    params[:for_research]
+    project_id = params[:project]
+    # TODO: - filter out users who have not consented
+    # params[:for_research]
     anon_req = params[:anonymous]
-    anonymize = current_user.anonymize? || anon_req
 
-    offset = anonymize ? project.course_anon_offset : 0
-
-    dataset = {
-      unitOfAnalysis: nil,
-      comments: {},
-      project_name: project.get_name( anonymize ),
-      project_id: project.id,
-      start_date: project.start_date + offset,
-      end_date: project.end_date + offset,
-      streams: {}
-    }
-    comments = dataset[:comments]
-    streams = dataset[:streams]
-    users = {}
     # Security checks
-    if current_user.is_admin? ||
-       project.course.instructors.include?( current_user )
+    anonymize = current_user.nil? || current_user.anonymize? || anon_req ||
+                current_user.is_researcher? ||
+                !( current_user.is_admin? ||
+                  ( current_user.is_instructor? &&
+                   !project.course.instructors.include?( current_user ) ) )
+
+    dataset = {}
+    if ( current_user.nil? || !( current_user.is_admin? ||
+                              current_user.is_instructor? ||
+                              current_user.is_researcher? ) ) &&
+       !Open_Projects.include?( project_id )
+      # NOOP
+    else
+      project = Project.find( project_id )
+      offset = anonymize ? project.course_anon_offset : 0
+
+      dataset = {
+        unitOfAnalysis: nil,
+        comments: {},
+        project_name: project.get_name( anonymize ),
+        project_id: project.id,
+        start_date: project.start_date + offset,
+        end_date: project.end_date + offset,
+        streams: {}
+      }
+      comments = dataset[:comments]
+      streams = dataset[:streams]
+      users = {}
       # Start pulling data
 
       groups = {}
@@ -212,22 +228,22 @@ class GraphingController < ApplicationController
           }
         end
       end
-    end
 
-    factors = {}
-    dataset[:streams].each_value do | stream |
-      stream[:sub_streams].each_value do | substream |
-        substream[:factor_streams].each_value do | factor_stream |
-          factors[factor_stream[:factor_id]] = {
-            name: factor_stream[:factor_name],
-            id: factor_stream[:factor_id]
-          }
+      factors = {}
+      dataset[:streams].each_value do | stream |
+        stream[:sub_streams].each_value do | substream |
+          substream[:factor_streams].each_value do | factor_stream |
+            factors[factor_stream[:factor_id]] = {
+              name: factor_stream[:factor_name],
+              id: factor_stream[:factor_id]
+            }
+          end
         end
       end
+      dataset[:users] = users
+      dataset[:factors] = factors
+      dataset[:groups] = groups
     end
-    dataset[:users] = users
-    dataset[:factors] = factors
-    dataset[:groups] = groups
 
     # Return the retrieved data
     respond_to do | format |

@@ -39,12 +39,18 @@ en:
   group_names: Group names
   history: History
   about_you: About You
-  calc_diversity: Perspectives
+  calc_diversity_hdr: Perspectives
+  calc_diversity_instr: >
+    To calculate your diversity score, please enter the email addresses
+    of the people you are considering for your team.  You can enter
+    multiple emails, separated by commas or spaces.
+  found_users: Found Users
+  perspective_score: Perspective Score
   users: Users
   diversity_score: Perspective Points
   calc_diversity_sub: Tell me the score!
   clear: Clear
-  calc_it: Calculate a Diversity Score
+  calc_it: Calculate Perspective Points
   ds_emails_lbl: Enter the emails of the proposed team members
   dates: Dates
   open_date: Open Date
@@ -78,7 +84,6 @@ en:
   submit: Submit
   #toolbar
   profile: Profile
-  c_panel: Admin&hellip;
   reports: Reports
   administration: Administration
   resp_summ: Response Summary
@@ -144,7 +149,6 @@ en:
   not_set: Not set
   instructors: Instructors
   students: Students
-  student: Student
   #roles
   instructor: instructor
   assistant: assistant
@@ -189,6 +193,9 @@ en:
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
     task_type: Task Type
+    terms_lists:
+      insufficient_msg: Not enough terms
+      sufficient_msg: Ready to play
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
     course_confirm: >

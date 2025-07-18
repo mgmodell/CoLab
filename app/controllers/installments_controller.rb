@@ -74,7 +74,11 @@ class InstallmentsController < ApplicationController
               description: installment.assessment.project.description
             }
           },
-          sliderSum: Installment::TOTAL_VAL
+          sliderSum: Installment::TOTAL_VAL,
+          messages: {
+            error: false,
+            status: t( 'installments.success' )
+          }
         }
       end
     end
@@ -107,32 +111,16 @@ class InstallmentsController < ApplicationController
               end
             end
             installment.reload
-            render json: {
-              error: false,
-              messages: {
-                status: t( 'installments.success' )
-              },
-              installment: {
-                id: installment.id,
-                assessment_id: installment.assessment_id,
-                group_id: installment.group_id,
-                comments: installment.comments,
-                values: installment.values
-                                   .collect do | item |
-                          {
-                            id: item[:id],
-                            user_id: item[:userId],
-                            factor_id: item[:factorId],
-                            name: item[:name],
-                            value: item[:value]
-                          }
-                        end
-              }
-            }
+            submit_helper(
+              factors: installment.assessment.project.factors,
+              group: installment.group,
+              installment: installment
+            )
           end
         rescue ActiveRecord::RecordInvalid => e
           render json: {
             messages: {
+              error: true,
               status: e.message
             },
             error: true
@@ -145,6 +133,7 @@ class InstallmentsController < ApplicationController
   def demo_update
     result = {
       messages: {
+        error: false,
         status: t( 'installments.demo_success' )
       },
       installment: {
@@ -177,8 +166,6 @@ class InstallmentsController < ApplicationController
   def update
     id = params[:id].to_i
 
-    result = {}
-
     ActiveRecord::Base.transaction do
       installment = Installment.includes( :values ).find( id )
       installment.comments = params[:installment][:comments]
@@ -204,6 +191,7 @@ class InstallmentsController < ApplicationController
     result = if value.errors.empty?
                {
                  messages: {
+                   error: false,
                    status: t( 'installments.success' )
                  },
                  installment: {

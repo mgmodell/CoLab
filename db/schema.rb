@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_26_133734) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -427,7 +427,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
-  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "jwk_kid", null: false
     t.text "_keypair_ciphertext", null: false
     t.datetime "created_at", null: false
@@ -508,6 +508,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["course_id"], name: "index_rosters_on_course_id"
     t.index ["role"], name: "index_rosters_on_role"
+    t.index ["user_id", "course_id"], name: "index_rosters_on_user_id_and_course_id", unique: true
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
@@ -607,16 +608,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
-  create_table "themes", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.string "code"
-    t.string "name_en"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "name_ko"
-    t.index ["code"], name: "index_themes_on_code", unique: true
-    t.index ["name_en"], name: "index_themes_on_name_en", unique: true
-  end
-
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -644,7 +635,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.boolean "admin"
     t.boolean "welcomed"
     t.datetime "last_emailed", precision: nil
-    t.integer "theme_id", default: 1
     t.integer "school_id"
     t.string "anon_first_name"
     t.string "anon_last_name"
@@ -665,6 +655,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.text "tokens"
     t.boolean "instructor", default: false, null: false
     t.boolean "active", default: true, null: false
+    t.string "theme", default: "007bff", null: false
     t.index ["cip_code_id"], name: "index_users_on_cip_code_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["gender_id"], name: "index_users_on_gender_id"
@@ -673,7 +664,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
     t.index ["primary_language_id"], name: "index_users_on_primary_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
-    t.index ["theme_id"], name: "index_users_on_theme_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -767,7 +757,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_04_06_181047) do
   add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
-  add_foreign_key "users", "themes"
   add_foreign_key "values", "factors"
   add_foreign_key "values", "installments"
   add_foreign_key "values", "users"

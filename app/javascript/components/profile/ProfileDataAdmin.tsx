@@ -15,10 +15,12 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import {
   fetchProfile,
   setProfile,
+  restoreProfile,
   persistProfile,
   setLocalLanguage,
   IUser
 } from "../infrastructure/ProfileSlice";
+import { utcAdjustString } from "../infrastructure/Utilities";
 
 import { Button } from "primereact/button";
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -26,12 +28,17 @@ import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Calendar } from "primereact/calendar";
+import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 import { Container, Row, Col } from "react-grid-system";
 import { AutoComplete } from "primereact/autocomplete";
+import { ColorPicker } from "primereact/colorpicker";
+import { FloatLabel } from "primereact/floatlabel";
+import { useBlocker, useNavigate } from "react-router";
+import { bl, di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;
@@ -57,10 +64,7 @@ export default function ProfileDataAdmin(props: Props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
-  const user: IUser = useTypedSelector(state => {
-    return state.profile.user
-  });
-
+  const user: IUser = useTypedSelector(state => state.profile.user);
 
   const getImpairments = () => {
     const imp = [];
@@ -96,7 +100,39 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
-  const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
+  const dirty = useTypedSelector(state => {
+    return state.profile.lastRetrieved !== state.profile.lastSet;
+  });
+
+  const navigate = useNavigate();
+
+  const blocker = useBlocker( ( args )=>{
+    if( args.nextLocation.state === 'unblocked' || !dirty ){
+      return false;
+    } else {
+      confirmUnsavedChanges( args );
+      return true;
+    }
+  })
+  const confirmUnsavedChanges = ( args ) => {
+    confirmDialog({
+      message: t("confirm_leave"),
+      header: t("confirm_leave_hdr"),
+      icon: "pi pi-exclamation-triangle",
+      modal: true,
+      accept: () => {
+        resetProfile();
+        navigate( args.nextLocation.pathname,
+          {
+            state: 'unblocked'
+          }
+         );
+      },
+      reject: () => {
+        // Do nothing
+      }
+    });
+  };
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;
@@ -107,7 +143,6 @@ export default function ProfileDataAdmin(props: Props) {
   const genders = useTypedSelector(state => state.context.lookups.genders);
   const schools = useTypedSelector(state => state.context.lookups.schools);
   const languages = useTypedSelector(state => state.context.lookups.languages);
-  const themes = useTypedSelector(state => state.context.lookups.themes);
 
   const [states, setStates] = useState([]);
 
@@ -121,7 +156,6 @@ export default function ProfileDataAdmin(props: Props) {
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState(0);
-  const [dirty, setDirty] = useState(false);
   const [curPanel, setCurPanel] = useState([0]);
 
   const setMessages = msgs => {
@@ -162,7 +196,7 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileGender = gender => {
     const temp = {};
     Object.assign(temp, user);
-    temp.gender = gender;
+    temp.gender_id = gender;
     dispatch(setProfile(temp));
   };
   const setProfileHomeCountry = homeCountry => {
@@ -198,6 +232,7 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
+
     temp.date_of_birth = date_of_birth.toString();
     dispatch(setProfile(temp));
   };
@@ -212,10 +247,10 @@ export default function ProfileDataAdmin(props: Props) {
   const setProfileLanguage = language_id => {
     dispatch(setLocalLanguage(language_id));
   };
-  const setProfileTheme = theme_id => {
+  const setProfileTheme = theme => {
     const temp = {};
     Object.assign(temp, user);
-    temp.theme_id = theme_id;
+    temp.theme = theme;
     dispatch(setProfile(temp));
   };
   const setProfileResearcher = researcher => {
@@ -260,13 +295,12 @@ export default function ProfileDataAdmin(props: Props) {
 
   const getProfile = () => {
     dispatch(fetchProfile())
-    setDirty(false);
-      //.then(setInitRetrieved(lastRetrieved))
-      //.then(setDirty(false));
   };
   const saveProfile = () => {
     dispatch(persistProfile());
-    setDirty(false);
+  };
+  const resetProfile = () => {
+    dispatch(restoreProfile());
   };
 
   useEffect(() => {
@@ -275,13 +309,6 @@ export default function ProfileDataAdmin(props: Props) {
       getProfile();
     }
   }, [endpointStatus]);
-
-  useEffect(() => {
-    //TODO: Fix profiles are marked dirty on initial load.
-    if (initRetrieved !== lastRetrieved) {
-      setDirty(true);
-    }
-  }, [user]);
 
   useEffect(() => getStates(user.country), [user.country]);
 
@@ -306,7 +333,12 @@ export default function ProfileDataAdmin(props: Props) {
 
   const saveButton = (
     <Button onClick={saveProfile} disabled={!dirty}>
-      {null == user.id ? "Create" : "Save"} Profile
+      {null == user.id ? t('create_btn') : t('save_btn')}
+    </Button>
+  );
+  const resetButton = (
+    <Button onClick={resetProfile} disabled={!dirty}>
+      {t("reset_btn")}
     </Button>
   );
 
@@ -347,7 +379,7 @@ export default function ProfileDataAdmin(props: Props) {
           <Container>
             <Row>
               <Col sm={6} xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputText
                     id="first-name"
                     itemID="first-name"
@@ -356,10 +388,10 @@ export default function ProfileDataAdmin(props: Props) {
                     onChange={event => setProfileFirstName(event.target.value)}
                   />
                   <label htmlFor="first-name">{t("first_name")}</label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col sm={6} xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <InputText
                     id="last-name"
                     itemID="last-name"
@@ -368,7 +400,7 @@ export default function ProfileDataAdmin(props: Props) {
                     onChange={event => setProfileLastName(event.target.value)}
                   />
                   <label htmlFor="last-name">{t("last_name")}</label>
-                </span>
+                </FloatLabel>
               </Col>
             </Row>
           </Container>
@@ -387,26 +419,16 @@ export default function ProfileDataAdmin(props: Props) {
         >
           <Container>
             <Col md={6} xs={12}>
-              <span className="p-float-label">
-                <Dropdown
-                  id="profile_theme"
-                  inputId="profile_theme"
-                  itemID="profile_theme"
-                  name="profile_theme"
-                  value={user.theme_id || 0}
-                  options={Object.values( themes )}
-                  optionValue="id"
-                  optionLabel="name"
-                  onChange={event => setProfileTheme(Number(event.value))}
-                  placeholder={t("display_settings.ui_theme")}
-                />
                 <label htmlFor="profile_theme">
                   {t("display_settings.ui_theme")}
                 </label>
-              </span>
+                <ColorPicker
+                  id='profile_theme'
+                  value={user.theme}
+                  onChange={event => setProfileTheme(event.value)} />
             </Col>
             <Col md={6} xs={12}>
-              <span className="p-float-label">
+              <FloatLabel>
                 <AutoComplete
                   id="profile_language"
                   inputId="profile_language"
@@ -441,7 +463,7 @@ export default function ProfileDataAdmin(props: Props) {
                 <label htmlFor="profile_language">
                   {t("display_settings.language")}
                 </label>
-              </span>
+              </FloatLabel>
             </Col>
             <Col xs={3}>
               <InputSwitch
@@ -454,7 +476,7 @@ export default function ProfileDataAdmin(props: Props) {
               </label>
             </Col>
             <Col xs={9}>
-              <span className="p-float-label">
+              <FloatLabel>
                 <Dropdown
                   id="profile_timezone"
                   inputId="profile_timezone"
@@ -470,7 +492,7 @@ export default function ProfileDataAdmin(props: Props) {
                 <label htmlFor="profile_timezone">
                   {t("display_settings.time_zone")}
                 </label>
-              </span>
+              </FloatLabel>
             </Col>
           </Container>
         </AccordionTab>
@@ -482,7 +504,7 @@ export default function ProfileDataAdmin(props: Props) {
           <Container>
             <Row>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_school"
                     inputId="profile_school"
@@ -498,10 +520,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_school">
                     {t("demographics.school")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_cip_code"
                     inputId="profile_cip_code"
@@ -517,16 +539,16 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_cip_code">
                     {t("demographics.major")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Calendar
                     id="profile_primary_start_school"
                     inputId="profile_primary_start_school"
                     name="profile_primary_start_school"
-                    value={new Date(Date.parse(user.started_school))}
-                    onChange={date => setProfileStartedSchool(date)}
+                    value={utcAdjustString(user.started_school)}
+                    onChange={date => setProfileStartedSchool(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
                     showOnFocus={false}
@@ -536,7 +558,7 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_primary_start_school">
                     {t("demographics.start_school")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
             </Row>
             <Row>
@@ -546,7 +568,7 @@ export default function ProfileDataAdmin(props: Props) {
             </Row>
             <Row>
               <Col xs={6} md={5}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_country"
                     inputId="profile_country"
@@ -565,11 +587,11 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_country">
                     {t("demographics.home_country")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={6}>
                 {states.length > 0 ? (
-                  <span className="p-float-label">
+                  <FloatLabel>
                     <Dropdown
                       id="profile_state"
                       inputId="profile_state"
@@ -587,13 +609,13 @@ export default function ProfileDataAdmin(props: Props) {
                     <label htmlFor="profile_state">
                       {t("demographics.home_state")}
                     </label>
-                  </span>
+                  </FloatLabel>
                 ) : null}
               </Col>
             </Row>
             <Row>
               <Col xs={12}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <AutoComplete
                     id="profile_home_language"
                     inputId="profile_home_language"
@@ -626,10 +648,10 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_home_language">
                     {t("demographics.home_language")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Dropdown
                     id="profile_gender"
                     name="profile_gender"
@@ -644,16 +666,16 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_gender">
                     {t("demographics.gender")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} sm={6} md={3}>
-                <span className="p-float-label">
+                <FloatLabel>
                   <Calendar
                     id="profile_date_of_birth"
                     inputId="profile_date_of_birth"
                     name="profile_date_of_birth"
-                    value={new Date(Date.parse(user.date_of_birth))}
-                    onChange={date => setProfileDOB(date)}
+                    value={utcAdjustString(user.date_of_birth)}
+                    onChange={date => setProfileDOB(date.value)}
                     dateFormat="mm/dd/yy"
                     showIcon={true}
                     monthNavigator={true}
@@ -663,7 +685,7 @@ export default function ProfileDataAdmin(props: Props) {
                   <label htmlFor="profile_date_of_birth">
                     {t("demographics.born")}
                   </label>
-                </span>
+                </FloatLabel>
               </Col>
               <Col xs={12} md={12}>
                 <label htmlFor="impairments">
@@ -690,11 +712,14 @@ export default function ProfileDataAdmin(props: Props) {
       <br />
       <br />
       {saveButton}
+      {resetButton}
     </Panel>
   ) : null;
 
   return (
     <Panel>
+      <ConfirmDialog 
+      />
       <TabView
         activeIndex={curTab}
         onTabChange={event => setCurTab(event.index)}

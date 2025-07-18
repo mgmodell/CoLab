@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
@@ -15,10 +15,11 @@ import {
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
+import { removeStopwords } from 'stopword'
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Col, Container, Row } from "react-grid-system";
-import { di } from "@fullcalendar/core/internal-common";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
   rootPath?: string;
@@ -49,6 +50,7 @@ export default function CandidateListEntry(props: Props) {
   const [isGroup, setIsGroup] = useState(false);
   const [expectedCount, setExpectedCount] = useState(0);
   const [candidates, setCandidates] = useState([]);
+  const [candidateCountHash, setCandidateCountHash] = useState({});
   const [othersRequestedHelp, setOthersRequestedHelp] = useState(0);
   const [helpRequested, setHelpRequested] = useState(false);
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
@@ -86,6 +88,20 @@ export default function CandidateListEntry(props: Props) {
         console.log("error", error);
       });
   };
+  useEffect(() => {
+    const tmpCandidates = [...candidates];
+    const countHash = {};
+    for (var i = 0; i < tmpCandidates.length; i++) {
+      const cleaned = removeStopwords( tmpCandidates[i].term.toLowerCase().split(" ") ).join(" ");
+      if (countHash[cleaned] === undefined) {
+        countHash[cleaned] = 1;
+      } else {
+        countHash[cleaned]++;
+      }
+    }
+    setCandidateCountHash(countHash);
+  }, [candidates]);
+
   const prepCandidates = (candidates, expectedCount) => {
     const tmpCandidates = [...candidates];
     const candidate_count = candidates.length;
@@ -99,13 +115,14 @@ export default function CandidateListEntry(props: Props) {
       }
     });
 
+
     for (var count = candidate_count; count < expectedCount; count++) {
       tmpCandidates.push({
         id: null,
         term: "",
         definition: "",
         filtered_consistent: "",
-        candidate_feedback_id: null
+        candidate_feedback_id: null,
       });
     }
     return tmpCandidates;
@@ -131,7 +148,6 @@ export default function CandidateListEntry(props: Props) {
       })
       .then(response => {
         const data = response.data;
-        console.log("data.messages", data);
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -165,14 +181,14 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    setDirty(true)
-    console.log( 'dirty: ', dirty ? "dirty" : "clean")
-  } , [candidates]);
+    setDirty(true);
+  }, [candidates]);
 
-  const saveButton = 
-         <Button disabled={!dirty} onClick={saveCandidateList}>
-          {t('student_entry.save')}
-        </Button>
+  // TODO: Fix the check to see if the form is dirty
+  const saveButton =
+    <Button onClick={saveCandidateList}>
+      {t('student_entry.save')}
+    </Button>
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
@@ -247,58 +263,72 @@ export default function CandidateListEntry(props: Props) {
     <Panel>
       <Container>
         <Row>
-          <Col xs={12} sm={3}>
-            <span>{t("topic")}</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{topic}</span>
-          </Col>
-          <Col xs={12} sm={3}>
-            <span>{t("description")}</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{parse(description)}</span>
-          </Col>
-          <Col xs={12} sm={3}>
-            <span>For</span>
-          </Col>
-          <Col xs={12} sm={9}>
-            <span>{user.name}</span>
-          </Col>
-          <hr />
-          <Col xs={12}>{groupComponent}</Col>
-          {candidates.map((candidate, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Col xs={12} sm={3}>
-                  <span className="p-float-label">
-                    <InputText
-                      id={`term_${index}`}
-                      onChange={event => updateTerm(event, index)}
-                      value={candidate.term}
-                    />
-                    <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
-                  </span>
-                </Col>
-                <Col xs={12} sm={9}>
-                  <span className="p-float-label">
-                    <InputTextarea
-                      id={`definition_${index}`}
-                      onChange={event => updateDefinition(event, index)}
-                      value={candidate.definition}
-                      autoResize
-                    />
-                    <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
-                  </span>
-                </Col>
-              </React.Fragment>
-            );
-          })}
-        </Row>
-      </Container>
+          <Col xs={12} sm={12}>
+            <Panel header={`${t('edit.topic')}: ${topic}`} toggleable>
+              <Container>
+                <Row>
+                  <Col xs={12} sm={3}>
+                    <h4>{t("edit.description")}</h4>
+                  </Col>
+                  <Col xs={12} sm={9}>
+                    {parse(description)}
+                  </Col>
+                  <Col xs={12} sm={3}>
+                    <h4>{t('edit.for')}</h4>
+                  </Col>
+                  <Col xs={12} sm={9}>
+                    <span>{user.name}</span>
+                  </Col>
+                  <Col xs={12}>{groupComponent}</Col>
+              </Row>
+            </Container>
+          </Panel>
+        </Col>
+        <Col xs={12} sm={12}>
+          <Panel
+            header={t("edit.instructions_title")}
+            toggleable>
+            {t("edit.instructions")}
+          </Panel>
+        </Col>
+        <Col xs={12}><hr /></Col>
+        {candidates.map((candidate, index) => {
+          const cleaned = removeStopwords( candidate.term.toLowerCase().split(" ") ).join(" ");
+          const duplicated = cleaned.length > 0 && candidateCountHash[cleaned] > 1;
+          return (
+            <React.Fragment key={index}>
+              <Col xs={12} sm={3}>
+                <FloatLabel>
+                  <InputText
+                    id={`term_${index}`}
+                    invalid={duplicated}
+                    onChange={event => updateTerm(event, index)}
+                    value={candidate.term}
+                    aria-describedby={`term_${index}_msg`}
+                  />
+                  {duplicated && <small color="red" id={`term_${index}_msg`}>{t('edit.duplicate_msg')}</small>}
+                  <label htmlFor={`term_${index}`}>{t('student_entry.term')}</label>
+                </FloatLabel>
+              </Col>
+              <Col xs={12} sm={9}>
+                <FloatLabel>
+                  <InputTextarea
+                    id={`definition_${index}`}
+                    onChange={event => updateDefinition(event, index)}
+                    value={candidate.definition}
+                    autoResize
+                  />
+                  <label htmlFor={`definition_${index}`}>{t('student_entry.definition')}</label>
+                </FloatLabel>
+              </Col>
+            </React.Fragment>
+          );
+        })}
+      </Row>
+    </Container>
       {
-        saveButton
-      }
-    </Panel>
+    saveButton
+  }
+    </Panel >
   );
 }

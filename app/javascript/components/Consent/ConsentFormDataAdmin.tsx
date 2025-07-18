@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
@@ -17,6 +17,8 @@ import { Calendar } from "primereact/calendar";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { Col, Container, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
+import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
 enum ConsentFormTabs {
   English = 1,
@@ -25,6 +27,7 @@ enum ConsentFormTabs {
 
 export default function ConsentFormDataAdmin(props) {
   const category = "consent_form";
+  const consentFormDataId = category;
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
@@ -52,7 +55,6 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
   const [consentFormDoc, setConsentFormDoc] = useState(null);
 
-  const consentFormDataId = "consent_form";
 
   const handleFileSelect = evt => {
     const file = evt.target.files[0];
@@ -181,7 +183,7 @@ export default function ConsentFormDataAdmin(props) {
       <Container>
         <Row>
           <Col xs={12}>
-            <span className="p-float-label">
+            <FloatLabel>
               <InputText
                 id="consent_form-name"
                 itemID="consent_form-name"
@@ -189,28 +191,42 @@ export default function ConsentFormDataAdmin(props) {
                 onChange={event => setConsentFormName(event.target.value)}
               />
               <label htmlFor="consent_form-name">{t("name")}</label>
-            </span>
+            </FloatLabel>
           </Col>
           <Col xs={12} sm={5}>
-            <span className="p-float-label">
-              <Calendar
-                id="consent_form_dates"
-                inputId="consent_form_dates"
-                name="consent_form_dates"
-                value={[consentFormStartDate, consentFormEndDate]}
-                onChange={event => {
-                  const changeTo = event.value;
-                  if (null != changeTo && changeTo.length > 1) {
-                    setConsentFormStartDate(changeTo[0]);
-                    setConsentFormEndDate(changeTo[1]);
-                  }
-                }}
-                selectionMode="range"
-                showOnFocus={false}
-                showIcon={true}
-              />
-              <label htmlFor="consent_form_dates">{t("study_dates")}</label>
-            </span>
+      <FloatLabel>
+        <Calendar
+          id="consent_form_start_date"
+          inputId="consent_form_start_date"
+          value={utcAdjustDate(consentFormStartDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            setConsentFormStartDate(changeTo);
+          }
+          }
+          showOnFocus={false}
+          placeholder={t("start_date_placeholder")}
+          showIcon={true}
+        />
+        <label htmlFor="consent_form_start_date">{t('start_date_lbl')}</label>
+      </FloatLabel>
+      {t('date_to_lbl')}
+      <FloatLabel>
+        <Calendar
+          id="consent_form_end_date"
+          inputId="consent_form_end_date"
+          value={utcAdjustEndDate(consentFormEndDate)}
+          onChange={event => {
+            const changeTo = event.value;
+            setConsentFormEndDate(changeTo);
+          }
+          }
+          showOnFocus={false}
+          placeholder={t("end_date_placeholder")}
+          showIcon={true}
+        />
+        <label htmlFor="consent_form_end_date">{t('end_date_lbl')}</label>
+      </FloatLabel>
           </Col>
           <Col xs={12} sm={2}>
             <InputSwitch

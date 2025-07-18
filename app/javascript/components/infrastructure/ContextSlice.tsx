@@ -207,7 +207,6 @@ const initialState: ContextRootState = {
     languages: {},
     cip_codes: {},
     genders: {},
-    themes: {},
     timezones: {},
     schools: {}
   },
@@ -328,18 +327,26 @@ export const emailSignIn = createAsyncThunk(
           password: params.password
         })
         .then(resp => {
-          //TODO resp contains the full user info
-
-          dispatch(
-            addMessage(t("sessions.signed_in"), new Date(), Priorities.INFO)
-          );
-          CONFIG.retrieveResources(dispatch, getState).then(response => {
-            dispatch(fetchProfile());
-          });
+          if( !resp.data.error ) {
+            //TODO resp contains the full user info
+            dispatch(
+              addMessage(t("sessions.signed_in"), new Date(), Priorities.INFO)
+            );
+            CONFIG.retrieveResources(dispatch, getState).then(response => {
+              dispatch(fetchProfile());
+            });
+          } else {
+            dispatch(addMessage(t(resp.data.message), new Date(), Priorities.ERROR ));
+            dispatch(setLoginFailed());
+          }
         })
         .catch(error => {
           //Handle a failed login properly
-          console.log("error", error);
+          if( 401 !== error.response.status){
+            console.log("error", error);
+          }
+          dispatch(setLoginFailed());
+          dispatch(addMessage(t('failure.email_sign_in'), new Date(), Priorities.ERROR ));
         });
     }
   }

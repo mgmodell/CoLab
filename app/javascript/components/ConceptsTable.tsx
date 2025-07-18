@@ -100,7 +100,8 @@ export default function ConceptsTable() {
           name: name
         }
       })
-      .then(data => {
+      .then(resp => {
+        const data = resp.data;
         const tmpConcepts = Object.assign([], conceptsRaw);
         const updatedObject = tmpConcepts.find(element => element.id == id);
         updatedObject.name = data.name;
@@ -138,7 +139,7 @@ export default function ConceptsTable() {
         onRowClick={drillDown}
         header={
           <StandardListToolbar
-            itemType={"invitation"}
+            itemType={"concept"}
             filtering={{
               filterValue: filterText,
               setFilterFunc: setFilterText
@@ -196,6 +197,7 @@ export default function ConceptsTable() {
           <>
             <Button onClick={() => setEditing(false)}>{t("cancel")}</Button>
             <Button
+              id="update_concept"
               onClick={() => updateConcept(conceptId, conceptName)}
               disabled={!dirty}
             >
@@ -207,6 +209,7 @@ export default function ConceptsTable() {
         <WorkingIndicator identifier="saving_concept" />
         {t("concept_name")}
         <InputText
+          id="conceptName"
           value={conceptName}
           onChange={event => setName(event.target.value)}
         />

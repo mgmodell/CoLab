@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -84,11 +84,18 @@ export default function HomeShell(props: Props) {
               value.title = value.group_name + " for (" + value.name + ")";
               break;
             case "bingo_game":
-              value.title = value.name;
+              if( value.instructor_task === true ){
+                value.title = t( 'candidate_lists.review', {task: value.name } );
+              }
+              else if( value.status < 0 ){
+                value.title = t( 'candidate_lists.play', {task: value.name } );
+              }
+              else{
+                value.title = t( 'candidate_lists.enter', {task: value.name } );
+              }
               break;
+            case "submission":
             case "assignment":
-              value.title = value.name;
-              break;
             case "experience":
               value.title = value.name;
               break;

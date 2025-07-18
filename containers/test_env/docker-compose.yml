@@ -1,21 +1,22 @@
 services:
   app:
-    image: colab_tester
+    image: localhost/colab_tester
     hostname: test-server-${HOSTNAME}
     environment:
       - PARENT=${HOSTNAME}
     volumes:
       - src:/home/colab/src/app
-      - asdf-installs:/home/colab/.asdf/installs
-      - asdf-shims:/home/colab/.asdf/shims
+      # - testmise:/home/colab/.local
     depends_on:
       - db
-      - browser
+      - selenium
   db:
     image: colab_db
     tmpfs:
       - /var/lib/mysql
-  browser:
+    ports:
+      - 31337:3306
+  selenium:
     image: colab_browser
     # The following inspired by:
     # https://medium.com/the-curve-tech-blog/dealing-with-cryptic-selenium-webdriver-error-invalidsessioniderror-errors-9c15abc68fdf
@@ -27,6 +28,5 @@ services:
 
 volumes:
   src:
-  asdf-installs:
-  asdf-shims:
   mariadb-data:
+  # testmise:

@@ -10,6 +10,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*
 **/*.log
+**/*.bak
 !/log/.keep
 /tmp
 /public/assets/*
@@ -27,6 +28,7 @@ yarn-error.log*
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+.yarn/install-state.gz
 test_results.html
 coverage
 cucumber

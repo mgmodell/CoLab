@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit( :sign_up, keys:
               %i[first_name last_name email password language_id
                  current_password timezone gender_id cip_code_id
-                 welcomed theme_id school_id date_of_birth
+                 welcomed theme school_id date_of_birth
                  started_school primary_language_id home_state_id
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit( :account_update, keys:
               %i[first_name last_name email password language_id
                  current_password timezone gender_id cip_code_id
-                 welcomed theme_id school_id researcher date_of_birth
+                 welcomed theme school_id researcher date_of_birth
                  started_school primary_language_id home_state_id
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive

@@ -14,26 +14,19 @@ default: &default
 
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false
-  ensure_consistent_versioning: true
-
 
 development:
   <<: *default
-  # This is false since we're running `bin/shakapacker -w` in Procfile.dev-setic
+  # This is false since we're running `bin/shakapacker -w` in Procfile.dev-static
   compile: false
-  webpack_loader: 'swc'
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
     server: 'https'
     host: 0.0.0.0
     port: 3035
-    public: localhost:3035
     # Hot Module Replacement updates modules while the application is running without a full reload
     hmr: true
-    hot: true
-    watchOptions:
-      poll: true
     client:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
@@ -55,15 +48,6 @@ development:
 test:
   <<: *default
   compile: true
-  extract_css: true
-  dev_server:
-    host: 0.0.0.0
-    port: 3010
-    allowed_hosts: 'localhost'
-    watchOptions:
-      poll: 1000
-    hmr: false
-
 
   # Compile test packs to a separate directory
   public_output_path: packs-test
@@ -73,7 +57,6 @@ production:
 
   # Production depends on precompilation of packs prior to booting for performance.
   compile: false
-  extract_css: true
 
   # Cache manifest.json for performance
   cache_manifest: true

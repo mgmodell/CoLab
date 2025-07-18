@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +10,6 @@ import { signOut } from "../infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
-import DiversityCheck from "../DiversityCheck";
 import Logo from "../Logo";
 
 type Props = {
@@ -25,7 +24,7 @@ export default function MainMenu(props: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [t, i18n] = useTranslation();
+  const [t] = useTranslation();
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
 
@@ -89,7 +88,15 @@ export default function MainMenu(props: Props) {
         icon: "pi pi-fw pi-user",
         id: "profile-menu-item",
         command: () => navTo("/profile")
-      });
+      },
+        {
+          label: t("calc_diversity_hdr"),
+          icon: "pi pi-fw pi-calculator",
+          id: "diversity-menu-item",
+          command: () => {
+            navTo("/perspective");
+          },
+        });
       if (user.is_instructor || user.is_admin) {
         let adminItems = [
           {
@@ -98,13 +105,6 @@ export default function MainMenu(props: Props) {
             id: "courses-menu-item",
             visible: adminOpen,
             command: () => navTo("/admin/courses")
-          },
-          {
-            label: t("reporting"),
-            icon: "pi pi-fw pi-chart-bar",
-            id: "reporting-menu-item",
-            visible: adminOpen,
-            command: () => navTo("/admin/reporting")
           },
           {
             label: t("rubrics_edit"),
@@ -163,13 +163,16 @@ export default function MainMenu(props: Props) {
         separator: true
       },
       {
-        template: <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
-      },
-      {
         label: t("titles.demonstration"),
         icon: "pi pi-fw pi-play",
         id: "demo-menu-item",
         command: () => navTo("/demo")
+      },
+      {
+        label: t("reporting"),
+        icon: "pi pi-fw pi-chart-bar",
+        id: "reporting-menu-item",
+        command: () => navTo("/reporting")
       },
       {
         label: t("support_menu"),

@@ -3,6 +3,7 @@
 class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
+  include Demoable
 
   def index; end
 
@@ -70,6 +71,16 @@ class HomeController < ApplicationController
       conceptsUrl: bingo_concepts_path( id: '' ),
       worksheetUrl: worksheet_for_bingo_path( bingo_game_id: '' )
     }
+    ep_hash[:graphing] = {
+      dataUrl: graphing_data_path,
+      subjectsUrl: graphing_subjects_path,
+      projectsUrl: graphing_projects_path
+    }
+      ep_hash[:assignment] = {
+        statusUrl: assignment_status_path( id: '' ),
+        submissionUrl: submission_path( id: '' ),
+        submissionWithdrawalUrl: submission_withdraw_path( id: '' )
+      }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
@@ -149,11 +160,6 @@ class HomeController < ApplicationController
           baseUrl: consent_forms_path,
           consentFormCreateUrl: new_consent_form_path
         }
-        ep_hash[:graphing] = {
-          dataUrl: graphing_data_path,
-          subjectsUrl: graphing_subjects_path,
-          projectsUrl: graphing_projects_path
-        }
       end
     end
 
@@ -219,13 +225,6 @@ class HomeController < ApplicationController
           code: gender.code
         }
       end,
-      themes: Theme.all.collect do | theme |
-        {
-          id: theme.id,
-          code: theme.code,
-          name: theme.name
-        }
-      end,
       timezones: HomeController::TIMEZONES,
       timezone_lookup: HomeController::TIMEZONE_HASH,
       oauth_ids: {
@@ -254,7 +253,7 @@ class HomeController < ApplicationController
     profile_hash = {
       user: current_user.as_json(
         only: %i[ id first_name last_name gender_id country
-                  timezone theme_id school_id language_id
+                  timezone theme school_id language_id
                   date_of_birth home_state_id cip_code_id
                   primary_language_id started_school researcher
                   impairment_visual impairment_auditory
@@ -339,7 +338,7 @@ class HomeController < ApplicationController
           name: @current_user.name( false ),
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
-          theme: @current_user.theme.code,
+          theme: @current_user.theme,
           welcomed: @current_user.welcomed,
           timezone: tz,
           language: @current_user.language.code,
@@ -388,7 +387,7 @@ class HomeController < ApplicationController
                      end,
         other: case activity.type
                when 'Terms List'
-                 candidates_list = activity.candidate_list_for_user( current_user ).status
+                 activity.candidate_list_for_user( current_user ).status
                when 'Project'
                  activity.get_performance( current_user )
                when 'Group Experience'
@@ -472,7 +471,7 @@ class HomeController < ApplicationController
     e.name = t( :demo_group )
     e.task_name_post = "<br>(#{t :project}: #{t( :demo_project )})"
     e.type = :assessment
-    e.status = t :not_started
+    e.status = 0
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 1.day.ago
@@ -484,11 +483,11 @@ class HomeController < ApplicationController
     @events = [e]
     e = Event_.new
     e.id = -11
-    e.name = t( 'candidate_lists.enter', task: t( 'candidate_lists.demo_topic' ) )
+    e.name = t( 'candidate_lists.demo_topic' )
     e.task_link = terms_demo_entry_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '50%'
+    e.status = 50
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 1.week.ago
@@ -500,12 +499,11 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -77
-    e.name = t( 'candidate_lists.review', task:
-      t( 'candidate_lists.demo_review_topic' ) )
+    e.name = t( 'candidate_lists.demo_review_topic' )
     e.task_link = bingo_demo_review_path( -1 )
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '0'
+    e.status = 0
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 3.weeks.ago
@@ -518,12 +516,11 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.id = -88
-    e.name = t( 'candidate_lists.play', task:
-      t( 'candidate_lists.demo_bingo_topic' ) )
+    e.name = t( 'candidate_lists.demo_bingo_topic' )
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = :bingo_game
-    e.status = '42 concepts'
+    e.status = -1
     e.group_name = t( :demo_group )
     e.course_name = t( :demo_course_name )
     e.start_date = 2.weeks.ago
@@ -531,6 +528,40 @@ class HomeController < ApplicationController
     e.next_date = e.close_date
     e.link = "bingo/candidate_results/#{e.id}"
     e.instructor_task = false
+    @events << e
+
+    e = Event_.new
+    assignment = get_demo_student_assignment
+    e.id = assignment.id
+    e.name = assignment.name
+    e.task_link = bingo_demo_play_path
+    e.task_name_post = ''
+    e.type = :assignment
+    e.status = 3
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
+    e.start_date = assignment.start_date
+    e.close_date = assignment.end_date
+    e.next_date = e.close_date
+    e.link = "assignment/#{e.id}"
+    e.instructor_task = false
+    @events << e
+
+    e = Event_.new
+    assignment = get_demo_instructor_assignment
+    e.id = assignment.id
+    e.name = assignment.name
+    e.task_link = bingo_demo_play_path
+    e.task_name_post = ''
+    e.type = :submission
+    e.status = 3
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
+    e.start_date = assignment.start_date
+    e.close_date = assignment.end_date
+    e.next_date = e.close_date
+    e.link = "assignment/critiques/#{e.id}"
+    e.instructor_task = true
     @events << e
 
     # Let's output this to JSON
@@ -549,9 +580,9 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(
+    params.require( :user ).permit(
       :first_name, :last_name,
-      :timezone, :language_id, :theme_id, :researcher,
+      :timezone, :language_id, :theme, :researcher,
       :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
       :school_id, :cip_code_id, :started_school,
       :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other

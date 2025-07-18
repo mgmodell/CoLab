@@ -14,7 +14,7 @@ import {
   setClean
 } from "../infrastructure/StatusSlice";
 import { refreshSchools } from "../infrastructure/ContextSlice";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 //import i18n from './i18n';
 import { Panel } from "primereact/panel";
@@ -22,6 +22,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
@@ -148,7 +149,7 @@ export default function SchoolDataAdmin(props) {
 
   const detailsComponent = endpointStatus ? (
     <Panel header={t("edit.title")}>
-      <div className="p-float-label">
+      <FloatLabel>
         <InputText
           id="school-name"
           itemID="school-name"
@@ -156,9 +157,9 @@ export default function SchoolDataAdmin(props) {
           onChange={event => setSchoolName(event.target.value)}
         />
         <label htmlFor="school-name">{t("index.name_lbl")}</label>
-      </div>
+      </FloatLabel>
       &nbsp;
-      <span className="p-float-label">
+      <FloatLabel>
         <Dropdown
           id="school_timezone"
           inputId="school_timezone"
@@ -172,9 +173,9 @@ export default function SchoolDataAdmin(props) {
           placeholder={t("time_zone")}
         />
         <label htmlFor="school_timezone">{t("time_zone")}</label>
-      </span>
+      </FloatLabel>
       <br />
-      <div className="p-float-label">
+      <FloatLabel>
         <InputTextarea
           id="school-description"
           placeholder="Enter a description of the school"
@@ -185,7 +186,7 @@ export default function SchoolDataAdmin(props) {
           onChange={event => setSchoolDescription(event.target.value)}
         />
         <label htmlFor="school-description">{t("index.description_lbl")}</label>
-      </div>
+      </FloatLabel>
       <br />
       {saveButton}
     </Panel>

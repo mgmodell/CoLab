@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
@@ -49,6 +49,16 @@ export interface IBingoBoard {
   bingo_cells: IBingoCell[];
   iteration: number;
   bingo_game: IBingoGame;
+}
+
+export interface IBingoCandidate {
+  id: number;
+  concept: string;
+  definition: string;
+  term: string;
+  feedback: string;
+  feedback_id: number;
+  credit: number;
 }
 
 export default function BingoBuilder(props: Props) {

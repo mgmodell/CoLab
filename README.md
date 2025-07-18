@@ -21,12 +21,11 @@ This system can be set up for development and testing on any modern
 desktop OS. It requires [Docker](https://www.docker.com/)
 [git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
 support (native on MacOSX and Linux but may require additional
-download/installation on Windows).
+download/installation on Windows). The current configuration uses [devContainers](https://containers.dev/) and I am using [VSCode](https://code.visualstudio.com/) for development. I recommend it. The instructions below assume the docker and vsCode are already installed.
+If you're installing Ubuntu, be sure to use the apt package for Docker rather than the snap version. Uninstall the snap version if it's present.
 
 ### Setting up ###
-1. On Windows, you'll first want to install [Ubuntu on WSL2](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview) (version 20.04 LTS or later should work just fine).
-1. If you're installing Ubuntu, be sure to use the apt package for Docker rather than the snap version. Uninstall the snap version if it's present.
-1. If you plan to run tests, you must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
+1. You must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
     1. mariadb-client
     1. mysql-client
 1. (**Recommended**) Set up ssh-keys on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
@@ -35,22 +34,19 @@ download/installation on Windows).
 1. Run `git clone https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
 1. Navigate to the colab directory
 1. Run `./buildContainers.sh`
-1. Run `./dev_serv.sh -j` to load up anonymized testing data.
+1. Run `./db_load.sh -j`
+1. Open [vsCode](https://code.visualstudio.com) and do the rest from there.
 1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
 up the testing user with your email and a password of 'password' for
 testing purposes.
+1. Run `./dev_serv.sh -s` to start up the server.
+  1. Open http://localhost:3000 or use a [VNC application](https://en.wikipedia.org/wiki/VNC) to open [vnc://localhost:5909](vnc://localhost:5909)
 
-The following two scripts are used to launch the development/testing
-server for manual testing and to launch the automated tests
-(respectively). Running either without any parameters will give you a
-full guide::
+The `dev_serve.sh` script is used to interact with the development/testing environment and it is recommended that you run each to see what options are available:
 
-* `dev_serv.sh` - Get started by using the `-j` option to load a basic
-  test dump and the `-s` option to start the server on
-  [http://localhost:3000](http://localhost:3000).
-* `run_tests.sh` - Start with the `-c` option to make sure the database
-  exists, then the `-r` option will kick off the process (*warning it
-  runs for nearly a day*).
+If you want to run the full suite of tests, you will use `run_tests.sh` and it:
+* Should be run from a terminal outside vsCode.
+* Offers a listing of its features if run with no options.
 
 # Contribution instructions #
 1. Review the issues
@@ -66,8 +62,6 @@ full guide::
 1. Open [the test server](http://localhost:3000)
 1. Play with it to understand the problem
 1. Start writing tests
-1. Run your tests (this may not work on all systems)
-    * `rake cucumber:rerun`
 1. Check in your code
     * `git add <file name>`
     * ``git commit -m `<meaningful message>` ``

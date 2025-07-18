@@ -8,6 +8,7 @@ en:
       feedback: Feedback
       concept: Concept
       credit: Credit
+      average_score: Average score
     create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
@@ -15,6 +16,9 @@ en:
     game_dates: Game availability dates
     open_date: Open date
     close_date: Game date
+    start_date_lbl: Start date
+    end_date_lbl: End date
+    date_to_lbl: until
     lead_time: Days for instructor review
     review_candidates:
       title: Candidate Terms for Review
@@ -60,6 +64,8 @@ en:
     #Term data
     topic: Topic
     description: Description
+    score: Score
+    file_select: Score Sheet Image
     definition: Definition
     feedback: Feedback
     concept: Concept

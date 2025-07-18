@@ -9,12 +9,10 @@ services:
       - 3035:3035
     depends_on:
       - db
-      - redis
-      - moodle
     volumes:
-      - ../../:/home/colab/src/app
-      - asdf-installs:/home/colab/.asdf/installs
-      - asdf-shims:/home/colab/.asdf/shims
+      - ../../:/home/colab/src/app:cached
+      - "${HOME}/.ssh:/root/.ssh-localhost:ro"
+    command: bash -c "sleep infinity"
   db:
     image: colab_db
     restart: unless-stopped
@@ -23,52 +21,63 @@ services:
     volumes:
       - devdata:/var/lib/mysql
 
-  redis:
-    image: redis:alpine
+  # Docs at https://github.com/MRColorR/vnc-browser
+  browser:
+    container_name: vnc-browser
+    image: mrcolorrain/vnc-browser:debian
+    ports:
+      - 5909:5900
+      - 6080:6080
+    environment:
+      VNC_PASSWORD: "password"
+      AUTO_START_XTERM: "false"
     restart: unless-stopped
+
+  selenium:
+    image: colab_browser
+    shm_size: '256mb'
+    ports:
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
 
   moodle:
     image: colab_moodle
     depends_on:
       - db
-      - redis
     environment:
-      - LANG=en_US.UTF-8
+      - MOODLE_LANG=en
       - LANGUAGE=en_US:en
-      - SITE_URL=http://localhost
-      - DB_TYPE=mariadb
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_NAME=moodle
-      - DB_USER=moodle
-      - DB_PASS=moodle
-      - DB_PREFIX=mdl_
-      - REDIS_HOST=redis
-      - REVERSEPROXY=false
-      - SSLPROXY=false
+      - MOODLE_DATABASE_TYPE=mariadb
+      - MOODLE_DATABASE_HOST=db
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_NAME=moodle
+      - MOODLE_DATABASE_USER=moodle
+      - MOODLE_DATABASE_PASSWORD=moodle
+
+      - MOODLE_REVERSEPROXY=false
+      - MOODLE_SSLPROXY=false
       - MOODLE_EMAIL=user@example.com
-      - MOODLE_LANGUAGE=en
-      - MOODLE_SITENAME=CoLab-Testing
+      - MOODLE_SITE_NAME=CoLab-Testing
       - MOODLE_USERNAME=moodleuser
       - MOODLE_PASSWORD=CHANGEME
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=micah.modell+moodle@gmail.com
-      - SMTP_PROTOCOL=tls
+
+      - MOODLE_SMTP_HOST=smtp.gmail.com
+      - MOODLE_SMTP_PORT_NUMBER=587
+      - MOODLE_SMTP_USER=micah.modell+moodle@gmail.com
+      - MOODLE_SMTP_PASSWORD=CHANGEME
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
     ports:
-      - 80:8080
+      - 8080:8080
     volumes:
       - moodledata:/var/www/moodledata
       - moodlehtml:/var/www/html
 
 
 volumes:
-  src:
-  asdf-installs:
-  asdf-shims:
   mariadb-data:
+  ffconfig:
   devdata:
   moodledata:
   moodlehtml:

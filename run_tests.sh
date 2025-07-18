@@ -70,32 +70,32 @@ done
 
 pushd containers/test_env/
 if [ "$RUN_TERM" = true ]; then
-  docker compose run --rm --entrypoint='' app /bin/bash
+  podman compose run --rm --entrypoint='/bin/bash -l' app
 
 elif [ "$SHOW_FAILS" = true ]; then
   echo "Show previous run failures"
-  docker compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
+  podman compose run --rm --entrypoint='/bin/cat /home/colab/src/app/rerun.txt' app
   echo -e "\nEnd failure listing\n"
 
 elif [ "$DROP_SUPPORT" = true ]; then
-  docker compose down 
+  podman compose down 
 
 else
   if [ "$RUN" = true ]; then
-    DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_test_ | wc -l`
+    DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP | grep colab_test_ | wc -l`
     if [ $(($DB_COUNT)) = 0 ]; then
       echo "Creating the DB"
-        docker compose run --rm app -c
+        podman compose run --rm app -c
       echo "Created the DB"
     fi
-    NUM_TESTERS=`docker ps | grep colab_testers | wc -l`
+    NUM_TESTERS=`podman ps | grep colab_testers | wc -l`
     if [ $NUM_TESTERS -lt 1 ]; then 
-      docker compose run --rm -d app $@
+      podman compose run --rm -d app $@
     fi
   fi
   if [ "$SHOW_OUTPUT" = true ]; then
-      OUTPUT_HASH=`docker ps | grep colab_tester | awk '{print $1;}'`
-      docker logs -f $OUTPUT_HASH
+      OUTPUT_HASH=`podman ps | grep colab_tester | awk '{print $1;}'`
+      podman logs -f $OUTPUT_HASH
   fi
 fi
 popd

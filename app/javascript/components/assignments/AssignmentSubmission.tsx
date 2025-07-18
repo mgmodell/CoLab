@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DateTime, Settings } from "luxon";
 
 //Redux store stuff
@@ -18,8 +18,10 @@ import { InputText } from "primereact/inputtext";
 import SubmissionList from "./SubmissionList";
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { Col, Container, Row } from "react-grid-system";
+import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {
+  rootPath?: string;
   assignment: IAssignment;
   reloadCallback: () => void;
 };
@@ -62,7 +64,10 @@ export default function AssignmentSubmission(props: Props) {
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
-    const url = `${endpoints.submissionUrl}${submissionId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.submissionUrl}${submissionId}.json`
+      : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;
+    dispatch(startTask("loading"));
     axios
       .get(url, {})
       .then(response => {
@@ -96,6 +101,9 @@ export default function AssignmentSubmission(props: Props) {
       })
       .then(response => {
         setDirty(false);
+      })
+      .finally(() => {
+        dispatch(endTask("loading"));
       });
   };
 
@@ -123,7 +131,7 @@ export default function AssignmentSubmission(props: Props) {
         <h6>{t("submissions.sub_link_lbl")}</h6>
       </Col>
       <Col xs={3}>
-        <span className="p-float-label">
+        <FloatLabel>
           <InputText
             value={submissionLink}
             id="sub_link"
@@ -134,19 +142,21 @@ export default function AssignmentSubmission(props: Props) {
             }}
           />
           <label htmlFor="sub_link">{t("submissions.sub_link_lbl")}</label>
-        </span>
+        </FloatLabel>
       </Col>
     </Row>
   ) : null;
 
   const saveSubmission = (submitIt: boolean) => {
-    dispatch(startTask("saving"));
-    const url = `${endpoints.submissionUrl}${
-      // If this is brand new, we have no ID and need a new one
-      // If this has already been submitted, then we must create a new submission
-      submissionId === null || submittedDate !== null ? "new" : submissionId
-    }.json`;
+    // If this is brand new, we have no ID and need a new one
+    // If this has already been submitted, then we must create a new submission
+    const id = submissionId === null ? "new" : submissionId;
+    const url = props.rootPath === undefined
+      ? `${endpoints.submissionUrl}${id}.json`
+      : `/${props.rootPath}${endpoints.submissionUrl}${id}.json`;
+
     const method = null === submissionId ? "PUT" : "PATCH";
+    dispatch(startTask("saving"));
 
     axios({
       url: url,
@@ -193,7 +203,9 @@ export default function AssignmentSubmission(props: Props) {
   const withdrawSubmission = () => {
     dispatch(startTask("withdrawing"));
 
-    const url = `${endpoints.submissionWithdrawalUrl}${submissionId}.json`;
+    const url = props.rootPath === undefined
+      ? `${endpoints.submissionWithdrawalUrl}${submissionId}.json`
+      : `/${props.rootPath}${endpoints.submissionWithdrawalUrl}${submissionId}.json`;
     axios
       .get(url)
       .then(response => {
