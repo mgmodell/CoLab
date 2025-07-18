@@ -20,6 +20,7 @@ import parse from "html-react-parser";
 import { Panel } from "primereact/panel";
 import { TabView, TabPanel } from "primereact/tabview";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
+import PlayBingo from "./PlayBingo";
 
 type Props = {
   rootPath?: string;
@@ -311,6 +312,9 @@ export default function BingoBuilder(props: Props) {
       </div>
       <hr />
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
+        <TabPanel header={t("tabs.builder.play_lbl")}>
+          <PlayBingo rootPath={props.rootPath} />
+        </TabPanel>
         <TabPanel header={t("tabs.builder.builder_lbl")}>
           <Panel>
             <br />

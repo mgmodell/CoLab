@@ -108,7 +108,8 @@ ko:
   course_invite_body: >
     (1){다음 수업에 참여하도록 초대되었습니다:};
     (2-inf){다음 {{count}}개의 수업에 참여하도록 초대되었습니다:}
-  course_invite_close: %{site_link}에 로그인하여 이 등록을 수락하거나 거부하세요.
+  course_invite_close: >
+    %{site_link}에 로그인하여 이 등록을 수락하거나 거부하세요.
   reminder_body: >
     이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다.
   reminder_body: >
