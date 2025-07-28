@@ -122,4 +122,4 @@ end
 
 
 
-gem "foreman", "~> 0.88.1"
+gem "foreman"
