@@ -7,8 +7,8 @@
 	"service": "app",
     "runServices": [
         "db",
-        //"redis",
-		//"browser",
+        "redis",
+		"browser",
 		//"moodle",
 		"selenium"
 	],

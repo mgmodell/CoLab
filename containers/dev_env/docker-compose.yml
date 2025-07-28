@@ -21,6 +21,11 @@ services:
     volumes:
       - devdata:/var/lib/mysql
 
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
   # Docs at https://github.com/MRColorR/vnc-browser
   browser:
     container_name: vnc-browser
