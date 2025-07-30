@@ -9,7 +9,7 @@
         "db",
         "redis",
 		"browser",
-		//"moodle",
+		"moodle",
 		"selenium"
 	],
 	"workspaceFolder": "/home/colab/src/app",

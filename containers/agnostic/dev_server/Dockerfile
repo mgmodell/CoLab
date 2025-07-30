@@ -12,6 +12,7 @@ RUN apt-get update && apt-get upgrade -y && \
   autoconf \
   gettext \
   bash \
+  mysql-client \
   libmysqlclient-dev \
   libyaml-dev \
   libsecret-1-dev \
