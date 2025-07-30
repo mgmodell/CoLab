@@ -51,17 +51,14 @@ while getopts "jl:htmnd" opt; do
       LOAD_FILE="../../db/dev_db.sql"
       ;;
     d)
-      popd
       mysqldump colab_dev -u test -ptest --port=31337 > db/dev_db.sql
       exit
       ;;
     t)
-      popd
       mysqldump colab_test_ -u test -ptest --port=31337 > db/test_db.sql
       exit
       ;;
     m)
-      popd
       mysqldump moodle -u moodle -pmoodle --port=31337 > db/moodle_db.sql
       exit
       ;;
