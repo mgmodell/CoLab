@@ -61,9 +61,9 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
   case $opt in
     q)
       if [[ $OPTARG == "moodle" ]]; then
-        mysql moodle -u moodle -pmoodle --protocol=TCP --port=31337
+        mysql moodle --host db -u moodle -pmoodle --protocol=TCP --port=3306
       else
-        mysql colab_dev -u test -ptest --protocol=TCP --port=31337
+        mysql colab_dev --host db -u test -ptest --protocol=TCP --port=3306
       fi
       exit
       ;;

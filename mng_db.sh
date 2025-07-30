@@ -7,7 +7,8 @@ print_help ( ) {
   echo " -j             Load latest dev db dump"
   echo " -d             Dump the dev db"
   echo " -t             Dump the test db"
-  echo " -n             Load the dev moodle db"
+  echo " -n             Load the blank moodle db"
+  echo " -b             Load latest moodle db dump"
   echo " -m             Dump the dev moodle db"
   echo ""
   echo " -h             Show this help and terminate"
@@ -24,7 +25,6 @@ if [ "$#" -lt 1 ]; then
 fi
 
 #Begin
-pushd containers/dev_env
 
 # Set up run context
 COLAB_DB=db
@@ -65,11 +65,15 @@ while getopts "jl:htmnd" opt; do
       mysqldump moodle -u moodle -pmoodle --port=31337 > db/moodle_db.sql
       exit
       ;;
-    t)
+    n)
+      LOAD=true
+      MOODLE=true
+      LOAD_FILE="db/moodle_blank.sql"
+      ;;
+    b)
       LOAD=true
       MOODLE=true
       LOAD_FILE="db/moodle_db.sql"
-      exit
       ;;
     h|\?) #Invalid option
       SHOW_HELP=true
@@ -96,7 +100,7 @@ fi
 # Load a sql file
 if [ "$LOAD" = true ]; then
   if test -f "$LOAD_FILE"; then
-    echo "Loading"
+    echo "Loading: $LOAD_FILE"
     if [ "$MOODLE" = false ]; then
         mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
     else
@@ -107,10 +111,8 @@ if [ "$LOAD" = true ]; then
     echo "File does not exist: $LOAD_FILE"
     ls ../../
     echo "Exiting"
-    popd
     exit
   fi
 fi
 
-popd
 
