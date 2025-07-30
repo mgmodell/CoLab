@@ -44,11 +44,11 @@ while getopts "jl:htmnd" opt; do
   case $opt in
     l)
       LOAD=true
-      LOAD_FILE="../../$OPTARG"
+      LOAD_FILE="$OPTARG"
       ;;
     j)
       LOAD=true
-      LOAD_FILE="../../db/dev_db.sql"
+      LOAD_FILE="db/dev_db.sql"
       ;;
     d)
       mysqldump colab_dev -u test -ptest --port=31337 > db/dev_db.sql
@@ -106,7 +106,6 @@ if [ "$LOAD" = true ]; then
     echo "Loaded"
   else
     echo "File does not exist: $LOAD_FILE"
-    ls ../../
     echo "Exiting"
     exit
   fi
