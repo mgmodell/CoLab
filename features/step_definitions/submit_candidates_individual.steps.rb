@@ -25,6 +25,7 @@ end
 When( /^the user clicks the link to the candidate list$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
+  byebug unless has_xpath? ("//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]")
   find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 end
 

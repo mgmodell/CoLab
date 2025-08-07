@@ -1,6 +1,6 @@
 [tools]
 node = "24.4.1"
-podman = "5.5.2"
+podman = "5.5.1"
 ruby = "3.4.5"
 usage = "2.2.2"
 yarn = "1.22.22"
