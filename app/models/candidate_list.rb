@@ -25,7 +25,7 @@ class CandidateList < ApplicationRecord
   end
 
   def percent_completed
-    100 * candidates.completed.count / expected_count
+    expected_count.zero? ? 0 : 100 * candidates.completed.count / expected_count
   end
 
   def performance
