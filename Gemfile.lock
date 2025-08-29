@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.5)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1150.0)
-    aws-sdk-core (3.230.0)
+    aws-partitions (1.1152.0)
+    aws-sdk-core (3.232.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -118,11 +118,11 @@ GEM
       bigdecimal
       jmespath (~> 1, >= 1.6.1)
       logger
-    aws-sdk-kms (1.110.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
+    aws-sdk-kms (1.112.0)
+      aws-sdk-core (~> 3, >= 3.231.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.197.0)
-      aws-sdk-core (~> 3, >= 3.228.0)
+    aws-sdk-s3 (1.198.0)
+      aws-sdk-core (~> 3, >= 3.231.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
@@ -313,6 +313,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.3)
+    memoist (0.16.2)
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
@@ -324,7 +325,7 @@ GEM
     mysql2 (0.5.6)
     net-http (0.6.0)
       uri
-    net-imap (0.5.9)
+    net-imap (0.5.10)
       date
       net-protocol
     net-pop (0.1.2)
@@ -473,7 +474,7 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
-    react_on_rails (14.2.1)
+    react_on_rails (15.0.0)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -494,7 +495,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.1)
+    rexml (3.4.2)
     rqrcode (3.1.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
@@ -512,7 +513,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.5)
-    rubocop (1.80.0)
+    rubocop (1.80.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -582,8 +583,9 @@ GEM
     spring (4.4.0)
     stopwords-filter2 (0.1.0)
     stringio (3.1.7)
-    sys-uname (1.3.1)
+    sys-uname (1.4.0)
       ffi (~> 1.1)
+      memoist (~> 0.16.2)
     thor (1.4.0)
     timeout (0.4.3)
     traceroute (0.8.1)
@@ -675,7 +677,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rails_best_practices
-  react_on_rails (= 14.2.1)
+  react_on_rails (= 15.0.0)
   reek
   report_builder
   rspec
