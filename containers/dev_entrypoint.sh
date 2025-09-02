@@ -9,6 +9,7 @@ echo "Setting the current working directory"
 
 cd $dir
 echo "Installing platforms"
+mise self-update -y
 mise install
 echo "Installing gems"
 bundle install --quiet
