@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.4.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.2.1'
+gem 'rails', '~> 8.0.3'
 
 gem 'puma', '~> 7.0.2'
 # Use mysql as the database for Active Record
@@ -59,7 +59,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '15.0.0'
+gem 'react_on_rails', '16.1'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'

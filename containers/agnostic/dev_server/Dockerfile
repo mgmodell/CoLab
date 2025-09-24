@@ -42,12 +42,12 @@ RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
   echo "export DRIVER=docker" >> ~/.bashrc
 
-USER colab
+# USER colab
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 #Set up the app materials
-RUN sed -i 's/(git)/(\ngit\nmise\nbundler\nrails\nyarn\nrake\n)/g' ~/.zshrc
+RUN sed -i 's/(git)/(\ngit\n\tmise\n\tbundler\n\trails\n\tyarn\n\trake\n\t)/g' ~/.zshrc
 RUN mkdir -p /home/colab/src/app
 COPY containers/dev_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app

@@ -11,7 +11,6 @@ services:
       - db
     volumes:
       - ../../:/home/colab/src/app:cached
-      - "${HOME}/.ssh:/root/.ssh-localhost:ro"
     command: bash -c "sleep infinity"
   db:
     image: colab_db
