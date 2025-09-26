@@ -39,7 +39,6 @@ cucumber
 /node_modules
 /yarn-error.log
 yarn-debug.log*
-.yarn-integrity
 
 /config/master.key
 
@@ -48,3 +47,11 @@ yarn-debug.log*
 
 rails_best_practices_output.html
 reek.html
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
