@@ -11,6 +11,7 @@ services:
       - db
     volumes:
       - ../../:/home/colab/src/app:cached
+      - devmise:/home/colab/.local/share/mise
     command: bash -c "sleep infinity"
   db:
     image: colab_db
@@ -84,6 +85,7 @@ services:
 
 
 volumes:
+  devmise:
   mariadb-data:
   ffconfig:
   devdata:
