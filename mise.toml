@@ -1,5 +1,5 @@
 [tools]
-node = "24.7.0"
+node = "24.9.0"
 podman = "5.6.1"
 python = "3.13.7"
 ruby = "3.4.6"
