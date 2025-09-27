@@ -92,7 +92,7 @@ group :development, :test do
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.73', require: false
+  gem 'rubocop', '~> 1.81', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
