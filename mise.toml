@@ -1,7 +1,7 @@
 [tools]
 node = "24.9.0"
-podman = "5.6.1"
+podman = "5.6.2"
 python = "3.13.7"
 ruby = "3.4.6"
-usage = "2.2.2"
+usage = "2.3.2"
 yarn = "4.10.3"

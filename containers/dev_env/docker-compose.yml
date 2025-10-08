@@ -9,6 +9,8 @@ services:
       - 3035:3035
     depends_on:
       - db
+    group_add:
+      - dialout
     volumes:
       - ../../:/home/colab/src/app:cached
       - devmise:/home/colab/.local/share/mise
