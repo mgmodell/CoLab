@@ -7,9 +7,17 @@ print_help ( ) {
     echo " -n             Build containers without relying upon the cached layers"
     echo " -d             Build dev containers only"
     echo " -t             Build test containers only"
+    echo " -b             Build both sets of containers"
+    echo ""
     echo " -h             Show this help and terminate"
     exit 0;
 }
+
+if [ "$#" -lt 1 ]; then
+  # We're in a Docker container, so we're good!
+  echo "Please specify options"
+  print_help
+fi
 
 # Function to test the result of the build command
 # Arguments:
@@ -31,11 +39,13 @@ test_result ( ) {
 BUILD_OPTS=""
 DEV_ONLY=false
 TEST_ONLY=false
-while getopts "nhdt" opt; do
+while getopts "nbhdt" opt; do
   case $opt in
     n)
       echo "Building containers without cache"
       BUILD_OPTS="--no-cache"
+      ;;
+    b)
       ;;
     h)
       print_help

@@ -22,11 +22,12 @@ RUN apt-get autoremove && \
     apt-get clean
 
 RUN groupadd -r colab && \
-  useradd --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+  useradd -u 501 --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+
+USER colab
 
 WORKDIR /home/colab
 
-USER colab
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
 ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \

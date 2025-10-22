@@ -14,7 +14,7 @@ services:
     volumes:
       - ../../:/home/colab/src/app:cached
       - devmise:/home/colab/.local/share/mise
-    command: bash -c "sleep infinity"
+    command: zsh -c "sleep infinity"
   db:
     image: colab_db
     restart: unless-stopped
