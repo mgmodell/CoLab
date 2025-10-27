@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_26_133734) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_23_160856) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -391,6 +391,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_26_133734) do
     t.integer "user_id", null: false
     t.integer "group_id", null: false
     t.index ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true
+    t.index ["user_id"], name: "fk_rails_8546c71994"
   end
 
   create_table "home_countries", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -726,6 +727,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_26_133734) do
   add_foreign_key "factors", "factor_packs"
   add_foreign_key "group_revisions", "groups"
   add_foreign_key "groups", "projects"
+  add_foreign_key "groups_users", "groups"
+  add_foreign_key "groups_users", "users"
   add_foreign_key "home_states", "home_countries"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
