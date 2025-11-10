@@ -7,6 +7,7 @@ class Course < ApplicationRecord
   has_many :rosters, inverse_of: :course, dependent: :destroy, autosave: true
   has_many :bingo_games, inverse_of: :course, dependent: :destroy, autosave: true
   has_many :candidate_lists, through: :bingo_games
+  has_many :candidates, through: :candidate_lists
   has_many :concepts, through: :candidate_lists
   has_many :users, through: :rosters
   belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
