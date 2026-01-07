@@ -18,11 +18,8 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. It requires [Docker](https://www.docker.com/)
-[git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
-support (native on MacOSX and Linux but may require additional
-download/installation on Windows). The current configuration uses [devContainers](https://containers.dev/) and I am using [VSCode](https://code.visualstudio.com/) for development. I recommend it. The instructions below assume the docker and vsCode are already installed.
-If you're installing Ubuntu, be sure to use the apt package for Docker rather than the snap version. Uninstall the snap version if it's present.
+desktop OS. It requires [Podman](https://podman.io/) [git](https://git-scm.com/) with [Compose](https://podman-desktop.io/docs/compose) (which you likely have to install for manually) and [bash](https://www.gnu.org/software/bash/) support (native on MacOSX and Linux but may require additional download/installation on Windows). The current configuration uses [devContainers](https://containers.dev/) and I am using [VSCode](https://code.visualstudio.com/) for development. I recommend it. The instructions below assume the Podman and vsCode are already installed.
+Also, do be sure that your Podman instalation is configured with sufficient memory. I have been using [podman-machine-set](https://docs.podman.io/en/latest/markdown/podman-machine-set.1.html) to configure the upper limits on the machines to be 8GB (e.g.  `podman machine set -m 8192`) and that seems to be sufficient.
 
 ### Setting up ###
 1. You must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/)(on a Mac) or `apt` or whatever package manager you're using:
