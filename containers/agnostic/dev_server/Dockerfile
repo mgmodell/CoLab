@@ -1,21 +1,25 @@
-FROM docker.io/ubuntu
+FROM docker.io/ubuntu:22.04
 
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \
+  autoconf \
+  bash \
+  build-essential \
   curl \
+  gettext \
+  git \
   imagemagick \
   libvips \
-  make \
-  ruby-build \
-  vim \
-  git \
-  autoconf \
-  gettext \
-  bash \
-  mysql-client \
+  libssl-dev \
+  libreadline-dev \
   libmysqlclient-dev \
   libyaml-dev \
   libsecret-1-dev \
+  make \
+  mysql-client \
+  ruby-build \
+  vim \
+  zlib1g-dev \
   zsh
 
 RUN apt-get autoremove && \
