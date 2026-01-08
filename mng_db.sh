@@ -6,6 +6,7 @@ print_help ( ) {
   echo " -l [sql dump]  Load DB from dump"
   echo " -j             Load latest dev db dump"
   echo " -d             Dump the dev db"
+  echo " -k             Load current test db to test"
   echo " -t             Dump the test db"
   echo " -n             Load the blank moodle db"
   echo " -b             Load latest moodle db dump"
@@ -39,7 +40,7 @@ COUNT_OPTS=0
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "jl:htmnd" opt; do
+while getopts "jkl:htmnd" opt; do
   COUNT_OPTS=$(($COUNT_OPTS + 1))
   case $opt in
     l)
@@ -49,6 +50,10 @@ while getopts "jl:htmnd" opt; do
     j)
       LOAD=true
       LOAD_FILE="db/dev_db.sql"
+      ;;
+    k)
+      mysql colab_test_ -u test -ptest --protocol=TCP --port=31337 < db/test_db.sql
+      exit
       ;;
     d)
       mysqldump colab_dev -u test -ptest --port=31337 > db/dev_db.sql
