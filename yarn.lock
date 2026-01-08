@@ -3143,7 +3143,7 @@ __metadata:
     mini-css-extract-plugin: "npm:^2.9.2"
     mockdate: "npm:^3.0.5"
     primeicons: "npm:^7.0.0"
-    primereact: "npm:10.9.1"
+    primereact: "npm:10.9.7"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
     quill: "npm:^2.0.3"
@@ -3161,7 +3161,7 @@ __metadata:
     react-virtualized: "npm:^9.22.6"
     react_ujs: "npm:^3.2.1"
     resize-observer-hook: "npm:^1.0.5"
-    shakapacker: "npm:9.4.0"
+    shakapacker: "npm:9.5.0"
     stopword: "npm:^3.1.5"
     style-loader: "npm:^4.0.0"
     swc-loader: "npm:^0.2.6"
@@ -7206,9 +7206,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primereact@npm:10.9.1":
-  version: 10.9.1
-  resolution: "primereact@npm:10.9.1"
+"primereact@npm:10.9.7":
+  version: 10.9.7
+  resolution: "primereact@npm:10.9.7"
   dependencies:
     "@types/react-transition-group": "npm:^4.4.1"
     react-transition-group: "npm:^4.4.1"
@@ -7219,7 +7219,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/aa5519af9fb6733bf7e2c7667230dcbb6d0474c1afda3b9b4c96d866b9e40600a6f79014aa7db3da2fb297529df2b1bc38479eb5b01ec4d838226d6d262a8371
+  checksum: 10c0/03ccaae80a1d7c88113c4e7518edffe29c04bed605e5d67b4c18e761c4470d0cb845b51ff572bb0ec8ab171675dee7609d15c39f5727016b68de412ec8e5fe3a
   languageName: node
   linkType: hard
 
@@ -8106,9 +8106,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shakapacker@npm:9.4.0":
-  version: 9.4.0
-  resolution: "shakapacker@npm:9.4.0"
+"shakapacker@npm:9.5.0":
+  version: 9.5.0
+  resolution: "shakapacker@npm:9.5.0"
   dependencies:
     js-yaml: "npm:^4.1.0"
     path-complete-extname: "npm:^1.0.0"
@@ -8194,7 +8194,7 @@ __metadata:
       optional: true
     webpack-subresource-integrity:
       optional: true
-  checksum: 10c0/31435b56c48b93d942cb34e4e392231b2c98896ed64d653892ce4b5601fec580eb7119cc9118bdfd55f4e3d9a54f4c7ea30708c021b8f4cae7e6cfa80c366235
+  checksum: 10c0/941d7d25cc9f41be031f7ef0ba6d683ab2a0e599ac7713fbd6761087e33ab77968b3551d52becd3f17918db9c3ef9fe05cebb9845b0176ee411648810f37e811
   languageName: node
   linkType: hard
 

@@ -55,3 +55,4 @@ reek.html
 !.yarn/sdks
 !.yarn/versions
 
+shakapacker-config-exports/
