@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.4.8'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.3'
+gem 'rails', '~> 8.1.1'
 
 gem 'puma', '~> 7.0.2'
 # Use mysql as the database for Active Record
@@ -35,6 +35,7 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'chronic'
 gem 'city-state'
+gem 'connection_pool', '< 3'
 gem 'csv'
 # gem 'country_select'
 gem 'd3-rails'
