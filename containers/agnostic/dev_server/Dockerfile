@@ -62,7 +62,6 @@ RUN mise trust /home/colab/src/app/mise.toml && \
 ENV DRIVER=docker
 ENV COLAB_DB=db
 ENV COLAB_DB_PORT=3306
-ENV CUCUMBER_PUBLISH_TOKEN=b7e96979-5fe5-43a0-9eae-42cffb5e8c13
 
 
 # ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
