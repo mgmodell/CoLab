@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[demo_withdraw show_demo]
+  skip_before_action :authenticate_user!, only: %i[show_demo]
   before_action :set_submission, only: %i[show update withdraw]
 
   include Demoable
