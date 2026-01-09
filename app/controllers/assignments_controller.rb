@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: %i[show edit update destroy status]
+  before_action :set_assignment, only: %i[show edit update status]
   skip_before_action :authenticate_user!, only: %i[demo_status]
   include PermissionsCheck, Demoable
 
