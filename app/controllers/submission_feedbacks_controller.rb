@@ -5,7 +5,7 @@ class SubmissionFeedbacksController < ApplicationController
   include PermissionsCheck
 
   skip_before_action :authenticate_user!, only: %i[demo_show demo_index_for_assignment demo_update]
-  before_action :set_submission, only: %i[show edit]
+  before_action :set_submission, only: %i[show]
   before_action :set_submission_feedback, only: %i[update destroy]
   before_action :check_editor
 

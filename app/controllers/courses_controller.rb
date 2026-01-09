@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
   before_action :set_reg_course, only: %i[self_reg_init self_reg_confirm self_reg_init]
-  before_action :check_admin, only: %i[new create]
+  before_action :check_admin, only: %i[create]
   before_action :check_editor, except: %i[accept_roster
                                           decline_roster show index
                                           self_reg_confirm qr reg_requests
