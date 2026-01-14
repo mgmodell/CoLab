@@ -1,6 +1,6 @@
 [tools]
 node = "25.2.1"
-podman = "5.7.0"
+podman = "5.7.1"
 python = "3.13.7"
 ruby = "3.4.8"
 rust = "1.92"
