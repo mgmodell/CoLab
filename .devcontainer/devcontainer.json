@@ -14,7 +14,7 @@
 	],
 	"workspaceFolder": "/home/colab/src/app",
 
-    "shutdownAction": "stopCompose",
+    "shutdownAction": "stopCompose"
 	/*
 	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 	"features": {

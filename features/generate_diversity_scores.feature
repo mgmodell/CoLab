@@ -369,7 +369,7 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
+     Then the user completes a week-ui
      Then the user logs out
 
     #The first user
@@ -380,8 +380,8 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
-     Then the user completes a week
+     Then the user completes a week-ui
+     Then the user completes a week-ui
      Then the user logs out
 
     #The last user
@@ -392,11 +392,11 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
      Then the user logs out
 
      When we update the group's diversity score
@@ -539,7 +539,7 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
+     Then the user completes a week-ui
      Then the user logs out
 
     #The third user
@@ -550,8 +550,8 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
-     Then the user completes a week
+     Then the user completes a week-ui
+     Then the user completes a week-ui
      Then the user logs out
 
     #The first user
@@ -562,8 +562,8 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
-     Then the user completes a week
+     Then the user completes a week-ui
+     Then the user completes a week-ui
      Then the user logs out
 
     #The last user
@@ -574,11 +574,11 @@ Feature: Generate diversity scores (DS)
      Then the user clicks the link to the experience
      Then the user sees the experience instructions page
       And the user presses "Next"
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
-     Then the user completes a week
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
+     Then the user completes a week-ui
      Then the user logs out
 
     #2 languages

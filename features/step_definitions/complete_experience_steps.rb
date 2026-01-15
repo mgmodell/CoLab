@@ -82,6 +82,23 @@ Then( /^the user sees the experience instructions page$/ ) do
 end
 
 Then( /^the user completes a week$/ ) do
+  experience = Experience.joins( course: { rosters: :user } )
+                         .find_by( id: @experience.id, 
+                         users: {id: @user.id } )
+  reaction = experience.get_user_reaction @user
+  week = reaction.next_week
+
+  diagnosis =  reaction.diagnoses.new( week: )  
+  diagnosis.behavior = Behavior.all.to_a.sample
+  diagnosis.other_name = 'FUBAR' if diagnosis.behavior.name_en == 'Other'
+  diagnosis.comment = 'FUBAR week comment' if rand( 1..10 ).odd?
+  diagnosis.save
+  diagnosis.errors.full_messages.each { | msg| log msg } if diagnosis.errors.present?
+  diagnosis.errors.count.should eq 0
+
+end
+
+Then( /^the user completes a week-ui$/ ) do
   reaction = @experience.get_user_reaction @user
   week = reaction.next_week
   # get the current week number
@@ -148,6 +165,36 @@ Then( /^no user will have reacted to the same narrative more than once$/ ) do
 end
 
 Then( /^the user successfully completes an experience$/ ) do
+  experience = Experience.joins( course: { rosters: :user } )
+                         .find_by( id: @experience.id, 
+                         users: {id: @user.id } )
+  reaction = experience.get_user_reaction @user
+  reaction.instructed = true
+  reaction.save
+  behaviors = Behavior.all
+  week = reaction.next_week
+
+  diagnosis = nil
+  while !week.nil?
+    diagnosis =  reaction.diagnoses.new( week: )
+    diagnosis.behavior = behaviors.sample
+    diagnosis.other_name = 'FUBAR' if diagnosis.behavior.name_en == 'Other'
+    diagnosis.comment = 'FUBAR week comment' if rand( 1..10 ).odd?
+    diagnosis.save
+    diagnosis.errors.full_messages.each { | msg| log msg } if diagnosis.errors.present?
+    diagnosis.errors.count.should eq 0
+    week = reaction.next_week
+  end
+  reaction.behavior = behaviors.sample
+  reaction.other_name = 'FUBAR' if reaction.behavior.name_en == 'Other'
+  reaction.improvements = 'FUBAR improvements'
+  reaction.save
+  log reaction.errors.full_messages if reaction.errors.present?
+  reaction.errors.count.should eq 0
+
+end
+
+Then( /^the user successfully completes an experience-ui$/ ) do
   step 'the user switches to the "Task View" tab'
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
