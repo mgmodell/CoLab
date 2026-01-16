@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { RouterProvider } from 'react-router/dom';
+import { RouterProvider } from "react-router/dom";
 import {
   createBrowserRouter,
   Route,
@@ -54,120 +54,114 @@ export default function PageWrapper(props: Readonly<Props>) {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
+      <Route
+        element={
+          <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
+            <AppHeader />
+            <WorkingIndicator />
+            <br />
+            <AppStatusBar />
+            <Outlet />
+          </Suspense>
+        }
+      >
         <Route
           element={
-            <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
-              <AppHeader />
-              <WorkingIndicator />
-              <br />
-              <AppStatusBar />
+            <div className="mainContent">
               <Outlet />
-            </Suspense>
+            </div>
           }
         >
+          <Route index element={<Navigate to={"welcome"} replace={true} />} />
+          <Route path={"welcome/*"} element={<Welcome />} />
           <Route
+            path={"login"}
+            element={<Navigate to={"/welcome/login"} replace={true} />}
+          />
+          <Route
+            path="profile"
             element={
-              <div className="mainContent">
-                <Outlet />
-              </div>
+              <Suspense fallback={<Skeleton className="mb-2" />}>
+                <RequireAuth>
+                  <ProfileDataAdmin />
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="admin/*"
+            element={
+              <Suspense fallback={<Skeleton className={"mb-2"} />}>
+                <RequireAuth>
+                  <Admin />
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route path={"reporting"} element={<ReportingAdmin />} />
+          <Route
+            path={"home/*"}
+            element={
+              <Suspense fallback={<Skeleton className={"mb-2"} />}>
+                <RequireAuth>
+                  <Outlet />
+                </RequireAuth>
+              </Suspense>
             }
           >
-            <Route index element={<Navigate to={"welcome"} replace={true} />} />
-            <Route path={"welcome/*"} element={<Welcome />} />
+            <Route index element={<HomeShell />} />
             <Route
-              path={"login"}
-              element={<Navigate to={"/welcome/login"} replace={true} />}
+              path={`login`}
+              element={<Navigate to={"/home"} relative={"path"} />}
             />
             <Route
-              path="profile"
-              element={
-                <Suspense fallback={<Skeleton className="mb-2" />}>
-                  <RequireAuth>
-                    <ProfileDataAdmin />
-                  </RequireAuth>
-                </Suspense>
-              }
+              path={`project/checkin/:installmentId`}
+              element={<InstallmentReport />}
+            />
+            <Route path="bingo/*" element={<BingoShell />} />
+            {/* Perhaps subgroup under Experience */}
+            <Route path={`experience/:experienceId`} element={<Experience />} />
+            {/* Perhaps subgroup under Assignment */}
+            <Route path={`assignment/*`} element={<AssignmentShell />} />
+            <Route
+              path={`research_information/:consentFormId`}
+              element={<ConsentLog />}
             />
             <Route
-              path="admin/*"
-              element={
-                <Suspense fallback={<Skeleton className={"mb-2"} />}>
-                  <RequireAuth>
-                    <Admin />
-                  </RequireAuth>
-                </Suspense>
-              }
-            />
-          <Route path={"reporting"} element={<ReportingAdmin />} />
-            <Route
-              path={"home/*"}
-              element={
-                <Suspense fallback={<Skeleton className={"mb-2"} />}>
-                  <RequireAuth>
-                    <Outlet />
-                  </RequireAuth>
-                </Suspense>
-              }
-            >
-              <Route index element={<HomeShell />} />
-              <Route
-                path={`login`}
-                element={<Navigate to={"/home"} relative={"path"} />}
-              />
-              <Route
-                path={`project/checkin/:installmentId`}
-                element={<InstallmentReport />}
-              />
-              <Route
-                path="bingo/*"
-                element={<BingoShell />} />
-              {/* Perhaps subgroup under Experience */}
-              <Route
-                path={`experience/:experienceId`}
-                element={<Experience />}
-              />
-              {/* Perhaps subgroup under Assignment */}
-              <Route
-                path={`assignment/*`}
-                element={<AssignmentShell />} />
-              <Route
-                path={`research_information/:consentFormId`}
-                element={<ConsentLog />}
-              />
-              <Route
-                path={`course/:courseId/enroll`}
-                element={<EnrollInCourse />}
-              />
-            </Route>
-
-            <Route path="user/password/edit" element={<PasswordEdit />} />
-            <Route path={`tos`} element={<TermsOfService />} />
-            <Route path={`privacy`} element={<Privacy />} />
-            <Route
-              path={`perspective`}
-              element={
-                <Suspense fallback={<Skeleton className={"mb-2"} />}>
-                  <RequireAuth>
-                    <DiversityCheck />
-                  </RequireAuth>
-                </Suspense>
-              }
-            />
-            <Route
-              path="demo/*"
-              element={
-                <Suspense fallback={<Skeleton className={""} />}>
-                  <Demo rootPath="demo" />
-                </Suspense>
-              }
+              path={`course/:courseId/enroll`}
+              element={<EnrollInCourse />}
             />
           </Route>
+
+          <Route path="user/password/edit" element={<PasswordEdit />} />
+          <Route path={`tos`} element={<TermsOfService />} />
+          <Route path={`privacy`} element={<Privacy />} />
+          <Route
+            path={`perspective`}
+            element={
+              <Suspense fallback={<Skeleton className={"mb-2"} />}>
+                <RequireAuth>
+                  <DiversityCheck />
+                </RequireAuth>
+              </Suspense>
+            }
+          />
+          <Route
+            path="demo/*"
+            element={
+              <Suspense fallback={<Skeleton className={""} />}>
+                <Demo rootPath="demo" />
+              </Suspense>
+            }
+          />
         </Route>
-    ), {
+      </Route>
+    ),
+    {
       future: {
         v7_relativeSplatPath: true,
         v7_startTransition: true
-      },
+      }
     }
   );
 

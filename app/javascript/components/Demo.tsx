@@ -40,7 +40,8 @@ export default function Demo(props: Props) {
         />
         <Route
           path={`assignment/*`}
-          element={<AssignmentShell rootPath={props.rootPath}/>} />
+          element={<AssignmentShell rootPath={props.rootPath} />}
+        />
         <Route index element={<HomeShell rootPath={"demo"} />} />
       </Route>
       <Route index element={<Navigate to={"home"} />} />

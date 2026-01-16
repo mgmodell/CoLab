@@ -10,8 +10,7 @@ import { Container, Row, Col } from "react-grid-system";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { Panel } from "primereact/panel";
 
-type Props = {
-};
+type Props = {};
 
 export default function DiversityCheck(props: Props) {
   const endpointSet = "home";
@@ -19,7 +18,7 @@ export default function DiversityCheck(props: Props) {
   const [diversityScore, setDiversityScore] = useState(null);
   const [foundUsers, setFoundUsers] = useState([]);
 
-  const { t } = useTranslation( /* endpointSet */);
+  const { t } = useTranslation(/* endpointSet */);
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
   );
@@ -52,7 +51,6 @@ export default function DiversityCheck(props: Props) {
 
   return (
     <Panel header={t("calc_diversity_hdr")}>
-
       <Container>
         <Row>
           <Col>{t("calc_diversity_instr")}</Col>
@@ -84,15 +82,16 @@ export default function DiversityCheck(props: Props) {
           </Fragment>
         ) : null}
         <Row>
-          <Col><br /></Col>
+          <Col>
+            <br />
+          </Col>
         </Row>
         <Row>
           <Col>
             <Button onClick={calcDiversity}>{t("calc_diversity_sub")}</Button>
           </Col>
           <Button onClick={handleClear}>{t("clear")}</Button>
-          <Col>
-          </Col>
+          <Col />
         </Row>
       </Container>
     </Panel>
