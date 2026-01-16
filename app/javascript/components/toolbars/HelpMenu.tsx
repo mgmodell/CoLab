@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import parse from "html-react-parser";
 
 // Icons
-//import Joyride, { ACTIONS } from "react-joyride";
+import {driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -16,22 +17,14 @@ type Props = {
 };
 
 export default function HelpMenu(props: Props) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [t, i18n] = useTranslation();
 
   const location = useLocation();
-  const [helpMe, setHelpMe] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
-  const endHelp = data => {
-    if (
-      data.action === ACTIONS.RESET ||
-      data.action === ACTIONS.CLOSE ||
-      data.action === ACTIONS.STOP
-    ) {
-      setHelpMe(false);
-    }
-  };
+  const driverObj = driver({
+    showProgress: true
+  });
 
   const feedbackOpts = useTypedSelector(
     state => state.context.lookups["candidate_feedbacks"]
@@ -70,59 +63,65 @@ export default function HelpMenu(props: Props) {
   const stepHash = {
     home: [
       {
-        target: "body",
-        content: "This stuff is awesome",
-        placement: "center"
+        element: "body",
+        popover: {
+          title: "Welcome to the Application!",
+          description: "This stuff is awesome. More information soon!",
+          align: "center",
+          side: "left"
+        }
       }
     ],
     bingo: [
       {
-        target: "body",
-        content: "There is no help available for this topic",
-        placement: "center"
+        element: "body",
+        popover: {
+          title: "No Help Available",
+          description: "There is no help available for this topic",
+          align: "center",
+          side: "left"
+        }
       }
     ],
     experience: [
       {
-        target: ".journal_entry",
-        content: <p>{parse(t("experiences.inst_p1"))}</p>,
-        placement: "center"
+        element: ".journal_entry",
+        popover: {
+          description: parse(t("experiences.inst_p1")),
+          align: "center",
+          side: "left"
+        }
       },
       {
-        target: ".behaviors",
-        content: <p>{parse(t("experiences.inst_p2"))}</p>,
-        placement: "center"
-      },
-      {
-        target: "body",
-        content: <p>{parse(t("experiences.inst_p3"))}</p>,
-        placement: "center"
-      },
-      {
-        target: "body",
-        content: <p>{parse(t("experiences.scenario_p1"))}</p>,
-        placement: "center"
+        element: ".behaviors",
+        popover: {
+          description: parse(t("experiences.inst_p4")),
+          align: "center",
+          side: "right"
+        }
       },
       {
         target: "body",
-        content: <p>{parse(t("experiences.scenario_p2"))}</p>,
-        placement: "center"
+        popover: {
+          description: parse(t("experiences.inst_p3")),
+          align: "center",
+          side: "top"
+        }
       },
-      {
-        target: "body",
-        content: <p>{parse(t("experiences.scenario_p3"))}</p>,
-        placement: "center"
-      }
     ],
     default: [
       {
-        target: "body",
-        content: "There is no help available for this topic",
-        placement: "center"
+        element: "body",
+        popover: {
+          title: "No Help Available",
+          description: "There is no help available for this topic",
+          align: "center",
+          side: "left"
+        }
       }
     ]
   };
-  const [steps, setSteps] = useState(stepHash.default);
+  //const [steps, setSteps] = useState(stepHash.default);
 
   const pathComponents = location.pathname.split("/");
   const pathLoc =
@@ -136,47 +135,32 @@ export default function HelpMenu(props: Props) {
       >
         {candidateFeedbackInfo()}
       </Sidebar>
-      {
-        /*
-      <Joyride
-        callback={endHelp}
-        continuous={true}
-        scrollToFirstStep={true}
-        showProgress={steps.length > 1}
-        steps={steps}
-        debug={false}
-        showSkipButton={steps.length > 1}
-        run={helpMe}
-        styles={{
-          options: {
-            width: "100%"
-          }
-        }}
-      />
-        */
-      }
       <LangButton />
-      {/*
-
       <Button
         id="help-menu-button"
         color="secondary"
         aria-controls="help-menu"
         aria-haspopup="true"
         onClick={event => {
+          console.log("Help requested for ", pathLoc);
           switch (pathLoc) {
             case "":
-              setSteps(stepHash.home);
+              driverObj.setSteps(stepHash.home);
+              driverObj.drive();
               break;
             case "bingo":
-              setSteps(stepHash.bingo);
+              driverObj.setSteps(stepHash.bingo);
+              driverObj.drive();
               break;
             case "experience":
-              setSteps(stepHash.experience);
+              driverObj.setSteps(stepHash.experience);
+              driverObj.drive();
               break;
+            default:
+              driverObj.setSteps(stepHash.default);
+              driverObj.drive();
           }
 
-          setHelpMe(true);
         }}
         size="small"
         rounded
@@ -184,7 +168,6 @@ export default function HelpMenu(props: Props) {
         outlined
         icon="pi pi-question"
       />
-      */}
       {pathComponents.includes("bingo") ? (
         <Button
           icon="pi pi-info"

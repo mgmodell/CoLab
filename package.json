@@ -43,6 +43,7 @@
     "css-minimizer-webpack-plugin": "^7.0.2",
     "d3-color": "^3.1.0",
     "d3-scale-chromatic": "^3.1.0",
+    "driver.js": "^1.4.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^5.2.11",
     "i18next": "^25.7.4",
