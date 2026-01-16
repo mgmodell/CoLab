@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 import parse from "html-react-parser";
 
 // Icons
-import Joyride, { ACTIONS } from "react-joyride";
+//import Joyride, { ACTIONS } from "react-joyride";
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -136,6 +136,8 @@ export default function HelpMenu(props: Props) {
       >
         {candidateFeedbackInfo()}
       </Sidebar>
+      {
+        /*
       <Joyride
         callback={endHelp}
         continuous={true}
@@ -151,7 +153,11 @@ export default function HelpMenu(props: Props) {
           }
         }}
       />
+        */
+      }
       <LangButton />
+      {/*
+
       <Button
         id="help-menu-button"
         color="secondary"
@@ -178,6 +184,7 @@ export default function HelpMenu(props: Props) {
         outlined
         icon="pi pi-question"
       />
+      */}
       {pathComponents.includes("bingo") ? (
         <Button
           icon="pi pi-info"
