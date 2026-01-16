@@ -337,7 +337,6 @@ class CoursesController < ApplicationController
     end
   end
 
-
   def new_from_template
     new_start = Chronic.parse( params[:start_date] )
 

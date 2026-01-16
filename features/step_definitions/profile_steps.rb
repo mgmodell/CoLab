@@ -86,7 +86,7 @@ Then( 'user should see login form' ) do
   page.should have_content 'Log in!'
 end
 
-Given('there is a registered user') do
+Given( 'there is a registered user' ) do
   @user = User.new(
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
@@ -100,68 +100,70 @@ Given('there is a registered user') do
   log @user.errors.full_messages if @user.errors.present?
 end
 
-Given('the user {string} confirmed') do |confirmed_status|
-  @user.welcomed = confirmed_status == 'is' ? true : false
+Given( 'the user {string} confirmed' ) do | confirmed_status |
+  @user.welcomed = confirmed_status == 'is'
   @user.save
   log @user.errors.full_messages if @user.errors.present?
 end
 
-Then('the user {string} see the {string} page') do |landing_status, page_identifier|
+Then( 'the user {string} see the {string} page' ) do | landing_status, page_identifier |
   has_text?( page_identifier ).should be landing_status == 'does'
 end
 
-Then('the user sets the {string} to {string}') do |field, value|
+Then( 'the user sets the {string} to {string}' ) do | field, value |
   case field
-    when 'first name'
-      fill_in 'first-name', with: value
-      @user.first_name = value
-    when 'last name'
-      fill_in 'last-name', with: value
-      @user.last_name = value
-    when 'birth date'
-      fill_in 'profile_date_of_birth', with: value
-      @user.date_of_birth = Chronic.parse( value )
-    when 'start school date'
-      fill_in 'profile_primary_start_school', with: value
-      @user.started_school = Chronic.parse( value )
-    else
-      true.should be false
+  when 'first name'
+    fill_in 'first-name', with: value
+    @user.first_name = value
+  when 'last name'
+    fill_in 'last-name', with: value
+    @user.last_name = value
+  when 'birth date'
+    fill_in 'profile_date_of_birth', with: value
+    @user.date_of_birth = Chronic.parse( value )
+  when 'start school date'
+    fill_in 'profile_primary_start_school', with: value
+    @user.started_school = Chronic.parse( value )
+  else
+    true.should be false
   end
 end
 
-Then('the user saves the profile') do
+Then( 'the user saves the profile' ) do
   click_link_or_button 'Save Profile'
   wait_for_render
   has_text?( 'Profile saved' ).should be true
 end
 
-Then('the user sees the name {string} {string}') do |field, value|
+Then( 'the user sees the name {string} {string}' ) do | field, value |
   find( :id, field ).value.should eq value
 end
 
-Then('the user sees the {string} is {string}') do |field, value|
+Then( 'the user sees the {string} is {string}' ) do | field, value |
   case field
-    when 'first name'
-      find( :id, 'first-name' ).value.should eq value
-    when 'last name'
-      find( :id, 'last-name' ).value.should eq value
-    when 'birth date'
-      find( :xpath, '//input[@id="profile_date_of_birth"]' ).value.should eq value
-    when 'start school date'
-      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime('%m/%d/%Y')
-    when 'start date'
-      find( :xpath, '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime('%m/%d/%Y')
-    else
-      true.should be false
+  when 'first name'
+    find( :id, 'first-name' ).value.should eq value
+  when 'last name'
+    find( :id, 'last-name' ).value.should eq value
+  when 'birth date'
+    find( :xpath, '//input[@id="profile_date_of_birth"]' ).value.should eq value
+  when 'start school date'
+    find( :xpath,
+          '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime( '%m/%d/%Y' )
+  when 'start date'
+    find( :xpath,
+          '//input[@id="profile_primary_start_school"]' ).value.should eq Chronic.parse( value ).strftime( '%m/%d/%Y' )
+  else
+    true.should be false
   end
 end
 
-Then('the user opens the demographics pane') do
+Then( 'the user opens the demographics pane' ) do
   el = find( :xpath, "//a[contains(.,'Tell us about yourself')]" )
   el.click if el['aria-expanded'] == 'false'
 end
 
-Then('the most recent user is the same as the current user') do
+Then( 'the most recent user is the same as the current user' ) do
   u = User.last
   u.first_name.should eq @user.first_name
   u.last_name.should eq @user.last_name

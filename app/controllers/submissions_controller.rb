@@ -63,7 +63,6 @@ class SubmissionsController < ApplicationController
       @submission = new_copy
     end
 
-
     @submission.submitted = DateTime.now if params[:submit]
 
     if @submission.update( sub_params )

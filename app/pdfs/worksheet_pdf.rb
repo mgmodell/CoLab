@@ -62,7 +62,7 @@ class WorksheetPdf
     move_down 5
     items.each do | item |
       Candidate.filter.filter( item[2].name.remove( '(', ')' ).split( /\W+/ ) ).each do | w |
-        item[1].gsub!( /\b#{w}/, ( '*' * w.length ) )
+        item[1].gsub!( /\b#{w}/, '*' * w.length )
       end
       text "<b>#{item[0]}.</b>  #{item[1]}",
            inline_format: true

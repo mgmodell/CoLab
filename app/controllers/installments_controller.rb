@@ -142,17 +142,17 @@ class InstallmentsController < ApplicationController
         group_id: params[:group_id],
         values: params[:contributions].values
                                       .reduce( [] ) do | tmp_arr, item_set |
-                  tmp_arr.concat(
-                    item_set.collect do | item |
-                      {
-                        id: item[:id],
-                        user_id: item[:userId],
-                        factor_id: item[:factorId],
-                        name: item[:name],
-                        value: item[:value]
-                      }
-                    end
-                  )
+                                        tmp_arr.concat(
+                                          item_set.collect do | item |
+                                            {
+                                              id: item[:id],
+                                              user_id: item[:userId],
+                                              factor_id: item[:factorId],
+                                              name: item[:name],
+                                              value: item[:value]
+                                            }
+                                          end
+                                        )
                 end
       }
     }
@@ -200,17 +200,17 @@ class InstallmentsController < ApplicationController
                    group_id: params[:group_id],
                    values: params[:contributions].values
                                                  .reduce( [] ) do | tmp_arr, item_set |
-                             tmp_arr.concat(
-                               item_set.collect do | item |
-                                 {
-                                   id: item[:id],
-                                   user_id: item[:userId],
-                                   factor_id: item[:factorId],
-                                   name: item[:name],
-                                   value: item[:value]
-                                 }
-                               end
-                             )
+                                                   tmp_arr.concat(
+                                                     item_set.collect do | item |
+                                                       {
+                                                         id: item[:id],
+                                                         user_id: item[:userId],
+                                                         factor_id: item[:factorId],
+                                                         name: item[:name],
+                                                         value: item[:value]
+                                                       }
+                                                     end
+                                                   )
                            end
                  }
                }

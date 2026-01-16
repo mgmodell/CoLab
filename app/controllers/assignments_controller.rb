@@ -3,7 +3,8 @@
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: %i[show edit update status]
   skip_before_action :authenticate_user!, only: %i[demo_status]
-  include PermissionsCheck, Demoable
+  include Demoable
+  include PermissionsCheck
 
   before_action :check_editor, except: %i[status demo_status]
 
@@ -64,14 +65,14 @@ class AssignmentsController < ApplicationController
     response = {
       assignment: assignment.as_json(
         only: %w[id start_date end_date name
-                  description
+                 description
                  group_enabled project_id
                  text_sub file_sub link_sub
                  active]
       )
     }
     response[:assignment][:course] = {
-      timezone: ActiveSupport::TimeZone.new( assignment.course_timezone ).tzinfo.name 
+      timezone: ActiveSupport::TimeZone.new( assignment.course_timezone ).tzinfo.name
     }
     response[:rubric] = get_demo_rubric_student
     submissions = []

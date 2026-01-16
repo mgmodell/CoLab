@@ -83,19 +83,18 @@ end
 
 Then( /^the user completes a week$/ ) do
   experience = Experience.joins( course: { rosters: :user } )
-                         .find_by( id: @experience.id, 
-                         users: {id: @user.id } )
+                         .find_by( id: @experience.id,
+                                   users: { id: @user.id } )
   reaction = experience.get_user_reaction @user
   week = reaction.next_week
 
-  diagnosis =  reaction.diagnoses.new( week: )  
+  diagnosis = reaction.diagnoses.new( week: )
   diagnosis.behavior = Behavior.all.to_a.sample
   diagnosis.other_name = 'FUBAR' if diagnosis.behavior.name_en == 'Other'
   diagnosis.comment = 'FUBAR week comment' if rand( 1..10 ).odd?
   diagnosis.save
-  diagnosis.errors.full_messages.each { | msg| log msg } if diagnosis.errors.present?
+  diagnosis.errors.full_messages.each { | msg | log msg } if diagnosis.errors.present?
   diagnosis.errors.count.should eq 0
-
 end
 
 Then( /^the user completes a week-ui$/ ) do
@@ -166,8 +165,8 @@ end
 
 Then( /^the user successfully completes an experience$/ ) do
   experience = Experience.joins( course: { rosters: :user } )
-                         .find_by( id: @experience.id, 
-                         users: {id: @user.id } )
+                         .find_by( id: @experience.id,
+                                   users: { id: @user.id } )
   reaction = experience.get_user_reaction @user
   reaction.instructed = true
   reaction.save
@@ -175,13 +174,13 @@ Then( /^the user successfully completes an experience$/ ) do
   week = reaction.next_week
 
   diagnosis = nil
-  while !week.nil?
-    diagnosis =  reaction.diagnoses.new( week: )
+  until week.nil?
+    diagnosis = reaction.diagnoses.new( week: )
     diagnosis.behavior = behaviors.sample
     diagnosis.other_name = 'FUBAR' if diagnosis.behavior.name_en == 'Other'
     diagnosis.comment = 'FUBAR week comment' if rand( 1..10 ).odd?
     diagnosis.save
-    diagnosis.errors.full_messages.each { | msg| log msg } if diagnosis.errors.present?
+    diagnosis.errors.full_messages.each { | msg | log msg } if diagnosis.errors.present?
     diagnosis.errors.count.should eq 0
     week = reaction.next_week
   end
@@ -191,7 +190,6 @@ Then( /^the user successfully completes an experience$/ ) do
   reaction.save
   log reaction.errors.full_messages if reaction.errors.present?
   reaction.errors.count.should eq 0
-
 end
 
 Then( /^the user successfully completes an experience-ui$/ ) do

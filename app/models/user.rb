@@ -100,16 +100,16 @@ class User < ApplicationRecord
     consent_logs.joins( :consent_form )
                 .where( consent_forms: { active: true } )
                 .find_each do | consent_log |
-      logs[consent_log.consent_form_id] = consent_log
+                  logs[consent_log.consent_form_id] = consent_log
     end
 
     courses.includes( consent_form: :consent_logs )
            .where( 'courses.consent_form_id IS NOT NULL' )
            .find_each do | course |
-      if course.consent_form_active && logs[course.consent_form_id].nil?
-        log = course.get_consent_log user: self
-        logs[log.consent_form_id] = log unless log.nil?
-      end
+             if course.consent_form_active && logs[course.consent_form_id].nil?
+               log = course.get_consent_log user: self
+               logs[log.consent_form_id] = log unless log.nil?
+             end
     end
 
     now = Time.zone.today
@@ -155,7 +155,7 @@ class User < ApplicationRecord
              .where( 'rosters.user_id': id )
              .and( Roster.faculty )
              .find_each do | game |
-      waiting_tasks << game if game.awaiting_review?
+               waiting_tasks << game if game.awaiting_review?
     end
 
     cur_date = DateTime.current
@@ -168,7 +168,7 @@ class User < ApplicationRecord
               # .and(Submission.where('recorded_score < 0'))
               .and( Roster.faculty )
               .find_each do | submission |
-      waiting_tasks << submission
+                waiting_tasks << submission
     end
 
     waiting_tasks.sort_by( &:end_date )

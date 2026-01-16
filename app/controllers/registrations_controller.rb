@@ -137,7 +137,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 
     reset_user = current_user.presence || User.find_by( email: params[:email] )
 
-    reset_user.send_reset_password_instructions if reset_user.present?
+    reset_user.presence&.send_reset_password_instructions
 
     respond_to do | format |
       format.json do

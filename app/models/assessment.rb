@@ -89,32 +89,32 @@ class Assessment < ApplicationRecord
               .where( assessments: { active: true }, instructor_updated: false, projects: { active: true } )
               .where( 'assessments.end_date < ?', date_now )
               .find_each do | assessment |
-      completion_hash = {}
-      # Collect data for notification and anonymize comments
-      assessment.installments.each do | inst |
-        completion_hash[inst.user.email] = { name: inst.user.name( false ), status: inst.inst_date.to_s }
-        inst.anonymize_comments
-        logger.debug inst.errors.full_messages unless inst.errors.empty?
-      end
+                completion_hash = {}
+                # Collect data for notification and anonymize comments
+                assessment.installments.each do | inst |
+                  completion_hash[inst.user.email] = { name: inst.user.name( false ), status: inst.inst_date.to_s }
+                  inst.anonymize_comments
+                  logger.debug inst.errors.full_messages unless inst.errors.empty?
+                end
 
-      assessment.project.course.enrolled_students.each do | student |
-        if completion_hash[student.email].blank?
-          completion_hash[student.email] = { name: student.name( false ), status: 'Incomplete' }
-        end
-      end
-      # Retrieve the course instructors
-      # Retrieve names of those who did not complete their assessments
-      # InstructorNewsLetterMailer.inform( instructor ).deliver_later
-      assessment.project.course.instructors.each do | instructor |
-        AdministrativeMailer.summary_report( "#{assessment.project.get_name( false )} (assessment)",
-                                             assessment.project.course.pretty_name( false ),
-                                             instructor,
-                                             completion_hash ).deliver_later
-        count += 1
-      end
+                assessment.project.course.enrolled_students.each do | student |
+                  if completion_hash[student.email].blank?
+                    completion_hash[student.email] = { name: student.name( false ), status: 'Incomplete' }
+                  end
+                end
+                # Retrieve the course instructors
+                # Retrieve names of those who did not complete their assessments
+                # InstructorNewsLetterMailer.inform( instructor ).deliver_later
+                assessment.project.course.instructors.each do | instructor |
+                  AdministrativeMailer.summary_report( "#{assessment.project.get_name( false )} (assessment)",
+                                                       assessment.project.course.pretty_name( false ),
+                                                       instructor,
+                                                       completion_hash ).deliver_later
+                  count += 1
+                end
 
-      assessment.instructor_updated = true
-      assessment.save
+                assessment.instructor_updated = true
+                assessment.save
     end
     logger.debug "\n\t********#{count} Assessment Reports sent to Instructors**"
   end

@@ -35,7 +35,7 @@ class CandidateList < ApplicationRecord
         candidates.joins( :candidate_feedback, :concept ).completed
                   .group( :concept ).maximum( 'candidate_feedbacks.credit' )
                   .each do | concept_max |
-          performance += concept_max[1]
+                    performance += concept_max[1]
         end
         performance /= expected_count
         self.cached_performance = performance

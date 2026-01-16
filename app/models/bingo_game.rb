@@ -107,7 +107,7 @@ class BingoGame < ApplicationRecord
       type: :bingo_game,
       instructor_task:,
       name: get_name( false ),
-      group_name: group.present? ? group.get_name( false ) : nil,
+      group_name: group.presence&.get_name( false ),
       status: local_status,
       course_name: course.get_name( false ),
       start_date:,

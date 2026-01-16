@@ -21,6 +21,8 @@ Then 'the user edits the existing experience' do
   wait_for_render
 end
 
-Then('the user sees the {string} {string} is {string}') do |type, start_or_end, value|
-  find( :xpath, "//input[@id='#{type}_#{start_or_end.tr(' ', '_')}']" ).value.should eq Chronic.parse( value ).strftime('%m/%d/%Y')
+Then( 'the user sees the {string} {string} is {string}' ) do | type, start_or_end, value |
+  find( :xpath,
+        "//input[@id='#{type}_#{start_or_end.tr( ' ',
+                                                 '_' )}']" ).value.should eq Chronic.parse( value ).strftime( '%m/%d/%Y' )
 end
