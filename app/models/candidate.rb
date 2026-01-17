@@ -11,6 +11,9 @@ class Candidate < ApplicationRecord
   belongs_to :user, inverse_of: :candidates
   has_many :bingo_cells, inverse_of: :candidate, dependent: :nullify
 
+  has_one :bingo_game, through: :candidate_list
+  has_one :course, through: :candidate_list
+
   default_scope { order( :filtered_consistent ) }
   scope :completed, lambda {
     joins( :candidate_list )
