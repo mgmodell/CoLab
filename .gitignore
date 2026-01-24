@@ -34,15 +34,8 @@ coverage
 cucumber
 .rake_tasks
 
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
 
 /config/master.key
-
-
 /config/credentials/production.key
 
 rails_best_practices_output.html

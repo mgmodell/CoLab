@@ -1,8 +1,8 @@
 [tools]
-node = "25.3.0"
+node = "25.4.0"
 podman = "5.7.1"
 python = "3.13.7"
 ruby = "3.4.8"
 rust = "1.92"
-usage = "2.11"
+usage = "2.13.1"
 yarn = "4.12.0"
