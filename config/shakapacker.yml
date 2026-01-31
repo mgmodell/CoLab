@@ -12,7 +12,7 @@ default:
   additional_paths: &1 []
   cache_manifest: false
   javascript_transpiler: swc
-  assets_bundler: rspack
+  assets_bundler: webpack
   ensure_consistent_versioning: true
   compiler_strategy: digest
   useContentHash: true
@@ -36,7 +36,7 @@ development:
   additional_paths: *1
   cache_manifest: false
   javascript_transpiler: swc
-  assets_bundler: rspack
+  assets_bundler: webpack
   ensure_consistent_versioning: true
   compiler_strategy: mtime
   useContentHash: false
@@ -71,7 +71,7 @@ test:
   additional_paths: *1
   cache_manifest: false
   javascript_transpiler: swc
-  assets_bundler: rspack
+  assets_bundler: webpack
   ensure_consistent_versioning: true
   compiler_strategy: digest
   useContentHash: true
@@ -91,7 +91,7 @@ production:
   additional_paths: *1
   cache_manifest: true
   javascript_transpiler: swc
-  assets_bundler: rspack
+  assets_bundler: webpack
   ensure_consistent_versioning: true
   compiler_strategy: digest
   useContentHash: true
