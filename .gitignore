@@ -49,3 +49,6 @@ reek.html
 !.yarn/versions
 
 shakapacker-config-exports/
+# Generated React on Rails packs
+**/generated/**
+ssr-generated

@@ -43,3 +43,4 @@ export function iconForType(type: string) {
     </>
   );
 }
+export default iconForType;

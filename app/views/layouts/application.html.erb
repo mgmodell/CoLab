@@ -11,12 +11,7 @@
     <meta property="og:url" content="https://CoLab.online/welcome" />
     <meta property="og:type" content='website' />
 
-    <% if true && Rails.env.test? %>
-      <%= javascript_pack_tag 'application', 'testing' %>
-    <% else %>
-      <%= javascript_pack_tag 'application' %>
-    <% end %>
-    <%= stylesheet_pack_tag 'application' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -29,12 +24,7 @@
     <% if true && Rails.env.test? %>
       <%= react_component "TimeSetter", { } %>
     <% end %>
-        <% if flash[:error] -%>
-          <p class='error'><%=h flash[:error] %></p>
-        <% end -%>
-        <% if flash[:notice] -%>
-          <p class='notice'><%=h flash[:notice] %></p>
-        <% end -%>
         <%= yield %>
+      <%= javascript_pack_tag%>
   </body>
 </html>

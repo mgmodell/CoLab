@@ -4,7 +4,9 @@
 const { merge, config } = require('shakapacker');
 const commonWebpackConfig = require('./commonWebpackConfig');
 
-const webpack = require('webpack');
+const bundler = config.assets_bundler === 'rspack'
+  ? require('@rspack/core')
+  : require('webpack');
 
 const configureServer = () => {
   // We need to use "merge" because the clientConfigObject, EVEN after running
@@ -41,19 +43,34 @@ const configureServer = () => {
   serverWebpackConfig.optimization = {
     minimize: false,
   };
-  serverWebpackConfig.plugins.unshift(new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }));
+  serverWebpackConfig.plugins.unshift(new bundler.optimize.LimitChunkCountPlugin({ maxChunks: 1 }));
 
-  // Custom output for the server-bundle that matches the config in
-  // config/initializers/react_on_rails.rb
+  // Custom output for the server-bundle
+  // Using Shakapacker 9.0+ privateOutputPath for automatic sync with shakapacker.yml
+  // This eliminates manual path configuration and keeps configs in sync.
+  // Falls back to hardcoded path if private_output_path is not configured.
+  const serverBundleOutputPath = config.privateOutputPath ||
+    require('path').resolve(__dirname, '../../ssr-generated');
+
   serverWebpackConfig.output = {
     filename: 'server-bundle.js',
     globalObject: 'this',
     // If using the React on Rails Pro node server renderer, uncomment the next line
     // libraryTarget: 'commonjs2',
-    path: config.outputPath,
-    publicPath: config.publicPath,
+    path: serverBundleOutputPath,
+    // No publicPath needed since server bundles are not served via web
     // https://webpack.js.org/configuration/output/#outputglobalobject
   };
+
+  // Validate server bundle output path configuration
+  // For Shakapacker 9.0+, verify privateOutputPath is configured in shakapacker.yml
+  if (!config.privateOutputPath) {
+    console.warn('⚠️  Shakapacker 9.0+ detected but private_output_path not configured in shakapacker.yml');
+    console.warn('   Add to config/shakapacker.yml:');
+    console.warn('     private_output_path: ssr-generated');
+    console.warn('   Run: rails react_on_rails:doctor to validate your configuration');
+  }
+
 
   // Don't hash the server bundle b/c would conflict with the client manifest
   // And no need for the MiniCssExtractPlugin

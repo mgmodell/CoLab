@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "primereact/button";
-import { Paginator } from "primereact/paginator";
 import { Dropdown } from "primereact/dropdown";
 
 const [first, setFirst] = useState([0, 0, 0]);
@@ -59,3 +58,4 @@ const standardTemplate = {
 };
 
 export { standardTemplate };
+export default standardTemplate;

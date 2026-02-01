@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import * as style from './PageWrapper.module.css';
 import { RouterProvider } from "react-router/dom";
 import {
   createBrowserRouter,
