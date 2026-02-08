@@ -36,7 +36,7 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'chronic'
 gem 'city-state'
-gem 'connection_pool', '< 3'
+gem 'connection_pool'
 gem 'csv'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
@@ -59,7 +59,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '16.2.1'
+gem 'react_on_rails', '16.3.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -103,8 +103,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'simplecov', require: false
-  # gem 'webdrivers', '~> 5.3.1', require: false
   gem 'selenium-webdriver'
   gem 'cucumber-rails',require: false
   gem 'capybara'

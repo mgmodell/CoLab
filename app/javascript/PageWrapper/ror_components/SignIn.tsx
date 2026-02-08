@@ -38,7 +38,6 @@ export default function SignIn(props) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const loggingIn = useTypedSelector(state => state.context.status.loggingIn);
   const [curTab, setCurTab] = useState(0);
@@ -185,7 +184,8 @@ export default function SignIn(props) {
         onError={() => {
           console.log("Login Failed");
         }}
-        useOneTap
+        //Not sure why oneTap doesn't work now
+        //useOneTap
         context="use"
         text="continue_with"
       />

@@ -7,11 +7,11 @@ GIT
 
 GIT
   remote: https://github.com/mgmodell/devise_token_auth_multi_email
-  revision: c0016bd94d64c49486cf1d225af9c0dab7bab1fd
+  revision: ceec9a45b6dbc383b73191454a733441ecf71f09
   specs:
     devise_token_auth (1.2.5)
       bcrypt (~> 3.0)
-      devise (> 3.5.2, < 5)
+      devise (> 3.5.2, <= 5.0)
       rails (>= 4.2.0, < 8.2)
 
 GEM
@@ -112,8 +112,8 @@ GEM
       safely_block (>= 0.5)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1211.0)
-    aws-sdk-core (3.241.4)
+    aws-partitions (1.1213.0)
+    aws-sdk-core (3.242.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -135,7 +135,7 @@ GEM
     benchmark (0.5.0)
     bigdecimal (3.3.1)
     bindex (0.8.1)
-    bootsnap (1.21.1)
+    bootsnap (1.22.0)
       msgpack (~> 1.2)
     builder (3.3.0)
     bullet (8.1.0)
@@ -161,7 +161,7 @@ GEM
     code_analyzer (0.5.5)
       sexp_processor
     concurrent-ruby (1.3.6)
-    connection_pool (2.5.5)
+    connection_pool (3.0.2)
     crass (1.0.6)
     csv (3.3.5)
     cucumber (10.2.0)
@@ -210,14 +210,13 @@ GEM
       activerecord (>= 3.0, < 9.0)
       delayed_job (>= 3.0, < 5)
     descriptive_statistics (2.5.1)
-    devise (4.9.4)
+    devise (5.0.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
+      railties (>= 7.0)
       responders
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
-    docile (1.4.1)
     drb (2.2.3)
     dry-configurable (1.3.0)
       dry-core (~> 1.1)
@@ -257,7 +256,7 @@ GEM
     execjs (2.10.0)
     faker (3.6.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.0)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -295,7 +294,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.18.0)
+    json (2.18.1)
     jwt (3.1.2)
       base64
     keypairs (2.0.1)
@@ -370,7 +369,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0, >= 2.0.3)
       version_gem (~> 1.1, >= 1.1.9)
-    oj (3.16.13)
+    oj (3.16.15)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (2.1.4)
@@ -390,7 +389,7 @@ GEM
     ostruct (0.6.3)
     package_json (0.2.0)
     parallel (1.27.0)
-    parallel_tests (5.5.0)
+    parallel_tests (5.6.0)
       parallel
     parser (3.3.10.1)
       ast (~> 2.4.1)
@@ -488,7 +487,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    react_on_rails (16.2.1)
+    react_on_rails (16.3.0)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -528,7 +527,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
-    rubocop (1.84.0)
+    rubocop (1.84.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -585,17 +584,11 @@ GEM
       railties (>= 5.2)
       semantic_range (>= 2.3.0)
     simple_po_parser (1.1.6)
-    simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.2)
-    simplecov_json_formatter (0.1.4)
     simpleidn (0.2.3)
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    spring (4.4.0)
+    spring (4.4.1)
     stopwords-filter2 (0.1.0)
     stringio (3.2.0)
     sys-uname (1.4.1)
@@ -658,7 +651,7 @@ DEPENDENCIES
   capybara
   chronic
   city-state
-  connection_pool (< 3)
+  connection_pool
   csv
   cucumber-rails
   d3-rails
@@ -694,7 +687,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rails_best_practices
-  react_on_rails (= 16.2.1)
+  react_on_rails (= 16.3.0)
   reek
   report_builder
   rspec
@@ -706,7 +699,6 @@ DEPENDENCIES
   sdoc
   selenium-webdriver
   shakapacker (= 9.5.0)
-  simplecov
   spring
   stopwords-filter2
   traceroute
