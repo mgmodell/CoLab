@@ -52,3 +52,10 @@ shakapacker-config-exports/
 # Generated React on Rails packs
 **/generated/**
 ssr-generated
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

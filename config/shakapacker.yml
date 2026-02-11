@@ -68,6 +68,7 @@ test:
   public_root_path: public
   public_output_path: packs-test
   cache_path: tmp/shakapacker
+  private_output_path: ssr-generated
   webpack_compile_output: true
   shakapacker_precompile: true
   additional_paths: *1
@@ -87,6 +88,7 @@ production:
   css_extract_ignore_order_warnings: false
   public_root_path: public
   public_output_path: packs
+  private_output_path: ssr-generated
   cache_path: tmp/shakapacker
   webpack_compile_output: true
   shakapacker_precompile: true

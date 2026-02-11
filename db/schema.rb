@@ -33,7 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -64,14 +64,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["project_id"], name: "index_assessments_on_project_id"
   end
 
-  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.string "anon_description"
     t.string "anon_name"
     t.integer "course_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
-    t.datetime "end_date", precision: nil, null: false
+    t.datetime "end_date", null: false
     t.boolean "file_sub", default: false, null: false
     t.boolean "group_enabled", default: false, null: false
     t.boolean "link_sub", default: false, null: false
@@ -79,7 +79,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.integer "passing", default: 65
     t.integer "project_id"
     t.bigint "rubric_id"
-    t.datetime "start_date", precision: nil, null: false
+    t.datetime "start_date", null: false
     t.boolean "text_sub", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_assignments_on_course_id"
@@ -264,7 +264,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["school_id"], name: "index_courses_on_school_id"
   end
 
-  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "description"
     t.text "l1_description"
@@ -428,7 +428,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
-  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.text "_keypair_ciphertext", null: false
     t.datetime "created_at", null: false
     t.datetime "expires_at", null: false
@@ -513,7 +513,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
-  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "criterium_id", null: false
     t.text "feedback"
@@ -524,7 +524,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["submission_feedback_id"], name: "index_rubric_row_feedbacks_on_submission_feedback_id"
   end
 
-  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.string "anon_description"
     t.string "anon_name"
@@ -581,7 +581,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["name_en"], name: "index_styles_on_name_en", unique: true
   end
 
-  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "feedback"
     t.bigint "submission_id", null: false
@@ -589,7 +589,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["submission_id"], name: "index_submission_feedbacks_on_submission_id"
   end
 
-  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "assignment_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
