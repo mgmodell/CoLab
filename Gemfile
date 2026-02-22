@@ -41,8 +41,8 @@ gem 'csv'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email', git: 'https://github.com/allenwq/devise-multi_email'
-gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth_multi_email'
+gem 'devise-multi_email_revived'
+gem 'devise_token_auth_multi_email'
 gem 'email_address'
 gem 'faker'
 gem 'image_processing', '~> 1.0'
@@ -116,7 +116,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
-
-
-
