@@ -41,6 +41,7 @@ gem 'csv'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
+gem 'devise'
 gem 'devise-multi_email_revived'
 gem 'devise_token_auth_multi_email'
 gem 'email_address'
@@ -92,7 +93,7 @@ group :development, :test do
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.84', require: false
+  gem 'rubocop', '~> 1.85.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
