@@ -66,7 +66,7 @@
     "resize-observer-hook": "^1.0.5",
     "rspack-manifest-plugin": "^5.2.1",
     "sass-loader": "^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
-    "shakapacker": "9.5.0",
+    "shakapacker": "9.6.1",
     "stopword": "^3.1.5",
     "style-loader": "^3.0.0 || ^4.0.0",
     "swc-loader": "^0.2.7",
@@ -79,8 +79,8 @@
     "defaults"
   ],
   "devDependencies": {
-    "@rspack/cli": "^1.7.7",
-    "@rspack/core": "^1.7.7",
+    "@rspack/cli": "^1.7.8",
+    "@rspack/core": "^1.7.8",
     "@rspack/plugin-react-refresh": "^1.6.1",
     "@types/postcss-flexbugs-fixes": "^5.0.3",
     "postcss": "^8.5.6",

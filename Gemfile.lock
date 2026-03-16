@@ -1,7 +1,23 @@
+GIT
+  remote: https://github.com/allenwq/devise-multi_email
+  revision: 027f65e9b52e35d1323f3fed792b585e730bd984
+  specs:
+    devise-multi_email (3.0.1)
+      devise
+
+GIT
+  remote: https://github.com/mgmodell/devise_token_auth_multi_email
+  revision: ceec9a45b6dbc383b73191454a733441ecf71f09
+  specs:
+    devise_token_auth (1.2.5)
+      bcrypt (~> 3.0)
+      devise (> 3.5.2, <= 5.0)
+      rails (>= 4.2.0, < 8.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    action_text-trix (2.1.16)
+    action_text-trix (2.1.17)
       railties
     actioncable (8.1.2)
       actionpack (= 8.1.2)
@@ -96,7 +112,7 @@ GEM
       safely_block (>= 0.5)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1223.0)
+    aws-partitions (1.1226.0)
     aws-sdk-core (3.243.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -108,7 +124,7 @@ GEM
     aws-sdk-kms (1.122.0)
       aws-sdk-core (~> 3, >= 3.241.4)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.215.0)
+    aws-sdk-s3 (1.216.0)
       aws-sdk-core (~> 3, >= 3.243.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -161,18 +177,18 @@ GEM
       multi_test (~> 1.1)
       sys-uname (~> 1.3)
     cucumber-ci-environment (11.0.0)
-    cucumber-core (16.1.1)
+    cucumber-core (16.2.0)
       cucumber-gherkin (> 36, < 40)
       cucumber-messages (> 31, < 33)
       cucumber-tag-expressions (> 6, < 9)
-    cucumber-cucumber-expressions (18.0.1)
+    cucumber-cucumber-expressions (19.0.0)
       bigdecimal
-    cucumber-gherkin (37.0.1)
-      cucumber-messages (>= 31, < 32)
+    cucumber-gherkin (39.0.0)
+      cucumber-messages (>= 31, < 33)
     cucumber-html-formatter (22.3.0)
       cucumber-messages (> 23, < 33)
-    cucumber-messages (31.2.0)
-    cucumber-rails (4.0.0)
+    cucumber-messages (32.2.0)
+    cucumber-rails (4.0.1)
       capybara (>= 3.25, < 4)
       cucumber (>= 7, < 11)
       railties (>= 6.1, < 9)
@@ -194,19 +210,12 @@ GEM
       activerecord (>= 3.0, < 9.0)
       delayed_job (>= 3.0, < 5)
     descriptive_statistics (2.5.1)
-    devise (5.0.2)
+    devise (5.0.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
-    devise-multi_email_revived (3.1.0)
-      devise (< 6.0)
-    devise_token_auth_multi_email (0.9.4)
-      bcrypt (~> 3.0)
-      devise (> 3.5.2, < 6.0)
-      devise-multi_email_revived (~> 3.1)
-      rails (>= 4.2.0, <= 8.2)
     diff-lcs (1.6.2)
     drb (2.2.3)
     dry-configurable (1.3.0)
@@ -286,7 +295,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.19.0)
+    json (2.19.1)
     json-schema (6.2.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -367,7 +376,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0, >= 2.0.3)
       version_gem (~> 1.1, >= 1.1.9)
-    oj (3.16.15)
+    oj (3.16.16)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (2.1.4)
@@ -537,7 +546,7 @@ GEM
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.49.0)
+    rubocop-ast (1.49.1)
       parser (>= 3.3.7.2)
       prism (~> 1.7)
     rubocop-capybara (2.22.1)
@@ -576,7 +585,7 @@ GEM
       websocket (~> 1.0)
     semantic_range (3.1.1)
     sexp_processor (4.17.5)
-    shakapacker (9.5.0)
+    shakapacker (9.6.1)
       activesupport (>= 5.2)
       package_json
       rack-proxy (>= 0.6.1)
@@ -594,7 +603,7 @@ GEM
       ffi (~> 1.1)
       memoist3 (~> 1.0.0)
     thor (1.5.0)
-    timeout (0.6.0)
+    timeout (0.6.1)
     traceroute (0.8.1)
       rails (>= 3.0.0)
     traco (6.0.0)
@@ -657,8 +666,8 @@ DEPENDENCIES
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
   devise
-  devise-multi_email_revived
-  devise_token_auth_multi_email
+  devise-multi_email!
+  devise_token_auth!
   email_address
   faker
   foreman
@@ -697,7 +706,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 9.5.0)
+  shakapacker (= 9.6.1)
   spring
   stopwords-filter2
   traceroute
