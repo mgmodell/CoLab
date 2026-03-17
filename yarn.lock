@@ -2429,7 +2429,7 @@ __metadata:
     react-dom: "npm:19.2.4"
     react-grid-system: "npm:^8.2.1"
     react-i18next: "npm:^16.5.4"
-    react-on-rails: "npm:16.3.0"
+    react-on-rails: "npm:16.4.0"
     react-redux: "npm:^9.2.0"
     react-refresh: "npm:0.18.0"
     react-router: "npm:^7.13.1"
@@ -2438,7 +2438,7 @@ __metadata:
     resize-observer-hook: "npm:^1.0.5"
     rspack-manifest-plugin: "npm:^5.2.1"
     sass-loader: "npm:^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
-    shakapacker: "npm:9.6.1"
+    shakapacker: "npm:9.7.0"
     stopword: "npm:^3.1.5"
     style-loader: "npm:^3.0.0 || ^4.0.0"
     swc-loader: "npm:^0.2.7"
@@ -5764,13 +5764,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-on-rails@npm:16.3.0":
-  version: 16.3.0
-  resolution: "react-on-rails@npm:16.3.0"
+"react-on-rails@npm:16.4.0":
+  version: 16.4.0
+  resolution: "react-on-rails@npm:16.4.0"
   peerDependencies:
     react: ">= 16"
     react-dom: ">= 16"
-  checksum: 10c0/e9f566dd4e4cb2bd89a2c6c15c5a811854fb40e0370b4a1f902a292920c3c8b8c52e6e7fed531c82177770c6cccaac3be0374bda5d4873c8a32fbb9901c06768
+  checksum: 10c0/036d65be3d87175ce43d62ef240faab335fc9db26c4be1e0db4c417ce077571a7274f924920a1ddd0915cfbd31adc0954159320f16b797e5384fe2b6895a6cb6
   languageName: node
   linkType: hard
 
@@ -6279,9 +6279,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shakapacker@npm:9.6.1":
-  version: 9.6.1
-  resolution: "shakapacker@npm:9.6.1"
+"shakapacker@npm:9.7.0":
+  version: 9.7.0
+  resolution: "shakapacker@npm:9.7.0"
   dependencies:
     js-yaml: "npm:^4.1.0"
     path-complete-extname: "npm:^1.0.0"
@@ -6292,8 +6292,8 @@ __metadata:
     "@babel/plugin-transform-runtime": ^7.17.0
     "@babel/preset-env": ^7.16.11
     "@babel/runtime": ^7.17.9
-    "@rspack/cli": ^1.0.0
-    "@rspack/core": ^1.0.0
+    "@rspack/cli": ^1.0.0 || ^2.0.0-0
+    "@rspack/core": ^1.0.0 || ^2.0.0-0
     "@rspack/plugin-react-refresh": ^1.0.0
     "@swc/core": ^1.3.0
     "@types/babel__core": ^7.0.0
@@ -6367,7 +6367,7 @@ __metadata:
       optional: true
     webpack-subresource-integrity:
       optional: true
-  checksum: 10c0/c48179d6546bfe5b7cf5055b2b40c96ad508afda67acd24d24fc721e41f60b65c8ca3135514153aeaca2eaf1242a437ac957e1bafe49a83a08cbd2dad623b028
+  checksum: 10c0/d46e192c88840cc654bc20014422cb2c0978fdd3b2fd76bcb1e37b26603e07e459c20ee1d8f6105a4398390d61cebce2f6811f677c3ad884039a6d2b6f8251fa
   languageName: node
   linkType: hard
 

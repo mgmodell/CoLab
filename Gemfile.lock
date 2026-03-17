@@ -1,19 +1,3 @@
-GIT
-  remote: https://github.com/allenwq/devise-multi_email
-  revision: 027f65e9b52e35d1323f3fed792b585e730bd984
-  specs:
-    devise-multi_email (3.0.1)
-      devise
-
-GIT
-  remote: https://github.com/mgmodell/devise_token_auth_multi_email
-  revision: ceec9a45b6dbc383b73191454a733441ecf71f09
-  specs:
-    devise_token_auth (1.2.5)
-      bcrypt (~> 3.0)
-      devise (> 3.5.2, <= 5.0)
-      rails (>= 4.2.0, < 8.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -112,7 +96,7 @@ GEM
       safely_block (>= 0.5)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1226.0)
+    aws-partitions (1.1227.0)
     aws-sdk-core (3.243.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -210,12 +194,19 @@ GEM
       activerecord (>= 3.0, < 9.0)
       delayed_job (>= 3.0, < 5)
     descriptive_statistics (2.5.1)
-    devise (5.0.0)
+    devise (5.0.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
+    devise-multi_email (3.1.5)
+      devise (< 6.0)
+    devise_token_auth_multi_email (0.9.4)
+      bcrypt (~> 3.0)
+      devise (> 3.5.2, < 6.0)
+      devise-multi_email
+      rails (>= 4.2.0, <= 8.2)
     diff-lcs (1.6.2)
     drb (2.2.3)
     dry-configurable (1.3.0)
@@ -494,7 +485,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    react_on_rails (16.3.0)
+    react_on_rails (16.4.0)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -585,7 +576,7 @@ GEM
       websocket (~> 1.0)
     semantic_range (3.1.1)
     sexp_processor (4.17.5)
-    shakapacker (9.6.1)
+    shakapacker (9.7.0)
       activesupport (>= 5.2)
       package_json
       rack-proxy (>= 0.6.1)
@@ -666,8 +657,8 @@ DEPENDENCIES
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
   devise
-  devise-multi_email!
-  devise_token_auth!
+  devise-multi_email
+  devise_token_auth_multi_email
   email_address
   faker
   foreman
@@ -695,7 +686,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rails_best_practices
-  react_on_rails (= 16.3.0)
+  react_on_rails (= 16.4.0)
   reek
   report_builder
   rspec
@@ -706,7 +697,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 9.6.1)
+  shakapacker (= 9.7.0)
   spring
   stopwords-filter2
   traceroute

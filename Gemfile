@@ -18,7 +18,7 @@ gem "foreman"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '9.6.1'
+gem 'shakapacker', '9.7.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -42,8 +42,8 @@ gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
 gem 'devise'
-gem 'devise-multi_email', git: 'https://github.com/allenwq/devise-multi_email'
-gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth_multi_email'
+gem 'devise-multi_email'
+gem 'devise_token_auth_multi_email'
 gem 'email_address'
 gem 'faker'
 gem 'image_processing', '~> 1.0'
@@ -60,7 +60,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '16.3.0'
+gem 'react_on_rails', '16.4.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
