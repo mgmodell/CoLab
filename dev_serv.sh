@@ -112,7 +112,10 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-rails db:prepare
+if [ "$PREPARE" = true ]; then
+  echo "Preparing the DB..."
+  rails db:prepare
+fi
 
 
 # Run a migratify task
