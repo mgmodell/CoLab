@@ -1,10 +1,18 @@
 es:
   bingo_games:
     update_bingo_btn: Actualizar juego de bingo
+    scored_game:
+      list_title: Artículo calificado
+      term: Término
+      definition: Definición
+      feedback: Comentarios
+      concept: Concepto
+      credit: Crédito
     create_bingo_btn: Crear juego de bingo
     game_details_pnl: Detalles del juego
     response_pnl: Datos de respuesta
     save_status: Guardando juego
+    game_dates: Fechas de disponibilidad del juego
     open_date: Fecha abierta
     close_date: Fecha del juego
     lead_time: Dias para revisión del instructor

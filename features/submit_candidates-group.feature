@@ -162,8 +162,10 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then the user logs out
      #user 3
      When group user 3 logs in
@@ -171,8 +173,10 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      When the user requests collaboration
     Given the user logs out
     #Let's have everyone accept now
@@ -249,8 +253,10 @@ Feature: Submitting Candidate words for Bingo!
      Then the candidate lists have been merged
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -264,8 +270,10 @@ Feature: Submitting Candidate words for Bingo!
      Then the user will see 36 term field sets
      When the user populates 4 of the "term" entries
       And the user populates 4 of the "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -279,8 +287,10 @@ Feature: Submitting Candidate words for Bingo!
      Then the user will see 36 term field sets
      When the user populates 4 additional "term" entries
       And the user populates 4 additional "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -292,10 +302,12 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
-     When the user changes the first 4 "term" entries
-     When the user changes the first 4 "definition" entries
+     When the user changes a random 4 "term" entries
+     When the user changes a random 4 "definition" entries
+    Then close all messages
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out

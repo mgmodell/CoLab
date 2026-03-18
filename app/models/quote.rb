@@ -11,6 +11,6 @@ class Quote < ApplicationRecord
       @@reloaded_at = DateTime.current
       @@quote_count = Quote.count
     end
-    Quote.offset(rand(@@quote_count)).take
+    Quote.offset( rand( @@quote_count ) ).take
   end
 end

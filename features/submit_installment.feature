@@ -33,6 +33,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     When the user submits the installment
     Then the installment will successfully save
+    Then the user sees a success message
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the installment values will match the submit ratio

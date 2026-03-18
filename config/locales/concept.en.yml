@@ -14,6 +14,11 @@ en:
     update_success: Concept was updated successfully!
     back: Back to the list of concepts
     use_count: Times Suggested
+    name: Name
+    search_concepts: Search concepts
+    concept_name: Concept Name
+    cancel: Cancel
+    update_con: Update Concept
     courses: Course Appearances
     games: Bingo! Appearances
     course_count:

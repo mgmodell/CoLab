@@ -14,6 +14,11 @@ es:
     update_success: El concepto se actualizo con exito!
     back: Volver a la lista de conceptos
     use_count: Tiempos sugeridos
+    name: Nombre
+    search_concepts: Busqueda de conceptos
+    concept_name: Nombre de concepto
+    cancel: Cancelar
+    update_con: actualización de concepto 
     courses: Apariciones en el curso 
     games: Apariciones de Bingo!
     course_count:

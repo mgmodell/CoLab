@@ -1,4 +1,23 @@
 en:
+  experience_admins:
+    name: Experience name
+    lead_time_lbl: Days for instructor prep
+    active: Active
+    timezone_warning: All dates are in the {{timezone}} time zone.
+    date_range: Experience dates
+    start_date_lbl: Experience start date
+    date_to_lbl: until
+    end_date_lbl: Experience end date
+    create: Create Experience
+    save: Save Experience
+    errors:
+      must_be created: >
+        The Experience must be created before students can
+        react to it.
+    tabs:
+      details: Details
+      results: Results
+      response_word_cloud: Response Word Cloud  
   experiences:
     simulation: Collaboration experience simulation
     available: 'Simulation: %{task}'
@@ -12,8 +31,8 @@ en:
     reaction_diagnosis: Reaction Diagnosis
     reaction_suggestions: Reaction Suggestions
     start_date_lbl: Experience start date
+    date_to_lbl: until
     end_date_lbl: Experience end date
-    lead_time_lbl: Days for instructor prep
     close_pnl: Close panel
     create_success: Experience was successfully created.
     update_success: Experience was successfully updated.
@@ -23,6 +42,17 @@ en:
     not_started: Not Started
     not_completed: Not Completed
     improvements: Improvements
+    reactions:
+      student_lbl: Student
+      email_lbl: Email
+      completion_lbl: Completion
+      narrative_lbl: Narrative
+      scenario_lbl: Scenario
+      response_lbl: Response
+      improvements_lbl: Improvements
+      suggestions_lbl: Suggestions
+      none_yet: No reactions yet.
+      
     tz_warn: This experience occurs in the %{time_zone} time zone and all dates reflect this.
     react_title: Experience Reaction
     editing: Editing Experience

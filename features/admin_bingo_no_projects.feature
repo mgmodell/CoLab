@@ -29,11 +29,14 @@ Feature: Bingo Administration
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
-    Then the user sets the bingo "start" date to "02/29/1980"
-    Then the user sets the bingo "end" date to "07/10/2008"
-    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user sets the "bingo_game" start date to "02/29/1980" and the end date to "07/10/2008"
+    Then the user sets the rich "description" field to "this is the coolest"
+    Then close all messages
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
+    Then close all messages
+    Then the user sees the 'bingo_game' 'start date' is '02/29/1980'
+    Then the user sees the 'bingo_game' 'end date' is '07/10/2008'
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"
@@ -55,19 +58,21 @@ Feature: Bingo Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Show" on the existing bingo game
+    Then the user clicks on the existing bingo game
      And the "Make groups available?" label is disabled
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
-    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then the user clicks "Update Bingo Game"
+    Then close all messages
     Then the user waits while seeing "Saving game"
     Then the user will see "successfully"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "Topic" is "Privacy"
-    Then the user sets the rich "Description" field to "<p>this is the coolest<p>"
+    Then the user sets the rich "description" field to "<p>this is the coolest<p>"
     Then the bingo project is empty
     #check the dates
     Then the bingo "start" date is "2/29/1980"

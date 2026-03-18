@@ -1,0 +1,29 @@
+en:
+  submissions:
+    feedbacks:
+      demo_feedback_1: >
+        This is an excellent initial submission. There remains work to
+        be done, but it's a fantastic start!
+      demo_feedback_2: >
+        You've made good progress in this iteration and improved on a
+        number of your design decisions through data collection. Keep
+        it up!
+      demo_feedback_3: >
+        You're continuing to improve. This time there are a significant
+        number of technical fixes to the report and the prototypes. You
+        are showing a great deal of growth here. You got this!
+    error:
+      nothing_submitted: No hay tarea presente
+      withdraw_requires_submit: >
+        You cannot withdraw an assignment that has not actually been
+        submitted.
+      no_changes_on_withdrawal: >
+        You cannot make changes when withdrawing an assignment.
+      no_update_error: Successfully saved the submission.
+      no_create_error: Successfully created the submission.
+      no_changes_once_submitted: >
+        Once an assignment has been submitted, it cannot be modified.
+        You must create a new submission.
+      update_failed: >
+        Unable to save assignment. Please resolve the errors below
+        and try again.

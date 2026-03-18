@@ -3,10 +3,10 @@
 require 'chronic'
 require 'faker'
 
-Given(/^there is a course with an experience$/) do
-  @course = School.find(1).courses.new(
+Given( /^there is a course with an experience$/ ) do
+  @course = School.find( 1 ).courses.new(
     name: "#{Faker::Company.industry} Course",
-    number: Faker::Number.within(range: 100..6000),
+    number: Faker::Number.within( range: 100..6000 ),
     timezone: 'UTC',
     start_date: 4.months.ago,
     end_date: 2.months.from_now
@@ -20,19 +20,19 @@ Given(/^there is a course with an experience$/) do
   @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 
-  @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
-  @experience.get_name(true).should_not be_nil
-  @experience.get_name(true).length.should be > 0
+  @course.get_name( true ).should_not be_nil
+  @course.get_name( true ).length.should be > 0
+  @experience.get_name( true ).should_not be_nil
+  @experience.get_name( true ).length.should be > 0
 end
 
-Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
-  @experience.active = has_or_has_not == 'has'
+Given( /^the experience "([^"]*)" been activated$/ ) do | has_or_has_not |
+  @experience.active = 'has' == has_or_has_not
   @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
-Given(/^the course has (\d+) confirmed users$/) do |user_count|
+Given( /^the course has (\d+) confirmed users$/ ) do | user_count |
   @users = []
   user_count.to_i.times do
     user = User.new(
@@ -42,9 +42,8 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
       password_confirmation: 'password',
       email: Faker::Internet.email,
       timezone: 'UTC',
-      school: School.find(1),
-      welcomed: true,
-      theme_id: 1
+      school: School.find( 1 ),
+      welcomed: true
     )
     user.skip_confirmation!
     user.save!
@@ -59,29 +58,33 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
   end
 end
 
-Given(/^the experience started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
-  course_tz = ActiveSupport::TimeZone.new(@experience.course.timezone)
-  d = Chronic.parse(start_date)
+Given( /^the experience started "([^"]*)" and ends "([^"]*)"$/ ) do | start_date, end_date |
+  course_tz = ActiveSupport::TimeZone.new( @experience.course.timezone )
+  d = Chronic.parse( start_date )
   @experience.reload
-  @experience.start_date = course_tz.local(d.year, d.month, d.day)
-  d = Chronic.parse(end_date)
-  @experience.end_date = course_tz.local(d.year, d.month, d.day)
+  @experience.start_date = course_tz.local( d.year, d.month, d.day )
+  d = Chronic.parse( end_date )
+  @experience.end_date = course_tz.local( d.year, d.month, d.day )
   @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
-Given(/^the users "(.*?)" had demographics requested$/) do |with_demographics|
-  demographics_requested = with_demographics == 'have'
-  @users.each do |u|
+Given( /^the users "(.*?)" had demographics requested$/ ) do | with_demographics |
+  demographics_requested = 'have' == with_demographics
+  @users.each do | u |
     u.welcomed = demographics_requested
     u.save!
     log u.errors.full_messages if u.errors.present?
   end
 end
 
-Given(/^the user is "(.*?)" user$/) do |which|
+Given( /^the user is "(.*?)" user$/ ) do | which |
+  @users.size.should be > 1, 'There are not enough users to select from'
   case which.downcase
-  when 'a random' then @user = @users.sample
+  when 'a random'
+    tmp_id = @user&.id
+    @user = @users.sample
+    @user = @users.sample while tmp_id == @user.id && @users.size > 1
   when 'the first' then @user = @users.first
   when 'the second' then @user = @users[1]
   when 'the third' then @user = @users[2]
@@ -92,7 +95,7 @@ Given(/^the user is "(.*?)" user$/) do |which|
   end
 end
 
-Given(/^the course has an assessed project$/) do
+Given( /^the course has an assessed project$/ ) do
   yesterday = DateTime.yesterday
   tomorrow = DateTime.tomorrow
 
@@ -102,17 +105,17 @@ Given(/^the course has an assessed project$/) do
     end_dow: 2,
     start_date: yesterday,
     end_date: tomorrow,
-    style: Style.find(1)
+    style: Style.find( 2 )
   )
   @project.save!
   if @project.persisted?
-    @project.get_name(true).should_not be_nil
-    @project.get_name(true).length.should be > 0
+    @project.get_name( true ).should_not be_nil
+    @project.get_name( true ).length.should be > 0
   end
   log @project.errors.full_messages if @project.errors.present?
 end
 
-Given(/^the user is in a group on the project$/) do
+Given( /^the user is in a group on the project$/ ) do
   @group = @project.groups.new(
     name: "#{Faker::Hacker.noun} #{Faker::Team.creature}"
   )
@@ -126,8 +129,7 @@ Given(/^the user is in a group on the project$/) do
       password_confirmation: 'password',
       email: Faker::Internet.email,
       timezone: 'UTC',
-      school: School.find(1),
-      theme_id: 1
+      school: School.find( 1 )
     )
     u.skip_confirmation!
     u.save!
@@ -142,8 +144,8 @@ Given(/^the user is in a group on the project$/) do
   end
   @group.users << @user
   @group.save!
-  @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name( true ).should_not be_nil
+  @group.get_name( true ).length.should be > 0
   log @group.errors.full_messages if @group.errors.present?
   @project.active = false
   @project.save!

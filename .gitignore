@@ -10,11 +10,14 @@
 # Ignore all logfiles and tempfiles.
 /log/*
 **/*.log
+**/*.bak
 !/log/.keep
 /tmp
 /public/assets/*
+**/id_rsa
 rerun.txt
 *.swp
+**/~$*.pptx
 *.DS_Store
 *~
 .byebug_history
@@ -25,10 +28,30 @@ yarn-error.log*
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+.yarn/install-state.gz
 test_results.html
 coverage
 cucumber
 .rake_tasks
+
+
+/config/master.key
+/config/credentials/production.key
+
+rails_best_practices_output.html
+reek.html
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+shakapacker-config-exports/
+# Generated React on Rails packs
+**/generated/**
+ssr-generated
 
 /public/packs
 /public/packs-test

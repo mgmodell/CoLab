@@ -1,0 +1,105 @@
+---
+default:
+  source_path: app/javascript
+  source_entry_path: packs
+  nested_entries: true
+  css_extract_ignore_order_warnings: false
+  public_root_path: public
+  public_output_path: packs
+  private_output_path: ssr-generated
+  cache_path: tmp/shakapacker
+  webpack_compile_output: true
+  shakapacker_precompile: true
+  additional_paths: &1 []
+  cache_manifest: false
+  javascript_transpiler: swc
+  assets_bundler: rspack
+  ensure_consistent_versioning: true
+  compiler_strategy: digest
+  useContentHash: true
+  integrity: &2
+    enabled: false
+    hash_functions:
+    - sha384
+    cross_origin: anonymous
+  early_hints: &3
+    enabled: false
+development:
+  source_path: app/javascript
+  source_entry_path: packs
+  nested_entries: true
+  css_extract_ignore_order_warnings: false
+  public_root_path: public
+  public_output_path: packs
+  private_output_path: ssr-generated
+  cache_path: tmp/shakapacker
+  webpack_compile_output: true
+  shakapacker_precompile: true
+  additional_paths: *1
+  cache_manifest: false
+  javascript_transpiler: swc
+  assets_bundler: rspack
+  ensure_consistent_versioning: true
+  compiler_strategy: mtime
+  useContentHash: false
+  integrity: *2
+  early_hints: *3
+  compile: true
+  dev_server:
+    host: localhost
+    port: 3035
+    hmr: true
+    inline_css: true
+    client:
+      overlay: true
+    compress: true
+    allowed_hosts: auto
+    pretty: true
+    headers:
+      Access-Control-Allow-Origin: "*"
+    static:
+      watch:
+        ignored: "**/node_modules/**"
+test:
+  source_path: app/javascript
+  source_entry_path: packs
+  nested_entries: true
+  css_extract_ignore_order_warnings: false
+  public_root_path: public
+  public_output_path: packs-test
+  cache_path: tmp/shakapacker
+  private_output_path: ssr-generated
+  webpack_compile_output: true
+  shakapacker_precompile: true
+  additional_paths: *1
+  cache_manifest: false
+  javascript_transpiler: swc
+  assets_bundler: rspack
+  ensure_consistent_versioning: true
+  compiler_strategy: digest
+  useContentHash: true
+  integrity: *2
+  early_hints: *3
+  compile: true
+production:
+  source_path: app/javascript
+  source_entry_path: packs
+  nested_entries: true
+  css_extract_ignore_order_warnings: false
+  public_root_path: public
+  public_output_path: packs
+  private_output_path: ssr-generated
+  cache_path: tmp/shakapacker
+  webpack_compile_output: true
+  shakapacker_precompile: true
+  additional_paths: *1
+  cache_manifest: true
+  javascript_transpiler: swc
+  assets_bundler: rspack
+  ensure_consistent_versioning: true
+  compiler_strategy: digest
+  useContentHash: true
+  integrity: *2
+  early_hints:
+    enabled: false
+  compile: false

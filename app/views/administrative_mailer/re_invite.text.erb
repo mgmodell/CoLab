@@ -4,7 +4,7 @@ You've been invited to participate in the following
 course<%= "s" unless @user.rosters.size < 2 %>:
 
 <% @user.rosters.each do |roster| %>
-  - <%= roster.course.name %>
+  - <%= roster.course_name %>
 <% end %>
 Please log into <%= link_to root_url, root_url %> to
 accept or decline this enrollment.

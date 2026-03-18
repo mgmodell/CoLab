@@ -40,3 +40,17 @@ Feature: Concept Administration
     Then a concept name is set to 'mixed case'
     Then the concept name is saved in standard form
 
+  @javascript
+  Scenario: Change the name of a concept through the Admin functions
+    When create a concept named "Conceptually speaking"
+    Then a concept will exist named "Conceptually speaking"
+    Then the user is an admin
+    Then the user logs in
+    Then the user clicks the Admin button
+    Then the user selects the 'Concepts' menu item
+    Then the user updates the "Conceptually Speaking" concept to "Conceptually speaking (CS)"
+    Then the user waits to see "successfully"
+    Then close all messages
+    Then the concept "Conceptually Speaking (cs)" will be in the list
+    Then a concept will exist named "Conceptually speaking (cs)"
+    Then a concept will not exist named "Conceptually speaking"

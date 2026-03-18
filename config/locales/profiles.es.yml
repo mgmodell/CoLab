@@ -1,0 +1,79 @@
+es:
+  profiles:
+    activities:
+      name: Actividad
+      type: Tipo
+      course_name: Curso
+      course_number: Número del curso
+    first_name: Nombre
+    last_name: Apellido
+    edit_profile: Edita tu perfil
+    tabs:
+      details: Detalles
+      courses: Mis Cursos
+      history: Hisorial
+      research: Participación en la investigación
+    cancel: Cancelar
+    email_settings: Configuración del correo electrónico
+    emails:
+      email_lbl: Correo electrónico
+      registered_col: Correos electrónicos registrados
+      primary_col: Principal
+      set_primary: ¿Establecer como principal? 
+      confirmed_col: Confirmado
+      remove_btn: ¿Eliminar?
+      add_btn: ¡Agregar correo electrónico!
+      add_dlg_title: Agregar correo electrónico
+      add_dlg: Agregar un nuevo correo electrónico
+      none_yet: No hay correos electrónicos cargados
+      remove_tltp: Eliminar esta dirección
+    none_option: No se ha seleccionado ninguno
+    course_status:
+      name: Nombre
+      number: Número
+      bingo: ¡Bingo! progreso
+      assessment: Progreso de la evaluación
+      experience: Progreso de la experiencia
+    consent:
+      name: Título del estudio
+      status: Estado del estudio
+      accept_status: ¿Aceptado?
+      active: Activo
+      expired: Inactivo (expired)
+      inactive: Inactivo
+      accepted: Aceptado
+      declined: Rechazado
+      action: Acción
+    password_change: >
+      ¿Quieres cambiar tu contraseña? Haga clic aquí y le enviaremos instrucciones por
+      correo electrónico.
+    display_settings:
+      prompt: Configuración de pantalla
+      ui_theme: ¿Qué tema de interfaz de usuario te gustaría usar?
+      language: ¿Qué idioma le gustaría utilizar para CoLab?
+      time_zone: ¿En qué zona horaria se encuentra?
+      anonymize: ¿Nombres anónimos?
+    demographics: 
+      prompt: >
+        Cuéntanos acerca de tí, {{first_name}} (optional)
+      date_prompt: Introduce la fecha
+      time_zone: Zona horaria
+      school: ¿A qué escuela asiste actualmente?
+      major: ¿Qué está estudiando?
+      start_school: ¿Cuándo empezó a estudiar?
+      born: ¿Cuándo nació?
+      gender: ¿Cuál es su género?
+      home_language: ¿Qué idioma habla en casa?
+      home_town: ¿A qué lugar llama hogar?
+      home_country: ¿Qué país?
+      home_state: ¿Qué estado?
+      impairments:
+        prompt: >
+          ¿Tiene algún impedimento que altere su 
+          perspectiva?
+        visual: Visual
+        auditory: Auditivo
+        cognitive: Cognitiva
+        motor: Motor
+        other: Otra
+      

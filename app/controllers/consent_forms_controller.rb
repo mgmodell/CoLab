@@ -7,10 +7,9 @@ class ConsentFormsController < ApplicationController
   # GET /consent_forms.json
   def index
     @consent_forms = ConsentForm.all
-    respond_to do |format|
-      format.html { render }
+    respond_to do | format |
       format.json do
-        resp = @consent_forms.collect do |cf|
+        resp = @consent_forms.collect do | cf |
           {
             id: cf.id,
             name: cf.name,
@@ -25,8 +24,7 @@ class ConsentFormsController < ApplicationController
   # GET /consent_forms/1
   # GET /consent_forms/1.json
   def show
-    respond_to do |format|
-      format.html
+    respond_to do | format |
       format.json do
         response = {
           consent_form: @consent_form.as_json(
@@ -46,12 +44,10 @@ class ConsentFormsController < ApplicationController
   # POST /consent_forms
   # POST /consent_forms.json
   def create
-    @consent_form = ConsentForm.new(consent_form_params)
-    respond_to do |format|
+    @consent_form = ConsentForm.new( consent_form_params )
+    respond_to do | format |
       if @consent_form.save
         notice = 'Consent form was successfully created.'
-        format.html { redirect_to @consent_form, notice: }
-        format.json { render :show, status: :created, location: @consent_form }
         format.json do
           response = {
             consent_form: @consent_form.as_json(
@@ -64,8 +60,6 @@ class ConsentFormsController < ApplicationController
         end
       else
         logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
-        format.html { render :new }
-        format.json { render json: @consent_form.errors, status: :unprocessable_entity }
         format.json do
           messages = @consent_form.errors.as_json
           messages[:main] = 'Please review the problems below'
@@ -80,10 +74,9 @@ class ConsentFormsController < ApplicationController
   # PATCH/PUT /consent_forms/1
   # PATCH/PUT /consent_forms/1.json
   def update
-    if @consent_form.update(consent_form_params)
+    if @consent_form.update( consent_form_params )
       notice = 'Consent form was successfully updated.'
-      respond_to do |format|
-        format.html { redirect_to @consent_form, notice: }
+      respond_to do | format |
         format.json do
           response = {
             consent_form: @consent_form.as_json(
@@ -97,8 +90,7 @@ class ConsentFormsController < ApplicationController
       end
     else
       logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
-      respond_to do |format|
-        format.html { render :edit }
+      respond_to do | format |
         format.json do
           messages = @consent_form.errors.to_hash
           messages[:main] = 'Please review the problems below.'
@@ -115,8 +107,7 @@ class ConsentFormsController < ApplicationController
   # DELETE /consent_forms/1.json
   def destroy
     @consent_form.destroy
-    respond_to do |format|
-      format.html { redirect_to consent_forms_url, notice: 'Consent form was successfully destroyed.' }
+    respond_to do | format |
       format.json { head :no_content }
     end
   end
@@ -125,18 +116,18 @@ class ConsentFormsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_consent_form
-    @consent_form = if params[:id].blank? || params[:id] == 'new'
+    @consent_form = if params[:id].blank? || 'new' == params[:id]
                       ConsentForm.new
                     else
-                      ConsentForm.find(params[:id])
+                      ConsentForm.find( params[:id] )
                     end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def consent_form_params
-    params.require(:consent_form)
-          .permit(:name, :user_id, :pdf, :project_ids,
-                  :form_text_en, :form_text_ko,
-                  :start_date, :end_date, :active)
+    params.require( :consent_form )
+          .permit( :name, :user_id, :pdf, :project_ids,
+                   :form_text_en, :form_text_ko,
+                   :start_date, :end_date, :active )
   end
 end

@@ -1,0 +1,27 @@
+es:
+  schools:
+    index:
+      title: Lista de escuelas
+      name_lbl: Nombre
+      description_lbl: Descripción
+      courses_lbl: Cursos
+      students_lbl: Conteo de estudiantes
+      instructor_lbl: Conteo de instructores
+      project_lbl: Conteo de proyectos
+      experience_lbl: Conteo de experiencias
+      terms_list_lbl: Lista de términos
+
+    edit:
+      title: Editar escuela
+    show:
+      title: Detalles de la escuela
+      edit_string: Editar detalles de la escuela
+    new:
+      title: Nueva escuela
+    create_success: ¡La escuela fue creada exitosamente!
+    destroy_success: ¡La escuela fue eliminada exitosamente!
+    update_success: ¡La escuela fue actualizada exitosamente
+    courses: Cursos de la escuela
+    no_courses: No hay cursos.
+    back: Volver a la lista de escuelas
+    time_zone: Zona horaria

@@ -24,6 +24,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 7, 1980, 12:00 AM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 9, 1980, 11:59 PM"
     
   @javascript
@@ -38,6 +39,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 7, 1980, 9:00 AM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 10, 1980, 8:59 AM"
     
   @javascript
@@ -67,6 +69,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 7, 1980, 5:00 AM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 10, 1980, 4:59 AM"
     When the system emails stragglers
     When the system emails stragglers
@@ -86,6 +89,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 6, 1980, 3:00 PM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 9, 1980, 2:59 PM"
     When the system emails stragglers
     When the system emails stragglers
@@ -106,6 +110,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 6, 1980, 3:00 PM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 9, 1980, 2:59 PM"
     When the system emails stragglers
     When the system emails stragglers
@@ -126,6 +131,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 6, 1980, 3:00 PM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 9, 1980, 2:59 PM"
     When the system emails stragglers
     When the system emails stragglers
@@ -154,6 +160,7 @@ Feature: Timezone Support
 
     #Loop - every hour for 5 days
     When the user logs in
+    Then the user should see a successful login message
     Given today is "March 5, 1980 at 3:00pm"
     Given the user sees 0 assessment every hour of the day
     Given today is "March 6, 1980 at 3:00pm"

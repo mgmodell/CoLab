@@ -1,12 +1,24 @@
 en:
   bingo_games:
     update_bingo_btn: Update Bingo Game
+    scored_game:
+      list_title: scored item
+      term: Term
+      definition: Definition
+      feedback: Feedback
+      concept: Concept
+      credit: Credit
+      average_score: Average score
     create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game
+    game_dates: Game availability dates
     open_date: Open date
     close_date: Game date
+    start_date_lbl: Start date
+    end_date_lbl: End date
+    date_to_lbl: until
     lead_time: Days for instructor review
     review_candidates:
       title: Candidate Terms for Review
@@ -31,9 +43,29 @@ en:
     active: Active
     group_option: Make groups available?
     activate_success: Bingo! Game activated!
+    review:
+      completed_col: Complete
+      submitter_col: Submitted by
+      term_col: Term
+      definition_col: Definition
+      feedback_col: Feedback
+      concept_col: Concept
+      none_msg: N/A
+      review_complete_msg: Review completed
+      not_set_opt: Not set
+      data_loaded_msg: Data loaded
+      saving_msg: Saving feedback
+      save_fail_msg: The save operation failed
+      reload_btn: Reload
+      toggle_columns_plc: Hide columns
+      progress_key: >
+        Unique concepts [acceptable concepts]
+        {{unique}} [{{acceptable}}]
     #Term data
     topic: Topic
     description: Description
+    score: Score
+    file_select: Score Sheet Image
     definition: Definition
     feedback: Feedback
     concept: Concept

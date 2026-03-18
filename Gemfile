@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.1.1'
+ruby '3.4.8'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.2.2'
+gem 'rails', '~> 8.1.2'
 
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 7.2.0'
 # Use mysql as the database for Active Record
-#gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'mysql2'
+gem "foreman"
 
 # Use Uglifier as compressor for JavaScript assets
 # gem 'uglifier', '>= 1.3.0'
@@ -18,8 +18,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-# https://github.com/rails/webpacker
-gem 'webpacker'
+gem 'shakapacker', '9.7.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -37,27 +36,35 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'chronic'
 gem 'city-state'
-# gem 'country_select'
+gem 'connection_pool'
+gem 'csv'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email', git: 'https://github.com/mgmodell/devise-multi_email.git'
-gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
+gem 'devise'
+gem 'devise-multi_email'
+gem 'devise_token_auth_multi_email'
 gem 'email_address'
-gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
+gem 'faker'
 gem 'image_processing', '~> 1.0'
+gem 'keypairs'
 gem 'listen'
+gem 'lockbox'
 gem 'matrix'
 gem 'net-smtp'
 gem 'omniauth'
+#This one is currently preventing oauth2 up update
 gem 'omniauth-google-oauth2'
+gem 'oj'
 gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react-rails'
-gem 'stopwords-filter', require: 'stopwords'
+gem 'react_on_rails', '16.4.0'
+
+gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
+gem 'tzinfo-data'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -72,32 +79,35 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'cucumber-rails', require: false, git: 'https://github.com/mgmodell/cucumber-rails'
-  gem 'database_cleaner'
+  # gem 'derailed'
   # gem 'ruby-debug-ide'
   # gem 'debase'
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
-  gem 'paperclip'
+  # gem 'paperclip'
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
-  gem 'rb-readline'
+  # gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.26.0', require: false
+  gem 'rails_best_practices'
+  gem 'rubocop', '~> 1.85.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
-  gem 'selenium-webdriver'
-  gem 'solargraph'
-  gem 'webdrivers', '~> 5.0', require: false
+  gem 'rubocop-capybara'
+  # gem 'solargraph'
+  gem 'traceroute'
 end
 
 group :test do
-  gem 'simplecov', require: false
+  gem 'selenium-webdriver'
+  gem 'cucumber-rails',require: false
+  gem 'capybara'
+  gem 'database_cleaner'
 end
 
 group :development do

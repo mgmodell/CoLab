@@ -1,0 +1,62 @@
+ko:
+  intro:
+    tooltips:
+        welcome: Welcome
+        about: About
+        why: CoLab을 선택해야만 하는 이유
+        research: Research
+        student: Student?
+        instructor: Instructor?
+    titles:
+        about: Who's behind CoLab?
+        why: How can CoLab help you?
+        research: The research behind CoLab
+        student: CoLab features for studentsWhy CoLab?
+        instructor: CoLab features for instructors
+    why_slides:
+        captions:
+            one_one: >
+                Collaboration can look different for
+                everyone.
+            one_two: >
+                But have you ever experienced any of these scenarios
+                in group projects?
+            two_one: >
+                Let's take a look at some examples of unequal group
+                work participation...
+            two_two: >
+                Group Domination: One person takes over and
+                thinks everyone else's opinion is not good enough
+            three_one: Have you ever been a George?
+            three_two: >
+                Leave it to George: One person does all the work and
+                everyone else watches
+            four_one: Or maybe this sounds familiar?
+            four_two: >
+                Social loafers or Free Riders: One or more students
+                slack off while everyone else does the work
+            five_one: What would you do in these situations?
+            five_two: >
+                Do you have to wait until the end of the semester to get help
+                from your professor?
+            six_one: >
+                What if there was a way for your professor to help
+                before things got out of hand?
+            six_two: Now there is!
+            seven_one:
+                title: 당신에게 CoLab.online이 필요한 이유입니다!
+                check-ins: 매주 자기평가 및 동료평가 진행
+                growth: 비판이 아닌 성장에 중점을 둔 피드백
+                visualizations: 협력도 시각화
+                diversity: 다양성을 고려한 그룹 구성
+                gamification: 게임화된 협업 읽기
+                simulations: 시뮬레이션을 통한 협력 체험
+                iterative_assignments: 반복 실행 과제
+            seven_two:
+                title: Are you a...
+                student: Student?
+                instructor: Instructor?
+
+    images:
+        student_concern: Student talks to teacher
+        normally_functioning: A group of students where all are engaged

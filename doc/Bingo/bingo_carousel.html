@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bingo Board with Carousel Definitions</title>
+  <style>
+    body {
+      background-color: hsl(240, 86%, 45%);
+      font-family: Baskerville, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0;
+      margin: 0;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 100px);
+      grid-template-rows: 50px repeat(5, 100px);
+      gap: 5px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .grid-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .title {
+      grid-column: span 5;
+      background-color: #ffcc00;
+      font-weight: bold;
+      font-size: 24px;
+      color: #000;
+    }
+
+    .definition-carousel {
+      color: white;
+      font-size: 18px;
+      text-align: center;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .arrow-button {
+      background-color: #ffffff22;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .definition-text {
+      flex: 1;
+      padding: 12px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      line-height: 1.4;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="grid-container">
+    <div class="grid-item title">Bingo Board</div>
+    <div class="grid-item">A1</div><div class="grid-item">B1</div><div class="grid-item">C1</div><div class="grid-item">D1</div><div class="grid-item">E1</div>
+    <div class="grid-item">A2</div><div class="grid-item">B2</div><div class="grid-item">C2</div><div class="grid-item">D2</div><div class="grid-item">E2</div>
+    <div class="grid-item">A3</div><div class="grid-item">B3</div><div class="grid-item">*</div><div class="grid-item">D3</div><div class="grid-item">E3</div>
+    <div class="grid-item">A4</div><div class="grid-item">B4</div><div class="grid-item">C4</div><div class="grid-item">D4</div><div class="grid-item">E4</div>
+    <div class="grid-item">A5</div><div class="grid-item">B5</div><div class="grid-item">C5</div><div class="grid-item">D5</div><div class="grid-item">E5</div>
+  </div>
+
+  <div class="definition-carousel">
+    <button class="arrow-button" onclick="prevDefinition()">←</button>
+    <div class="definition-text" id="definitionText"></div>
+    <button class="arrow-button" onclick="nextDefinition()">→</button>
+  </div>
+
+  <script>
+    const definitions = [
+      { text: "Lorem ipsum dolor sit amet", color: "#e74c3c" },
+      { text: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", color: "#f39c12" },
+      { text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", color: "#f1c40f" },
+      { text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.", color: "#2ecc71" },
+      { text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", color: "#1abc9c" },
+      { text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", color: "#3498db" },
+      { text: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", color: "#9b59b6" },
+      { text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.", color: "#34495e" },
+      { text: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.", color: "#e67e22" },
+      { text: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.", color: "#95a5a6" }
+    ];
+
+    let currentIndex = 0;
+    let selectedColor = definitions[currentIndex].color;
+
+    function updateDefinition() {
+      const current = definitions[currentIndex];
+      document.getElementById("definitionText").textContent = current.text;
+      selectedColor = current.color;
+    }
+
+    function prevDefinition() {
+      currentIndex = (currentIndex - 1 + definitions.length) % definitions.length;
+      updateDefinition();
+    }
+
+    function nextDefinition() {
+      currentIndex = (currentIndex + 1) % definitions.length;
+      updateDefinition();
+    }
+
+    // Highlight grid cells
+    document.querySelectorAll('.grid-item').forEach(cell => {
+      if (!cell.classList.contains('title')) {
+        cell.addEventListener('click', function () {
+          if (selectedColor) {
+            this.style.backgroundColor = selectedColor;
+          }
+        });
+      }
+    });
+
+    // Initialize first definition
+    updateDefinition();
+  </script>
+
+</body>
+</html>

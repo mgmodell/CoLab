@@ -178,3 +178,59 @@
     Suggesting allocation of resources (team members, materials, etc.)
     to individual task completions.
   description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Progress towards task completion
+  name_ko: 
+  description_en: >
+    Performing tasks that bring the team materially closer to meeting
+    its objective(s).
+  description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Facilitates free flow of ideas
+  name_ko: 
+  description_en: >
+    Engages in activities that leads to the sharing and/or generation of
+    ideas that relate to meeting the team's objective(s).
+  description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Involved in skill augmentation behavior
+  name_ko: 
+  description_en: >
+    Provides help or support to team members, makes it possible for
+    others to provide help or initiates requests for assistance or
+    additional support for themselves.
+  description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Develops and implements strategy
+  name_ko: 
+  description_en: >
+    Considers the tasks required to progress towards meeting objectives
+    and works to develop, communicate and track progress towards
+    achieving milestones - adapting approach as warranted.
+  description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Considers alternate approaches and/or perspectives
+  name_ko: 
+  description_en: >
+    Actively generates and/or seeks out creative solutions to the
+    problem(s) facing the team. Entertains all possibilities.
+  description_ko: 
+
+- !ruby/object:Factor_
+  fp: AECT 2023
+  name_en: Contributes towards understanding goals/requirements
+  name_ko: 
+  description_en: >
+    interrogates the objectives and the problem space to develop and
+    share a thorough understanding of the challenge(s) facing the team.
+  description_ko: 

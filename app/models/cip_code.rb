@@ -2,5 +2,5 @@
 
 class CipCode < ApplicationRecord
   translates :name
-  has_many :users, inverse_of: :cip_code
+  has_many :users, inverse_of: :cip_code, dependent: :nullify
 end

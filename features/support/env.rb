@@ -8,22 +8,37 @@
 
 require 'cucumber/rails'
 require 'selenium/webdriver'
-require 'webdrivers'
-Webdrivers.cache_time = 86_400
+# require 'webdrivers'
 
-require 'simplecov'
-SimpleCov.start 'rails'
+
+# Webdrivers.cache_time = 86_400
+
 
 def wait_for_render
   times = 3000
 
-  while !all(:xpath, "//*[@id='waiting']").empty? && times > 0
-    sleep(0.01)
+  while !all( :xpath, "//*[@id='waiting']" ).empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
+    sleep( 0.01 )
     times -= 1
   end
 end
 
-Capybara.register_driver :headless_firefox do |app|
+def ack_messages
+  find_all( :xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']" ).each do | element |
+    element.click
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+    true.should( be_false, e.inspect )
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    true.should( be_false, e.inspect )
+  end
+end
+
+# Not sure I should really need this, but...
+# Latest pulled from https://chromedriver.storage.googleapis.com/index.html
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+
+Capybara.register_driver :headless_firefox do | app |
   profile = Selenium::WebDriver::Firefox::Profile.new
   client = Selenium::WebDriver::Remote::Http::Default.new
   client.timeout = 120 # instead of the default of 60s
@@ -38,7 +53,7 @@ Capybara.register_driver :headless_firefox do |app|
   )
 end
 
-Capybara.register_driver :firefox do |app|
+Capybara.register_driver :firefox do | app |
   profile = Selenium::WebDriver::Firefox::Profile.new
   client = Selenium::WebDriver::Remote::Http::Default.new
   client.timeout = 120 # instead of the default of 60s
@@ -52,19 +67,51 @@ Capybara.register_driver :firefox do |app|
   )
 end
 
-Capybara.register_driver(:chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[disable-gpu] }
-  )
+Capybara.register_driver( :remote_chrome ) do | app |
+  options = Selenium::WebDriver::Chrome::Options.new
 
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome
-    # desired_capabilities: capabilities
+    browser: :remote,
+    url: 'http://selenium:4444/wd/hub',
+    options:
   )
 end
 
+Capybara.register_driver( :headless_chrome ) do | app |
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument( '--headless' )
+  options.add_argument( '--disable-extensions' )
+  options.add_argument( '--browser-test' )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: :options
+  )
+end
+
+Capybara.register_driver( :chrome ) do | app |
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument( '--disable-extensions' )
+  options.add_argument( '--browser-test' )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options:
+  )
+end
+
+# Fix docker-ization later
 Capybara.javascript_driver = case ENV['DRIVER']
+                             when 'docker'
+                               Capybara.server_host = `hostname -s`.strip
+                               Capybara.server_port = '31337'
+                               Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+                               :remote_chrome
+                             when 'chrome_h'
+                               :headless_chrome
                              when 'chrome'
                                :chrome
                              when 'ff'
@@ -82,15 +129,16 @@ Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
 def loadData
-  sql = File.read('db/test_db.sql')
-  statements = sql.split(/;$/)
+  sql = File.read( 'db/test_db.sql' )
+  statements = sql.split( /;$/ )
   statements.pop # remote empty line
   ActiveRecord::Base.transaction do
-    statements.each do |statement|
-      ActiveRecord::Base.connection.execute(statement)
+    statements.each do | statement |
+      ActiveRecord::Base.connection.execute( statement )
     end
   end
 end
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
@@ -116,7 +164,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
@@ -137,7 +185,7 @@ end
 #
 
 Before '@javascript' do
-  page.driver.browser.manage.window.resize_to(1024, 768)
+  page.driver.browser.manage.window.resize_to( 1024, 768 )
   DatabaseCleaner.strategy = :truncation
 end
 
@@ -146,8 +194,10 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+# loadData
+
 Before do
-  EmailAddress::Config.setting(:host_validation, :syntax)
+  EmailAddress::Config.setting( :host_validation, :syntax )
   loadData
   DatabaseCleaner.start
   Chronic.time_class = Time.zone
@@ -155,21 +205,21 @@ Before do
   @anon = false
 end
 
-After('@javascript') do |_scenario|
+After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
   loadData
   travel_back
 end
 
-After('not @javascript') do |_scenario|
+After( 'not @javascript' ) do | _scenario |
   DatabaseCleaner.clean
   travel_back
 end
 
 scenario_times = {}
 
-World(ActiveJob::TestHelper)
-Around() do |scenario, block|
+World( ActiveJob::TestHelper )
+Around() do | scenario, block |
   start = Time.zone.now
   perform_enqueued_jobs do
     block.call
@@ -179,11 +229,11 @@ end
 
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
-  total_time = scenario_times.values.inject(0) { |sum, x| sum + x }
+  total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
   puts "Aggregate Testing Time: #{total_time}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
-  sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
-  sorted_times[0..max_scenarios - 1].each do |key, value|
-    puts "#{value.round(2)}  #{key}"
+  sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
+  sorted_times[0..max_scenarios - 1].each do | key, value |
+    puts "#{value.round( 2 )}  #{key}"
   end
 end

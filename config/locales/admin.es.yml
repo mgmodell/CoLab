@@ -1,0 +1,5 @@
+es:
+  admin:
+    accept_decline: Aceptar/Rechazar
+    new_activity: Nueva {{activity_type}}
+    toggle_columns_plc: Mostrar columnas ocultas

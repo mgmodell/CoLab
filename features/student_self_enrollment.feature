@@ -73,13 +73,13 @@ Feature: Presenting Consent Forms
      Then the course has 1 "requesting student" users
 
 @javascript
-  Scenario: A logged in course-enrolled CoLab user self-registers for the course
+  Scenario: A logged in course-enrolled CoLab user cannot self-register for the course
     Given the user is "a random" user
     Given the user "has" had demographics requested
     Given the user logs in
      Then the user opens the self-registration link for the course
      Then the user sees "Enrollment confirmation"
-     Then the user clicks "Enroll me!"
+    Then the 'Enroll me!' button will be disabled
      Then the course has 12 "enrolled student" users
 
 @javascript

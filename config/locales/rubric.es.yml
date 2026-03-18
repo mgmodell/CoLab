@@ -1,0 +1,47 @@
+es:
+  rubrics:
+    index:
+      title: Lista de Rúbricas
+    edit:
+      title: Editar Rúbrica
+      deactivate: Desactivar Rúbrica
+      activate: Activate Rubric
+    show:
+      title: Detalles de la rúbrica
+      edit_string: Editar detalles de la rúbrica
+      published: ¿Esta publicado?
+      creator: Creado por
+    new:
+      title: Nueva Rúbrica
+      criteria: Nuevos criterios
+      criteria_l1: Mínimo
+    create_success: ¡La rúbrica se creó exitosamente!
+    new_version_success: Una nueva versión fue creada
+    destroy_success: ¡La rúbrica fue destruida exitosamente!
+    update_success: ¡La rúbrica fue actualizada exitosamente!
+    publish_success: ¡La rúbrica se publicó exitosamente!
+    activate_success: Se activó la rúbrica
+    copy_success: ¡La rúbrica se copió correctamente!
+    deactivate_success: Rúbrica fue desactivada
+    back: Volver a la lista de rúbricas
+    name: Nombre
+    description: Descripción
+    version: Versión
+    rubric:
+      copy: Copiar rúbrica
+      delete: Eliminar esta rúbrica
+    criteria:
+      new: Nuevos criterios
+      sequence: Secuencia
+      description: Breve descripción de criterios
+      weight: Peso de los criterios
+      l1_description: Minimum requirements
+      l2_description: Requisitos para el crédito de nivel 2
+      l3_description: Requisitos para el crédito de nivel 3
+      l4_description: Requisitos para el crédito de nivel 4
+      l5_description: Requisitos para el crédito de nivel 5
+      up: Mover criterios hacia arriba
+      down: Mover criterios hacia abajo
+      copy: Criterios de copia
+      delete: Eliminar este criterio
+

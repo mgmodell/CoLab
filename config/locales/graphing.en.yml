@@ -1,9 +1,16 @@
 en:
   graphing:
     # Reporting terms
-    instruction: >
+    instructions: >
       Please use this page to visualise the data available for your
       students.
+    admin_instructions: >
+      All data is genuine. Please use use the anonymization capabilities
+      to demonstrate functionality and filter for users who offered
+      consent if presenting to a public audience.
+    lay_instructions: >
+      All data is genuine, but anonymized to be suitable for
+      presentation to all audiences.
     agree: Agree
     disagree: Disagree
     consent_switch: Limit to consenting users only
@@ -20,7 +27,7 @@ en:
     loading: Data is loading
     chart_for_group: Group chart for {{subject}}
     chart_for_individual: Individual chart for {{subject}}
-    chart_for_project: for project 
+    chart_for_project: for project
     none: None Selected
     date: Date
     contribution_lvl: Contribution Level

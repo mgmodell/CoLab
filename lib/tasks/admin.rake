@@ -40,10 +40,10 @@ namespace :admin do
   end
 
   desc 'Get diversity information for a class'
-  task :diversanal, [:course_id,:member_count] => [:environment] do |_t, args| 
+  task :diversanal, [:course_id,:member_count] => [:environment] do |_t, args|
     course = Course.where( id: args[:course_id].to_i ).take
     member_count = args[:member_count].to_i
-    if course.nil? 
+    if course.nil?
       puts '  This task analyses the student diversity in a class and '
       puts ' offers related analysis and data.'
       puts '   Usage:   rake admin:diversanal[<course_id>]'

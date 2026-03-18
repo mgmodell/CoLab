@@ -23,10 +23,12 @@ Feature: Experience Administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Group Experience"
-    Then the user sets the "Name" field to "Jimmy Hendrix"
+    Then the user sets the "Experience name" field to "Jimmy Hendrix"
     Then the user sets the "Days for instructor prep" field to "5"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -42,17 +44,21 @@ Feature: Experience Administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Group Experience"
-    Then the user sets the "Name" field to "Jimmy Hendrix"
+    Then the user sets the "Experience name" field to "Jimmy Hendrix"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
      And the experience "lead_time" is 3
      And the experience start date is "5/10/1976" and the end date is "tomorrow"
+    Then the user sees the 'experience' 'start date' is '05/10/1976'
+    Then the user sees the 'experience' 'end date' is 'tomorrow'
 
 @javascript
-  Scenario: Instructor creates a new Experience
+  Scenario: Instructor creates a new Experience and student can see it
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
@@ -60,12 +66,15 @@ Feature: Experience Administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Group Experience"
-    Then the user sets the "Name" field to "Jimmy Hendrix"
-    Then the user sets the experience "start" date to "2/29/1980"
-    Then the user sets the experience "end" date to "7/10/2008"
+    Then the user sets the "Experience name" field to "Jimmy Hendrix"
+    Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
+    Then close all messages
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
@@ -78,17 +87,20 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Edit" on the existing experience
-    Then the user sets the "Name" field to "Bob Marley"
-    Then the user sets the experience "start" date to "2/29/1980"
-    Then the user sets the experience "end" date to "7/10/2008"
+    Then the user edits the existing experience
+    Then the user sets the "Experience name" field to "Bob Marley"
+    Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
+    Then close all messages
     Then the user clicks "Save Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"
      And the experience "lead_time" is 3
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
 
 @javascript
   Scenario: Instructor edits an existing Experience with lead time
@@ -98,16 +110,19 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Edit" on the existing experience
-    Then the user sets the "Name" field to "Bob Marley"
-    Then the user sets the experience "start" date to "2/29/1980"
-    Then the user sets the experience "end" date to "7/10/2008"
+    Then the user edits the existing experience
+    Then the user sets the "Experience name" field to "Bob Marley"
+    Then the user sets the "experience" start date to "2/29/1980" and the end date to "7/10/2008"
+    Then close all messages
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Save Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"
      And the experience "lead_time" is 5
     Then the experience start date is "2/29/1980" and the end date is "7/10/2008"
+    Then the user sees the 'experience' 'start date' is '02/29/1980'
+    Then the user sees the 'experience' 'end date' is '07/10/2008'
 
