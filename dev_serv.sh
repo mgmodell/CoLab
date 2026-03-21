@@ -71,7 +71,7 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
       echo "Feature: $OPTARG"
       FEATURE=true
       FEATURES=$OPTARG
-      MIGRATE=true
+      MIGRATE=false
       ;;
     c)
       rails console
