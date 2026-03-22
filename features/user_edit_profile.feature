@@ -44,3 +44,29 @@ Feature: User edit Profile
     Then the user sees the 'birth date' is '07/29/1984'
     Then the user sees the 'start school date' is '04/13/1994'
 
+  @javascript
+  Scenario: User can generate a password reset email using their primary address
+    Then show the email queue
+    Given the email queue is empty
+    And the user 'is' confirmed
+    When the user visits the index
+    Then the user switches to the "Forgot your password?" tab
+    Then the user fills in the password reset form with their "primary" email address
+    Then there are no performed tasks
+    Then the user clicks "Send me reset password instructions"
+    Then 1 emails will be sent
+    Then 0 emails will be tracked
+
+  @javascript
+  Scenario: User can generate a password reset email using their secondary address
+    Then show the email queue
+    Given the email queue is empty
+    Given the user has an additional email address
+    And the user 'is' confirmed
+    When the user visits the index
+    Then the user switches to the "Forgot your password?" tab
+    Then the user fills in the password reset form with their "secondary" email address
+    Then there are no performed tasks
+    Then the user clicks "Send me reset password instructions"
+    Then 2 emails will be sent
+    Then 0 emails will be tracked
