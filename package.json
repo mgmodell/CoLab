@@ -18,7 +18,7 @@
     "@react-spring/types": "9.7.5",
     "@react-spring/web": "9.7.5",
     "@reduxjs/toolkit": "^2.11.2",
-    "@swc/core": "^1.15.18",
+    "@swc/core": "^1.15.21",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-redux": "^7.1.34",
