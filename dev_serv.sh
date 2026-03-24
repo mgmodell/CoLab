@@ -145,6 +145,8 @@ fi
 # Test a feature
 if [ "$FEATURE" = true ]; then
   echo 'Testing Feature'
+  rm -rf public/packs-test ssr-generated tmp/shakapacker
+  RAILS_ENV=test bin/shakapacker
   rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
 fi
 

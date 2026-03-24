@@ -52,6 +52,9 @@ development:
     inline_css: true
     client:
       overlay: true
+      webSocketURL:
+        port: 3035
+        protocol: ws
     compress: true
     allowed_hosts: auto
     pretty: true
