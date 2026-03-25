@@ -158,9 +158,13 @@ if [ "$RUN_TESTS" = false ]; then
 elif [ "$SPEC_FEATURE" = true ]; then
   # Run the specialised tests
   echo "Begin the specified test executions: $FEATURE" >&2
+  rm -rf public/packs-test ssr-generated tmp/shakapacker
+  RAILS_ENV=test bin/shakapacker
   rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER FEATURE=$FEATURE COLAB_DB=db
 else
   # Run the tests
   echo "Begin the remaining test executions" >&2
+  rm -rf public/packs-test ssr-generated tmp/shakapacker
+  RAILS_ENV=test bin/shakapacker
   rails cucumber:rerun RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER COLAB_DB=db
 fi
