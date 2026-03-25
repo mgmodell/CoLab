@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.4.8'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.1.2'
+gem 'rails', '~> 8.1.3'
 
 gem 'puma', '~> 7.2.0'
 # Use mysql as the database for Active Record
@@ -93,7 +93,7 @@ group :development, :test do
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.85.1', require: false
+  gem 'rubocop', '~> 1.86', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
