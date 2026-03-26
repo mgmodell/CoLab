@@ -33,7 +33,7 @@ import Admin from "./Admin";
 
 import ProfileDataAdmin from "./profile/ProfileDataAdmin";
 import InstallmentReport from "./checkin/InstallmentReport";
-import Experience from "./experiences/ExperienceInstructions";
+import Experience from "./experiences/Experience";
 import ReportingAdmin from "./Reports/ReportingAdmin";
 
 import EnrollInCourse from "./EnrollInCourse";
