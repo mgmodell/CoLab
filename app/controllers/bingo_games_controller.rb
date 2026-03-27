@@ -469,7 +469,7 @@ class BingoGamesController < ApplicationController
         next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
-        entered_concepts << Concept.standardize_name( name: concept_name )
+        entered_concepts << Concept.standardize_concept( name: concept_name )
       end
 
       concept_map = {}
@@ -507,7 +507,7 @@ class BingoGamesController < ApplicationController
                    if 'term_problem' != candidate.candidate_feedback_critique
                      entered_candidate[:concept][:name].present?
                      concept_name = entered_candidate[:concept][:name]
-                     concept_name = Concept.standardize_name name: concept_name
+                     concept_name = Concept.standardize_concept name: concept_name
 
                      concept = concept_map[concept_name]
                      if concept_name.present? && concept.nil?
