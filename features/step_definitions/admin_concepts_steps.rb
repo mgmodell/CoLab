@@ -46,7 +46,7 @@ end
 
 Then( 'the concept name is saved in standard form' ) do
   @concept.reload.name.should_not eq @concept_saved
-  @concept.reload.name.should eq Concept.standardize_name name: @concept_saved
+  @concept.reload.name.should eq Concept.standardize_concept name: @concept_saved
 end
 
 Then( 'the user updates the {string} concept to {string}' ) do | concept_old, concept_new |
