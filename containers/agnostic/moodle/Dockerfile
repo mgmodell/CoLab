@@ -1,2 +1,1 @@
-FROM docker.io/bitnami/moodle
-
+FROM docker.io/erseco/alpine-moodle:v5.0.1

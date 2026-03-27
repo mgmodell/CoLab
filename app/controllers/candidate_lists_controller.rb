@@ -50,7 +50,7 @@ class CandidateListsController < ApplicationController
           description: bingo_game.description,
           group_option: bingo_game.group_option?,
           end_date: bingo_game.end_date,
-          group_name: group.present? ? group.get_name( false ) : nil,
+          group_name: group.presence&.get_name( false ),
           is_group: candidate_list.is_group?,
           expected_count: candidate_list.expected_count,
           candidates: candidate_list.candidates.as_json(

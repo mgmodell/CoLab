@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[demo_withdraw show_demo]
+  skip_before_action :authenticate_user!, only: %i[show_demo]
   before_action :set_submission, only: %i[show update withdraw]
 
   include Demoable
@@ -62,7 +62,6 @@ class SubmissionsController < ApplicationController
       new_copy.recorded_score = nil
       @submission = new_copy
     end
-
 
     @submission.submitted = DateTime.now if params[:submit]
 

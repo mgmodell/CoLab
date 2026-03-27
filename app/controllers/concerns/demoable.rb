@@ -113,13 +113,13 @@ module Demoable
     s.updated_at = 70.hours.ago + ( -count ).hours
     s.user = demo_user.name( false )
     s.sub_text = Faker::Lorem.paragraphs( number: 5, supplemental: true )
-                             .reduce('') do | html_output, paragraph |
-      html_output += "<p>#{paragraph}</p>"
+                             .reduce( '' ) do | html_output, paragraph |
+                               html_output + "<p>#{paragraph}</p>"
     end
     s.sub_link = nil
     s.submission_feedback = get_demo_submission_feedback( count.abs )
     rubric_row_feedbacks = []
-    get_demo_rubric_student.criteria.each_with_index do | c, idx |
+    get_demo_rubric_student.criteria.each_with_index do | c, _idx |
       rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, count, c.weight )
     end
     s.rubric_row_feedbacks = rubric_row_feedbacks
@@ -231,7 +231,7 @@ module Demoable
     sf.feedback = t "submissions.feedbacks.demo_feedback_#{index}"
     sf.submitted = Time.zone.now
     sf.rubric_row_feedbacks = []
-    get_demo_rubric_student.criteria.each_with_index do | c, idx |
+    get_demo_rubric_student.criteria.each_with_index do | c, _idx |
       sf.rubric_row_feedbacks << get_demo_rubric_row_feedback( c.id, index, c.weight )
     end
     sf
@@ -241,7 +241,7 @@ module Demoable
     r = RubricRowFeedbackStub.new
     r.id = -1
 
-    r.score = 44 + (7.5 * (index ^ count.abs ) ).floor
+    r.score = 44 + ( 7.5 * ( index ^ count.abs ) ).floor
     r.feedback = Faker::ChuckNorris.fact
     r.criterium_id = index
     r.rubric_row_weight = weight
@@ -277,12 +277,13 @@ module Demoable
                   :recorded_score,
                   :submission_feedback, :rubric_row_feedbacks,
                   :user, :group
+
     def calculated_score
       weight_total = rubric_row_feedbacks.reduce( 0 ) do | sum, rubric_row_feedback |
         sum + rubric_row_feedback.rubric_row_weight
       end
       raw_score = rubric_row_feedbacks.reduce( 0 ) do | sum, rubric_row_feedback |
-        sum + (rubric_row_feedback.rubric_row_weight) * rubric_row_feedback.score
+        sum + rubric_row_feedback.rubric_row_weight * rubric_row_feedback.score
       end
       raw_score / weight_total
     end

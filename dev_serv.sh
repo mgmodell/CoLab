@@ -61,9 +61,9 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
   case $opt in
     q)
       if [[ $OPTARG == "moodle" ]]; then
-        mysql moodle -u moodle -pmoodle --protocol=TCP --port=31337
+        mysql moodle --host db -u moodle -pmoodle --protocol=TCP --port=3306
       else
-        mysql colab_dev -u test -ptest --protocol=TCP --port=31337
+        mysql colab_dev --host db -u test -ptest --protocol=TCP --port=3306
       fi
       exit
       ;;
@@ -71,7 +71,7 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
       echo "Feature: $OPTARG"
       FEATURE=true
       FEATURES=$OPTARG
-      MIGRATE=true
+      MIGRATE=false
       ;;
     c)
       rails console
@@ -112,7 +112,10 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-rails db:prepare
+if [ "$PREPARE" = true ]; then
+  echo "Preparing the DB..."
+  rails db:prepare
+fi
 
 
 # Run a migratify task
@@ -142,12 +145,14 @@ fi
 # Test a feature
 if [ "$FEATURE" = true ]; then
   echo 'Testing Feature'
+  rm -rf public/packs-test ssr-generated tmp/shakapacker
+  RAILS_ENV=test bin/shakapacker
   rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
 # Start the server
 if [ "$STARTUP" = true ]; then
-  foreman start -f Procfile.dev
+  bin/dev
 fi
 
 

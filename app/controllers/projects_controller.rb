@@ -3,10 +3,9 @@
 class ProjectsController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_project, only: %i[show new edit update destroy activate
+  before_action :set_project, only: %i[show edit update destroy activate
                                        rescore_group rescore_groups]
-  before_action :check_editor, except: %i[next diagnose react
-                                          rescore_group rescore_groups
+  before_action :check_editor, except: %i[rescore_group rescore_groups
                                           show index get_groups
                                           set_groups]
   before_action :check_viewer, only: %i[show index]

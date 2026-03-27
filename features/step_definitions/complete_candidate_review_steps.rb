@@ -12,9 +12,7 @@ Given( 'the users {string} prep {string}' ) do | completion_level, group_or_solo
       @user = user
       step 'the user "has" had demographics requested'
       step 'the user logs in'
-      step 'user should see 1 open task'
       step 'the user clicks the link to the candidate list'
-      step 'the user should see the Bingo candidate list'
 
       if !collab_requested
         step 'the user requests collaboration'

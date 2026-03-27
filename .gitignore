@@ -34,17 +34,28 @@ coverage
 cucumber
 .rake_tasks
 
+
+/config/master.key
+/config/credentials/production.key
+
+rails_best_practices_output.html
+reek.html
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+shakapacker-config-exports/
+# Generated React on Rails packs
+**/generated/**
+ssr-generated
+
 /public/packs
 /public/packs-test
 /node_modules
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-
-/config/master.key
-
-
-/config/credentials/production.key
-
-rails_best_practices_output.html
-reek.html

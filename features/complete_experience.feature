@@ -151,20 +151,20 @@ Feature: Users can complete 'experiences'
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
 
   @javascript
   Scenario: Participant completes a full experience
@@ -172,6 +172,7 @@ Feature: Users can complete 'experiences'
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
+     And the user logs out
     Then the user completes a week
     Then the user completes a week
     Then the user completes a week
@@ -186,6 +187,9 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user completes a week
     Then the user completes a week
+    When the user logs in
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your suggestions:"
@@ -205,6 +209,7 @@ Feature: Users can complete 'experiences'
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
+    Then the user logs out
     Then the user completes a week
     Then the user completes a week
     Then the user completes a week
@@ -219,6 +224,9 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user completes a week
     Then the user completes a week
+    When the user logs in
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then the 'Submit' button will be disabled
@@ -263,14 +271,14 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user clicks the link to the experience
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then the 'Submit' button will be disabled
@@ -293,14 +301,14 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user clicks the link to the experience
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
-    Then the user completes a week
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
+    Then the user completes a week-ui
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Group domination" radio button
     Then they enter "second comment" in extant field "Your suggestions:"

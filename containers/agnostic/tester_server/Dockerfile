@@ -30,7 +30,7 @@ ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   # echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/.bashrc && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \
-  mise activate --shims && \
+  # mise activate --shims && \
   echo "bundler \n foreman \n" >> /home/colab/default-gems
 # ENV PATH="/home/colab/.local/share/mise/shims:$PATH"
 
@@ -54,7 +54,6 @@ RUN mise trust /home/colab/src/app/mise.toml && \
   mise settings add idiomatic_version_file_enable_tools ruby
 
 ENV DRIVER=docker
-ENV CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 
 ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
 CMD -r

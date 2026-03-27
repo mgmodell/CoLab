@@ -162,13 +162,13 @@ class BingoGamesController < ApplicationController
                                                .count { | c | !( c.definition.empty? || c.term.empty? ) }
           resp[user_id][:concepts_credited] = cl.candidates
                                                 .count do | c |
-            !( c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
+                                                  !( c.candidate_feedback.present? &&
+                                                    CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
           end
           resp[user_id][:term_problems] = cl.candidates
                                             .count do | c |
-            !( c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
+                                              !( c.candidate_feedback.present? &&
+                                                CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
           end
           resp[user_id][:performance] = cl.performance
           candidates = []
@@ -177,7 +177,7 @@ class BingoGamesController < ApplicationController
               id: c.id,
               term: c.term,
               definition: c.definition,
-              concept: c.concept.present? ? c.concept.name : nil,
+              concept: c.concept.presence&.name,
               feedback: c.candidate_feedback.name,
               feedback_id: c.candidate_feedback_id
             }
@@ -190,13 +190,13 @@ class BingoGamesController < ApplicationController
                              .count { | c | !( c.definition.empty? || c.term.empty? ) }
         concepts_credited = cl.candidates
                               .count do | c |
-          !( c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
+                                !( c.candidate_feedback.present? &&
+                                  CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
         end
         term_problems = cl.candidates
                           .count do | c |
-          !( c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
+                            !( c.candidate_feedback.present? &&
+                              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
         end
         performance = cl.performance
         candidates = []
@@ -205,7 +205,7 @@ class BingoGamesController < ApplicationController
             id: c.id,
             term: c.term,
             definition: c.definition,
-            concept: c.concept.present? ? c.concept.name : nil,
+            concept: c.concept.presence&.name,
             feedback: c.candidate_feedback.name,
             feedback_id: c.candidate_feedback_id
           }
@@ -495,31 +495,31 @@ class BingoGamesController < ApplicationController
                             concept: %i[courses candidates],
                             candidate_list: { bingo_game: :course } )
                  .find_all do | candidate |
-        entered_candidate = candidate_map[candidate.id]
+                   entered_candidate = candidate_map[candidate.id]
 
-        next if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
+                   next if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
 
-        candidate.candidate_feedback =
-          feedback_map[entered_candidate[:candidate_feedback_id]]
+                   candidate.candidate_feedback =
+                     feedback_map[entered_candidate[:candidate_feedback_id]]
 
-        # feedback_name = candidate.candidate_feedback.name_en
+                   # feedback_name = candidate.candidate_feedback.name_en
 
-        if 'term_problem' != candidate.candidate_feedback_critique
-          entered_candidate[:concept][:name].present?
-          concept_name = entered_candidate[:concept][:name]
-          concept_name = Concept.standardize_name name: concept_name
+                   if 'term_problem' != candidate.candidate_feedback_critique
+                     entered_candidate[:concept][:name].present?
+                     concept_name = entered_candidate[:concept][:name]
+                     concept_name = Concept.standardize_name name: concept_name
 
-          concept = concept_map[concept_name]
-          if concept_name.present? && concept.nil?
-            concept = Concept.create( name: concept_name )
-            concept_map[concept_name] = concept
-          end
-          candidate.concept = concept
-        else
-          candidate.concept = nil
-        end
-        candidate.save
-        logger.debug candidate.errors.full_messages unless candidate.errors.empty?
+                     concept = concept_map[concept_name]
+                     if concept_name.present? && concept.nil?
+                       concept = Concept.create( name: concept_name )
+                       concept_map[concept_name] = concept
+                     end
+                     candidate.concept = concept
+                   else
+                     candidate.concept = nil
+                   end
+                   candidate.save
+                   logger.debug candidate.errors.full_messages unless candidate.errors.empty?
       end
 
       # Send notifications to students
@@ -583,17 +583,17 @@ class BingoGamesController < ApplicationController
     }
     resp[:projects] = bingo_game.course.projects
                                 .collect do | p |
-      {
-        id: p.id,
-        name: p.get_name( current_user.anonymize? )
-      }
+                                  {
+                                    id: p.id,
+                                    name: p.get_name( current_user.anonymize? )
+                                  }
     end.as_json
     resp[:concepts] = bingo_game.get_concepts
                                 .collect do | c |
-      {
-        id: c.id,
-        name: c.name
-      }
+                                  {
+                                    id: c.id,
+                                    name: c.name
+                                  }
     end.as_json
     words = bingo_game.candidates.collect do | c |
       c.definition.split( ' ' )

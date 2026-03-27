@@ -59,7 +59,7 @@ class Assignment < ApplicationRecord
       type: is_faculty ? :submission : :assignment,
       instructor_task: is_faculty,
       name: get_name( false ),
-      group_name: group.present? ? group.get_name( false ) : nil,
+      group_name: group.presence&.get_name( false ),
       status:,
       course_name: course.get_name( false ),
       start_date:,

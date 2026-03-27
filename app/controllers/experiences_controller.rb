@@ -3,9 +3,9 @@
 class ExperiencesController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_experience, only: %i[show get_reactions edit update destroy]
+  before_action :set_experience, only: %i[show get_reactions update destroy]
   before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[edit get_reactions update destroy]
+  before_action :check_editor, only: %i[get_reactions update destroy]
 
   def show
     respond_to do | format |

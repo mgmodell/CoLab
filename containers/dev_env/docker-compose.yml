@@ -9,10 +9,12 @@ services:
       - 3035:3035
     depends_on:
       - db
+    group_add:
+      - dialout
     volumes:
       - ../../:/home/colab/src/app:cached
-      - "${HOME}/.ssh:/root/.ssh-localhost:ro"
-    command: bash -c "sleep infinity"
+      - devmise:/home/colab/.local/share/mise
+    command: zsh -c "sleep infinity"
   db:
     image: colab_db
     restart: unless-stopped
@@ -21,6 +23,11 @@ services:
     volumes:
       - devdata:/var/lib/mysql
 
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
   # Docs at https://github.com/MRColorR/vnc-browser
   browser:
     container_name: vnc-browser
@@ -46,14 +53,16 @@ services:
     depends_on:
       - db
     environment:
-      - MOODLE_LANG=en
-      - LANGUAGE=en_US:en
-      - MOODLE_DATABASE_TYPE=mariadb
-      - MOODLE_DATABASE_HOST=db
-      - MOODLE_DATABASE_PORT_NUMBER=3306
-      - MOODLE_DATABASE_NAME=moodle
-      - MOODLE_DATABASE_USER=moodle
-      - MOODLE_DATABASE_PASSWORD=moodle
+      - MOODLE_LANGUAGE=en
+      - LANG=en_US:en
+      - SITE_URL=http://moodle:8080
+      - MOODLE_URL=http://moodle:8080
+      - DB_TYPE=mariadb
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=moodle
+      - DB_USER=moodle
+      - DB_PASSWORD=moodle
 
       - MOODLE_REVERSEPROXY=false
       - MOODLE_SSLPROXY=false
@@ -68,6 +77,8 @@ services:
       - MOODLE_SMTP_PASSWORD=CHANGEME
       - MOODLE_MAIL_NOREPLY_ADDRESS=noreply@localhost
       - MOODLE_MAIL_PREFIX=[colab-moodle]
+
+      - REDIS_HOST=redis
     ports:
       - 8080:8080
     volumes:
@@ -76,6 +87,7 @@ services:
 
 
 volumes:
+  devmise:
   mariadb-data:
   ffconfig:
   devdata:
