@@ -185,7 +185,7 @@ export default function SignIn(props) {
           console.log("Login Failed");
         }}
         //Not sure why oneTap doesn't work now
-        //useOneTap
+        useOneTap
         context="use"
         text="continue_with"
       />

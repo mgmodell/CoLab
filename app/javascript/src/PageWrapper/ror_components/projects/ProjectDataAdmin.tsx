@@ -31,8 +31,8 @@ import { TabPanel, TabView } from "primereact/tabview";
 import parse from 'html-react-parser';
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
-const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
-const ChartContainer = React.lazy(() => import("../Reports/ChartContainer"));
+import ProjectGroups from "./ProjectGroups";
+import ChartContainer from "../Reports/ChartContainer";
 
 interface ProjectDataAdminProps {}
 

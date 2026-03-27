@@ -1,18 +1,13 @@
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 
-const CourseList = React.lazy(() => import("./CourseList"));
-const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));
-const BingoGameDataAdmin = React.lazy(() =>
-  import("../BingoBoards/BingoGameDataAdmin")
-);
-const ExperienceDataAdmin = React.lazy(() =>
-  import("../experiences/ExperienceDataAdmin")
-);
-const ProjectDataAdmin = React.lazy(() => import("../projects/ProjectDataAdmin"));
-const AssignmentDataAdmin = React.lazy(() =>
-  import("../assignments/AssignmentDataAdmin")
-);
+import CourseList from "./CourseList";
+import CourseDataAdmin from "./CourseDataAdmin";
+import BingoGameDataAdmin from "../BingoBoards/BingoGameDataAdmin";
+import ExperienceDataAdmin from "../experiences/ExperienceDataAdmin";
+import ProjectDataAdmin from "../projects/ProjectDataAdmin";
+import AssignmentDataAdmin from "../assignments/AssignmentDataAdmin";
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {

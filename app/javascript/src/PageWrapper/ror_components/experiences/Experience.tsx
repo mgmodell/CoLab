@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import ExperienceInstructions from "./ExperienceInstructions";
 import ExperienceDiagnosis from "./ExperienceDiagnosis";
 
-const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
+import ExperienceReaction from "./ExperienceReaction";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { Skeleton } from "primereact/skeleton";

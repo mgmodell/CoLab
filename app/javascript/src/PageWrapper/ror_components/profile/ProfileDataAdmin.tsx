@@ -2,11 +2,9 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 import UserEmailList from "./UserEmailList";
-const UserCourseList = React.lazy(() => import("./UserCourseList"));
-const ResearchParticipationList = React.lazy(() =>
-  import("./ResearchParticipationList")
-);
-const UserActivityList = React.lazy(() => import("./UserActivityList"));
+import UserCourseList from "./UserCourseList";
+import ResearchParticipationList from "./ResearchParticipationList";
+import UserActivityList from "./UserActivityList";
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";

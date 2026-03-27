@@ -2,8 +2,8 @@ import React, { useMemo } from "react";
 
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
-const LinePath = React.lazy(() => import("../Reports/visxLinePath"));
-const Text = React.lazy(() => import("../Reports/visxText"));
+import { LinePath } from "@visx/shape";
+import { Text } from "@visx/text";
 
 type Props = {
   height: number;
