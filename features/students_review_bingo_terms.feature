@@ -61,6 +61,9 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 0 open task
      Then user opens their profile
      Then user sees the Bingo! in the history
+     And the user switches to the "My Courses" tab
+     And the user sees 'Course list'
+     And the user sees 1 course
 
   @javascript
   Scenario: Instructor logs in and accepts all candidates

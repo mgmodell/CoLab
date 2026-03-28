@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
-const ReactionsList = React.lazy(() => import("./ReactionsList"));
+import ReactionsList from "./ReactionsList";
 
 import { useDispatch } from "react-redux";
 import {

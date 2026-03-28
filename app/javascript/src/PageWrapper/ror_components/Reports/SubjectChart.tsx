@@ -4,13 +4,10 @@ import useResizeObserver from "resize-observer-hook";
 import { scaleOrdinal } from "@visx/scale";
 import { curveLinearClosed, curveMonotoneX } from "@visx/curve";
 
-const GlyphSeries = React.lazy(() => import("./visxGlyphSeries"));
-const XYChart = React.lazy(() => import("./visxXYChart"));
-const Tooltip = React.lazy(() => import("./visxTooltip"));
-const LineSeries = React.lazy(() => import("./visxLineSeries"));
 import { Axis } from "@visx/xychart";
-const Arc = React.lazy(() => import("./visxArc"));
-const LinePath = React.lazy(() => import("./visxLinePath"));
+
+import {XYChart, Tooltip, LineSeries, GlyphSeries} from "@visx/xychart";
+import { Arc, LinePath } from "@visx/shape";
 
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";

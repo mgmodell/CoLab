@@ -14,9 +14,10 @@ import {
 
 
 import { StudentData, UserListType } from "./CourseUsersList";
+import CourseUsersList from "./CourseUsersList";
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 import { useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
