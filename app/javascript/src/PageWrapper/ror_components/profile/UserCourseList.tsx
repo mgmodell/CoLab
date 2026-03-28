@@ -96,7 +96,7 @@ export default function UserCourseList(props: Props) {
           rowsPerPageOptions={[5, 10, 20, props.coursesList.length]}
           header={
             <StandardListToolbar
-              itemType={"activity"}
+              itemType={"course"}
               filtering={{
                 filterValue: filterText,
                 setFilterFunc: setFilterText

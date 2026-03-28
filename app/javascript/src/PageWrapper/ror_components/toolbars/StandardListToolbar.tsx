@@ -39,7 +39,7 @@ export default function StandardListToolbar(props: Props) {
     ) : null;
 
   const title = (
-    <h3>{props.itemType.charAt(0).toUpperCase() + props.itemType.slice(1)}s</h3>
+    <h3>{t( 'list_name', { item_type: props.itemType.charAt(0).toUpperCase() + props.itemType.slice(1) } )}</h3>
   );
 
   const search =

@@ -70,3 +70,27 @@ Feature: User edit Profile
     Then the user clicks "Send me reset password instructions"
     Then 2 emails will be sent
     Then 0 emails will be tracked
+
+  @javascript
+  Scenario: User should be able to access their courses tab
+    And the user 'is' confirmed
+    Then the user logs in
+    Then user opens their profile
+     And the user switches to the "My Courses" tab
+     And the user sees 'Course list'
+
+  @javascript
+  Scenario: User should see their research participation in their profile
+    And the user 'is' confirmed
+    Then the user logs in
+    Then user opens their profile
+     And the user switches to the "Research Participation" tab
+     And the user sees 'Study title'
+
+  @javascript
+  Scenario: User should see all activites they've participated in in their profile
+    And the user 'is' confirmed
+    Then the user logs in
+    Then user opens their profile
+     And the user switches to the "History" tab
+     And the user sees 'Activity list'
