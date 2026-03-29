@@ -1,1 +1,1 @@
-FROM docker.io/selenium/standalone-chromium
+FROM docker.io/selenium/standalone-chromium:145.0
