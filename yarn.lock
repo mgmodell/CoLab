@@ -2589,7 +2589,7 @@ __metadata:
     driver.js: "npm:^1.4.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^5.2.17"
-    i18next: "npm:^25.8.1"
+    i18next: "npm:^26.0.1"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^7.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -4232,9 +4232,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^25.8.1":
-  version: 25.10.10
-  resolution: "i18next@npm:25.10.10"
+"i18next@npm:^26.0.1":
+  version: 26.0.1
+  resolution: "i18next@npm:26.0.1"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
   peerDependencies:
@@ -4242,7 +4242,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/6ff601b52363c9c974ef293af4a6de04d9f76b4bf2ad9a56c8546235aaf19ff1a7c2109ddba3a73922d418e208ec5b688e5afb323eba6e27c75d629e93827ae1
+  checksum: 10c0/50c4202aca80ebf236765b47bd1141f1b61da73b331e0aae554c371bed68052a1ad6616c02731f00f84071b5e3211e787799f1143dec24e32af9ebe8995dc70b
   languageName: node
   linkType: hard
 
