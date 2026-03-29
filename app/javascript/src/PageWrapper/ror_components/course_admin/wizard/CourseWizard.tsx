@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 import { useTypedSelector } from "../../infrastructure/AppReducers";
 
-const CourseUsersList = React.lazy(() => import("../CourseUsersList"));
 import { useTranslation } from "react-i18next";
 import { ICourse } from "../CourseDataAdmin";
 import { Panel } from "primereact/panel";

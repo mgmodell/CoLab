@@ -152,6 +152,7 @@ fi
 
 # Start the server
 if [ "$STARTUP" = true ]; then
+  rm -rf public/packs ssr-generated tmp/shakapacker
   bin/dev
 fi
 

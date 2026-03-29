@@ -173,3 +173,58 @@ Then( 'the most recent user is the same as the current user' ) do
   u.date_of_birth.should eq @user.date_of_birth
   u.started_school.should eq @user.started_school
 end
+
+Then('the user fills in the password reset form with their {string} email address') do |address_priority|
+  case address_priority
+  when 'primary'
+    address = @user.emails.where( primary: true ).first.email
+  when 'secondary'
+    address = @user.emails.where( primary: false ).sample.email
+  else
+    true.should be false
+  end
+  fill_in :email, with: address
+end
+
+Given('the user has an additional email address') do
+  @user.emails.create( email: Faker::Internet.email )
+  @user.save
+end
+
+Then('wait a second') do
+  sleep 1
+end
+
+When('the user logs in with the {string} additional email address') do |case_option|
+  address = @user.emails.where( primary: false ).sample.email
+  case case_option
+  when 'natural'
+    email_to_use = address
+  when 'capitalised'
+    email_to_use = address.upcase
+  when 'lowercase'
+    email_to_use = address.downcase
+  else
+    true.should be false
+  end
+  visit '/login'
+  wait_for_render
+
+  fill_in 'email', with: address
+  fill_in 'password', with: 'password'
+
+  ack_messages
+  click_link_or_button 'Log in!'
+
+  wait_for_render
+  page.should have_content 'signed in successfully'
+
+  # Blow away the cookies accept
+  click_link_or_button 'I understand' if has_content? 'I understand'
+
+  # Set custom time if warranted
+  if :rack_test != Capybara.current_driver && !@dest_date.nil?
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
+end
