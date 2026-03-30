@@ -49,7 +49,7 @@
     "mockdate": "^3.0.5",
     "postcss-preset-env": "^11.1.3",
     "primeicons": "^7.0.0",
-    "primereact": "10.9.7",
+    "primereact": "10.9.4",
     "promise-polyfill": "^8.3.0",
     "prop-types": "15.8.1",
     "quill": "^2.0.3",
