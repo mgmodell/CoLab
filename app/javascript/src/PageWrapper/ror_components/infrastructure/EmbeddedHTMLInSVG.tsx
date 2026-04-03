@@ -1,6 +1,6 @@
 import React, { ReactNode, createContext, useContext } from "react";
 import { SvgContext } from "./ResizableSVG";
-import { SpringValue, animated } from "react-spring";
+import { SpringValue, animated } from "@react-spring/web";
 
 interface Props {
   children: ReactNode;

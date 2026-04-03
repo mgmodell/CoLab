@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSpring, animated, config } from "react-spring";
+import { useSpring, animated, config } from "@react-spring/web";
 import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import StudentConcern from "../svgs/StudentConcern";
@@ -59,21 +59,25 @@ export default function WhyCoLab(props: Props) {
     centerY: 225
   };
 
-  const [title1Spring, title1Api] = useSpring(() => ({
+  const [title1Target, setTitle1Target] = useState({
     x: 10,
     y: 100,
     width: 175,
     height: 200,
     opacity: 1
-  }));
+  });
 
-  const [title2Spring, title2Api] = useSpring(() => ({
+  const title1Spring = useSpring(title1Target);
+
+  const [title2Target, setTitle2Target] = useState({
     x: 10,
     y: 100,
     width: 175,
     height: 200,
     opacity: 1
-  }));
+  });
+
+  const title2Spring = useSpring(title2Target);
 
   const titles_one = [
     <p >{t('why_slides.captions.one_one')}</p>,
@@ -703,20 +707,23 @@ export default function WhyCoLab(props: Props) {
     }
   ];
 
-  const [normallyFunctioningSpring, normallyFunctioningApi] = useSpring(
-    () => NF_SVG[0]
-  );
-  const [teacherStudentSpring, teacherStudentApi] = useSpring(() => TS_SVG[0]);
-  const [socialLoafingSpring, socialLoafingApi] = useSpring(() => SL_SVG[0]);
-  const [leaveItToGeorgeSpring, leaveItToGeorgeApi] = useSpring(
-    () => LITG_SVG[0]
-  );
-  const [groupDominationSpring, groupDominationApi] = useSpring(
-    () => GD_SVG[0]
-  );
-  const [divisionOfLaborSpring, divisionOfLaborApi] = useSpring(
-    () => DL_SVG[0]
-  );
+  const [normallyFunctioningTarget, setNormallyFunctioningTarget] = useState(NF_SVG[0]);
+  const normallyFunctioningSpring = useSpring(normallyFunctioningTarget);
+  
+  const [teacherStudentTarget, setTeacherStudentTarget] = useState(TS_SVG[0]);
+  const teacherStudentSpring = useSpring(teacherStudentTarget);
+  
+  const [socialLoafingTarget, setSocialLoafingTarget] = useState(SL_SVG[0]);
+  const socialLoafingSpring = useSpring(socialLoafingTarget);
+  
+  const [leaveItToGeorgeTarget, setLeaveItToGeorgeTarget] = useState(LITG_SVG[0]);
+  const leaveItToGeorgeSpring = useSpring(leaveItToGeorgeTarget);
+  
+  const [groupDominationTarget, setGroupDominationTarget] = useState(GD_SVG[0]);
+  const groupDominationSpring = useSpring(groupDominationTarget);
+  
+  const [divisionOfLaborTarget, setDivisionOfLaborTarget] = useState(DL_SVG[0]);
+  const divisionOfLaborSpring = useSpring(divisionOfLaborTarget);
 
   const [arrowNavSpring] = useSpring(() => ({
     from: {
@@ -731,7 +738,7 @@ export default function WhyCoLab(props: Props) {
     }
   }));
 
-  const curNav: JSX.Element[] = [];
+  const curNav: React.JSX.Element[] = [];
   const navDotsStart = 200 - (NavSpecs.navDots / 2) * NavSpecs.dotSpacing;
 
   for (let index = 0; index < NavSpecs.navDots; index++) {
@@ -762,30 +769,14 @@ export default function WhyCoLab(props: Props) {
   };
 
   useEffect(() => {
-    title1Api.start({
-      to: TXT_ONE[curScene]
-    });
-    title2Api.start({
-      to: TXT_TWO[curScene]
-    });
-    normallyFunctioningApi.start({
-      to: NF_SVG[curScene]
-    });
-    teacherStudentApi.start({
-      to: TS_SVG[curScene]
-    });
-    socialLoafingApi.start({
-      to: SL_SVG[curScene]
-    });
-    leaveItToGeorgeApi.start({
-      to: LITG_SVG[curScene]
-    });
-    groupDominationApi.start({
-      to: GD_SVG[curScene]
-    });
-    divisionOfLaborApi.start({
-      to: DL_SVG[curScene]
-    });
+    setTitle1Target(TXT_ONE[curScene]);
+    setTitle2Target(TXT_TWO[curScene]);
+    setNormallyFunctioningTarget(NF_SVG[curScene]);
+    setTeacherStudentTarget(TS_SVG[curScene]);
+    setSocialLoafingTarget(SL_SVG[curScene]);
+    setLeaveItToGeorgeTarget(LITG_SVG[curScene]);
+    setGroupDominationTarget(GD_SVG[curScene]);
+    setDivisionOfLaborTarget(DL_SVG[curScene]);
   }, [curScene]);
 
   useEffect(() => {

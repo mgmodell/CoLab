@@ -1138,146 +1138,146 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/animated@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/animated@npm:9.7.5"
+"@react-spring/animated@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/animated@npm:10.0.3"
   dependencies:
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/f8c2473c60f39a878c7dd0fdfcfcdbc720521e1506aa3f63c9de64780694a0a73d5ccc535a5ccec3520ddb70a71cf43b038b32c18e99531522da5388c510ecd7
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/6142522f310926729a92009a108ec1bd0d1fe3dca7e9aa0c49692c82fbed28f70c0ea9808fc7452f04bb688ae34333e780f794495906fa4b0efbfc7d53a19b6b
   languageName: node
   linkType: hard
 
-"@react-spring/core@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/core@npm:9.7.5"
+"@react-spring/core@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/core@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/5bfd83dfe248cd91889f215f015d908c7714ef445740fd5afa054b27ebc7d5a456abf6c309e2459d9b5b436e78d6fda16b62b9601f96352e9130552c02270830
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/d941541d4a40a5229f488e78b414149d54238065178fdd14db307a851d285d521ab1914c0d426b102e0190651dbe752aeb743cee4cd497f5c066be937f2d1790
   languageName: node
   linkType: hard
 
-"@react-spring/konva@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/konva@npm:9.7.5"
+"@react-spring/konva@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/konva@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
     konva: ">=2.6"
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-konva: ^16.8.0 || ^16.8.7-0 || ^16.9.0-0 || ^16.10.1-0 || ^16.12.0-0 || ^16.13.0-0 || ^17.0.0-0 || ^17.0.1-0 || ^17.0.2-0 || ^18.0.0-0
-  checksum: 10c0/c0df7920e3ff2edec579631e38c5dc1288972ac0a30b639fae482da67755462269d3eaacad057d4c191dd21255d5ab75287db431eaad1a5755d8230dd35e1d8e
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-konva: ^19
+  checksum: 10c0/7b36382c46e9d26b6c4ed9e14ee46eb5dcf0b4cef7ef021c3c0213059c5c4b41157b798fcc19aac0c2606283dc4473c3f66a35e0bb8fb11bda3f004a7c69a1a9
   languageName: node
   linkType: hard
 
-"@react-spring/native@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/native@npm:9.7.5"
+"@react-spring/native@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/native@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
-    react: 16.8.0  || >=17.0.0 || >=18.0.0
-    react-native: ">=0.58"
-  checksum: 10c0/a7d4e9806298e5d2a31cfc69acc9aef240857f446151d6eef89c781c40afd36b79ee5517d512f092473dc8307def42460b88aa800645958210ba9c8ca00b2122
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-native: ">=0.78"
+  checksum: 10c0/20a7ca49941f0f00eae11ef775d14bf02af4ba5e825de65a88fbb004ec43ae36fa0567e9bbc54e0be093e4044cdb60b461eeb64c4a7886cf38332dc77a108e5a
   languageName: node
   linkType: hard
 
-"@react-spring/parallax@npm:9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/parallax@npm:9.7.5"
+"@react-spring/parallax@npm:10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/parallax@npm:10.0.3"
   dependencies:
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/web": "npm:~9.7.5"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/web": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/7c363c02b0d03cbeb94b492a3092872506f9a86f254eb9c2e9035dfae7242fd73b0512a6b4c5b54ff5ea9ad0f5c5bbcc0ebb4e034540b8e6f08a49278cce659d
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/d044e5e250f0a959f29c6ce72c083482a9fc3a4cc3a781cb7110b4d5189b56a1dbede495b422b247826ee6a09cb93822f4a3a4a274930b9a1fb72891a5d6bf27
   languageName: node
   linkType: hard
 
-"@react-spring/rafz@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/rafz@npm:9.7.5"
-  checksum: 10c0/8bdad180feaa9a0e870a513043a5e98a4e9b7292a9f887575b7e6fadab2677825bc894b7ff16c38511b35bfe6cc1072df5851c5fee64448d67551559578ca759
+"@react-spring/rafz@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/rafz@npm:10.0.3"
+  checksum: 10c0/4cf6f710e2be64a3d94e90a20a24a93c68a89b618538d32aaf0079217f9fbed610395051a181d2d010c7ed6898cb7239a3f2ced1d91dd93e4138563ffd2d44ce
   languageName: node
   linkType: hard
 
-"@react-spring/shared@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/shared@npm:9.7.5"
+"@react-spring/shared@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/shared@npm:10.0.3"
   dependencies:
-    "@react-spring/rafz": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/rafz": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/0207eacccdedd918a2fc55e78356ce937f445ce27ad9abd5d3accba8f9701a39349b55115641dc2b39bb9d3a155b058c185b411d292dc8cc5686bfa56f73b94f
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/d8b33b2390792924d0ff2b57b3098d1c6b688a788fc67e83b168928659aad7435dd2c399925a765ffa5080182634dde8f9f76c919f2c259a33af15319187f72f
   languageName: node
   linkType: hard
 
-"@react-spring/three@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/three@npm:9.7.5"
+"@react-spring/three@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/three@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
     "@react-three/fiber": ">=6.0"
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     three: ">=0.126"
-  checksum: 10c0/793f2c27a55060b015880e661ede045f240e4be9b85f448616fb0f8f282bed21d08fb2389a70c73addffbdb868c38bc26d8c6f6f55dd2b0ef67ba6c5a11a55d9
+  checksum: 10c0/bdc9e91bfed61e21a17d9a5894de94f9c90d28906f8460f7b22dfa013014fccdaec7292f9ce3a331d23bce31d7488ee83cf5ef51b388ab895180826d4fffcec8
   languageName: node
   linkType: hard
 
-"@react-spring/types@npm:9.7.5, @react-spring/types@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/types@npm:9.7.5"
-  checksum: 10c0/85c05121853cacb64f7cf63a4855e9044635e1231f70371cd7b8c78bc10be6f4dd7c68f592f92a2607e8bb68051540989b4677a2ccb525dba937f5cd95dc8bc1
+"@react-spring/types@npm:10.0.3, @react-spring/types@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/types@npm:10.0.3"
+  checksum: 10c0/f9bc2619dc9997fe93ebab90fd98118106e53bc45c9c279caaa7081b69d3ed0186d603d5ed445e56bb8ad0075553d15908a2a54e3a0a36ef7cd43a03c1650b02
   languageName: node
   linkType: hard
 
-"@react-spring/web@npm:9.7.5, @react-spring/web@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/web@npm:9.7.5"
+"@react-spring/web@npm:10.0.3, @react-spring/web@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/web@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/bcd1e052e1b16341a12a19bf4515f153ca09d1fa86ff7752a5d02d7c4db58e8baf80e6283e64411f1e388c65340dce2254b013083426806b5dbae38bd151e53e
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/cafbf55991d68920e94419b5b081cfb0aea2ddfa193e984861ab53306365bf81152bce2861370f9b26d4027dd714e8acc0dfbd57bd2eda99e827c3212e22a51c
   languageName: node
   linkType: hard
 
-"@react-spring/zdog@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/zdog@npm:9.7.5"
+"@react-spring/zdog@npm:~10.0.3":
+  version: 10.0.3
+  resolution: "@react-spring/zdog@npm:10.0.3"
   dependencies:
-    "@react-spring/animated": "npm:~9.7.5"
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/shared": "npm:~9.7.5"
-    "@react-spring/types": "npm:~9.7.5"
+    "@react-spring/animated": "npm:~10.0.3"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/shared": "npm:~10.0.3"
+    "@react-spring/types": "npm:~10.0.3"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-zdog: ">=1.0"
     zdog: ">=1.0"
-  checksum: 10c0/0e506a2c0efb6944334bc21b1df660c090f9c6804846c77b6232314df53a617ef5629c832478357cb8bb943690e60861fb6f56c58be86036901291b119d5d46f
+  checksum: 10c0/ec41cb1cebfe7992aaeede7dc8d80b90aa6297af1b4e02b7bd4674b35dd257dc0f52c17a07d2e7dc46f8bbd6e604bc34ddc39b3d81019a60341a51a25e645c0f
   languageName: node
   linkType: hard
 
@@ -1303,92 +1303,92 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/binding-darwin-arm64@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-darwin-arm64@npm:1.7.10"
+"@rspack/binding-darwin-arm64@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-darwin-arm64@npm:1.7.11"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rspack/binding-darwin-x64@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-darwin-x64@npm:1.7.10"
+"@rspack/binding-darwin-x64@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-darwin-x64@npm:1.7.11"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@rspack/binding-linux-arm64-gnu@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-linux-arm64-gnu@npm:1.7.10"
+"@rspack/binding-linux-arm64-gnu@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-linux-arm64-gnu@npm:1.7.11"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@rspack/binding-linux-arm64-musl@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-linux-arm64-musl@npm:1.7.10"
+"@rspack/binding-linux-arm64-musl@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-linux-arm64-musl@npm:1.7.11"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@rspack/binding-linux-x64-gnu@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-linux-x64-gnu@npm:1.7.10"
+"@rspack/binding-linux-x64-gnu@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-linux-x64-gnu@npm:1.7.11"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@rspack/binding-linux-x64-musl@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-linux-x64-musl@npm:1.7.10"
+"@rspack/binding-linux-x64-musl@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-linux-x64-musl@npm:1.7.11"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@rspack/binding-wasm32-wasi@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-wasm32-wasi@npm:1.7.10"
+"@rspack/binding-wasm32-wasi@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-wasm32-wasi@npm:1.7.11"
   dependencies:
     "@napi-rs/wasm-runtime": "npm:1.0.7"
   conditions: cpu=wasm32
   languageName: node
   linkType: hard
 
-"@rspack/binding-win32-arm64-msvc@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-win32-arm64-msvc@npm:1.7.10"
+"@rspack/binding-win32-arm64-msvc@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-win32-arm64-msvc@npm:1.7.11"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rspack/binding-win32-ia32-msvc@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-win32-ia32-msvc@npm:1.7.10"
+"@rspack/binding-win32-ia32-msvc@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-win32-ia32-msvc@npm:1.7.11"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@rspack/binding-win32-x64-msvc@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding-win32-x64-msvc@npm:1.7.10"
+"@rspack/binding-win32-x64-msvc@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding-win32-x64-msvc@npm:1.7.11"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@rspack/binding@npm:1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/binding@npm:1.7.10"
+"@rspack/binding@npm:1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/binding@npm:1.7.11"
   dependencies:
-    "@rspack/binding-darwin-arm64": "npm:1.7.10"
-    "@rspack/binding-darwin-x64": "npm:1.7.10"
-    "@rspack/binding-linux-arm64-gnu": "npm:1.7.10"
-    "@rspack/binding-linux-arm64-musl": "npm:1.7.10"
-    "@rspack/binding-linux-x64-gnu": "npm:1.7.10"
-    "@rspack/binding-linux-x64-musl": "npm:1.7.10"
-    "@rspack/binding-wasm32-wasi": "npm:1.7.10"
-    "@rspack/binding-win32-arm64-msvc": "npm:1.7.10"
-    "@rspack/binding-win32-ia32-msvc": "npm:1.7.10"
-    "@rspack/binding-win32-x64-msvc": "npm:1.7.10"
+    "@rspack/binding-darwin-arm64": "npm:1.7.11"
+    "@rspack/binding-darwin-x64": "npm:1.7.11"
+    "@rspack/binding-linux-arm64-gnu": "npm:1.7.11"
+    "@rspack/binding-linux-arm64-musl": "npm:1.7.11"
+    "@rspack/binding-linux-x64-gnu": "npm:1.7.11"
+    "@rspack/binding-linux-x64-musl": "npm:1.7.11"
+    "@rspack/binding-wasm32-wasi": "npm:1.7.11"
+    "@rspack/binding-win32-arm64-msvc": "npm:1.7.11"
+    "@rspack/binding-win32-ia32-msvc": "npm:1.7.11"
+    "@rspack/binding-win32-x64-msvc": "npm:1.7.11"
   dependenciesMeta:
     "@rspack/binding-darwin-arm64":
       optional: true
@@ -1410,13 +1410,13 @@ __metadata:
       optional: true
     "@rspack/binding-win32-x64-msvc":
       optional: true
-  checksum: 10c0/ae2324bcca8d0234077419454f0af242596bcc26960c11805019e225ae1afc534520f7d6795d0dd7736c2f4bdd809f932830d86aa1b74c2eb65d506b7f33b27d
+  checksum: 10c0/9f0421dc3b3ab32bc76d2e5f280361be4c24f05a11814b64bf8b5c3ba589f03da3a5d20a54df20e2b73b25cd0d33c5d2016287108190f833977dc2aa99dba0d7
   languageName: node
   linkType: hard
 
-"@rspack/cli@npm:^1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/cli@npm:1.7.10"
+"@rspack/cli@npm:^1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/cli@npm:1.7.11"
   dependencies:
     "@discoveryjs/json-ext": "npm:^0.5.7"
     "@rspack/dev-server": "npm:~1.1.5"
@@ -1426,23 +1426,23 @@ __metadata:
     "@rspack/core": ^1.0.0-alpha || ^1.x
   bin:
     rspack: bin/rspack.js
-  checksum: 10c0/951150f77f5f22f6f74f72cb97633e7fe639e4a9662c17ec78b5938ac450d745a2361a9b3b76164efbe83832f2959a3bfe38eb7a822d023c2045c1193bad088e
+  checksum: 10c0/e9ad8ad3a642b0aaf5fdb100f76c4860e50893498a91e04ebe729442e799ea07dd520dc27314afb314fc8f38b4d9a9ef017c7dadcc3b2ecb8d0f3f94b1d4c5ea
   languageName: node
   linkType: hard
 
-"@rspack/core@npm:^1.7.10":
-  version: 1.7.10
-  resolution: "@rspack/core@npm:1.7.10"
+"@rspack/core@npm:^1.7.11":
+  version: 1.7.11
+  resolution: "@rspack/core@npm:1.7.11"
   dependencies:
     "@module-federation/runtime-tools": "npm:0.22.0"
-    "@rspack/binding": "npm:1.7.10"
+    "@rspack/binding": "npm:1.7.11"
     "@rspack/lite-tapable": "npm:1.1.0"
   peerDependencies:
     "@swc/helpers": ">=0.5.1"
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 10c0/2bfe65ba0cc629095d8036f71b068541382788a8f2b610776642d8a43ab88db9e702a43cfd030a4c672e510ca4b6e6aec0279c6f92721c4c503791770cc7d8b8
+  checksum: 10c0/a1df355d94a7d7737729aa816f6d0cd3ef481a05dff02486fb4e6f7155b9c76653ed57aed5cfe56dc6c686a1cae4167d4de16c68e71d60d7191c8d2613a171f7
   languageName: node
   linkType: hard
 
@@ -2560,12 +2560,12 @@ __metadata:
     "@fullcalendar/luxon": "npm:^6.1.20"
     "@fullcalendar/react": "npm:^6.1.20"
     "@react-oauth/google": "npm:^0.13.4"
-    "@react-spring/parallax": "npm:9.7.5"
-    "@react-spring/types": "npm:9.7.5"
-    "@react-spring/web": "npm:9.7.5"
+    "@react-spring/parallax": "npm:10.0.3"
+    "@react-spring/types": "npm:10.0.3"
+    "@react-spring/web": "npm:10.0.3"
     "@reduxjs/toolkit": "npm:^2.11.2"
-    "@rspack/cli": "npm:^1.7.10"
-    "@rspack/core": "npm:^1.7.10"
+    "@rspack/cli": "npm:^1.7.11"
+    "@rspack/core": "npm:^1.7.11"
     "@rspack/plugin-react-refresh": "npm:^1.6.1"
     "@swc/core": "npm:^1.15.21"
     "@types/node": "npm:^25.5.0"
@@ -2589,7 +2589,7 @@ __metadata:
     driver.js: "npm:^1.4.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^5.2.17"
-    i18next: "npm:^26.0.1"
+    i18next: "npm:^26.0.3"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^7.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -2603,7 +2603,7 @@ __metadata:
     postcss-loader: "npm:^8.2.1"
     postcss-preset-env: "npm:^11.1.3"
     primeicons: "npm:^7.0.0"
-    primereact: "npm:10.9.4"
+    primereact: "npm:10.9.3"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:15.8.1"
     quill: "npm:^2.0.3"
@@ -2611,13 +2611,13 @@ __metadata:
     react-cookie-consent: "npm:^10.0.1"
     react-dom: "npm:19.2.4"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.0.1"
+    react-i18next: "npm:^17.0.2"
     react-on-rails: "npm:16.5.1"
     react-redux: "npm:^9.2.0"
     react-refresh: "npm:0.18.0"
-    react-router: "npm:^7.13.2"
-    react-router-dom: "npm:^7.13.2"
-    react-spring: "npm:9.7.5"
+    react-router: "npm:^7.14.0"
+    react-router-dom: "npm:^7.14.0"
+    react-spring: "npm:10.0.3"
     react-virtualized: "npm:^9.22.6"
     resize-observer-hook: "npm:^1.0.5"
     rspack-manifest-plugin: "npm:^5.2.1"
@@ -4232,9 +4232,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.0.1":
-  version: 26.0.1
-  resolution: "i18next@npm:26.0.1"
+"i18next@npm:^26.0.3":
+  version: 26.0.3
+  resolution: "i18next@npm:26.0.3"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
   peerDependencies:
@@ -4242,7 +4242,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/50c4202aca80ebf236765b47bd1141f1b61da73b331e0aae554c371bed68052a1ad6616c02731f00f84071b5e3211e787799f1143dec24e32af9ebe8995dc70b
+  checksum: 10c0/ba0b8ba8b1294abccd892ac897902f121f5f127d77e6fd605c0c368ec505a505ccaa24ee7ddbe04928783cfbd7abbc162d4c043027aef06858b427e4e4737eb5
   languageName: node
   linkType: hard
 
@@ -5628,9 +5628,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primereact@npm:10.9.4":
-  version: 10.9.4
-  resolution: "primereact@npm:10.9.4"
+"primereact@npm:10.9.3":
+  version: 10.9.3
+  resolution: "primereact@npm:10.9.3"
   dependencies:
     "@types/react-transition-group": "npm:^4.4.1"
     react-transition-group: "npm:^4.4.1"
@@ -5641,7 +5641,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/da519186ccac9ea1527953be33e60debf009962c9d11116144365f83356a8591bb8319fc0f1d43d5659c4da01d84a787b457150b752e3dbce0db701cc9be30c2
+  checksum: 10c0/e3ee563345c2429ca0b2221e6a7e85e4d2b1345600b4169cc66413f21921fcb5e3a38792c7aec7a9d7d232d88070021d84fbd3721e4ff507d5b0a2b84b05c01a
   languageName: node
   linkType: hard
 
@@ -5795,9 +5795,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.0.1":
-  version: 17.0.1
-  resolution: "react-i18next@npm:17.0.1"
+"react-i18next@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "react-i18next@npm:17.0.2"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
     html-parse-stringify: "npm:^3.0.1"
@@ -5813,7 +5813,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/eb363db5a15cebda8e6964d3f417133372c3ff5560887233a5e937b86bad3023728362754b3c1aa7bce0fb754e8d3660804c7abbc6c6eb4e85f9f48823b6a7b0
+  checksum: 10c0/6bbaeccb919726a7f4fda1e547fa58936f1004e122b99234ac1a65d35077563864af7062c51ab9b8b0190be4cb384cd2ed7aeaa895d2785c1783c39cdae64ecd
   languageName: node
   linkType: hard
 
@@ -5874,21 +5874,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^7.13.2":
-  version: 7.13.2
-  resolution: "react-router-dom@npm:7.13.2"
+"react-router-dom@npm:^7.14.0":
+  version: 7.14.0
+  resolution: "react-router-dom@npm:7.14.0"
   dependencies:
-    react-router: "npm:7.13.2"
+    react-router: "npm:7.14.0"
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
-  checksum: 10c0/ce9e5d47ba8accb7aa40272f83a98c3372634d0216ec92c8b20d52765ca62db06b4fde5284a4bd37cef2279b9767a45927f3b074e74e2c9b462c8599427bbfef
+  checksum: 10c0/f7130c7083c2a8921aa59e9a9755ae4b79ef98b4df0ae84052ab0fd95b27612a7ebd2539b83d299b8073f8b5fc41595e8cc82bf748837d95d166f8ee19bf5f24
   languageName: node
   linkType: hard
 
-"react-router@npm:7.13.2, react-router@npm:^7.13.2":
-  version: 7.13.2
-  resolution: "react-router@npm:7.13.2"
+"react-router@npm:7.14.0, react-router@npm:^7.14.0":
+  version: 7.14.0
+  resolution: "react-router@npm:7.14.0"
   dependencies:
     cookie: "npm:^1.0.1"
     set-cookie-parser: "npm:^2.6.0"
@@ -5898,24 +5898,24 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10c0/c7620565df0b444507cfceb76733adbd26e28a72fc4d52d344190bcb2e6483427313a3b6076c53d362e2682ccdb1262731bcaa6c3577cbbeea130291a38715f1
+  checksum: 10c0/a496489973cd5e87dcc5c1c7312f4cc99463eb5e0a0f97b3f298467531b754a3227562a83e0c9019b9d2452fd0681d05882ee061af2e0cafb0818f857578b805
   languageName: node
   linkType: hard
 
-"react-spring@npm:9.7.5":
-  version: 9.7.5
-  resolution: "react-spring@npm:9.7.5"
+"react-spring@npm:10.0.3":
+  version: 10.0.3
+  resolution: "react-spring@npm:10.0.3"
   dependencies:
-    "@react-spring/core": "npm:~9.7.5"
-    "@react-spring/konva": "npm:~9.7.5"
-    "@react-spring/native": "npm:~9.7.5"
-    "@react-spring/three": "npm:~9.7.5"
-    "@react-spring/web": "npm:~9.7.5"
-    "@react-spring/zdog": "npm:~9.7.5"
+    "@react-spring/core": "npm:~10.0.3"
+    "@react-spring/konva": "npm:~10.0.3"
+    "@react-spring/native": "npm:~10.0.3"
+    "@react-spring/three": "npm:~10.0.3"
+    "@react-spring/web": "npm:~10.0.3"
+    "@react-spring/zdog": "npm:~10.0.3"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/3663e38f69a788a17537257421cb8678bc70ad8048df646f2a923e80b95bead18ece9bead377b2483689420746d5f10c3f66423d9375b361e491c2fa9914c3e8
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/5fdd65df206cc90ac0f83455685f066c22a05454569e3a0d35feb5e5546e67ed2994e9edb1159c64ffca5f3d8a5fb61b3fd6b8532dc0d6493aa76f09e4fff5e2
   languageName: node
   linkType: hard
 
