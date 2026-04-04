@@ -46,8 +46,8 @@ Feature: User edit Profile
 
   @javascript
   Scenario: User can generate a password reset email using their primary address
-    Then show the email queue
     Given the email queue is empty
+      And there are no performed tasks
     And the user 'is' confirmed
     When the user visits the index
     Then the user switches to the "Forgot your password?" tab
@@ -59,8 +59,8 @@ Feature: User edit Profile
 
   @javascript
   Scenario: User can generate a password reset email using their secondary address
-    Then show the email queue
     Given the email queue is empty
+      And there are no performed tasks
     Given the user has an additional email address
     And the user 'is' confirmed
     When the user visits the index

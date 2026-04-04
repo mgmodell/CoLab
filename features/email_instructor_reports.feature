@@ -48,10 +48,12 @@ Feature: Email experience stragglers
     Given the user is the instructor for the course
 
     Given the email queue is empty
+      And there are no performed tasks
     Then the system emails stragglers
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 1 emails will be tracked
@@ -61,11 +63,13 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
@@ -75,17 +79,20 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
     Then the experience started "last month" and ends "3 days from now"
      And the experience 'lead_time' is 2
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 0 emails will be sent
     Then 5 emails will be tracked
@@ -95,21 +102,25 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
     Then the experience started "last month" and ends "15 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 0 emails will be sent
     Then 5 emails will be tracked
     Given today is "30 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 6 emails will be tracked
@@ -123,11 +134,13 @@ Feature: Email experience stragglers
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "32 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 2 emails will be sent
     Then 6 emails will be tracked
@@ -139,12 +152,14 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
+      And there are no performed tasks
     Then the system emails stragglers
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
@@ -157,6 +172,7 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
+      And there are no performed tasks
     Given the user is the "last" user in the group
     Then the user logs in and submits an installment
     Then the system emails stragglers
@@ -165,6 +181,7 @@ Feature: Email experience stragglers
     Then 3 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 4 emails will be tracked
@@ -180,12 +197,14 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
+      And there are no performed tasks
     Then the system emails stragglers
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 2 emails will be sent
     Then 6 emails will be tracked
@@ -200,9 +219,11 @@ Feature: Email experience stragglers
     Given the Bingo! "has" been activated
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 1 emails will be tracked
@@ -217,9 +238,11 @@ Feature: Email experience stragglers
     Given the Bingo! "has" been activated
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 1 emails will be tracked
@@ -227,6 +250,7 @@ Feature: Email experience stragglers
     # Change the end date
     Given the Bingo! started "last month" and ends "1 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 0 emails will be sent
     Then 1 emails will be tracked
@@ -241,9 +265,11 @@ Feature: Email experience stragglers
     Given the Bingo! "has" been activated
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 1 emails will be tracked
@@ -251,6 +277,7 @@ Feature: Email experience stragglers
     # Change the end date
     Given the Bingo! started "last month" and ends "3 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 0 emails will be sent
     Then 1 emails will be tracked
@@ -258,6 +285,7 @@ Feature: Email experience stragglers
     #Advance the clock
     Given today is "2 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 2 emails will be tracked

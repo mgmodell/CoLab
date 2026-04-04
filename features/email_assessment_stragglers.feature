@@ -9,6 +9,7 @@ Feature: Email assessment stragglers
 
   Scenario: Four students have assessments waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
+      And there are no performed tasks
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
     Given the project has been activated
@@ -18,6 +19,7 @@ Feature: Email assessment stragglers
 
   Scenario: 4 students have assessments waiting. 1 drops the course. Email the stragglers - 3 emails are sent
     Given the email queue is empty
+      And there are no performed tasks
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
     Given the project has been activated
@@ -30,6 +32,7 @@ Feature: Email assessment stragglers
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
     Given reset time clock to now
     Given the email queue is empty
+      And there are no performed tasks
     Given the project measures 4 factors
     Given the course has a consent form
     Given the user is the "last" user in the group
@@ -42,6 +45,7 @@ Feature: Email assessment stragglers
 
   Scenario: Four students have been mailed about their assessments waiting when we email the stragglers - no emails are sent
     Given the email queue is empty
+      And there are no performed tasks
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
     Given the project has been activated
@@ -50,12 +54,14 @@ Feature: Email assessment stragglers
     Then an email will be sent to each member of the group
     Then 4 emails will be tracked
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 4 emails will be tracked
 
   Scenario: 4 students are in a project, but the project has been deactivated - no emails are sent
     Given the email queue is empty
+      And there are no performed tasks
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
     Given the project has been activated
@@ -73,6 +79,7 @@ Feature: Email assessment stragglers
     Then the members of "the last" group go to other groups
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -87,6 +94,7 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -100,6 +108,7 @@ Feature: Email assessment stragglers
     Given the project has a group with 2 confirmed users
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 8 emails will be tracked
@@ -113,6 +122,7 @@ Feature: Email assessment stragglers
     Given today is "4 days from now"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 18 emails will be tracked
@@ -128,6 +138,7 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -141,6 +152,7 @@ Feature: Email assessment stragglers
     Then the members of "the last" group go to other groups
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 10 emails will be tracked
@@ -155,6 +167,7 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Given the project has been activated
@@ -176,6 +189,7 @@ Feature: Email assessment stragglers
     Given today is "7 days from now"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 12 emails will be tracked
@@ -190,6 +204,7 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
 
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -211,6 +226,7 @@ Feature: Email assessment stragglers
 
     #Add a new group
     Given the email queue is empty
+      And there are no performed tasks
     Given today is "3 days from now"
     #The project should NOT be available
     Given the project has a group with 2 confirmed users
@@ -231,6 +247,7 @@ Feature: Email assessment stragglers
 
     Given today is "7 days from now"
     Given the email queue is empty
+      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 32 emails will be tracked
