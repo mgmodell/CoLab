@@ -98,7 +98,7 @@ export default function CourseDatesWizard(props: Props) {
                   onChange={event => {
                     props.setCourseFunc({
                       ...props.course,
-                      timezone: event.target.value
+                      timezone: event.value
                     });
                   }}
                   optionLabel="name"
