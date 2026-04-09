@@ -124,7 +124,7 @@ export default function ActivityList(props: Props) {
           body={rowData => {
             if (!rowData.active) {
               return "Not Activated";
-            } else if (rowData.end_date > new Date()) {
+            } else if (DateTime.fromISO(rowData.end_date) > DateTime.now()) {
               return "Active";
             } else {
               return "Expired";
