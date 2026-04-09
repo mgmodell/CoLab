@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+Then( 'the user completes the profile walkthrough' ) do
+  find( '.driver-popover', wait: 10 )
+  while page.has_css?( '.driver-popover', wait: 2 )
+    find( '.driver-popover-next-btn' ).click
+    wait_for_render
+  end
+end
+
 Then( /^user opens their profile$/ ) do
   wait_for_render
   find( :id, 'main-menu-button' ).click
