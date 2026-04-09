@@ -149,7 +149,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
     feedback = feedbacks.sample
     @feedback_list[candidate.id] = { feedback: }
     concept = nil
-    if 'term_problem' == feedback.critique
+    if feedback.term_problem?
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!( 1 ).first
@@ -230,6 +230,7 @@ Given( /^the saved reviews match the list$/ ) do
 end
 
 Given( 'the user checks the review completed checkbox' ) do
+  # byebug unless page.has_xpath?( "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]

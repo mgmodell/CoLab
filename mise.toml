@@ -1,5 +1,5 @@
 [tools]
-node = "25.6.1"
+node = "25.9.0"
 podman = { version = "5.8.1", matching = "podman-remote" }
 python = "3.13.7"
 ruby = "3.4.8"
