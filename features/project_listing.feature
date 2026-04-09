@@ -11,6 +11,33 @@ Feature: Assessment Listing
     Given the factor pack is set to "Original"
 
 @javascript
+  Scenario: User can log in using a secondary email address
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the project has been activated
+    Given the user has an additional email address
+    When the user logs in with the 'natural' additional email address
+    Then the user should see a successful login message
+    Then user should see 1 open task
+
+@javascript
+  Scenario: User can log in using a secondary email in all caps
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the project has been activated
+    Given the user has an additional email address
+    When the user logs in with the 'capitalised' additional email address
+    Then the user should see a successful login message
+    Then user should see 1 open task
+
+@javascript
+  Scenario: User can log in using a secondary email in lowercase
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the project has been activated
+    Given the user has an additional email address
+    When the user logs in with the 'lowercase' additional email address
+    Then the user should see a successful login message
+    Then user should see 1 open task
+
+@javascript
   Scenario: Checking for open projects
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has been activated

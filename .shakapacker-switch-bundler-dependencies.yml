@@ -1,0 +1,16 @@
+---
+rspack:
+  devDependencies:
+  - "@rspack/cli"
+  - "@rspack/plugin-react-refresh"
+  dependencies:
+  - "@rspack/core"
+  - rspack-manifest-plugin
+webpack:
+  devDependencies:
+  - webpack
+  - webpack-cli
+  - webpack-dev-server
+  - "@pmmmwh/react-refresh-webpack-plugin"
+  dependencies:
+  - webpack-assets-manifest
