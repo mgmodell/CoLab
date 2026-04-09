@@ -476,3 +476,7 @@ Then( 'the user selects the {string} activity' ) do | activity_name |
   find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end
+
+Then( 'the activity {string} shows status {string}' ) do | activity_name, expected_status |
+  page.should have_xpath( "//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]" )
+end
