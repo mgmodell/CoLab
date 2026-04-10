@@ -6,8 +6,7 @@ class Group < ApplicationRecord
   after_initialize :store_load_state
 
   belongs_to :project, inverse_of: :groups
-  has_and_belongs_to_many :users, inverse_of: :groups,
-                                  after_add: :set_dirty, after_remove: :set_dirty
+  has_and_belongs_to_many :users, inverse_of: :groups
   has_many :group_revisions, inverse_of: :group, dependent: :destroy
   has_many :candidate_lists, inverse_of: :group, dependent: :nullify
 
@@ -140,14 +139,6 @@ class Group < ApplicationRecord
       errors.add( :project,
                   'It is not possible to move a group from one project to another.' )
     end
-    return unless changed? || @dirty
-
-    project.active = false
-    project.save!
-  end
-
-  def set_dirty( _user )
-    @dirty = true
   end
 
   def anonymize

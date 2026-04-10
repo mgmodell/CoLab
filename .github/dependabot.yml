@@ -6,7 +6,13 @@
 
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
+ - package-ecosystem: "npm"
+   directory: "/"
+   schedule:
+     interval: weekly
+   target-branch: 'staging'
+
+ - package-ecosystem: "bundler"
    directory: "/"
    schedule:
      interval: weekly

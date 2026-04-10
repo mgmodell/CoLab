@@ -476,3 +476,15 @@ Then( 'the user selects the {string} activity' ) do | activity_name |
   find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end
+
+Given( 'a student from the project group' ) do
+  @users = [@group.users.first]
+end
+
+Then( 'the project group has {int} users' ) do | count |
+  @group.reload.users.count.should eq count
+end
+
+Then( 'the activity {string} shows status {string}' ) do | activity_name, expected_status |
+  page.should have_xpath( "//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]" )
+end

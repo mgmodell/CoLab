@@ -247,6 +247,21 @@ Feature: Course Administration
     Then the users are students
 
   @javascript
+  Scenario: Admin drops a student who is in an active project group from a course
+    Given the user is the instructor for the course
+    Given the project has been activated
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a student from the project group
+    Then the user drops the 'student' users 'user_list'
+    Then there are 11 enrolled students in the course
+    Then the project group has 3 users
+
+  @javascript
   Scenario: Admin adds new students to a course
     Given the user is the instructor for the course
     Given the user logs in
