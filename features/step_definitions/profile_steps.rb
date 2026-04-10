@@ -65,7 +65,7 @@ When( /^the user logs in$/ ) do
     click_link_or_button 'I understand' if has_content? 'I understand'
 
     # Set custom time if warranted
-    unless @dest_date.nil?
+    if @dest_date
       fill_in 'newTimeVal', with: @dest_date.to_s
       click_button 'setTimeBtn'
     end
