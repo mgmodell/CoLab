@@ -65,7 +65,7 @@ export default function HomeShell(props: Props) {
       }
     ]);
     return () => setTourSteps([]);
-  }, []);
+  }, [setTourSteps]);
 
   useEffect(() => {
     if (null !== user.lastRetrieved && undefined !== tasks) {

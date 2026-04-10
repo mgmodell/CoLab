@@ -29,7 +29,7 @@ export default function BingoShell(props: Props) {
       }
     ]);
     return () => setTourSteps([]);
-  }, []);
+  }, [setTourSteps]);
 
   return (
     <React.Fragment>

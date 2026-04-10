@@ -66,7 +66,7 @@ export default function Experience(props) {
       }
     ]);
     return () => setTourSteps([]);
-  }, []);
+  }, [setTourSteps, t]);
 
   const [reactionId, setReactionId] = useState();
   const [instructed, setInstructed] = useState(false);
