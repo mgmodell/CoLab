@@ -262,8 +262,6 @@ GEM
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
-    foreman (0.90.0)
-      thor (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
     hashie (5.1.0)
@@ -661,7 +659,6 @@ DEPENDENCIES
   devise_token_auth_multi_email
   email_address
   faker
-  foreman
   htmlbeautifier
   htmlentities
   i18n_data
