@@ -1286,17 +1286,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/types@npm:9.7.5, @react-spring/types@npm:~9.7.5":
-  version: 9.7.5
-  resolution: "@react-spring/types@npm:9.7.5"
-  checksum: 10c0/85c05121853cacb64f7cf63a4855e9044635e1231f70371cd7b8c78bc10be6f4dd7c68f592f92a2607e8bb68051540989b4677a2ccb525dba937f5cd95dc8bc1
-  languageName: node
-  linkType: hard
-
-"@react-spring/types@npm:~10.0.3":
+"@react-spring/types@npm:10.0.3, @react-spring/types@npm:~10.0.3":
   version: 10.0.3
   resolution: "@react-spring/types@npm:10.0.3"
   checksum: 10c0/f9bc2619dc9997fe93ebab90fd98118106e53bc45c9c279caaa7081b69d3ed0186d603d5ed445e56bb8ad0075553d15908a2a54e3a0a36ef7cd43a03c1650b02
+  languageName: node
+  linkType: hard
+
+"@react-spring/types@npm:~9.7.5":
+  version: 9.7.5
+  resolution: "@react-spring/types@npm:9.7.5"
+  checksum: 10c0/85c05121853cacb64f7cf63a4855e9044635e1231f70371cd7b8c78bc10be6f4dd7c68f592f92a2607e8bb68051540989b4677a2ccb525dba937f5cd95dc8bc1
   languageName: node
   linkType: hard
 
@@ -2627,7 +2627,7 @@ __metadata:
     "@fullcalendar/react": "npm:^6.1.20"
     "@react-oauth/google": "npm:^0.13.4"
     "@react-spring/parallax": "npm:9.7.5"
-    "@react-spring/types": "npm:9.7.5"
+    "@react-spring/types": "npm:10.0.3"
     "@react-spring/web": "npm:10.0.3"
     "@reduxjs/toolkit": "npm:^2.11.2"
     "@rspack/cli": "npm:^1.7.10"
