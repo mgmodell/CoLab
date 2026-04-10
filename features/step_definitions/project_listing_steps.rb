@@ -86,7 +86,10 @@ Given( /^the project has been activated$/ ) do
 end
 
 Then( /^the user should see a successful login message$/ ) do
-  page.should have_content 'signed in successfully.'
+  # With programmatic (Warden) login the Devise flash is not emitted; only check for it
+  # when the login form was actually submitted (rack_test / non-JavaScript driver).
+  page.should have_content 'signed in successfully.' if Capybara.current_driver == :rack_test
+  wait_for_render
   ack_messages
 end
 
