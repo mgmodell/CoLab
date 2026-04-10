@@ -20,7 +20,6 @@ en:
     end_date_lbl: End date
     date_to_lbl: until
     lead_time: Days for instructor review
-    student_deadline_msg: "Students must have this done by {{date}}."
     review_candidates:
       title: Candidate Terms for Review
       submitted_by: Submitted by

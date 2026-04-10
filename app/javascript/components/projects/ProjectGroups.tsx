@@ -205,7 +205,6 @@ export default function ProjectGroups(props: Props) {
       .then(response => {
         const data = response.data;
         setWorking(false);
-        setDirty(false);
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
         setGroups(Object.values(data.groups));

@@ -20,7 +20,6 @@ import AppHeader from "./toolbars/AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
-import { TourProvider } from "./infrastructure/TourContext";
 
 import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
@@ -173,9 +172,7 @@ export default function PageWrapper(props: Readonly<Props>) {
           <CookieConsent>
             This website uses cookies to enhance the user experience.
           </CookieConsent>
-          <TourProvider>
-            <RouterProvider router={router} />
-          </TourProvider>
+          <RouterProvider router={router} />
         </AppInit>
       </PrimeReactProvider>
     </Provider>

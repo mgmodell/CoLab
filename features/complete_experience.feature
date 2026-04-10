@@ -338,7 +338,11 @@ Feature: Users can complete 'experiences'
   Scenario: 1 student completes experiences for 2 courses
      Then the user logs out
     Given the experience started "last month" and ends "4 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for another class
     Given today is "3 days from now"
@@ -346,6 +350,9 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "yesterday" and ends "4 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
@@ -359,7 +366,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Given the users "have" had demographics requested
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another
     Given the course has an experience
@@ -367,6 +378,9 @@ Feature: Users can complete 'experiences'
     Given the experience started "March 7, 2017" and ends "March 10, 2017"
     Given the experience 'lead_time' is 1
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
@@ -379,7 +393,11 @@ Feature: Users can complete 'experiences'
     Given today is "February 1, 2017"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 2
     Given today is "February 7, 2017"
@@ -387,14 +405,22 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "February 6, 2017" and ends "February 11, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (3) for this class
     Given today is "February 10, 2017"
     Given the course has an experience
     Given the experience started "February 9, 2017" and ends "February 14, 2017"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 4
     Given today is "February 12, 2017"
@@ -402,14 +428,22 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "February 12, 2017" and ends "February 16, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (5) for this class
     Given today is "February 16, 2017"
     Given the course has an experience
     Given the experience started "yesterday" and ends "February 20, 2017"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 6
     Given today is "3 days from now"
@@ -417,7 +451,11 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "yesterday" and ends "7 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (7) for this class
     Given today is "5 days hence"
@@ -425,7 +463,11 @@ Feature: Users can complete 'experiences'
     Given the experience started "yesterday" and ends "6 days hence"
     Given the experience 'lead_time' is 2
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 8
     Given today is "5 days from now"
@@ -433,14 +475,22 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "yesterday" and ends "7 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (9) for this class
     Given today is "5 days hence"
     Given the course has an experience
     Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 10
     Given today is "4 days from now"
@@ -448,14 +498,22 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "yesterday" and ends "7 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (11) for this class
     Given today is "4 days hence"
     Given the course has an experience
     Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 12
     Given today is "4 days from now"
@@ -463,14 +521,22 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "yesterday" and ends "7 days hence"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (13) for this class
     Given today is "4 days hence"
     Given the course has an experience
     Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     Then there will be 13 reactions from 12 different narratives recorded
     Then there will be 13 reactions from 3 different scenarios recorded
@@ -484,7 +550,11 @@ Feature: Users can complete 'experiences'
     Given today is "February 2, 2017"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 2
     Given the user is "the last" user
@@ -493,12 +563,20 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "February 6, 2017" and ends "February 11, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (3) for this class
     Given the user is "the first" user
     Given the user enrolls in the course
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 4
     Given the user is "the last" user
@@ -507,7 +585,11 @@ Feature: Users can complete 'experiences'
     Given the course has an experience
     Given the experience "has" been activated
     Given the experience started "February 12, 2017" and ends "February 16, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (5) for this class
     Given the user is "the first" user
@@ -517,7 +599,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "4 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 6
     Given the user is "a random" user
@@ -527,7 +613,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "2 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (7) for this class
     Given the user is "the last" user
@@ -537,7 +627,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "3 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 8
     Given the user is "the first" user
@@ -547,7 +641,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "4 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (9) for this class
     Given the user is "a random" user
@@ -557,7 +655,11 @@ Feature: Users can complete 'experiences'
     Given the experience started "yesterday" and ends "4 days hence"
     Given the experience 'lead_time' is 0
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 10
     Given the user is "the last" user
@@ -567,7 +669,11 @@ Feature: Users can complete 'experiences'
     #Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "4 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (11) for this class
     Given the user is "the first" user
@@ -577,7 +683,11 @@ Feature: Users can complete 'experiences'
     Given the experience started "yesterday" and ends "3 days hence"
     Given the experience 'lead_time' is 0
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Now for class 12
     Given the user is "the last" user
@@ -587,7 +697,11 @@ Feature: Users can complete 'experiences'
     Given the experience 'lead_time' is 0
     Given the experience started "yesterday" and ends "3 days hence"
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (13) for this class
     Given the user is "a random" user
@@ -597,7 +711,11 @@ Feature: Users can complete 'experiences'
     Given the experience started "yesterday" and ends "3 days hence"
     Given the experience 'lead_time' is 0
     Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     Then there will be 13 reactions from 3 different scenarios recorded
     Then no user will have reacted to the same narrative more than once
@@ -646,19 +764,35 @@ Feature: Users can complete 'experiences'
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 2
     Given the course has an experience
@@ -668,19 +802,35 @@ Feature: Users can complete 'experiences'
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 3
     Given the course has an experience
@@ -690,19 +840,35 @@ Feature: Users can complete 'experiences'
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 4
     Given the course has an experience
@@ -712,19 +878,35 @@ Feature: Users can complete 'experiences'
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
 
     Then there will be 16 reactions from at least 10 different narratives recorded

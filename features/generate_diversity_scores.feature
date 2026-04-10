@@ -128,19 +128,35 @@ Feature: Generate diversity scores (DS)
     Given the users "have" had demographics requested
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 2
     Given the course has an experience
@@ -150,15 +166,27 @@ Feature: Generate diversity scores (DS)
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 3
     Given the course has an experience
@@ -168,15 +196,27 @@ Feature: Generate diversity scores (DS)
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #experience 4
     Given the course has an experience
@@ -186,19 +226,35 @@ Feature: Generate diversity scores (DS)
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
      When we update the group's diversity score
      Then the group's diversity score is greater than 9
@@ -211,19 +267,35 @@ Feature: Generate diversity scores (DS)
     Given the users "have" had demographics requested
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #Next experience
     Given the course has an experience
@@ -233,15 +305,27 @@ Feature: Generate diversity scores (DS)
 
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The third user
     Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The second user
     Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
      When we update the group's diversity score
      Then the group's diversity score is greater than 5
@@ -254,11 +338,19 @@ Feature: Generate diversity scores (DS)
     Given the users "have" had demographics requested
     #The first user
     Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
     #The last user
     Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
      Then the user successfully completes an experience
+     Then the user logs out
 
      When we update the group's diversity score
      Then the group's diversity score is 2

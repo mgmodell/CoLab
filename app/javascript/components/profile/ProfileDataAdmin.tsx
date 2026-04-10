@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 
 import UserEmailList from "./UserEmailList";
 const UserCourseList = React.lazy(() => import("./UserCourseList"));
@@ -14,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { useTour } from "../infrastructure/TourContext";
 import {
   fetchProfile,
   setProfile,
@@ -68,32 +65,6 @@ export default function ProfileDataAdmin(props: Props) {
     state => state.context.status.lookupsLoaded
   );
   const user: IUser = useTypedSelector(state => state.profile.user);
-
-  const { setTourSteps } = useTour();
-
-  useEffect(() => {
-    setTourSteps([
-      {
-        element: "#first-name",
-        popover: {
-          title: t("edit_profile"),
-          description: t("first_name"),
-          align: "center",
-          side: "bottom"
-        }
-      },
-      {
-        element: "#profile_timezone",
-        popover: {
-          title: t("display_settings.prompt"),
-          description: t("display_settings.time_zone"),
-          align: "center",
-          side: "bottom"
-        }
-      }
-    ]);
-    return () => setTourSteps([]);
-  }, [setTourSteps, t]);
 
   const getImpairments = () => {
     const imp = [];
@@ -186,8 +157,6 @@ export default function ProfileDataAdmin(props: Props) {
 
   const [curTab, setCurTab] = useState(0);
   const [curPanel, setCurPanel] = useState([0]);
-  const [tourCompleted, setTourCompleted] = useState(false);
-  const tourStartedRef = useRef(false);
 
   const setMessages = msgs => {
     Object.keys(msgs).forEach(key => {
@@ -343,66 +312,6 @@ export default function ProfileDataAdmin(props: Props) {
 
   useEffect(() => getStates(user.country), [user.country]);
 
-  useEffect(() => {
-    if (existingProfile && !user.welcomed && !tourStartedRef.current) {
-      tourStartedRef.current = true;
-      const profileDriver = driver({
-        showProgress: true,
-        onDestroyed: () => {
-          setTourCompleted(true);
-        }
-      });
-      profileDriver.setSteps([
-        {
-          element: '#profile-details-tab',
-          popover: {
-            title: t('walkthrough.details_title'),
-            description: t('walkthrough.details_desc'),
-            side: 'bottom',
-            align: 'start'
-          }
-        },
-        {
-          element: '#profile-email-tab',
-          popover: {
-            title: t('walkthrough.email_title'),
-            description: t('walkthrough.email_desc'),
-            side: 'bottom',
-            align: 'start'
-          }
-        },
-        {
-          element: '#profile-display-tab',
-          popover: {
-            title: t('walkthrough.display_title'),
-            description: t('walkthrough.display_desc'),
-            side: 'bottom',
-            align: 'start'
-          }
-        },
-        {
-          element: '#profile-demographics-tab',
-          popover: {
-            title: t('walkthrough.demographics_title'),
-            description: t('walkthrough.demographics_desc'),
-            side: 'bottom',
-            align: 'start'
-          }
-        },
-        {
-          element: '#profile-save-btn',
-          popover: {
-            title: t('walkthrough.save_title'),
-            description: t('walkthrough.save_desc'),
-            side: 'top',
-            align: 'start'
-          }
-        }
-      ]);
-      profileDriver.drive();
-    }
-  }, [existingProfile, user.welcomed]);
-
   //Support for AutoComplete
   const [localProfileLanguage, setLocalProfileLanguage] = useState(
     languages.find(lang => lang.id === user.language_id).name
@@ -423,7 +332,7 @@ export default function ProfileDataAdmin(props: Props) {
   ] = useState(languages);
 
   const saveButton = (
-    <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (user.welcomed || !tourCompleted)}>
+    <Button onClick={saveProfile} disabled={!dirty}>
       {null == user.id ? t('create_btn') : t('save_btn')}
     </Button>
   );
@@ -466,7 +375,6 @@ export default function ProfileDataAdmin(props: Props) {
           header={t("edit_profile")}
           aria-label={t("edit_profile")}
           className="fixedDrawer"
-          pt={{ root: { id: 'profile-details-tab' } }}
           >
           <Container>
             <Row>
@@ -501,7 +409,6 @@ export default function ProfileDataAdmin(props: Props) {
           key='email_settings'
           header={t("email_settings")}
           aria-label={t("email_settings")}
-          pt={{ root: { id: 'profile-email-tab' } }}
         >
           {emailPanel}
         </AccordionTab>
@@ -509,7 +416,6 @@ export default function ProfileDataAdmin(props: Props) {
           key='display_settings'
           header={t("display_settings.prompt")}
           aria-label={t("display_settings.prompt")}
-          pt={{ root: { id: 'profile-display-tab' } }}
         >
           <Container>
             <Col md={6} xs={12}>
@@ -594,7 +500,6 @@ export default function ProfileDataAdmin(props: Props) {
           key='demographics'
           header={t("demographics.prompt", { first_name: user.first_name })}
           aria-label={t("demographics.prompt", { first_name: user.first_name })}
-          pt={{ root: { id: 'profile-demographics-tab' } }}
         >
           <Container>
             <Row>

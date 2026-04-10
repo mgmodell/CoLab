@@ -211,9 +211,14 @@ Then( /^the user successfully completes an experience-ui$/ ) do
 end
 
 Then( /^all users complete the course successfully$/ ) do
+  # _count = 1
   @course.enrolled_students.each do | user |
     @user = user
+    step 'the user logs in'
+    step 'the user should see a successful login message'
     step 'the user successfully completes an experience'
+    # _count += 1
+    step 'the user logs out'
   end
 end
 

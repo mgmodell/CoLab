@@ -19,7 +19,6 @@ import ExperienceDiagnosis from "./ExperienceDiagnosis";
 
 const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { useTour } from "../infrastructure/TourContext";
 import axios from "axios";
 import { Skeleton } from "primereact/skeleton";
 
@@ -35,39 +34,7 @@ export default function Experience(props) {
 
   const dispatch = useDispatch();
   const [t, i18n] = useTranslation("installments");
-  const [tExp] = useTranslation("experiences");
   const navigate = useNavigate();
-  const { setTourSteps } = useTour();
-
-  useEffect(() => {
-    setTourSteps([
-      {
-        element: ".journal_entry",
-        popover: {
-          description: tExp("inst_p1"),
-          align: "center",
-          side: "left"
-        }
-      },
-      {
-        element: ".behaviors",
-        popover: {
-          description: tExp("inst_p2"),
-          align: "center",
-          side: "right"
-        }
-      },
-      {
-        element: "body",
-        popover: {
-          description: tExp("inst_p3"),
-          align: "center",
-          side: "top"
-        }
-      }
-    ]);
-    return () => setTourSteps([]);
-  }, [setTourSteps, tExp]);
 
   const [reactionId, setReactionId] = useState();
   const [instructed, setInstructed] = useState(false);

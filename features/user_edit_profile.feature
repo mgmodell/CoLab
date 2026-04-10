@@ -5,18 +5,22 @@ Feature: User edit Profile
     Given there is a registered user
 
   @javascript
-  Scenario: User should be asked to verify profile information on first login
+  Scenario: User should be asked to enter profile information on first login
     And the user 'is not' confirmed
     Then the user logs in
     Then the user 'does' see the 'Edit your profile' page
-    Then the user completes the profile walkthrough
+    Then the user sets the 'first name' to 'Jack'
+    Then the user sets the 'last name' to 'Black'
     Then close all messages
     Then the user saves the profile
     Then the user 'does not' see the 'Edit your profile' page
     Then user should see 0 open task
+    Then user opens their profile
+    Then the user sees the 'first name' is 'Jack'
+    Then the user sees the 'last name' is 'Black'
 
   @javascript
-  Scenario: User should not see profile edit on first login if already confirmed
+  Scenario: User should be asked to enter profile information on first login
     And the user 'is' confirmed
     Then the user logs in
     Then the user 'does not' see the 'Edit your profile' page

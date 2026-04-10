@@ -36,9 +36,6 @@ cucumber
 
 /public/packs
 /public/packs-test
-app/javascript/generated
-app/javascript/packs/generated
-ssr-generated
 /node_modules
 /yarn-error.log
 yarn-debug.log*

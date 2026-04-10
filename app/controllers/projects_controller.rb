@@ -152,7 +152,6 @@ class ProjectsController < ApplicationController
       # Post back a JSON error
       get_groups_helper project:, message: t( 'projects.group_save_failure' )
     else
-      project.groups.reset
       get_groups_helper project:, message: t( 'projects.group_save_success' )
     end
   end

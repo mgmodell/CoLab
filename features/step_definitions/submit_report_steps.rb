@@ -158,7 +158,7 @@ Then( /^the user logs out$/ ) do
   find( :id, 'main-menu-button' ).click
   find( :id, 'logout-menu-item' ).click
   wait_for_render
-  Capybara.reset_sessions!
+  page.quit
 end
 
 Then( /^there should be an error$/ ) do

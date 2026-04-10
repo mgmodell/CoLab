@@ -13,16 +13,19 @@ require 'simplecov'
 
 SimpleCov.start 'rails'
 
-World( Warden::Test::Helpers )
-Warden.test_mode!
-
 # Webdrivers.cache_time = 86_400
 
 # require 'simplecov'
 # SimpleCov.start 'rails'
 
 def wait_for_render
-  page.has_no_xpath?( "//*[@id='waiting']", wait: 30 )
+  times = 3000
+
+  while !all( :xpath, "//*[@id='waiting']" ).empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
+    sleep( 0.01 )
+    times -= 1
+  end
 end
 
 def ack_messages
@@ -129,17 +132,12 @@ Capybara.javascript_driver = case ENV['DRIVER']
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
-$cached_sql_statements = nil
-
 def loadData
-  $cached_sql_statements ||= begin
-    sql = File.read( 'db/test_db.sql' )
-    statements = sql.split( /;$/ )
-    statements.pop # remove empty line
-    statements
-  end
+  sql = File.read( 'db/test_db.sql' )
+  statements = sql.split( /;$/ )
+  statements.pop # remote empty line
   ActiveRecord::Base.transaction do
-    $cached_sql_statements.each do | statement |
+    statements.each do | statement |
       ActiveRecord::Base.connection.execute( statement )
     end
   end
@@ -213,13 +211,12 @@ end
 
 After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
-  Warden.test_reset!
+  loadData
   travel_back
 end
 
 After( 'not @javascript' ) do | _scenario |
   DatabaseCleaner.clean
-  Warden.test_reset!
   travel_back
 end
 

@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, useMemo } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -247,13 +247,6 @@ export default function BingoGameDataAdmin(props) {
       });
   };
 
-  const studentDeadline = useMemo(() => {
-    if (!gameEndDate) return null;
-    const deadline = new Date(gameEndDate);
-    deadline.setDate(deadline.getDate() - (1 + (gameLeadTime || 0)));
-    return deadline;
-  }, [gameEndDate, gameLeadTime]);
-
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
@@ -416,11 +409,6 @@ export default function BingoGameDataAdmin(props) {
                     />
                     <label htmlFor="bingo_game_end_date">{t('end_date_lbl')}</label>
                   </FloatLabel>
-                  {studentDeadline && (
-                    <p id="student_deadline_msg">
-                      {t('student_deadline_msg', {date: studentDeadline.toLocaleDateString(i18n.language, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})})}
-                    </p>
-                  )}
                 </Col>
                 <Col xs={4}>
                   <InputSwitch
