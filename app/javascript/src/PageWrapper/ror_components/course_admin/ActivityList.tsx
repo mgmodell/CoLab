@@ -21,7 +21,7 @@ import CourseAdminListToolbar from "./CourseAdminListToolbar";
 import { iconForType } from "../ActivityLib";
 
 import { IActivityLink } from "./CourseDataAdmin";
-import { a } from "react-spring";
+import { a } from "@react-spring/web";
 
 enum ActivityType {
   BingoGame = "bingo_game",

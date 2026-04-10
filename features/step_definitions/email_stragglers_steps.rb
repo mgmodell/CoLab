@@ -35,6 +35,7 @@ end
 
 Then('there are no performed tasks') do
   performed_jobs = []
+  clear_performed_jobs
 end
 
 Then( /^(\d+) emails will be sent$/ ) do | email_count |

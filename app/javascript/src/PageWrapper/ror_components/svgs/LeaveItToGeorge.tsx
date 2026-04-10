@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { SpringValue, animated } from "react-spring";
+import { SpringValue, animated } from "@react-spring/web";
 
 type Props = {
   svgPos?: {

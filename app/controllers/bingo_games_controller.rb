@@ -163,12 +163,12 @@ class BingoGamesController < ApplicationController
           resp[user_id][:concepts_credited] = cl.candidates
                                                 .count do | c |
                                                   !( c.candidate_feedback.present? &&
-                                                    CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
+                                                    c.candidate_feedback.term_problem? )
           end
           resp[user_id][:term_problems] = cl.candidates
                                             .count do | c |
-                                              !( c.candidate_feedback.present? &&
-                                                CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
+                                              c.candidate_feedback.present? &&
+                                                c.candidate_feedback.term_problem?
           end
           resp[user_id][:performance] = cl.performance
           candidates = []
@@ -191,12 +191,12 @@ class BingoGamesController < ApplicationController
         concepts_credited = cl.candidates
                               .count do | c |
                                 !( c.candidate_feedback.present? &&
-                                  CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
+                                  c.candidate_feedback.term_problem? )
         end
         term_problems = cl.candidates
                           .count do | c |
-                            !( c.candidate_feedback.present? &&
-                              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
+                            c.candidate_feedback.present? &&
+                              c.candidate_feedback.term_problem?
         end
         performance = cl.performance
         candidates = []

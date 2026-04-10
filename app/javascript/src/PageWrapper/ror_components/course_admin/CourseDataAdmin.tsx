@@ -312,7 +312,7 @@ export default function CourseDataAdmin() {
           value={course.school_id}
           options={schools}
           onChange={event => {
-            const changeTo = Number(event.target.value);
+            const changeTo = Number(event.value);
             setCourse(course => {
               return {
                 ...course,
@@ -338,7 +338,7 @@ export default function CourseDataAdmin() {
           value={course.timezone}
           options={timezones}
           onChange={event => {
-            setCourseValue('timezone', event.target.value);
+            setCourseValue('timezone', event.value);
           }}
           optionLabel="name"
           optionValue="name"
@@ -357,7 +357,7 @@ export default function CourseDataAdmin() {
         value={course.consent_form_id}
         options={consentForms}
         onChange={event => {
-          setCourseValue('consent_form_id', event.target.value);
+          setCourseValue('consent_form_id', event.value);
         }}
         optionValue="id"
         optionLabel="name"

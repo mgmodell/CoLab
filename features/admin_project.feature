@@ -349,6 +349,7 @@ Feature: Project Administration
 @javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty
+      And there are no performed tasks
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
@@ -368,6 +369,7 @@ Feature: Project Administration
 
     # Change the project
     Given the email queue is empty
+      And there are no performed tasks
      When the project started "5/10/1978" and ends "10/29/2012", opened "Friday" and closes "Saturday"
     Given the project has been activated
     Given today is "10/14/1979"
@@ -385,6 +387,7 @@ Feature: Project Administration
     Given the course timezone is "UTC"
     Given the user timezone is "UTC"
     Given the email queue is empty
+      And there are no performed tasks
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
@@ -404,6 +407,7 @@ Feature: Project Administration
 
     # Change the project
     Given the email queue is empty
+      And there are no performed tasks
      When the project started "5/10/1978" and ends "10/29/2012", opened "Friday" and closes "Saturday"
     Given the project has been activated
      When the system emails stragglers
@@ -420,6 +424,7 @@ Feature: Project Administration
     # Change the project
     Given today is "11/10/1979"
     Given the email queue is empty
+      And there are no performed tasks
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
@@ -438,6 +443,7 @@ Feature: Project Administration
 @javascript
   Scenario: A deactivated project incurs no emails and is not listed
     Given the email queue is empty
+      And there are no performed tasks
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested

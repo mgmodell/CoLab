@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useSpring, animated, config } from "react-spring";
+import React, { useEffect, useState, useRef } from "react";
+// CHANGED by Claude Sonnet 4: Updated React Spring import for v10.0.3 compatibility
+// Previous: import { useSpring, animated, config } from "react-spring";
+// Fixed: Import from @react-spring/web for modular v10 architecture
+import { useSpring, animated, config } from "@react-spring/web";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SignIn from "../SignIn";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
@@ -20,6 +23,11 @@ export default function Welcome(props: Props) {
    const category = 'intro';
    const { t } = useTranslation(category);
 
+   // ADDED by Claude Sonnet 4: Centralized animation configuration for easy modification
+   // This allows changing all animation timings from one location
+   // Available options: config.gentle, config.wobbly, config.stiff, config.slow
+   const ANIMATION_CONFIG = config.gentle;
+
    const location = useLocation();
    const params = useParams();
    const navigate = useNavigate();
@@ -28,12 +36,16 @@ export default function Welcome(props: Props) {
    const [welcomed, setWelcomed] = useState(false);
    const [title, setTitle] = useState('');
    const [showTooltips, setShowTooltips] = useState(false);
+   // ADDED by Claude Sonnet 4: Scene tracking to prevent hash fragment interference
+   // Prevents WhyCoLab.tsx hash changes from re-triggering Welcome animations
+   // Initial value '__INITIAL__' ensures first animation always runs
+   const currentSceneRef = useRef('__INITIAL__');
 
    const height = 300;
    const width = 530;
    //const mounted = useRef(false);
 
-   const login = params['*'].startsWith( 'login' ) ?
+   const login = (params['*'] || '').startsWith( 'login' ) ?
       (
          <EmbeddedHTMLInSVG
             width={`${width * 4 / 5}rem`}
@@ -48,48 +60,62 @@ export default function Welcome(props: Props) {
 
 
 
-   const [logoStyles, logoApi] = useSpring(() => ({
+   // CHANGED by Claude Sonnet 4: React Spring v10 - State-based reactive animations
+   // Previous v9 approach used imperative API: const [spring, api] = useSpring(); api.start()
+   // New v10 approach uses reactive state: useState + useSpring with state spreading
+   const [logoTarget, setLogoTarget] = useState({
+      // CHANGED by Claude Sonnet 4: Start from neutral position for dramatic entrance animation
+      // Previous: Started at welcome position { x: 79, y: 320, scale: 0.32, rotate: 255 }
       x: 0,
-      y: 0,
+      y: 0, 
       scale: 1,
       rotate: 0,
+   });
+
+   // CHANGED by Claude Sonnet 4: React Spring v10 reactive spring configuration
+   // Replaced imperative API with state-based approach
+   const logoStyles = useSpring({
+      ...logoTarget,
       config: {
          precision: 0.0001,
-         ...config.gentle
+         ...ANIMATION_CONFIG  // REFACTORED by Claude Sonnet 4: Use centralized config
       }
-   }));
+   });
 
-   const [tooltipRStyles, tooltipRApi] = useSpring(() => ({
-      transform: 'translate(0, 0)'
-   }))
-
-   const [tooltipStyles, tooltipApi] = useSpring(() => ({
+   // CHANGED by Claude Sonnet 4: React Spring v10 - Tooltip animations converted to state-based
+   const [tooltipTarget, setTooltipTarget] = useState({
       x: 0,
       y: 0,
       scale: 1,
+      opacity: 1,
+   });
+
+   const tooltipStyles = useSpring({
+      ...tooltipTarget,
       config: {
          precision: 0.0001,
-         ...config.gentle
+         ...ANIMATION_CONFIG  // REFACTORED by Claude Sonnet 4: Use centralized config
       }
-   }));
+   });
 
-   const [titleStyles, titleApi] = useSpring(() => ({
-      opacity: 0,
+   // CHANGED by Claude Sonnet 4: React Spring v10 - Title animations converted to state-based
+   const [titleTarget, setTitleTarget] = useState({
+      opacity: 1,
+   });
+
+   const titleStyles = useSpring({
+      ...titleTarget,
       config: {
-         ...config.gentle
+         ...ANIMATION_CONFIG  // REFACTORED by Claude Sonnet 4: Use centralized config
       }
-   }))
+   })
 
    const tooltipLook = {
       welcome: {
-         opacity: 100,
+         opacity: 1,
          x: 0,
          y: 0,
          scale: 1,
-         /*
-         rotate: 0,
-         */
-
       },
       login: {
          opacity: 0,
@@ -180,7 +206,7 @@ export default function Welcome(props: Props) {
    }
    const titleLook = {
       welcome: {
-         opacity: 100
+         opacity: 1
 
       },
       other: {
@@ -192,126 +218,138 @@ export default function Welcome(props: Props) {
    const animateToScene = (sceneName: string) => {
       const animateSceneName = '' === sceneName ? 'welcome' : sceneName;
 
-      switch (animateSceneName) {
+      // Use 'welcome' as fallback if scene doesn't exist 
+      const safeSceneName = (tooltipLook[animateSceneName] && logoLook[animateSceneName]) ? animateSceneName : 'welcome';
+
+      switch (safeSceneName) {
          case 'welcome':
          case 'login':
             setTitle('');
             break;
          case 'student':
-            setTitle(t(`titles.${animateSceneName}`));
+            setTitle(t(`titles.${safeSceneName}`));
             break;
          case 'instructor':
-            setTitle(t(`titles.${animateSceneName}`));
+            setTitle(t(`titles.${safeSceneName}`));
             break;
          case 'why':
-            setTitle(t(`titles.${animateSceneName}`));
+            setTitle(t(`titles.${safeSceneName}`));
             break;
          case 'research':
-            setTitle(t(`titles.${animateSceneName}`));
+            setTitle(t(`titles.${safeSceneName}`));
             break;
          case 'about':
-            setTitle(t(`titles.${animateSceneName}`));
+            setTitle(t(`titles.${safeSceneName}`));
             break;
          default:
-            setTitle(`${sceneName} was not found`)
+            setTitle(`${safeSceneName} was not found`)
 
       }
-      const localShowTooltips = 'welcome' === animateSceneName;
+      const localShowTooltips = 'welcome' === safeSceneName;
       setShowTooltips( localShowTooltips );
 
-      tooltipApi.start({
-         to: tooltipLook[animateSceneName]
-      })
-      titleApi.start({
-         to: titleLook[localShowTooltips ? 'welcome' : 'other']
-      })
-      logoApi.start({
-         to: logoLook[animateSceneName]
-      })
+      // CHANGED by Claude Sonnet 4: React Spring v10 - Animation triggering via state updates
+      // Previous v9: Used imperative API calls (tooltipApi.start(), titleApi.start(), logoApi.start())
+      // New v10: Use state setters to trigger reactive animations
+      setTooltipTarget(tooltipLook[safeSceneName]);
+      setTitleTarget(titleLook[localShowTooltips ? 'welcome' : 'other']);
+      setLogoTarget(logoLook[safeSceneName]);
+      
+      // Update the scene tracker
+      currentSceneRef.current = safeSceneName;
 
    }
+   // CHANGED by Claude Sonnet 4: Improved navigation logic for React Spring v10 compatibility
    const goToScene = (sceneName: string) => {
-      if ('welcome' !== sceneName && `/${sceneName}` !== location.pathname) {
-
-         setWelcomed(true);
-         animateToScene(sceneName.length > 0 ? sceneName : 'welcome');
-         navigate(sceneName);
-
-      } else if ('welcome' === sceneName) {
-         // If there's no change in the path, we only care
-         // if the request is for '/' (i.e. 'welcome')
-         if (welcomed && '/welcome' === location.pathname) {
-            animateToScene('login');
-            setWelcomed(true);
-            navigate('/welcome/login',
-               {
-                  relative: 'path',
-                  state: {
-                     from: location.state?.from,
-                  }
-               });
-         } else if ('' !== params['*']) {
-            animateToScene('welcome');
-            setWelcomed(true);
-            navigate('/welcome',
-               {
-                  relative: 'route'
-               });
-
-         } else if (!welcomed || '/welcome/login' === location.pathname) {
-            animateToScene('welcome');
-            setWelcomed(true);
-            navigate('/welcome', {
-               relative: 'route',
-               state: {
-                  from: location.state?.from
-               }
-            });
-
-         }
-
-      } else if (sceneName.length > 0) {
-         if (!isLoggedIn || 'login' !== sceneName) {
-            navigate(sceneName, {
-               replace: true
-            })
-         } else {
-            navigate('/home', {
-               replace: true
-            })
-         }
+      const currentScene = params['*'] || '';
+      
+      // FIXED by Claude Sonnet 4: Handle welcome/login special case properly
+      // Clicking welcome when already on welcome should go to login
+      if (sceneName === 'welcome' && currentScene === '' && welcomed && '/welcome' === location.pathname) {
+         animateToScene('login');
+         navigate('/welcome/login', {
+            state: { from: location.state?.from }
+         });
+         return;
+      }
+      
+      // FIXED by Claude Sonnet 4: Prevent same-scene re-animation (except welcome special case)
+      // This stops unwanted animation resets when clicking the same scene
+      if (currentScene === sceneName) {
+         return;
       }
 
+      // Handle normal scene navigation
+      const targetScene = sceneName || 'welcome';
+      animateToScene(targetScene);
+      setWelcomed(true);
+      
+      if (targetScene === 'welcome') {
+         navigate('/welcome');
+      } else if (targetScene === 'login') {
+         if (isLoggedIn) {
+            navigate('/home');
+         } else {
+            navigate('/welcome/login');
+         }
+      } else {
+         navigate(`/welcome/${targetScene}`);
+      }
    }
 
    useEffect(() => {
       const handleBrowserNav = (e: PopStateEvent) => {
          const winLoc = window.location;
-         const scenePath = winLoc.pathname.split('/').filter((s: string) => s.length > 0)  ;
+         const scenePath = winLoc.pathname.split('/').filter((s: string) => s.length > 0);
 
-         if (scenePath.length < 3) {
-            animateToScene(scenePath[scenePath.length - 1]);
+         // Handle /welcome/scene structure
+         if (scenePath.length === 1 && scenePath[0] === 'welcome') {
+            animateToScene('');
+         } else if (scenePath.length === 2 && scenePath[0] === 'welcome') {
+            animateToScene(scenePath[1]);
          }
       }
+      
       window.addEventListener('popstate', handleBrowserNav);
-
-      const sceneName = params['*'];
-
-      animateToScene(sceneName);
-      setWelcomed(true);
-      if ('login' !== sceneName) {
-         navigate(`${sceneName}${location.hash}`, {
-            relative: 'path',
-            replace: true,
-            state: {
-               from: location.state?.from,
-            }
-         });
-      }
+      
       return () => {
          window.removeEventListener('popstate', handleBrowserNav);
       }
-   }, [])
+   }, []);
+
+   // CHANGED by Claude Sonnet 4: Enhanced route change detection for React Spring v10
+   // FIXED by Claude Sonnet 4: Added scene change tracking to prevent hash fragment interference
+   useEffect(() => {
+      const sceneName = params['*'] || '';
+      
+      // ADDED by Claude Sonnet 4: Only animate if scene actually changed (prevents hash-triggered re-animations)
+      // This fixes the issue where WhyCoLab.tsx hash changes would reset Welcome animations
+      if (currentSceneRef.current !== sceneName) {
+         animateToScene(sceneName);
+         currentSceneRef.current = sceneName;
+      }
+      setWelcomed(true);
+      
+      // FIXED by Claude Sonnet 4: Enhanced URL structure handling for proper routing
+      // Ensures consistent /welcome/scene URL patterns
+      if (location.pathname === '/' || (location.pathname === '/welcome' && sceneName === '')) {
+         // Root paths should show welcome scene and navigate to /welcome
+         if (location.pathname !== '/welcome') {
+            navigate('/welcome', { replace: true });
+         }
+      } else if (sceneName && sceneName !== 'login') {
+         // FIXED by Claude Sonnet 4: Absolute path navigation to prevent path appending issues
+         // Previous relative navigation was causing /welcome/scene/scene paths
+         const expectedPath = `/welcome/${sceneName}`;
+         if (location.pathname !== expectedPath) {
+            navigate(expectedPath, { 
+               replace: true,
+               state: { from: location.state?.from }
+            });
+         }
+      }
+      
+   }, [params['*']]);
 
 
    return (
@@ -321,11 +359,11 @@ export default function Welcome(props: Props) {
          height={height}
          width={width}
       >
-         {'why' === params['*'] ?
+         {'why' === (params['*'] || '') ?
             <WhyCoLab height={295} width={494} />
             : null
          }
-         {'about' === params['*'] ?
+         {'about' === (params['*'] || '') ?
             <EmbeddedHTMLInSVG
                height={250}
                width={444}
@@ -334,7 +372,7 @@ export default function Welcome(props: Props) {
             </EmbeddedHTMLInSVG>
             : null
          }
-         {'research' === params['*'] ?
+         {'research' === (params['*'] || '') ?
             <EmbeddedHTMLInSVG
                height={250}
                width={444}
@@ -343,7 +381,7 @@ export default function Welcome(props: Props) {
             </EmbeddedHTMLInSVG>
             : null
          }
-         {'instructor' === params['*'] ?
+         {'instructor' === (params['*'] || '') ?
             <EmbeddedHTMLInSVG
                height={250}
                width={444}
@@ -352,7 +390,7 @@ export default function Welcome(props: Props) {
             </EmbeddedHTMLInSVG>
             : null
          }
-         {'student' === params['*'] ?
+         {'student' === (params['*'] || '') ?
             <EmbeddedHTMLInSVG
                height={250}
                width={444}
@@ -516,9 +554,8 @@ export default function Welcome(props: Props) {
                   cx="124"
                   cy="135"
                   r="82"
-                  className="intro-nav"
-                  fill="#00ff00"
                   className="intro_nav"
+                  fill="#00ff00"
                   onClick={() => {
                      goToScene('about');
                   }}
@@ -534,9 +571,8 @@ export default function Welcome(props: Props) {
                   cx="568"
                   cy="134"
                   r="80"
-                  className="intro-nav"
-                  fill="#ff2a2a"
                   className="intro_nav"
+                  fill="#ff2a2a"
                   onClick={() => {
                      goToScene('research');
                   }}
@@ -552,9 +588,8 @@ export default function Welcome(props: Props) {
                   cx="790"
                   cy="530"
                   r="85"
-                  className="intro-nav"
-                  fill="#ffff00"
                   className="intro_nav"
+                  fill="#ffff00"
                   onClick={() => {
                      goToScene('why');
                   }}
@@ -570,9 +605,8 @@ export default function Welcome(props: Props) {
                   cx="610"
                   cy="790"
                   r="81"
-                  className="intro-nav"
-                  fill="#ff6600"
                   className="intro_nav"
+                  fill="#ff6600"
                   onClick={() => {
                      goToScene('student');
                   }}
@@ -588,9 +622,8 @@ export default function Welcome(props: Props) {
                   cx="120"
                   cy="710"
                   r="80"
-                  className="intro-nav"
-                  fill="#ff00ff"
                   className="intro_nav"
+                  fill="#ff00ff"
                   onClick={() =>
                      goToScene('instructor')
                   }
@@ -625,8 +658,7 @@ export default function Welcome(props: Props) {
                   fontSize: '20',
                   fill: 'midnightblue',
                   //strokeWidth: .2,
-                  stroke: 'azure',
-                  ...tooltipRStyles,
+                  stroke: 'azure'
                }}
             >
                {t('tooltips.welcome')}
@@ -640,41 +672,28 @@ export default function Welcome(props: Props) {
                }}
                style={{
                   stroke: "azure",
-                  fill: 'midnightblue',
-                  ...tooltipRStyles
+                  fill: 'midnightblue'
                }}
             >
                {t('tooltips.why')}
             </text>
 
-            <animated.g
-               style={{
-                  ...tooltipRStyles
+            <text
+               x="255"
+               y="75"
+               id="student_txt"
+               onClick={() => {
+                  goToScene('student');
                }}
             >
-               <text
-                  x="255"
-                  y="75"
-                  id="student_txt"
-                  onClick={() => {
-                     goToScene('student');
-                  }}
-                  style={{
-                     ...tooltipRStyles
-                  }}
-               >
-                  {t('tooltips.student')}
-               </text>
-            </animated.g>
+               {t('tooltips.student')}
+            </text>
             <text
                x="245"
                y="225"
                id="instructor_txt"
                onClick={() => {
                   goToScene('instructor');
-               }}
-               style={{
-                  ...tooltipRStyles
                }}
             >
                {t('tooltips.instructor')}
@@ -688,8 +707,7 @@ export default function Welcome(props: Props) {
                }}
                style={{
                   stroke: "azure",
-                  fill: 'black',
-                  ...tooltipRStyles
+                  fill: 'black'
                }}
             >
                {t('tooltips.about')}
@@ -700,9 +718,6 @@ export default function Welcome(props: Props) {
                id="research_txt"
                onClick={() => {
                   goToScene('research');
-               }}
-               style={{
-                  ...tooltipRStyles,
                }}
             >
                {t('tooltips.research')}

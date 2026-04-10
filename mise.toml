@@ -1,9 +1,8 @@
 [tools]
-heroku = "latest"
-node = "25.8.2"
+node = "25.9.0"
 podman = { version = "5.8.1", matching = "podman-remote" }
 python = "3.13.7"
 ruby = "3.4.8"
 rust = "1.92"
-usage = "3.2"
-yarn = "4.13"
+usage = "3.2.0"
+yarn = "4.13.0"

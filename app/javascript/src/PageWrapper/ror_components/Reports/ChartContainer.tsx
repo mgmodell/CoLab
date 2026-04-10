@@ -156,7 +156,7 @@ export default function ChartContainer(props: Props) {
             value={selectedSubject}
             options={subjects}
             onChange={evt => {
-              selectSubject(evt.target.value);
+              selectSubject(evt.value);
             }}
             optionLabel="name"
             optionValue="id"
@@ -181,7 +181,7 @@ export default function ChartContainer(props: Props) {
             value={selectedProject}
             options={projects}
             onChange={evt => {
-              setSelectedProject(evt.target.value);
+              setSelectedProject(evt.value);
             }}
             optionLabel="name"
             optionValue="id"
