@@ -200,7 +200,7 @@ GEM
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
-    devise-multi_email (3.1.6)
+    devise-multi_email (4.0.0)
       devise (< 6.0)
     devise_token_auth_multi_email (0.9.9)
       bcrypt (~> 3.0)
@@ -761,7 +761,7 @@ CHECKSUMS
   delayed_job_active_record (4.1.11) sha256=64f34a6d50316dd7a7df1daf7c6e04ad888c0e86938762318f6f52522b7c1ba8
   descriptive_statistics (2.5.1) sha256=1b8f9a38ca9554bd791d053c265d364ed7abebd10f7aeb7d2b04c8bda0db29fb
   devise (5.0.3) sha256=c4c065051cdc4ace11547b2b7f5c3c4c97d0f1269250f5fe90f614ff78f29546
-  devise-multi_email (3.1.6) sha256=b63f1e1b63785375746a40ffc7ad7da7bd19731a1976812d6216414f1bae62b6
+  devise-multi_email (4.0.0) sha256=4d04a18e9aab126628d0ad5305993538702776588bec39495be2d417ea055414
   devise_token_auth_multi_email (0.9.9) sha256=e73bec12b007e5e2e7bbbb25713b6d80aa3909eef56f7e321a7b8646003d13f3
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
