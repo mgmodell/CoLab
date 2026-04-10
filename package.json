@@ -55,7 +55,7 @@
     "quill": "^2.0.3",
     "react": "19.2.4",
     "react-cookie-consent": "^10.0.1",
-    "react-dom": "19.2.4",
+    "react-dom": "19.2.5",
     "react-grid-system": "^8.2.1",
     "react-i18next": "^17.0.1",
     "react-on-rails": "16.5.1",
