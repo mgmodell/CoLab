@@ -34,6 +34,7 @@ Feature: Bingo Administration
     Then the user sets the project to the course's project
     Then the user sets the "bingo_game" start date to "02/29/1980" and the end date to "07/10/2008"
     Then the user sets the rich "description" field to "this is the coolest"
+    Then the user will see "Students must have this done by"
     Then close all messages
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
@@ -70,6 +71,7 @@ Feature: Bingo Administration
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the rich "description" field to "this is the coolest"
+    Then the user will see "Students must have this done by"
     Then the user sees the 'bingo_game' 'start date' is '05/10/1976'
     Then the user sees the 'bingo_game' 'end date' is '11/01/2012'
     Then close all messages
