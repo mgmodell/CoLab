@@ -16,7 +16,7 @@
     "@react-oauth/google": "^0.13.4",
     "@react-spring/parallax": "9.7.5",
     "@react-spring/types": "9.7.5",
-    "@react-spring/web": "9.7.5",
+    "@react-spring/web": "10.0.3",
     "@reduxjs/toolkit": "^2.11.2",
     "@swc/core": "^1.15.21",
     "@types/node": "^25.5.0",
