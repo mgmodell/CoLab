@@ -202,12 +202,10 @@ GEM
       warden (~> 1.2.3)
     devise-multi_email (3.1.6)
       devise (< 6.0)
-    devise-multi_email_revived (3.1.2)
-      devise (< 6.0)
-    devise_token_auth_multi_email (0.9.4)
+    devise_token_auth_multi_email (0.9.9)
       bcrypt (~> 3.0)
       devise (> 3.5.2, < 6.0)
-      devise-multi_email_revived (~> 3.1)
+      devise-multi_email
       rails (>= 4.2.0, <= 8.2)
     diff-lcs (1.6.2)
     drb (2.2.3)
@@ -319,7 +317,7 @@ GEM
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
-    minitest (6.0.2)
+    minitest (6.0.3)
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.0)
@@ -410,14 +408,14 @@ GEM
     puma (7.2.0)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.5)
+    rack (3.2.6)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
     rack-proxy (0.7.7)
       rack
-    rack-session (2.1.1)
+    rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
@@ -764,8 +762,7 @@ CHECKSUMS
   descriptive_statistics (2.5.1) sha256=1b8f9a38ca9554bd791d053c265d364ed7abebd10f7aeb7d2b04c8bda0db29fb
   devise (5.0.3) sha256=c4c065051cdc4ace11547b2b7f5c3c4c97d0f1269250f5fe90f614ff78f29546
   devise-multi_email (3.1.6) sha256=b63f1e1b63785375746a40ffc7ad7da7bd19731a1976812d6216414f1bae62b6
-  devise-multi_email_revived (3.1.2) sha256=bc75dbe8ceada4cc5ad6b97e315fcfc2940c3b8f0fd9f2bec25f480245370d4f
-  devise_token_auth_multi_email (0.9.4) sha256=c83321618fc38a0032947a7b3b9bce2ab2d320472cd8e83566a8829ca8be4580
+  devise_token_auth_multi_email (0.9.9) sha256=e73bec12b007e5e2e7bbbb25713b6d80aa3909eef56f7e321a7b8646003d13f3
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-configurable (1.3.0) sha256=882d862858567fc1210d2549d4c090f34370fc1bb7c5c1933de3fe792e18afa8
@@ -818,7 +815,7 @@ CHECKSUMS
   memoist3 (1.0.0) sha256=686e42402cf150a362050c23143dc57b0ef88f8c344943ff8b7845792b50d56f
   mini_magick (5.3.1) sha256=29395dfd76badcabb6403ee5aff6f681e867074f8f28ce08d78661e9e4a351c4
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  minitest (6.0.2) sha256=db6e57956f6ecc6134683b4c87467d6dd792323c7f0eea7b93f66bd284adbc3d
+  minitest (6.0.3) sha256=88ac8a1de36c00692420e7cb3cc11a0773bbcb126aee1c249f320160a7d11411
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   multi_test (1.1.0) sha256=e9e550cdd863fb72becfe344aefdcd4cbd26ebf307847f4a6c039a4082324d10
   multi_xml (0.8.1) sha256=addba0290bac34e9088bfe73dc4878530297a82a7bbd66cb44dcd0a4b86edf5a
@@ -859,10 +856,10 @@ CHECKSUMS
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
   puma (7.2.0) sha256=bf8ef4ab514a4e6d4554cb4326b2004eba5036ae05cf765cfe51aba9706a72a8
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (3.2.5) sha256=4cbd0974c0b79f7a139b4812004a62e4c60b145cba76422e288ee670601ed6d3
+  rack (3.2.6) sha256=5ed78e1f73b2e25679bec7d45ee2d4483cc4146eb1be0264fc4d94cb5ef212c2
   rack-protection (4.2.1) sha256=cf6e2842df8c55f5e4d1a4be015e603e19e9bc3a7178bae58949ccbb58558bac
   rack-proxy (0.7.7) sha256=446a4b57001022145d5c3ba73b775f66a2260eaf7420c6907483141900395c8a
-  rack-session (2.1.1) sha256=0b6dc07dea7e4b583f58a48e8b806d4c9f1c6c9214ebc202ec94562cbea2e4e9
+  rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
   railroady (1.6.0) sha256=c0f020a10bf818c21e9b107549ec48cd160bb35117c2c5bf8a6722156275cd0e
