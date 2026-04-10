@@ -10,9 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import ConceptChips from "./ConceptChips";
-const BingoGameDataAdminTable = React.lazy(() =>
-  import("./BingoGameDataAdminTable")
-);
+import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";

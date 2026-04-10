@@ -4,7 +4,7 @@ import axios from "axios";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
 
-const DiversityScore = React.lazy(() => import("../DiversityScore"));
+import DiversityScore from "../DiversityScore";
 
 import { SortDirection } from "react-virtualized";
 

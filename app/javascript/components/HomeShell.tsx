@@ -17,15 +17,11 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Container, Row, Col } from "react-grid-system";
 
-const DecisionEnrollmentsTable = React.lazy(() =>
-  import("./DecisionEnrollmentsTable")
-);
-const DecisionInvitationsTable = React.lazy(() =>
-  import("./DecisionInvitationsTable")
-);
-const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const TaskList = React.lazy(() => import("./TaskList"));
+import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
+import DecisionInvitationsTable from "./DecisionInvitationsTable";
+import ConsentLog from "./Consent/ConsentLog";
+import ProfileDataAdmin from "./profile/ProfileDataAdmin";
+import TaskList from "./TaskList";
 
 interface Props {
   rootPath?: string;

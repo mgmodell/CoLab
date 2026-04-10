@@ -28,21 +28,20 @@ import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import DiversityCheck from "./DiversityCheck";
 
-const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const InstallmentReport = React.lazy(() =>
-  import("./checkin/InstallmentReport")
-);
-const Experience = React.lazy(() => import("./experiences/Experience"));
-const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const Admin = React.lazy(() => import("./Admin"));
-const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
-const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
+import ProfileDataAdmin from "./profile/ProfileDataAdmin";
+import InstallmentReport from "./checkin/InstallmentReport";
+import Experience from "./experiences/Experience";
+import ConsentLog from "./Consent/ConsentLog";
+import Admin from "./Admin";
+import ReportingAdmin from "./Reports/ReportingAdmin";
+import EnrollInCourse from "./EnrollInCourse";
 
-const Privacy = React.lazy(() => import("./info/Privacy"));
-const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
-const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
-const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
-const Demo = React.lazy(() => import("./Demo"));
+import Privacy from "./info/Privacy";
+import TermsOfService from "./info/TermsOfService";
+import AppInit from "./infrastructure/AppInit";
+import Demo from "./Demo";
+import PasswordEdit from "./PasswordEdit";
+
 
 type Props = {
   getEndpointsUrl: string;
