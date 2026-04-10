@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { useTour } from "../infrastructure/TourContext";
 import {
   fetchProfile,
   setProfile,
@@ -67,6 +68,32 @@ export default function ProfileDataAdmin(props: Props) {
     state => state.context.status.lookupsLoaded
   );
   const user: IUser = useTypedSelector(state => state.profile.user);
+
+  const { setTourSteps } = useTour();
+
+  useEffect(() => {
+    setTourSteps([
+      {
+        element: "#first-name",
+        popover: {
+          title: t("edit_profile"),
+          description: t("first_name"),
+          align: "center",
+          side: "bottom"
+        }
+      },
+      {
+        element: "#profile_timezone",
+        popover: {
+          title: t("display_settings.prompt"),
+          description: t("display_settings.time_zone"),
+          align: "center",
+          side: "bottom"
+        }
+      }
+    ]);
+    return () => setTourSteps([]);
+  }, [setTourSteps, t]);
 
   const getImpairments = () => {
     const imp = [];

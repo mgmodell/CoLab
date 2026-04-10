@@ -12,6 +12,7 @@ import { Skeleton } from "primereact/skeleton";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTour } from "./infrastructure/TourContext";
 import { useTranslation } from "react-i18next";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
@@ -48,6 +49,23 @@ export default function HomeShell(props: Props) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
   const [tasks, setTasks] = useState();
+
+  const { setTourSteps } = useTour();
+
+  useEffect(() => {
+    setTourSteps([
+      {
+        element: "body",
+        popover: {
+          title: "Welcome to the Application!",
+          description: "This stuff is awesome. More information soon!",
+          align: "center",
+          side: "left"
+        }
+      }
+    ]);
+    return () => setTourSteps([]);
+  }, [setTourSteps]);
 
   useEffect(() => {
     if (null !== user.lastRetrieved && undefined !== tasks) {
