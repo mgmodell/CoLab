@@ -46,7 +46,7 @@
     "mini-css-extract-plugin": "^2.10.2",
     "mockdate": "^3.0.5",
     "primeicons": "^7.0.0",
-    "primereact": "10.9.3",
+    "primereact": "10.9.7",
     "promise-polyfill": "^8.3.0",
     "prop-types": "^15.8.1",
     "quill": "^2.0.3",
