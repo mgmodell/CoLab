@@ -152,9 +152,3 @@ Then( 'the new assignment metadata is the same as the old' ) do
   @assignment.group_enabled.should eq @orig_assignment.group_enabled
   @assignment.project.should eq @orig_assignment.project
 end
-
-Given( 'the assignment is active' ) do
-  @assignment.active = true
-  @assignment.save
-  log @assignment.errors.full_messages if @assignment.errors.present?
-end

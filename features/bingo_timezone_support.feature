@@ -14,7 +14,6 @@ Feature: Timezone Support for Bingo!
     Given the users "have" had demographics requested
     Given the user is "a random" user
     Given the email queue is empty
-      And there are no performed tasks
 
   @javascript
   Scenario: Checking for open bingo bears correct time

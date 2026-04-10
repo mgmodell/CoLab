@@ -518,11 +518,8 @@ class CoursesController < ApplicationController
         message = t( 'courses.permission_fail' )
       else
         r.role = Roster.roles[:dropped_student]
-        if r.save
-          course_path( r.course )
-        else
-          message = r.errors.full_messages.join( ', ' )
-        end
+        r.save
+        course_path( r.course ) if instructor_action
       end
     end
     respond_to do | format |

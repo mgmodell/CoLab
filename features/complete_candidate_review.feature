@@ -78,7 +78,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Accept" feedback to all candidates-fast
+    Given the user assigns "Accept" feedback to all candidates
     Given the user checks the review completed checkbox
     Then close all messages
      Then the user clicks "Save"
@@ -154,7 +154,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Accept" feedback to all candidates-fast
+    Given the user assigns "Accept" feedback to all candidates
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -181,7 +181,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Accept" feedback to all candidates-fast
+    Given the user assigns "Accept" feedback to all candidates
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -208,7 +208,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Accept" feedback to all candidates-fast
+    Given the user assigns "Accept" feedback to all candidates
     Given the user checks the review completed checkbox
     Then close all messages
      Then the user clicks "Save"

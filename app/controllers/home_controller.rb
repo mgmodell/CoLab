@@ -81,9 +81,6 @@ class HomeController < ApplicationController
       submissionUrl: submission_path( id: '' ),
       submissionWithdrawalUrl: submission_withdraw_path( id: '' )
     }
-    ep_hash[:profile] = {
-      passwordResetUrl: initiate_password_reset_path
-    }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path

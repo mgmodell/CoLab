@@ -14,14 +14,7 @@
 	],
 	"workspaceFolder": "/home/colab/src/app",
 
-	"shutdownAction": "stopCompose",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"Heroku-Dev-Tools.heroku"
-			]
-		}
-	}
+    "shutdownAction": "stopCompose"
 	/*
 	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 	"features": {

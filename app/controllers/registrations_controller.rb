@@ -135,7 +135,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       message: current_user.present? ? 'passwords.send_instructions' : 'passwords.send_paranoid_instructions'
     }
 
-    reset_user = current_user.presence || User.joins( :emails ).where( emails: { email: params[:email] } ).first
+    reset_user = current_user.presence || User.find_by( email: params[:email] )
 
     reset_user.presence&.send_reset_password_instructions
 

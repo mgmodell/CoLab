@@ -13,7 +13,6 @@ Feature: Timezone Support
     Given the user "has" had demographics requested
     Given the factor pack is set to "Original"
     Given the email queue is empty
-      And there are no performed tasks
 
   @javascript
   Scenario: Checking for open projects
@@ -143,7 +142,6 @@ Feature: Timezone Support
     Then an email will be sent to each member of the group
     Given today is "6 hours from now"
     Given the email queue is empty
-      And there are no performed tasks
     Given today is "24 hours from now"
     Given that the system's set_up_assessments process runs
     When the system emails stragglers
