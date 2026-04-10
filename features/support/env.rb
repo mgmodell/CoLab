@@ -9,10 +9,14 @@
 require 'cucumber/rails'
 require 'selenium/webdriver'
 # require 'webdrivers'
+require 'simplecov'
 
+SimpleCov.start 'rails'
 
 # Webdrivers.cache_time = 86_400
 
+# require 'simplecov'
+# SimpleCov.start 'rails'
 
 def wait_for_render
   times = 3000
@@ -230,10 +234,10 @@ end
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
-  puts "Aggregate Testing Time: #{(total_time / 60 ).floor} minutes and #{(total_time % 60).round( 2 )} seconds"
+  puts "Aggregate Testing Time: #{total_time}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do | key, value |
-    puts "#{(value / 60).floor} minutes and #{(value % 60).round( 2 )} seconds  #{key}"
+    puts "#{value.round( 2 )}  #{key}"
   end
 end

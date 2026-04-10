@@ -12,7 +12,6 @@ Feature: Email experience stragglers
 @javascript
   Scenario: Four students have experiences waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
@@ -20,7 +19,6 @@ Feature: Email experience stragglers
 @javascript
   Scenario: 4 students are invited and one student drops - 3 emails are sent
     Given the email queue is empty
-      And there are no performed tasks
     Given the user is "a random" user
     Then the user is dropped from the course
     When the system emails stragglers
@@ -31,7 +29,6 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "yesterday"
     Given the experience "has" been activated
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -41,7 +38,6 @@ Feature: Email experience stragglers
     Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
@@ -52,7 +48,6 @@ Feature: Email experience stragglers
     When the user logs in
     Then the user successfully completes an experience
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 3 emails will be sent
     Then 3 emails will be tracked
@@ -65,7 +60,6 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 7 emails will be sent
     Then 7 emails will be tracked
@@ -78,7 +72,6 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 8 emails will be sent
     Then 8 emails will be tracked
@@ -95,7 +88,6 @@ Feature: Email experience stragglers
     Then the user successfully completes an experience
     Then the user logs out
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 7 emails will be sent
     Then 7 emails will be tracked
@@ -113,7 +105,6 @@ Feature: Email experience stragglers
     Then the user logs out
     Then the user logs in and submits an installment
     Given the email queue is empty
-      And there are no performed tasks
     When the system emails stragglers
     Then 6 emails will be sent
     Then 6 emails will be tracked

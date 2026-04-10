@@ -5,7 +5,6 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "module": "esnext",
     "lib": ["es6", "dom"],
     "module": "es2022",

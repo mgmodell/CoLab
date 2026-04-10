@@ -9,7 +9,6 @@ services:
       - 3035:3035
     depends_on:
       - db
-    userns_mode: "keep-id:uid=1000,gid=1000"
     group_add:
       - dialout
     volumes:

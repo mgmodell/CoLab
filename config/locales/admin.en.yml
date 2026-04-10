@@ -24,6 +24,3 @@ en:
     accept_decline: Accept/Decline
     new_activity: New {{activity_type}}
     toggle_columns_plc: Show hidden columns
-    list_name: >
-        {{item_type}} list
-

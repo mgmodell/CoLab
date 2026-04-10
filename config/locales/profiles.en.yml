@@ -83,4 +83,22 @@ en:
         cognitive: Cognitive
         motor: Motor
         other: Other
-      
+    walkthrough:
+      details_title: Your Profile Details
+      details_desc: >
+        Verify your first and last name and update them if needed.
+      email_title: Email Settings
+      email_desc: >
+        Review your registered email addresses.
+      display_title: Display Settings
+      display_desc: >
+        Customize your CoLab experience with your preferred
+        theme, language, and timezone.
+      demographics_title: About You
+      demographics_desc: >
+        This section is optional. You can share information
+        about yourself to help us improve CoLab.
+      save_title: All Done!
+      save_desc: >
+        When you have verified your profile, click Save Profile
+        to continue.

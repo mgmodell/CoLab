@@ -76,4 +76,22 @@ es:
         cognitive: Cognitiva
         motor: Motor
         other: Otra
-      
+    walkthrough:
+      details_title: Detalles de tu perfil
+      details_desc: >
+        Verifica tu nombre y apellido y actualízalos si es necesario.
+      email_title: Configuración del correo electrónico
+      email_desc: >
+        Revisa tus direcciones de correo electrónico registradas.
+      display_title: Configuración de pantalla
+      display_desc: >
+        Personaliza tu experiencia en CoLab con tu tema,
+        idioma y zona horaria preferidos.
+      demographics_title: Acerca de ti
+      demographics_desc: >
+        Esta sección es opcional. Puedes compartir información
+        sobre ti para ayudarnos a mejorar CoLab.
+      save_title: ¡Todo listo!
+      save_desc: >
+        Cuando hayas verificado tu perfil, haz clic en
+        Guardar perfil para continuar.

@@ -125,42 +125,6 @@ Given( /^the user lowercases "([^"]*)" concepts$/ ) do | which_concepts |
   end
 end
 
-Given( 'the user assigns {string} feedback to all candidates-fast' ) do | feedback_type |
-  concept_count = Concept.count
-  concepts = if concept_count < 2
-               []
-             else
-               Concept.where( 'id > 0' ).collect( &:name )
-             end
-
-  concept_count.upto( concept_count + 3 ) do | counter |
-    concepts << Concept.new(name: "concept #{counter}")
-  end
-
-  feedbacks = CandidateFeedback.unscoped.where( 'name_en like ?', "#{feedback_type}%" )
-  @feedback_list = {}
-  @bingo.transaction do
-    @bingo.candidates.completed.each do | candidate |
-      feedback = feedbacks.sample
-      @feedback_list[candidate.id] = { feedback: feedback }
-      candidate.candidate_feedback = feedback
-      concept = nil
-      if 'term_problem' == feedback.critique
-        @feedback_list[candidate.id][:concept] = ''
-      else
-        concept = concepts.rotate!( 1 ).first
-        @feedback_list[candidate.id][:concept] = concept.name
-      end
-      candidate.concept = concept
-      candidate.save
-    end
-  end
-
-  wait_for_render
-  click_button 'Reload'
-
-end
-
 Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_type |
   wait_for_render
   # Enable max rows
@@ -185,7 +149,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
     feedback = feedbacks.sample
     @feedback_list[candidate.id] = { feedback: }
     concept = nil
-    if feedback.term_problem?
+    if 'term_problem' == feedback.critique
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!( 1 ).first
@@ -266,7 +230,6 @@ Given( /^the saved reviews match the list$/ ) do
 end
 
 Given( 'the user checks the review completed checkbox' ) do
-  # byebug unless page.has_xpath?( "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]

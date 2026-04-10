@@ -341,11 +341,6 @@ class User < ApplicationRecord
     waiting_tasks.sort_by( &:end_date )
   end
 
-
-  def send_devise_notification( notification, *args )
-    devise_mailer.send( notification, self, *args ).deliver_later
-  end
-
   def self.from_omniauth( access_token )
     data = access_token
     user = User.joins( :emails ).where( emails: { email: data['email'] } ).first

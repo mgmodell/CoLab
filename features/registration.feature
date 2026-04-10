@@ -6,7 +6,6 @@ Feature: User registration
   Background:
     Given a user has signed up
     Given the email queue is empty
-      And there are no performed tasks
 
   @javascript
   Scenario: Registered user provides consent and demographics.

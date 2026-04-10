@@ -233,7 +233,6 @@ Feature: Submitting Reports
     Then the installment values will match the submit ratio
     Given today is "3 days hence"
     Given the email queue is empty
-      And there are no performed tasks
     Then the system emails instructor reports
     Then 1 emails will be sent
     Then the comment matches what was entered
@@ -269,7 +268,6 @@ Feature: Submitting Reports
     Then the installment values will match the submit ratio
     Given today is "3 days hence"
     Given the email queue is empty
-      And there are no performed tasks
     Then the system emails instructor reports
     Then 1 emails will be sent
     Then the comment matches what was entered

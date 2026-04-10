@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%= javascript_pack_tag "application" %>
+
+</head>
+<body>
+<%= react_component "CPanel", {
+  token: form_authenticity_token,
+  base: 'c_panel',
+  first_name: @current_user.first_name,
+  last_name: @current_user.last_name,
+  quote_path: get_quote_path,
+  logo: image_path( 'CoLab_small.png' ),
+  theme: {
+    primary: @current_user.theme.primary,
+    secondary: @current_user.theme.secondary
+  },
+  timezone: @current_user.timezone,
+  } %>
+</body>
