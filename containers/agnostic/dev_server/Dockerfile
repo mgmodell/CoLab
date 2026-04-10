@@ -22,6 +22,8 @@ RUN apt-get update && apt-get upgrade -y && \
   zlib1g-dev \
   zsh
 
+RUN curl https://cli-assets.heroku.com/install.sh | sh
+
 RUN apt-get autoremove && \
     apt-get clean
 

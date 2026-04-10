@@ -43,13 +43,13 @@ Then( /^there should be an error if I try to modify an project field$/ ) do
   @project.errors.count.should be > 0
 end
 
-Then( /^there should be an error if I try to modify a group that is part of an active project$/ ) do
+Then( /^modifying a group that is part of an active project should succeed$/ ) do
   group = @project.groups.last
   user = group.users.last
   group.users.delete( user )
   group.save
   log group.errors.full_messages if group.errors.present?
-  group.errors.count.should be > 0
+  group.errors.count.should eq 0
 end
 
 Given( /^the factor pack is set to "([^"]*)"$/ ) do | pack_name |

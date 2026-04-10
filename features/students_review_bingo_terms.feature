@@ -44,7 +44,7 @@ Feature: Students review Candidate words for Bingo!
 
   @javascript
   Scenario: Instructor completes the review and the user checks their account
-    Given the user assigns "Accept" feedback to all candidates
+    Given the user assigns "Accept" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -61,11 +61,14 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 0 open task
      Then user opens their profile
      Then user sees the Bingo! in the history
+     And the user switches to the "My Courses" tab
+     And the user sees 'Course list'
+     And the user sees 1 course
 
   @javascript
   Scenario: Instructor logs in and accepts all candidates
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Accept" feedback to all candidates
+    Given the user assigns "Accept" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -95,7 +98,7 @@ Feature: Students review Candidate words for Bingo!
   @javascript
   Scenario: Instructor reviews, user is dropped and re-added
     Given the user sees review items for all the expected candidates
-    Given the user assigns "" feedback to all candidates
+    Given the user assigns "" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -134,7 +137,7 @@ Feature: Students review Candidate words for Bingo!
   @javascript
   Scenario: Instructor logs in and assigns definition feedback to candidates
     Given the user sees review items for all the expected candidates
-    Given the user assigns "Definition" feedback to all candidates
+    Given the user assigns "Definition" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -150,7 +153,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor logs in and assigns mixed feedback to candidates
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
-    Given the user assigns "" feedback to all candidates
+    Given the user assigns "" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -171,7 +174,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor assigns mixed feedback to 2 courses successively
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
-    Given the user assigns "" feedback to all candidates
+    Given the user assigns "" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
@@ -209,7 +212,7 @@ Feature: Students review Candidate words for Bingo!
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
-    Given the user assigns "" feedback to all candidates
+    Given the user assigns "" feedback to all candidates-fast
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
