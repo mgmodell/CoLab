@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -133,13 +133,15 @@ export default function HomeShell(props: Props) {
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
       pageContent = (
-        <ConsentLog
-          consentFormId={consentLogs[0].consent_form_id}
-          parentUpdateFunc={getTasks}
-        />
+        <Suspense fallback={<Skeleton className="mb-2" />}>
+          <ConsentLog
+            consentFormId={consentLogs[0].consent_form_id}
+            parentUpdateFunc={getTasks}
+          />
+        </Suspense>
       );
     } else if (isLoggedIn && !user.welcomed) {
-      pageContent = <ProfileDataAdmin profileId={user.id} />;
+      pageContent = <Suspense fallback={<Skeleton className="mb-2" />}><ProfileDataAdmin profileId={user.id} /></Suspense>;
     } else {
       pageContent = (
         <React.Fragment>
@@ -158,7 +160,9 @@ export default function HomeShell(props: Props) {
             }}
           >
             <TabPanel header="Task View">
-              <TaskList tasks={tasks} />
+              <Suspense fallback={<Skeleton className="mb-2" />}>
+                <TaskList tasks={tasks} />
+              </Suspense>
             </TabPanel>
 
             <TabPanel header="Calendar View">
@@ -201,10 +205,12 @@ export default function HomeShell(props: Props) {
             <Row>
               <Col xs={12}>
                 {undefined !== waitingRosters && waitingRosters.length > 0 ? (
-                  <DecisionInvitationsTable
-                    invitations={waitingRosters}
-                    parentUpdateFunc={getTasks}
-                  />
+                  <Suspense fallback={<Skeleton className="mb-2" />}>
+                    <DecisionInvitationsTable
+                      invitations={waitingRosters}
+                      parentUpdateFunc={getTasks}
+                    />
+                  </Suspense>
                 ) : null}
               </Col>
             </Row>
@@ -213,10 +219,12 @@ export default function HomeShell(props: Props) {
               <Col xs={12}>
                 {undefined !== endpoints["courseRegRequestsUrl"] &&
                 undefined !== endpoints["courseRegUpdatesUrl"] ? (
-                  <DecisionEnrollmentsTable
-                    init_url={endpoints["courseRegRequestsUrl"]}
-                    update_url={endpoints["courseRegUpdatesUrl"]}
-                  />
+                  <Suspense fallback={<Skeleton className="mb-2" />}>
+                    <DecisionEnrollmentsTable
+                      init_url={endpoints["courseRegRequestsUrl"]}
+                      update_url={endpoints["courseRegUpdatesUrl"]}
+                    />
+                  </Suspense>
                 ) : null}
               </Col>
             </Row>

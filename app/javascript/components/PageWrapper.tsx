@@ -21,12 +21,13 @@ import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
 
-import HomeShell from "./HomeShell";
-import BingoShell from "./BingoBoards/BingoShell";
-import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import DiversityCheck from "./DiversityCheck";
+
+const HomeShell = React.lazy(() => import("./HomeShell"));
+const BingoShell = React.lazy(() => import("./BingoBoards/BingoShell"));
+const AssignmentShell = React.lazy(() => import("./assignments/AssignmentShell"));
+const DiversityCheck = React.lazy(() => import("./DiversityCheck"));
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() =>
@@ -98,7 +99,7 @@ export default function PageWrapper(props: Readonly<Props>) {
               </Suspense>
             }
           />
-          <Route path={"reporting"} element={<ReportingAdmin />} />
+          <Route path={"reporting"} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><ReportingAdmin /></Suspense>} />
           <Route
             path={"home/*"}
             element={
@@ -133,9 +134,9 @@ export default function PageWrapper(props: Readonly<Props>) {
             />
           </Route>
 
-          <Route path="user/password/edit" element={<PasswordEdit />} />
-          <Route path={`tos`} element={<TermsOfService />} />
-          <Route path={`privacy`} element={<Privacy />} />
+          <Route path="user/password/edit" element={<Suspense fallback={<Skeleton className={"mb-2"} />}><PasswordEdit /></Suspense>} />
+          <Route path={`tos`} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><TermsOfService /></Suspense>} />
+          <Route path={`privacy`} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><Privacy /></Suspense>} />
           <Route
             path={`perspective`}
             element={

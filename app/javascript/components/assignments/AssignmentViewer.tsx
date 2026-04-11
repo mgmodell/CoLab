@@ -22,7 +22,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
 import { Container, Col, Row } from "react-grid-system";
 
-import FeedbackVisualization from "./FeedbackVisualization";
+const FeedbackVisualization = React.lazy(() => import("./FeedbackVisualization"));
 
 interface ISubmissionCondensed {
   id: number;
@@ -219,9 +219,11 @@ export default function AssignmentViewer(props) {
           })
           }
         >
-          <FeedbackVisualization
-            assignment={assignment}
-          />
+          <Suspense fallback={<Skeleton className="mb-2" />}>
+            <FeedbackVisualization
+              assignment={assignment}
+            />
+          </Suspense>
         </TabPanel>
       </TabView>
     );
