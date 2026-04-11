@@ -8,7 +8,6 @@ require 'net/http'
 # Assignment and Grade Services (AGS).
 class LtiController < ApplicationController
   skip_before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:register, :login, :launch]
 
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
   LTI_MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type'
