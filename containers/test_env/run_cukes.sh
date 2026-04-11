@@ -152,7 +152,7 @@ if [ "$SHOW_FAILS" = true ]; then
   printf '%s\n' "$(cat rerun.txt)"
 fi
 
-# Ensure the reports directory exists (mounted from the host)
+# Ensure reports directory exists and is writable for cucumber HTML formatter
 mkdir -p reports
 
 #Run the tests according to the request
