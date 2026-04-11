@@ -5,7 +5,7 @@
 # Each user subscribes with their own id so broadcasts are private.
 class NotificationsChannel < ApplicationCable::Channel
   def subscribed
-    stream_from channel_name( current_user.id )
+    stream_from self.class.channel_name( current_user.id )
   end
 
   def unsubscribed

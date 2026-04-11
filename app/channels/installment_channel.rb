@@ -10,7 +10,7 @@ class InstallmentChannel < ApplicationCable::Channel
     group_id      = params[:group_id]
 
     if assessment_id.present? && group_id.present?
-      stream_from channel_name( assessment_id, group_id )
+      stream_from self.class.channel_name( assessment_id, group_id )
     else
       reject
     end
