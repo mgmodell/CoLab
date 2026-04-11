@@ -506,6 +506,8 @@ end
 Then( 'the project is marked as deleted' ) do
   expect( @project.reload.deleted ).to be true
   expect( @project.reload.active ).to be false
+end
+
 Then( 'the activity {string} shows status {string}' ) do | activity_name, expected_status |
   page.should have_xpath( "//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]" )
 end
