@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+course_link:
+  lti_deployment: moodle_dev
+  resource_link_id: res_link_001
+  context_id: ctx_001
+  context_title: Test Course Context
+  names_roles_url: http://moodle:8080/mod/lti/services.php/CourseSection/1/bindings/2/memberships
+
+assignment_link:
+  lti_deployment: moodle_dev
+  resource_link_id: res_link_002
+  context_id: ctx_001
+  context_title: Test Course Context
+  line_item_url: http://moodle:8080/mod/lti/services.php/tool/2/lineitems/1/lineitem

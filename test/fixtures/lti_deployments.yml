@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+moodle_dev:
+  issuer: http://moodle:8080
+  client_id: test_client_id_001
+  auth_login_url: http://moodle:8080/mod/lti/auth.php
+  auth_token_url: http://moodle:8080/mod/lti/token.php
+  key_set_url: http://moodle:8080/mod/lti/certs.php
+  deployment_id: "1"
+  tool_url: http://localhost:3000
+
+saltire_test:
+  issuer: https://saltire.lti.app
+  client_id: saltire_client_001
+  auth_login_url: https://saltire.lti.app/platform/oidc/auth
+  auth_token_url: https://saltire.lti.app/platform/token
+  key_set_url: https://saltire.lti.app/platform/jwks
+  deployment_id: "1"
+  tool_url: http://localhost:3000

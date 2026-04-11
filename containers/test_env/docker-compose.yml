@@ -26,6 +26,31 @@ services:
       - 5900:5900
       - 7900:7900
 
+  moodle:
+    image: colab_moodle
+    depends_on:
+      - db
+    environment:
+      - MOODLE_LANGUAGE=en
+      - LANG=en_US:en
+      - SITE_URL=http://moodle:8080
+      - MOODLE_URL=http://moodle:8080
+      - DB_TYPE=mariadb
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=moodle
+      - DB_USER=moodle
+      - DB_PASSWORD=moodle
+      - MOODLE_REVERSEPROXY=false
+      - MOODLE_SSLPROXY=false
+      - MOODLE_EMAIL=user@example.com
+      - MOODLE_SITE_NAME=CoLab-Testing
+      - MOODLE_USERNAME=moodleuser
+      - MOODLE_PASSWORD=CHANGEME
+      - REDIS_HOST=redis
+    ports:
+      - 8080:8080
+
 volumes:
   src:
   mariadb-data:
