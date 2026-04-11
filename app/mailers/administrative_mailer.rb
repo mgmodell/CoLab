@@ -44,6 +44,12 @@ class AdministrativeMailer < ApplicationMailer
       category: ['availability']
     }.to_json
 
+    NotificationsChannel.broadcast_to_user(
+      user_id: user.id,
+      message: "CoLab: #{activity} is available",
+      priority: 'info'
+    )
+
     mail( to: "#{user.first_name} #{user.last_name} <#{user.email}>",
           subject: "CoLab: #{activity} is available" )
   end
@@ -98,6 +104,12 @@ class AdministrativeMailer < ApplicationMailer
         next if !u.last_emailed.nil? && u.last_emailed.today?
 
         AdministrativeMailer.remind( u ).deliver_later
+
+        NotificationsChannel.broadcast_to_user(
+          user_id: u.id,
+          message: 'CoLab: You have pending activities to complete.',
+          priority: 'warning'
+        )
 
         u.last_emailed = curr_date
         u.save

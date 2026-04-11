@@ -23,12 +23,27 @@ import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
+import useInstallmentChannel from "../infrastructure/useInstallmentChannel";
 
 interface IContribution {
   userId: number;
   factorId: number;
   name: string;
   value: number;
+}
+
+interface IInstallmentState {
+  id?: number;
+  assessment_id?: number;
+  group_id?: number;
+  inst_date?: string;
+  comments: string;
+}
+
+interface IGroupState {
+  id?: number;
+  name?: string;
+  users?: Record<number, { id: number; name: string }>;
 }
 
 interface Props {
@@ -55,14 +70,32 @@ export default function InstallmentReport(props: Props) {
   const [t] = useTranslation("installments");
 
   const [curPanel, setCurPanel] = useState(0);
-  const [group, setGroup] = useState({});
+  const [group, setGroup] = useState<IGroupState>({});
   const [factors, setFactors] = useState({});
 
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
 
   const [contributions, setContributions] = useState({});
-  const [installment, setInstallment] = useState({ comments: "" });
+  const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
+
+  // Subscribe to real-time updates for the current group/assessment.
+  // When a group member saves, show an in-app toast.
+  useInstallmentChannel(
+    installment.assessment_id ?? null,
+    group.id ?? null,
+    msg => {
+      if (msg.user_id !== user.id) {
+        dispatch(
+          addMessage(
+            t("peer_submitted", { name: msg.user_name }),
+            new Date(),
+            Priorities.INFO
+          )
+        );
+      }
+    }
+  );
 
   const updateSlice = (id, update) => {
     const lContributions = { ...contributions};

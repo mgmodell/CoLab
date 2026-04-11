@@ -2014,6 +2014,7 @@ __metadata:
     "@fullcalendar/list": "npm:^6.1.20"
     "@fullcalendar/luxon": "npm:^6.1.20"
     "@fullcalendar/react": "npm:^6.1.20"
+    "@rails/actioncable": "npm:8.1.300"
     "@react-oauth/google": "npm:^0.13.5"
     "@react-spring/parallax": "npm:10.0.3"
     "@react-spring/types": "npm:10.0.3"

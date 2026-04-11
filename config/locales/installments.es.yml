@@ -4,6 +4,7 @@ es:
     subtitle: Tu cuota semanal 
     submit: Enviar cuota semanal 
     success: Su respesta fue guardada 
+    peer_submitted: "{{name}} ha enviado su evaluación de pares."
     err_unknown: No se pudo grabar su respuesta
     demo_success: Su respuesta se habria guardado con éxito. La demostración está terminada.
     err_not_member: >
