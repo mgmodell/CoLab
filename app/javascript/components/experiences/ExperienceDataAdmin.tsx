@@ -27,6 +27,7 @@ import { Calendar } from "primereact/calendar";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import parse from 'html-react-parser';
 import { FloatLabel } from "primereact/floatlabel";
+import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
 interface IExperience {
   id: string;
@@ -313,6 +314,15 @@ export default function ExperienceDataAdmin(props) {
           colors={colors}
         />
       </TabPanel>
+      {experienceId && endpoints?.ltiConnectionUrl ? (
+        <TabPanel header={t("lti.panel_title")}>
+          <LtiConnectionPanel
+            connectionUrl={`${endpoints.ltiConnectionUrl}${experienceId}.json`}
+            gradePushUrl={`${endpoints.ltiGradePushUrl}${experienceId}.json`}
+            t={t}
+          />
+        </TabPanel>
+      ) : null}
     </TabView>
   );
 }

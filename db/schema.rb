@@ -440,6 +440,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["jwk_kid"], name: "index_keypairs_on_jwk_kid", unique: true
   end
 
+  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "connectable_type", null: false
+    t.bigint "connectable_id", null: false
+    t.string "line_item_url"
+    t.string "ags_access_token_url"
+    t.string "client_id"
+    t.string "deployment_id"
+    t.string "iss"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[connectable_type connectable_id], name: "index_lti_connections_on_connectable", unique: true
+  end
+
   create_table "languages", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "name_en"

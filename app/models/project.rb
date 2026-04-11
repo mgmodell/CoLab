@@ -14,6 +14,7 @@ class Project < ApplicationRecord
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments, dependent: :destroy
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
