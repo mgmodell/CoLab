@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_000000) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id", null: false
     t.datetime "created_at", null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", precision: nil, null: false
     t.boolean "file_sub", default: false, null: false
@@ -132,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_topic"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", precision: nil
     t.integer "group_discount"
@@ -327,6 +329,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.datetime "end_date", precision: nil
     t.boolean "instructor_updated", default: false, null: false
     t.integer "lead_time", default: 3, null: false
@@ -463,6 +466,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", precision: nil
     t.integer "end_dow"
