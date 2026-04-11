@@ -476,3 +476,44 @@ Then( 'the user selects the {string} activity' ) do | activity_name |
   find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end
+
+Then( /^the course has (\d+) activit(?:y|ies)$/ ) do | count |
+  wait_for_render
+  expect( @course.reload.get_activities.count ).to eq count.to_i
+end
+
+Then( 'the user deletes the bingo game' ) do
+  activity_name = @bingo.get_topic( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end
+
+Then( 'the user deletes the experience' ) do
+  activity_name = @experience.get_name( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end
+
+Then( 'the user deletes the project' ) do
+  activity_name = @project.get_name( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end
+
+Then( 'the project is marked as deleted' ) do
+  expect( @project.reload.deleted ).to be true
+  expect( @project.reload.active ).to be false
+Then( 'the activity {string} shows status {string}' ) do | activity_name, expected_status |
+  page.should have_xpath( "//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]" )
+end
+
+Given( 'a student from the project group' ) do
+  @users = [@group.users.first]
+end
+
+Then( 'the project group has {int} users' ) do | count |
+  @group.reload.users.count.should eq count
+end

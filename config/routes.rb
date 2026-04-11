@@ -47,7 +47,7 @@ Rails.application.routes.draw do
     resources :concepts, only: %i[show update index]
 
     resources :assignments,
-        except: %i[new create destroy]
+        except: %i[new create]
 
     resources :experiences, except: %i[new edit]
     resources :rubrics, :bingo_games,

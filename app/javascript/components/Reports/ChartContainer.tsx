@@ -11,7 +11,7 @@ import { Col, Container, Row } from "react-grid-system";
 import { Panel } from "primereact/panel";
 import { FloatLabel } from "primereact/floatlabel";
 
-const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
+import ConfirmDialog from "./ConfirmDialog";
 
 interface IProject {
   id: number;

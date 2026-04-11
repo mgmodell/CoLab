@@ -38,6 +38,7 @@ interface IActivity {
   start_date: Date;
   end_date: Date;
   link: string;
+  delete_link: string;
 }
 
 enum ACTIVITY_COLS {
@@ -124,7 +125,7 @@ export default function ActivityList(props: Props) {
           body={rowData => {
             if (!rowData.active) {
               return "Not Activated";
-            } else if (rowData.end_date > new Date()) {
+            } else if (DateTime.fromISO(rowData.end_date) > DateTime.now()) {
               return "Active";
             } else {
               return "Expired";
@@ -167,10 +168,10 @@ export default function ActivityList(props: Props) {
               aria-label="Delete"
               tooltip={lbl}
               onClick={event => {
+                event.stopPropagation();
                 dispatch(startTask("deleting"));
                 axios
-                  // Is this right? Shouldn't it be params.value?
-                  .delete(rowData.link, {})
+                  .delete(`${rowData.delete_link}.json`, {})
                   .then(response => {
                     const data = response.data;
                     props.refreshFunc();
