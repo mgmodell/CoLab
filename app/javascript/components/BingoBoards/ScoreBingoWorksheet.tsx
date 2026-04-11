@@ -83,6 +83,7 @@ export default function ScoreBingoWorksheet(props) {
 
     const url = `${endpoints.worksheetScoreUrl}${worksheetIdParam}.json`;
 
+    dispatch(startTask());
     axios
       .post(url, formData, {
         headers: {

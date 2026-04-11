@@ -8,7 +8,7 @@ import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Panel } from "primereact/panel";
 
-const BingoGameResults = React.lazy(() => import("./BingoGameResults"));
+import BingoGameResults from "./BingoGameResults";
 
 type Props = {
   results_raw: Array<any>;

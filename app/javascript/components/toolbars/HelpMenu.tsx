@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router";
-import parse from "html-react-parser";
 
 // Icons
 import {driver } from "driver.js";
@@ -8,6 +7,7 @@ import "driver.js/dist/driver.css";
 
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { useTour } from "../infrastructure/TourContext";
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 import LangButton from "./LangButton";
@@ -16,11 +16,24 @@ type Props = {
   lookupUrl: string;
 };
 
+const NO_HELP_STEP = [
+  {
+    element: "body",
+    popover: {
+      title: "No Help Available",
+      description: "There is no help available for this topic",
+      align: "center" as const,
+      side: "left" as const
+    }
+  }
+];
+
 export default function HelpMenu(props: Props) {
   const [t, i18n] = useTranslation();
 
   const location = useLocation();
   const [showInfo, setShowInfo] = useState(false);
+  const { tourSteps } = useTour();
 
   const driverObj = driver({
     showProgress: true
@@ -60,72 +73,7 @@ export default function HelpMenu(props: Props) {
     }
   };
 
-  const stepHash = {
-    home: [
-      {
-        element: "body",
-        popover: {
-          title: "Welcome to the Application!",
-          description: "This stuff is awesome. More information soon!",
-          align: "center",
-          side: "left"
-        }
-      }
-    ],
-    bingo: [
-      {
-        element: "body",
-        popover: {
-          title: "No Help Available",
-          description: "There is no help available for this topic",
-          align: "center",
-          side: "left"
-        }
-      }
-    ],
-    experience: [
-      {
-        element: ".journal_entry",
-        popover: {
-          description: parse(t("experiences.inst_p1")),
-          align: "center",
-          side: "left"
-        }
-      },
-      {
-        element: ".behaviors",
-        popover: {
-          description: parse(t("experiences.inst_p4")),
-          align: "center",
-          side: "right"
-        }
-      },
-      {
-        target: "body",
-        popover: {
-          description: parse(t("experiences.inst_p3")),
-          align: "center",
-          side: "top"
-        }
-      },
-    ],
-    default: [
-      {
-        element: "body",
-        popover: {
-          title: "No Help Available",
-          description: "There is no help available for this topic",
-          align: "center",
-          side: "left"
-        }
-      }
-    ]
-  };
-  //const [steps, setSteps] = useState(stepHash.default);
-
   const pathComponents = location.pathname.split("/");
-  const pathLoc =
-    "demo" === pathComponents[1] ? pathComponents[2] : pathComponents[1];
   return (
     <React.Fragment>
       <Sidebar
@@ -142,25 +90,9 @@ export default function HelpMenu(props: Props) {
         aria-controls="help-menu"
         aria-haspopup="true"
         onClick={event => {
-          console.log("Help requested for ", pathLoc);
-          switch (pathLoc) {
-            case "":
-              driverObj.setSteps(stepHash.home);
-              driverObj.drive();
-              break;
-            case "bingo":
-              driverObj.setSteps(stepHash.bingo);
-              driverObj.drive();
-              break;
-            case "experience":
-              driverObj.setSteps(stepHash.experience);
-              driverObj.drive();
-              break;
-            default:
-              driverObj.setSteps(stepHash.default);
-              driverObj.drive();
-          }
-
+          const steps = tourSteps.length > 0 ? tourSteps : NO_HELP_STEP;
+          driverObj.setSteps(steps);
+          driverObj.drive();
         }}
         size="small"
         rounded

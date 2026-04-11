@@ -118,8 +118,17 @@ class ProjectsController < ApplicationController
 
   def destroy
     @course = @project.course
-    @project.destroy
-    redirect_to @course, notice: t( 'projects.destroy_success' )
+    if @project.has_student_data?
+      @project.update( active: false, deleted: true )
+      msg = t( 'projects.soft_delete_success' )
+    else
+      @project.destroy
+      msg = t( 'projects.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   def set_groups
@@ -152,6 +161,7 @@ class ProjectsController < ApplicationController
       # Post back a JSON error
       get_groups_helper project:, message: t( 'projects.group_save_failure' )
     else
+      project.groups.reset
       get_groups_helper project:, message: t( 'projects.group_save_success' )
     end
   end
