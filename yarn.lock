@@ -1538,6 +1538,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rails/actioncable@npm:8.1.300":
+  version: 8.1.300
+  resolution: "@rails/actioncable@npm:8.1.300"
+  checksum: 10c0/144e6cc6d83e5bc56287ecd3c989c494915f0bf8593eedf7cbf4c10741fa2a1f75e4bcf7963b3e14114a70563a1dd64272580f81ed707b5fbb7e3734a3f3a6a8
+  languageName: node
+  linkType: hard
+
 "@react-oauth/google@npm:^0.13.4":
   version: 0.13.4
   resolution: "@react-oauth/google@npm:0.13.4"
@@ -3090,6 +3097,7 @@ __metadata:
     "@fullcalendar/luxon": "npm:^6.1.20"
     "@fullcalendar/react": "npm:^6.1.20"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.6.0"
+    "@rails/actioncable": "npm:8.1.300"
     "@react-oauth/google": "npm:^0.13.4"
     "@react-spring/parallax": "npm:9.7.5"
     "@react-spring/types": "npm:9.7.5"

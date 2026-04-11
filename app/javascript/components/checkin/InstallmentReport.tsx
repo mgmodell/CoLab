@@ -23,6 +23,7 @@ import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
+import useInstallmentChannel from "../infrastructure/useInstallmentChannel";
 
 interface IContribution {
   userId: number;
@@ -63,6 +64,24 @@ export default function InstallmentReport(props: Props) {
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState({ comments: "" });
+
+  // Subscribe to real-time updates for the current group/assessment.
+  // When a group member saves, show an in-app toast.
+  useInstallmentChannel(
+    (installment as any).assessment_id ?? null,
+    (group as any).id ?? null,
+    msg => {
+      if (msg.user_id !== user.id) {
+        dispatch(
+          addMessage(
+            t("peer_submitted", { name: msg.user_name }),
+            new Date(),
+            Priorities.INFO
+          )
+        );
+      }
+    }
+  );
 
   const updateSlice = (id, update) => {
     const lContributions = { ...contributions};
