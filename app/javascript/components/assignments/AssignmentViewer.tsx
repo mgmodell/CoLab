@@ -22,7 +22,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
 import { Container, Col, Row } from "react-grid-system";
 
-const FeedbackVisualization = React.lazy(() => import("./FeedbackVisualization"));
+import FeedbackVisualization from "./FeedbackVisualization";
 
 interface ISubmissionCondensed {
   id: number;

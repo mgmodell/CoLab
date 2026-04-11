@@ -1,13 +1,14 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 import { Skeleton } from "primereact/skeleton";
+import { useTour } from "../infrastructure/TourContext";
 
-const CandidateListEntry = React.lazy(() => import("./CandidateListEntry"));
-const CandidatesReviewTable = React.lazy(() => import("./CandidatesReviewTable"));
-const BingoBuilder = React.lazy(() => import("./BingoBuilder"));
-const ScoreBingoWorksheet = React.lazy(() => import("./ScoreBingoWorksheet"));
+import CandidatesReviewTable from "./CandidatesReviewTable";
+import CandidateListEntry from "./CandidateListEntry";
+import BingoBuilder from "./BingoBuilder";
+import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
 
 type Props = {
   rootPath?: string;

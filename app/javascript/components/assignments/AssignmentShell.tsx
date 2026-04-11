@@ -4,8 +4,8 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 import { Skeleton } from "primereact/skeleton";
 
-const AssignmentViewer = React.lazy(() => import("./AssignmentViewer"));
-const CritiqueShell = React.lazy(() => import("./CritiqueShell"));
+import AssignmentViewer from "./AssignmentViewer";
+import CritiqueShell from "./CritiqueShell";
 
 type Props = {
   rootPath?: string;

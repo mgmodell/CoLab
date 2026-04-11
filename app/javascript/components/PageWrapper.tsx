@@ -25,10 +25,10 @@ import { TourProvider } from "./infrastructure/TourContext";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
-const HomeShell = React.lazy(() => import("./HomeShell"));
+import HomeShell from "./HomeShell";
+import DiversityCheck from "./DiversityCheck";
 const BingoShell = React.lazy(() => import("./BingoBoards/BingoShell"));
 const AssignmentShell = React.lazy(() => import("./assignments/AssignmentShell"));
-const DiversityCheck = React.lazy(() => import("./DiversityCheck"));
 
 import ProfileDataAdmin from "./profile/ProfileDataAdmin";
 import InstallmentReport from "./checkin/InstallmentReport";
