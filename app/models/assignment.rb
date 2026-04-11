@@ -39,6 +39,10 @@ class Assignment < ApplicationRecord
     'assignment'
   end
 
+  def has_student_data?
+    submissions.any?
+  end
+
   def task_data( current_user: )
     is_faculty = course.rosters.where( user: current_user ).faculty.size.positive?
 

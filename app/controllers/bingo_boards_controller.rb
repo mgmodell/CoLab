@@ -402,13 +402,17 @@ class BingoBoardsController < ApplicationController
                                       filename: File.basename( proc_image.path ) )
     end
 
+    @bingo_board.save
+
     resp_hash = {
       msg: if @bingo_board.errors.empty?
              t( 'scored_success' )
            else
-             @bingo_board.errors.full_message
+             @bingo_board.errors.full_messages.join( ', ' )
            end,
-      result_url: url_for( @bingo_board.result_img )
+      bingo_game: {
+        result_url: @bingo_board.result_img.attached? ? url_for( @bingo_board.result_img ) : nil
+      }
     }
     respond_to do | format |
       format.json do

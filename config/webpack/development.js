@@ -12,9 +12,9 @@ const developmentEnvOnly = (clientWebpackConfig, _serverWebpackConfig) => {
     // Thus, this plugin is not applied to the server bundle.
 
     // eslint-disable-next-line global-require
-    const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+    const ReactRefreshPlugin = require('@rspack/plugin-react-refresh');
     clientWebpackConfig.plugins.push(
-      new ReactRefreshWebpackPlugin({
+      new ReactRefreshPlugin({
         overlay: {
           sockIntegration: 'wds'
         },

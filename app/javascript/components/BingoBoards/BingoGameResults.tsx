@@ -5,7 +5,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Container, Row, Col } from "react-grid-system";
 
-const ScoredGameDataTable = React.lazy(() => import("./ScoredGameDataTable"));
+import ScoredGameDataTable from "./ScoredGameDataTable";
 
 interface ICandidate {
   id: number;

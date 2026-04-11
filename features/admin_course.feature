@@ -247,6 +247,21 @@ Feature: Course Administration
     Then the users are students
 
   @javascript
+  Scenario: Admin drops a student who is in an active project group from a course
+    Given the user is the instructor for the course
+    Given the project has been activated
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a student from the project group
+    Then the user drops the 'student' users 'user_list'
+    Then there are 11 enrolled students in the course
+    Then the project group has 3 users
+
+  @javascript
   Scenario: Admin adds new students to a course
     Given the user is the instructor for the course
     Given the user logs in
@@ -382,6 +397,57 @@ Feature: Course Administration
     Then the new assignment metadata is the same as the old
     And the 'assignment' is 'not' active
     Then the 'assignment' dates are '2/21/1985' and '7/22/2003'
+
+  @javascript
+  Scenario: Instructor deletes a Bingo! game from a course
+    Given the course has a Bingo! game
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the course has 2 activities
+    Then the user deletes the bingo game
+    And the user will see "successfully"
+    Then close all messages
+    Then the course has 1 activity
+
+  @javascript
+  Scenario: Instructor deletes an experience from a course
+    Given the course has an experience
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the course has 2 activities
+    Then the user deletes the experience
+    And the user will see "successfully"
+    Then close all messages
+    Then the course has 1 activity
+
+  @javascript
+  Scenario: Instructor soft-deletes a project with student data from a course
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the course has 1 activity
+    Then the user deletes the project
+    And the user will see "successfully"
+    Then close all messages
+    Then the course has 0 activities
+    And the project is marked as deleted
 
   @javascript
   Scenario: Admin duplicates an existing course with a bingo but no project

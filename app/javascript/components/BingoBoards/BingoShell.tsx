@@ -14,6 +14,22 @@ type Props = {
 };
 export default function BingoShell(props: Props) {
   const [working] = useState(true);
+  const { setTourSteps } = useTour();
+
+  useEffect(() => {
+    setTourSteps([
+      {
+        element: "body",
+        popover: {
+          title: "No Help Available",
+          description: "There is no help available for this topic",
+          align: "center",
+          side: "left"
+        }
+      }
+    ]);
+    return () => setTourSteps([]);
+  }, [setTourSteps]);
 
   return (
     <React.Fragment>
