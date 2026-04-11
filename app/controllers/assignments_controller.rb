@@ -143,10 +143,16 @@ class AssignmentsController < ApplicationController
   # DELETE /assignments/1 or /assignments/1.json
   def destroy
     @course = @assignment.course
-    @assignment.destroy
+    if @assignment.has_student_data?
+      @assignment.update( active: false, deleted: true )
+      msg = t( 'assignments.soft_delete_success' )
+    else
+      @assignment.destroy
+      msg = t( 'assignments.destroy_success' )
+    end
     respond_to do | format |
-      format.html { redirect_to @course, notice: t( 'assignments.destroy_success' ) }
-      format.json { render json: { message: t( 'assignments.destroy_success' ) } }
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
     end
   end
 

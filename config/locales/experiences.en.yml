@@ -37,6 +37,7 @@ en:
     create_success: Experience was successfully created.
     update_success: Experience was successfully updated.
     destroy_success: Experience was successfully destroyed.
+    soft_delete_success: Experience has been deactivated and marked as deleted.
     wrong_course: That experience is a part of another course.
     instr_title: Experience Instruction
     not_started: Not Started

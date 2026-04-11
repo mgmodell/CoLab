@@ -68,6 +68,7 @@ en:
       lines: Line Chart
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
+    soft_delete_success: Assignment has been deactivated and marked as deleted.
     update_success: Assignment was updated successfully!
     back: Back to the list of assignments
     name: Assignment Name

@@ -495,3 +495,15 @@ Then( 'the user deletes the experience' ) do
   row.find( :xpath, ".//button[@aria-label='Delete']" ).click
   wait_for_render
 end
+
+Then( 'the user deletes the project' ) do
+  activity_name = @project.get_name( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end
+
+Then( 'the project is marked as deleted' ) do
+  expect( @project.reload.deleted ).to be true
+  expect( @project.reload.active ).to be false
+end

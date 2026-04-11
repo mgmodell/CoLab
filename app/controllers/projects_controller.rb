@@ -118,10 +118,16 @@ class ProjectsController < ApplicationController
 
   def destroy
     @course = @project.course
-    @project.destroy
+    if @project.has_student_data?
+      @project.update( active: false, deleted: true )
+      msg = t( 'projects.soft_delete_success' )
+    else
+      @project.destroy
+      msg = t( 'projects.destroy_success' )
+    end
     respond_to do | format |
-      format.html { redirect_to @course, notice: t( 'projects.destroy_success' ) }
-      format.json { render json: { message: t( 'projects.destroy_success' ) } }
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
     end
   end
 
