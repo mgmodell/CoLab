@@ -1,17 +1,23 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes, Navigate, Outlet } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-
-import CourseAdmin from "./course_admin/CourseAdmin";
-import SchoolList from "./course_admin/SchoolList";
-import SchoolDataAdmin from "./course_admin/SchoolDataAdmin";
-import RubricList from "./assignments/RubricList";
-import RubricDataAdmin from "./assignments/RubricDataAdmin";
-import ConsentFormList from "./Consent/ConsentFormList";
-import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
-import ConceptsTable from "./ConceptsTable";
-
+import { Skeleton } from "primereact/skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+
+const CourseAdmin = React.lazy(() => import("./course_admin/CourseAdmin"));
+const SchoolList = React.lazy(() => import("./course_admin/SchoolList"));
+const SchoolDataAdmin = React.lazy(() =>
+  import("./course_admin/SchoolDataAdmin")
+);
+const RubricList = React.lazy(() => import("./assignments/RubricList"));
+const RubricDataAdmin = React.lazy(() =>
+  import("./assignments/RubricDataAdmin")
+);
+const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
+const ConsentFormDataAdmin = React.lazy(() =>
+  import("./Consent/ConsentFormDataAdmin")
+);
+const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
 
 interface AdminProps {}
 
@@ -25,7 +31,9 @@ export default function Admin(props: AdminProps) {
           element={
             <React.Fragment>
               <WorkingIndicator identifier="admin_save" />
-              <Outlet />
+              <Suspense fallback={<Skeleton className="mb-2" />}>
+                <Outlet />
+              </Suspense>
             </React.Fragment>
           }
         >
