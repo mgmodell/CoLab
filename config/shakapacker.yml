@@ -7,6 +7,7 @@ default: &default
   public_output_path: packs
   cache_path: tmp/shakapacker
   webpack_compile_output: true
+  assets_bundler: "rspack"
 
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
@@ -31,10 +32,11 @@ development:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
       # May also be a string
-      # webSocketURL:
-      #  hostname: "0.0.0.0"
-      #  pathname: "/ws"
-      #  port: 8080
+      webSocketURL:
+        hostname: "localhost"
+        pathname: "/ws"
+        port: 3035
+        protocol: "wss"
     compress: true
     # Note that apps that do not check the host are vulnerable to DNS rebinding attacks
     allowed_hosts: [ 'localhost' ]

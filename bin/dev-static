@@ -19,12 +19,11 @@ end
 
 if installed? "overmind"
   run "overmind"
-elsif installed? "foreman"
-  run "foreman"
 else
   warn <<~MSG
     NOTICE:
-    For this script to run, you need either 'overmind' or 'foreman' installed on your machine. Please try this script after installing one of them.
+    For this script to run, you need 'overmind' installed on your machine.
+    Please install it and try again: https://github.com/DarthSim/overmind
   MSG
   exit!
 end
