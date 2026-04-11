@@ -31,12 +31,9 @@ development:
     client:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
-      # May also be a string
-      webSocketURL:
-        hostname: "localhost"
-        pathname: "/ws"
-        port: 3035
-        protocol: "wss"
+      # Use 'auto' so the client derives host/port/protocol from the current page URL.
+      # This prevents websocket errors in dynamic environments (e.g. GitHub Codespaces).
+      webSocketURL: 'auto://0.0.0.0:0/ws'
     compress: true
     # Note that apps that do not check the host are vulnerable to DNS rebinding attacks
     allowed_hosts: [ 'localhost' ]
