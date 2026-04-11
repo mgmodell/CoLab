@@ -6,7 +6,7 @@ class ScheduleInitialKeypairRotation < ActiveRecord::Migration[8.1]
     # most-recent keypair (creating one on-the-fly if none exists). We schedule
     # RotateKeypairJob to fire 60 days after that key was created, which is
     # 30 days before the default 90-day expiry.
-    run_at = Keypair.current.created_at + RotateKeypairJob::ROTATION_INTERVAL
+    run_at = [ Keypair.current.created_at + RotateKeypairJob::ROTATION_INTERVAL, Time.current ].max
     RotateKeypairJob.set(wait_until: run_at).perform_later
   end
 
