@@ -300,7 +300,7 @@ class LtiController < ApplicationController
   private
 
   def tool_base_url
-    "https://#{request.host_with_port}"
+    "#{request.protocol}#{request.host_with_port}"
   end
 
   def build_tool_config
