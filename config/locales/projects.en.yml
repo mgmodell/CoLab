@@ -9,6 +9,7 @@ en:
     update_success_inactive: >
       Project was successfully updated. Don't forget to activate it!
     destroy_success: Project was successfully destroyed.
+    soft_delete_success: Project has been deactivated and marked as deleted.
     timezone_warning: All dates shown in the {{timezone}} time zone.
     factor_pack: Factor pack
     active_switch: Active

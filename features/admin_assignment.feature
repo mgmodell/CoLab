@@ -230,3 +230,24 @@ Feature: Assignment administration
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment project is the course project
+
+  @javascript
+  Scenario: Inactive assignment shows 'Not Activated' status in Activities tab
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the activity "Sack Troy" shows status "Not Activated"
+
+  @javascript
+  Scenario: Active assignment with past end date shows 'Expired' status in Activities tab
+    Given the assignment is active
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the activity "Sack Troy" shows status "Expired"
+
+  @javascript
+  Scenario: Active assignment with future end date shows 'Active' status in Activities tab
+    Given the assignment opening is "last month" and close is "next month"
+    Given the assignment is active
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the activity "Sack Troy" shows status "Active"

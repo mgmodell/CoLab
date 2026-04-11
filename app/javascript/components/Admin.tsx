@@ -3,19 +3,13 @@ import { Route, Routes, Navigate, Outlet } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CourseAdmin from "./course_admin/CourseAdmin";
-const SchoolList = React.lazy(() => import("./course_admin/SchoolList"));
-const SchoolDataAdmin = React.lazy(() =>
-  import("./course_admin/SchoolDataAdmin")
-);
-const RubricList = React.lazy(() => import("./assignments/RubricList"));
-const RubricDataAdmin = React.lazy(() =>
-  import("./assignments/RubricDataAdmin")
-);
-const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
-const ConsentFormDataAdmin = React.lazy(() =>
-  import("./Consent/ConsentFormDataAdmin")
-);
-const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
+import SchoolList from "./course_admin/SchoolList";
+import SchoolDataAdmin from "./course_admin/SchoolDataAdmin";
+import RubricList from "./assignments/RubricList";
+import RubricDataAdmin from "./assignments/RubricDataAdmin";
+import ConsentFormList from "./Consent/ConsentFormList";
+import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
+import ConceptsTable from "./ConceptsTable";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 

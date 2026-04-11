@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 
-const ReactionsList = React.lazy(() => import("./ReactionsList"));
+import ReactionsList from "./ReactionsList";
 
 import { useDispatch } from "react-redux";
 import {
@@ -206,6 +206,13 @@ export default function ExperienceDataAdmin(props) {
     experienceEndDate
   ]);
 
+  const studentDeadline = useMemo(() => {
+    if (!experienceEndDate) return null;
+    const deadline = new Date(experienceEndDate);
+    deadline.setDate(deadline.getDate() - (1 + (experienceLeadTime || 0)));
+    return deadline;
+  }, [experienceEndDate, experienceLeadTime]);
+
   const saveButton = dirty ? (
     <Button onClick={saveExperience}>
       {null == experienceId ? t('create') : t('save')}
@@ -281,6 +288,11 @@ export default function ExperienceDataAdmin(props) {
         />
         <label htmlFor="experience_end_date">{t('end_date_lbl')}</label>
       </FloatLabel>
+      {studentDeadline && (
+        <p id="student_deadline_msg">
+          {t('student_deadline_msg', {date: studentDeadline.toLocaleDateString(i18n.language, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})})}
+        </p>
+      )}
 
       <br />
 
