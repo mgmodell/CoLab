@@ -32,6 +32,20 @@ interface IContribution {
   value: number;
 }
 
+interface IInstallmentState {
+  id?: number;
+  assessment_id?: number;
+  group_id?: number;
+  inst_date?: string;
+  comments: string;
+}
+
+interface IGroupState {
+  id?: number;
+  name?: string;
+  users?: Record<number, { id: number; name: string }>;
+}
+
 interface Props {
   rootPath?: string;
 }
@@ -56,20 +70,20 @@ export default function InstallmentReport(props: Props) {
   const [t] = useTranslation("installments");
 
   const [curPanel, setCurPanel] = useState(0);
-  const [group, setGroup] = useState({});
+  const [group, setGroup] = useState<IGroupState>({});
   const [factors, setFactors] = useState({});
 
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
 
   const [contributions, setContributions] = useState({});
-  const [installment, setInstallment] = useState({ comments: "" });
+  const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
 
   // Subscribe to real-time updates for the current group/assessment.
   // When a group member saves, show an in-app toast.
   useInstallmentChannel(
-    (installment as any).assessment_id ?? null,
-    (group as any).id ?? null,
+    installment.assessment_id ?? null,
+    group.id ?? null,
     msg => {
       if (msg.user_id !== user.id) {
         dispatch(

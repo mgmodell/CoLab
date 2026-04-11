@@ -40,6 +40,10 @@ export default function useInstallmentChannel(
 ): void {
   const consumerRef = useRef<Consumer | null>(null);
   const subscriptionRef = useRef<Subscription | null>(null);
+  // Keep a stable ref to onMessage so the effect doesn't need to re-subscribe
+  // when the caller's inline callback changes identity on every render.
+  const onMessageRef = useRef(onMessage);
+  onMessageRef.current = onMessage;
 
   useEffect(() => {
     if (!assessmentId || !groupId) return;
@@ -68,7 +72,7 @@ export default function useInstallmentChannel(
       },
       {
         received(data: InstallmentChannelMessage) {
-          onMessage(data);
+          onMessageRef.current(data);
         }
       }
     );
