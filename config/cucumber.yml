@@ -4,7 +4,7 @@ rerun = rerun.strip.gsub /\s/, ' '
 rerun_opts = rerun.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
 std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict --tags 'not @wip'"
 html_report = ENV['CUCUMBER_HTML_REPORT'] || 'reports/cucumber_report.html'
-html_opts = "--format html --out #{html_report}"
+html_opts = '' # "--format html --out #{html_report}"
 %>
 default: <%= std_opts %> <%= html_opts %> features
 wip: --tags @wip:3 --wip features
