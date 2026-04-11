@@ -14,10 +14,8 @@ import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 import { FilterMatchMode } from "primereact/api";
 
-const DropUserButton = React.lazy(() => import("./DropUserButton"));
-const BingoDataRepresentation = React.lazy(() =>
-  import("../BingoBoards/BingoDataRepresentation")
-);
+import DropUserButton from "./DropUserButton";
+import BingoDataRepresentation from "../BingoBoards/BingoDataRepresentation";
 enum OPT_COLS {
   FIRST_NAME = "first_name",
   LAST_NAME = "last_name",

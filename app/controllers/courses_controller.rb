@@ -49,7 +49,8 @@ class CoursesController < ApplicationController
                 type: activity.type,
                 start_date: anon ? activity.start_date + @course.anon_offset : activity.start_date,
                 end_date: anon ? activity.end_date + @course.anon_offset : activity.end_date,
-                link: activity.get_link
+                link: activity.get_link,
+                delete_link: polymorphic_path( activity )
               }
             end
             response[:course][:activities] = activities
@@ -518,8 +519,11 @@ class CoursesController < ApplicationController
         message = t( 'courses.permission_fail' )
       else
         r.role = Roster.roles[:dropped_student]
-        r.save
-        course_path( r.course ) if instructor_action
+        if r.save
+          course_path( r.course )
+        else
+          message = r.errors.full_messages.join( ', ' )
+        end
       end
     end
     respond_to do | format |

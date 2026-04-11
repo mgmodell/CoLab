@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes, Navigate, Outlet } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import { Skeleton } from "primereact/skeleton";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import CourseAdmin from "./course_admin/CourseAdmin";
+const CourseAdmin = React.lazy(() => import("./course_admin/CourseAdmin"));
 const SchoolList = React.lazy(() => import("./course_admin/SchoolList"));
 const SchoolDataAdmin = React.lazy(() =>
   import("./course_admin/SchoolDataAdmin")
@@ -17,8 +19,6 @@ const ConsentFormDataAdmin = React.lazy(() =>
 );
 const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
 
-import { useTypedSelector } from "./infrastructure/AppReducers";
-
 interface AdminProps {}
 
 export default function Admin(props: AdminProps) {
@@ -31,7 +31,9 @@ export default function Admin(props: AdminProps) {
           element={
             <React.Fragment>
               <WorkingIndicator identifier="admin_save" />
-              <Outlet />
+              <Suspense fallback={<Skeleton className="mb-2" />}>
+                <Outlet />
+              </Suspense>
             </React.Fragment>
           }
         >
