@@ -369,6 +369,14 @@ class LtiController < ApplicationController
     nil
   end
 
+  # Upsert the user's roster entry for the given course based on their LTI role
+  # claims. The LTI spec expresses roles as full URN strings such as
+  # "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor", so we look
+  # for 'Instructor' anywhere in the role string rather than doing an exact
+  # match. Anyone not identified as an Instructor is treated as an enrolled
+  # student. Using find_or_initialize_by ensures this is idempotent: a second
+  # launch from the same user simply refreshes their role rather than creating
+  # a duplicate Roster record.
   def enroll_lti_user(user, payload, course)
     roles = payload[LTI_ROLES] || []
     is_instructor = roles.any? { |r| r.include?('Instructor') }
