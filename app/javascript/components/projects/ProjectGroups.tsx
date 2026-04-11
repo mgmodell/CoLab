@@ -4,7 +4,7 @@ import axios from "axios";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
 
-const DiversityScore = React.lazy(() => import("../DiversityScore"));
+import DiversityScore from "../DiversityScore";
 
 import { SortDirection } from "react-virtualized";
 
@@ -205,6 +205,7 @@ export default function ProjectGroups(props: Props) {
       .then(response => {
         const data = response.data;
         setWorking(false);
+        setDirty(false);
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
         setGroups(Object.values(data.groups));

@@ -1,3 +1,3 @@
-const { environment } = require('@rails/webpacker')
+const { generateRspackConfig } = require('shakapacker/rspack')
 
-module.exports = environment
+module.exports = generateRspackConfig()
