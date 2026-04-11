@@ -476,3 +476,22 @@ Then( 'the user selects the {string} activity' ) do | activity_name |
   find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
   wait_for_render
 end
+
+Then( /^the course has (\d+) activit(?:y|ies)$/ ) do | count |
+  wait_for_render
+  expect( @course.reload.get_activities.count ).to eq count.to_i
+end
+
+Then( 'the user deletes the bingo game' ) do
+  activity_name = @bingo.get_topic( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end
+
+Then( 'the user deletes the experience' ) do
+  activity_name = @experience.get_name( false )
+  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
+  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  wait_for_render
+end

@@ -551,7 +551,10 @@ class BingoGamesController < ApplicationController
     @course = @bingo_game.course
     check_bingo_editor bingo_game: @bingo_game
     @bingo_game.destroy
-    redirect_to @course, notice: ( t 'bingo_games.destroy_success' )
+    respond_to do | format |
+      format.html { redirect_to @course, notice: ( t 'bingo_games.destroy_success' ) }
+      format.json { render json: { message: t( 'bingo_games.destroy_success' ) } }
+    end
   end
 
   def activate

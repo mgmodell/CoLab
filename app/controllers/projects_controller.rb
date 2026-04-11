@@ -119,7 +119,10 @@ class ProjectsController < ApplicationController
   def destroy
     @course = @project.course
     @project.destroy
-    redirect_to @course, notice: t( 'projects.destroy_success' )
+    respond_to do | format |
+      format.html { redirect_to @course, notice: t( 'projects.destroy_success' ) }
+      format.json { render json: { message: t( 'projects.destroy_success' ) } }
+    end
   end
 
   def set_groups

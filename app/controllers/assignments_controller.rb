@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: %i[show edit update status]
+  before_action :set_assignment, only: %i[show edit update status destroy]
   skip_before_action :authenticate_user!, only: %i[demo_status]
   include Demoable
   include PermissionsCheck
@@ -137,6 +137,16 @@ class AssignmentsController < ApplicationController
         Rails.logger.debug @assignment.errors.full_messages
         format.json { render json: standardized_response( @assignment, @assignment.errors ) }
       end
+    end
+  end
+
+  # DELETE /assignments/1 or /assignments/1.json
+  def destroy
+    @course = @assignment.course
+    @assignment.destroy
+    respond_to do | format |
+      format.html { redirect_to @course, notice: t( 'assignments.destroy_success' ) }
+      format.json { render json: { message: t( 'assignments.destroy_success' ) } }
     end
   end
 

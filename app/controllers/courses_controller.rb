@@ -49,7 +49,8 @@ class CoursesController < ApplicationController
                 type: activity.type,
                 start_date: anon ? activity.start_date + @course.anon_offset : activity.start_date,
                 end_date: anon ? activity.end_date + @course.anon_offset : activity.end_date,
-                link: activity.get_link
+                link: activity.get_link,
+                delete_link: polymorphic_path( activity )
               }
             end
             response[:course][:activities] = activities

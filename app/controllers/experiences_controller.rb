@@ -139,7 +139,10 @@ class ExperiencesController < ApplicationController
   def destroy
     @course = @experience.course
     @experience.destroy
-    redirect_to @course, notice: t( 'experiences.destroy_success' )
+    respond_to do | format |
+      format.html { redirect_to @course, notice: t( 'experiences.destroy_success' ) }
+      format.json { render json: { message: t( 'experiences.destroy_success' ) } }
+    end
   end
 
   # Maybe build in JSON API support
