@@ -290,12 +290,23 @@ Rails.application.routes.draw do
     end
   end
 
-  # LTI Registration
-  # post 'lti/tool_connect' => 'lti#register'
-  get 'lti/tool_connect' => 'lti#register'
+  # LTI 1.3 endpoints
+  # Dynamic Registration
+  get  'lti/tool_connect' => 'lti#register', as: :lti_register
+  post 'lti/tool_connect' => 'lti#register'
+  # JWKS endpoint for platform JWT verification
   scope '.well-known' do
-    # get :jwks, to: Keypairs::PublicKeysController.action(:index)
+    get 'jwks.json' => 'lti#jwks', as: :lti_jwks
   end
+  # OIDC Login Initiation
+  get  'lti/login' => 'lti#login', as: :lti_login
+  post 'lti/login' => 'lti#login'
+  # LTI Launch (receives id_token from platform)
+  post 'lti/launch' => 'lti#launch', as: :lti_launch
+  # Names and Role Provisioning Services (roster sync)
+  post 'lti/names_roles/:id' => 'lti#names_roles', as: :lti_names_roles
+  # Assignment and Grade Services (grade push)
+  post 'lti/grades/:id' => 'lti#grades', as: :lti_grades
 
   # get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

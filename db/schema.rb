@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_000002) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -443,6 +443,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_000000) do
     t.index ["jwk_kid"], name: "index_keypairs_on_jwk_kid", unique: true
   end
 
+  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "issuer", null: false
+    t.string "client_id", null: false
+    t.string "auth_login_url", null: false
+    t.string "auth_token_url", null: false
+    t.string "key_set_url", null: false
+    t.string "deployment_id"
+    t.string "tool_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issuer", "client_id"], name: "index_lti_deployments_on_issuer_and_client_id", unique: true
+    t.index ["deployment_id"], name: "index_lti_deployments_on_deployment_id"
+  end
+
+  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "lti_deployment_id", null: false
+    t.string "resource_link_id", null: false
+    t.string "context_id"
+    t.string "context_title"
+    t.bigint "course_id"
+    t.bigint "assignment_id"
+    t.string "line_item_url"
+    t.string "names_roles_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lti_deployment_id", "resource_link_id"], name: "index_lti_resource_links_on_deployment_and_link", unique: true
+    t.index ["lti_deployment_id"], name: "index_lti_resource_links_on_lti_deployment_id"
+    t.index ["course_id"], name: "index_lti_resource_links_on_course_id"
+    t.index ["assignment_id"], name: "index_lti_resource_links_on_assignment_id"
+  end
+
   create_table "languages", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "name_en"
@@ -737,6 +768,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_000000) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "lti_resource_links", "lti_deployments"
+  add_foreign_key "lti_resource_links", "courses"
+  add_foreign_key "lti_resource_links", "assignments"
   add_foreign_key "narratives", "scenarios"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"
