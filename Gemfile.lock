@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    action-cable-testing (0.6.1)
+      actioncable (>= 5.0)
     action_text-trix (2.1.18)
       railties
     actioncable (8.1.3)
@@ -638,6 +640,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  action-cable-testing (~> 0.6.1)
   active_storage_validations
   activerecord-session_store
   ahoy_email
