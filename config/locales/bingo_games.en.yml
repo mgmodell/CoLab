@@ -20,6 +20,7 @@ en:
     end_date_lbl: End date
     date_to_lbl: until
     lead_time: Days for instructor review
+    student_deadline_msg: "Students must have this done by {{date}}."
     review_candidates:
       title: Candidate Terms for Review
       submitted_by: Submitted by
@@ -37,6 +38,7 @@ en:
       title: New Bingo! Game
     create_success: Bingo! Game created successfully!
     destroy_success: Bingo! Game destroyed successfully!
+    soft_delete_success: Bingo! Game has been deactivated and marked as deleted.
     update_success: Bingo! Game updated successfully!
     review_success: Review data successfully saved
     review_problems: There were problems with the review and it could not be saved

@@ -552,8 +552,17 @@ class BingoGamesController < ApplicationController
   def destroy
     @course = @bingo_game.course
     check_bingo_editor bingo_game: @bingo_game
-    @bingo_game.destroy
-    redirect_to @course, notice: ( t 'bingo_games.destroy_success' )
+    if @bingo_game.has_student_data?
+      @bingo_game.update( active: false, deleted: true )
+      msg = t( 'bingo_games.soft_delete_success' )
+    else
+      @bingo_game.destroy
+      msg = t( 'bingo_games.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   def activate

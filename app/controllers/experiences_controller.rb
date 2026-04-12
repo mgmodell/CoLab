@@ -139,8 +139,17 @@ class ExperiencesController < ApplicationController
 
   def destroy
     @course = @experience.course
-    @experience.destroy
-    redirect_to @course, notice: t( 'experiences.destroy_success' )
+    if @experience.has_student_data?
+      @experience.update( active: false, deleted: true )
+      msg = t( 'experiences.soft_delete_success' )
+    else
+      @experience.destroy
+      msg = t( 'experiences.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   # Maybe build in JSON API support
