@@ -442,7 +442,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
 
   create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "connectable_type", null: false
-    t.bigint "connectable_id", null: false
+    t.integer "connectable_id", null: false
     t.string "line_item_url"
     t.string "ags_access_token_url"
     t.string "client_id"
