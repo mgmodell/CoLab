@@ -139,12 +139,18 @@ class HomeController < ApplicationController
           baseUrl: bingo_games_path,
           gameResultsUrl: game_results_path( id: '' ),
           worksheetResultsUrl: ws_results_path( id: '' ),
-          worksheetScoreUrl: ws_score_path( id: '' )
+          worksheetScoreUrl: ws_score_path( id: '' ),
+          ltiConnectionUrl: bingo_game_lti_connection_path( id: '' ),
+          ltiGradePushUrl: push_bingo_game_lti_grades_path( id: '' )
         }
         ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
-          baseUrl: experiences_path
+          baseUrl: experiences_path,
+          ltiConnectionUrl: experience_lti_connection_path( id: '' ),
+          ltiGradePushUrl: push_experience_lti_grades_path( id: '' )
         }
+        ep_hash[:project][:ltiConnectionUrl] = project_lti_connection_path( id: '' )
+        ep_hash[:project][:ltiGradePushUrl] = push_project_lti_grades_path( id: '' )
         ep_hash[:concept] = {
           baseUrl: concepts_path
         }

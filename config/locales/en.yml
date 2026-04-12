@@ -31,3 +31,11 @@
 
 en:
   hello: "Hello world"
+  lti:
+    connection_saved: "LTI connection saved successfully."
+    connection_save_failed: "Failed to save LTI connection."
+    not_configured: "LTI connection is not configured. Please provide the Line Item URL, AGS Access Token URL, and Client ID."
+    grades_pushed:
+      one: "Successfully pushed grade for 1 student."
+      other: "Successfully pushed grades for %{count} students."
+    grades_push_partial: "Grades partially pushed: %{success} succeeded, %{failed} failed."

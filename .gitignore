@@ -30,6 +30,7 @@ yarn-debug.log*
 .yarn-integrity
 .yarn/install-state.gz
 test_results.html
+reports/
 coverage
 cucumber
 .rake_tasks

@@ -38,18 +38,11 @@ class Roster < ApplicationRecord
       ActiveRecord::Base.transaction do
         course.projects.includes( groups: :users ).find_each do | project |
           project.groups.each do | group |
-            next unless group.users.includes( user )
+            next unless group.users.include?( user )
 
-            project = group.project
-            activation_status = project.active
             group.users.delete( user )
             group.save!
             logger.debug group.errors.full_messages unless group.errors.empty?
-            project = group.project
-            project.reload
-            project.active = activation_status
-            project.save!
-            logger.debug project.errors.full_messages unless project.errors.empty?
           end
         end
       end

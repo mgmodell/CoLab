@@ -1,12 +1,9 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'staging'
 
-const environment = require('./environment')
-const TerserPlugin = require('terser-webpack-plugin')
+const webpackConfig = require('./webpackConfig')
 
-environment.config.optimization.minimizer.forEach(function(minimizer){
-  if(minimizer instanceof TerserPlugin){
-    minimizer.options.parallel = false;
-  }
-})
+const stagingEnvOnly = (_clientWebpackConfig, _serverWebpackConfig) => {
+  // place any code here that is for staging only
+}
 
-module.exports = environment.toWebpackConfig()
+module.exports = webpackConfig(stagingEnvOnly)

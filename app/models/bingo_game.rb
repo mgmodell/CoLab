@@ -11,6 +11,7 @@ class BingoGame < ApplicationRecord
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games, optional: true
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   has_many :candidates, through: :candidate_lists
   has_many :users, through: :course
@@ -125,6 +126,10 @@ class BingoGame < ApplicationRecord
     # helpers = Rails.application.routes.url_helpers
     # helpers.bingo_game_path self
     'bingo_game'
+  end
+
+  def has_student_data?
+    bingo_boards.any?
   end
 
   def type

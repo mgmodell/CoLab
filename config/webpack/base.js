@@ -1,6 +1,5 @@
-const { generateWebpackConfig, merge } = require('shakapacker');
-//const { webpackConfig, merge } = require('@rails/webpacker');
-const webpackConfig = generateWebpackConfig()
+const { generateRspackConfig } = require('shakapacker/rspack');
 
-module.exports = merge(webpackConfig, customConfig);
+const rspackConfig = generateRspackConfig();
 
+module.exports = rspackConfig;

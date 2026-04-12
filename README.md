@@ -64,6 +64,14 @@ If you want to run the full suite of tests, you will use `run_tests.sh` and it:
     * ``git commit -m `<meaningful message>` ``
     * `git push`
 
+## LTI 1.3 Integration
+
+CoLab supports LTI 1.3 for single sign-on, roster provisioning, and grade sync with
+Moodle, Canvas, Blackboard, Brightspace, and other compliant LMS platforms.
+
+See [doc/LTI_INTEGRATION.md](doc/LTI_INTEGRATION.md) for step-by-step connection
+instructions.
+
 ### Who do I talk to? ###
 
 * @micah_gideon
