@@ -3,7 +3,7 @@
 class CreateLtiResourceLinks < ActiveRecord::Migration[8.1]
   def change
     create_table :lti_resource_links do |t|
-      t.references :lti_deployment, null: false, foreign_key: true
+      t.bigint :lti_deployment_id, null: false
       t.string :resource_link_id, null: false
       t.string :context_id
       t.string :context_title
@@ -15,9 +15,11 @@ class CreateLtiResourceLinks < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
+    add_index :lti_resource_links, :lti_deployment_id
     add_index :lti_resource_links,
               %i[lti_deployment_id resource_link_id],
               unique: true,
               name: 'index_lti_resource_links_on_deployment_and_link'
+    add_foreign_key :lti_resource_links, :lti_deployments
   end
 end
