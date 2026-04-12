@@ -31,6 +31,37 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate',
         as: :activate_bingo_game
+
+    # LTI connection management and grade pushing
+    get 'bingo_games/lti/:id' => 'bingo_games#show_lti_connection',
+        as: :bingo_game_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'bingo_games/lti/:id' => 'bingo_games#update_lti_connection',
+          as: :update_bingo_game_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'bingo_games/push_grades/:id' => 'bingo_games#push_lti_grades',
+         as: :push_bingo_game_lti_grades,
+         constraints: ->(req) { req.format == :json }
+
+    get 'experiences/lti/:id' => 'experiences#show_lti_connection',
+        as: :experience_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'experiences/lti/:id' => 'experiences#update_lti_connection',
+          as: :update_experience_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'experiences/push_grades/:id' => 'experiences#push_lti_grades',
+         as: :push_experience_lti_grades,
+         constraints: ->(req) { req.format == :json }
+
+    get 'projects/lti/:id' => 'projects#show_lti_connection',
+        as: :project_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'projects/lti/:id' => 'projects#update_lti_connection',
+          as: :update_project_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'projects/push_grades/:id' => 'projects#push_lti_grades',
+         as: :push_project_lti_grades,
+         constraints: ->(req) { req.format == :json }
     get 'course/cal/:id' => 'courses#calendar',
         as: :course_cal,
         constraints: ->(req) { req.format == :json }

@@ -2,10 +2,11 @@
 
 class ExperiencesController < ApplicationController
   include PermissionsCheck
+  include LtiGradable
 
   before_action :set_experience, only: %i[show get_reactions update destroy]
   before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[get_reactions update destroy]
+  before_action :check_editor, only: %i[get_reactions update destroy show_lti_connection update_lti_connection push_lti_grades]
 
   def show
     respond_to do | format |
@@ -303,5 +304,17 @@ class ExperiencesController < ApplicationController
   def reaction_params
     params.require( :reaction ).permit( :behavior_id, :improvements, :narrative_id,
                                         :other_name )
+  end
+
+  def lti_resource
+    Experience.find( params[:id] )
+  end
+
+  def grade_scores_for( experience )
+    experience.reactions.includes( :user ).map do | reaction |
+      # Status 0 = not started, positive integer = completed steps
+      score = reaction.status.is_a?( Integer ) && reaction.status.positive? ? 100 : 0
+      { user_id: reaction.user_id.to_s, score_given: score, score_maximum: 100 }
+    end
   end
 end

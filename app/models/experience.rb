@@ -9,6 +9,7 @@ class Experience < ApplicationRecord
   delegate :timezone, :name, to: :course, prefix: true
 
   has_many :reactions, inverse_of: :experience, dependent: :destroy
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   # validations
   validates :name, :end_date, :start_date, presence: true

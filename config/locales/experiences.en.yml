@@ -18,7 +18,21 @@ en:
     tabs:
       details: Details
       results: Results
-      response_word_cloud: Response Word Cloud  
+      response_word_cloud: Response Word Cloud
+    lti:
+      panel_title: LTI Grade Passback
+      line_item_url_lbl: LMS Line Item URL
+      line_item_url_placeholder: "e.g. https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS Access Token URL
+      ags_token_url_placeholder: "e.g. https://lms.example.com/login/oauth2/token"
+      client_id_lbl: Client ID
+      deployment_id_lbl: Deployment ID
+      iss_lbl: Issuer (iss)
+      save_btn: Save LTI Connection
+      push_btn: Push Grades to LMS
+      not_configured: Not configured
+      configured: Connected
+      push_confirm: Push all grades to the LMS now?
   experiences:
     simulation: Collaboration experience simulation
     available: 'Simulation: %{task}'
@@ -130,4 +144,3 @@ en:
         You may access these instructions or the project description
         at any time using the <i>Instructions</i> button in the upper right-hand
         corner of the page.
-

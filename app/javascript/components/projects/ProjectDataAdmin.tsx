@@ -30,6 +30,7 @@ import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import parse from 'html-react-parser';
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
 import ProjectGroups from "./ProjectGroups";
 import ChartContainer from "../Reports/ChartContainer";
@@ -386,6 +387,15 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         />
       </TabPanel>
       <TabPanel header="Reporting">{chartContainer}</TabPanel>
+      {projectId && endpoints?.ltiConnectionUrl ? (
+        <TabPanel header={t("lti.panel_title")}>
+          <LtiConnectionPanel
+            connectionUrl={`${endpoints.ltiConnectionUrl}${projectId}.json`}
+            gradePushUrl={`${endpoints.ltiGradePushUrl}${projectId}.json`}
+            t={t}
+          />
+        </TabPanel>
+      ) : null}
     </TabView>
   );
 }

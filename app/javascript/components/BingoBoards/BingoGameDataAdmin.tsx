@@ -26,6 +26,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
 export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
@@ -472,6 +473,15 @@ export default function BingoGameDataAdmin(props) {
               </Row>
             </Container>
           </TabPanel>
+          {bingoGameId && endpoints?.ltiConnectionUrl ? (
+            <TabPanel header={t("lti.panel_title")}>
+              <LtiConnectionPanel
+                connectionUrl={`${endpoints.ltiConnectionUrl}${bingoGameId}.json`}
+                gradePushUrl={`${endpoints.ltiGradePushUrl}${bingoGameId}.json`}
+                t={t}
+              />
+            </TabPanel>
+          ) : null}
         </TabView>
       </Panel>
     </Suspense>
