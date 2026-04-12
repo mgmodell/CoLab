@@ -69,6 +69,7 @@ while getopts "soxb:clndf:rteh" opt; do
 done
 
 pushd containers/test_env/
+mkdir -p ../../reports
 if [ "$RUN_TERM" = true ]; then
   podman compose run --rm --entrypoint='/bin/bash -l' app
 

@@ -219,9 +219,11 @@ export default function AssignmentViewer(props) {
           })
           }
         >
-          <FeedbackVisualization
-            assignment={assignment}
-          />
+          <Suspense fallback={<Skeleton className="mb-2" />}>
+            <FeedbackVisualization
+              assignment={assignment}
+            />
+          </Suspense>
         </TabPanel>
       </TabView>
     );

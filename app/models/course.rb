@@ -36,10 +36,10 @@ class Course < ApplicationRecord
   end
 
   def get_activities
-    activities = projects.to_a
-    activities.concat bingo_games
-    activities.concat experiences
-    activities.concat assignments
+    activities = projects.where( deleted: false ).to_a
+    activities.concat bingo_games.where( deleted: false )
+    activities.concat experiences.where( deleted: false )
+    activities.concat assignments.where( deleted: false )
 
     activities.sort_by( &:end_date )
   end

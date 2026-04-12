@@ -128,6 +128,10 @@ class BingoGame < ApplicationRecord
     'bingo_game'
   end
 
+  def has_student_data?
+    bingo_boards.any?
+  end
+
   def type
     'Terms List'
   end

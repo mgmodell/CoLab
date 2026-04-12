@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19-11.7.2-MariaDB, for osx10.20 (arm64)
+-- MariaDB dump 10.19-12.2.2-MariaDB, for osx10.21 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.7.2-MariaDB-ubu2404
+-- Server version	12.2.2-MariaDB-ubu2404
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -41,10 +41,13 @@ CREATE TABLE `active_storage_attachments` (
 -- Dumping data for table `active_storage_attachments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `active_storage_attachments` WRITE;
 /*!40000 ALTER TABLE `active_storage_attachments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `active_storage_attachments` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `active_storage_blobs`
@@ -72,10 +75,13 @@ CREATE TABLE `active_storage_blobs` (
 -- Dumping data for table `active_storage_blobs`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `active_storage_blobs` WRITE;
 /*!40000 ALTER TABLE `active_storage_blobs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `active_storage_blobs` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `active_storage_variant_records`
@@ -98,10 +104,13 @@ CREATE TABLE `active_storage_variant_records` (
 -- Dumping data for table `active_storage_variant_records`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `active_storage_variant_records` WRITE;
 /*!40000 ALTER TABLE `active_storage_variant_records` DISABLE KEYS */;
 /*!40000 ALTER TABLE `active_storage_variant_records` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ahoy_messages`
@@ -131,10 +140,13 @@ CREATE TABLE `ahoy_messages` (
 -- Dumping data for table `ahoy_messages`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ahoy_messages` WRITE;
 /*!40000 ALTER TABLE `ahoy_messages` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ahoy_messages` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ar_internal_metadata`
@@ -156,6 +168,7 @@ CREATE TABLE `ar_internal_metadata` (
 -- Dumping data for table `ar_internal_metadata`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ar_internal_metadata` WRITE;
 /*!40000 ALTER TABLE `ar_internal_metadata` DISABLE KEYS */;
 INSERT INTO `ar_internal_metadata` VALUES
@@ -163,6 +176,8 @@ INSERT INTO `ar_internal_metadata` VALUES
 ('schema_sha1','20322dd1d0bd0b11663a6e1117d762c4eb418216','2019-09-23 11:40:09.067337','2019-09-23 11:40:09.067337');
 /*!40000 ALTER TABLE `ar_internal_metadata` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `assessments`
@@ -190,10 +205,13 @@ CREATE TABLE `assessments` (
 -- Dumping data for table `assessments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `assessments` WRITE;
 /*!40000 ALTER TABLE `assessments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `assessments` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `assignments`
@@ -221,6 +239,7 @@ CREATE TABLE `assignments` (
   `file_sub` tinyint(1) NOT NULL DEFAULT 0,
   `link_sub` tinyint(1) NOT NULL DEFAULT 0,
   `text_sub` tinyint(1) NOT NULL DEFAULT 1,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_assignments_on_rubric_id` (`rubric_id`),
   KEY `index_assignments_on_course_id` (`course_id`),
@@ -235,10 +254,13 @@ CREATE TABLE `assignments` (
 -- Dumping data for table `assignments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `assignments` WRITE;
 /*!40000 ALTER TABLE `assignments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `assignments` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `behaviors`
@@ -265,6 +287,7 @@ CREATE TABLE `behaviors` (
 -- Dumping data for table `behaviors`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `behaviors` WRITE;
 /*!40000 ALTER TABLE `behaviors` DISABLE KEYS */;
 INSERT INTO `behaviors` VALUES
@@ -276,6 +299,8 @@ INSERT INTO `behaviors` VALUES
 (6,'Other','This entry indicates a behavior that is not listed and I will enter it in myself.\n','2019-09-23 11:40:16','2020-06-21 03:46:02',NULL,NULL,1);
 /*!40000 ALTER TABLE `behaviors` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `bingo_boards`
@@ -307,10 +332,13 @@ CREATE TABLE `bingo_boards` (
 -- Dumping data for table `bingo_boards`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `bingo_boards` WRITE;
 /*!40000 ALTER TABLE `bingo_boards` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bingo_boards` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `bingo_cells`
@@ -344,10 +372,13 @@ CREATE TABLE `bingo_cells` (
 -- Dumping data for table `bingo_cells`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `bingo_cells` WRITE;
 /*!40000 ALTER TABLE `bingo_cells` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bingo_cells` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `bingo_games`
@@ -378,6 +409,7 @@ CREATE TABLE `bingo_games` (
   `students_notified` tinyint(1) NOT NULL DEFAULT 0,
   `anon_topic` varchar(255) DEFAULT NULL,
   `size` int(11) DEFAULT 5,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_bingo_games_on_course_id` (`course_id`),
   KEY `index_bingo_games_on_project_id` (`project_id`),
@@ -390,10 +422,13 @@ CREATE TABLE `bingo_games` (
 -- Dumping data for table `bingo_games`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `bingo_games` WRITE;
 /*!40000 ALTER TABLE `bingo_games` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bingo_games` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `candidate_feedbacks`
@@ -421,6 +456,7 @@ CREATE TABLE `candidate_feedbacks` (
 -- Dumping data for table `candidate_feedbacks`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `candidate_feedbacks` WRITE;
 /*!40000 ALTER TABLE `candidate_feedbacks` DISABLE KEYS */;
 INSERT INTO `candidate_feedbacks` VALUES
@@ -440,6 +476,8 @@ INSERT INTO `candidate_feedbacks` VALUES
 (14,'Definition: Recursive','2019-09-23 11:40:17','2019-09-23 11:40:17',NULL,'The term was used to define itself.\n',NULL,50,2);
 /*!40000 ALTER TABLE `candidate_feedbacks` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `candidate_lists`
@@ -478,10 +516,13 @@ CREATE TABLE `candidate_lists` (
 -- Dumping data for table `candidate_lists`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `candidate_lists` WRITE;
 /*!40000 ALTER TABLE `candidate_lists` DISABLE KEYS */;
 /*!40000 ALTER TABLE `candidate_lists` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `candidates`
@@ -519,10 +560,13 @@ CREATE TABLE `candidates` (
 -- Dumping data for table `candidates`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `candidates` WRITE;
 /*!40000 ALTER TABLE `candidates` DISABLE KEYS */;
 /*!40000 ALTER TABLE `candidates` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `cip_codes`
@@ -547,6 +591,7 @@ CREATE TABLE `cip_codes` (
 -- Dumping data for table `cip_codes`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `cip_codes` WRITE;
 /*!40000 ALTER TABLE `cip_codes` DISABLE KEYS */;
 INSERT INTO `cip_codes` VALUES
@@ -601,6 +646,8 @@ INSERT INTO `cip_codes` VALUES
 (49,100,'Other','2019-09-23 11:40:09','2019-09-23 11:40:09',NULL);
 /*!40000 ALTER TABLE `cip_codes` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `concepts`
@@ -627,12 +674,15 @@ CREATE TABLE `concepts` (
 -- Dumping data for table `concepts`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `concepts` WRITE;
 /*!40000 ALTER TABLE `concepts` DISABLE KEYS */;
 INSERT INTO `concepts` VALUES
 (0,'*','2019-09-23 11:40:17','2019-09-23 11:40:17',0,0,0);
 /*!40000 ALTER TABLE `concepts` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `consent_forms`
@@ -663,10 +713,13 @@ CREATE TABLE `consent_forms` (
 -- Dumping data for table `consent_forms`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `consent_forms` WRITE;
 /*!40000 ALTER TABLE `consent_forms` DISABLE KEYS */;
 /*!40000 ALTER TABLE `consent_forms` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `consent_logs`
@@ -695,10 +748,13 @@ CREATE TABLE `consent_logs` (
 -- Dumping data for table `consent_logs`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `consent_logs` WRITE;
 /*!40000 ALTER TABLE `consent_logs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `consent_logs` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `courses`
@@ -734,10 +790,13 @@ CREATE TABLE `courses` (
 -- Dumping data for table `courses`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `criteria`
@@ -770,10 +829,13 @@ CREATE TABLE `criteria` (
 -- Dumping data for table `criteria`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `criteria` WRITE;
 /*!40000 ALTER TABLE `criteria` DISABLE KEYS */;
 /*!40000 ALTER TABLE `criteria` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `delayed_jobs`
@@ -804,10 +866,13 @@ CREATE TABLE `delayed_jobs` (
 -- Dumping data for table `delayed_jobs`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `delayed_jobs` WRITE;
 /*!40000 ALTER TABLE `delayed_jobs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `delayed_jobs` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `diagnoses`
@@ -839,10 +904,13 @@ CREATE TABLE `diagnoses` (
 -- Dumping data for table `diagnoses`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `diagnoses` WRITE;
 /*!40000 ALTER TABLE `diagnoses` DISABLE KEYS */;
 /*!40000 ALTER TABLE `diagnoses` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `emails`
@@ -873,12 +941,15 @@ CREATE TABLE `emails` (
 -- Dumping data for table `emails`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `emails` WRITE;
 /*!40000 ALTER TABLE `emails` DISABLE KEYS */;
 INSERT INTO `emails` VALUES
 (1,1,'micah.modell@gmail.com',1,NULL,NULL,'2019-09-23 11:40:17',NULL,'2019-09-23 11:40:17','2019-09-23 11:40:17');
 /*!40000 ALTER TABLE `emails` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `experiences`
@@ -900,6 +971,7 @@ CREATE TABLE `experiences` (
   `anon_name` varchar(255) DEFAULT NULL,
   `lead_time` int(11) NOT NULL DEFAULT 3,
   `student_end_date` datetime DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_experiences_on_course_id` (`course_id`),
   CONSTRAINT `fk_rails_23ce752422` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
@@ -910,10 +982,13 @@ CREATE TABLE `experiences` (
 -- Dumping data for table `experiences`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `experiences` WRITE;
 /*!40000 ALTER TABLE `experiences` DISABLE KEYS */;
 /*!40000 ALTER TABLE `experiences` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `factor_packs`
@@ -939,6 +1014,7 @@ CREATE TABLE `factor_packs` (
 -- Dumping data for table `factor_packs`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `factor_packs` WRITE;
 /*!40000 ALTER TABLE `factor_packs` DISABLE KEYS */;
 INSERT INTO `factor_packs` VALUES
@@ -948,6 +1024,8 @@ INSERT INTO `factor_packs` VALUES
 (4,'AECT 2023','Distillation of factors from 100+ sources. Presented at Association for Educational Communications Technologists Annual Meeting, 2023.\n','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL);
 /*!40000 ALTER TABLE `factor_packs` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `factors`
@@ -976,6 +1054,7 @@ CREATE TABLE `factors` (
 -- Dumping data for table `factors`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `factors` WRITE;
 /*!40000 ALTER TABLE `factors` DISABLE KEYS */;
 INSERT INTO `factors` VALUES
@@ -1008,6 +1087,8 @@ INSERT INTO `factors` VALUES
 (27,'interrogates the objectives and the problem space to develop and share a thorough understanding of the challenge(s) facing the team.\n','Contributes towards understanding goals/requirements','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4);
 /*!40000 ALTER TABLE `factors` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `genders`
@@ -1032,6 +1113,7 @@ CREATE TABLE `genders` (
 -- Dumping data for table `genders`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `genders` WRITE;
 /*!40000 ALTER TABLE `genders` DISABLE KEYS */;
 INSERT INTO `genders` VALUES
@@ -1041,6 +1123,8 @@ INSERT INTO `genders` VALUES
 (4,'I\'d prefer not to answer','2019-09-23 11:40:16','2019-09-23 11:40:16','나는 대답하지 않는 것을 좋아한다','__');
 /*!40000 ALTER TABLE `genders` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `group_revisions`
@@ -1066,10 +1150,13 @@ CREATE TABLE `group_revisions` (
 -- Dumping data for table `group_revisions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `group_revisions` WRITE;
 /*!40000 ALTER TABLE `group_revisions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `group_revisions` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `groups`
@@ -1096,10 +1183,13 @@ CREATE TABLE `groups` (
 -- Dumping data for table `groups`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `groups_users`
@@ -1111,7 +1201,10 @@ DROP TABLE IF EXISTS `groups_users`;
 CREATE TABLE `groups_users` (
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
-  UNIQUE KEY `index_groups_users_on_group_id_and_user_id` (`group_id`,`user_id`)
+  UNIQUE KEY `index_groups_users_on_group_id_and_user_id` (`group_id`,`user_id`),
+  KEY `fk_rails_8546c71994` (`user_id`),
+  CONSTRAINT `fk_rails_4e63edbd27` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_rails_8546c71994` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1119,10 +1212,13 @@ CREATE TABLE `groups_users` (
 -- Dumping data for table `groups_users`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `groups_users` WRITE;
 /*!40000 ALTER TABLE `groups_users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups_users` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `home_countries`
@@ -1147,6 +1243,7 @@ CREATE TABLE `home_countries` (
 -- Dumping data for table `home_countries`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `home_countries` WRITE;
 /*!40000 ALTER TABLE `home_countries` DISABLE KEYS */;
 INSERT INTO `home_countries` VALUES
@@ -1401,6 +1498,8 @@ INSERT INTO `home_countries` VALUES
 (249,'I prefer not to specify my country','__',1,'2019-09-23 11:40:09','2019-09-23 11:40:09');
 /*!40000 ALTER TABLE `home_countries` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `home_states`
@@ -1428,6 +1527,7 @@ CREATE TABLE `home_states` (
 -- Dumping data for table `home_states`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `home_states` WRITE;
 /*!40000 ALTER TABLE `home_states` DISABLE KEYS */;
 INSERT INTO `home_states` VALUES
@@ -4167,6 +4267,8 @@ INSERT INTO `home_states` VALUES
 (2734,248,'I prefer not to specify the state','__:ZW',1,'2019-09-23 11:40:16','2019-09-23 11:40:16');
 /*!40000 ALTER TABLE `home_states` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `installments`
@@ -4199,10 +4301,13 @@ CREATE TABLE `installments` (
 -- Dumping data for table `installments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `installments` WRITE;
 /*!40000 ALTER TABLE `installments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `installments` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `keypairs`
@@ -4230,10 +4335,13 @@ CREATE TABLE `keypairs` (
 -- Dumping data for table `keypairs`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `keypairs` WRITE;
 /*!40000 ALTER TABLE `keypairs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `keypairs` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `languages`
@@ -4258,6 +4366,7 @@ CREATE TABLE `languages` (
 -- Dumping data for table `languages`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `languages` WRITE;
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
 INSERT INTO `languages` VALUES
@@ -4449,6 +4558,8 @@ INSERT INTO `languages` VALUES
 (186,'__','I prefer not to answer',NULL,0);
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `narratives`
@@ -4474,6 +4585,7 @@ CREATE TABLE `narratives` (
 -- Dumping data for table `narratives`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `narratives` WRITE;
 /*!40000 ALTER TABLE `narratives` DISABLE KEYS */;
 INSERT INTO `narratives` VALUES
@@ -4491,6 +4603,8 @@ INSERT INTO `narratives` VALUES
 (12,'Iain',3,'2019-09-23 11:40:16','2019-09-23 11:40:16',NULL);
 /*!40000 ALTER TABLE `narratives` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `projects`
@@ -4514,6 +4628,7 @@ CREATE TABLE `projects` (
   `factor_pack_id` int(11) DEFAULT NULL,
   `style_id` int(11) DEFAULT NULL,
   `anon_name` varchar(255) DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_projects_on_course_id` (`course_id`),
   KEY `index_projects_on_factor_pack_id` (`factor_pack_id`),
@@ -4528,10 +4643,13 @@ CREATE TABLE `projects` (
 -- Dumping data for table `projects`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `quotes`
@@ -4554,6 +4672,7 @@ CREATE TABLE `quotes` (
 -- Dumping data for table `quotes`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `quotes` WRITE;
 /*!40000 ALTER TABLE `quotes` DISABLE KEYS */;
 INSERT INTO `quotes` VALUES
@@ -4617,6 +4736,8 @@ INSERT INTO `quotes` VALUES
 (58,'You may have the greatest bunch of individual stars in the world, but if they don\'t play together, the club won\'t be worth a dime.\n','Babe Ruth','2019-09-23 11:40:17','2019-09-23 11:40:17');
 /*!40000 ALTER TABLE `quotes` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `reactions`
@@ -4653,10 +4774,13 @@ CREATE TABLE `reactions` (
 -- Dumping data for table `reactions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `reactions` WRITE;
 /*!40000 ALTER TABLE `reactions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `reactions` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `rosters`
@@ -4686,10 +4810,13 @@ CREATE TABLE `rosters` (
 -- Dumping data for table `rosters`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `rosters` WRITE;
 /*!40000 ALTER TABLE `rosters` DISABLE KEYS */;
 /*!40000 ALTER TABLE `rosters` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `rubric_row_feedbacks`
@@ -4718,10 +4845,13 @@ CREATE TABLE `rubric_row_feedbacks` (
 -- Dumping data for table `rubric_row_feedbacks`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `rubric_row_feedbacks` WRITE;
 /*!40000 ALTER TABLE `rubric_row_feedbacks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `rubric_row_feedbacks` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `rubrics`
@@ -4760,10 +4890,13 @@ CREATE TABLE `rubrics` (
 -- Dumping data for table `rubrics`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `rubrics` WRITE;
 /*!40000 ALTER TABLE `rubrics` DISABLE KEYS */;
 /*!40000 ALTER TABLE `rubrics` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `scenarios`
@@ -4789,6 +4922,7 @@ CREATE TABLE `scenarios` (
 -- Dumping data for table `scenarios`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `scenarios` WRITE;
 /*!40000 ALTER TABLE `scenarios` DISABLE KEYS */;
 INSERT INTO `scenarios` VALUES
@@ -4797,6 +4931,8 @@ INSERT INTO `scenarios` VALUES
 (3,'Social Loafing',4,'2019-09-23 11:40:16','2019-09-23 11:40:16',NULL);
 /*!40000 ALTER TABLE `scenarios` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `schema_migrations`
@@ -4815,6 +4951,7 @@ CREATE TABLE `schema_migrations` (
 -- Dumping data for table `schema_migrations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
 INSERT INTO `schema_migrations` VALUES
@@ -5013,9 +5150,13 @@ INSERT INTO `schema_migrations` VALUES
 ('20240406181047'),
 ('20250130032658'),
 ('20250317224044'),
-('20250326133734');
+('20250326133734'),
+('20251023160856'),
+('20260411000000');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `schools`
@@ -5041,6 +5182,7 @@ CREATE TABLE `schools` (
 -- Dumping data for table `schools`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `schools` WRITE;
 /*!40000 ALTER TABLE `schools` DISABLE KEYS */;
 INSERT INTO `schools` VALUES
@@ -5048,6 +5190,8 @@ INSERT INTO `schools` VALUES
 (2,'The State University of New York, Korea','SUNY Korea','2019-09-23 11:40:16','2019-09-23 11:40:16','Quatz institute','Seoul',0);
 /*!40000 ALTER TABLE `schools` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `sessions`
@@ -5072,10 +5216,13 @@ CREATE TABLE `sessions` (
 -- Dumping data for table `sessions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `styles`
@@ -5100,6 +5247,7 @@ CREATE TABLE `styles` (
 -- Dumping data for table `styles`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `styles` WRITE;
 /*!40000 ALTER TABLE `styles` DISABLE KEYS */;
 INSERT INTO `styles` VALUES
@@ -5107,6 +5255,8 @@ INSERT INTO `styles` VALUES
 (2,'Sliders (simple)','slider_basic','2019-09-23 11:40:16','2019-09-23 11:40:16',NULL);
 /*!40000 ALTER TABLE `styles` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `submission_feedbacks`
@@ -5131,10 +5281,13 @@ CREATE TABLE `submission_feedbacks` (
 -- Dumping data for table `submission_feedbacks`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `submission_feedbacks` WRITE;
 /*!40000 ALTER TABLE `submission_feedbacks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `submission_feedbacks` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `submissions`
@@ -5175,10 +5328,13 @@ CREATE TABLE `submissions` (
 -- Dumping data for table `submissions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `submissions` WRITE;
 /*!40000 ALTER TABLE `submissions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `submissions` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `users`
@@ -5259,12 +5415,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
 (1,'$2a$04$CaDetLlxhfe65uYCvlL91O7wEhBwXc5ucNtVlholavm2KpDmAmbzG',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2019-09-23 11:40:17','2020-08-11 03:13:58','Micah','Modell',NULL,NULL,'UTC',1,NULL,NULL,NULL,'Ashley','Welch',NULL,40,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'email','micah.modell@gmail.com',NULL,0,1,'007bff');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `values`
@@ -5295,10 +5454,13 @@ CREATE TABLE `values` (
 -- Dumping data for table `values`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `values` WRITE;
 /*!40000 ALTER TABLE `values` DISABLE KEYS */;
 /*!40000 ALTER TABLE `values` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `weeks`
@@ -5326,6 +5488,7 @@ CREATE TABLE `weeks` (
 -- Dumping data for table `weeks`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `weeks` WRITE;
 /*!40000 ALTER TABLE `weeks` DISABLE KEYS */;
 INSERT INTO `weeks` VALUES
@@ -5499,6 +5662,8 @@ INSERT INTO `weeks` VALUES
 (168,12,14,'<p> At the final meeting, we reviewed the paper to make sure it was ready\nfor submission at the end of the week. I volunteered to do a final read,\nprint the document and send it to the instructor, but Marie said she was\nnot finished with it and that she\'d like to take some more time with it.\nShe eventually agreed to get it to me the evening of the next day. Hannah\nsuggested that I might not have enough time and asked that Marie submit the\nlatest version at the deadline. She said that if I was able to get Marie my\nupdates by that time, they\'d go in, but otherwise we\'d send what we\'d got.\nI feel like they don\'t trust me and that\'s annoying, but I agreed. </p>\n\n<p> I got Marie the content in plenty of time and she got it in in time.\nShe confirmed this and sent a copy of the finished product to the entire\nteam. </p>\n','2019-09-23 11:40:17','2019-09-23 11:40:17',NULL);
 /*!40000 ALTER TABLE `weeks` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -5509,4 +5674,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-26  9:47:01
+-- Dump completed on 2026-04-10 23:19:21

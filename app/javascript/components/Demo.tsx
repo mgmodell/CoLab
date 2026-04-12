@@ -4,12 +4,10 @@ import { Routes, Route, Outlet, Navigate } from "react-router";
 import HomeShell from "./HomeShell";
 import { Skeleton } from "primereact/skeleton";
 
-const InstallmentReport = React.lazy(() =>
-  import("./checkin/InstallmentReport")
-);
+import InstallmentReport from "./checkin/InstallmentReport";
+import Experience from "./experiences/Experience";
 
 import BingoShell from "./BingoBoards/BingoShell";
-const Experience = React.lazy(() => import("./experiences/Experience"));
 import AssignmentShell from "./assignments/AssignmentShell";
 
 type Props = {

@@ -33,6 +33,10 @@ class Experience < ApplicationRecord
     'experience'
   end
 
+  def has_student_data?
+    reactions.any?
+  end
+
   def next_deadline
     end_date - ( 1 + lead_time ).days
   end

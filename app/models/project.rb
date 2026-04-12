@@ -67,6 +67,10 @@ class Project < ApplicationRecord
     'project'
   end
 
+  def has_student_data?
+    groups.joins( :users ).any?
+  end
+
   def get_user_appearance_counts
     Project.get_occurence_count_hash users
   end

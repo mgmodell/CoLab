@@ -16,6 +16,7 @@ es:
     open_date: Fecha abierta
     close_date: Fecha del juego
     lead_time: Dias para revisión del instructor
+    student_deadline_msg: "Los estudiantes deben completar esto antes del {{date}}."
     review_candidates:
       title: Terminos de los candidatos para revisión
       submitted_by: Presentado por
