@@ -141,9 +141,15 @@ if [ "$DB_RESET" = true ]; then
   # Reset database
   RUN_TESTS=false
   echo "Setting up database" >&2
-  rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  echo "Database initialised "
+  if ! rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database creation failed" >&2
+    exit 1
+  fi
+  if ! rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database initialisation failed" >&2
+    exit 1
+  fi
+  echo "Database initialised successfully"
   exit 0;
 fi
 
