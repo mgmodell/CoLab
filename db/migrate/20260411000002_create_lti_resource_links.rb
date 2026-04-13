@@ -7,7 +7,7 @@ class CreateLtiResourceLinks < ActiveRecord::Migration[8.1]
       t.string :resource_link_id, null: false
       t.string :context_id
       t.string :context_title
-      t.references :course, foreign_key: true
+      t.references :course, type: :integer, foreign_key: true
       t.references :assignment, foreign_key: true
       t.string :line_item_url
       t.string :names_roles_url
