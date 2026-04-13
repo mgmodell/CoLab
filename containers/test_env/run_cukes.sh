@@ -138,12 +138,19 @@ echo "Installing yarn packages"
 yarn install --silent
 
 if [ "$DB_RESET" = true ]; then
-  # Reset database
+  # Drop and re-create the database so -c always starts from a clean state
   RUN_TESTS=false
   echo "Setting up database" >&2
-  rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  echo "Database initialised "
+  rails db:drop RAILS_ENV=$RAILS_ENV COLAB_DB=db 2>/dev/null; true
+  if ! rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database creation failed" >&2
+    exit 1
+  fi
+  if ! rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database initialisation failed" >&2
+    exit 1
+  fi
+  echo "Database initialised successfully"
   exit 0;
 fi
 
