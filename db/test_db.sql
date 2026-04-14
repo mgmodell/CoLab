@@ -4639,7 +4639,7 @@ CREATE TABLE `lti_resource_links` (
   `resource_link_id` varchar(255) NOT NULL,
   `context_id` varchar(255) DEFAULT NULL,
   `context_title` varchar(255) DEFAULT NULL,
-  `course_id` bigint(20) DEFAULT NULL,
+  `course_id` int(11) DEFAULT NULL,
   `assignment_id` bigint(20) DEFAULT NULL,
   `line_item_url` varchar(255) DEFAULT NULL,
   `names_roles_url` varchar(255) DEFAULT NULL,
