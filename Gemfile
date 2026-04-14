@@ -124,4 +124,4 @@ end
 
 
 
-gem "foreman"
+gem "action-cable-testing", "~> 0.6.1"
