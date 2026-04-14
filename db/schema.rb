@@ -475,7 +475,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_220000) do
     t.string "resource_link_id", null: false
     t.string "context_id"
     t.string "context_title"
-    t.bigint "course_id"
+    t.integer "course_id"
     t.bigint "assignment_id"
     t.string "line_item_url"
     t.string "names_roles_url"
