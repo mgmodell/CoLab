@@ -57,3 +57,4 @@ reek.html
 !.yarn/versions
 
 shakapacker-config-exports/
+.overmind.sock
