@@ -246,6 +246,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Active assignment with future end date shows 'Active' status in Activities tab
+    Given the course started "three months ago" and ended "three months from now"
     Given the assignment opening is "last month" and close is "next month"
     Given the assignment is active
     Then the user opens the course

@@ -21,7 +21,6 @@ import CourseAdminListToolbar from "./CourseAdminListToolbar";
 import { iconForType } from "../ActivityLib";
 
 import { IActivityLink } from "./CourseDataAdmin";
-import { a } from "react-spring";
 
 enum ActivityType {
   BingoGame = "bingo_game",
@@ -124,11 +123,11 @@ export default function ActivityList(props: Props) {
           field="status"
           body={rowData => {
             if (!rowData.active) {
-              return "Not Activated";
+              return t( 'activities.not_active_lbl' );
             } else if (DateTime.fromISO(rowData.end_date) > DateTime.now()) {
-              return "Active";
+              return t( 'activities.active_lbl' );
             } else {
-              return "Expired";
+              return t( 'activities.expired_lbl' );
             }
           }}
         />

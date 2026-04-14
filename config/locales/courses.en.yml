@@ -187,6 +187,9 @@ en:
       close_col: Close date
       delete_lbl: Delete
       save_first_msg: You must save the course to have activities.
+      not_active_lbl: Not Activated
+      active_lbl: Active
+      expired_lbl: Expired
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
