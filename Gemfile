@@ -110,6 +110,7 @@ group :test do
   gem 'cucumber-rails',require: false
   gem 'capybara'
   gem 'database_cleaner'
+  gem 'machinist', '~> 2.0'
 end
 
 group :development do
