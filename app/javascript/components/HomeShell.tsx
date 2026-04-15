@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -12,20 +12,17 @@ import { Skeleton } from "primereact/skeleton";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTour } from "./infrastructure/TourContext";
 import { useTranslation } from "react-i18next";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Container, Row, Col } from "react-grid-system";
 
-const DecisionEnrollmentsTable = React.lazy(() =>
-  import("./DecisionEnrollmentsTable")
-);
-const DecisionInvitationsTable = React.lazy(() =>
-  import("./DecisionInvitationsTable")
-);
-const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const TaskList = React.lazy(() => import("./TaskList"));
+import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
+import DecisionInvitationsTable from "./DecisionInvitationsTable";
+import ConsentLog from "./Consent/ConsentLog";
+import ProfileDataAdmin from "./profile/ProfileDataAdmin";
+import TaskList from "./TaskList";
 
 interface Props {
   rootPath?: string;
@@ -48,6 +45,23 @@ export default function HomeShell(props: Props) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
   const [tasks, setTasks] = useState();
+
+  const { setTourSteps } = useTour();
+
+  useEffect(() => {
+    setTourSteps([
+      {
+        element: "body",
+        popover: {
+          title: "Welcome to the Application!",
+          description: "This stuff is awesome. More information soon!",
+          align: "center",
+          side: "left"
+        }
+      }
+    ]);
+    return () => setTourSteps([]);
+  }, [setTourSteps]);
 
   useEffect(() => {
     if (null !== user.lastRetrieved && undefined !== tasks) {
@@ -133,13 +147,15 @@ export default function HomeShell(props: Props) {
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
       pageContent = (
-        <ConsentLog
-          consentFormId={consentLogs[0].consent_form_id}
-          parentUpdateFunc={getTasks}
-        />
+        <Suspense fallback={<Skeleton className="mb-2" />}>
+          <ConsentLog
+            consentFormId={consentLogs[0].consent_form_id}
+            parentUpdateFunc={getTasks}
+          />
+        </Suspense>
       );
     } else if (isLoggedIn && !user.welcomed) {
-      pageContent = <ProfileDataAdmin profileId={user.id} />;
+      pageContent = <Suspense fallback={<Skeleton className="mb-2" />}><ProfileDataAdmin profileId={user.id} /></Suspense>;
     } else {
       pageContent = (
         <React.Fragment>
@@ -158,7 +174,9 @@ export default function HomeShell(props: Props) {
             }}
           >
             <TabPanel header="Task View">
-              <TaskList tasks={tasks} />
+              <Suspense fallback={<Skeleton className="mb-2" />}>
+                <TaskList tasks={tasks} />
+              </Suspense>
             </TabPanel>
 
             <TabPanel header="Calendar View">
@@ -201,10 +219,12 @@ export default function HomeShell(props: Props) {
             <Row>
               <Col xs={12}>
                 {undefined !== waitingRosters && waitingRosters.length > 0 ? (
-                  <DecisionInvitationsTable
-                    invitations={waitingRosters}
-                    parentUpdateFunc={getTasks}
-                  />
+                  <Suspense fallback={<Skeleton className="mb-2" />}>
+                    <DecisionInvitationsTable
+                      invitations={waitingRosters}
+                      parentUpdateFunc={getTasks}
+                    />
+                  </Suspense>
                 ) : null}
               </Col>
             </Row>
@@ -213,10 +233,12 @@ export default function HomeShell(props: Props) {
               <Col xs={12}>
                 {undefined !== endpoints["courseRegRequestsUrl"] &&
                 undefined !== endpoints["courseRegUpdatesUrl"] ? (
-                  <DecisionEnrollmentsTable
-                    init_url={endpoints["courseRegRequestsUrl"]}
-                    update_url={endpoints["courseRegUpdatesUrl"]}
-                  />
+                  <Suspense fallback={<Skeleton className="mb-2" />}>
+                    <DecisionEnrollmentsTable
+                      init_url={endpoints["courseRegRequestsUrl"]}
+                      update_url={endpoints["courseRegUpdatesUrl"]}
+                    />
+                  </Suspense>
                 ) : null}
               </Col>
             </Row>

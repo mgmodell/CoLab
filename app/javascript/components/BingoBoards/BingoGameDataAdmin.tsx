@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -10,9 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import ConceptChips from "./ConceptChips";
-const BingoGameDataAdminTable = React.lazy(() =>
-  import("./BingoGameDataAdminTable")
-);
+import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
@@ -28,6 +26,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
 import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
 export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
@@ -247,6 +246,13 @@ export default function BingoGameDataAdmin(props) {
       });
   };
 
+  const studentDeadline = useMemo(() => {
+    if (!gameEndDate) return null;
+    const deadline = new Date(gameEndDate);
+    deadline.setDate(deadline.getDate() - (1 + (gameLeadTime || 0)));
+    return deadline;
+  }, [gameEndDate, gameLeadTime]);
+
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
@@ -409,6 +415,11 @@ export default function BingoGameDataAdmin(props) {
                     />
                     <label htmlFor="bingo_game_end_date">{t('end_date_lbl')}</label>
                   </FloatLabel>
+                  {studentDeadline && (
+                    <p id="student_deadline_msg">
+                      {t('student_deadline_msg', {date: studentDeadline.toLocaleDateString(i18n.language, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})})}
+                    </p>
+                  )}
                 </Col>
                 <Col xs={4}>
                   <InputSwitch
@@ -462,6 +473,15 @@ export default function BingoGameDataAdmin(props) {
               </Row>
             </Container>
           </TabPanel>
+          {bingoGameId && endpoints?.ltiConnectionUrl ? (
+            <TabPanel header={t("lti.panel_title")}>
+              <LtiConnectionPanel
+                connectionUrl={`${endpoints.ltiConnectionUrl}${bingoGameId}.json`}
+                gradePushUrl={`${endpoints.ltiGradePushUrl}${bingoGameId}.json`}
+                t={t}
+              />
+            </TabPanel>
+          ) : null}
         </TabView>
       </Panel>
     </Suspense>

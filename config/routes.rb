@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   get 'hello_world', to: 'hello_world#index'
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
@@ -30,6 +31,37 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate',
         as: :activate_bingo_game
+
+    # LTI connection management and grade pushing
+    get 'bingo_games/lti/:id' => 'bingo_games#show_lti_connection',
+        as: :bingo_game_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'bingo_games/lti/:id' => 'bingo_games#update_lti_connection',
+          as: :update_bingo_game_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'bingo_games/push_grades/:id' => 'bingo_games#push_lti_grades',
+         as: :push_bingo_game_lti_grades,
+         constraints: ->(req) { req.format == :json }
+
+    get 'experiences/lti/:id' => 'experiences#show_lti_connection',
+        as: :experience_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'experiences/lti/:id' => 'experiences#update_lti_connection',
+          as: :update_experience_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'experiences/push_grades/:id' => 'experiences#push_lti_grades',
+         as: :push_experience_lti_grades,
+         constraints: ->(req) { req.format == :json }
+
+    get 'projects/lti/:id' => 'projects#show_lti_connection',
+        as: :project_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'projects/lti/:id' => 'projects#update_lti_connection',
+          as: :update_project_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'projects/push_grades/:id' => 'projects#push_lti_grades',
+         as: :push_project_lti_grades,
+         constraints: ->(req) { req.format == :json }
     get 'course/cal/:id' => 'courses#calendar',
         as: :course_cal,
         constraints: ->(req) { req.format == :json }
@@ -46,7 +78,7 @@ Rails.application.routes.draw do
     resources :concepts, only: %i[show update index]
 
     resources :assignments,
-        except: %i[new create destroy]
+        except: %i[new create]
 
     resources :experiences, except: %i[new edit]
     resources :rubrics, :bingo_games,
@@ -289,12 +321,23 @@ Rails.application.routes.draw do
     end
   end
 
-  # LTI Registration
-  # post 'lti/tool_connect' => 'lti#register'
-  get 'lti/tool_connect' => 'lti#register'
+  # LTI 1.3 endpoints
+  # Dynamic Registration
+  get  'lti/tool_connect' => 'lti#register', as: :lti_register
+  post 'lti/tool_connect' => 'lti#register'
+  # JWKS endpoint for platform JWT verification
   scope '.well-known' do
-    # get :jwks, to: Keypairs::PublicKeysController.action(:index)
+    get 'jwks.json' => 'lti#jwks', as: :lti_jwks
   end
+  # OIDC Login Initiation
+  get  'lti/login' => 'lti#login', as: :lti_login
+  post 'lti/login' => 'lti#login'
+  # LTI Launch (receives id_token from platform)
+  post 'lti/launch' => 'lti#launch', as: :lti_launch
+  # Names and Role Provisioning Services (roster sync)
+  post 'lti/names_roles/:id' => 'lti#names_roles', as: :lti_names_roles
+  # Assignment and Grade Services (grade push)
+  post 'lti/grades/:id' => 'lti#grades', as: :lti_grades
 
   # get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

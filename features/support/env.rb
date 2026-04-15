@@ -21,11 +21,8 @@ SimpleCov.start 'rails'
 def wait_for_render
   times = 3000
 
-  while !all( :xpath, "//*[@id='waiting']" ).empty? && times.positive?
-    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
-    sleep( 0.01 )
-    times -= 1
-  end
+  # 30 seconds should be more than enough for any page to render, even on CI
+  page.assert_not_selector( :xpath, "//*[@id='waiting']", wait: 30 )
 end
 
 def ack_messages
@@ -211,7 +208,6 @@ end
 
 After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
-  loadData
   travel_back
 end
 

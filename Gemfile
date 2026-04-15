@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.4.8'
+ruby '4.0.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.2'
 
-gem 'puma', '~> 7.1.0'
+gem 'puma', '~> 8.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '9.5.0'
+gem 'shakapacker', '10.0.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -41,8 +41,8 @@ gem 'csv'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email', git: 'https://github.com/mgmodell/devise-multi_email'
-gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
+gem 'devise-multi_email'
+gem 'devise_token_auth_multi_email'
 # gem 'devise_token_auth', path: '/Users/micah/dev/devise_token_auth_multi_email'
 gem 'email_address'
 gem 'faker'
@@ -60,7 +60,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '16.1.2'
+gem 'react_on_rails', '16.6.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -111,6 +111,7 @@ group :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'machinist', '~> 2.0'
+  gem 'webmock'
 end
 
 group :development do
@@ -120,8 +121,5 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
-
-
 
 gem "action-cable-testing", "~> 0.6.1"

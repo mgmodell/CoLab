@@ -6,6 +6,14 @@ namespace :migratify do
 
   end
 
+  desc 'Normalize concept names using the current standardize procedure'
+  task normalize_concepts: :environment do
+    Concept.find_each do |concept|
+      standardized = Concept.standardize_name( name: concept.name )
+      concept.update_column( :name, standardized ) if concept.name != standardized
+    end
+  end
+
   desc 'Updating the rails counter caches'
   task update_counters: :environment do
     ActiveRecord::Base.transaction do
