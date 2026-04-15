@@ -61,9 +61,11 @@ Rails.application.configure do
   config.machine_name = 'localhost'
 
   config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
+    if ENV['BULLET']
+      Bullet.enable = true
+      Bullet.bullet_logger = true
+      Bullet.rails_logger = true
+    end
   end
 end
 
