@@ -22,7 +22,7 @@ def wait_for_render
   times = 3000
 
   # 30 seconds should be more than enough for any page to render, even on CI
-  page.assert_not_selector( :xpath, "//*[@id='waiting']", wait: 30 )
+  page.assert_no_selector( :xpath, "//*[@id='waiting']", wait: 5 )
 end
 
 def ack_messages
