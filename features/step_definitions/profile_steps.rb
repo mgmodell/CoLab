@@ -2,9 +2,12 @@
 
 Then( 'the user completes the profile walkthrough' ) do
   find( '.driver-popover', wait: 10 )
-  while page.has_css?( '.driver-popover', wait: 2 )
+  max_steps = 20
+  steps_taken = 0
+  while page.has_css?( '.driver-popover', wait: 2 ) && steps_taken < max_steps
     find( '.driver-popover-next-btn' ).click
     wait_for_render
+    steps_taken += 1
   end
 end
 
