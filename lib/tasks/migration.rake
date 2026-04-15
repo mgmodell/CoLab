@@ -9,7 +9,7 @@ namespace :migratify do
   desc 'Normalize concept names using the current standardize procedure'
   task normalize_concepts: :environment do
     Concept.find_each do |concept|
-      standardized = Concept.standardize_name( name: concept.name )
+      standardized = Concept.standardize_concept( name: concept.name )
       concept.update_column( :name, standardized ) if concept.name != standardized
     end
   end
