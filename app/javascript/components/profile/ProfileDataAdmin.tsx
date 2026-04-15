@@ -400,7 +400,7 @@ export default function ProfileDataAdmin(props: Props) {
       ]);
       profileDriver.drive();
     }
-  }, [existingProfile, user.welcomed]);
+  }, [existingProfile, user.welcomed, t]);
 
   //Support for AutoComplete
   const [localProfileLanguage, setLocalProfileLanguage] = useState(
