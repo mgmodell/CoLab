@@ -187,6 +187,7 @@ GEM
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.2)
+    machinist (2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0)
     database_cleaner-core (2.0.1)
@@ -665,6 +666,7 @@ DEPENDENCIES
   cucumber-rails
   d3-rails
   database_cleaner
+  machinist (~> 2.0)
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
   devise-multi_email
