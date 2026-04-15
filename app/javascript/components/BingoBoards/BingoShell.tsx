@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
+import RequireInstructor from "../infrastructure/RequireInstructor";
+import { Skeleton } from "primereact/skeleton";
 import { useTour } from "../infrastructure/TourContext";
 
-import CandidateListEntry from "./CandidateListEntry";
 import CandidatesReviewTable from "./CandidatesReviewTable";
+import CandidateListEntry from "./CandidateListEntry";
 import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
-import RequireInstructor from "../infrastructure/RequireInstructor";
 
 type Props = {
   rootPath?: string;
@@ -34,7 +35,8 @@ export default function BingoShell(props: Props) {
   return (
     <React.Fragment>
       <WorkingIndicator identifier="play_bingo" />
-      <Routes>
+      <Suspense fallback={<Skeleton className="mb-2" />}>
+        <Routes>
         <Route
           path={`enter_candidates/:bingoGameId`}
           element={<CandidateListEntry rootPath={props.rootPath} />}
@@ -66,7 +68,8 @@ export default function BingoShell(props: Props) {
             </RequireInstructor>
           }
         />
-      </Routes>
+        </Routes>
+      </Suspense>
     </React.Fragment>
   );
 }

@@ -18,7 +18,9 @@ import "whatwg-fetch";
 // ReactRailsUJS.useContext(componentRequireContext);
 
 import PageWrapper from "../components/PageWrapper";
+import TimeSetter from "../components/TimeSetter";
 
 ReactOnRails.register({
-  PageWrapper
+  PageWrapper,
+  TimeSetter
 });

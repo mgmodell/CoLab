@@ -18,6 +18,7 @@ RUN apt-get update && apt-get upgrade -y && \
   make \
   mysql-client \
   ruby-build \
+  tmux \
   vim \
   zlib1g-dev \
   zsh

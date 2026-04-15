@@ -147,7 +147,7 @@ fi
 
 # Start the server
 if [ "$STARTUP" = true ]; then
-  foreman start -f Procfile.dev
+  overmind start -f Procfile.dev
 fi
 
 

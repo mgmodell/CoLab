@@ -4,6 +4,7 @@ require 'faker'
 
 class BingoGamesController < ApplicationController
   include PermissionsCheck
+  include LtiGradable
 
   layout 'admin', except: %i[review_candidates update_review_candidates
                              review_candidates_demo game_results ]
@@ -19,6 +20,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates ]
 
   before_action :check_viewer, only: %i[show index]
+  before_action :check_editor, only: %i[show_lti_connection update_lti_connection push_lti_grades]
 
   include Demoable
 
@@ -469,7 +471,7 @@ class BingoGamesController < ApplicationController
         next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
-        entered_concepts << Concept.standardize_name( name: concept_name )
+        entered_concepts << Concept.standardize_concept( name: concept_name )
       end
 
       concept_map = {}
@@ -507,7 +509,7 @@ class BingoGamesController < ApplicationController
                    if 'term_problem' != candidate.candidate_feedback_critique
                      entered_candidate[:concept][:name].present?
                      concept_name = entered_candidate[:concept][:name]
-                     concept_name = Concept.standardize_name name: concept_name
+                     concept_name = Concept.standardize_concept name: concept_name
 
                      concept = concept_map[concept_name]
                      if concept_name.present? && concept.nil?
@@ -550,8 +552,17 @@ class BingoGamesController < ApplicationController
   def destroy
     @course = @bingo_game.course
     check_bingo_editor bingo_game: @bingo_game
-    @bingo_game.destroy
-    redirect_to @course, notice: ( t 'bingo_games.destroy_success' )
+    if @bingo_game.has_student_data?
+      @bingo_game.update( active: false, deleted: true )
+      msg = t( 'bingo_games.soft_delete_success' )
+    else
+      @bingo_game.destroy
+      msg = t( 'bingo_games.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   def activate
@@ -638,5 +649,18 @@ class BingoGamesController < ApplicationController
                                           :active, :group_option, :individual_count,
                                           :group_discount, :lead_time, :project_id,
                                           :start_date, :end_date )
+  end
+
+  def lti_resource
+    BingoGame.find( params[:id] )
+  end
+
+  def grade_scores_for( bingo_game )
+    bingo_game.candidate_lists.includes( :group, candidates: :candidate_feedback )
+              .flat_map do | cl |
+      users = cl.is_group && cl.group.present? ? cl.group.users : [cl.user].compact
+      score = cl.performance.to_f
+      users.map { | u | { user_id: u.id.to_s, score_given: score, score_maximum: 100 } }
+    end
   end
 end
