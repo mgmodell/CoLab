@@ -104,13 +104,7 @@ end
 
 Then( /^the user waits while seeing "([^"]*)"$/ ) do | wait_msg |
   wait_for_render
-
-  counter = 0
-  while page.has_text? wait_msg
-    sleep 1
-    counter += 1
-    break if counter > 60
-  end
+  expect( page ).not_to have_text( wait_msg, wait: 60 )
 end
 
 Given( /^the user lowercases "([^"]*)" concepts$/ ) do | which_concepts |

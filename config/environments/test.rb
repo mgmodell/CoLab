@@ -58,9 +58,11 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
+    if ENV['BULLET']
+      Bullet.enable = true
+      Bullet.bullet_logger = true
+      Bullet.rails_logger = true
+    end
   end
 end
 

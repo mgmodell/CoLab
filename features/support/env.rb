@@ -11,21 +11,13 @@ require 'selenium/webdriver'
 # require 'webdrivers'
 require 'simplecov'
 
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' if ENV['COVERAGE']
 
 # Webdrivers.cache_time = 86_400
 
-# require 'simplecov'
-# SimpleCov.start 'rails'
-
 def wait_for_render
-  times = 3000
-
-  while !all( :xpath, "//*[@id='waiting']" ).empty? && times.positive?
-    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
-    sleep( 0.01 )
-    times -= 1
-  end
+  # 30 seconds matches the original 3000-iteration × 0.01s polling loop
+  page.assert_no_selector( :xpath, "//*[@id='waiting']", wait: 30 )
 end
 
 def ack_messages
@@ -211,7 +203,6 @@ end
 
 After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
-  loadData
   travel_back
 end
 
