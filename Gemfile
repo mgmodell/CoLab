@@ -109,7 +109,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'cucumber-rails',require: false
   gem 'capybara'
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'machinist', '~> 2.0'
   gem 'webmock'
 end

@@ -13,16 +13,12 @@ require 'simplecov'
 
 SimpleCov.start 'rails'
 
-# Webdrivers.cache_time = 86_400
-
-# require 'simplecov'
-# SimpleCov.start 'rails'
+World( Warden::Test::Helpers )
+Warden.test_mode!
 
 def wait_for_render
-  times = 3000
-
   # 30 seconds should be more than enough for any page to render, even on CI
-  page.assert_no_selector( :xpath, "//*[@id='waiting']", wait: 5 )
+  page.has_no_xpath?( "//*[@id='waiting']", wait: 30 )
 end
 
 def ack_messages
@@ -129,12 +125,17 @@ Capybara.javascript_driver = case ENV['DRIVER']
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
+$cached_sql_statements = nil
+
 def loadData
-  sql = File.read( 'db/test_db.sql' )
-  statements = sql.split( /;$/ )
-  statements.pop # remote empty line
+  $cached_sql_statements ||= begin
+    sql = File.read( 'db/test_db.sql' )
+    statements = sql.split( /;$/ )
+    statements.pop # remove empty line
+    statements
+  end
   ActiveRecord::Base.transaction do
-    statements.each do | statement |
+    $cached_sql_statements.each do | statement |
       ActiveRecord::Base.connection.execute( statement )
     end
   end
@@ -165,7 +166,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.strategy = :transaction
 rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
@@ -195,8 +196,6 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-# loadData
-
 Before do
   EmailAddress::Config.setting( :host_validation, :syntax )
   loadData
@@ -208,11 +207,13 @@ end
 
 After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
+  Warden.test_reset!
   travel_back
 end
 
 After( 'not @javascript' ) do | _scenario |
   DatabaseCleaner.clean
+  Warden.test_reset!
   travel_back
 end
 
@@ -230,10 +231,10 @@ end
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
-  puts "Aggregate Testing Time: #{total_time}"
+  puts "Aggregate Testing Time: #{( total_time / 60).floor } minutes and #{total_time % 60} seconds"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do | key, value |
-    puts "#{value.round( 2 )}  #{key}"
+    puts "#{ (value / 60 ).floor } minutes and #{value.round( 2 ) % 60} seconds  #{key}"
   end
 end
