@@ -34,12 +34,12 @@ class ApplicationController < ActionController::Base
               %i[id_token] )
   end
 
-  def switch_locale( &action )
+  def switch_locale
     locale = if user_signed_in?
                current_user.language_code
              else
                params[:lang] || I18n.default_locale
              end
-    I18n.with_locale( locale, &action )
+    I18n.with_locale( locale ) { yield }
   end
 end
