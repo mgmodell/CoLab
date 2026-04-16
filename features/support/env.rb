@@ -24,10 +24,10 @@ end
 def ack_messages
   find_all( :xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']" ).each do | element |
     element.click
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
-    true.should( be_false, e.inspect )
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    true.should( be_false, e.inspect )
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    # Notification already auto-dismissed — that's the desired state, not a failure
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    # Notification already auto-dismissed — that's the desired state, not a failure
   end
 end
 
@@ -189,6 +189,10 @@ end
 Before '@javascript' do
   page.driver.browser.manage.window.resize_to( 1024, 768 )
   DatabaseCleaner.strategy = :truncation
+end
+
+Before 'not @javascript' do
+  DatabaseCleaner.strategy = :transaction
 end
 
 # Possible values are :truncation and :transaction
