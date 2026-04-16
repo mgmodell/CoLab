@@ -462,8 +462,8 @@ class BingoGamesController < ApplicationController
     else
       @bingo_game = BingoGame.find( bingo_id )
       # Security check to support demos
-      redirect_to root_path unless current_user.present? &&
-                                   @bingo_game.course.instructors.include?( current_user )
+      return redirect_to root_path unless current_user.present? &&
+                                         @bingo_game.course.instructors.include?( current_user )
 
       candidates = params[:candidates]
       entered_concepts = []
