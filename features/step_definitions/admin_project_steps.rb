@@ -111,6 +111,7 @@ Then 'the user enables the {string} table view option' do | view_option |
   while retries < 4 && !found
     find( :xpath, "//div[@data-pc-name='multiselect']" ).click
     found = has_xpath?( option_xpath )
+    retries += 1
   end
   found.should be( true ), "No checkbox for #{view_option} found"
 
