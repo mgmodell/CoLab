@@ -61,6 +61,7 @@ export default function ConsentLog(props: Props) {
       })
       .catch(error => {
         console.log("error", error);
+        dispatch(endTask("loading"));
       });
   };
 
@@ -88,6 +89,7 @@ export default function ConsentLog(props: Props) {
       })
       .catch(error => {
         console.log("error", error);
+        dispatch(endTask("saving"));
       });
   };
 
