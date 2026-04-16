@@ -245,7 +245,7 @@ GEM
     email_address (0.2.8)
       base64
       simpleidn
-    erb (6.0.2)
+    erb (6.0.3)
     erubi (1.13.1)
     erubis (2.7.0)
     execjs (2.10.1)
@@ -716,7 +716,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-  ruby 4.0.2p0
+  ruby 4.0.2
 
 BUNDLED WITH
   4.0.10
