@@ -2,6 +2,7 @@ import React, { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { getContext, setDebug } from "./ContextSlice";
 import { useTypedSelector } from "./AppReducers";
+import useNotificationsChannel from "./useNotificationsChannel";
 
 import { Skeleton } from "primereact/skeleton";
 import { IUser } from "./ProfileSlice";
@@ -26,6 +27,8 @@ export default function AppInit(props: Props) {
   const user: IUser = useTypedSelector(state => state.profile.user);
 
   const endpoints = useTypedSelector(state => state.context.endpoints);
+
+  useNotificationsChannel(isLoggedIn ? user.id : null);
 
   useEffect(() => {
     //dispatch( authConfig()  )

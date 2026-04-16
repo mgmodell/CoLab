@@ -13,6 +13,8 @@ print_help ( ) {
   echo " -l             Clear out the log files"
   echo " -n             Wipe previous runs"
   echo " -o             Show output (if running)"
+  echo " -q [db]        Open mysql session on containerized test DB"
+  echo "                ('colab' or 'moodle')"
   echo " -x             Shut down support processes and terminate"
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
@@ -36,12 +38,14 @@ SHOW_FAILS=false
 RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
+MYSQL_SESSION=false
+MYSQL_DB=''
 RUN=false
 
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "soxb:clndf:rteh" opt; do
+while getopts "soxb:clndf:rteq:h" opt; do
   case $opt in
     x) # Open up a terminal
       RUN=false
@@ -54,6 +58,11 @@ while getopts "soxb:clndf:rteh" opt; do
     t) # Open up a terminal
       RUN=false
       RUN_TERM=true
+      ;;
+    q) # Open a mysql session
+      RUN=false
+      MYSQL_SESSION=true
+      MYSQL_DB=$OPTARG
       ;;
     r|c|b|n|l|f|d)
       RUN=true
@@ -69,8 +78,16 @@ while getopts "soxb:clndf:rteh" opt; do
 done
 
 pushd containers/test_env/
+mkdir -p ../../reports
 if [ "$RUN_TERM" = true ]; then
   podman compose run --rm --entrypoint='/bin/bash -l' app
+
+elif [ "$MYSQL_SESSION" = true ]; then
+  if [[ $MYSQL_DB == "moodle" ]]; then
+    podman compose exec db mysql moodle -u moodle -pmoodle
+  else
+    podman compose exec db mysql colab_test_ -u test -ptest
+  fi
 
 elif [ "$SHOW_FAILS" = true ]; then
   echo "Show previous run failures"
@@ -82,7 +99,7 @@ elif [ "$DROP_SUPPORT" = true ]; then
 
 else
   if [ "$RUN" = true ]; then
-    DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP | grep colab_test_ | wc -l`
+    DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_test_ | wc -l`
     if [ $(($DB_COUNT)) = 0 ]; then
       echo "Creating the DB"
         podman compose run --rm app -c

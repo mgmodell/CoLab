@@ -20,7 +20,7 @@ const statusSlice = createSlice({
   reducers: {
     startTask: {
       reducer(state, action) {
-        state[action.payload] = (state[action.payload] || 0) + 1;
+        state.tasks[action.payload] = (state.tasks[action.payload] || 0) + 1;
       },
       prepare(taskName?: string) {
         const localTaskName = taskName || "default";
@@ -33,7 +33,7 @@ const statusSlice = createSlice({
     },
     endTask: {
       reducer(state, action) {
-        state[action.payload] = Math.max(0, state[action.payload] || 0) - 1;
+        state.tasks[action.payload] = Math.max(0, state.tasks[action.payload] || 0) - 1;
       },
       prepare(taskName?: string) {
         const localTaskName = taskName || "default";

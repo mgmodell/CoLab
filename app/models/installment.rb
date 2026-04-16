@@ -12,6 +12,7 @@ class Installment < ApplicationRecord
   validate :check_dates
 
   before_save :normalize_sums
+  after_save_commit :broadcast_submission
 
   TOTAL_VAL = 6000.0
 
@@ -124,5 +125,9 @@ class Installment < ApplicationRecord
       end
       errors[:base] << I18n.t( 'err_normalize_sums' ) if Installment::TOTAL_VAL != total
     end
+  end
+
+  def broadcast_submission
+    InstallmentChannel.broadcast_submission( self )
   end
 end

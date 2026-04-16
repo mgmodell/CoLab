@@ -39,6 +39,7 @@ Feature: User registration
     Then the user will see a consent request
     When the user "does not" provide consent
     Then the user will see a request for demographics
+    Then the user completes the profile walkthrough
     When the user "does" fill in demographics data
     When the user visits the index
     Then the user will see the task listing page

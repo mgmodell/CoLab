@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+Then( 'the user completes the profile walkthrough' ) do
+  find( '.driver-popover', wait: 10 )
+  max_steps = 20
+  steps_taken = 0
+  while page.has_css?( '.driver-popover', wait: 2 ) && steps_taken < max_steps
+    find( '.driver-popover-next-btn' ).click
+    wait_for_render
+    steps_taken += 1
+  end
+end
+
 Then( /^user opens their profile$/ ) do
   wait_for_render
   find( :id, 'main-menu-button' ).click
@@ -39,25 +50,36 @@ Then( /^user sees the assignment in the history$/ ) do
 end
 
 When( /^the user logs in$/ ) do
-  visit '/login'
-  wait_for_render
+  if Capybara.current_driver == :rack_test
+    # For non-JavaScript scenarios: use the login form as usual
+    visit '/login'
+    wait_for_render
 
-  fill_in 'email', with: @user.email
-  fill_in 'password', with: 'password'
+    fill_in 'email', with: @user.email
+    fill_in 'password', with: 'password'
 
-  ack_messages
-  click_link_or_button 'Log in!'
+    ack_messages
+    click_link_or_button 'Log in!'
 
-  wait_for_render
-  page.should have_content 'signed in successfully'
+    wait_for_render
+    page.should have_content 'signed in successfully'
 
-  # Blow away the cookies accept
-  click_link_or_button 'I understand' if has_content? 'I understand'
+    # Blow away the cookies accept
+    click_link_or_button 'I understand' if has_content? 'I understand'
+  else
+    # For JavaScript scenarios: use programmatic Warden login — much faster than form submission
+    login_as( @user, scope: :user )
+    visit '/home'
+    wait_for_render
 
-  # Set custom time if warranted
-  if :rack_test != Capybara.current_driver && !@dest_date.nil?
-    fill_in 'newTimeVal', with: @dest_date.to_s
-    click_button 'setTimeBtn'
+    # Blow away the cookies accept
+    click_link_or_button 'I understand' if has_content? 'I understand'
+
+    # Set custom time if warranted
+    if @dest_date
+      fill_in 'newTimeVal', with: @dest_date.to_s
+      click_button 'setTimeBtn'
+    end
   end
 end
 

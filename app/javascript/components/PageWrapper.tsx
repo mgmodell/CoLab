@@ -20,29 +20,30 @@ import AppHeader from "./toolbars/AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
+import { TourProvider } from "./infrastructure/TourContext";
 
-import HomeShell from "./HomeShell";
-import BingoShell from "./BingoBoards/BingoShell";
-import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+
+import HomeShell from "./HomeShell";
 import DiversityCheck from "./DiversityCheck";
+const BingoShell = React.lazy(() => import("./BingoBoards/BingoShell"));
+const AssignmentShell = React.lazy(() => import("./assignments/AssignmentShell"));
 
-const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
-const InstallmentReport = React.lazy(() =>
-  import("./checkin/InstallmentReport")
-);
-const Experience = React.lazy(() => import("./experiences/Experience"));
-const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const Admin = React.lazy(() => import("./Admin"));
-const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
-const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
+import ProfileDataAdmin from "./profile/ProfileDataAdmin";
+import InstallmentReport from "./checkin/InstallmentReport";
+import Experience from "./experiences/Experience";
+import ConsentLog from "./Consent/ConsentLog";
+import Admin from "./Admin";
+import ReportingAdmin from "./Reports/ReportingAdmin";
+import EnrollInCourse from "./EnrollInCourse";
 
-const Privacy = React.lazy(() => import("./info/Privacy"));
-const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
-const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
-const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
-const Demo = React.lazy(() => import("./Demo"));
+import Privacy from "./info/Privacy";
+import TermsOfService from "./info/TermsOfService";
+import AppInit from "./infrastructure/AppInit";
+import Demo from "./Demo";
+import PasswordEdit from "./PasswordEdit";
+
 
 type Props = {
   getEndpointsUrl: string;
@@ -98,7 +99,7 @@ export default function PageWrapper(props: Readonly<Props>) {
               </Suspense>
             }
           />
-          <Route path={"reporting"} element={<ReportingAdmin />} />
+          <Route path={"reporting"} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><ReportingAdmin /></Suspense>} />
           <Route
             path={"home/*"}
             element={
@@ -133,9 +134,9 @@ export default function PageWrapper(props: Readonly<Props>) {
             />
           </Route>
 
-          <Route path="user/password/edit" element={<PasswordEdit />} />
-          <Route path={`tos`} element={<TermsOfService />} />
-          <Route path={`privacy`} element={<Privacy />} />
+          <Route path="user/password/edit" element={<Suspense fallback={<Skeleton className={"mb-2"} />}><PasswordEdit /></Suspense>} />
+          <Route path={`tos`} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><TermsOfService /></Suspense>} />
+          <Route path={`privacy`} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><Privacy /></Suspense>} />
           <Route
             path={`perspective`}
             element={
@@ -172,7 +173,9 @@ export default function PageWrapper(props: Readonly<Props>) {
           <CookieConsent>
             This website uses cookies to enhance the user experience.
           </CookieConsent>
-          <RouterProvider router={router} />
+          <TourProvider>
+            <RouterProvider router={router} />
+          </TourProvider>
         </AppInit>
       </PrimeReactProvider>
     </Provider>
