@@ -44,5 +44,5 @@ end
 Then( /^the user waits to see "([^"]*)"$/ ) do | wait_msg |
   wait_for_render
 
-  expect( page ).to have_text( wait_msg, wait: 60 )
+  expect( page ).to have_text( wait_msg, wait: 10 )
 end
