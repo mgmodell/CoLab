@@ -40,7 +40,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
 import { useBlocker, useNavigate } from "react-router";
-import { bl, di } from "@fullcalendar/core/internal-common";
+import { bl, co, di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;
@@ -293,7 +293,7 @@ export default function ProfileDataAdmin(props: Props) {
   const getStates = countryCode => {
     if (endpointStatus) {
       if (!endpoints.statesForUrl || null !== countryCode) {
-        dispatch(startTask());
+        dispatch(startTask('loading'));
         const url = endpoints.statesForUrl + countryCode + ".json";
         axios
           .get(url, {})
@@ -316,6 +316,7 @@ export default function ProfileDataAdmin(props: Props) {
           })
           .catch(error => {
             console.log("error", error);
+            dispatch(endTask("loading"));
           });
       } else {
         setStates([]);
@@ -349,6 +350,8 @@ export default function ProfileDataAdmin(props: Props) {
         showProgress: true,
         onDestroyed: () => {
           setTourCompleted(true);
+          const u = {...user, welcomed: true};
+          setProfile(u);
         }
       });
       profileDriver.setSteps([
@@ -399,6 +402,9 @@ export default function ProfileDataAdmin(props: Props) {
         }
       ]);
       profileDriver.drive();
+      setTourCompleted(true);
+      const u = {...user, welcomed: true};
+      setProfile(u);
     }
   }, [existingProfile, user.welcomed, t]);
 
@@ -421,11 +427,15 @@ export default function ProfileDataAdmin(props: Props) {
     setSuggestedLocalHomeLanguages
   ] = useState(languages);
 
-  const saveButton = (
-    <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (user.welcomed || !tourCompleted)}>
-      {null == user.id ? t('create_btn') : t('save_btn')}
-    </Button>
+  const saveButton = useMemo(
+    () => (
+      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (user.welcomed || !tourCompleted)}>
+        {null == user.id ? t('create_btn') : t('save_btn')}
+      </Button>
+    ),
+    [dirty, user.welcomed, tourCompleted]
   );
+
   const resetButton = (
     <Button onClick={resetProfile} disabled={!dirty}>
       {t("reset_btn")}
