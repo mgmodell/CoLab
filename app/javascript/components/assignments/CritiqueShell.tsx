@@ -388,7 +388,9 @@ export default function CritiqueShell(props: Props) {
                       <h6>
                         {t('submitted_text')}:
                       </h6>
-                        {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
+                        <p id='sub_text'>
+                          {parse(selectedSubmission.sub_text || `<i>${t('no_text')}</i>`)}
+                        </p>
                     </React.Fragment>
                   ) : null}
                 </Panel>
