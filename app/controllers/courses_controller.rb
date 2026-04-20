@@ -129,7 +129,14 @@ class CoursesController < ApplicationController
   end
 
   def self_reg_confirm
+    path = course_path( @course )
     roster = Roster.find_by( user: current_user, course: @course )
+    response = {
+      course: @course.as_json(
+        only: %i[id name number description]
+      )
+    }
+
     if roster.nil?
       roster = @course.rosters.create( role: Roster.roles[:requesting_student], user: current_user )
     elsif !(  roster.enrolled_student? || roster.invited_student? ||
@@ -139,9 +146,25 @@ class CoursesController < ApplicationController
       roster.enrolled_student!
     end
     roster.save
-    logger.debug roster.errors.full_messages unless roster.errors.empty?
+    if roster.errors.empty?
+      response[:messages] = {
+        main: 'Enrollment successfully requested'
+      }
+    else
+      response[:messages] = {
+        main: 'There was a problem requesting enrollment in the course'
+      }
+      response[:messages][:details] = roster.errors.full_messages
+      logger.debug roster.errors.full_messages 
+    end
 
-    redirect_to controller: 'home', action: 'index'
+    respond_to do | format |
+      format.json do
+        render json: response
+      end
+    end
+
+    # redirect_to controller: 'home', action: 'index'
   end
 
   def self_reg_init
