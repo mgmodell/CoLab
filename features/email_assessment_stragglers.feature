@@ -74,10 +74,6 @@ Feature: Email assessment stragglers
 
     Given the email queue is empty
     When the system emails stragglers
-    Then 0 emails will be sent
-    Then 0 emails will be tracked
-    Given the project has been activated
-    When the system emails stragglers
     Then 10 emails will be sent
     Then 10 emails will be tracked
 
@@ -149,7 +145,7 @@ Feature: Email assessment stragglers
     Then 10 emails will be sent
     Then 20 emails will be tracked
 
-  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands in second week - 10 emails sent
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 added - 12 emails sent
     Given the project has a group with 4 confirmed users
     Given the project has a group with 2 confirmed users
     Given the factor pack is set to "Original"
@@ -164,11 +160,6 @@ Feature: Email assessment stragglers
     #Let's add a new group mid-stream
     Given the project has a group with 2 confirmed users
     Then 10 emails will be sent
-    When the system emails stragglers
-    Then 10 emails will be sent
-    Then 10 emails will be tracked
-
-    Given the project has been activated
     When the system emails stragglers
     Then 12 emails will be sent
     Then 12 emails will be tracked

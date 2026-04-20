@@ -121,7 +121,7 @@ Then( /^the installment form should request factor x user values$/ ) do
 
   tabs.each do | tab |
     tab.click unless 1 == tab.all( :xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]' ).size
-    sleep( 0.35 ) # unfortunately, react takes a moment to render the sliders after the tab is clicked, so we have to wait a bit here.
+    sleep( 0.4 ) # unfortunately, react takes a moment to render the sliders after the tab is clicked, so we have to wait a bit here.
     # If we check too early, we might get a false negative on the slider count.
     tab_count = tab.all( :xpath,
                          'ancestor::div[contains(@class,"p-accordion-tab-active")]//div[@data-pc-name="slider"]' ).size
