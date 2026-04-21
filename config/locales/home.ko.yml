@@ -39,7 +39,12 @@ ko:
   group_names: 그룹명
   history: 진행 상황
   about_you: 자기 소개
-  calc_diversity: 견해
+  calc_diversity_hdr: 관점들
+  calc_diversity_instr: >
+    다양성 점수를 계산하려면 팀원으로 고려하는 사람들의 이메일 주소를
+    입력하세요. 쉼표나 공백으로 구분하여 여러 이메일을 입력할 수 있습니다.
+  found_users: 찾은 사용자
+  perspective_score: 관점 점수
   users: 사용자
   diversity_score: 견해 점수
   calc_diversity_sub: 점수를 말해줘!
@@ -78,7 +83,6 @@ ko:
   submit: 제출하기
   #toolbar
   profile: 개요
-  c_panel: 관리 패널&hellip;
   reports: 보고서
   administration: 관리
   resp_summ: 답변 요약
@@ -190,6 +194,9 @@ ko:
     student_tasks: 학생용 할 일
     task_type: 할 일 유형
     sapa: 자기 평가 및 동료 평가
+    terms_lists:
+      insufficient_msg: 용어가 부족합니다
+      sufficient_msg: 게임 준비가 되었습니다
     terms_list: 용어 목록 제출
     course_confirm: >
       {{course_list_text}}에 추가되었지만, 때때로 강사들이 실수를 할 수 있으므로
