@@ -147,4 +147,57 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
       skip 'No assignments in test database'
     end
   end
+
+  # ── Deep Linking ─────────────────────────────────────────────────────────────
+
+  test 'GET /lti/select_content without a deep-linking session returns 400' do
+    get '/lti/select_content'
+    assert_response :bad_request
+  end
+
+  test 'POST /lti/deep_link_response without a deep-linking session returns 400' do
+    post '/lti/deep_link_response', params: { activity_type: 'bingo_game', activity_id: '1' }
+    assert_response :bad_request
+  end
+
+  test 'GET /lti/tool_connect advertises Deep Linking message type' do
+    get '/lti/tool_connect'
+    assert_response :success
+    body = JSON.parse(response.body)
+    lti_config = body['https://purl.imsglobal.org/spec/lti-tool-configuration']
+    assert lti_config['messages'].any? { |m| m['type'] == 'LtiDeepLinkingRequest' }
+  end
+
+  # ── simulate_launch (test-only route) ────────────────────────────────────────
+
+  test 'POST /lti/simulate_launch with unknown issuer returns 401' do
+    post '/lti/simulate_launch', params: {
+      iss: 'https://unknown.platform.example.com',
+      message_type: 'LtiResourceLinkRequest'
+    }
+    assert_response :unauthorized
+  end
+
+  test 'POST /lti/simulate_launch with known issuer creates resource link and redirects' do
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiResourceLinkRequest',
+      resource_link_id: 'test_sim_rl_001',
+      context_id: 'ctx_sim_001',
+      context_title: 'Simulated Moodle Course',
+      user_email: 'sim-user@test.local'
+    }
+    assert_response :redirect
+    assert LtiResourceLink.exists?(resource_link_id: 'test_sim_rl_001')
+  end
+
+  test 'POST /lti/simulate_launch with LtiDeepLinkingRequest redirects to select_content' do
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiDeepLinkingRequest',
+      deep_link_return_url: 'http://moodle:8080/mod/lti/return.php',
+      user_email: 'sim-dl-user@test.local'
+    }
+    assert_redirected_to '/lti/select_content'
+  end
 end
