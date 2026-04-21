@@ -23,3 +23,7 @@ en:
       experience:
         name_col: "Experience"
         type: "Experience"
+    deep_link_response:
+      title: "Returning to Moodle\u2026"
+      body: "Sending your selection back to Moodle. Please wait\u2026"
+      continue_btn: "Continue to Moodle"

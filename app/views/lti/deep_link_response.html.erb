@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Returning to Moodle…</title>
+  <title><%= t '.title' %></title>
 </head>
 <body>
-  <p>Sending your selection back to Moodle. Please wait…</p>
+  <p><%= t '.body' %></p>
 
   <form id="lti_dl_form" method="post" action="<%= @return_url %>">
     <input type="hidden" name="JWT" value="<%= @jwt %>">
     <noscript>
-      <input type="submit" value="Continue to Moodle">
+      <input type="submit" value="<%= t '.continue_btn' %>">
     </noscript>
   </form>
 
