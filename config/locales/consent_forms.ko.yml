@@ -1,0 +1,40 @@
+ko:
+  consent_forms:
+    new_title: 새 동의서
+    title: 동의 응답 업데이트
+    multiple: 연구 참여
+    not_for_research: 연구 목적 아님
+    consent_form: 연구 동의서
+    start_date_lbl: 시작 날짜
+    start_date_placeholder: 시작 날짜 입력
+    end_date_placeholder: 종료 날짜 입력
+    end_date_lbl: 종료 날짜
+    date_to_lbl: 까지
+    english_tab: 영어
+    korean_tab: 한국어
+    edit:
+      title: 동의서
+      create_btn: 동의서 만들기
+      save_btn: 동의서 저장
+      file_select_btn: 파일 선택
+      view_pdf_lbl: 현재 PDF 보기
+    index:
+      title: 동의서 목록
+      name_col: 이름
+      active_col: 활성화됨
+    show:
+      name: 연구 이름
+      lead_admin: 연구 수석 관리자
+      applicable_lbl: 해당 프로젝트
+      applicable_txt: 이 동의서는 시스템의 모든 사용자에게 적용됩니다.
+      form_text_lbl: 동의서 본문
+      form_text: >
+        아래 텍스트는 모든 잠재적 연구 참여자에게 제공됩니다.
+        기본 HTML을 사용하여 텍스트를 형식화하세요.
+      date_summ: >
+        이 동의서는 <strong>%{start_date}</strong>부터
+        <strong>%{end_date}</strong>까지 적용됩니다.
+    create_success: 동의서가 성공적으로 만들어졌습니다.
+    update_success: 동의서가 성공적으로 업데이트되었습니다.
+    destroy_success: 동의서가 성공적으로 삭제되었습니다.
+    please_review: 아래 문제를 검토하세요

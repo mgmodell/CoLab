@@ -42,7 +42,9 @@ export default function ConsentFormDataAdmin(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
+  const [consentFormId, setConsentFormId] = useState(
+    consentFormIDParam === "new" ? null : consentFormIDParam
+  );
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
   const now = new Date();
@@ -54,6 +56,7 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
   const [consentFormDoc, setConsentFormDoc] = useState(null);
+  const [consentFormPdfUrl, setConsentFormPdfUrl] = useState(null);
 
 
   const handleFileSelect = evt => {
@@ -61,6 +64,7 @@ export default function ConsentFormDataAdmin(props) {
 
     if (file) {
       setConsentFormDoc(file);
+      setDirty(true);
     }
   };
 
@@ -90,6 +94,7 @@ export default function ConsentFormDataAdmin(props) {
 
         setConsentFormFormTextEn(consentForm.form_text_en || "");
         setConsentFormFormTextKo(consentForm.form_text_ko || "");
+        setConsentFormPdfUrl(consentForm.pdf_url || null);
 
         dispatch(endTask());
         setDirty(false);
@@ -104,26 +109,26 @@ export default function ConsentFormDataAdmin(props) {
 
     const url =
       endpoints.baseUrl +
-      "/" +
-      (null == consentFormId ? null : consentFormId) +
+      (null == consentFormId ? "" : "/" + consentFormId) +
       ".json";
 
     const formData = new FormData();
+    formData.append("consent_form[name]", consentFormName);
+    formData.append("consent_form[start_date]", consentFormStartDate.toISOString());
+    formData.append("consent_form[end_date]", consentFormEndDate.toISOString());
+    formData.append("consent_form[form_text_en]", consentFormFormTextEn || "");
+    formData.append("consent_form[form_text_ko]", consentFormFormTextKo || "");
+    formData.append("consent_form[active]", consentFormActive.toString());
     if (consentFormDoc) {
-      formData.append;
+      formData.append("consent_form[pdf]", consentFormDoc);
     }
+
     axios({
       method: method,
       url: url,
-      data: {
-        consent_form: {
-          name: consentFormName,
-          start_date: consentFormStartDate,
-          end_date: consentFormEndDate,
-          form_text_en: consentFormFormTextEn,
-          form_text_ko: consentFormFormTextKo,
-          active: consentFormActive
-        }
+      data: formData,
+      headers: {
+        "content-type": "multipart/form-data"
       }
     })
       .then(response => {
@@ -142,6 +147,7 @@ export default function ConsentFormDataAdmin(props) {
 
           setConsentFormFormTextEn(consentForm.form_text_en || "");
           setConsentFormFormTextKo(consentForm.form_text_ko || "");
+          setConsentFormPdfUrl(consentForm.pdf_url || null);
 
           setShowErrors(true);
           setDirty(false);
@@ -275,9 +281,16 @@ export default function ConsentFormDataAdmin(props) {
           name={consentFormDataId}
           onChange={handleFileSelect}
           type="file"
+          accept="application/pdf"
         />
         <Button>{t("edit.file_select_btn")}</Button>
       </label>
+      {consentFormDoc && (
+        <span>&nbsp;{consentFormDoc.name}</span>
+      )}
+      {!consentFormDoc && consentFormPdfUrl && (
+        <span>&nbsp;<a href={consentFormPdfUrl} target="_blank" rel="noreferrer" id="consent_form_pdf_link">{t("edit.view_pdf_lbl")}</a></span>
+      )}
       <br />
       <br />
       {saveButton}
