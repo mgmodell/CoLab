@@ -30,6 +30,8 @@ class ConsentFormsController < ApplicationController
           consent_form: @consent_form.as_json(
             only: %i[ id name start_date end_date active
                       form_text_en form_text_ko ]
+          ).merge(
+            pdf_url: @consent_form.pdf.attached? ? url_for( @consent_form.pdf ) : nil
           ),
           messages: {}
         }
@@ -45,6 +47,7 @@ class ConsentFormsController < ApplicationController
   # POST /consent_forms.json
   def create
     @consent_form = ConsentForm.new( consent_form_params )
+    @consent_form.user ||= current_user
     respond_to do | format |
       if @consent_form.save
         notice = t( 'consent_forms.create_success' )
@@ -53,6 +56,8 @@ class ConsentFormsController < ApplicationController
             consent_form: @consent_form.as_json(
               only: %i[ id name start_date end_date active
                         form_text_en form_text_ko ]
+            ).merge(
+              pdf_url: @consent_form.pdf.attached? ? url_for( @consent_form.pdf ) : nil
             ),
             messages: { main: notice }
           }
@@ -82,6 +87,8 @@ class ConsentFormsController < ApplicationController
             consent_form: @consent_form.as_json(
               only: %i[ id name start_date end_date active
                         form_text_en form_text_ko ]
+            ).merge(
+              pdf_url: @consent_form.pdf.attached? ? url_for( @consent_form.pdf ) : nil
             ),
             messages: { main: notice }
           }
