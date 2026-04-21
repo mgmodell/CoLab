@@ -1,7 +1,7 @@
 Feature: LTI Deep Linking – Connect CoLab Activities to Moodle
   As a Moodle instructor
   I want to create deep links from my Moodle course directly to specific CoLab
-  activities (Terms Lists, Projects, Experiences) so that:
+  activities (Terms List, Projects, Experiences) so that:
   - Students can reach those activities in one click from Moodle.
   - A gradebook column is automatically created in Moodle for graded activities.
 
