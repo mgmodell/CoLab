@@ -426,7 +426,8 @@ class CoursesController < ApplicationController
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do | format |
         format.json do
-          messages = @course.errors.to_hash.tap { |h| h[:main] = t( 'courses.please_review' ) }
+          messages = @course.errors.to_hash
+          messages.store( :main, t( 'courses.please_review' ) )
           response = {
             messages:
           }

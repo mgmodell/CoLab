@@ -305,7 +305,8 @@ class HomeController < ApplicationController
       logger.debug current_user.errors.full_messages
       respond_to do | format |
         format.json do
-          messages = current_user.errors.to_hash.tap { |h| h[:main] = t( 'profiles.please_review' ) }
+          messages = current_user.errors.to_hash
+          messages.store( :main, t( 'profiles.please_review' ) )
           response = {
             messages:
           }
