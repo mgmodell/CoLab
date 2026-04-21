@@ -243,7 +243,7 @@ GEM
     email_address (0.2.8)
       base64
       simpleidn
-    erb (6.0.3)
+    erb (6.0.4)
     erubi (1.13.1)
     erubis (2.7.0)
     execjs (2.10.1)
