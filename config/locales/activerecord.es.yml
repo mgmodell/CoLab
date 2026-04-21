@@ -1,5 +1,5 @@
 es:
-  required:
+  activerecord:
     errors:
       models:
         diagnosis:
