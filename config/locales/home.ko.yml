@@ -106,6 +106,7 @@ ko:
   back_to_course: 코스로 돌아가기
   back_to_courses: 코스 목록으로 돌아가기
   support: 지원
+  mailer_greeting: "안녕하세요, %{name}님"
   avail_body: >
     %{activity_name} 활동이 %{site_link}에서 사용 가능합니다. 가능한 빨리
     %{login_link}에 로그인하여 확인하고 완료해 주세요.

@@ -109,6 +109,7 @@ es:
   back_to_course: De vuelta al curso
   back_to_courses: Volver a la lista de cursos
   support: Soporte
+  mailer_greeting: "Hola, %{name}"
   avail_body: >
     El %{activity_name} ya esta disponible para usted en %{site_link}. Inicie
     %{login_link} lo antes posible para echar un vistazo y completario.

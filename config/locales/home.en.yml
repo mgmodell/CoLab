@@ -108,6 +108,7 @@ en:
   back_to_course: Back to course
   back_to_courses: Back to the list of courses
   support: Support
+  mailer_greeting: "Hello, %{name}"
   avail_body: >
     The %{activity_name} is now available for you on %{site_link}. Please
     %{login_link} at your earliest convenience to have a look and complete

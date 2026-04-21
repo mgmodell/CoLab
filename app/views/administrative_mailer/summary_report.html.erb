@@ -4,7 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
+    <h1><%= t :mailer_greeting, name: @user.first_name %>.</h1>
     <p>
       <%= raw( t :summary_body, task_name: @name,
                            course_name: @course_name,
