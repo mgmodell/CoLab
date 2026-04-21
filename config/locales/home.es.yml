@@ -40,10 +40,17 @@ es:
   history: Historia
   about_you: About You
   calc_diversity_hdr: Diversidad
+  calc_diversity_instr: >
+    Para calcular tu puntuación de diversidad, por favor ingresa las direcciones
+    de correo electrónico de las personas que estás considerando para tu equipo.
+    Puedes ingresar varios correos electrónicos, separados por comas o espacios.
+  found_users: Usuarios encontrados
+  perspective_score: Puntuación de perspectiva
   users: Usuarios
   diversity_score: Puntuación de Diversidad
   calc_diversity_sub: Dime el puntaje!
   calc_it: Calcular una puntación de diversidad
+  clear: Limpiar
   ds_emails_lbl: Ingrese los correos electrónicos de los miembros propuestos de equipo
   dates: Fechas
   open_date: Cita Abierta
@@ -56,6 +63,7 @@ es:
   expired: Expirado
   bingo_game: Bingo! Juego
   experience: Experiencia grupal
+  assignment: Tarea
   other_info: Otra informatión
   start_dow: Iniciar DOW
   end_dow: Terminar DOW
@@ -157,6 +165,7 @@ es:
   course: Curso
   school: Escuela
   schools_edit: Escuelas
+  rubrics_edit: Rúbricas
   consent_forms_edit: Formas de Consentimentos
   courses_edit: Cursos
   reporting: Centro de Informes
@@ -194,3 +203,48 @@ es:
     courses_interval: (1)[a course];(2-inf)[ {{count}} courses]
     courses_proper_interval: (1)[the course];(2-inf)[the {{count}} courses]
     task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]
+    terms_lists:
+      insufficient_msg: Términos insuficientes
+      sufficient_msg: Listo para jugar
+    enroll_title: Confirmación de inscripción
+    enroll_failed_title: Inscripción no posible
+    test_zero: cero
+    test_one: uno
+    test_many: muchos
+    self_enroll_body: >
+      ¿Te gustaría unirte al curso {{course_name}} ({{course_number}})?
+    self_enroll_already_rejected_body: >
+      Por favor contacta al instructor de {{course_name}} ({{course_number}})
+      ya que anteriormente rechazó tu solicitud de inscripción y debe
+      confirmar tu inscripción personalmente.
+    self_enroll_already_requested_body: >
+      Ya has solicitado la inscripción en {{course_name}}
+      ({{course_number}}). Ahora solo debes esperar a que un instructor
+      acepte la inscripción.
+    self_enroll_already_enrolled_body: >
+      Ya estás inscrito en {{course_name}} ({{course_number}}).
+    self_enroll_course_closed_body: >
+      El curso {{course_name}} ({{course_number}}) no está disponible
+      actualmente y por lo tanto no puedes inscribirte en él.
+    self_enroll_instructor_body: >
+      Ya eres instructor (o asistente) en {{course_name}} ({{course_number}})
+      y no puedes inscribirte en tu propio curso.
+    self_enroll: "¡Inscríbeme!"
+    self_enroll_cancel: Cancelar y volver al inicio
+    list:
+      type: Tipo
+      task_name: Nombre de la tarea
+      course_name: Nombre del curso
+      group_name: Nombre del grupo
+      start_date: Fecha de apertura
+      next_date: Fecha de cierre
+      all_tasks: Todas
+      consent_form:
+        label: Formulario de consentimiento
+        absent: No es para investigación
+        present: Formulario de consentimiento de investigación
+      instructor_task: Tarea del instructor
+      status:
+        label: Estado
+        incomplete: No completado
+        complete: Completado
