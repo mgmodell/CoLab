@@ -12,18 +12,25 @@ Feature: Email experience stragglers
 @javascript
   Scenario: Four students have experiences waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
+    Given the user is "a random" user
+      And the user logs in
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
+     And the user will see "Reporting available"
 
 @javascript
   Scenario: 4 students are invited and one student drops - 3 emails are sent
     Given the email queue is empty
     Given the user is "a random" user
     Then the user is dropped from the course
+      And the user logs in
     When the system emails stragglers
+     And the user will not see "have pending activities to complete"
+     And the user will not see "Reporting available"
     Then 3 emails will be sent
     Then 3 emails will be tracked
+     And the user will see "Reporting available"
 
   Scenario: Four students have incomplete experiences that ended yesterday - no emails are sent
     Given the experience started "last month" and ends "yesterday"

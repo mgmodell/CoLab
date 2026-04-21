@@ -221,7 +221,13 @@ class Experience < ApplicationRecord
                                                instructor,
                                                completion_hash ).deliver_later
           count += 1
-        end
+          NotificationsChannel.broadcast_to_user(
+              user_id: instructor.id,
+              message: "Experience for #{experience.name} just closed. " \
+                " Reporting available",  
+              priority: AdministrativeMailer::PRIORITY[:INFO]
+            )
+          end
         experience.instructor_updated = true
         experience.save
         logger.debug experience.errors.full_messages unless experience.errors.empty?

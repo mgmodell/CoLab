@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class AdministrativeMailer < ApplicationMailer
+  PRIORITY = {
+    INFO: 'info',
+    WARNING: 'warning',
+    ERROR: 'error'
+  }.freeze
+
   default from: 'support@CoLab.online'
   has_history
 
@@ -46,8 +52,8 @@ class AdministrativeMailer < ApplicationMailer
 
     NotificationsChannel.broadcast_to_user(
       user_id: user.id,
-      message: "CoLab: #{activity} is available",
-      priority: 'info'
+      message: "CoLab: #{activity} Bingo! is available to play",
+      priority: PRIORITY[:INFO]
     )
 
     mail( to: "#{user.first_name} #{user.last_name} <#{user.email}>",
@@ -108,7 +114,7 @@ class AdministrativeMailer < ApplicationMailer
         NotificationsChannel.broadcast_to_user(
           user_id: u.id,
           message: 'CoLab: You have pending activities to complete.',
-          priority: 'warning'
+          priority: PRIORITY[:INFO]
         )
 
         u.last_emailed = curr_date

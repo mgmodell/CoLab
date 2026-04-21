@@ -111,6 +111,12 @@ class Assessment < ApplicationRecord
                                                        instructor,
                                                        completion_hash ).deliver_later
                   count += 1
+                  NotificationsChannel.broadcast_to_user(
+                    user_id: instructor.id,
+                    message: "Check-in for #{assessment.project.get_name( false )} just closed. " \
+                      " Reporting available",  
+                    priority: AdministrativeMailer::PRIORITY[:INFO]
+                  )
                 end
 
                 assessment.instructor_updated = true
