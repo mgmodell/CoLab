@@ -334,10 +334,15 @@ Rails.application.routes.draw do
   post 'lti/login' => 'lti#login'
   # LTI Launch (receives id_token from platform)
   post 'lti/launch' => 'lti#launch', as: :lti_launch
+  # Deep Linking – content selection and response
+  get  'lti/select_content' => 'lti#select_content', as: :lti_select_content
+  post 'lti/deep_link_response' => 'lti#deep_link_response', as: :lti_deep_link_response
   # Names and Role Provisioning Services (roster sync)
   post 'lti/names_roles/:id' => 'lti#names_roles', as: :lti_names_roles
   # Assignment and Grade Services (grade push)
   post 'lti/grades/:id' => 'lti#grades', as: :lti_grades
+  # Test-only: simulate an LTI launch without JWT verification (Cucumber support)
+  post 'lti/simulate_launch' => 'lti#simulate_launch', as: :lti_simulate_launch if Rails.env.test?
 
   # get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

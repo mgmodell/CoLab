@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Returning to Moodle…</title>
+</head>
+<body>
+  <p>Sending your selection back to Moodle. Please wait…</p>
+
+  <form id="lti_dl_form" method="post" action="<%= @return_url %>">
+    <input type="hidden" name="JWT" value="<%= @jwt %>">
+    <noscript>
+      <input type="submit" value="Continue to Moodle">
+    </noscript>
+  </form>
+
+  <%# Auto-submit immediately in production/development.
+      In the test environment we leave the form in place so Cucumber
+      scenarios can read the JWT value before any redirect occurs. %>
+  <% unless Rails.env.test? %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('lti_dl_form').submit();
+    });
+  </script>
+  <% end %>
+</body>
+</html>
