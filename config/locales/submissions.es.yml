@@ -1,5 +1,15 @@
 es:
   submissions:
+    feedbacks:
+      demo_feedback_1: >
+        Esta es una entrega inicial excelente. Queda trabajo por hacer, pero el enfoque general
+        es sólido.
+      demo_feedback_2: >
+        Has hecho un buen progreso en esta iteración y has mejorado varios aspectos de tu
+        entrega anterior.
+      demo_feedback_3: >
+        Sigues mejorando. Esta vez hay una cantidad significativa de problemas técnicos que
+        deben abordarse.
     error:
       nothing_submitted: No hay tarea presente
       withdraw_requires_submit: >

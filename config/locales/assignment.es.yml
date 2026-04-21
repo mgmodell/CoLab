@@ -15,6 +15,11 @@ es:
       link_sub: ¿Enlaces (URLs) a las entregas?
       file_sub: ¿Carga de archivos?
       status_saving: Guardando tarea
+      start_date_lbl: "Fecha de inicio"
+      start_date_placeholder: "Haz clic para seleccionar la fecha de inicio"
+      end_date_lbl: "Fecha de cierre"
+      end_date_placeholder: "Haz clic para seleccionar la fecha de cierre"
+      date_to_lbl: "hasta"
     show:
       title: Detalles de la Tarea
       edit_string: Editar detalles de la tarea
@@ -23,6 +28,20 @@ es:
     new:
       title: Nueva Tarea
       create_assignment_btn: Crear Tarea
+    demo:
+      student_title: "Desafío de diseño"
+      student_description: >
+        Contribuye al espacio de diseño de la GRATITUD. Usa enfoques de diseño centrado en el ser
+        humano para desarrollar una nueva forma de expresar, compartir o transmitir nuestra gratitud,
+        afecto, bondad o apreciación a las comunidades más amplias en este momento crítico. La gratitud
+        nos empodera, estimula la positividad en nuestros pensamientos y mejora nuestro bienestar físico
+        y mental. (CHI 2022 Competencia de Diseño Estudiantil)
+      instructor_title: "Vonnegut Favorito"
+      instructor_description: >
+        Un ensayo de 8-10 páginas profundizando en tu obra favorita de Kurt Vonnegut. El ensayo debe
+        incluir un resumen de la obra, una discusión de los temas e ideas presentados, y una discusión
+        de cómo la obra se relaciona con el contexto histórico en el que fue escrita y los temas de
+        este curso.
     status:
       name: Nombre de la Tarea
       brief: Breve
@@ -64,6 +83,7 @@ es:
     create_success: ¡La tarea se creó exitosamente!
     destroy_success: ¡La tarea fue destruida exitosamente!
     update_success: ¡La tarea se actualizó exitosamente!
+    soft_delete_success: La tarea ha sido desactivada y marcada como eliminada.
     back: Volver a la lista de tareas
     name: Nombre de la Tarea
     open_date: Fecha de inicio

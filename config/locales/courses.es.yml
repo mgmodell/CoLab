@@ -7,15 +7,54 @@ es:
     size_btn: Grande
     date_picker_label: Nueva fecha de inicio del curso?
     copy_cancel_btn: Cancelar
+    toggle_columns_plc: Mostrar columnas ocultas
+    new_user: "Agregar un(a) {{user_type}}"
+    add_lbl: "Agregar {{user_type}}"
+    bingo_performance: Rendimiento en Bingo!
+    activities_list_ttl: Actividades
+    details_tab: Detalles
+    instructors_tab: Instructores
+    students_tab: Estudiantes
+    activities_tab: Actividades
+    new_activity: Nueva actividad
+    checkin_record: Registro de asistencia
+    start_date_lbl: Fecha de inicio
+    end_date_lbl: Fecha de finalización
+    start_date_placeholder: Haz clic para seleccionar la fecha de inicio
+    end_date_placeholder: Haz clic para seleccionar la fecha de cierre
+    date_to_lbl: hasta
+    experience_completion: Finalización de experiencia
+    actions: Acciones
+    create_success: "¡Curso creado exitosamente!"
     index:
       title: Lista de Cursos
       submit_copy: Copiar este Curso
       copy_new_start: Cuando va empezar este nuevo curso?
       original_date: Fecha del curso existente
       copy_new_start_lbl: Nueva fecha de inicio del curso?
+      number_col: Número
+      name_col: Nombre
+      school_col: Escuela
+      open_col: Fecha de apertura
+      close_col: Fecha de cierre
+      faculty_col: Facultad
+      students_col: Estudiantes
+      projects_col: Proyectos
+      experiences_col: Experiencias
+      bingo_games_col: Juegos de Bingo!
+      actions_col: Acciones
     edit:
       title: Editar detalles del curso
       self_reg_dwnld: Descargar código de autoregistro
+      number: Número del curso
+      name: Nombre del curso
+      description: Descripción del curso
+      school: Escuela
+      time_zone: Zona horaria
+      consent: Formulario de consentimiento
+      dates_tz: "Todas las fechas se muestran en la zona horaria {{time_zone}}."
+      dates: Fechas del curso
+      download_qr: Descargar código de auto-registro
     show:
       title: Detalles des curso
       instructors: Instructores del curso
@@ -23,6 +62,7 @@ es:
       add_instructor_lbl: 'Agregar instructor por correo electronico:'
       add_student_lbl: 'Agregar estudiante por correo electronico:'
       add: Agregar!
+      add_btn: "¡Agregar {{user_type}}s!"
       enrolled_count:
         one: Hay un estudiante matriculado.
         other: Hay %{count} estudiantes matriculados.
@@ -52,7 +92,75 @@ es:
     no_roster: Ese usuario no figura como estudiante en ese curso.
     editing: Editar el curso.
     participants: Participantes.
-    activities: Actividades del curso.
+    wizard:
+      advanced_switch: Cambiar al modo avanzado
+      wizard_switch: Cambiar al modo de asistencia
+      name_number_lbl: Descripción
+      name_number_ttl: "¿Qué curso es este?"
+      name_number_desc: >
+        Por favor ingresa el título del curso y el identificador del curso. Así es como el curso
+        aparecerá en CoLab para los estudiantes y los instructores.
+      course_description_desc: >
+        A continuación puedes ingresar una descripción del curso. Rara vez se muestra a los
+        estudiantes, pero puede ser útil para los instructores.
+      dates_lbl: Fechas
+      dates_ttl: "¿Cuándo se realizará este curso?"
+      dates_desc: >
+        Por favor ingresa la fecha de inicio y la fecha de finalización de este curso. Todas las
+        actividades del curso deben ocurrir dentro de estas fechas.
+      dates_timezone: >
+        Asumimos que este curso se realizará en la zona horaria {{timezone}}, al igual que tu escuela.
+      confirm_create_lbl: Confirmar y crear
+      confirm_save_lbl: Resumen
+      confirm_save_ttl: "¿Todo está correcto?"
+      confirm_save_desc: >
+        Por favor revisa toda la información que hemos recopilado hasta ahora para asegurarte de
+        que sea correcta.
+      confirm_save_name: Nombre del curso
+      confirm_save_number: Número del curso
+      confirm_save_description: Descripción del curso
+      confirm_save_dates: El curso comenzará el {{open_date}} y terminará el {{close_date}}.
+      confirm_save_btn: "Todo está correcto &mdash; ¡creémoslo!"
+      instructors_lbl: Instructores
+      instructors_ttl: "¿Quién enseñará este curso?"
+      instructor_desc: "Por favor agrega cualquier instructor involucrado en la enseñanza de este curso.\n"
+      instructor_remove_desc: "Nota: Solo un administrador de escuela de CoLab.online puede eliminar a un instructor de un curso."
+      project_lbl: Agregar proyecto
+      project_ttl: "¿Agregar un proyecto grupal?"
+      project_desc: >
+        Al crear un proyecto para tu curso, puedes asignar estudiantes a equipos y tener
+        seguimiento de su trabajo a lo largo del tiempo.
+      project_start_week: "¿En qué semana debe comenzar el proyecto?"
+      experience_sim_init: >
+        CoLab.online puede llevar a tus estudiantes a través de una experiencia de trabajo en equipo
+        simulada para que puedan entender cómo funciona CoLab.
+      project_support_site: "¿Te gustaría más información sobre lo que hace CoLab.online, más herramientas para ayudarte a tomar esta decisión?"
+      readings_lbl: Lecturas
+      readings_ttl: "¿Agregar lecturas colaborativas gamificadas?"
+      readings_desc: >
+        Las tareas de lectura de CoLab.online piden a los estudiantes que extraigan y definan
+        términos de las lecturas asignadas. Luego, los estudiantes juegan un juego de bingo
+        colaborativo con estos términos.
+      students_lbl: Estudiantes
+      students_ttl: Inscribir estudiantes
+      students_desc: >
+        Puedes inscribir manualmente a los estudiantes ingresando sus direcciones de correo
+        electrónico en el cuadro a continuación.
+      enrollment_qr_lbl: Descargar el código QR de inscripción
+      next_btn: Siguiente
+      prev_btn: Anterior
+      save_btn: Guardar
+    activities:
+      type_col: Tipo
+      name_col: Nombre
+      status_col: Estado
+      open_col: Fecha de apertura
+      close_col: Fecha de cierre
+      delete_lbl: Eliminar
+      save_first_msg: Debes guardar el curso para tener actividades.
+      not_active_lbl: No activado
+      active_lbl: Activo
+      expired_lbl: Expirado
     re_invite: Re Invitar.
     drop: Soltar.
     courses: Cursos.

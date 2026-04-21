@@ -14,6 +14,11 @@ es:
       history: Hisorial
       research: Participación en la investigación
     cancel: Cancelar
+    create_btn: Crear perfil
+    save_btn: Guardar perfil
+    reset_btn: Deshacer cambios
+    confirm_leave_hdr: "¿Salir con cambios sin guardar?"
+    confirm_leave: "¿Estás seguro de que quieres salir de esta página? Los cambios no guardados se perderán.\n"
     email_settings: Configuración del correo electrónico
     emails:
       email_lbl: Correo electrónico
