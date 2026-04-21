@@ -10,8 +10,6 @@ en:
     end_date_placeholder: Enter end date
     end_date_lbl: End date
     date_to_lbl: until
-    english_tab: English
-    korean_tab: Korean
     edit:
       title: Consent Form
       create_btn: Create consent form
@@ -34,7 +32,3 @@ en:
         This consent form applies between <strong>%{start_date}</strong> and 
         <strong>%{end_date}</strong>.
 
-    create_success: Consent form was successfully created.
-    update_success: Consent form was successfully updated.
-    destroy_success: Consent form was successfully destroyed.
-    please_review: Please review the problems below

@@ -46,9 +46,9 @@ export default function RubricDataAdmin(props) {
 
   const dispatch = useDispatch();
   const freshCriteria = {
-    description: t("new_criteria"),
+    description: "New Criteria",
     weight: 1,
-    l1_description: t("min_score_description")
+    l1_description: "The bare minimum to register a score."
   };
 
   const addCriteria = () => {
@@ -259,7 +259,7 @@ export default function RubricDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button aria-label="save-rubric" onClick={saveRubric} disabled={!dirty}>
-      {parseInt(rubricId) > 0 ? t("save_btn") : t("create_btn")}
+      {parseInt(rubricId) > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
 
@@ -269,11 +269,15 @@ export default function RubricDataAdmin(props) {
         aria-label="activate-or-publish-rubric"
         onClick={publishOrActivateRubric}
       >
-        {rubricPublished
-          ? rubricActive
-            ? t("deactivate_btn")
-            : t("activate_btn")
-          : t("publish_btn")}
+        {t(
+          `${
+            rubricPublished
+              ? rubricActive
+                ? "Deactivate"
+                : "Activate"
+              : "Publish"
+          } Rubric`
+        )}
       </Button>
     ) : null;
 
@@ -329,7 +333,7 @@ export default function RubricDataAdmin(props) {
         <InputTextarea
           itemID="rubric-description"
           id="rubric-description"
-          placeholder={t("description_placeholder")}
+          placeholder="Enter a description of the rubric"
           rows={2}
           autoResize={true}
           value={rubricDescription}
@@ -337,9 +341,9 @@ export default function RubricDataAdmin(props) {
         />
         <label htmlFor="rubric-description">{t("description")}</label>
       </FloatLabel>
-      <p>{t("version_label", { version: rubricVersion })}</p>
-      <p>{t("published_label")} {rubricPublished ? t("yes") : t("no")}</p>
-      <p>{t("active_label")} {rubricActive ? t("yes") : t("no")}</p>
+      <p>Version {rubricVersion}</p>
+      <p>Published {rubricPublished ? "Yes" : "No"}</p>
+      <p>Active {rubricActive ? "Yes" : "No"}</p>
       <br />
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>

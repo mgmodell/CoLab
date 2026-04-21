@@ -21,7 +21,6 @@ import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
 import { TourProvider } from "./infrastructure/TourContext";
-import { useTranslation } from "react-i18next";
 
 import Welcome from "./info/Welcome";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -53,7 +52,6 @@ type Props = {
 
 export default function PageWrapper(props: Readonly<Props>) {
   const store = appStatus;
-  const { t } = useTranslation();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -173,7 +171,7 @@ export default function PageWrapper(props: Readonly<Props>) {
       <PrimeReactProvider>
         <AppInit endpointsUrl={props.getEndpointsUrl} debug={props.debug}>
           <CookieConsent>
-            {t("cookie_consent")}
+            This website uses cookies to enhance the user experience.
           </CookieConsent>
           <TourProvider>
             <RouterProvider router={router} />

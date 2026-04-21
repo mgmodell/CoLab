@@ -71,9 +71,6 @@ en:
     soft_delete_success: Assignment has been deactivated and marked as deleted.
     update_success: Assignment was updated successfully!
     back: Back to the list of assignments
-    overview_tab: Overview
-    none_selected: None Selected
-    nothing_here: Nothing here yet
     name: Assignment Name
     open_date: Start Date
     close_date: Close Date

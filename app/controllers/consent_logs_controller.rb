@@ -11,7 +11,7 @@ class ConsentLogsController < ApplicationController
       messages = { main: t( 'consent_logs.save_success' ) }
     else
       messages = @consent_log.errors.as_json
-      messages[:main] = t( 'consent_logs.please_review' )
+      messages[:main] = 'Please review the problems below'
     end
 
     respond_to do | format |

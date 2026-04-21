@@ -1,15 +1,5 @@
 en:
   bingo_games:
-    no_help_title: No Help Available
-    no_help_description: There is no help available for this topic
-    results:
-      no_board: No board available
-      score_label: Score
-      unscored: unscored
-      for_student: "Results for {{student}}"
-      done_btn: Done
-      scored_results_tab: Scored Results
-      answer_key_tab: Answer Key
     update_bingo_btn: Update Bingo Game
     scored_game:
       list_title: scored item
@@ -134,7 +124,3 @@ en:
       not_configured: Not configured
       configured: Connected
       push_confirm: Push all grades to the LMS now?
-    game_save_success: Game saved successfully!
-    unable_to_save: Unable to save
-    demo_done: Demo done!
-    review_error: Error!

@@ -53,8 +53,8 @@ export default function HomeShell(props: Props) {
       {
         element: "body",
         popover: {
-          title: t("home.tour_title"),
-          description: t("home.tour_description"),
+          title: "Welcome to the Application!",
+          description: "This stuff is awesome. More information soon!",
           align: "center",
           side: "left"
         }
@@ -173,13 +173,13 @@ export default function HomeShell(props: Props) {
               setCurTab(e.index);
             }}
           >
-            <TabPanel header={t("home.task_view_tab")}>
+            <TabPanel header="Task View">
               <Suspense fallback={<Skeleton className="mb-2" />}>
                 <TaskList tasks={tasks} />
               </Suspense>
             </TabPanel>
 
-            <TabPanel header={t("home.calendar_view_tab")}>
+            <TabPanel header="Calendar View">
               <FullCalendar
                 headerToolbar={{
                   center: "thisWeek,dayGridMonth"

@@ -11,8 +11,6 @@ es:
       No eres miembro de este grupo y, por lo tanto, no puedes
       enviar esta entrega.
     comment_prompt: Le gustaria agregar comentarios adicionales?
-    comment_input_prompt: Ingresa tus comentarios
-    err_normalize_sums: "No se pueden reconciliar los valores de registro. Por favor contacta a un administrador.\n"
     instructions: >
       Por favor completa esta semanas la evaluación de esta semana para el grupo 
       <em>{{group_name}}</em> (working with you on <em>{{project_name}}</em>)

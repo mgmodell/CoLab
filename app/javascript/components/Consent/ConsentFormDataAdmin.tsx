@@ -242,7 +242,7 @@ export default function ConsentFormDataAdmin(props) {
         </Row>
       </Container>
       <TabView>
-        <TabPanel header={t("english_tab")}>
+        <TabPanel header="English">
           <Editor
             id="english_form"
             placeholder={"en_form"}
@@ -254,7 +254,7 @@ export default function ConsentFormDataAdmin(props) {
             value={consentFormFormTextEn}
           />
         </TabPanel>
-        <TabPanel header={t("korean_tab")}>
+        <TabPanel header="Korean">
           <Editor
             id="korean_form"
             placeholder={"ko_form"}

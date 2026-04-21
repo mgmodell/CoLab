@@ -33,7 +33,7 @@ export default function EnrollInCourse(props: EnrollInCourseProps) {
   const [courseNumber, setCourseNumber] = useState("loading");
 
   const [enrollable, setEnrollable] = useState(false);
-  const [messageHeader, setMessageHeader] = useState("enroll_title");
+  const [messageHeader, setMessageHeader] = useState("Enrollment");
   const [message, setMessage] = useState("Loading...");
 
   const enrollConfirm = (confirm: boolean) => {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { TabView, TabPanel } from "primereact/tabview";
 import { Button } from "primereact/button";
@@ -27,19 +26,18 @@ type Props = {
 };
 
 export default function BingoGameResults(props: Props) {
-  const { t } = useTranslation("bingo_games");
   const [curTab, setCurTab] = useState(0);
 
   const renderBoard = board => {
     if (board == null || board.length == 0) {
-      return <p>{t("results.no_board")}</p>;
+      return <p>No board available</p>;
     } else {
       return (
         <Container>
           <Row>
             <Col xs={12}>
-              <b>{t("results.score_label")}: </b>
-              {null == props.score ? t("results.unscored") : props.score}
+              <b>Score: </b>
+              {null == props.score ? "unscored" : props.score}
             </Col>
           </Row>
 
@@ -61,7 +59,7 @@ export default function BingoGameResults(props: Props) {
 
   return (
     <Dialog
-      header={<span>{t("results.for_student", { student: props.student })}</span>}
+      header={<span>Results for {props.student}</span>}
       visible={props.open}
       onHide={() => props.close()}
       footer={
@@ -70,7 +68,7 @@ export default function BingoGameResults(props: Props) {
             props.close();
           }}
         >
-          {t("results.done_btn")}
+          Done
         </Button>
       }
     >
@@ -80,10 +78,10 @@ export default function BingoGameResults(props: Props) {
           setCurTab(event.index);
         }}
       >
-        <TabPanel header={t("results.scored_results_tab")}>
+        <TabPanel header={"Scored Results"}>
           {renderBoard(props.board)}
         </TabPanel>
-        <TabPanel header={t("results.answer_key_tab")}>
+        <TabPanel header={"Answer Key"}>
           <ScoredGameDataTable candidates={props.candidates} />
         </TabPanel>
       </TabView>

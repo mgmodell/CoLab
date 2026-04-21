@@ -31,7 +31,6 @@
 
 en:
   hello: "Hello world"
-  cookie_consent: This website uses cookies to enhance the user experience.
   lti:
     connection_saved: "LTI connection saved successfully."
     connection_save_failed: "Failed to save LTI connection."

@@ -1,15 +1,5 @@
 es:
   projects:
-    groups:
-      default_name: "Equipo {{id}}"
-      operation_failed: "La operación falló"
-      given_name_col: Nombre de pila
-      family_name_col: Apellido
-      no_group_col: Sin grupo
-      save_btn: Guardar
-      add_group_btn: Agregar grupo
-      recalculate_btn: Recalcular diversidad
-      search_placeholder: Buscar estudiantes
     create_success: El proyecto fue creado exitosamente.
     create_success_inactive: >
       El proyecto fue creado exitosamente. ¡No olvides activarlo!
@@ -17,9 +7,6 @@ es:
     update_success_inactive: >
       El proyecto se actualizó exitosamente. ¡No olvides activarlo!
     destroy_success: El proyecto fue destruido exitosamente.
-    soft_delete_success: El proyecto ha sido desactivado y marcado como eliminado.
-    create_btn: Crear proyecto
-    save_btn: Guardar proyecto
     factor_pack: Paquete de factores
     active_switch: Activo
     project_dates: Fechas del proyecto
@@ -31,11 +18,6 @@ es:
     tz_warn: Este proyecto se produce en la %{time_zone} zona horaria y todas las fechas lo reflejan.
     start_date_lbl: Fecha de inicio del proyecto
     end_date_lbl: Fecha de finalización del proyecto
-    start_date_placeholder: Haz clic para seleccionar la fecha de inicio
-    end_date_placeholder: Haz clic para seleccionar la fecha de cierre
-    date_to_lbl: hasta
-    style: Estilo de entrada
-    timezone_warning: "Todas las fechas se muestran en la zona horaria {{timezone}}."
     opens: Abre cada
     no_group: No asignado
     rescore: Volver a puntuar
@@ -70,20 +52,3 @@ es:
       title: Nuevo proyecto
     projects: Proyecto
     diversity_scores: Puntos de perspectiva
-    lti:
-      panel_title: Transferencia de Calificaciones LTI
-      configured: Conectado
-      not_configured: No configurado
-      line_item_url_lbl: URL del elemento de línea del LMS
-      line_item_url_placeholder: "e.g. https://lms.example.com/api/lti/courses/1/line_items/1"
-      ags_token_url_lbl: URL del token de acceso AGS
-      ags_token_url_placeholder: "e.g. https://lms.example.com/login/oauth2/token"
-      client_id_lbl: ID de cliente
-      deployment_id_lbl: ID de implementación
-      iss_lbl: Emisor (iss)
-      save_btn: Guardar conexión LTI
-      push_btn: Enviar calificaciones al LMS
-      push_confirm: "¿Enviar todas las calificaciones al LMS ahora?"
-    details_tab: Detalles
-    groups_tab: Grupos
-    reporting_tab: Informes

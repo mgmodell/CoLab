@@ -1,15 +1,5 @@
 es:
   bingo_games:
-    no_help_title: Sin ayuda disponible
-    no_help_description: No hay ayuda disponible para este tema
-    results:
-      no_board: No hay tablero disponible
-      score_label: "Puntuación"
-      unscored: sin calificación
-      for_student: "Resultados para {{student}}"
-      done_btn: Listo
-      scored_results_tab: Resultados calificados
-      answer_key_tab: Clave de respuestas
     update_bingo_btn: Actualizar juego de bingo
     scored_game:
       list_title: Artículo calificado
@@ -18,7 +8,6 @@ es:
       feedback: Comentarios
       concept: Concepto
       credit: Crédito
-      average_score: Puntuación promedio
     create_bingo_btn: Crear juego de bingo
     game_details_pnl: Detalles del juego
     response_pnl: Datos de respuesta
@@ -26,11 +15,6 @@ es:
     game_dates: Fechas de disponibilidad del juego
     open_date: Fecha abierta
     close_date: Fecha del juego
-    start_date_lbl: Fecha de inicio
-    end_date_lbl: Fecha de finalización
-    date_to_lbl: hasta
-    file_select: Imagen de hoja de puntuación
-    score: Puntuación
     lead_time: Dias para revisión del instructor
     student_deadline_msg: "Los estudiantes deben completar esto antes del {{date}}."
     review_candidates:
@@ -50,9 +34,7 @@ es:
       title: Nuevo juego de Bingo!
     create_success: >
       Juego de Bingo! creado con exito!
-    destroy_success: "¡Juego de Bingo! destruido exitosamente"
-    soft_delete_success: El juego de Bingo! ha sido desactivado y marcado como eliminado.
-    scored_success: La puntuación fue guardada exitosamente.
+      destroy_success:Juego de Bingo! destruido con exito!
     update_success: Juego de Bingo! actualizado con exito!
     review_success: Review data successfully saved
     review_problems: There were problems with the review and it could not be saved
@@ -102,38 +84,4 @@ es:
     end_date_err: >
       The bingo game cannot begin after the course has ended
       (%{end_date} > %{course_end_date})
-    lti:
-      panel_title: Transferencia de Calificaciones LTI
-      configured: Conectado
-      not_configured: No configurado
-      line_item_url_lbl: URL del elemento de línea del LMS
-      line_item_url_placeholder: "e.g. https://lms.example.com/api/lti/courses/1/line_items/1"
-      ags_token_url_lbl: URL del token de acceso AGS
-      ags_token_url_placeholder: "e.g. https://lms.example.com/login/oauth2/token"
-      client_id_lbl: ID de cliente
-      deployment_id_lbl: ID de implementación
-      iss_lbl: Emisor (iss)
-      save_btn: Guardar conexión LTI
-      push_btn: Enviar calificaciones al LMS
-      push_confirm: "¿Enviar todas las calificaciones al LMS ahora?"
-    review:
-      toggle_columns_plc: Ocultar columnas
-      submitter_col: Enviado por
-      term_col: Término
-      concept_col: Concepto
-      definition_col: Definición
-      feedback_col: Retroalimentación
-      completed_col: Completo
-      not_set_opt: No establecido
-      none_msg: N/D
-      data_loaded_msg: Datos cargados
-      saving_msg: Guardando retroalimentación
-      save_fail_msg: La operación de guardado falló
-      review_complete_msg: Revisión completada
-      reload_btn: Recargar
-      progress_key: "Conceptos únicos [conceptos aceptables] {{unique}} [{{acceptable}}]"
 
-    game_save_success: ¡Juego guardado exitosamente!
-    unable_to_save: No se puede guardar
-    demo_done: ¡Demo completado!
-    review_error: ¡Error!

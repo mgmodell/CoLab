@@ -64,10 +64,6 @@ es:
       def: Pista
     edit:
       title: Completa la lista de términos
-      topic: Tema
-      description: Descripción
-      for: Para
-      instructions_title: Instrucciones
       instructions: >
         Por favor, lea el tema anterior, asegurándose de revisar
         las lecturas asignadas y de buscar su propio material. Haga
@@ -75,7 +71,6 @@ es:
         e introdúzcalos, junto con pistas para ayudar a
         otros a identificar los términos que describe.
       behalf: A nombre de
-      duplicate_msg: Este término puede ser un duplicado.
       waiting: Aun esperando una respuesta a su solicitud de ayuda grupal
       req_rec: Tus compañeros en {{grp_name}} quieren colaborar.
       req_help: ¿Quieres invitar a tus compañeros en {{grp_name}} a ayudar?
@@ -92,5 +87,3 @@ es:
       save: Guardar estos términos
       term: Término
       definition: Definición
-    please_review: Por favor revise los errores señalados
-    all_good: Todo bien

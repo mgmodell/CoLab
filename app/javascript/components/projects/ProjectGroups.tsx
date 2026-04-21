@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useTranslation } from "react-i18next";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
@@ -26,7 +25,6 @@ type Props = {
 };
 
 export default function ProjectGroups(props: Props) {
-  const { t } = useTranslation("projects");
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
@@ -47,7 +45,7 @@ export default function ProjectGroups(props: Props) {
     const min_id = Math.min(...group_ids) - 1;
 
     updatedGroups[min_id] = {
-      name: t("groups.default_name", { id: min_id }),
+      name: "Team " + min_id,
       id: min_id,
       diversity: 0
     };
@@ -157,7 +155,7 @@ export default function ProjectGroups(props: Props) {
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = t("groups.operation_failed");
+        fail_data.notice = "The operation failed";
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
@@ -183,7 +181,7 @@ export default function ProjectGroups(props: Props) {
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = t("groups.operation_failed");
+        fail_data.notice = "The operation failed";
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
@@ -216,7 +214,7 @@ export default function ProjectGroups(props: Props) {
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = t("groups.operation_failed");
+        fail_data.notice = "The operation failed";
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
@@ -250,7 +248,7 @@ export default function ProjectGroups(props: Props) {
                 <span className="p-input-icon-left">
                   <i className="pi pi-search" />
                   <InputText
-                    placeholder={t("groups.search_placeholder")}
+                    placeholder="Search Students"
                     onChange={filter}
                     value={filterText}
                   />
@@ -261,15 +259,15 @@ export default function ProjectGroups(props: Props) {
                 </span>
                 {dirty ? (
                   <Button onClick={saveGroups} icon="pi pi-save">
-                    {t("groups.save_btn")}
+                    Save
                   </Button>
                 ) : null}
                 <span>{message}</span>
                 <Button onClick={recalcDiversity} icon="pi pi-calculator">
-                  {t("groups.recalculate_btn")}
+                  Recalculate Diversity
                 </Button>
                 <Button onClick={addGroup} icon="pi pi-users">
-                  {t("groups.add_group_btn")}
+                  Add Group
                 </Button>
               </>
             }
@@ -277,14 +275,14 @@ export default function ProjectGroups(props: Props) {
         }
       >
         <Column
-          header={t("groups.given_name_col")}
+          header="Given Name"
           field="first_name"
           sortable
           filter
           key="first_name"
         />
         <Column
-          header={t("groups.family_name_col")}
+          header="Family Name"
           field="last_name"
           sortable
           filter
@@ -350,7 +348,7 @@ export default function ProjectGroups(props: Props) {
           );
         })}
         <Column
-          header={t("groups.no_group_col")}
+          header="No Group"
           field="id"
           filter
           key="0"

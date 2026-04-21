@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
-import { useTranslation } from "react-i18next";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 import { Skeleton } from "primereact/skeleton";
@@ -15,7 +14,6 @@ type Props = {
   rootPath?: string;
 };
 export default function BingoShell(props: Props) {
-  const { t } = useTranslation("bingo_games");
   const [working] = useState(true);
   const { setTourSteps } = useTour();
 
@@ -24,8 +22,8 @@ export default function BingoShell(props: Props) {
       {
         element: "body",
         popover: {
-          title: t("no_help_title"),
-          description: t("no_help_description"),
+          title: "No Help Available",
+          description: "There is no help available for this topic",
           align: "center",
           side: "left"
         }

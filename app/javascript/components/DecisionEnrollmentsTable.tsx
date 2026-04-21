@@ -83,9 +83,10 @@ export default function DecisionEnrollmentsTable(props: Props) {
 
   return 0 < requests.length ? (
     <Panel>
-      <h1>{t("enrollment_requests_title")}</h1>
+      <h1>Decision Enrollment Requests</h1>
       <p>
-        {t("enrollment_requests_body")}
+        The following students are trying to enroll in your course. Please
+        accept or decline each enrollment.
       </p>
       <WorkingIndicator identifier="loading_enrollments" />
       <DataTable
@@ -121,10 +122,10 @@ export default function DecisionEnrollmentsTable(props: Props) {
         //paginatorRight={paginatorRight}
         dataKey="id"
       >
-        <Column header={t("first_name_col")} field="first_name" sortable />
-        <Column header={t("last_name_col")} field="last_name" sortable />
-        <Column header={t("course_name_col")} field="course_name" sortable />
-        <Column header={t("course_number_col")} field="course_number" sortable />
+        <Column header="First Name" field="first_name" sortable />
+        <Column header="Last Name" field="last_name" sortable />
+        <Column header="Course Name" field="course_name" sortable />
+        <Column header="Course Number" field="course_number" sortable />
         <Column
           header={t("accept_decline")}
           field="id"
@@ -137,9 +138,9 @@ export default function DecisionEnrollmentsTable(props: Props) {
                   onClick={() => {
                     decision(id, true);
                   }}
-                  aria-label={t("accept_btn")}
+                  aria-label="Accept"
                   id="Accept"
-                  tooltip={t("accept_btn")}
+                  tooltip="Accept"
                   size="small"
                   rounded
                   raised
@@ -150,9 +151,9 @@ export default function DecisionEnrollmentsTable(props: Props) {
                   onClick={() => {
                     decision(id, false);
                   }}
-                  aria-label={t("reject_btn")}
+                  aria-label="Reject"
                   id="Reject"
-                  tooltip={t("reject_btn")}
+                  tooltip="Reject"
                   size="small"
                   rounded
                   raised

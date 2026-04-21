@@ -39,12 +39,7 @@ ko:
   group_names: 그룹명
   history: 진행 상황
   about_you: 자기 소개
-  calc_diversity_hdr: 관점들
-  calc_diversity_instr: >
-    다양성 점수를 계산하려면 팀원으로 고려하는 사람들의 이메일 주소를
-    입력하세요. 쉼표나 공백으로 구분하여 여러 이메일을 입력할 수 있습니다.
-  found_users: 찾은 사용자
-  perspective_score: 관점 점수
+  calc_diversity: 견해
   users: 사용자
   diversity_score: 견해 점수
   calc_diversity_sub: 점수를 말해줘!
@@ -83,6 +78,7 @@ ko:
   submit: 제출하기
   #toolbar
   profile: 개요
+  c_panel: 관리 패널&hellip;
   reports: 보고서
   administration: 관리
   resp_summ: 답변 요약
@@ -106,15 +102,16 @@ ko:
   back_to_course: 코스로 돌아가기
   back_to_courses: 코스 목록으로 돌아가기
   support: 지원
-  mailer_greeting: "안녕하세요, %{name}님"
   avail_body: >
     %{activity_name} 활동이 %{site_link}에서 사용 가능합니다. 가능한 빨리
     %{login_link}에 로그인하여 확인하고 완료해 주세요.
-  course_invite_body:
-    one: "다음 수업에 참여하도록 초대되었습니다:"
-    other: "다음 %{count}개의 수업에 참여하도록 초대되었습니다:"
+  course_invite_body: >
+    (1){다음 수업에 참여하도록 초대되었습니다:};
+    (2-inf){다음 {{count}}개의 수업에 참여하도록 초대되었습니다:}
   course_invite_close: >
     %{site_link}에 로그인하여 이 등록을 수락하거나 거부하세요.
+  reminder_body: >
+    이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다.
   reminder_body: >
     이 이메일은 현재 대기 중인 할 일이 있음을 상기시켜 드리기 위해 발송되었습니다.
     가능한 한 빨리 %{site_link}에 로그인하여 완료해 주세요.
@@ -183,18 +180,8 @@ ko:
   member: 팀 멤버
   titles:
     demonstration: 시연
-  no_help_title: 도움말 없음
-  no_help_description: 이 항목에 대한 도움말이 없습니다
-  help_not_loaded: 로드되지 않음
-  help_feedback_col: 피드백
-  help_definition_col: 정의
-  help_points_col: 점수
   home:
     title: 홈
-    tour_title: 애플리케이션에 오신 것을 환영합니다!
-    tour_description: 배정된 할 일과 진행 상황을 확인하세요.
-    task_view_tab: 할 일 보기
-    calendar_view_tab: 달력 보기
     your_tasks: 할 일
     invited: 초대받았습니다!
     greeting: 안녕하세요, {{name}}님
@@ -203,9 +190,6 @@ ko:
     student_tasks: 학생용 할 일
     task_type: 할 일 유형
     sapa: 자기 평가 및 동료 평가
-    terms_lists:
-      insufficient_msg: 용어가 부족합니다
-      sufficient_msg: 게임 준비가 되었습니다
     terms_list: 용어 목록 제출
     course_confirm: >
       {{course_list_text}}에 추가되었지만, 때때로 강사들이 실수를 할 수 있으므로
@@ -252,5 +236,3 @@ ko:
         label: 상태
         incomplete: 완료되지 않음
         complete: 완료됨
-    enrollment_success: "{{course_name}}에 성공적으로 등록되었습니다"
-    enrollment_error: "{{course_name}}에 등록할 수 없습니다"

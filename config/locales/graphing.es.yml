@@ -1,24 +1,8 @@
 es:
   graphing:
     # Reporting terms
-    admin_instructions: "Todos los datos son genuinos. Por favor usa las capacidades de anonimización para demostrarlos a otras personas."
-    agree: De acuerdo
     anon_confirm: Esto eliminará todos los gráficos a continuacion. Esta seguro?
-    anon_confirm_title: "¿Borrar gráficos existentes?"
-    anon_switch: Anonimizar datos
-    chart_for_group: "Gráfico de grupo para {{subject}}"
-    chart_for_individual: "Gráfico individual para {{subject}}"
-    chart_for_project: para el proyecto
-    consent_switch: Limitar solo a usuarios con consentimiento
     date: Fecha 
-    disagree: En desacuerdo
-    group_list: Seleccionar un grupo
-    individual_list: Seleccionar un individuo
-    instructions: "Por favor usa esta página para visualizar los datos disponibles para tus estudiantes.\n"
-    lay_instructions: "Todos los datos son genuinos, pero están anonimizados para ser adecuados para su presentación a todas las audiencias."
-    loading: Los datos se están cargando
-    none: Ninguno seleccionado
-    projects_list: Seleccionar un proyecto
     contribution_lvl: Nivel de contribución
     chart_dwn_warn: >
       Esta functión de gráfico es experimental y solo funciona en

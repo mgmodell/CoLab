@@ -24,11 +24,3 @@ en:
     accept_decline: Accept/Decline
     new_activity: New {{activity_type}}
     toggle_columns_plc: Show hidden columns
-    enrollment_requests_title: Decision Enrollment Requests
-    enrollment_requests_body: The following students are trying to enroll in your course. Please accept or decline each enrollment.
-    first_name_col: First Name
-    last_name_col: Last Name
-    course_name_col: Course Name
-    course_number_col: Course Number
-    accept_btn: Accept
-    reject_btn: Reject

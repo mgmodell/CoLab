@@ -376,8 +376,8 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
   return (
     <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
-      <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
-      <TabPanel header={t("groups_tab")}>
+      <TabPanel header="Details">{detailsComponent}</TabPanel>
+      <TabPanel header="Groups">
         <ProjectGroups
           projectId={projectId}
           groupsUrl={endpoints.groupsUrl}
@@ -386,7 +386,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
           diversityRescoreGroups={endpoints.diversityRescoreGroups}
         />
       </TabPanel>
-      <TabPanel header={t("reporting_tab")}>{chartContainer}</TabPanel>
+      <TabPanel header="Reporting">{chartContainer}</TabPanel>
       {projectId && endpoints?.ltiConnectionUrl ? (
         <TabPanel header={t("lti.panel_title")}>
           <LtiConnectionPanel

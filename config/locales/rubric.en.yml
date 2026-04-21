@@ -30,19 +30,6 @@ en:
     name: Name
     description: Description
     version: Version
-    new_criteria: New Criteria
-    min_score_description: The bare minimum to register a score.
-    description_placeholder: Enter a description of the rubric
-    version_label: "Version {{version}}"
-    yes: "Yes"
-    no: "No"
-    published_label: Published
-    active_label: Active
-    save_btn: Save Rubric
-    create_btn: Create Rubric
-    deactivate_btn: Deactivate Rubric
-    activate_btn: Activate Rubric
-    publish_btn: Publish Rubric
     demo:
       student_rubric_name: CHI Design Challenge
       student_rubric_description: >

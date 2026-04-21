@@ -46,10 +46,10 @@ export default function AssignmentDataAdmin(props) {
   const [dirty, setDirty] = useState(false);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
-    { id: -1, name: t("none_selected") }
+    { id: -1, name: "None Selected" }
   ]);
   const [availableRubrics, setAvailableRubrics] = useState([
-    { id: -1, name: t("none_selected"), version: 0 }
+    { id: -1, name: "None Selected", version: 0 }
   ]);
   const [saveStatus, setSaveStatus] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
@@ -179,14 +179,14 @@ export default function AssignmentDataAdmin(props) {
   };
 
   const setAssignmentData = data => {
-    const projects = new Array({ id: -1, name: t("none_selected") }).concat(
+    const projects = new Array({ id: -1, name: "None Selected" }).concat(
       data.projects
     );
     setAssignmentProjects(projects);
 
     const availableRubrics = new Array({
       id: -1,
-      name: t("none_selected"),
+      name: "None Selected",
       version: 0
     }).concat(data.rubrics);
     setAvailableRubrics(availableRubrics);
@@ -358,11 +358,11 @@ export default function AssignmentDataAdmin(props) {
                       name="assignment_rubric"
                       options={availableRubrics}
                       itemTemplate={(selected) => {
-                        const output = null !== selected ? `${selected.name} v${selected.version}` : t("none_selected");
+                        const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
                         return output;
                       }}
                       valueTemplate={(selected, props) => {
-                        const output = null !== selected ? `${selected.name} v${selected.version}` : t("none_selected");
+                        const output = null !== selected ? `${selected.name} v${selected.version}` : "None Selected";
                         return output;
                       }}
                       optionValue="id"
@@ -452,7 +452,7 @@ export default function AssignmentDataAdmin(props) {
             <Container>
               <Row>
                 <Col xs={5}>
-                  <span>{t("nothing_here")}</span>
+                  <span>Nothing here yet</span>
                 </Col>
               </Row>
             </Container>
