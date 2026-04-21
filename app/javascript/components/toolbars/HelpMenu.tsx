@@ -16,16 +16,6 @@ type Props = {
   lookupUrl: string;
 };
 
-const NO_HELP_STEP = [
-  {
-    element: "body",
-    popover: {
-      align: "center" as const,
-      side: "left" as const
-    }
-  }
-];
-
 export default function HelpMenu(props: Props) {
   const [t, i18n] = useTranslation();
 
