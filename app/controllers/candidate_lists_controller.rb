@@ -98,7 +98,7 @@ class CandidateListsController < ApplicationController
           ),
           others_requested_help: @candidate_list.others_requested_help,
           help_requested: @candidate_list.group_requested,
-          messages: { main: 'All good' }
+          messages: { main: t( 'candidates.all_good' ) }
         }
       end
     end
@@ -152,7 +152,7 @@ class CandidateListsController < ApplicationController
           logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
           format.json do
             messages = @candidate_list.errors.to_h
-            messages[:main] = 'Please review the errors noted'
+            messages[:main] = t( 'candidates.please_review' )
             render json: {
               id: @candidate_list.id,
               is_group: @candidate_list.is_group?,

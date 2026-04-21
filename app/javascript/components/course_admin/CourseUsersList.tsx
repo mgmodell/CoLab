@@ -407,7 +407,7 @@ export default function CourseUsersList(props: Props) {
                 case UserListType.rejected_student:
                 case UserListType.dropped_student:
                 case UserListType.declined_student:
-                  const lbl = "Re-Add Student";
+                  const lbl = t("re_add_student");
                   btns.push(
                     <Button
                       tooltip={lbl}
@@ -447,10 +447,10 @@ export default function CourseUsersList(props: Props) {
 
   return (
     <Fragment>
-      <Tooltip target={".enrolled"} content="Enrolled" />
-      <Tooltip target={".awaiting"} content="Awaiting Response" />
-      <Tooltip content="Not Enrolled" target={".not-enrolled"} />
-      <Tooltip target={".instructor"} content="Instructor or Assistant" />
+      <Tooltip target={".enrolled"} content={t("status_enrolled")} />
+      <Tooltip target={".awaiting"} content={t("status_awaiting")} />
+      <Tooltip content={t("status_not_enrolled")} target={".not-enrolled"} />
+      <Tooltip target={".instructor"} content={t("status_instructor")} />
       <WorkingIndicator identifier="loading_users" />
       {newUserList}
     </Fragment>

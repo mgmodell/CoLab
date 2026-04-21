@@ -1,0 +1,90 @@
+ko:
+  candidate_lists:
+    submission: 용어 목록 제출
+    distilled: 정제된 개념
+    feedback_breakdown: >
+      용어는 다음 카테고리를 사용하여 평가됩니다. 그런 다음 평균이
+      귀하의 성과로 보고됩니다.
+    list_for_class: 수업 목록
+    feedback_info_label: 정보
+    credit:
+      zero: 점수 없음
+      one: 1점
+      other: '%{count}점'
+    review: '검토: {{task}}'
+    enter: '용어 입력: {{task}}'
+    play: '빙고 플레이: {{task}}'
+    demo_term1: 그룹 역학
+    demo_def1: 그룹 구성원들이 함께 일하는 방식
+    demo_term2: 협력
+    demo_def2: 두 개 이상의 주체가 공동 목표를 달성하기 위해 기술을 적용하는 것
+    demo_term3: 그룹 역학
+    demo_def3: 그룹 구성원들이 서로 상호작용하는 방식의 본질
+    demo_term4: 그룹
+    demo_def4: ''
+    demo_term5: 그룹 프로세스
+    demo_def5: 그룹이 따르는 방법과 기술
+    demo_term6: 팀
+    demo_def6: 함께 일하는 사람들의 무리
+    demo_review_topic: 시뮬레이션과 게이밍
+    demo_review_description: >
+      Lara, M., Myers, R., Frick, T. W., Aslan, S., & Michaelidou, T.
+      (2010). 디자인 사례: 확산 시뮬레이션 게임의 향상된 버전 만들기.
+      International Journal of Designs for Learning, 1(1), 301–310.
+    demo_bingo_topic: 게임화와 교육
+    demo_bingo_description: >
+      Dichev, C., & Dicheva, D. (2017). 교육 게임화: 알려진 것, 믿어지는 것,
+      불확실한 것: 비판적 검토. International Journal of Educational Technology
+      in Higher Education (Vol. 14).
+    demo_topic: 협업이란 무엇인가?
+    demo_description: >
+      Johnson, R. T., & Johnson, D. W. (1994). 협동 학습의 개요.
+      J. Thousand, A. Villa, & A. Nevin (Eds.), Creativity and collaborative
+      learning (pp. 1–21). Baltimore: Brookes Press.
+    demo_success: 응답이 성공적으로 저장되었을 것입니다. 데모가 완료되었습니다.
+    demo_colab_success: 협업이 성공적으로 요청되었을 것입니다. 데모가 완료되었습니다.
+    update_success: 목록이 성공적으로 저장되었습니다.
+    not_ready_for_review: 이 목록은 아직 검토할 준비가 되지 않았습니다.
+    no_longer_available: 이 목록은 더 이상 편집할 수 없습니다.
+    list_closed: >
+      이 목록은 이미 마감되어 더 이상 편집할 수 없습니다.
+    concepts_for_game: 확인된 모든 실행 가능한 개념
+    ind_sum_msg: 귀하는 다음 용어들을 확인했으며, %{con_count}개의 고유한 개념이 도출되었습니다
+    term: 용어
+    terms: 용어들
+    grp_sum_msg: >
+      귀하와 귀하의 그룹 %{grp_name}은 다음 용어들을 확인했으며,
+      %{con_count}개의 고유한 개념이 도출되었습니다
+    list_stats:
+      title: 후보 목록 통계
+      def: 힌트
+    edit:
+      title: 용어 목록 완성하기
+      topic: 주제
+      description: 설명
+      for: 대상
+      instructions_title: 지침
+      instructions: >
+        위의 주제에 대해 읽어보고, 지정된 읽기 자료를 완독하고 자신만의 자료도 찾아보세요.
+        가장 중요하고/또는 두드러진 용어, 개념, 아이디어의 목록을 만들어 입력하고,
+        설명하는 용어를 다른 사람들이 식별하는 데 도움이 되는 힌트도 함께 입력하세요.
+      behalf: 대신에
+      duplicate_msg: 이 용어는 중복일 수 있습니다.
+      waiting: 그룹 도움 요청에 대한 응답을 기다리는 중
+      req_rec: "{{grp_name}}의 팀원들이 협업을 원합니다"
+      req_help: "{{grp_name}}의 팀원들을 도움 요청하시겠습니까?"
+      confirm_accept: 확실합니까? 변경 사항을 저장하셨습니까? 이 작업은 되돌릴 수 없습니다.
+      confirm_decline: 확실합니까? 변경 사항을 저장하셨습니까?
+      accept: 수락
+      decline: 거부
+      dup: 가능한 중복
+      term: 용어
+      def: 힌트
+    show:
+      title: 검토를 위한 용어 목록
+    student_entry:
+      save: 이 용어들 저장
+      term: 용어
+      definition: 정의
+    please_review: 표시된 오류를 검토하세요
+    all_good: 모두 좋습니다

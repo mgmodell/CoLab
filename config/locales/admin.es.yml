@@ -3,3 +3,11 @@ es:
     accept_decline: Aceptar/Rechazar
     new_activity: Nueva {{activity_type}}
     toggle_columns_plc: Mostrar columnas ocultas
+    enrollment_requests_title: Solicitudes de inscripción pendientes
+    enrollment_requests_body: Los siguientes estudiantes están intentando inscribirse en tu curso. Por favor acepta o rechaza cada solicitud.
+    first_name_col: Nombre
+    last_name_col: Apellido
+    course_name_col: Nombre del curso
+    course_number_col: Número del curso
+    accept_btn: Aceptar
+    reject_btn: Rechazar

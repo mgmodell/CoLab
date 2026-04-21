@@ -16,3 +16,5 @@ en:
       submit_response: Record my response to this Consent Form
       consent_dl: Download a Copy of this Document
       accept: I agree
+    save_success: Consent response saved.
+    please_review: Please review the problems below

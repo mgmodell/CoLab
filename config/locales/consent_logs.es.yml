@@ -16,3 +16,5 @@ es:
       submit_response: Registar mi respuesta a este formulario de consentimiento 
       consent_dl: Descargue una copia de este documento
       accept: Acepto
+    save_success: Respuesta de consentimiento guardada.
+    please_review: Por favor revise los problemas a continuación

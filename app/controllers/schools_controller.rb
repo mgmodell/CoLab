@@ -64,7 +64,7 @@ class SchoolsController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @school.errors.as_json
-          messages[:main] = 'Please review the problems below'
+          messages[:main] = t( 'schools.please_review' )
           render json: {
             messages:
           }
@@ -92,7 +92,7 @@ class SchoolsController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @school.errors.to_hash
-          messages.store( :main, 'Unable to save. Please resolve the issues and try again.' )
+          messages.store( :main, t( 'schools.unable_to_save' ) )
           response = {
             messages:
           }

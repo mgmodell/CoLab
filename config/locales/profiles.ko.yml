@@ -1,0 +1,106 @@
+ko:
+  profiles:
+    activities:
+      name: 활동
+      type: 유형
+      course_name: 수업
+      course_number: 수업 번호
+    first_name: 이름
+    last_name: 성
+    reset_btn: 변경 취소
+    save_btn: 프로필 저장
+    confirm_leave_hdr: 저장하지 않고 나가시겠습니까?
+    confirm_leave: >
+      이 페이지를 떠나시겠습니까? 저장하지 않은 변경 사항이 손실됩니다.
+    create_btn: 프로필 만들기
+    edit_profile: 프로필 편집
+    tabs:
+      details: 세부 정보
+      courses: 내 수업
+      history: 기록
+      research: 연구 참여
+    cancel: 취소
+    email_settings: 이메일 설정
+    emails:
+      email_lbl: 이메일 주소
+      registered_col: 등록된 이메일
+      primary_col: 기본
+      set_primary: 기본으로 설정할까요?
+      confirmed_col: 확인됨
+      remove_btn: 제거할까요?
+      add_btn: 이메일 추가!
+      add_dlg_title: 이메일 추가
+      add_dlg: 새 이메일 주소 추가
+      none_yet: 이메일이 로드되지 않았습니다.
+      remove_tltp: 이 주소 제거
+    none_option: 선택 없음
+    course_status:
+      name: 이름
+      number: 번호
+      bingo: 빙고 진행 상황
+      assessment: 평가 진행 상황
+      experience: 경험 진행 상황
+    consent:
+      name: 연구 제목
+      status: 연구 상태
+      accept_status: 수락됨?
+      active: 활성화됨
+      expired: 비활성화됨 (만료됨)
+      inactive: 비활성화됨
+      accepted: 수락됨
+      declined: 거부됨
+      action: 실행
+    password_change: >
+      비밀번호를 변경하고 싶으신가요? 여기를 클릭하면 지침을 이메일로 보내드립니다.
+    display_settings:
+      prompt: 표시 설정
+      ui_theme: 어떤 색상 구성을 사용하시겠습니까?
+      language: CoLab에 어떤 언어를 사용하시겠습니까?
+      time_zone: 귀하의 시간대는?
+      anonymize: 이름 익명화?
+    demographics:
+      prompt: >
+        {{first_name}}님, 자신에 대해 알려주세요 (선택 사항)
+      date_prompt: 날짜 입력
+      time_zone: 시간대
+      school: 현재 어느 학교에 다니시나요?
+      major: 무엇을 공부하고 있나요?
+      start_school: 언제 학업을 시작했나요?
+      born: 언제 태어나셨나요?
+      gender: 성별이 어떻게 되시나요?
+      home_language: 집에서 어떤 언어를 사용하시나요?
+      home_town: 고향이 어디인가요?
+      home_country: 어느 나라인가요?
+      home_state: 어느 주인가요?
+      impairments:
+        prompt: >
+          관점을 바꾸는 장애가 있으신가요?
+        visual: 시각
+        auditory: 청각
+        cognitive: 인지
+        motor: 운동
+        other: 기타
+    walkthrough:
+      details_title: 프로필 세부 정보
+      details_desc: >
+        이름과 성을 확인하고 필요하면 업데이트하세요.
+      email_title: 이메일 설정
+      email_desc: >
+        등록된 이메일 주소를 검토하세요.
+      display_title: 표시 설정
+      display_desc: >
+        선호하는 테마, 언어, 시간대로 CoLab 경험을 맞춤화하세요.
+      demographics_title: 자기 소개
+      demographics_desc: >
+        이 섹션은 선택 사항입니다. CoLab 개선을 위해 자신에 대한 정보를 공유할 수 있습니다.
+      save_title: 완료!
+      save_desc: >
+        프로필을 확인한 후 프로필 저장을 클릭하여 계속하세요.
+    impairment:
+      visual: 시각
+      auditory: 청각
+      motor: 운동
+      cognitive: 인지
+      other: 기타
+    update_success: 프로필이 성공적으로 업데이트되었습니다
+    please_review: 아래 오류를 검토하세요

@@ -291,7 +291,7 @@ class BingoGamesController < ApplicationController
         else
           logger.debug @bingo_game.errors.full_messages
           render json: {
-            notice: 'Unable to save',
+            notice: t( 'bingo_games.unable_to_save' ),
             messages: @bingo_game.errors
           }
         end
@@ -456,7 +456,7 @@ class BingoGamesController < ApplicationController
     bingo_id = params[:id].to_i
     response = {}
     if bingo_id < 1
-      response[:notice] = 'Error!'
+      response[:notice] = t( 'bingo_games.review_error' )
       response[:reviewed] = params[:reviewed]
 
     else

@@ -184,8 +184,18 @@ en:
   member: Team Member
   titles:
     demonstration: Demonstration
+  no_help_title: No Help Available
+  no_help_description: There is no help available for this topic
+  help_not_loaded: Not loaded
+  help_feedback_col: Feedback
+  help_definition_col: Definition
+  help_points_col: Points
   home:
     title: Home
+    tour_title: Welcome to the Application!
+    tour_description: Explore the tasks assigned to you and your progress.
+    task_view_tab: Task View
+    calendar_view_tab: Calendar View
     your_tasks: Your Tasks
     invited: You've been invited!
     greeting: Hello {{name}}
@@ -248,3 +258,5 @@ en:
         label: Status
         incomplete: Not Completed
         complete: Completed
+    enrollment_success: "Successfully enrolled in {{course_name}}"
+    enrollment_error: "Unable to enroll in {{course_name}}"

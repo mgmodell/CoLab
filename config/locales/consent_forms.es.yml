@@ -5,10 +5,22 @@ es:
     multiple: Partcipacion en investigacion
     not_for_research: No para la investigacion
     consent_form: Formulario de consentimiento de investigacion
+    start_date_lbl: Fecha de inicio
+    start_date_placeholder: Ingresar fecha de inicio
+    end_date_lbl: Fecha de finalización
+    end_date_placeholder: Ingresar fecha de finalización
+    date_to_lbl: hasta
+    english_tab: Inglés
+    korean_tab: Coreano
     edit:
-      title: Formulario de consentimiento 
+      title: Formulario de consentimiento
+      create_btn: Crear formulario de consentimiento
+      save_btn: Guardar formulario de consentimiento
+      file_select_btn: Seleccionar archivo
     index:
       title: Listado de formularios de consentimiento
+      name_col: Nombre
+      active_col: Activo
     show:
       name: Nombre del estudio
       lead_admin: Administradora principal del estudio
@@ -22,3 +34,7 @@ es:
         Este formulario de consentimiento se aplica entre <strong>%{start_date}</strong> y 
         <strong>%{end_date}</strong>.
 
+    create_success: El formulario de consentimiento fue creado exitosamente.
+    update_success: El formulario de consentimiento fue actualizado exitosamente.
+    destroy_success: El formulario de consentimiento fue eliminado exitosamente.
+    please_review: Por favor revise los problemas a continuación

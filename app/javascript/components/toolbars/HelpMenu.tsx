@@ -16,18 +16,6 @@ type Props = {
   lookupUrl: string;
 };
 
-const NO_HELP_STEP = [
-  {
-    element: "body",
-    popover: {
-      title: "No Help Available",
-      description: "There is no help available for this topic",
-      align: "center" as const,
-      side: "left" as const
-    }
-  }
-];
-
 export default function HelpMenu(props: Props) {
   const [t, i18n] = useTranslation();
 
@@ -44,15 +32,15 @@ export default function HelpMenu(props: Props) {
   );
   const candidateFeedbackInfo = () => {
     if (undefined === feedbackOpts || null === feedbackOpts) {
-      return <p>Not loaded</p>;
+      return <p>{t("help_not_loaded")}</p>;
     } else {
       return (
         <table>
           <thead>
             <tr>
-              <td>Feedback</td>
-              <td>Definition</td>
-              <td>Points</td>
+              <td>{t("help_feedback_col")}</td>
+              <td>{t("help_definition_col")}</td>
+              <td>{t("help_points_col")}</td>
             </tr>
           </thead>
           <tbody>
@@ -90,7 +78,18 @@ export default function HelpMenu(props: Props) {
         aria-controls="help-menu"
         aria-haspopup="true"
         onClick={event => {
-          const steps = tourSteps.length > 0 ? tourSteps : NO_HELP_STEP;
+          const noHelpStep = [
+            {
+              element: "body",
+              popover: {
+                title: t("no_help_title"),
+                description: t("no_help_description"),
+                align: "center" as const,
+                side: "left" as const
+              }
+            }
+          ];
+          const steps = tourSteps.length > 0 ? tourSteps : noHelpStep;
           driverObj.setSteps(steps);
           driverObj.drive();
         }}

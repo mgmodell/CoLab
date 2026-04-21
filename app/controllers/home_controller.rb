@@ -293,7 +293,7 @@ class HomeController < ApplicationController
 
     submitted_params[:welcomed] = true
     if current_user.update( submitted_params )
-      notice = 'Profile successfully updated'
+      notice = t( 'profiles.update_success' )
       respond_to do | format |
         response = get_profile_hash
         response [:messages] = { main: notice }
@@ -305,7 +305,8 @@ class HomeController < ApplicationController
       logger.debug current_user.errors.full_messages
       respond_to do | format |
         format.json do
-          messages = current_user.errors.to_hash.store( :main, 'Please review the errors below' )
+          messages = current_user.errors.to_hash
+          messages.store( :main, t( 'profiles.please_review' ) )
           response = {
             messages:
           }

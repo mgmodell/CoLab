@@ -144,3 +144,7 @@ en:
         You may access these instructions or the project description
         at any time using the <i>Instructions</i> button in the upper right-hand
         corner of the page.
+    create_error: Error creating the Experience
+    save_error: Error saving the Experience
+    diagnosis_save_error: Unable to save your diagnosis. Please try again.
+    diagnosis_save_success: Diagnosis successfully saved.

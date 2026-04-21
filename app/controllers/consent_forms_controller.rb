@@ -47,7 +47,7 @@ class ConsentFormsController < ApplicationController
     @consent_form = ConsentForm.new( consent_form_params )
     respond_to do | format |
       if @consent_form.save
-        notice = 'Consent form was successfully created.'
+        notice = t( 'consent_forms.create_success' )
         format.json do
           response = {
             consent_form: @consent_form.as_json(
@@ -62,7 +62,7 @@ class ConsentFormsController < ApplicationController
         logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
         format.json do
           messages = @consent_form.errors.as_json
-          messages[:main] = 'Please review the problems below'
+          messages[:main] = t( 'consent_forms.please_review' )
           render json: {
             messages:
           }
@@ -75,7 +75,7 @@ class ConsentFormsController < ApplicationController
   # PATCH/PUT /consent_forms/1.json
   def update
     if @consent_form.update( consent_form_params )
-      notice = 'Consent form was successfully updated.'
+      notice = t( 'consent_forms.update_success' )
       respond_to do | format |
         format.json do
           response = {
@@ -93,7 +93,7 @@ class ConsentFormsController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @consent_form.errors.to_hash
-          messages[:main] = 'Please review the problems below.'
+          messages[:main] = t( 'consent_forms.please_review' )
           response = {
             messages:
           }

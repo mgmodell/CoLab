@@ -1,0 +1,32 @@
+ko:
+  concepts:
+    index:
+      title: 개념 목록
+    edit:
+      title: 개념 편집
+    show:
+      title: 개념 세부 정보
+      edit_string: 개념 세부 정보 편집
+    new:
+      title: 새 개념
+    create_success: 개념이 성공적으로 만들어졌습니다!
+    destroy_success: 개념이 성공적으로 삭제되었습니다!
+    update_success: 개념이 성공적으로 업데이트되었습니다!
+    back: 개념 목록으로 돌아가기
+    use_count: 제안 횟수
+    name: 이름
+    search_concepts: 개념 검색
+    concept_name: 개념 이름
+    cancel: 취소
+    update_con: 개념 업데이트
+    courses: 수업 등장 횟수
+    games: 빙고 등장 횟수
+    course_count:
+      one: 개념은 한 수업에서만 확인되었습니다.
+      other: 개념은 %{count}개 수업에서 확인되었습니다.
+    game_count:
+      one: 개념은 한 게임에서만 확인되었습니다.
+      other: 개념은 %{count}개 게임에서 확인되었습니다.
+    candidate_count:
+      one: 개념은 한 번만 제안되었습니다.
+      other: 개념은 %{count}번 제안되었습니다.

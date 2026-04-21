@@ -46,12 +46,12 @@ type Props = {
   // profileId: number;
 };
 
-const impairmentOptions = [
-  { label: "Visual", value: "visual" },
-  { label: "Auditory", value: "auditory" },
-  { label: "Motor", value: "motor" },
-  { label: "Cognitive", value: "cognitive" },
-  { label: "Other", value: "other" }
+const impairmentOptions = (t: (key: string) => string) => [
+  { label: t("impairment.visual"), value: "visual" },
+  { label: t("impairment.auditory"), value: "auditory" },
+  { label: t("impairment.motor"), value: "motor" },
+  { label: t("impairment.cognitive"), value: "cognitive" },
+  { label: t("impairment.other"), value: "other" }
 ];
 
 export default function ProfileDataAdmin(props: Props) {
@@ -800,7 +800,7 @@ export default function ProfileDataAdmin(props: Props) {
                   name="impairments"
                   aria-label="impairments"
                   value={getImpairments()}
-                  options={impairmentOptions}
+                  options={impairmentOptions(t)}
                   onChange={event => {
                     setProfileImpairment(event.target.value)
                     event.originalEvent.currentTarget.blur( )

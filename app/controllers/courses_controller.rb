@@ -152,7 +152,7 @@ class CoursesController < ApplicationController
       }
     else
       response[:messages] = {
-        main: 'There was a problem requesting enrollment in the course'
+        main: t( 'courses.enrollment_error' )
       }
       response[:messages][:details] = roster.errors.full_messages
       logger.debug roster.errors.full_messages 
@@ -397,7 +397,7 @@ class CoursesController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @course.errors.as_json
-          messages[:main] = 'Please review the problems below'
+          messages[:main] = t( 'courses.please_review' )
           render json: {
             messages:
           }
@@ -426,7 +426,8 @@ class CoursesController < ApplicationController
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do | format |
         format.json do
-          messages = @course.errors.to_hash.store( :main, 'Please review the problems below' )
+          messages = @course.errors.to_hash
+          messages.store( :main, t( 'courses.please_review' ) )
           response = {
             messages:
           }
@@ -463,7 +464,7 @@ class CoursesController < ApplicationController
 
   def accept_roster
     r = Roster.students.find_by( id: params[:roster_id], user: current_user )
-    notice = 'Successfully accepted the course'
+    notice = t( 'courses.accept_success' )
     if r.nil?
       notice = t( 'courses.accept_fail' )
     else
@@ -481,7 +482,7 @@ class CoursesController < ApplicationController
 
   def decline_roster
     r = Roster.students.find_by( id: params[:roster_id], user: current_user )
-    notice = 'Successfully declined the course'
+    notice = t( 'courses.decline_success' )
     if r.nil?
       notice = t( 'courses.decline_fail' )
     else
@@ -524,7 +525,7 @@ class CoursesController < ApplicationController
       format.json do
         render json: {
           messages: {
-            main: message || 'Successfully reinvited'
+            main: message || t( 'courses.reinvite_success' )
           }
         }
       end
@@ -553,7 +554,7 @@ class CoursesController < ApplicationController
       format.json do
         render json: {
           messages: {
-            main: message || 'Successfully dropped'
+            main: message || t( 'courses.drop_success' )
           }
         }
       end

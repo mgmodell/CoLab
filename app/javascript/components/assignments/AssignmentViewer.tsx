@@ -174,7 +174,7 @@ export default function AssignmentViewer(props) {
   } else {
     output = (
       <TabView activeIndex={curTab} onTabChange={e => setCurTab(e.index)}>
-        <TabPanel header={"Overview"}>
+        <TabPanel header={t("overview_tab")}>
           <Container fluid>
             <Row>
               <Col xs={12} sm={3}>

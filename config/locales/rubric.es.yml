@@ -2,6 +2,7 @@ es:
   rubrics:
     index:
       title: Lista de Rúbricas
+      empty: No se encontraron rúbricas
     edit:
       title: Editar Rúbrica
       deactivate: Desactivar Rúbrica
@@ -23,10 +24,25 @@ es:
     activate_success: Se activó la rúbrica
     copy_success: ¡La rúbrica se copió correctamente!
     deactivate_success: Rúbrica fue desactivada
+    activate_no_permission: Solo puedes activar tus propias rúbricas.
+    publish_no_permission: Solo puedes publicar tus propias rúbricas.
     back: Volver a la lista de rúbricas
     name: Nombre
     description: Descripción
     version: Versión
+    new_criteria: Nuevo criterio
+    min_score_description: El mínimo para registrar una puntuación.
+    description_placeholder: Ingresa una descripción de la rúbrica
+    version_label: "Versión {{version}}"
+    yes: "Sí"
+    no: "No"
+    published_label: Publicado
+    active_label: Activo
+    save_btn: Guardar rúbrica
+    create_btn: Crear rúbrica
+    deactivate_btn: Desactivar rúbrica
+    activate_btn: Activar rúbrica
+    publish_btn: Publicar rúbrica
     rubric:
       copy: Copiar rúbrica
       delete: Eliminar esta rúbrica
@@ -44,4 +60,18 @@ es:
       down: Mover criterios hacia abajo
       copy: Criterios de copia
       delete: Eliminar este criterio
+    demo:
+      student_rubric_name: Desafío de Diseño CHI
+      student_rubric_description: Para evaluar las respuestas de proyectos basados en la competencia de diseño de Interacción Humano-Computadora.
+      rubric_criteria_1: Gramática
+      rubric_criteria_1_level_1: Más de 3 errores por página.
+      rubric_criteria_1_level_2: Más de 1 error por página.
+      rubric_criteria_1_level_3: Menos de 1 error por página.
+      rubric_criteria_2: Formato
+      rubric_criteria_2_level_1: Sin página de título ni bordes y fuentes correctos.
+      rubric_criteria_2_level_2: Falta la página de título o la fuente y/o el ancho del borde son incorrectos.
+      rubric_criteria_2_level_3: Página de título completa con fuente y ancho de borde correctos.
+      rubric_criteria_3: Referencias
+      rubric_criteria_3_level_1: Presente con algunos errores.
+      rubric_criteria_3_level_2: Presente sin errores notables.
 
