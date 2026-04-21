@@ -188,7 +188,7 @@ es:
   home:
     title: Pagina de Inicio
     your_tasks: Tus Tareas 
-    invited: "¡Has sido Invitado!"
+    invited: "¡Has sido invitado!"
     greeting: Hola {{name}}
     greeting_unknown: Hola!
     instructor_tasks: Tarea de Instructor 
