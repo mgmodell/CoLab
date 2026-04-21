@@ -1,5 +1,0 @@
-candidates_list:
-  filter_label: 'Filtrer par :'
-  header: Candidats disponibles
-  no_candidates: "Aucun candidat trouv\xE9."
-extra_candidate_key: "Cl\xE9 suppl\xE9mentaire pour les candidats."

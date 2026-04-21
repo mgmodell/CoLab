@@ -1,0 +1,74 @@
+ko:
+  projects:
+    create_btn: 프로젝트 만들기
+    save_btn: 프로젝트 저장
+    create_success: 프로젝트가 성공적으로 만들어졌습니다.
+    create_success_inactive: >
+      프로젝트가 성공적으로 만들어졌습니다. 활성화하는 것을 잊지 마세요!
+    update_success: 프로젝트가 성공적으로 업데이트되었습니다.
+    update_success_inactive: >
+      프로젝트가 성공적으로 업데이트되었습니다. 활성화하는 것을 잊지 마세요!
+    destroy_success: 프로젝트가 성공적으로 삭제되었습니다.
+    soft_delete_success: 프로젝트가 비활성화되어 삭제 표시되었습니다.
+    timezone_warning: "{{timezone}} 시간대로 표시된 모든 날짜."
+    factor_pack: 요소 팩
+    active_switch: 활성화됨
+    project_dates: 프로젝트 날짜
+    start_date_lbl: 시작 날짜
+    start_date_placeholder: 시작 날짜를 선택하려면 클릭하세요
+    end_date_placeholder: 종료 날짜를 선택하려면 클릭하세요
+    end_date_lbl: 종료 날짜
+    date_to_lbl: 까지
+    name_lbl: 프로젝트 이름
+    description_lbl: 프로젝트 설명
+    group_create_success: 그룹이 성공적으로 만들어졌습니다.
+    group_save_success: 그룹 데이터가 성공적으로 업데이트되었습니다.
+    group_save_failure: 그룹 데이터 업데이트에 실패했습니다. 지원팀에 문의하세요.
+    tz_warn: "이 프로젝트는 %{time_zone} 시간대에서 진행되며 모든 날짜는 이를 반영합니다."
+    opens: 매주 시작
+    style: 입력 방식
+    no_group: 미배정
+    rescore: 재채점
+    new_group: 새 그룹 이름
+    closes: 매주 종료
+    groups_intro: >
+      이 프로젝트에는 현재 아래에 명시된 %{group_count}개의 그룹이 있습니다. 각 그룹의
+      견해 점수는 이름 아래에 나열되어 있습니다. 해당 견해 점수를 재계산할 수 있습니다.
+    diversity_calculated: 현재 데이터를 기반으로 견해 점수가 계산되었습니다.
+    diversities_calculated: 현재 데이터를 기반으로 견해 점수가 계산되었습니다.
+    recalculate_diversities: 모든 견해 점수 계산하기!
+    wrong_group: 지정된 그룹이 이 프로젝트에 없습니다.
+    performance_explained: >
+      이 값은 CoLab의 주간 자기 및 동료 평가 요청에 대한 응답률을 반영합니다.
+    show:
+      title: 프로젝트 세부 사항
+    edit:
+      title: 프로젝트 세부 사항 편집
+      editing: 프로젝트 편집 중
+      show: 프로젝트 보기
+      date_summ: >
+        <strong>%{start_date}</strong>부터 <strong>%{end_date}</strong>까지 평가가
+        매주 실행되며, 매 <strong>%{start_dow}</strong>에 시작하여
+        <strong>%{end_dow}</strong>까지 진행됩니다.
+    index:
+      title: 프로젝트 목록
+    create:
+      title: 새 프로젝트
+    new:
+      title: 새 프로젝트
+    projects: 프로젝트
+    diversity_scores: 견해 점수
+    lti:
+      panel_title: LTI 성적 전달
+      line_item_url_lbl: LMS 라인 항목 URL
+      line_item_url_placeholder: "예: https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS 액세스 토큰 URL
+      ags_token_url_placeholder: "예: https://lms.example.com/login/oauth2/token"
+      client_id_lbl: 클라이언트 ID
+      deployment_id_lbl: 배포 ID
+      iss_lbl: 발급자 (iss)
+      save_btn: LTI 연결 저장
+      push_btn: LMS에 성적 전송
+      not_configured: 구성되지 않음
+      configured: 연결됨
+      push_confirm: 지금 모든 성적을 LMS에 전송할까요?

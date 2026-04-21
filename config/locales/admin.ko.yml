@@ -1,0 +1,5 @@
+ko:
+  admin:
+    accept_decline: 수락/거부
+    new_activity: 새 {{activity_type}}
+    toggle_columns_plc: 숨겨진 열 표시
