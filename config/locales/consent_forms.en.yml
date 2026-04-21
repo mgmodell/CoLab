@@ -17,6 +17,7 @@ en:
       create_btn: Create consent form
       save_btn: Save consent form
       file_select_btn: Select file
+      view_pdf_lbl: View current PDF
     index:
       title: Listing Consent Forms
       name_col: Name

@@ -77,6 +77,7 @@ en:
     topic: Topic
     description: Description
     score: Score
+    submit_scores: Submit Scores
     file_select: Score Sheet Image
     definition: Definition
     feedback: Feedback

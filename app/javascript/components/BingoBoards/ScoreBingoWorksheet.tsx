@@ -45,7 +45,7 @@ export default function ScoreBingoWorksheet(props) {
   }, [endpointsLoaded]);
 
   const getWorksheetData = () => {
-    const url = `${endpoints.worksheetResultsUrl}/${worksheetIdParam}.json`;
+    const url = `${endpoints.worksheetResultsUrl}${worksheetIdParam}.json`;
     dispatch(startTask());
     axios
       .get(url, {})

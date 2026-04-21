@@ -17,6 +17,7 @@ ko:
       create_btn: 동의서 만들기
       save_btn: 동의서 저장
       file_select_btn: 파일 선택
+      view_pdf_lbl: 현재 PDF 보기
     index:
       title: 동의서 목록
       name_col: 이름

@@ -76,6 +76,7 @@ ko:
     topic: 주제
     description: 설명
     score: 점수
+    submit_scores: 점수 제출
     file_select: 채점지 이미지
     definition: 정의
     feedback: 피드백

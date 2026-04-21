@@ -17,6 +17,7 @@ es:
       create_btn: Crear formulario de consentimiento
       save_btn: Guardar formulario de consentimiento
       file_select_btn: Seleccionar archivo
+      view_pdf_lbl: Ver PDF actual
     index:
       title: Listado de formularios de consentimiento
       name_col: Nombre
