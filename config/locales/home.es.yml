@@ -115,7 +115,7 @@ es:
   course_invite_body:
     one: "Ha sido invitado a participar en el siguiente curso:"
     other: "Ha sido invitado a participar en los siguientes %{count} cursos:"
-  course_invite_close: Por favor inicie session en %{site_link} aceptar o rechazar esta inscipción.
+  course_invite_close: Por favor inicie sesión en %{site_link} para aceptar o rechazar esta inscripción.
   reminder_body: >
     Este correo electrónico es un recordatorio amistoso de que tiene una tarea abierta
     esperándolo en este momento. Por favor inicie session en %{site_link} lo antes
