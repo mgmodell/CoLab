@@ -37,3 +37,20 @@ Feature: Admin uploads a PDF for a Consent Form
     Then the user waits to see "successfully"
     Then the existing consent form has a PDF stored in Active Storage
     Then the admin sees the PDF link on the consent form page
+
+  @javascript
+  Scenario: Admin replaces the PDF on an existing consent form that already has one
+    Given there is a consent form with an existing PDF
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'consent-forms' menu item
+    Then the user opens the consent form for editing
+    Then the user sees the consent form editing page
+    Then the admin sees the PDF link on the consent form page
+    When the admin uploads a replacement PDF for the consent form
+    When the user clicks "Save consent form"
+    Then the user waits to see "successfully"
+    Then the existing consent form has a PDF stored in Active Storage
+    Then the replaced PDF is different from the original PDF
+    Then the admin sees the PDF link on the consent form page
