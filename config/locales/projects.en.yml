@@ -86,3 +86,6 @@ en:
       not_configured: Not configured
       configured: Connected
       push_confirm: Push all grades to the LMS now?
+    details_tab: Details
+    groups_tab: Groups
+    reporting_tab: Reporting

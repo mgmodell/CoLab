@@ -186,3 +186,5 @@ es:
     decline_student: Rechazar al estudiante
     cancel: Cancelar
     save_course_warning: Tiene que guardar el curso para que se le asignen estudiantes.
+    save_btn: Guardar curso
+    create_btn: Crear curso

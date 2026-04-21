@@ -30,6 +30,19 @@ es:
     name: Nombre
     description: Descripción
     version: Versión
+    new_criteria: Nuevo criterio
+    min_score_description: El mínimo para registrar una puntuación.
+    description_placeholder: Ingresa una descripción de la rúbrica
+    version_label: "Versión {{version}}"
+    yes: "Sí"
+    no: "No"
+    published_label: Publicado
+    active_label: Activo
+    save_btn: Guardar rúbrica
+    create_btn: Crear rúbrica
+    deactivate_btn: Desactivar rúbrica
+    activate_btn: Activar rúbrica
+    publish_btn: Publicar rúbrica
     rubric:
       copy: Copiar rúbrica
       delete: Eliminar esta rúbrica

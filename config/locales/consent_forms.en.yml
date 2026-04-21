@@ -10,6 +10,8 @@ en:
     end_date_placeholder: Enter end date
     end_date_lbl: End date
     date_to_lbl: until
+    english_tab: English
+    korean_tab: Korean
     edit:
       title: Consent Form
       create_btn: Create consent form

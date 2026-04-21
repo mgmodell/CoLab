@@ -215,3 +215,5 @@ en:
     decline_student: Decline Student
     cancel: Cancel
     save_course_warning: You must save the Course to have students assigned to it
+    save_btn: Save Course
+    create_btn: Create Course

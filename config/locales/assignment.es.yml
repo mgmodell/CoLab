@@ -85,6 +85,9 @@ es:
     update_success: ¡La tarea se actualizó exitosamente!
     soft_delete_success: La tarea ha sido desactivada y marcada como eliminada.
     back: Volver a la lista de tareas
+    overview_tab: Resumen
+    none_selected: Ninguno seleccionado
+    nothing_here: Nada aquí todavía
     name: Nombre de la Tarea
     open_date: Fecha de inicio
     close_date: Fecha de cierre

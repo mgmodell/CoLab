@@ -84,3 +84,6 @@ es:
       save_btn: Guardar conexión LTI
       push_btn: Enviar calificaciones al LMS
       push_confirm: "¿Enviar todas las calificaciones al LMS ahora?"
+    details_tab: Detalles
+    groups_tab: Grupos
+    reporting_tab: Informes

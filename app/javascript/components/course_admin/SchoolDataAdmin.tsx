@@ -143,7 +143,7 @@ export default function SchoolDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveSchool} disabled={!dirty}>
-      {schoolId > 0 ? "Save" : "Create"} School
+      {schoolId > 0 ? t("save_btn") : t("create_btn")}
     </Button>
   ) : null;
 

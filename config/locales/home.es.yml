@@ -185,6 +185,12 @@ es:
   member: Miembro de Equipo 
   titles:
     demonstration: Demonstration
+  no_help_title: Sin ayuda disponible
+  no_help_description: No hay ayuda disponible para este tema
+  help_not_loaded: No cargado
+  help_feedback_col: Retroalimentación
+  help_definition_col: Definición
+  help_points_col: Puntos
   home:
     title: Pagina de Inicio
     tour_title: "¡Bienvenido a la Aplicación!"

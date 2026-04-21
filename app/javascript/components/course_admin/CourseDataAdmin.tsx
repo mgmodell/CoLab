@@ -242,7 +242,7 @@ export default function CourseDataAdmin() {
     <React.Fragment>
       <hr />
       <Button onClick={saveCourse}>
-        {Boolean(courseId) ? "Save" : "Create"} Course
+        {Boolean(courseId) ? t("save_btn") : t("create_btn")}
       </Button>
     </React.Fragment>
   ) : null;

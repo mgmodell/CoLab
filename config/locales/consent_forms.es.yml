@@ -10,6 +10,8 @@ es:
     end_date_lbl: Fecha de finalización
     end_date_placeholder: Ingresar fecha de finalización
     date_to_lbl: hasta
+    english_tab: Inglés
+    korean_tab: Coreano
     edit:
       title: Formulario de consentimiento
       create_btn: Crear formulario de consentimiento
