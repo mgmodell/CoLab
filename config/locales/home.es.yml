@@ -187,6 +187,10 @@ es:
     demonstration: Demonstration
   home:
     title: Pagina de Inicio
+    tour_title: "¡Bienvenido a la aplicación!"
+    tour_description: Explora las tareas asignadas a ti y tu progreso.
+    task_view_tab: Vista de tareas
+    calendar_view_tab: Vista de calendario
     your_tasks: Tus Tareas 
     invited: "¡Has sido invitado!"
     greeting: Hola {{name}}

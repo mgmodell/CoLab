@@ -1,5 +1,15 @@
 en:
   projects:
+    groups:
+      default_name: "Team {{id}}"
+      operation_failed: The operation failed
+      given_name_col: Given Name
+      family_name_col: Family Name
+      no_group_col: No Group
+      save_btn: Save
+      add_group_btn: Add Group
+      recalculate_btn: Recalculate Diversity
+      search_placeholder: Search Students
     create_btn: Create Project
     save_btn: Save Project
     create_success: Project was successfully created.

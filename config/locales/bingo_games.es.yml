@@ -1,5 +1,15 @@
 es:
   bingo_games:
+    no_help_title: Sin ayuda disponible
+    no_help_description: No hay ayuda disponible para este tema
+    results:
+      no_board: No hay tablero disponible
+      score_label: "Puntuación"
+      unscored: sin calificación
+      for_student: "Resultados para {{student}}"
+      done_btn: Listo
+      scored_results_tab: Resultados calificados
+      answer_key_tab: Clave de respuestas
     update_bingo_btn: Actualizar juego de bingo
     scored_game:
       list_title: Artículo calificado

@@ -1,5 +1,15 @@
 es:
   projects:
+    groups:
+      default_name: "Equipo {{id}}"
+      operation_failed: "La operación falló"
+      given_name_col: Nombre de pila
+      family_name_col: Apellido
+      no_group_col: Sin grupo
+      save_btn: Guardar
+      add_group_btn: Agregar grupo
+      recalculate_btn: Recalcular diversidad
+      search_placeholder: Buscar estudiantes
     create_success: El proyecto fue creado exitosamente.
     create_success_inactive: >
       El proyecto fue creado exitosamente. ¡No olvides activarlo!

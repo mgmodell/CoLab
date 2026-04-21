@@ -186,6 +186,10 @@ en:
     demonstration: Demonstration
   home:
     title: Home
+    tour_title: Welcome to the Application!
+    tour_description: Explore the tasks assigned to you and your progress.
+    task_view_tab: Task View
+    calendar_view_tab: Calendar View
     your_tasks: Your Tasks
     invited: You've been invited!
     greeting: Hello {{name}}
