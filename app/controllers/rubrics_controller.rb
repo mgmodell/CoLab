@@ -212,7 +212,7 @@ class RubricsController < ApplicationController
       logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
       if @rubric.errors.empty?
         format.json do
-          render json: standardized_response( @rubric, { main: 'Successfully saved rubric' } )
+          render json: standardized_response( @rubric, { main: t( 'rubrics.update_success' ) } )
         end
       else
         format.json do

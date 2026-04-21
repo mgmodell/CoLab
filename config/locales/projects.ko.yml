@@ -1,0 +1,87 @@
+ko:
+  projects:
+    groups:
+      default_name: "팀 {{id}}"
+      operation_failed: 작업이 실패했습니다
+      given_name_col: 이름
+      family_name_col: 성
+      no_group_col: 그룹 없음
+      save_btn: 저장
+      add_group_btn: 그룹 추가
+      recalculate_btn: 다양성 재계산
+      search_placeholder: 학생 검색
+    create_btn: 프로젝트 만들기
+    save_btn: 프로젝트 저장
+    create_success: 프로젝트가 성공적으로 만들어졌습니다.
+    create_success_inactive: >
+      프로젝트가 성공적으로 만들어졌습니다. 활성화하는 것을 잊지 마세요!
+    update_success: 프로젝트가 성공적으로 업데이트되었습니다.
+    update_success_inactive: >
+      프로젝트가 성공적으로 업데이트되었습니다. 활성화하는 것을 잊지 마세요!
+    destroy_success: 프로젝트가 성공적으로 삭제되었습니다.
+    soft_delete_success: 프로젝트가 비활성화되어 삭제 표시되었습니다.
+    timezone_warning: "모든 날짜는 {{timezone}} 시간대로 표시됩니다."
+    factor_pack: 요소 팩
+    active_switch: 활성화됨
+    project_dates: 프로젝트 날짜
+    start_date_lbl: 시작 날짜
+    start_date_placeholder: 클릭하여 시작 날짜 선택
+    end_date_placeholder: 클릭하여 마감 날짜 선택
+    end_date_lbl: 마감 날짜
+    date_to_lbl: 까지
+    name_lbl: 프로젝트 이름
+    description_lbl: 프로젝트 설명
+    group_create_success: 그룹이 성공적으로 만들어졌습니다.
+    group_save_success: 그룹 데이터가 성공적으로 업데이트되었습니다.
+    group_save_failure: 그룹 데이터 업데이트에 실패했습니다. 지원팀에 문의하세요.
+    tz_warn: "이 프로젝트는 %{time_zone} 시간대에서 진행되며 모든 날짜는 이를 반영합니다."
+    opens: 매주 시작
+    style: 입력 스타일
+    no_group: 배정되지 않음
+    rescore: 재채점
+    new_group: 새 그룹 이름
+    closes: 매주 마감
+    groups_intro: >
+      이 프로젝트는 현재 아래에 명시된 %{group_count}개의 그룹을 포함합니다.
+      각 관점 점수는 이름 아래에 나열됩니다.
+    diversity_calculated: 현재 데이터를 기반으로 관점 점수가 계산되었습니다.
+    diversities_calculated: 현재 데이터를 기반으로 관점 점수가 계산되었습니다.
+    recalculate_diversities: 모든 관점 점수 계산하기!
+    wrong_group: 지정된 그룹은 이 프로젝트에 없습니다.
+    performance_explained: >
+      이 값은 CoLab의 주간 자기 평가 및 동료 평가 요청에 대한 응답률을 반영합니다.
+    show:
+      title: 프로젝트 세부 정보
+    edit:
+      title: 프로젝트 세부 정보 편집
+      editing: 프로젝트 편집 중
+      show: 프로젝트 표시
+      date_summ: >
+        <strong>%{start_date}</strong>부터 <strong>%{end_date}</strong>까지
+        평가는 매주 진행되며, 매 <strong>%{start_dow}</strong>에 시작하여
+        <strong>%{end_dow}</strong>에 마감됩니다.
+    index:
+      title: 프로젝트 목록
+    create:
+      title: 새 프로젝트
+    new:
+      title: 새 프로젝트
+    projects: 프로젝트들
+    diversity_scores: 관점 점수
+    lti:
+      panel_title: LTI 성적 전달
+      line_item_url_lbl: LMS 라인 항목 URL
+      line_item_url_placeholder: "예: https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS 액세스 토큰 URL
+      ags_token_url_placeholder: "예: https://lms.example.com/login/oauth2/token"
+      client_id_lbl: 클라이언트 ID
+      deployment_id_lbl: 배포 ID
+      iss_lbl: 발급자 (iss)
+      save_btn: LTI 연결 저장
+      push_btn: LMS에 성적 전송
+      not_configured: 구성되지 않음
+      configured: 연결됨
+      push_confirm: 지금 모든 성적을 LMS에 전송할까요?
+    details_tab: 세부 정보
+    groups_tab: 그룹
+    reporting_tab: 보고서

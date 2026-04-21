@@ -217,3 +217,14 @@ en:
     save_course_warning: You must save the Course to have students assigned to it
     save_btn: Save Course
     create_btn: Create Course
+    re_add_student: Re-Add Student
+    status_enrolled: Enrolled
+    status_awaiting: Awaiting Response
+    status_not_enrolled: Not Enrolled
+    status_instructor: Instructor or Assistant
+    please_review: Please review the problems below
+    accept_success: Successfully accepted the course
+    decline_success: Successfully declined the course
+    reinvite_success: Successfully reinvited
+    drop_success: Successfully dropped
+    enrollment_error: There was a problem requesting enrollment in the course

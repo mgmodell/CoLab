@@ -1,0 +1,36 @@
+ko:
+  critiques:
+    critique_title: 비평
+    error:
+      not_loaded: 제출물이 로드되지 않았습니다
+      feedback_required: >
+        완벽한 점수 미만의 경우 피드백이 필요합니다.
+    submissions_title: 제출물
+    submitted: 과제 제출물
+    submitted_text: 제출된 텍스트
+    submitted_link: 제출된 링크
+    submission_list_hidden: 제출물 목록을 보려면 여기를 클릭하세요
+    no_text: 입력된 텍스트 없음
+    feedback: 전체 피드백
+    calculated_score_lbl: 계산된 점수
+    override_option_lbl: 점수를 재정의할까요?
+    override_score_lbl: 점수 설정
+    clear_override_btn: 재정의된 점수 지우기
+    history: 이전 제출물 및 피드백
+    rubric:
+      name: 이름
+      version: 버전
+      minimum: 최소 요건 미충족.
+      criteria_feedback: 기준 피드백
+    save_btn: 피드백 저장
+    save_success_msg: 피드백이 성공적으로 저장되었습니다
+    save_fail_msg: 피드백 저장에 실패했습니다
+    submissions:
+      id: 제출 ID
+      score: 점수
+      calculated_score: 계산된 점수
+      submitted: 제출 날짜
+      withdrawn: 취소 날짜
+      not_withdrawn: --
+      submitter: 제출자
+      score_na: --

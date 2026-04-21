@@ -100,7 +100,7 @@ class ExperiencesController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @experience.errors.to_hash
-          messages[:status] = 'Error creating the Experience'
+          messages[:status] = t( 'experiences.create_error' )
           render json: { messages: }
         end
       end
@@ -130,7 +130,7 @@ class ExperiencesController < ApplicationController
       respond_to do | format |
         format.json do
           messages = @experience.errors.to_hash
-          messages[:status] = 'Error saving the Experience'
+          messages[:status] = t( 'experiences.save_error' )
           render json: { messages: }
         end
       end
@@ -206,11 +206,11 @@ class ExperiencesController < ApplicationController
       logger.debug received_diagnosis.errors.full_messages
       @diagnosis = received_diagnosis
       response[:messages] = @diagnosis.errors.to_hash
-      response[:messages][:main] = 'Unable to save your diagnosis. Please try again.'
+      response[:messages][:main] = t( 'experiences.diagnosis_save_error' )
     else
       reaction = received_diagnosis.reaction
       @diagnosis = reaction.diagnoses.new( week: )
-      response[:messages] = { main: 'Diagnosis successfully saved.' }
+      response[:messages] = { main: t( 'experiences.diagnosis_save_success' ) }
     end
 
     if week.nil?

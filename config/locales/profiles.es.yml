@@ -101,3 +101,11 @@ es:
       save_desc: >
         Cuando hayas verificado tu perfil, haz clic en
         Guardar perfil para continuar.
+    impairment:
+      visual: Visual
+      auditory: Auditivo
+      motor: Motor
+      cognitive: Cognitivo
+      other: Otro
+    update_success: Perfil actualizado exitosamente
+    please_review: Por favor revise los errores a continuación

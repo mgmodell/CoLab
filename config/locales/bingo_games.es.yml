@@ -133,3 +133,7 @@ es:
       reload_btn: Recargar
       progress_key: "Conceptos únicos [conceptos aceptables] {{unique}} [{{acceptable}}]"
 
+    game_save_success: ¡Juego guardado exitosamente!
+    unable_to_save: No se puede guardar
+    demo_done: ¡Demo completado!
+    review_error: ¡Error!

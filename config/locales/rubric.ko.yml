@@ -1,0 +1,80 @@
+ko:
+  rubrics:
+    index:
+      title: 루브릭 목록
+      empty: 루브릭을 찾을 수 없습니다
+    edit:
+      title: 루브릭 편집
+      deactivate: 루브릭 비활성화
+      activate: 루브릭 활성화
+    show:
+      title: 루브릭 세부 정보
+      edit_string: 루브릭 세부 정보 편집
+      published: 게시됨?
+      creator: 작성자
+    new:
+      title: 새 루브릭
+      criteria: 새 기준
+      criteria_l1: 최소 요건
+    create_success: 루브릭이 성공적으로 만들어졌습니다!
+    new_version_success: 새 버전이 만들어졌습니다.
+    destroy_success: 루브릭이 성공적으로 삭제되었습니다!
+    update_success: 루브릭이 성공적으로 업데이트되었습니다!
+    publish_success: 루브릭이 성공적으로 게시되었습니다!
+    publish_no_permission: 자신의 루브릭만 게시할 수 있습니다.
+    activate_success: 루브릭이 활성화되었습니다
+    activate_no_permission: 자신의 루브릭만 활성화할 수 있습니다.
+    copy_success: 루브릭이 성공적으로 복사되었습니다!
+    deactivate_success: 루브릭이 비활성화되었습니다
+    back: 루브릭 목록으로 돌아가기
+    name: 이름
+    description: 설명
+    version: 버전
+    new_criteria: 새 기준
+    min_score_description: 점수를 등록하기 위한 최소 요건.
+    description_placeholder: 루브릭 설명을 입력하세요
+    version_label: "버전 {{version}}"
+    yes: "예"
+    no: "아니요"
+    published_label: 게시됨
+    active_label: 활성화됨
+    save_btn: 루브릭 저장
+    create_btn: 루브릭 만들기
+    deactivate_btn: 루브릭 비활성화
+    activate_btn: 루브릭 활성화
+    publish_btn: 루브릭 게시
+    demo:
+      student_rubric_name: CHI 디자인 챌린지
+      student_rubric_description: >
+        컴퓨터-인간 상호작용 디자인 경쟁 기반 프로젝트 응답 평가용.
+      rubric_criteria_1: 문법
+      rubric_criteria_1_level_1: 페이지당 3개 이상의 오류.
+      rubric_criteria_1_level_2: 페이지당 1개 이상의 오류.
+      rubric_criteria_1_level_3: 페이지당 1개 미만의 오류.
+      rubric_criteria_2: 형식
+      rubric_criteria_2_level_1: >
+        표지 없음 또는 잘못된 여백과 글꼴.
+      rubric_criteria_2_level_2: >
+        표지 누락 또는 잘못된 글꼴 및/또는 여백 너비.
+      rubric_criteria_2_level_3: >
+        올바른 글꼴과 여백 너비의 완전한 표지.
+      rubric_criteria_3: 참고문헌
+      rubric_criteria_3_level_1: 일부 실수가 있음.
+      rubric_criteria_3_level_2: 눈에 띄는 실수 없음.
+    rubric:
+      copy: 루브릭 복사
+      delete: 이 루브릭 제거
+    criteria:
+      new: 새 기준
+      sequence: 순서
+      description: 간단한 기준 설명
+      weight: 기준 가중치
+      l1_description: 최소 요건
+      l2_description: 2단계 점수 요건
+      l3_description: 3단계 점수 요건
+      l4_description: 4단계 점수 요건
+      l5_description: 5단계 점수 요건
+      up: 기준 위로 이동
+      down: 기준 아래로 이동
+      copy: 기준 복사
+      delete: 이 기준 제거

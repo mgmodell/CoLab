@@ -27,3 +27,5 @@ en:
     time_zone: Time Zone
     save_btn: Save School
     create_btn: Create School
+    please_review: Please review the problems below
+    unable_to_save: Please resolve the issues and try again.

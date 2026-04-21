@@ -188,3 +188,14 @@ es:
     save_course_warning: Tiene que guardar el curso para que se le asignen estudiantes.
     save_btn: Guardar curso
     create_btn: Crear curso
+    re_add_student: Volver a agregar al estudiante
+    status_enrolled: Inscrito
+    status_awaiting: En espera de respuesta
+    status_not_enrolled: No inscrito
+    status_instructor: Instructor o asistente
+    please_review: Por favor revise los problemas a continuación
+    accept_success: Curso aceptado exitosamente
+    decline_success: Curso rechazado exitosamente
+    reinvite_success: Reinvitado exitosamente
+    drop_success: Eliminado exitosamente
+    enrollment_error: Hubo un problema al solicitar la inscripción en el curso

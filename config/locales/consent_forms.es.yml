@@ -34,3 +34,7 @@ es:
         Este formulario de consentimiento se aplica entre <strong>%{start_date}</strong> y 
         <strong>%{end_date}</strong>.
 
+    create_success: El formulario de consentimiento fue creado exitosamente.
+    update_success: El formulario de consentimiento fue actualizado exitosamente.
+    destroy_success: El formulario de consentimiento fue eliminado exitosamente.
+    please_review: Por favor revise los problemas a continuación

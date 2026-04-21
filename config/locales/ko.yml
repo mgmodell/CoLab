@@ -1,0 +1,11 @@
+ko:
+  hello: "안녕하세요!"
+  cookie_consent: 이 웹사이트는 사용자 경험을 향상시키기 위해 쿠키를 사용합니다.
+  lti:
+    connection_saved: "LTI 연결이 성공적으로 저장되었습니다."
+    connection_save_failed: "LTI 연결 저장에 실패했습니다."
+    not_configured: "LTI 연결이 구성되지 않았습니다. 라인 항목 URL, AGS 액세스 토큰 URL 및 클라이언트 ID를 제공하세요."
+    grades_pushed:
+      one: "1명의 학생에 대한 성적을 성공적으로 전송했습니다."
+      other: "%{count}명의 학생에 대한 성적을 성공적으로 전송했습니다."
+    grades_push_partial: "성적 일부 전송: %{success}건 성공, %{failed}건 실패."

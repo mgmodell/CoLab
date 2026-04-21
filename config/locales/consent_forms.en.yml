@@ -34,3 +34,7 @@ en:
         This consent form applies between <strong>%{start_date}</strong> and 
         <strong>%{end_date}</strong>.
 
+    create_success: Consent form was successfully created.
+    update_success: Consent form was successfully updated.
+    destroy_success: Consent form was successfully destroyed.
+    please_review: Please review the problems below

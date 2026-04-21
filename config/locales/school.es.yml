@@ -27,3 +27,5 @@ es:
     time_zone: Zona horaria
     save_btn: Guardar escuela
     create_btn: Crear escuela
+    please_review: Por favor revise los problemas a continuación
+    unable_to_save: Por favor resuelva los problemas e intente nuevamente.

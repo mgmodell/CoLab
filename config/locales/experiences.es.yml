@@ -1,0 +1,136 @@
+es:
+  experience_admins:
+    name: Nombre de la experiencia
+    lead_time_lbl: Días de preparación del instructor
+    student_deadline_msg: "Los estudiantes deben completar esto antes de {{date}}."
+    active: Activo
+    timezone_warning: Todas las fechas están en la zona horaria {{timezone}}.
+    date_range: Fechas de la experiencia
+    start_date_lbl: Fecha de inicio de la experiencia
+    date_to_lbl: hasta
+    end_date_lbl: Fecha de fin de la experiencia
+    create: Crear experiencia
+    save: Guardar experiencia
+    errors:
+      must_be created: >
+        La experiencia debe crearse antes de que los estudiantes puedan
+        reaccionar a ella.
+    tabs:
+      details: Detalles
+      results: Resultados
+      response_word_cloud: Nube de palabras de respuesta
+    lti:
+      panel_title: Devolución de calificaciones LTI
+      line_item_url_lbl: URL del elemento de línea del LMS
+      line_item_url_placeholder: "p. ej. https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: URL del token de acceso AGS
+      ags_token_url_placeholder: "p. ej. https://lms.example.com/login/oauth2/token"
+      client_id_lbl: ID de cliente
+      deployment_id_lbl: ID de implementación
+      iss_lbl: Emisor (iss)
+      save_btn: Guardar conexión LTI
+      push_btn: Enviar calificaciones al LMS
+      not_configured: No configurado
+      configured: Conectado
+      push_confirm: ¿Enviar todas las calificaciones al LMS ahora?
+  experiences:
+    simulation: Simulación de experiencia colaborativa
+    available: 'Simulación: %{task}'
+    completed: 'Simulación completada: %{task}'
+    instructions_lbl: Instrucciones
+    glossary_lbl: Glosario
+    scenario_lbl: Escenario
+    narrative_lbl: Narrativa
+    behavior_lbl: Comportamiento
+    overall_diagnosis: Diagnóstico general
+    reaction_diagnosis: Diagnóstico de reacción
+    reaction_suggestions: Sugerencias de reacción
+    start_date_lbl: Fecha de inicio de la experiencia
+    date_to_lbl: hasta
+    end_date_lbl: Fecha de fin de la experiencia
+    close_pnl: Cerrar panel
+    create_success: La experiencia fue creada exitosamente.
+    update_success: La experiencia fue actualizada exitosamente.
+    destroy_success: La experiencia fue eliminada exitosamente.
+    soft_delete_success: La experiencia ha sido desactivada y marcada como eliminada.
+    wrong_course: Esa experiencia es parte de otro curso.
+    instr_title: Instrucción de experiencia
+    not_started: No iniciado
+    not_completed: No completado
+    improvements: Mejoras
+    reactions:
+      student_lbl: Estudiante
+      email_lbl: Correo electrónico
+      completion_lbl: Finalización
+      narrative_lbl: Narrativa
+      scenario_lbl: Escenario
+      response_lbl: Respuesta
+      improvements_lbl: Mejoras
+      suggestions_lbl: Sugerencias
+      none_yet: Todavía no hay reacciones.
+    tz_warn: Esta experiencia ocurre en la zona horaria %{time_zone} y todas las fechas lo reflejan.
+    react_title: Reacción a la experiencia
+    editing: Editando experiencia
+    react_success: Tu reacción a la experiencia fue registrada
+    react_fail: Hubo un problema al registrar tu reacción, por favor inténtalo de nuevo.
+    no_experiences: Sin experiencias
+    performance_explained: >
+      Este valor refleja tu nivel promedio de finalización de las
+      experiencias de trabajo en grupo simuladas asignadas dentro de CoLab.
+    inst_p1: >
+      En esta experiencia, leerás un diario semanal escrito por un estudiante en un
+      proyecto de grupo colaborativo de un semestre. Decide qué comportamiento
+      caracteriza mejor la dinámica del grupo esa semana.
+    inst_p2: >
+      Después de completar las 14 semanas, se te pedirá tu evaluación general
+      del comportamiento del grupo.
+    inst_p3: >
+      Por favor no uses el botón de retroceso de tu navegador durante la experiencia.
+    scenario_p1: >
+      Los estudiantes de esta clase trabajan en un trabajo de investigación en grupos de
+      cuatro, con otros tres estudiantes con quienes no han trabajado antes.
+    scenario_p2: >
+      La primera tarea, que vence en la semana 5, es enviar el tema del trabajo
+      seleccionado por el grupo y una lista preliminar de referencias con resúmenes.
+    scenario_p3: >
+      Se espera que cada grupo se reúna y trabaje en este proyecto fuera de clase,
+      y se recomienda programar reuniones recurrentes.
+    index:
+      title: Lista de experiencias
+    show:
+      title: Detalles de la experiencia
+    edit:
+      title: Editar experiencia
+    new:
+      title: Nueva experiencia
+    next:
+      journal: 'Entrada de diario: Semana {{week_num}}'
+      prompt: ¿Qué comportamiento caracteriza mejor a este grupo ahora?
+      other: ¿Qué comportamiento viste?
+      comments: Tus comentarios
+      click_for_comment: >
+        Haz clic aquí si tienes comentarios adicionales sobre esta narrativa.
+      save_and_continue: Guardar y continuar
+    reaction:
+      title: Comportamiento general del grupo
+      instructions: >
+        Reflexiona sobre toda la narrativa que acabas de leer y dinos cuál de los
+        siguientes comportamientos caracteriza mejor al grupo durante todo el semestre.
+      dom_behavior: ¿Qué comportamiento dominó la narrativa?
+      improve: ¿Cómo podría mejorar la narrativa?
+      suggest: 'Tus sugerencias:'
+      submit: Enviar
+    instructions:
+      title: Instrucciones para completar esta experiencia
+      scenario_lbl: El escenario del proyecto estudiantil
+      behaviors_lbl: Los comportamientos
+      behaviors_lbl_sub: Estas etiquetas y descripciones se proporcionan en cada página siguiente
+      next: Siguiente
+      reminder: >
+        Puedes acceder a estas instrucciones o a la descripción del proyecto
+        en cualquier momento usando el botón de instrucciones en la esquina
+        superior derecha de la página.
+    create_error: Error al crear la experiencia
+    save_error: Error al guardar la experiencia
+    diagnosis_save_error: No se pudo guardar el diagnóstico. Por favor inténtalo de nuevo.
+    diagnosis_save_success: Diagnóstico guardado exitosamente.

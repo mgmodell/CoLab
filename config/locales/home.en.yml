@@ -258,3 +258,5 @@ en:
         label: Status
         incomplete: Not Completed
         complete: Completed
+    enrollment_success: "Successfully enrolled in {{course_name}}"
+    enrollment_error: "Unable to enroll in {{course_name}}"

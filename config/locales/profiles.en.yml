@@ -103,3 +103,11 @@ en:
       save_desc: >
         When you have verified your profile, click Save Profile
         to continue.
+    impairment:
+      visual: Visual
+      auditory: Auditory
+      motor: Motor
+      cognitive: Cognitive
+      other: Other
+    update_success: Profile successfully updated
+    please_review: Please review the errors below

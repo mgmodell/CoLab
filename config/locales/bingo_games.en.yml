@@ -134,3 +134,7 @@ en:
       not_configured: Not configured
       configured: Connected
       push_confirm: Push all grades to the LMS now?
+    game_save_success: Game saved successfully!
+    unable_to_save: Unable to save
+    demo_done: Demo done!
+    review_error: Error!

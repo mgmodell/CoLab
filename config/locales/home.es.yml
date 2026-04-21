@@ -258,3 +258,5 @@ es:
         label: Estado
         incomplete: No completado
         complete: Completado
+    enrollment_success: "Inscrito exitosamente en {{course_name}}"
+    enrollment_error: "No se pudo inscribir en {{course_name}}"

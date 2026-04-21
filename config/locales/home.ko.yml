@@ -184,8 +184,18 @@ ko:
   member: 팀 멤버
   titles:
     demonstration: 시연
+  no_help_title: 도움말 없음
+  no_help_description: 이 항목에 대한 도움말이 없습니다
+  help_not_loaded: 로드되지 않음
+  help_feedback_col: 피드백
+  help_definition_col: 정의
+  help_points_col: 점수
   home:
     title: 홈
+    tour_title: 애플리케이션에 오신 것을 환영합니다!
+    tour_description: 배정된 할 일과 진행 상황을 확인하세요.
+    task_view_tab: 할 일 보기
+    calendar_view_tab: 달력 보기
     your_tasks: 할 일
     invited: 초대받았습니다!
     greeting: 안녕하세요, {{name}}님
@@ -243,3 +253,5 @@ ko:
         label: 상태
         incomplete: 완료되지 않음
         complete: 완료됨
+    enrollment_success: "{{course_name}}에 성공적으로 등록되었습니다"
+    enrollment_error: "{{course_name}}에 등록할 수 없습니다"
