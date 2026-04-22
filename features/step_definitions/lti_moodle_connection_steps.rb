@@ -57,7 +57,8 @@ end
 
 Then( 'the LTI tool configuration is returned' ) do
   # The browser renders the JSON body as text.  Parse it from page.body.
-  @lti_config = JSON.parse( page.body )
+  body_text = find( 'pre' ).text
+  @lti_config = JSON.parse( body_text )
   @lti_config.should be_a( Hash )
   @lti_config['application_type'].should eq 'web'
 end
