@@ -78,8 +78,7 @@ Feature: LTI Grade Push
     Then the user clicks on the existing bingo game
     Then the user switches to the "LTI Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
-    Then the user clicks "Push Grades to LMS"
-    Then the user confirms the grade push dialog
+    Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
     Then close all messages
 
@@ -145,8 +144,7 @@ Feature: LTI Grade Push
     Then the user edits the existing experience
     Then the user switches to the "LTI Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
-    Then the user clicks "Push Grades to LMS"
-    Then the user confirms the grade push dialog
+    Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
     Then close all messages
 
@@ -204,8 +202,7 @@ Feature: LTI Grade Push
     Then the user clicks on the existing project
     Then the user switches to the "LTI Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
-    Then the user clicks "Push Grades to LMS"
-    Then the user confirms the grade push dialog
+    Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
     Then close all messages
 

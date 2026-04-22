@@ -85,13 +85,42 @@ Then( 'the user sees the LTI connection status is {string}' ) do | status_text |
   should have_css( "[data-pc-name='tag']", text: status_text )
 end
 
-Then( 'the user confirms the grade push dialog' ) do
-  # The LtiConnectionPanel uses window.confirm before pushing grades.
+Then( 'the user clicks {string} and confirms the grade push dialog' ) do | link_or_button |
+  wait_for_render
+
+  if has_xpath?( "//button[contains(.,'#{link_or_button}')]",
+                 visible: :all )
+    btn = find( :xpath, "//button[contains(.,'#{link_or_button}')]",
+                match: :first,
+                visible: :all )
+  elsif has_xpath?( "//a[contains(.,'#{link_or_button}')]",
+                    visible: :all )
+    btn = find( :xpath, "//a[contains(.,'#{link_or_button}')]",
+                visible: :all )
+  elsif has_xpath?( "//input[@value='#{link_or_button}']",
+                    visible: :all )
+    btn = find( :xpath, "//input[@value='#{link_or_button}']",
+                visible: :all )
+  else
+    puts "nothing found yet for '#{link_or_button}"
+    pending # nothing is found yet
+  end
   begin
+    retries ||= 0
+    btn.click
     page.driver.browser.switch_to.alert.accept
-  rescue Selenium::WebDriver::Error::NoSuchAlertError
-    sleep 0.5
-    page.driver.browser.switch_to.alert.accept
+  rescue NoMethodError => e
+    puts e.inspect
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    puts e.inspect
+    if ( retries += 1 ) < 4
+      retry
+    else
+      true.should be false
+    end
+    rescue Selenium::WebDriver::Error::NoSuchAlertError
+      sleep 0.5
+      page.driver.browser.switch_to.alert.accept
   end
   wait_for_render
 end

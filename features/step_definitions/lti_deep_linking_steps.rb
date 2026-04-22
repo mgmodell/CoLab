@@ -40,7 +40,11 @@ def trigger_deep_link_launch( issuer, return_url: 'http://moodle:8080/mod/lti/re
     })();
   JS
 
-  wait_for_render
+  # wait_for_render won't work here because we're outside of 
+  # our React app (PageWrapper). Therefore we use a simple sleep to 
+  # give the server time to process the form submission and load the
+  # new page.
+  sleep 1 
 end
 
 After do
