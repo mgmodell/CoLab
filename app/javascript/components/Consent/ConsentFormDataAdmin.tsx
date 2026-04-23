@@ -196,7 +196,7 @@ export default function ConsentFormDataAdmin(props) {
                 value={consentFormName}
                 onChange={event => setConsentFormName(event.target.value)}
               />
-              <label htmlFor="consent_form-name">{t("name")}</label>
+              <label htmlFor="consent_form-name">{t("show.name")}</label>
             </FloatLabel>
           </Col>
           <Col xs={12} sm={5}>

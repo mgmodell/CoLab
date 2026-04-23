@@ -16,7 +16,7 @@ Feature: Admin uploads a PDF for a Consent Form
     Then the user selects the 'consent-forms' menu item
     Then the user clicks the "New consent_form" button
     Then the user sees the consent form editing page
-    When the user sets the "Name" field to "Research Study 2026"
+    When the user sets the "Name of the Study" field to "Research Study 2026"
     When the admin uploads a PDF for the consent form
     When the user clicks "Create consent form"
     Then the user waits to see "successfully"
