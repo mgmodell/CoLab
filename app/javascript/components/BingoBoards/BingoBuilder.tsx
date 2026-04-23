@@ -344,7 +344,6 @@ export default function BingoBuilder(props: Props) {
         <TabPanel
           header={t("tabs.worksheet")}
           disabled={
-            !board.practicable ||
             null == board.worksheet ||
             (null == board.worksheet.performance &&
               null == board.worksheet.result_img)

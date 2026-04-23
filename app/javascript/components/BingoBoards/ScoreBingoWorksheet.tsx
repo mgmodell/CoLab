@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router";
 //Redux store stuff
@@ -37,6 +37,7 @@ export default function ScoreBingoWorksheet(props) {
   const [newImgExt, setNewImgExt] = useState(null);
 
   const imgFileDataId = "result_photo";
+  const imgFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (endpointsLoaded) {
@@ -166,16 +167,17 @@ export default function ScoreBingoWorksheet(props) {
             </FloatLabel>
           </Col>
           <Col xs={12} sm={6}>
-            <label htmlFor={imgFileDataId}>
-              <input
-                style={{ display: "none" }}
-                id={imgFileDataId}
-                name={imgFileDataId}
-                onChange={handleFileSelect}
-                type="file"
-              />
-              <Button>{t("file_select")}</Button>
-            </label>
+            <input
+              style={{ display: "none" }}
+              id={imgFileDataId}
+              name={imgFileDataId}
+              ref={imgFileInputRef}
+              onChange={handleFileSelect}
+              type="file"
+            />
+            <Button onClick={() => imgFileInputRef.current?.click()}>
+              {t("file_select")}
+            </Button>
           </Col>
         </Row>
         <Row>
