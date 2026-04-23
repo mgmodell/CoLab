@@ -55,7 +55,7 @@
     "react-cookie-consent": "^10.0.1",
     "react-dom": "^19.2.5",
     "react-grid-system": "^8.2.1",
-    "react-i18next": "^17.0.3",
+    "react-i18next": "^17.0.4",
     "react-on-rails": "16.6.0",
     "react-redux": "^9.2.0",
     "react-router": "^7.14.1",
