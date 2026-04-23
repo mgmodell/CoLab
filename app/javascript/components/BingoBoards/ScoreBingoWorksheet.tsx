@@ -25,7 +25,7 @@ export default function ScoreBingoWorksheet(props) {
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const [t, i18n] = useTranslation(category);
+  const [t, i18n] = useTranslation(category + 's');
   const { worksheetIdParam } = useParams();
 
   const [topic, setTopic] = useState("loading");

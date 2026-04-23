@@ -8,7 +8,7 @@ require 'net/http'
 # Assignment and Grade Services (AGS), and Deep Linking.
 class LtiController < ApplicationController
   skip_before_action :authenticate_user!
-  skip_around_action :switch_locale, only: [ :deep_link_response ]
+  # skip_around_action :switch_locale, only: [ :deep_link_response ]
   layout :lti_layout
 
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
