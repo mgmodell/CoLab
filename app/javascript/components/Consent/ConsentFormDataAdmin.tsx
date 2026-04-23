@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
@@ -39,6 +39,7 @@ export default function ConsentFormDataAdmin(props) {
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [consentFormId, setConsentFormId] = useState(
     consentFormIDParam === "new" ? null : consentFormIDParam
@@ -281,11 +282,12 @@ export default function ConsentFormDataAdmin(props) {
         style={{ display: "none" }}
         id={consentFormDataId}
         name={consentFormDataId}
+        ref={fileInputRef}
         onChange={handleFileSelect}
         type="file"
         accept="application/pdf"
       />
-      <Button onClick={() => document.getElementById(consentFormDataId).click()}>
+      <Button onClick={() => fileInputRef.current?.click()}>
         {t("edit.file_select_btn")}
       </Button>
       {consentFormDoc && (
