@@ -166,16 +166,16 @@ export default function ScoreBingoWorksheet(props) {
             </FloatLabel>
           </Col>
           <Col xs={12} sm={6}>
-            <label htmlFor={imgFileDataId}>
-              <input
-                style={{ display: "none" }}
-                id={imgFileDataId}
-                name={imgFileDataId}
-                onChange={handleFileSelect}
-                type="file"
-              />
-              <Button>{t("file_select")}</Button>
-            </label>
+            <input
+              style={{ display: "none" }}
+              id={imgFileDataId}
+              name={imgFileDataId}
+              onChange={handleFileSelect}
+              type="file"
+            />
+            <Button onClick={() => document.getElementById(imgFileDataId).click()}>
+              {t("file_select")}
+            </Button>
           </Col>
         </Row>
         <Row>

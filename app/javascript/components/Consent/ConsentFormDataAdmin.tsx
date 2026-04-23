@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -39,8 +39,6 @@ export default function ConsentFormDataAdmin(props) {
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
 
   const [consentFormId, setConsentFormId] = useState(
     consentFormIDParam === "new" ? null : consentFormIDParam
@@ -86,11 +84,12 @@ export default function ConsentFormDataAdmin(props) {
         setConsentFormName(consentForm.name || "");
         setConsentFormActive(consentForm.active || false);
 
-        var receivedDate = new Date(Date.parse(consentForm.start_date));
-        setConsentFormStartDate(receivedDate);
-
-        receivedDate = new Date(Date.parse(consentForm.end_date));
-        setConsentFormEndDate(receivedDate);
+        if (consentForm.start_date) {
+          setConsentFormStartDate(new Date(Date.parse(consentForm.start_date)));
+        }
+        if (consentForm.end_date) {
+          setConsentFormEndDate(new Date(Date.parse(consentForm.end_date)));
+        }
 
         setConsentFormFormTextEn(consentForm.form_text_en || "");
         setConsentFormFormTextKo(consentForm.form_text_ko || "");
@@ -114,8 +113,12 @@ export default function ConsentFormDataAdmin(props) {
 
     const formData = new FormData();
     formData.append("consent_form[name]", consentFormName);
-    formData.append("consent_form[start_date]", consentFormStartDate.toISOString());
-    formData.append("consent_form[end_date]", consentFormEndDate.toISOString());
+    if (consentFormStartDate) {
+      formData.append("consent_form[start_date]", consentFormStartDate.toISOString());
+    }
+    if (consentFormEndDate) {
+      formData.append("consent_form[end_date]", consentFormEndDate.toISOString());
+    }
     formData.append("consent_form[form_text_en]", consentFormFormTextEn || "");
     formData.append("consent_form[form_text_ko]", consentFormFormTextKo || "");
     formData.append("consent_form[active]", consentFormActive.toString());
@@ -135,27 +138,27 @@ export default function ConsentFormDataAdmin(props) {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.consent_form;
-          console.log(response);
           setConsentFormId(consentForm.id);
           setConsentFormName(consentForm.name);
 
           setConsentFormActive(consentForm.active || false);
-          var receivedDate = new Date(Date.parse(consentForm.start_date));
-          setConsentFormStartDate(receivedDate);
-          var receivedDate = new Date(Date.parse(consentForm.end_date));
-          setConsentFormEndDate(receivedDate);
+          if (consentForm.start_date) {
+            setConsentFormStartDate(new Date(Date.parse(consentForm.start_date)));
+          }
+          if (consentForm.end_date) {
+            setConsentFormEndDate(new Date(Date.parse(consentForm.end_date)));
+          }
 
           setConsentFormFormTextEn(consentForm.form_text_en || "");
           setConsentFormFormTextKo(consentForm.form_text_ko || "");
           setConsentFormPdfUrl(consentForm.pdf_url || null);
 
-          setShowErrors(true);
+          setConsentFormDoc(null);
           setDirty(false);
-          setMessages(data.messages);
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           dispatch(endTask("saving"));
         } else {
-          setShowErrors(true);
-          setMessages(data.messages);
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.ERROR));
           dispatch(endTask("saving"));
         }
       })
@@ -274,17 +277,17 @@ export default function ConsentFormDataAdmin(props) {
         </TabPanel>
       </TabView>
       &nbsp;
-      <label htmlFor={consentFormDataId}>
-        <input
-          style={{ display: "none" }}
-          id={consentFormDataId}
-          name={consentFormDataId}
-          onChange={handleFileSelect}
-          type="file"
-          accept="application/pdf"
-        />
-        <Button>{t("edit.file_select_btn")}</Button>
-      </label>
+      <input
+        style={{ display: "none" }}
+        id={consentFormDataId}
+        name={consentFormDataId}
+        onChange={handleFileSelect}
+        type="file"
+        accept="application/pdf"
+      />
+      <Button onClick={() => document.getElementById(consentFormDataId).click()}>
+        {t("edit.file_select_btn")}
+      </Button>
       {consentFormDoc && (
         <span>&nbsp;{consentFormDoc.name}</span>
       )}
