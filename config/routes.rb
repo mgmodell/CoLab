@@ -356,5 +356,8 @@ Rails.application.routes.draw do
   post 'graphing/data' => # /:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>
           'graphing#data', as: :graphing_data
 
-  match '*path', to: 'home#index', via: :all
+  match '*path', to: 'home#index', via: :all,
+    constraints: lambda { |req|
+        req.path.exclude? 'rails/active_storage' # Exclude Active Storage routes from catch-all
+    }
 end
