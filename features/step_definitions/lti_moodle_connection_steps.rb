@@ -109,11 +109,12 @@ When( 'a Moodle instructor launches CoLab and links it to the CoLab course as {s
     context_title: 'Introduction to CoLab',
     user_email: email
   )
+  sleep 0.5 # Wait for the previous launch to complete and the user to be provisioned before simulating the next launch.
 end
 
 Given( 'the Moodle course {string} is already linked to the CoLab course' ) do | context_title |
   deployment = @deployment || LtiDeployment.find_by( issuer: 'http://moodle:8080' )
-  deployment.lti_resource_links.find_or_create_by!(
+  lrl = deployment.lti_resource_links.find_or_create_by!(
     resource_link_id: 'bdd_rl_enrol_001'
   ) do | rl |
     rl.context_id    = 'moodle_ctx_enrol_001'
