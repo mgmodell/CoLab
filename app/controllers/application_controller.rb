@@ -40,6 +40,10 @@ class ApplicationController < ActionController::Base
              else
                params[:lang] || I18n.default_locale
              end
-    I18n.with_locale( locale, &action )
+    if request.format.json? || request.format.html?
+      I18n.with_locale( locale, &action )
+    else
+      action.call
+    end
   end
 end
