@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router";
+import parse from 'html-react-parser';
 
 
 import { DataTable } from "primereact/datatable";
@@ -58,6 +59,8 @@ export default function TaskList(props: Props) {
   //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const { t } = useTranslation(category);
   const user = useTypedSelector(state => state.profile.user);
+
+  console.log("Tasks: ", props.tasks);
 
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
@@ -143,6 +146,9 @@ export default function TaskList(props: Props) {
           className="content-table-data"
           filter
           key={'name'}
+          body={(params) => {
+            return parse(params.name);
+          }}
         />
         <Column
           header={t("list.course_name")}
