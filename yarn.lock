@@ -1579,7 +1579,7 @@ __metadata:
     driver.js: "npm:^1.4.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.0.1"
-    i18next: "npm:^26.0.7"
+    i18next: "npm:^26.0.8"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^7.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -2667,15 +2667,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.0.7":
-  version: 26.0.7
-  resolution: "i18next@npm:26.0.7"
+"i18next@npm:^26.0.8":
+  version: 26.0.8
+  resolution: "i18next@npm:26.0.8"
   peerDependencies:
     typescript: ^5 || ^6
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/5bcf5535a9b0612d5e580673c89e6a0f7e09202011f4161aa096afe35283857e129df3adb0521ccae60823791178a011f6724ad838f66b4fd3b95bb8be324b11
+  checksum: 10c0/48bcb3f8731a17ab586d7371a6d4d155cd8eeaec1a237466d21ffe7b32a6e98432481171a53b0583b397b4ac65c3342b8a64d01cd672b6a1686028329d0c0d8e
   languageName: node
   linkType: hard
 
