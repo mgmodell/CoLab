@@ -58,3 +58,7 @@ reek.html
 
 shakapacker-config-exports/
 .overmind.sock
+
+# Ignore key files for decrypting credentials and more.
+/config/credentials/*.key
+
