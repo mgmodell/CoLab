@@ -1,4 +1,5 @@
 [tools]
+aube = "latest"
 node = "25.9.0"
 overmind = "latest"
 podman = "5.8.2"
