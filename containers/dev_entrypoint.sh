@@ -13,7 +13,7 @@ mise self-update -y
 mise install
 echo "Installing gems"
 bundle install --quiet
-echo "Installing yarn packages"
-yarn install --silent
+echo "Installing packages using aube"
+aube install --silent
 
 $@
