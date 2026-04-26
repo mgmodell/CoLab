@@ -73,10 +73,11 @@ Feature: Email assessment stragglers (for 2/1/2019 date)
     Then the members of "the last" group go to other groups
 
     Given the email queue is empty
+    # We no longer deactivate the project when the group disbands,
+    # so we should still be sending emails to the remaining students.
     When the system emails stragglers
-    Then 0 emails will be sent
-    Then 0 emails will be tracked
-    Given the project has been activated
+    Then 10 emails will be sent
+    Then 10 emails will be tracked
     When the system emails stragglers
     Then 10 emails will be sent
     Then 10 emails will be tracked
@@ -165,11 +166,8 @@ Feature: Email assessment stragglers (for 2/1/2019 date)
     Given the project has a group with 2 confirmed users
     Then 10 emails will be sent
     When the system emails stragglers
-    Then 10 emails will be sent
-    Then 10 emails will be tracked
-
-    Given the project has been activated
-    When the system emails stragglers
+    # Projects no longer get deactivated when groups disband,
+    # so we should still be sending emails to the remaining students.
     Then 12 emails will be sent
     Then 12 emails will be tracked
 
