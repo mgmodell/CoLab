@@ -88,10 +88,9 @@ class LtiController < ApplicationController
   end
 
   # GET /.well-known/jwks.json
-  # Expose our public keys so platforms can verify our signed JWTs.
-  def jwks
-    render json: { keys: Keypair.jwt_encode_keys }
-  end
+  # This is handled by Keypairs::PublicKeysController#index,
+  # but we document the route here for clarity since it's part 
+  # of the LTI spec.
 
   # GET|POST /lti/login
   # LTI 1.3 OIDC Login Initiation.

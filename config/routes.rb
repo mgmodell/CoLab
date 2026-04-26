@@ -327,7 +327,7 @@ Rails.application.routes.draw do
   post 'lti/tool_connect' => 'lti#register'
   # JWKS endpoint for platform JWT verification
   scope '.well-known' do
-    get 'jwks.json' => 'lti#jwks', as: :lti_jwks
+    get :jwks, to: Keypairs::PublicKeysController.action(:index), as: :lti_jwks
   end
   # OIDC Login Initiation
   get  'lti/login' => 'lti#login', as: :lti_login
