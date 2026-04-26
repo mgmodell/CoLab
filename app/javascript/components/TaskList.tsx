@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import TaskListToolbar from "./toolbars/TaskListToolbar";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
+import { p } from "react-router/dist/development/index-react-server-client-BBd0A0TL";
 
 enum TaskType {
   experience = 'experience',
@@ -86,6 +87,11 @@ export default function TaskList(props: Props) {
     return found;
   }, [props.tasks])
 
+  const paginatorOpts = Array.from(
+    [
+    5, 10, 20, props.tasks.length
+  ] );
+
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
       <DataTable
@@ -101,9 +107,7 @@ export default function TaskList(props: Props) {
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, props.tasks.length]
-        }
+        rowsPerPageOptions={ paginatorOpts }
         header={<TaskListToolbar
           filtering={{
             filterValue: filterText,

@@ -34,7 +34,7 @@ Given( /^the user is the instructor for the course$/ ) do
 end
 
 Then( 'retrieve the instructor user' ) do
-  @user = @instructor
+  @user = @course.rosters.instructor.sample.user # @instructor
 end
 
 Then( /^the user opens the course$/ ) do
