@@ -223,8 +223,7 @@ class Experience < ApplicationRecord
           count += 1
           NotificationsChannel.broadcast_to_user(
               user_id: instructor.id,
-              message: "Experience for #{experience.name} just closed. " \
-                " Reporting available",  
+              message: I18n.t( 'notifications.experience_report_available', experience_name: experience.name ),
               priority: AdministrativeMailer::PRIORITY[:INFO]
             )
           end

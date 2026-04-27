@@ -241,8 +241,7 @@ class BingoGame < ApplicationRecord
         count += 1
         NotificationsChannel.broadcast_to_user(
           user_id: instructor.id,
-          message: "Terms Lists for #{bingo.get_name( false )} just closed. " \
-            " Reviewing available",  
+          message: I18n.t( 'notifications.terms_list_review_available', terms_list_name: bingo.get_name( false ) ),
           priority: AdministrativeMailer::PRIORITY[:INFO]
         )
       end

@@ -52,7 +52,7 @@ class AdministrativeMailer < ApplicationMailer
 
     NotificationsChannel.broadcast_to_user(
       user_id: user.id,
-      message: "CoLab: #{activity} Bingo! is available to play",
+      message: I18n.t( 'notifications.bingo_activity_available', activity_name: activity ),
       priority: PRIORITY[:INFO]
     )
 
@@ -113,7 +113,7 @@ class AdministrativeMailer < ApplicationMailer
 
         NotificationsChannel.broadcast_to_user(
           user_id: u.id,
-          message: 'CoLab: You have pending activities to complete.',
+          message: I18n.t( 'notifications.pending_activities' ),
           priority: PRIORITY[:INFO]
         )
 
