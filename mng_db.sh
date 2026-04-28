@@ -27,8 +27,12 @@ fi
 
 #Begin
 
+# Resolve the project root from the script's own location so the script works
+# regardless of which directory it is invoked from.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Helper: run a command inside the dev db container without a TTY (safe for piping).
-DB_EXEC="podman compose -f containers/dev_env/docker-compose.yml exec -T db"
+DB_EXEC="podman compose -f ${SCRIPT_DIR}/containers/dev_env/docker-compose.yml exec -T db"
 
 SHOW_HELP=false
 LOAD=false

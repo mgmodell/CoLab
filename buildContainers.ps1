@@ -58,12 +58,14 @@ Write-Host "`t*****`n`tbuilding db"
 podman build @BuildOpts -f ./containers/agnostic/db/Dockerfile -t colab_db .
 Test-BuildResult 'colab_db'
 
+# Build the test container unless we are doing a dev-only build.
 if (-not $DevOnly) {
     Write-Host "`n`t*****`n`tbuilding app tester"
     podman build @BuildOpts -f ./containers/agnostic/tester_server/Dockerfile -t colab_tester .
     Test-BuildResult 'colab_tester'
 }
 
+# Build the dev containers unless we are doing a test-only build.
 if (-not $TestOnly) {
     Write-Host "`n`t*****`n`tbuilding app dev"
     podman build @BuildOpts -f ./containers/agnostic/dev_server/Dockerfile -t colab_dev_server .
