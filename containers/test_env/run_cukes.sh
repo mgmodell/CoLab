@@ -125,7 +125,7 @@ COLAB_DB=db
 # CUCUMBER_PUBLISH_TOKEN enables Cucumber Cloud reporting.
 # Set it in the environment or in a .env file in the project root (gitignored).
 if [ -z "${CUCUMBER_PUBLISH_TOKEN}" ] && [ -f "$HOME/src/app/.env" ]; then
-  CUCUMBER_PUBLISH_TOKEN=$(grep -E '^CUCUMBER_PUBLISH_TOKEN=' "$HOME/src/app/.env" | cut -d '=' -f2- | tr -d '"'"'" )
+  CUCUMBER_PUBLISH_TOKEN=$(grep -E '^CUCUMBER_PUBLISH_TOKEN=' "$HOME/src/app/.env" | cut -d '=' -f2- | tr -d "\"'" )
   export CUCUMBER_PUBLISH_TOKEN
 fi
 
