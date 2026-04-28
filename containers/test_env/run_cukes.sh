@@ -89,10 +89,6 @@ while getopts "eocrhsnb:f:d:tl" opt; do
       echo "Removing Rerun File" >&2
       CLEAR_RERUN=true
       ;;
-    r)
-      echo "Rerun recent failures" >&2
-      # NOOP
-      ;;
     t)
       /bin/bash -i
       exit 0;
@@ -126,8 +122,12 @@ fi
 # Set up run context
 RAILS_ENV=test
 COLAB_DB=db
-CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
-#RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
+# CUCUMBER_PUBLISH_TOKEN enables Cucumber Cloud reporting.
+# Set it in the environment or in a .env file in the project root (gitignored).
+if [ -z "${CUCUMBER_PUBLISH_TOKEN}" ] && [ -f ".env" ]; then
+  CUCUMBER_PUBLISH_TOKEN=$(grep -E '^CUCUMBER_PUBLISH_TOKEN=' .env | cut -d '=' -f2-)
+  export CUCUMBER_PUBLISH_TOKEN
+fi
 
 echo "Installing platforms"
 mise self-update -y
