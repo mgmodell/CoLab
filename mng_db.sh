@@ -48,33 +48,33 @@ while getopts "jkl:htmnd" opt; do
       ;;
     j)
       LOAD=true
-      LOAD_FILE="db/dev_db.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/dev_db.sql"
       ;;
     k)
-      $DB_EXEC mysql colab_test_ -u test -ptest < db/test_db.sql
+      $DB_EXEC mysql colab_test_ -u test -ptest < "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     d)
-      $DB_EXEC mysqldump colab_dev -u test -ptest > db/dev_db.sql
+      $DB_EXEC mysqldump colab_dev -u test -ptest > "${SCRIPT_DIR}/db/dev_db.sql"
       exit
       ;;
     t)
-      $DB_EXEC mysqldump colab_test_ -u test -ptest > db/test_db.sql
+      $DB_EXEC mysqldump colab_test_ -u test -ptest > "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     m)
-      $DB_EXEC mysqldump moodle -u moodle -pmoodle > db/moodle_db.sql
+      $DB_EXEC mysqldump moodle -u moodle -pmoodle > "${SCRIPT_DIR}/db/moodle_db.sql"
       exit
       ;;
     n)
       LOAD=true
       MOODLE=true
-      LOAD_FILE="db/moodle_blank.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/moodle_blank.sql"
       ;;
     b)
       LOAD=true
       MOODLE=true
-      LOAD_FILE="db/moodle_db.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/moodle_db.sql"
       ;;
     h|\?) #Invalid option
       SHOW_HELP=true

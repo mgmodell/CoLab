@@ -157,10 +157,9 @@ Inside the VS Code terminal (which runs inside the devcontainer), prepare the da
 ./dev_serv.sh -p
 ```
 
-To load a pre-existing database snapshot (if you have one in `db/dev_db.sql`):
+To load a pre-existing database snapshot (if you have one in `db/dev_db.sql`), run this from a terminal **on your host machine** (not inside VS Code):
 
 ```bash
-# Run from a terminal on your host machine (outside VS Code)
 ./mng_db.sh -j
 ```
 
@@ -207,13 +206,15 @@ Run `./run_tests.sh -h` for a full list of options.
 
 ### Database management
 
-`mng_db.sh` manages database snapshots. Run it from the **project root** on your host machine (no host MySQL client required — it uses `podman compose exec` internally):
+`mng_db.sh` manages database snapshots. Run it from your host machine (not inside the devcontainer). No host MySQL client is required — it uses `podman compose exec` internally, so the DB container must be running:
 
 ```bash
 ./mng_db.sh -j   # Load the dev DB snapshot (db/dev_db.sql)
 ./mng_db.sh -d   # Dump the current dev DB to db/dev_db.sql
 ./mng_db.sh -h   # Show all options
 ```
+
+The script resolves all file and compose paths from its own location, so it works correctly regardless of which directory you invoke it from.
 
 ---
 
