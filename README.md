@@ -118,11 +118,7 @@ Copy `.env.example` to `.env` and fill in any values you need:
 cp .env.example .env
 ```
 
-The `.env` file is gitignored. Currently it supports:
-
-| Variable | Purpose |
-|----------|---------|
-| `CUCUMBER_PUBLISH_TOKEN` | Publishes test results to [Cucumber Cloud](https://cucumber.io/docs/cucumber/reporting/). Leave unset to disable cloud reporting (tests still run normally). |
+The `.env` file is gitignored. Add any environment variables you need here; see `.env.example` for the available options.
 
 ---
 
@@ -136,6 +132,19 @@ The `.env` file is gitignored. Currently it supports:
    - If the notification doesn't appear, open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **"Dev Containers: Reopen in Container"**.
 3. VS Code will start all services (`db`, `redis`, `browser`, `moodle`, `selenium`) and attach to the `app` container.
 4. On first open, `postCreateCommand` runs automatically to install the Ruby/Node toolchain via `mise` and install all gems. This takes a few minutes.
+
+#### Linux rootless Podman — extra step
+
+On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: keep-id` so that container file writes are owned by your host user. Enable it by referencing the provided override in `.devcontainer/devcontainer.json`:
+
+```json
+"dockerComposeFile": [
+  "../containers/dev_env/docker-compose.yml",
+  "../containers/dev_env/docker-compose.rootless.yml"
+]
+```
+
+> **Windows / macOS**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container. The base `docker-compose.yml` works correctly on all platforms without it.
 
 The following ports are forwarded automatically to your host machine:
 

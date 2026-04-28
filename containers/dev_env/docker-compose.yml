@@ -4,9 +4,9 @@ services:
     build:
       context: ../..
       dockerfile: containers/agnostic/dev_server/Dockerfile
-    # userns_mode: keep-id maps the host user into the container under the same UID so that
-    # bind-mounted source files remain writable in rootless Podman.
-    userns_mode: keep-id
+    # On Linux with rootless Podman, add docker-compose.rootless.yml to your
+    # devcontainer.json dockerComposeFile list to enable userns_mode: keep-id,
+    # which maps your host UID into the container so bind-mounted files stay writable.
     hostname: dev-serv-${HOSTNAME:-colab-dev}
     environment:
       - PARENT=${HOSTNAME:-colab-dev}
