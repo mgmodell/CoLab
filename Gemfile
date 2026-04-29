@@ -99,7 +99,7 @@ group :development, :test do
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
-  # gem 'solargraph'
+  gem 'solargraph'
   gem 'traceroute'
 end
 
