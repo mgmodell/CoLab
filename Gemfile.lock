@@ -569,6 +569,10 @@ GEM
       rubocop-ast (>= 1.44.0, < 2.0)
     ruby-graphviz (1.2.5)
       rexml
+    ruby-lsp (0.26.9)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 5)
     ruby-progressbar (1.13.0)
     ruby-vips (2.3.0)
       ffi (~> 1.12)
@@ -743,6 +747,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
+  ruby-lsp
   sdoc
   selenium-webdriver
   shakapacker (= 10.0.0)
