@@ -148,9 +148,13 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 
 #### macOS rootless Podman — extra step
 
-On macOS, Podman shares the host filesystem into its Linux VM via virtiofs, which passes macOS file ownership (UID 501 / GID 20 for the first macOS user) directly into the container. The default container user `colab` has UID 1000 and therefore cannot write to those files.
+On macOS, Podman shares the host filesystem into its Linux VM via virtiofs, which passes macOS file ownership (UID 501 / GID 20 for the first macOS user) directly into the container. Without the macOS override, the bind-mounted files appear as `uid:0 / nogroup` inside the container (not writable) because rootless Podman's user namespace remaps the host UID 501 to container UID 0 without the `userns_mode: keep-id` setting.
 
-A macOS-specific compose override rebuilds the dev-server image so that the `colab` user inside the container has UID 501, matching the macOS host user. Enable it by referencing it in `.devcontainer/devcontainer.json`:
+The macOS compose override applies two settings together to fix this:
+- `userns_mode: keep-id` — maps the Podman Machine user UID (501) into the container unchanged, so files owned by UID 501 on the host remain owned by UID 501 inside the container.
+- `USER_UID: "501"` build arg — rebuilds the dev-server image so that the `colab` container user also has UID 501, making those files writable.
+
+Enable it by referencing it in `.devcontainer/devcontainer.json`:
 
 ```json
 "dockerComposeFile": [
@@ -161,7 +165,7 @@ A macOS-specific compose override rebuilds the dev-server image so that the `col
 
 After adding the override, run **"Dev Containers: Rebuild and Reopen in Container"** (Command Palette: `Cmd+Shift+P`) so the image is rebuilt with the correct UID.
 
-> **Linux / Windows**: do **not** add the macOS override. It hardcodes a macOS-specific UID that will break file ownership on other platforms.
+> **Windows**: do **not** add the macOS override. `userns_mode: keep-id` on Windows/WSL2 triggers an *"unsupported UNC path"* error (WSLg Wayland socket). **Linux**: use `docker-compose.rootless.yml` instead.
 
 The following ports are forwarded automatically to your host machine:
 

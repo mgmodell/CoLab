@@ -4,12 +4,18 @@
 #
 # On macOS, Podman shares the host filesystem into its Linux VM via virtiofs,
 # which passes macOS file ownership (UID 501 / GID 20 for the first macOS user)
-# directly into the container.  The default container user 'colab' has UID 1000
-# and therefore cannot write to those files.
+# directly into the container.  Without this override the bind-mounted files
+# appear as uid:0 / nogroup inside the container and are not writable.
 #
-# This override builds the dev-server image with USER_UID=501 so that 'colab'
-# inside the container has the same UID as the macOS host user, making the
-# bind-mounted source tree fully writable.
+# Two settings are required together:
+#
+#   userns_mode: keep-id  — maps the Podman Machine user UID (501) into the
+#                           container unchanged, so virtiofs files owned by
+#                           uid 501 remain owned by uid 501 inside the container.
+#
+#   USER_UID: "501"       — rebuilds the dev-server image so that the 'colab'
+#                           container user has UID 501, matching the host UID
+#                           and making those files writable.
 #
 # Usage — add this file to your .devcontainer/devcontainer.json:
 #
@@ -19,13 +25,15 @@
 #   ]
 #
 # After adding the override, run "Dev Containers: Rebuild and Reopen in Container"
-# so that the image is rebuilt with the correct UID.
+# (Command Palette: Cmd+Shift+P) so the image is rebuilt with the correct UID.
 #
-# Do NOT use on Linux or Windows — those platforms use different UID schemes and
-# do not need this override.
+# Do NOT use on Linux or Windows — userns_mode: keep-id on Windows/WSL2 triggers
+# an "unsupported UNC path" error (WSLg Wayland socket); Linux users should use
+# docker-compose.rootless.yml instead.
 
 services:
   app:
+    userns_mode: keep-id
     build:
       args:
         USER_UID: "501"
