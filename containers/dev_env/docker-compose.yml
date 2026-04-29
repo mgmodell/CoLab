@@ -1,22 +1,29 @@
 services:
   app:
     image: colab_dev_server
-    hostname: dev-serv-${HOSTNAME}
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/dev_server/Dockerfile
+    # On Linux with rootless Podman, add docker-compose.rootless.yml to your
+    # devcontainer.json dockerComposeFile list to enable userns_mode: keep-id,
+    # which maps your host UID into the container so bind-mounted files stay writable.
+    hostname: dev-serv-${HOSTNAME:-colab-dev}
     environment:
-      - PARENT=${HOSTNAME}
+      - PARENT=${HOSTNAME:-colab-dev}
     ports:
       - 3000:3000
       - 3035:3035
     depends_on:
       - db
-    group_add:
-      - dialout
     volumes:
       - ../../:/home/colab/src/app:cached
       - devmise:/home/colab/.local/share/mise
     command: zsh -c "sleep infinity"
   db:
     image: colab_db
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/db/Dockerfile
     restart: unless-stopped
     ports:
       - 31337:3306
@@ -42,6 +49,9 @@ services:
 
   selenium:
     image: colab_browser
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/browser/Dockerfile
     shm_size: '256mb'
     ports:
       - 4444:4444
@@ -50,6 +60,9 @@ services:
 
   moodle:
     image: colab_moodle
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/moodle/Dockerfile
     depends_on:
       - db
     environment:

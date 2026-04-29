@@ -1,0 +1,55 @@
+# docker-compose.macos.yml
+#
+# Override for macOS with rootless Podman.
+#
+# On macOS, Podman shares the host filesystem into its Linux VM via virtiofs,
+# which passes macOS file ownership (UID 501 / GID 20 for the first macOS user)
+# directly into the container.  Without this override the bind-mounted files
+# appear as uid:0 / nogroup inside the container and are not writable.
+#
+# Three settings are required together:
+#
+#   userns_mode: keep-id  — maps the Podman Machine user UID (501) and primary
+#                           GID (20, macOS 'staff') into the container unchanged,
+#                           so virtiofs files owned by 501:20 remain 501:20 inside
+#                           the container.
+#
+#   USER_UID: "501"       — rebuilds the dev-server image so that the 'colab'
+#                           container user has UID 501, matching the host UID
+#                           and making bind-mounted files writable.
+#
+#   USER_GID: "20"        — pins the 'colab' group GID to 20 (macOS 'staff').
+#                           With userns_mode: keep-id, only the host user's
+#                           primary GID maps 1:1 into the container.  If the
+#                           colab group is assigned a dynamic system GID (~998),
+#                           named volumes (e.g. devmise) owned by that GID are
+#                           not writable.  Setting GID 20 matches the macOS
+#                           user's primary GID so keep-id maps it correctly.
+#
+# Usage — add this file to your .devcontainer/devcontainer.json:
+#
+#   "dockerComposeFile": [
+#     "../containers/dev_env/docker-compose.yml",
+#     "../containers/dev_env/docker-compose.macos.yml"
+#   ]
+#
+# After adding the override, run "Dev Containers: Rebuild and Reopen in Container"
+# (Command Palette: Cmd+Shift+P) so the image is rebuilt with the correct UID/GID.
+#
+# If you previously ran the container without this override you must also delete
+# and recreate the named volumes (e.g. 'devmise') so they are initialised with
+# the correct ownership:
+#
+#   podman volume rm dev_env_devmise
+#
+# Do NOT use on Linux or Windows — userns_mode: keep-id on Windows/WSL2 triggers
+# an "unsupported UNC path" error (WSLg Wayland socket); Linux users should use
+# docker-compose.rootless.yml instead.
+
+services:
+  app:
+    userns_mode: keep-id
+    build:
+      args:
+        USER_UID: "501"
+        USER_GID: "20"

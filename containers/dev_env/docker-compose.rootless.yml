@@ -1,0 +1,21 @@
+# docker-compose.rootless.yml
+#
+# Override for Linux rootless Podman.
+#
+# userns_mode: keep-id maps your host UID/GID into the container unchanged,
+# so bind-mounted source files remain writable without permission errors.
+#
+# Usage — add this file to your .devcontainer/devcontainer.json:
+#
+#   "dockerComposeFile": [
+#     "../containers/dev_env/docker-compose.yml",
+#     "../containers/dev_env/docker-compose.rootless.yml"
+#   ]
+#
+# Do NOT use on Windows — it triggers an "unsupported UNC path" error
+# when the Wayland socket path from WSLg is forwarded into the container.
+# macOS users should use docker-compose.macos.yml instead.
+
+services:
+  app:
+    userns_mode: keep-id
