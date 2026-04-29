@@ -26,8 +26,9 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN apt-get autoremove && \
     apt-get clean
 
+ARG USER_UID=1000
 RUN groupadd -r colab && \
-  useradd -u 1000 --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+  useradd -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
 
 USER colab
 

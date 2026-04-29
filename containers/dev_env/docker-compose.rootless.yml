@@ -12,8 +12,9 @@
 #     "../containers/dev_env/docker-compose.rootless.yml"
 #   ]
 #
-# Do NOT use on macOS or Windows — it triggers an "unsupported UNC path" error
-# when the Wayland socket path from WSL/WSLg is forwarded into the container.
+# Do NOT use on Windows — it triggers an "unsupported UNC path" error
+# when the Wayland socket path from WSLg is forwarded into the container.
+# macOS users should use docker-compose.macos.yml instead.
 
 services:
   app:

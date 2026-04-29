@@ -53,7 +53,7 @@ installed. Development is supported on **macOS**, **Linux**, and **Windows** (vi
 
 #### macOS-only note
 
-Podman Desktop installs a Podman Machine automatically. No extra steps are needed beyond installing Podman Desktop and VS Code.
+Podman Desktop installs a Podman Machine automatically. No extra steps are needed beyond installing Podman Desktop and VS Code. See the [macOS rootless Podman — extra step](#macos-rootless-podman--extra-step) section below for instructions on making the bind-mounted source tree writable.
 
 ---
 
@@ -144,7 +144,24 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 ]
 ```
 
-> **Windows / macOS**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container. The base `docker-compose.yml` works correctly on all platforms without it.
+> **Windows**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container.
+
+#### macOS rootless Podman — extra step
+
+On macOS, Podman shares the host filesystem into its Linux VM via virtiofs, which passes macOS file ownership (UID 501 / GID 20 for the first macOS user) directly into the container. The default container user `colab` has UID 1000 and therefore cannot write to those files.
+
+A macOS-specific compose override rebuilds the dev-server image so that the `colab` user inside the container has UID 501, matching the macOS host user. Enable it by referencing it in `.devcontainer/devcontainer.json`:
+
+```json
+"dockerComposeFile": [
+  "../containers/dev_env/docker-compose.yml",
+  "../containers/dev_env/docker-compose.macos.yml"
+]
+```
+
+After adding the override, run **"Dev Containers: Rebuild and Reopen in Container"** (Command Palette: `Cmd+Shift+P`) so the image is rebuilt with the correct UID.
+
+> **Linux / Windows**: do **not** add the macOS override. It hardcodes a macOS-specific UID that will break file ownership on other platforms.
 
 The following ports are forwarded automatically to your host machine:
 

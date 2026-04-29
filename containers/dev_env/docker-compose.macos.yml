@@ -1,0 +1,31 @@
+# docker-compose.macos.yml
+#
+# Override for macOS with rootless Podman.
+#
+# On macOS, Podman shares the host filesystem into its Linux VM via virtiofs,
+# which passes macOS file ownership (UID 501 / GID 20 for the first macOS user)
+# directly into the container.  The default container user 'colab' has UID 1000
+# and therefore cannot write to those files.
+#
+# This override builds the dev-server image with USER_UID=501 so that 'colab'
+# inside the container has the same UID as the macOS host user, making the
+# bind-mounted source tree fully writable.
+#
+# Usage — add this file to your .devcontainer/devcontainer.json:
+#
+#   "dockerComposeFile": [
+#     "../containers/dev_env/docker-compose.yml",
+#     "../containers/dev_env/docker-compose.macos.yml"
+#   ]
+#
+# After adding the override, run "Dev Containers: Rebuild and Reopen in Container"
+# so that the image is rebuilt with the correct UID.
+#
+# Do NOT use on Linux or Windows — those platforms use different UID schemes and
+# do not need this override.
+
+services:
+  app:
+    build:
+      args:
+        USER_UID: "501"
