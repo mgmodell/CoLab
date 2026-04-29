@@ -27,7 +27,8 @@ RUN apt-get autoremove && \
     apt-get clean
 
 ARG USER_UID=1000
-RUN groupadd -r colab && \
+ARG USER_GID=1000
+RUN groupadd -g ${USER_GID} colab && \
   useradd -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
 
 USER colab

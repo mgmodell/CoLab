@@ -150,9 +150,10 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 
 On macOS, Podman shares the host filesystem into its Linux VM via virtiofs, which passes macOS file ownership (UID 501 / GID 20 for the first macOS user) directly into the container. Without the macOS override, the bind-mounted files appear as `uid:0 / nogroup` inside the container (not writable) because rootless Podman's user namespace remaps the host UID 501 to container UID 0 without the `userns_mode: keep-id` setting.
 
-The macOS compose override applies two settings together to fix this:
-- `userns_mode: keep-id` — maps the Podman Machine user UID (501) into the container unchanged, so files owned by UID 501 on the host remain owned by UID 501 inside the container.
-- `USER_UID: "501"` build arg — rebuilds the dev-server image so that the `colab` container user also has UID 501, making those files writable.
+The macOS compose override applies three settings together to fix this:
+- `userns_mode: keep-id` — maps the Podman Machine user UID (501) **and** its primary GID (20, macOS `staff`) into the container unchanged. Only these two IDs are preserved 1:1; all others are remapped through the sub-UID/GID range.
+- `USER_UID: "501"` build arg — rebuilds the dev-server image so that the `colab` container user has UID 501, matching the host UID and making bind-mounted files writable.
+- `USER_GID: "20"` build arg — pins the `colab` group GID to 20 (macOS `staff`). Without this, `groupadd` assigns a dynamic system GID (~998) that is *not* the host user's primary GID and therefore is not preserved by `keep-id` — this causes named volumes like `devmise` to appear with the wrong group and be unwritable.
 
 Enable it by referencing it in `.devcontainer/devcontainer.json`:
 
@@ -163,7 +164,15 @@ Enable it by referencing it in `.devcontainer/devcontainer.json`:
 ]
 ```
 
-After adding the override, run **"Dev Containers: Rebuild and Reopen in Container"** (Command Palette: `Cmd+Shift+P`) so the image is rebuilt with the correct UID.
+After adding the override, run **"Dev Containers: Rebuild and Reopen in Container"** (Command Palette: `Cmd+Shift+P`) so the image is rebuilt with the correct UID/GID.
+
+If you had already created the named volumes without this override (e.g. `devmise` showing `uid:500 gid:998`), delete and recreate them so they are seeded with the correct ownership:
+
+```bash
+podman volume rm dev_env_devmise
+```
+
+Then rebuild/reopen the devcontainer and the volume will be re-created with the correct `501:20` ownership.
 
 > **Windows**: do **not** add the macOS override. `userns_mode: keep-id` on Windows/WSL2 triggers an *"unsupported UNC path"* error (WSLg Wayland socket). **Linux**: use `docker-compose.rootless.yml` instead.
 
