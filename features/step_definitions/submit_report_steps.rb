@@ -117,9 +117,12 @@ Then( /^the installment form should request factor x user values$/ ) do
 
   expected_count = group.users.count * factors.count
   actual_count = 0
-  page.all( :xpath, "//div[@id='installments']//a[@role='button']" ).each do | tab |
+  tabs = page.all( :xpath, "//div[@id='installments']//a[@role='button']" )
+
+  tabs.each do | tab |
     tab.click unless 1 == tab.all( :xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]' ).size
-    wait_for_render
+    sleep( 0.4 ) # unfortunately, react takes a moment to render the sliders after the tab is clicked, so we have to wait a bit here.
+    # If we check too early, we might get a false negative on the slider count.
     tab_count = tab.all( :xpath,
                          'ancestor::div[contains(@class,"p-accordion-tab-active")]//div[@data-pc-name="slider"]' ).size
     actual_count += tab_count

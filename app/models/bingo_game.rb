@@ -239,6 +239,11 @@ class BingoGame < ApplicationRecord
                                              instructor,
                                              completion_hash ).deliver_later
         count += 1
+        NotificationsChannel.broadcast_to_user(
+          user_id: instructor.id,
+          message: I18n.t( 'notifications.terms_list_review_available', terms_list_name: bingo.get_name( false ) ),
+          priority: AdministrativeMailer::PRIORITY[:INFO]
+        )
       end
       bingo.instructor_notified = true
       bingo.save

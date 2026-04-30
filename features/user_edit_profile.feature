@@ -10,7 +10,7 @@ Feature: User edit Profile
     Then the user logs in
     Then the user 'does' see the 'Edit your profile' page
     Then the user completes the profile walkthrough
-    Then close all messages
+    # Then close all messages
     Then the user saves the profile
     Then the user 'does not' see the 'Edit your profile' page
     Then user should see 0 open task

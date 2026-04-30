@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router";
 //Redux store stuff
@@ -25,7 +25,7 @@ export default function ScoreBingoWorksheet(props) {
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const [t, i18n] = useTranslation(category);
+  const [t, i18n] = useTranslation(category + 's');
   const { worksheetIdParam } = useParams();
 
   const [topic, setTopic] = useState("loading");
@@ -37,6 +37,7 @@ export default function ScoreBingoWorksheet(props) {
   const [newImgExt, setNewImgExt] = useState(null);
 
   const imgFileDataId = "result_photo";
+  const imgFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (endpointsLoaded) {
@@ -45,7 +46,7 @@ export default function ScoreBingoWorksheet(props) {
   }, [endpointsLoaded]);
 
   const getWorksheetData = () => {
-    const url = `${endpoints.worksheetResultsUrl}/${worksheetIdParam}.json`;
+    const url = `${endpoints.worksheetResultsUrl}${worksheetIdParam}.json`;
     dispatch(startTask());
     axios
       .get(url, {})
@@ -166,16 +167,17 @@ export default function ScoreBingoWorksheet(props) {
             </FloatLabel>
           </Col>
           <Col xs={12} sm={6}>
-            <label htmlFor={imgFileDataId}>
-              <input
-                style={{ display: "none" }}
-                id={imgFileDataId}
-                name={imgFileDataId}
-                onChange={handleFileSelect}
-                type="file"
-              />
-              <Button>{t("file_select")}</Button>
-            </label>
+            <input
+              style={{ display: "none" }}
+              id={imgFileDataId}
+              name={imgFileDataId}
+              ref={imgFileInputRef}
+              onChange={handleFileSelect}
+              type="file"
+            />
+            <Button onClick={() => imgFileInputRef.current?.click()}>
+              {t("file_select")}
+            </Button>
           </Col>
         </Row>
         <Row>

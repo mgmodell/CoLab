@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '4.0.2'
+ruby '4.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.2'
@@ -99,7 +99,8 @@ group :development, :test do
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
-  # gem 'solargraph'
+  gem 'ruby-lsp'
+  gem 'solargraph'
   gem 'traceroute'
 end
 
@@ -121,5 +122,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
-gem "action-cable-testing", "~> 0.6.1"

@@ -111,6 +111,11 @@ class Assessment < ApplicationRecord
                                                        instructor,
                                                        completion_hash ).deliver_later
                   count += 1
+                  NotificationsChannel.broadcast_to_user(
+                    user_id: instructor.id,
+                    message: I18n.t( 'notifications.assessment_report_available', assessment_name: assessment.project.get_name( false ) ),
+                    priority: AdministrativeMailer::PRIORITY[:INFO]
+                  )
                 end
 
                 assessment.instructor_updated = true

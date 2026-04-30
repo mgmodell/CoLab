@@ -15,6 +15,12 @@ es:
     game_dates: Fechas de disponibilidad del juego
     open_date: Fecha abierta
     close_date: Fecha del juego
+    start_date_lbl: Fecha de inicio
+    end_date_lbl: Fecha de finalización
+    date_to_lbl: hasta
+    file_select: Imagen de hoja de puntuación
+    score: Puntuación
+    submit_scores: Enviar puntuaciones
     lead_time: Dias para revisión del instructor
     student_deadline_msg: "Los estudiantes deben completar esto antes del {{date}}."
     review_candidates:

@@ -56,19 +56,23 @@ Feature: Email experience stragglers
     Then 1 emails will be sent
     Then 1 emails will be tracked
 
+  @javascript
   Scenario: Course Instructor will be emailed when experience closes
     Given the course has an experience
     Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
+     And the user logs in
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
+     And the user will not see "Reporting available"
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
+     And the user will see "Reporting available"
 
   Scenario: Instructor not emailed when experience end_date changes before today
     Given the course has an experience
@@ -132,6 +136,7 @@ Feature: Email experience stragglers
     Then 2 emails will be sent
     Then 6 emails will be tracked
 
+  @javascript
   Scenario: Check project reports
     Given the course has an assessed project
     Given the project has a group with 4 confirmed users
@@ -139,15 +144,18 @@ Feature: Email experience stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
+    Then the user logs in
     Then the system emails stragglers
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
+     And the user will not see "Reporting available"
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
+     And the user will see "Reporting available"
 
   @javascript
   Scenario: Check project reports when a student has completed an assessment
@@ -190,6 +198,7 @@ Feature: Email experience stragglers
     Then 2 emails will be sent
     Then 6 emails will be tracked
 
+  @javascript
   Scenario: Course Instructor will be emailed when bingo closes
     Given the course has a Bingo! game
     Given the course has an assessed project
@@ -200,12 +209,15 @@ Feature: Email experience stragglers
     Given the Bingo! "has" been activated
 
     Given the email queue is empty
+      And the user logs in
+    Then the user will not see "Reviewing available"
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 1 emails will be tracked
+    Then the user will see "Reviewing available"
 
   Scenario: Instructor not emailed when bingo closes and end date changed earlier
     Given the course has a Bingo! game

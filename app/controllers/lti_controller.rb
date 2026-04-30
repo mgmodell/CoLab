@@ -4,10 +4,12 @@ require 'net/http'
 
 # LTI 1.3 controller
 # Implements Dynamic Registration, OIDC Login Initiation, Launch,
-# Names and Role Provisioning Services (NRPS), and
-# Assignment and Grade Services (AGS).
+# Names and Role Provisioning Services (NRPS),
+# Assignment and Grade Services (AGS), and Deep Linking.
 class LtiController < ApplicationController
   skip_before_action :authenticate_user!
+  # skip_around_action :switch_locale, only: [ :deep_link_response ]
+  layout :lti_layout
 
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
   LTI_MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type'
@@ -18,6 +20,10 @@ class LtiController < ApplicationController
   LTI_DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id'
   LTI_NAMES_ROLES_SERVICE = 'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
   LTI_AGS_CLAIM = 'https://purl.imsglobal.org/spec/lti-ags/claim/endpoint'
+
+  # LTI Deep Linking 2.0 claims
+  LTI_DEEP_LINKING_SETTINGS = 'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
+  LTI_DEEP_LINKING_CONTENT_ITEMS = 'https://purl.imsglobal.org/spec/lti-dl/claim/content_items'
 
   NRPS_SCOPE = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly'
   AGS_LINEITEM_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem'
@@ -82,10 +88,9 @@ class LtiController < ApplicationController
   end
 
   # GET /.well-known/jwks.json
-  # Expose our public keys so platforms can verify our signed JWTs.
-  def jwks
-    render json: { keys: Keypair.jwt_encode_keys }
-  end
+  # This is handled by Keypairs::PublicKeysController#index,
+  # but we document the route here for clarity since it's part 
+  # of the LTI spec.
 
   # GET|POST /lti/login
   # LTI 1.3 OIDC Login Initiation.
@@ -129,8 +134,8 @@ class LtiController < ApplicationController
 
   # POST /lti/launch
   # Receives the signed id_token from the platform after OIDC login.
-  # Validates the JWT, finds/creates the resource link, and redirects the
-  # user to the appropriate CoLab resource.
+  # Validates the JWT, then routes to either the resource-link handler or the
+  # Deep Linking content-selection page based on the LTI message type.
   def launch
     id_token = params[:id_token]
     state = params[:state]
@@ -172,61 +177,76 @@ class LtiController < ApplicationController
     session.delete(:lti_state)
     session.delete(:lti_nonce)
 
-    # Find or create resource link
-    resource_link_claim = payload[LTI_RESOURCE_LINK] || {}
-    resource_link_id = resource_link_claim['id']
+    message_type = payload[LTI_MESSAGE_TYPE]
 
-    resource_link = deployment.lti_resource_links.find_or_initialize_by(
-      resource_link_id:
-    )
-    context = payload[LTI_CONTEXT] || {}
-    resource_link.context_id = context['id']
-    resource_link.context_title = context['title']
-    resource_link.save
-
-    # Store AGS line item URL if provided
-    ags_claim = payload[LTI_AGS_CLAIM]
-    if ags_claim&.dig('lineitem').present?
-      resource_link.line_item_url ||= ags_claim['lineitem']
-      resource_link.save
+    if message_type == 'LtiDeepLinkingRequest'
+      handle_deep_linking_request(payload, deployment)
+    else
+      handle_resource_link_request(payload, deployment)
     end
+  end
 
-    # Find user by email
-    user = User.joins(:emails).find_by(emails: { email: payload['email'] }) if payload['email'].present?
-
-    # Auto-provision user if not found and email is present
-    if user.nil? && payload['email'].present?
-      user = User.new(
-        email: payload['email'],
-        first_name: payload['given_name'] || 'LTI',
-        last_name: payload['family_name'] || 'User',
-        password: SecureRandom.hex(24),
-        timezone: 'UTC'
-      )
-      user.confirm
-      user.save
-    end
-
-    unless user
-      render json: { error: 'Could not identify or provision user' }, status: :unprocessable_entity
+  # GET /lti/select_content
+  # Shown after a successful LtiDeepLinkingRequest launch.
+  # Presents available CoLab activities so the instructor can choose which
+  # one to deep-link into Moodle (creating a direct activity link and,
+  # optionally, a gradebook column).
+  def select_content
+    unless session[:lti_deep_link_settings].present?
+      render plain: 'No active deep-linking session', status: :bad_request
       return
     end
 
-    # Enroll the user in the course if we have one
-    if resource_link.course
-      enroll_lti_user(user, payload, resource_link.course)
+    unless current_user
+      redirect_to new_user_session_path
+      return
     end
 
-    # Sign in via Devise and redirect
-    sign_in user
-    redirect_destination = if resource_link.assignment
-                             "/assignment/#{resource_link.assignment.id}"
-                           elsif resource_link.course
-                             '/'
-                           else
-                             '/'
-                           end
-    redirect_to redirect_destination
+    @deep_link_return_url = session[:lti_deep_link_settings]['deep_link_return_url']
+    @accept_types = session[:lti_deep_link_settings]['accept_types'] || ['ltiResourceLink']
+
+    # Show courses where the signed-in user is an instructor (or all courses for admins)
+    @courses = if current_user.admin?
+                 Course.all.includes(:bingo_games, :projects, :experiences)
+               else
+                 Course.joins(:rosters)
+                       .where(rosters: { user: current_user,
+                                         role: [Roster.roles[:instructor], Roster.roles[:assistant]] })
+                       .includes(:bingo_games, :projects, :experiences)
+               end
+  end
+
+  # POST /lti/deep_link_response
+  # Builds the signed LTI Deep Linking Response JWT and renders an
+  # auto-submitting form that POSTs it back to the platform's
+  # deep_link_return_url (completing the Deep Linking flow).
+  def deep_link_response
+    unless session[:lti_deep_link_settings].present?
+      render plain: 'No active deep-linking session', status: :bad_request
+      return
+    end
+
+    @return_url = session[:lti_deep_link_settings]['deep_link_return_url']
+    deployment   = LtiDeployment.find_by(id: session[:lti_deep_link_deployment_id])
+
+    unless deployment && @return_url.present?
+      render plain: 'Invalid deep-linking session', status: :bad_request
+      return
+    end
+
+    content_items = build_content_items(
+      params[:activity_type],
+      params[:activity_id]
+    )
+
+    @jwt = build_deep_link_response_jwt(deployment, content_items)
+
+    # Clear the deep-linking session data – it is single-use
+    session.delete(:lti_deep_link_settings)
+    session.delete(:lti_deep_link_deployment_id)
+    session.delete(:lti_deep_link_context)
+
+    render :deep_link_response
   end
 
   # POST /lti/names_roles/:id
@@ -296,7 +316,83 @@ class LtiController < ApplicationController
     render json: { error: e.message }, status: :internal_server_error
   end
 
+  # POST /lti/simulate_launch  (TEST ENVIRONMENT ONLY)
+  # Simulates what Moodle does during an LTI launch without requiring a real
+  # signed JWT.  This lets Cucumber @javascript scenarios drive the deep-linking
+  # and resource-link flows through the browser without needing a live Moodle.
+  #
+  # Accepted params:
+  #   iss              – issuer that matches an existing LtiDeployment
+  #   message_type     – 'LtiResourceLinkRequest' (default) or 'LtiDeepLinkingRequest'
+  #   resource_link_id – resource link ID (resource link requests)
+  #   course_id        – CoLab course to associate with the resource link (optional)
+  #   context_id       – Moodle context identifier
+  #   context_title    – Moodle course name
+  #   user_email       – email of the CoLab user that "launches"
+  #   deep_link_return_url – where Moodle expects the deep-link response form to POST
+  def simulate_launch
+    raise ActionController::RoutingError, 'Not Found' unless Rails.env.test?
+
+    deployment = LtiDeployment.find_by(issuer: params[:iss])
+    unless deployment
+      render json: { error: 'Unknown platform' }, status: :unauthorized
+      return
+    end
+
+    message_type        = params.fetch(:message_type, 'LtiResourceLinkRequest')
+    context_id          = params.fetch(:context_id, 'sim_ctx_001')
+    context_title       = params.fetch(:context_title, 'Simulated Moodle Course')
+    user_email          = params.fetch(:user_email, 'lti-sim@moodle.local')
+    deep_link_return_url = params[:deep_link_return_url]
+
+    user = find_or_provision_user(
+      'email'       => user_email,
+      'given_name'  => 'LTI',
+      'family_name' => 'Tester'
+    )
+
+    unless user
+      render json: { error: 'Could not provision user' }, status: :unprocessable_entity
+      return
+    end
+
+    if message_type == 'LtiDeepLinkingRequest'
+      session[:lti_deep_link_settings] = {
+        'deep_link_return_url'                 => deep_link_return_url,
+        'accept_types'                         => ['ltiResourceLink'],
+        'accept_presentation_document_targets' => %w[iframe window]
+      }
+      session[:lti_deep_link_deployment_id] = deployment.id
+      session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
+
+      sign_in user
+      redirect_to lti_select_content_path
+    else
+      resource_link_id = params.fetch(:resource_link_id, "sim_rl_#{SecureRandom.hex(4)}")
+      resource_link = deployment.lti_resource_links.find_or_initialize_by(
+        resource_link_id: resource_link_id
+      )
+      resource_link.context_id    = context_id
+      resource_link.context_title = context_title
+      resource_link.course_id     = params[:course_id] if params[:course_id].present?
+      resource_link.save
+
+      roles = ['http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor']
+      enroll_lti_user(user, { LTI_ROLES => roles }, resource_link.course) if resource_link.course
+
+      sign_in user
+      redirect_to '/'
+    end
+  end
+
   private
+
+  # Use no Rails layout for LTI views (select_content, deep_link_response) that
+  # ship their own complete HTML document.  All other LTI actions render JSON /
+  # plain text where layout is irrelevant anyway.
+  def lti_layout
+    action_name.in?(%w[select_content deep_link_response]) ? false : 'application'
+  end
 
   def tool_base_url
     "#{request.protocol}#{request.host_with_port}"
@@ -325,6 +421,11 @@ class LtiController < ApplicationController
             type: 'LtiResourceLinkRequest',
             target_link_uri: "#{base}/lti/launch",
             label: 'CoLab'
+          },
+          {
+            type: 'LtiDeepLinkingRequest',
+            target_link_uri: "#{base}/lti/launch",
+            label: 'CoLab – Select Activity'
           }
         ],
         claims: %w[iss sub name given_name family_name email]
@@ -475,5 +576,161 @@ class LtiController < ApplicationController
       end
     end
     pushed
+  end
+
+  # ── Deep-Linking helpers ────────────────────────────────────────────────────
+
+  # Route an LtiDeepLinkingRequest: store settings, sign the user in, and
+  # redirect to the content-selection page.
+  def handle_deep_linking_request(payload, deployment)
+    deep_link_settings = payload[LTI_DEEP_LINKING_SETTINGS] || {}
+    session[:lti_deep_link_settings]     = deep_link_settings
+    session[:lti_deep_link_deployment_id] = deployment.id
+    session[:lti_deep_link_context]      = payload[LTI_CONTEXT]
+
+    user = find_or_provision_user(payload)
+    unless user
+      render json: { error: 'Could not identify or provision user' }, status: :unprocessable_entity
+      return
+    end
+
+    sign_in user
+    redirect_to lti_select_content_path
+  end
+
+  # Route an LtiResourceLinkRequest: find/create the resource link, enroll the
+  # user, and redirect to the linked CoLab resource.
+  def handle_resource_link_request(payload, deployment)
+    resource_link_claim = payload[LTI_RESOURCE_LINK] || {}
+    resource_link_id    = resource_link_claim['id']
+
+    resource_link = deployment.lti_resource_links.find_or_initialize_by(
+      resource_link_id:
+    )
+    context = payload[LTI_CONTEXT] || {}
+    resource_link.context_id    = context['id']
+    resource_link.context_title = context['title']
+    resource_link.save
+
+    ags_claim = payload[LTI_AGS_CLAIM]
+    if ags_claim&.dig('lineitem').present?
+      resource_link.line_item_url ||= ags_claim['lineitem']
+      resource_link.save
+    end
+
+    user = find_or_provision_user(payload)
+    unless user
+      render json: { error: 'Could not identify or provision user' }, status: :unprocessable_entity
+      return
+    end
+
+    enroll_lti_user(user, payload, resource_link.course) if resource_link.course
+
+    sign_in user
+    redirect_destination = if resource_link.assignment
+                             "/assignment/#{resource_link.assignment.id}"
+                           else
+                             '/'
+                           end
+    redirect_to redirect_destination
+  end
+
+  # Find an existing CoLab user by e-mail or auto-provision a new one from the
+  # LTI payload (or a plain hash with the same keys for simulate_launch).
+  def find_or_provision_user(payload)
+    email = payload['email']
+    return nil unless email.present?
+
+    user = User.joins(:emails).find_by(emails: { email: })
+    if user.nil?
+      user = User.new(
+        email:,
+        first_name: payload['given_name'] || 'LTI',
+        last_name:  payload['family_name'] || 'User',
+        password:   SecureRandom.hex(24),
+        timezone:   'UTC'
+      )
+      user.confirm
+      user.save
+    end
+    user
+  end
+
+  # Build the array of LTI Deep Linking content items for the selected activity.
+  # Returns a single-item array on success, or an empty array when the activity
+  # is not found.
+  def build_content_items(activity_type, activity_id)
+    base = tool_base_url
+
+    case activity_type
+    when 'bingo_game'
+      activity = BingoGame.find_by(id: activity_id)
+      return [] unless activity
+
+      item = {
+        type:  'ltiResourceLink',
+        url:   "#{base}/home#bingo/#{activity.id}",
+        title: activity.get_topic(false),
+        lineItem: {
+          scoreMaximum: 100,
+          label:        activity.get_topic(false),
+          tag:          'grade'
+        }
+      }
+      [item]
+
+    when 'project'
+      activity = Project.find_by(id: activity_id)
+      return [] unless activity
+
+      item = {
+        type:  'ltiResourceLink',
+        url:   "#{base}/home#project/#{activity.id}",
+        title: activity.get_name(false),
+        lineItem: {
+          scoreMaximum: 100,
+          label:        activity.get_name(false),
+          tag:          'grade'
+        }
+      }
+      [item]
+
+    when 'experience'
+      activity = Experience.find_by(id: activity_id)
+      return [] unless activity
+
+      # Experiences do not currently produce a numeric grade, so no lineItem
+      [
+        {
+          type:  'ltiResourceLink',
+          url:   "#{base}/home#experience/#{activity.id}",
+          title: activity.get_name(false)
+        }
+      ]
+
+    else
+      []
+    end
+  end
+
+  # Build and sign the LTI Deep Linking Response JWT that will be POSTed back
+  # to the platform's deep_link_return_url.
+  def build_deep_link_response_jwt(deployment, content_items)
+    keypair = Keypair.current
+    now     = Time.now.to_i
+
+    payload = {
+      'iss'                          => deployment.client_id,
+      'aud'                          => deployment.issuer,
+      'iat'                          => now,
+      'exp'                          => now + 600,
+      'nonce'                        => SecureRandom.urlsafe_base64(16),
+      LTI_MESSAGE_TYPE               => 'LtiDeepLinkingResponse',
+      LTI_VERSION                    => '1.3.0',
+      LTI_DEEP_LINKING_CONTENT_ITEMS => content_items
+    }
+
+    JWT.encode(payload, keypair.private_key, 'RS256',
+               { kid: keypair.jwk_kid, typ: 'JWT' })
   end
 end

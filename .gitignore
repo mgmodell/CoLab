@@ -58,3 +58,11 @@ reek.html
 
 shakapacker-config-exports/
 .overmind.sock
+
+# Ignore key files for decrypting credentials and more.
+/config/credentials/*.key
+
+# Local environment variable overrides (e.g. CUCUMBER_PUBLISH_TOKEN).
+# Copy .env.example to .env and fill in your values.
+.env
+

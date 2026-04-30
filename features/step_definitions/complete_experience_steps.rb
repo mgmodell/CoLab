@@ -19,6 +19,11 @@ Then 'the user will see {string}' do | check_text |
   should have_content check_text
 end
 
+Then 'the user will not see {string}' do | check_text |
+  wait_for_render
+  should_not have_content check_text
+end
+
 Then( /^the user presses hidden "([^"]*)"$/ ) do | link_or_button_name |
   click_link_or_button link_or_button_name, visible: :all, disabled: :all
 end

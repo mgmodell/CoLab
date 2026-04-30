@@ -22,7 +22,7 @@ class Group < ApplicationRecord
   has_many :submissions, inverse_of: :group, dependent: :nullify
 
   validates :name, presence: true
-  validate :validate_activation_status
+  validate :prevent_group_movement
 
   before_create :anonymize
 
@@ -135,15 +135,12 @@ class Group < ApplicationRecord
     # gr.save if persisted? && i_changed
   end
 
-  def validate_activation_status
+  def prevent_group_movement
     if persisted? && project_id_was != project_id
       errors.add( :project,
                   'It is not possible to move a group from one project to another.' )
     end
-    return unless changed? || @dirty
-
-    project.active = false
-    project.save!
+    return
   end
 
   def set_dirty( _user )

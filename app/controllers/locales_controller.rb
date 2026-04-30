@@ -2,6 +2,7 @@
 
 class LocalesController < ApplicationController
   skip_before_action :authenticate_user!
+  skip_around_action :switch_locale
 
   def get_resources
     ns = params[:ns]

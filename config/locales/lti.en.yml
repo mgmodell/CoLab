@@ -1,0 +1,29 @@
+en:
+  lti:
+    select_content:
+      title: "CoLab – Select Activity to Link"
+      heading: "Select a CoLab Activity to Link in Moodle"
+      instructions: >
+        Choose an activity below. Moodle will create a direct link to it in your
+        course, and a gradebook column will be added where applicable.
+      no_courses: >
+        No courses are available. Make sure you are an instructor in at least one
+        CoLab course.
+      type_col: "Type"
+      action_col: "Action"
+      select_btn: "Select"
+      select_btn_aria: "Select %{name}"
+      no_activities: "No activities in this course yet."
+      bingo:
+        name_col: "Terms List (Bingo! Game)"
+        type: "Bingo! / Terms List"
+      project:
+        name_col: "Project"
+        type: "Project"
+      experience:
+        name_col: "Experience"
+        type: "Experience"
+    deep_link_response:
+      title: "Returning to Moodle\u2026"
+      body: "Sending your selection back to Moodle. Please wait\u2026"
+      continue_btn: "Continue to Moodle"

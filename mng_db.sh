@@ -27,18 +27,17 @@ fi
 
 #Begin
 
-# Set up run context
-COLAB_DB=db
-COLAB_DB_PORT=3306
+# Resolve the project root from the script's own location so the script works
+# regardless of which directory it is invoked from.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Helper: run a command inside the dev db container without a TTY (safe for piping).
+DB_EXEC="podman compose -f ${SCRIPT_DIR}/containers/dev_env/docker-compose.yml exec -T db"
 
 SHOW_HELP=false
-MIGRATE=false
 LOAD=false
 MOODLE=false
 COUNT_OPTS=0
-
-# Set up a variable for the container
-export HOSTNAME=$(hostname -s)
 
 while getopts "jkl:htmnd" opt; do
   COUNT_OPTS=$(($COUNT_OPTS + 1))
@@ -49,33 +48,33 @@ while getopts "jkl:htmnd" opt; do
       ;;
     j)
       LOAD=true
-      LOAD_FILE="db/dev_db.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/dev_db.sql"
       ;;
     k)
-      mysql colab_test_ -u test -ptest --protocol=TCP --port=31337 < db/test_db.sql
+      $DB_EXEC mysql colab_test_ -u test -ptest < "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     d)
-      mysqldump colab_dev -u test -ptest --port=31337 > db/dev_db.sql
+      $DB_EXEC mysqldump colab_dev -u test -ptest > "${SCRIPT_DIR}/db/dev_db.sql"
       exit
       ;;
     t)
-      mysqldump colab_test_ -u test -ptest --port=31337 > db/test_db.sql
+      $DB_EXEC mysqldump colab_test_ -u test -ptest > "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     m)
-      mysqldump moodle -u moodle -pmoodle --port=31337 > db/moodle_db.sql
+      $DB_EXEC mysqldump moodle -u moodle -pmoodle > "${SCRIPT_DIR}/db/moodle_db.sql"
       exit
       ;;
     n)
       LOAD=true
       MOODLE=true
-      LOAD_FILE="db/moodle_blank.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/moodle_blank.sql"
       ;;
     b)
       LOAD=true
       MOODLE=true
-      LOAD_FILE="db/moodle_db.sql"
+      LOAD_FILE="${SCRIPT_DIR}/db/moodle_db.sql"
       ;;
     h|\?) #Invalid option
       SHOW_HELP=true
@@ -93,8 +92,8 @@ if [ "$SHOW_HELP" = true ]; then
   exit
 fi
 
-DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
-if [ $(($DB_COUNT)) = 0 ]; then
+DB_COUNT=$($DB_EXEC mysqlshow -u test -ptest 2>/dev/null | grep -c colab_dev || echo 0)
+if [ "$DB_COUNT" -eq 0 ]; then
   echo "Initialise the DBs from the dev environment"
   exit
 fi
@@ -104,9 +103,9 @@ if [ "$LOAD" = true ]; then
   if test -f "$LOAD_FILE"; then
     echo "Loading: $LOAD_FILE"
     if [ "$MOODLE" = false ]; then
-        mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
+        $DB_EXEC mysql colab_dev -u test -ptest < $LOAD_FILE
     else
-        mysql moodle -u moodle -pmoodle --protocol=TCP --port=31337 < $LOAD_FILE
+        $DB_EXEC mysql moodle -u moodle -pmoodle < $LOAD_FILE
     fi
     echo "Loaded"
   else
@@ -115,5 +114,4 @@ if [ "$LOAD" = true ]; then
     exit
   fi
 fi
-
 

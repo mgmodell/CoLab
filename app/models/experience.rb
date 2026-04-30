@@ -221,7 +221,12 @@ class Experience < ApplicationRecord
                                                instructor,
                                                completion_hash ).deliver_later
           count += 1
-        end
+          NotificationsChannel.broadcast_to_user(
+              user_id: instructor.id,
+              message: I18n.t( 'notifications.experience_report_available', experience_name: experience.name ),
+              priority: AdministrativeMailer::PRIORITY[:INFO]
+            )
+          end
         experience.instructor_updated = true
         experience.save
         logger.debug experience.errors.full_messages unless experience.errors.empty?

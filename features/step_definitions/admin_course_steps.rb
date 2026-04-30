@@ -387,9 +387,9 @@ Then 'the user opens the self-registration link for the course' do
   wait_for_render
 end
 
-Then 'the user sees {string}' do | string |
+Then 'the user sees {string}' do | msg |
   wait_for_render
-  page.should have_content string
+  page.should have_content msg
 end
 
 Then 'the user submits credentials' do

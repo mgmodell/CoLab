@@ -327,17 +327,22 @@ Rails.application.routes.draw do
   post 'lti/tool_connect' => 'lti#register'
   # JWKS endpoint for platform JWT verification
   scope '.well-known' do
-    get 'jwks.json' => 'lti#jwks', as: :lti_jwks
+    get :jwks, to: Keypairs::PublicKeysController.action(:index), as: :lti_jwks
   end
   # OIDC Login Initiation
   get  'lti/login' => 'lti#login', as: :lti_login
   post 'lti/login' => 'lti#login'
   # LTI Launch (receives id_token from platform)
   post 'lti/launch' => 'lti#launch', as: :lti_launch
+  # Deep Linking – content selection and response
+  get  'lti/select_content' => 'lti#select_content', as: :lti_select_content
+  post 'lti/deep_link_response' => 'lti#deep_link_response', as: :lti_deep_link_response
   # Names and Role Provisioning Services (roster sync)
   post 'lti/names_roles/:id' => 'lti#names_roles', as: :lti_names_roles
   # Assignment and Grade Services (grade push)
   post 'lti/grades/:id' => 'lti#grades', as: :lti_grades
+  # Test-only: simulate an LTI launch without JWT verification (Cucumber support)
+  post 'lti/simulate_launch' => 'lti#simulate_launch', as: :lti_simulate_launch if Rails.env.test?
 
   # get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects
@@ -351,5 +356,8 @@ Rails.application.routes.draw do
   post 'graphing/data' => # /:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>
           'graphing#data', as: :graphing_data
 
-  match '*path', to: 'home#index', via: :all
+  match '*path', to: 'home#index', via: :all,
+    constraints: lambda { |req|
+        req.path.exclude? 'rails/active_storage' # Exclude Active Storage routes from catch-all
+    }
 end

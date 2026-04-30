@@ -1,6 +1,7 @@
 import React from "react";
 import { Chip } from "primereact/chip";
 import { Panel } from "primereact/panel";
+import { parse } from "html-react-parser";
 
 type Props = {
   concepts: Array<{ id: number; name: string }>;
@@ -12,7 +13,7 @@ export default function ConceptChips(props: Props) {
     <Panel>
       {props.concepts.map(chip => {
         return (
-          <Chip key={chip.id} id={`concept_${chip.id}`} label={chip.name} />
+          <Chip key={chip.id} id={`concept_${chip.id}`} label={parse( chip.name )} />
         );
       })}
     </Panel>

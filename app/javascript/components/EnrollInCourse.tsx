@@ -5,12 +5,13 @@ import { useTranslation } from "react-i18next";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from "react-grid-system";
+import { di } from "@fullcalendar/core/internal-common";
 
 interface EnrollInCourseProps {}
 
@@ -38,16 +39,22 @@ export default function EnrollInCourse(props: EnrollInCourseProps) {
   const enrollConfirm = (confirm: boolean) => {
     if (confirm) {
       const url = `${endpoints.selfRegUrl}${courseId}.json`;
+      dispatch(startTask());
       axios
         .post(url, {})
-        .then(response => {
+        .then(  response => {
           // Success!
+          dispatch(addMessage(t("enrollment_success", { course_name: courseName }), new Date(), Priorities.INFO));
+          navigate('/'); // Go back to the home page
         })
         .catch(error => {
           console.log("error", error);
+          dispatch(addMessage(t("enrollment_error", { course_name: courseName }), new Date(), Priorities.ERROR));
+        })
+        .finally(() => {
+          dispatch(endTask());
         });
     }
-    navigate("/");
   };
 
   const enrollButton = (
@@ -63,7 +70,7 @@ export default function EnrollInCourse(props: EnrollInCourseProps) {
   const cancelButton = (
     <Button
       onClick={() => {
-        enrollConfirm(true);
+        enrollConfirm(false);
       }}
     >
       {t("self_enroll_cancel")}

@@ -1,0 +1,136 @@
+ko:
+  bingo_games:
+    no_help_title: 도움말 없음
+    no_help_description: 이 항목에 대한 도움말이 없습니다
+    results:
+      no_board: 사용 가능한 보드 없음
+      score_label: 점수
+      unscored: 채점 안 됨
+      for_student: "{{student}}의 결과"
+      done_btn: 완료
+      scored_results_tab: 채점 결과
+      answer_key_tab: 정답지
+    update_bingo_btn: 빙고 게임 업데이트
+    scored_game:
+      list_title: 채점된 항목
+      term: 용어
+      definition: 정의
+      feedback: 피드백
+      concept: 개념
+      credit: 점수
+      average_score: 평균 점수
+    create_bingo_btn: 빙고 게임 만들기
+    game_details_pnl: 게임 세부 정보
+    response_pnl: 응답 데이터
+    save_status: 게임 저장 중
+    game_dates: 게임 이용 가능 날짜
+    open_date: 개시 날짜
+    close_date: 게임 날짜
+    start_date_lbl: 시작 날짜
+    end_date_lbl: 마감 날짜
+    date_to_lbl: 까지
+    lead_time: 강사 검토를 위한 일수
+    student_deadline_msg: "학생들은 {{date}}까지 완료해야 합니다."
+    review_candidates:
+      title: 검토할 후보 용어
+      submitted_by: 제출자
+    index:
+      title: 빙고 게임 목록
+    edit:
+      title: 빙고 게임 편집
+    show:
+      title: 빙고 게임 세부 정보
+      identified_concepts:
+        one: 이 수업은 하나의 고유한 개념만 확인했습니다.
+        other: 이 수업은 %{count}개의 고유한 개념을 확인했습니다.
+      not_reviewed: 아직 검토되지 않았습니다.
+    new:
+      title: 새 빙고 게임
+    create_success: 빙고 게임이 성공적으로 만들어졌습니다!
+    destroy_success: 빙고 게임이 성공적으로 삭제되었습니다!
+    soft_delete_success: 빙고 게임이 비활성화되어 삭제 표시되었습니다.
+    update_success: 빙고 게임이 성공적으로 업데이트되었습니다!
+    review_success: 검토 데이터가 성공적으로 저장되었습니다
+    review_problems: 검토에 문제가 있어 저장할 수 없었습니다
+    active: 활성화됨
+    group_option: 그룹을 사용 가능하게 할까요?
+    activate_success: 빙고 게임이 활성화되었습니다!
+    review:
+      completed_col: 완료
+      submitter_col: 제출자
+      term_col: 용어
+      definition_col: 정의
+      feedback_col: 피드백
+      concept_col: 개념
+      none_msg: 해당 없음
+      review_complete_msg: 검토 완료
+      not_set_opt: 설정 안 됨
+      data_loaded_msg: 데이터 로드됨
+      saving_msg: 피드백 저장 중
+      save_fail_msg: 저장 작업이 실패했습니다
+      reload_btn: 다시 로드
+      toggle_columns_plc: 열 숨기기
+      progress_key: >
+        고유 개념 [허용 가능한 개념]
+        {{unique}} [{{acceptable}}]
+    topic: 주제
+    description: 설명
+    score: 점수
+    submit_scores: 점수 제출
+    file_select: 채점지 이미지
+    definition: 정의
+    feedback: 피드백
+    concept: 개념
+    date: 게임 날짜
+    your_score: 내 성과
+    bingo_games: 빙고 게임
+    no_games: 빙고 게임 없음
+    group_opts: 그룹 옵션
+    ind_term_count: 학생당 항목 수
+    days_for_prep: 강사 준비 일수
+    attached_to: "%{course_name} 수업에 연결됨"
+    group_discount: 협업 할인
+    group_source: 그룹 출처
+    no_group: 그룹 옵션이 설정되지 않았습니다.
+    tz_warn: >
+      이 게임은 %{time_zone} 시간대에서 진행되며 모든 날짜는 이를 반영합니다.
+    response_summary: 학생 응답 요약
+    resp_challenged: 이의 제기된 응답
+    resp_con_expct: 예상 개념
+    resp_term_count: 입력된 용어 수
+    resp_con_count: 발견된 개념 수
+    resp_perf: 성과
+    game_summary: 이 수업은 %{con_count}개의 고유한 개념을 확인했습니다.
+    not_reviewed: 아직 검토되지 않았습니다.
+    reviewed_err: >
+      검토를 '완료'로 표시하려면 모든 후보를 검토해야 합니다
+    group_requires_discount: >
+      그룹 옵션은 할인이 입력되어야 합니다.
+    group_requires_project: >
+      그룹 옵션은 프로젝트가 선택되어야 합니다
+    start_date_err: >
+      빙고 게임은 수업이 시작된 후에 시작할 수 없습니다
+      (%{start_date} > %{course_start_date})
+    end_date_err: >
+      빙고 게임은 수업이 종료된 후에 시작할 수 없습니다
+      (%{end_date} > %{course_end_date})
+    scored_success: >
+      점수가 성공적으로 저장되었습니다.
+    lti:
+      panel_title: LTI 성적 전달
+      line_item_url_lbl: LMS 라인 항목 URL
+      line_item_url_placeholder: "예: https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS 액세스 토큰 URL
+      ags_token_url_placeholder: "예: https://lms.example.com/login/oauth2/token"
+      client_id_lbl: 클라이언트 ID
+      deployment_id_lbl: 배포 ID
+      iss_lbl: 발급자 (iss)
+      save_btn: LTI 연결 저장
+      push_btn: LMS에 성적 전송
+      not_configured: 구성되지 않음
+      configured: 연결됨
+      push_confirm: 지금 모든 성적을 LMS에 전송할까요?
+    game_save_success: 게임이 성공적으로 저장되었습니다!
+    unable_to_save: 저장할 수 없습니다
+    demo_done: 데모 완료!
+    review_error: 오류!

@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router";
+import parse from 'html-react-parser';
 
 
 import { DataTable } from "primereact/datatable";
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import TaskListToolbar from "./toolbars/TaskListToolbar";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
+import { p } from "react-router/dist/development/index-react-server-client-BBd0A0TL";
 
 enum TaskType {
   experience = 'experience',
@@ -59,6 +61,8 @@ export default function TaskList(props: Props) {
   const { t } = useTranslation(category);
   const user = useTypedSelector(state => state.profile.user);
 
+  console.log("Tasks: ", props.tasks);
+
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
   const optColumns = [
@@ -83,6 +87,11 @@ export default function TaskList(props: Props) {
     return found;
   }, [props.tasks])
 
+  const paginatorOpts = Array.from(
+    [
+    5, 10, 20, props.tasks.length
+  ] );
+
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
       <DataTable
@@ -98,9 +107,7 @@ export default function TaskList(props: Props) {
         reorderableColumns
         paginator
         rows={5}
-        rowsPerPageOptions={
-          [5, 10, 20, props.tasks.length]
-        }
+        rowsPerPageOptions={ paginatorOpts }
         header={<TaskListToolbar
           filtering={{
             filterValue: filterText,
@@ -143,6 +150,9 @@ export default function TaskList(props: Props) {
           className="content-table-data"
           filter
           key={'name'}
+          body={(params) => {
+            return parse(params.name);
+          }}
         />
         <Column
           header={t("list.course_name")}
