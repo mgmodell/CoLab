@@ -10,10 +10,10 @@ updates:
    directory: "/"
    schedule:
      interval: weekly
-   target-branch: 'staging'
+   target-branch: 'main'
 
  - package-ecosystem: "bundler"
    directory: "/"
    schedule:
      interval: weekly
-   target-branch: 'staging'
+   target-branch: 'main'
