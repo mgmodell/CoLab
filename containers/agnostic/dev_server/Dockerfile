@@ -28,8 +28,12 @@ RUN apt-get autoremove && \
 
 ARG USER_UID=1000
 ARG USER_GID=1000
-RUN groupadd -g ${USER_GID} colab && \
-  useradd -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+# -o/--non-unique allows the macOS override (USER_GID=20 / USER_UID=501) to
+# reuse GIDs/UIDs already present in the Ubuntu base image (e.g. GID 20 is
+# 'dialout').  In a rootless-Podman devcontainer this is intentional: the colab
+# user must share the host's UID/GID so bind-mounted files remain writable.
+RUN groupadd -o -g ${USER_GID} colab && \
+  useradd -o -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
 
 USER colab
 
