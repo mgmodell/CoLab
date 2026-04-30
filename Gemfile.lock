@@ -289,7 +289,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.19.3)
+    json (2.19.4)
     jwt (3.1.2)
       base64
     keypairs (2.0.1)
@@ -321,7 +321,7 @@ GEM
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
-    minitest (6.0.4)
+    minitest (6.0.5)
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.0)
@@ -456,12 +456,13 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
-    rails_best_practices (1.23.3)
+    rails_best_practices (1.23.4)
       activesupport
       code_analyzer (~> 0.5.5)
       erubis
       i18n
       json
+      ostruct
       require_all (~> 3.0)
       ruby-progressbar
     rails_serve_static_assets (0.0.5)
