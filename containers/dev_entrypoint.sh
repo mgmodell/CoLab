@@ -29,6 +29,6 @@ if [ -n "$BUNDLER_VERSION" ]; then
 fi
 bundle install --quiet
 echo "Installing packages using aube"
-aube install --silent
+aube install
 
 $@

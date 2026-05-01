@@ -128,7 +128,7 @@ mise install
 echo "Installing gems"
 bundle install --quiet
 echo "Installing packages using aube"
-aube install --silent
+aube install
 
 if [ "$DB_RESET" = true ]; then
   # Drop and re-create the database so -c always starts from a clean state
