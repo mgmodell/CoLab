@@ -14,6 +14,13 @@
 	],
 	"workspaceFolder": "/home/colab/src/app",
 	"remoteUser": "colab",
+	// Do not let VS Code remap the container user's UID/GID at runtime.
+	// The correct UID/GID are baked into the image at build time via the
+	// docker-compose.macos.yml / docker-compose.rootless.yml overrides.
+	// Allowing updateRemoteUserUID causes `groupmod -g 20 colab` to fail
+	// (GID 20 is already 'dialout' in Ubuntu) and can corrupt named-volume
+	// ownership.
+	"updateRemoteUserUID": false,
 	"shutdownAction": "stopCompose",
 
 	// Forward the Rails server, Shakapacker dev server, Selenium, VNC browser, and Moodle ports.
