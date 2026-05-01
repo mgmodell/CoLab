@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "aube@1.5.1",
   "dependencies": {
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
