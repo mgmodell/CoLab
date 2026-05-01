@@ -19,6 +19,14 @@ echo "Installing platforms"
 mise self-update -y
 mise install
 echo "Installing gems"
+# Ensure the exact bundler version required by Gemfile.lock is installed.
+# When BUNDLED WITH is present, bundler auto-upgrades itself at runtime to that
+# version — but that auto-install can produce a partial gem (missing rubygems_ext)
+# if the devmise volume has stale state.  Installing explicitly here is reliable.
+BUNDLER_VERSION=$(grep -A1 "BUNDLED WITH" Gemfile.lock 2>/dev/null | tail -1 | tr -d ' ')
+if [ -n "$BUNDLER_VERSION" ]; then
+  gem install bundler -v "$BUNDLER_VERSION" --no-document
+fi
 bundle install --quiet
 echo "Installing packages using aube"
 aube install --silent
