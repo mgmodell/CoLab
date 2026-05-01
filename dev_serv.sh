@@ -7,7 +7,7 @@ print_help ( ) {
   echo " -s             Start the server (cannot be combined)"
   echo " -f [features]  Specify specific features to run"
   echo ""
-  echo " -p             Prepare the DB (run db:prepare task)"
+  echo " -p             Prepare the DB (run db:create task)"
   echo " -d             Migrate the DB"
   echo " -c             Run the rails console (then terminate)"
   echo " -q [db]        Open mysql terminal to 'colab' or 'moodle'"
@@ -112,7 +112,10 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-rails db:prepare
+if [ "$MIGRATE" = true ]; then
+  echo "Preparing (creating) the DB..."
+  db:create
+fi
 
 
 # Run a migratify task

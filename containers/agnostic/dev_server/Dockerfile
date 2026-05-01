@@ -40,7 +40,7 @@ ENV PATH="/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc && \
   # echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
-  echo "bundler \n foreman \n rubocop" >> ~/.default-gems
+  printf 'bundler\nforeman\nrubocop\n' >> ~/.default-gems
 
 RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\
