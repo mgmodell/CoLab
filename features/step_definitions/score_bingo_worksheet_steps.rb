@@ -21,7 +21,7 @@ Given( 'the user is a student with the scored worksheet' ) do
 end
 
 When( 'the instructor visits the worksheet score page' ) do
-  visit Capybara.app_host + '/home/bingo/score_bingo_worksheet/' +  @worksheet_board.id.to_s
+  visit "#{Capybara.app_host}/home/bingo/score_bingo_worksheet/#{@worksheet_board.id.to_s}"
 
   wait_for_render
 end

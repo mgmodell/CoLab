@@ -11,7 +11,6 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from "react-grid-system";
-import { di } from "@fullcalendar/core/internal-common";
 
 interface EnrollInCourseProps {}
 
