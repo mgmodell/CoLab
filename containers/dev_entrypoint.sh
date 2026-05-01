@@ -9,7 +9,7 @@ echo "Setting the current working directory"
 
 cd $dir
 
-# Add mise shims and bin to PATH so managed tools (bundle, aube, etc.) are
+# Add mise shims and bin to PATH so managed tools (bundle, yarn, etc.) are
 # accessible in this non-interactive bash script.  `mise activate bash` relies
 # on PROMPT_COMMAND, which is never fired in non-interactive scripts, so we
 # set PATH directly instead.
@@ -28,7 +28,7 @@ if [ -n "$BUNDLER_VERSION" ]; then
   gem install bundler -v "$BUNDLER_VERSION" --no-document
 fi
 bundle install --quiet
-echo "Installing packages using aube"
-aube install
+echo "Installing packages using yarn"
+yarn install
 
 $@
