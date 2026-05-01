@@ -51,19 +51,19 @@ while getopts "jkl:htmnd" opt; do
       LOAD_FILE="${SCRIPT_DIR}/db/dev_db.sql"
       ;;
     k)
-      $DB_EXEC mysql colab_test_ -u test -ptest < "${SCRIPT_DIR}/db/test_db.sql"
+      $DB_EXEC mariadb colab_test_ -u test -ptest < "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     d)
-      $DB_EXEC mysqldump colab_dev -u test -ptest > "${SCRIPT_DIR}/db/dev_db.sql"
+      $DB_EXEC mariadb-dump colab_dev -u test -ptest > "${SCRIPT_DIR}/db/dev_db.sql"
       exit
       ;;
     t)
-      $DB_EXEC mysqldump colab_test_ -u test -ptest > "${SCRIPT_DIR}/db/test_db.sql"
+      $DB_EXEC mariadb-dump colab_test_ -u test -ptest > "${SCRIPT_DIR}/db/test_db.sql"
       exit
       ;;
     m)
-      $DB_EXEC mysqldump moodle -u moodle -pmoodle > "${SCRIPT_DIR}/db/moodle_db.sql"
+      $DB_EXEC mariadb-dump moodle -u moodle -pmoodle > "${SCRIPT_DIR}/db/moodle_db.sql"
       exit
       ;;
     n)
@@ -92,7 +92,7 @@ if [ "$SHOW_HELP" = true ]; then
   exit
 fi
 
-DB_COUNT=$($DB_EXEC mysqlshow -u test -ptest 2>/dev/null | grep -c colab_dev || echo 0)
+DB_COUNT=$($DB_EXEC mariadb-show -u test -ptest 2>/dev/null | grep -c colab_dev )
 if [ "$DB_COUNT" -eq 0 ]; then
   echo "Initialise the DBs from the dev environment"
   exit
@@ -103,9 +103,9 @@ if [ "$LOAD" = true ]; then
   if test -f "$LOAD_FILE"; then
     echo "Loading: $LOAD_FILE"
     if [ "$MOODLE" = false ]; then
-        $DB_EXEC mysql colab_dev -u test -ptest < $LOAD_FILE
+        $DB_EXEC mariadb colab_dev -u test -ptest < $LOAD_FILE
     else
-        $DB_EXEC mysql moodle -u moodle -pmoodle < $LOAD_FILE
+        $DB_EXEC mariadb moodle -u moodle -pmoodle < $LOAD_FILE
     fi
     echo "Loaded"
   else
