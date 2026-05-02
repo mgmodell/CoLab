@@ -144,7 +144,7 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 ]
 ```
 
-> **Windows**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container.
+> **Windows (native)**: do **not** add the rootless override. It causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container. Use `docker-compose.windows.yml` instead — see [Windows (Podman Desktop) — extra step](#windows-podman-desktop--extra-step) below.
 
 #### macOS rootless Podman — extra step
 
@@ -173,11 +173,36 @@ If you had already created the named volumes without this override, delete and r
 podman volume rm dev_env_devmise
 ```
 
-> **Windows**: do **not** add the macOS override. `userns_mode: keep-id` on Windows/WSL2 triggers an *"unsupported UNC path"* error (WSLg Wayland socket). **Linux**: use `docker-compose.rootless.yml` instead.
+> **Windows (native)**: do **not** add the macOS override. `userns_mode: keep-id` on Windows triggers an *"unsupported UNC path"* error (WSLg Wayland socket). Use `docker-compose.windows.yml` instead — see [Windows (Podman Desktop) — extra step](#windows-podman-desktop--extra-step) below. **Linux**: use `docker-compose.rootless.yml` instead.
+
+#### Windows (Podman Desktop) — extra step
+
+On Windows with Podman Desktop, the container host filesystem is shared into the Linux VM via **virtio-9p** (v9fs). This means platform-specific native Node.js modules (such as `@rspack/binding`) may be installed with Windows binaries into the bind-mounted `node_modules`, which the Linux container cannot use. A named Docker volume (`devnodemodules`) in the base compose file already addresses this by shadowing `node_modules` so the container always builds its own Linux-native copy — no extra volume configuration is needed.
+
+Enable the Windows override by updating `.devcontainer/devcontainer.json`:
+
+```json
+"dockerComposeFile": [
+  "../containers/dev_env/docker-compose.yml",
+  "../containers/dev_env/docker-compose.windows.yml"
+]
+```
+
+> **Order matters**: always list the base `docker-compose.yml` **first**. Docker Compose merges override files on top of the base in the order they appear, so reversing the order would break the base configuration.
+
+After adding the override, run **"Dev Containers: Rebuild and Reopen in Container"** (Command Palette: `Ctrl+Shift+P`) so the container is recreated, the `devnodemodules` volume is initialised, and `yarn install` runs inside the container with the correct Linux binaries.
+
+If you encounter `Cannot find native binding` errors after a rebuild, wipe and repopulate the volume manually:
+
+```bash
+podman volume rm dev_env_devnodemodules
+```
+
+Then rebuild the container.
+
+> **WSL2 users**: if you have set up your development environment *inside* WSL2 (rather than running VS Code natively on Windows), treat your setup as Linux and use `docker-compose.rootless.yml` instead. WSL2 presents a normal Linux filesystem, so the Windows override is not needed.
 
 The following ports are forwarded automatically to your host machine:
-
-| Port | Service |
 |------|---------|
 | 3000 | Rails development server |
 | 3035 | Shakapacker (JavaScript) dev server |
