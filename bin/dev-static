@@ -1,6 +1,14 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rbconfig"
+
+# Returns truthy when running on native Windows (MSYS2/Git Bash/Cygwin),
+# but NOT inside WSL, where overmind does not work properly.
+def windows_non_wsl?
+  RbConfig::CONFIG["host_os"] =~ /mswin|mingw|cygwin/i
+end
+
 def installed?(process)
   IO.popen "#{process} -v"
 rescue Errno::ENOENT
@@ -17,7 +25,7 @@ rescue Errno::ENOENT
   exit!
 end
 
-if installed? "overmind"
+if !windows_non_wsl? && installed?("overmind")
   run "overmind"
 elsif installed? "foreman"
   run "foreman"

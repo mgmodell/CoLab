@@ -148,9 +148,18 @@ if [ "$FEATURE" = true ]; then
   rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
+# Returns true (exit 0) when running on native Windows (MSYS2/Git Bash/Cygwin)
+# but NOT inside WSL, where overmind does not work.
+is_windows_non_wsl() {
+  case "$(uname -s)" in
+    MINGW*|CYGWIN*|MSYS*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 # Start the server
 if [ "$STARTUP" = true ]; then
-  if command -v overmind &> /dev/null; then
+  if ! is_windows_non_wsl && command -v overmind &> /dev/null; then
     overmind start -f Procfile.dev
   elif command -v foreman &> /dev/null; then
     foreman start -f Procfile.dev
