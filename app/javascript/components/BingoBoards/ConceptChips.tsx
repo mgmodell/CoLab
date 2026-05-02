@@ -1,7 +1,7 @@
 import React from "react";
 import { Chip } from "primereact/chip";
 import { Panel } from "primereact/panel";
-import { parse } from "html-react-parser";
+import parse from "html-react-parser";
 
 type Props = {
   concepts: Array<{ id: number; name: string }>;

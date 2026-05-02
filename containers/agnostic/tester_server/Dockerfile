@@ -26,7 +26,7 @@ WORKDIR /home/colab
 
 USER colab
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
-ENV PATH="/home/colab/.local/bin:$PATH"
+ENV PATH="/home/colab/src/app/node_modules/.bin:/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   # echo "export PATH=/home/colab/.local/bin:$PATH" >> /home/colab/.bashrc && \
   echo 'eval "$(~/.local/bin/mise activate bash)"' >> /home/colab/.bashrc && \

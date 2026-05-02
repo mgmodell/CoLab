@@ -3,7 +3,7 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
-PATH=$HOME/.local/share/mise/shims:$PATH
+export PATH=$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$PATH
 # eval "$(~/.local/bin/mise activate bash)"
 
 
@@ -127,8 +127,8 @@ mise self-update -y
 mise install
 echo "Installing gems"
 bundle install --quiet
-echo "Installing packages using aube"
-aube install --silent
+echo "Installing packages using yarn"
+yarn install
 
 if [ "$DB_RESET" = true ]; then
   # Drop and re-create the database so -c always starts from a clean state

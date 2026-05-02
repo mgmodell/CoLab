@@ -11,7 +11,7 @@ import UserActivityList from "./UserActivityList";
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTour } from "../infrastructure/TourContext";
 import {
@@ -40,7 +40,6 @@ import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
 import { useBlocker, useNavigate } from "react-router";
-import { bl, co, di } from "@fullcalendar/core/internal-common";
 
 type Props = {
   // profileId: number;

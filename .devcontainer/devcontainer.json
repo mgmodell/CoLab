@@ -14,6 +14,10 @@
 	],
 	"workspaceFolder": "/home/colab/src/app",
 	"remoteUser": "colab",
+	// Do not let VS Code remap the container user's UID at runtime.
+	// The correct UID is baked into the image at build time via the
+	// docker-compose.macos.yml / docker-compose.rootless.yml overrides.
+	"updateRemoteUserUID": false,
 	"shutdownAction": "stopCompose",
 
 	// Forward the Rails server, Shakapacker dev server, Selenium, VNC browser, and Moodle ports.

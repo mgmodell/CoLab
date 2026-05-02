@@ -92,7 +92,7 @@ if [ "$SHOW_HELP" = true ]; then
   exit
 fi
 
-DB_COUNT=$($DB_EXEC mariadb-show -u test -ptest 2>/dev/null | grep -c colab_dev )
+DB_COUNT=$($DB_EXEC mariadb-show -u test -ptest 2>/dev/null | grep -c colab_dev)
 if [ "$DB_COUNT" -eq 0 ]; then
   echo "Initialise the DBs from the dev environment"
   exit
