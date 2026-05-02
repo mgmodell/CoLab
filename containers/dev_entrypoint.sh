@@ -13,7 +13,7 @@ cd $dir
 # accessible in this non-interactive bash script.  `mise activate bash` relies
 # on PROMPT_COMMAND, which is never fired in non-interactive scripts, so we
 # set PATH directly instead.
-export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
+export PATH="$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$HOME/.local/bin:$PATH"
 
 echo "Installing platforms"
 mise self-update -y

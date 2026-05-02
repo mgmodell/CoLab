@@ -36,7 +36,7 @@ USER colab
 WORKDIR /home/colab
 
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
-ENV PATH="/home/colab/.local/bin:$PATH"
+ENV PATH="/home/colab/src/app/node_modules/.bin:/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
   echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc && \
   # echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
