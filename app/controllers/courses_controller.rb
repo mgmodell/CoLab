@@ -251,7 +251,7 @@ class CoursesController < ApplicationController
         terms_lists = []
         worksheets = []
         bingo_games.each do | bingo_game |
-          list = bingo_game.candidate_lists.find_by user_id: user.id
+          list = bingo_game.candidate_list_for_user user
           terms_lists << if list.nil?
                            0
                          else
@@ -284,7 +284,7 @@ class CoursesController < ApplicationController
 
   def reg_requests
     # Pull any requesting students for review
-    courses = current_user.rosters.faculty.collect( &:course )
+    courses = current_user.rosters.includes( :course ).faculty.collect( &:course )
     waiting_student_requests = Roster.requesting_student
                                      .where( course: courses )
     respond_to do | format |
@@ -339,7 +339,7 @@ class CoursesController < ApplicationController
 
     respond_to do | format |
       format.json do
-        resp = @courses.collect do | r |
+        resp = @courses.includes( :school, :rosters, :projects, :experiences, :bingo_games ).collect do | r |
           { id: r.id,
             name: r.name,
             number: r.number,
