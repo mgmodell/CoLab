@@ -150,7 +150,11 @@ fi
 
 # Start the server
 if [ "$STARTUP" = true ]; then
-  overmind start -f Procfile.dev
+  if command -v overmind &> /dev/null; then
+    overmind start -f Procfile.dev
+  else
+    foreman start -f Procfile.dev
+  fi
 fi
 
 
