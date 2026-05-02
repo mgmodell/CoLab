@@ -1,0 +1,52 @@
+# docker-compose.windows.yml
+#
+# Override for Windows with Podman Desktop (or Docker Desktop).
+#
+# On Windows, Podman shares the host filesystem into its Linux VM via virtio-9p
+# (v9fs).  Two issues arise that are addressed here:
+#
+#   1. node_modules native binaries — @rspack/binding and similar packages ship
+#      platform-specific optional native extensions.  When yarn is run on the
+#      Windows host the Windows (.node) file is installed.  The Linux container
+#      cannot use it, and yarn install inside the container will skip the
+#      optional dep reinstall if it already sees the package in node_modules.
+#      The base docker-compose.yml now shadows node_modules with a named volume
+#      (devnodemodules) so the container always builds its own Linux-native
+#      copy.  No extra override is needed for this — it is included here only
+#      for documentation purposes.
+#
+#   2. User-namespace mapping — unlike macOS/Linux rootless Podman, Windows
+#      Podman Desktop does NOT support userns_mode: keep-id (the Wayland/WSLg
+#      socket path causes an "unsupported UNC path" error).  Do NOT add
+#      userns_mode: keep-id here.  The image is built with USER_UID=1000 which
+#      matches the default Podman Desktop mapping.
+#
+# Usage — add this file to your .devcontainer/devcontainer.json:
+#
+#   "dockerComposeFile": [
+#     "../containers/dev_env/docker-compose.yml",
+#     "../containers/dev_env/docker-compose.windows.yml"
+#   ]
+#
+# After the first-time setup (or when you pull new package changes) you may
+# need to run "Dev Containers: Rebuild and Reopen in Container" from the VS Code
+# Command Palette so that the postCreateCommand re-runs bundle install / yarn
+# install inside the container and populates the devnodemodules volume with
+# Linux-native binaries.
+#
+# If you encounter stale native-module errors after a rebuild, you can wipe and
+# repopulate the named volume manually:
+#
+#   podman volume rm dev_env_devnodemodules
+#
+# Then rebuild the container so the volume is recreated and yarn install runs
+# again with the correct Linux binaries.
+#
+# Note: WSL2 (Windows Subsystem for Linux) users should use the Linux setup
+# instead — WSL presents a normal Linux filesystem, so none of the Windows
+# workarounds above are needed.
+
+# No additional service overrides are required for Windows at this time.
+# This file exists to document the setup and can be extended in the future.
+services:
+  app: {}
