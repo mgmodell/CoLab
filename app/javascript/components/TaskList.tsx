@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 
 import { DataTable } from "primereact/datatable";
 
-import { DateTime } from "luxon";
+import { Temporal, formatZonedDateTime, DATETIME_MED } from "./infrastructure/TemporalSettings";
 
 import { iconForType } from "./ActivityLib";
 
@@ -42,9 +42,9 @@ interface ITaskItem {
   course_name: string,
   group_name: string,
   status: string,
-  start_date: DateTime,
-  end_date: DateTime,
-  next_date: DateTime,
+  start_date: Temporal.ZonedDateTime,
+  end_date: Temporal.ZonedDateTime,
+  next_date: Temporal.ZonedDateTime,
   link: string,
   consent_link: string,
   active: boolean
@@ -218,7 +218,7 @@ export default function TaskList(props: Props) {
               sortable
               key={OPT_COLS.START_DATE}
               body={(params) => {
-                return <span>{params.start_date.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                return <span>{params.start_date ? formatZonedDateTime(params.start_date, DATETIME_MED) : ""}</span>;
               }}
 
             />
@@ -232,7 +232,7 @@ export default function TaskList(props: Props) {
               sortable
               key={OPT_COLS.NEXT_DATE}
               body={(params) => {
-                return <span>{params.next_date.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                return <span>{params.next_date ? formatZonedDateTime(params.next_date, DATETIME_MED) : ""}</span>;
               }}
             />
           ) : null

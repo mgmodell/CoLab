@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-import { DateTime } from "luxon";
+import { Temporal } from "../infrastructure/TemporalSettings";
 import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 
@@ -49,7 +49,7 @@ export default function CopyActivityButton(props: Props) {
       closeOnEscape={false}
       modal={true}
       onHide={() => {
-        setNewStartDate(DateTime.local());
+        setNewStartDate(new Date());
         setCopyData(null);
       }}
       footer={
@@ -57,7 +57,7 @@ export default function CopyActivityButton(props: Props) {
           <Button
             disabled={status.working}
             onClick={event => {
-              setNewStartDate(DateTime.local());
+              setNewStartDate(new Date());
               setCopyData(null);
             }}
           >
@@ -68,10 +68,10 @@ export default function CopyActivityButton(props: Props) {
             onClick={event => {
               dispatch(startTask("copying_course"));
               const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
-              const sendDate = DateTime.fromISO(
-                newStartDate.toISOString().substring(0, 10),
-                { zone: "UTC" }
-              );
+              // Send just the date portion in UTC
+              const sendDate = newStartDate
+                ? newStartDate.toISOString().substring(0, 10)
+                : new Date().toISOString().substring(0, 10);
 
               axios
                 .post(url, {
@@ -84,7 +84,7 @@ export default function CopyActivityButton(props: Props) {
                   if (Boolean(props.itemUpdateFunc)) {
                     props.itemUpdateFunc();
                   }
-                  setNewStartDate(DateTime.local());
+                  setNewStartDate(new Date());
                   setCopyData(null);
                 })
                 .catch(error => {
@@ -101,7 +101,7 @@ export default function CopyActivityButton(props: Props) {
       }
     >
       This course started on{" "}
-      {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When would you like
+      {props.startDate.toLocaleDateString()}. When would you like
       for the new copy to begin? Everything will be shifted accordingly.
       <br />
       <span className="card flex justify-content-center">

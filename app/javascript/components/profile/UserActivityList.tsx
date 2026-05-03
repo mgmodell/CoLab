@@ -7,7 +7,7 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { DateTime } from "luxon";
+import { Temporal } from "../infrastructure/TemporalSettings";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -20,7 +20,7 @@ interface IActivity {
   link: string | null;
   course_name: string;
   course_number: string;
-  close_date: DateTime;
+  close_date: Temporal.ZonedDateTime;
   performance: number;
   other: number;
 }

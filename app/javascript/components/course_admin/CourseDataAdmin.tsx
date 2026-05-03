@@ -33,7 +33,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
-import {DateTime} from 'luxon';
+import { Temporal, parseISO } from "../infrastructure/TemporalSettings";
 
 interface IActivityLink {
   name: string;
@@ -93,8 +93,6 @@ export default function CourseDataAdmin() {
   });
 
   const [courseUsersList, setCourseUsersList] = useState(Array<StudentData>);
-
-  //Using this Luxon function for later i18n
 
   const schools = useTypedSelector(state => state.context.lookups["schools"]);
   const timezones = useTypedSelector(
@@ -182,15 +180,18 @@ export default function CourseDataAdmin() {
         if (Object.keys(data.messages).length < 2) {
           const timezoneAdjust = data.course.timezone
           const timezone = timezones.find(tz => tz.name === timezoneAdjust);
-          const procStartDate = DateTime.fromISO(data.course.start_date, { zone: timezone.stdName });
-          const procEndDate = DateTime.fromISO(data.course.end_date, { zone: timezone.stdName });
+          const stdName = timezone ? timezone.stdName : timezoneAdjust;
+          const procStartInstant = Temporal.Instant.from(data.course.start_date);
+          const procStartDate = procStartInstant.toZonedDateTimeISO(stdName);
+          const procEndInstant = Temporal.Instant.from(data.course.end_date);
+          const procEndDate = procEndInstant.toZonedDateTimeISO(stdName);
 
 
           const localCourse: ICourse = Object.assign({},
             data.course,
             {
-              start_date: procStartDate.plus( {minutes: procStartDate.offset }).toJSDate( ),
-              end_date: procEndDate.plus( {minutes: procEndDate.offset }).toJSDate( ),
+              start_date: new Date(procStartDate.epochMilliseconds + procStartDate.offsetNanoseconds / 1e6),
+              end_date: new Date(procEndDate.epochMilliseconds + procEndDate.offsetNanoseconds / 1e6),
             }
           );
           setCourse(localCourse);

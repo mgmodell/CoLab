@@ -2,10 +2,10 @@ import React, { Suspense, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import luxonPlugin from "@fullcalendar/luxon";
-import { DateTime, Settings } from "luxon";
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import dayjs from "dayjs";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Temporal, TemporalSettings as Settings, parseISO } from "./infrastructure/TemporalSettings";
 
 import { Skeleton } from "primereact/skeleton";
 
@@ -66,9 +66,23 @@ export default function HomeShell(props: Props) {
   useEffect(() => {
     if (null !== user.lastRetrieved && undefined !== tasks) {
       const newTasks = tasks;
-      newTasks.forEach((value, index, array) => {
-        value.next_date = value.next_date.setZone(Settings.defaultZone);
-        value.start_date = value.start_date.setZone(Settings.defaultZone);
+      newTasks.forEach((value, _index, _array) => {
+        value.next_date = value.next_date
+          ? parseISO(
+              value.next_date instanceof Object
+                ? value.next_date.toString()
+                : value.next_date,
+              Settings.defaultZone
+            )
+          : value.next_date;
+        value.start_date = value.start_date
+          ? parseISO(
+              value.start_date instanceof Object
+                ? value.start_date.toString()
+                : value.start_date,
+              Settings.defaultZone
+            )
+          : value.start_date;
       });
 
       setTasks(newTasks);
@@ -120,12 +134,12 @@ export default function HomeShell(props: Props) {
 
           value.link = value.url;
           // Set the dates properly - close may need work
-          value.start = value.next_date;
+          value.start = value.next_date ? new Date(value.next_date) : new Date();
           if (null !== value.next_date) {
-            value.next_date = DateTime.fromISO(value.next_date);
+            value.next_date = parseISO(value.next_date);
           }
           if (null !== value.start_date) {
-            value.start_date = DateTime.fromISO(value.start_date);
+            value.start_date = parseISO(value.start_date);
           }
         });
         setTasks(data.tasks);
@@ -180,29 +194,20 @@ export default function HomeShell(props: Props) {
             </TabPanel>
 
             <TabPanel header="Calendar View">
-              <FullCalendar
-                headerToolbar={{
-                  center: "thisWeek,dayGridMonth"
+              <Calendar
+                localizer={dayjsLocalizer(dayjs)}
+                events={Array.isArray(tasks) ? (tasks as any[]).map(task => ({
+                  title: task.title,
+                  start: task.start instanceof Date ? task.start : new Date(task.start || Date.now()),
+                  end: task.start instanceof Date ? task.start : new Date(task.start || Date.now()),
+                  resource: task
+                })) : []}
+                onSelectEvent={event => {
+                  navigate(event.resource.url);
                 }}
-                initialView="thisWeek"
-                views={{
-                  thisWeek: {
-                    type: "dayGrid",
-                    duration: {
-                      weeks: 2
-                    },
-                    buttonText: "Two Weeks"
-                  },
-                  dayGridMonth: {
-                    buttonText: "One Month"
-                  }
-                }}
-                displayEventTime={false}
-                events={tasks}
-                eventClick={info => {
-                  navigate(info.event.url);
-                }}
-                plugins={[dayGridPlugin, luxonPlugin]}
+                defaultView="week"
+                views={["week", "month"]}
+                style={{ height: 500 }}
               />
             </TabPanel>
           </TabView>

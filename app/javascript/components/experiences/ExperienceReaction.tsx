@@ -13,7 +13,6 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { RadioButton } from "primereact/radiobutton";
 import { Container, Row, Col } from "react-grid-system";
-import { di } from "@fullcalendar/core/internal-common";
 import { FloatLabel } from "primereact/floatlabel";
 
 type Props = {

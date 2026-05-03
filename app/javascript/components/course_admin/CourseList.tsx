@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 
-import { DateTime } from "luxon";
+import { parseISO } from "../infrastructure/TemporalSettings";
 
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
@@ -161,7 +161,7 @@ export default function CourseList(props) {
           filter
           field="start_date"
           body={param => {
-            return <>{DateTime.fromISO(param.start_date).toLocaleString()}</>;
+            return <>{parseISO(param.start_date).toLocaleString()}</>;
           }}
         />
         <Column
@@ -170,7 +170,7 @@ export default function CourseList(props) {
           filter
           field="end_date"
           body={param => {
-            return <>{DateTime.fromISO(param.end_date).toLocaleString()}</>;
+            return <>{parseISO(param.end_date).toLocaleString()}</>;
           }}
         />
         {visibleColumns.includes(OPT_COLS.INSTR) ? (

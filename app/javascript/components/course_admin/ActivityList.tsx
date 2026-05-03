@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import { useTranslation } from "react-i18next";
-import { DateTime } from "luxon";
+import { Temporal, parseISO } from "../infrastructure/TemporalSettings";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import {
@@ -124,7 +124,12 @@ export default function ActivityList(props: Props) {
           body={rowData => {
             if (!rowData.active) {
               return t( 'activities.not_active_lbl' );
-            } else if (DateTime.fromISO(rowData.end_date) > DateTime.now()) {
+            } else if (
+              Temporal.Instant.compare(
+                Temporal.Instant.from(rowData.end_date),
+                Temporal.Now.instant()
+              ) > 0
+            ) {
               return t( 'activities.active_lbl' );
             } else {
               return t( 'activities.expired_lbl' );
@@ -139,7 +144,7 @@ export default function ActivityList(props: Props) {
           body={rowData => {
             return (
               <span>
-                {DateTime.fromISO(rowData.start_date).toLocaleString()}
+                {parseISO(rowData.start_date).toLocaleString()}
               </span>
             );
           }}
@@ -151,7 +156,7 @@ export default function ActivityList(props: Props) {
           field="end_date"
           body={rowData => {
             return (
-              <span>{DateTime.fromISO(rowData.end_date).toLocaleString()}</span>
+              <span>{parseISO(rowData.end_date).toLocaleString()}</span>
             );
           }}
         />

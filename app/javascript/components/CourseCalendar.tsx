@@ -1,24 +1,42 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import listPlugin from "@fullcalendar/list";
+import React, { useState, useEffect } from "react";
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import dayjs from "dayjs";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import axios from "axios";
 
 type Props = {
   dataUrl: string;
 };
+
 export default function CourseCalendar(props: Props) {
-  const header = {
-    left: "prev,next today",
-    center: "title",
-    right: "dayGridWeek,dayGridMonth,listMonth"
-  };
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(props.dataUrl + ".json")
+      .then(response => {
+        const data = response.data;
+        const mapped = (Array.isArray(data) ? data : data.events || []).map(
+          (ev: { title?: string; name?: string; start?: string; end?: string }) => ({
+            title: ev.title || ev.name || "",
+            start: ev.start ? new Date(ev.start) : new Date(),
+            end: ev.end ? new Date(ev.end) : new Date()
+          })
+        );
+        setEvents(mapped);
+      })
+      .catch(error => {
+        console.error("CourseCalendar fetch error:", error);
+      });
+  }, [props.dataUrl]);
 
   return (
-    <FullCalendar
-      plugins={[dayGridPlugin, listPlugin]}
-      header={header}
-      defaultView="dayGridWeek"
-      events={props.dataUrl + ".json"}
+    <Calendar
+      localizer={dayjsLocalizer(dayjs)}
+      events={events}
+      defaultView="week"
+      views={["week", "month", "agenda"]}
+      style={{ height: 600 }}
     />
   );
 }
