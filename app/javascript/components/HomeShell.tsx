@@ -196,6 +196,7 @@ export default function HomeShell(props: Props) {
               <Calendar
                 localizer={dayjsLocalizer(dayjs)}
                 events={Array.isArray(tasks) ? (tasks as any[])
+                  // Only include tasks that have a resolved start date
                   .filter(task => task.start instanceof Date)
                   .map(task => ({
                     title: task.title,

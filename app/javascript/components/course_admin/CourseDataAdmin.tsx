@@ -180,12 +180,16 @@ export default function CourseDataAdmin() {
         if (Object.keys(data.messages).length < 2) {
           const timezoneAdjust = data.course.timezone
           const timezone = timezones.find(tz => tz.name === timezoneAdjust);
+          // Fall back to the raw timezone string if lookup fails (e.g. new/custom zones)
           const stdName = timezone ? timezone.stdName : timezoneAdjust;
           const procStartInstant = Temporal.Instant.from(data.course.start_date);
           const procStartDate = procStartInstant.toZonedDateTimeISO(stdName);
           const procEndInstant = Temporal.Instant.from(data.course.end_date);
           const procEndDate = procEndInstant.toZonedDateTimeISO(stdName);
-          // Convert offset from nanoseconds to milliseconds using integer arithmetic
+          // We need to shift the Date by the UTC offset so that JavaScript's
+          // Date object (which has no timezone) represents the local wall-clock
+          // time. This matches the behaviour of the original Luxon-based code:
+          //   procStartDate.plus({ minutes: procStartDate.offset }).toJSDate()
           const startOffsetMs = Math.floor(procStartDate.offsetNanoseconds / 1_000_000);
           const endOffsetMs = Math.floor(procEndDate.offsetNanoseconds / 1_000_000);
 
