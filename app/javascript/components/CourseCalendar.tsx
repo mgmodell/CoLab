@@ -16,13 +16,15 @@ export default function CourseCalendar(props: Props) {
       .get(props.dataUrl + ".json")
       .then(response => {
         const data = response.data;
-        const mapped = (Array.isArray(data) ? data : data.events || []).map(
-          (ev: { title?: string; name?: string; start?: string; end?: string }) => ({
+        const mapped = (Array.isArray(data) ? data : data.events || [])
+          .filter((ev: { start?: string }): ev is { start: string; title?: string; name?: string; end?: string } =>
+            Boolean(ev.start)
+          )
+          .map((ev: { start: string; title?: string; name?: string; end?: string }) => ({
             title: ev.title || ev.name || "",
-            start: ev.start ? new Date(ev.start) : new Date(),
-            end: ev.end ? new Date(ev.end) : new Date()
-          })
-        );
+            start: new Date(ev.start),
+            end: ev.end ? new Date(ev.end) : new Date(ev.start)
+          }));
         setEvents(mapped);
       })
       .catch(error => {

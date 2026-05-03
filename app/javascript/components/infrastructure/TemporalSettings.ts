@@ -69,7 +69,7 @@ const formatZonedDateTime = (
   return new Intl.DateTimeFormat(undefined, {
     ...options,
     timeZone: zdt.timeZoneId
-  }).format(new Date(zdt.epochMilliseconds));
+  }).format(new Date(zdt.toInstant().epochMilliseconds));
 };
 
 /**

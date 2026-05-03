@@ -379,7 +379,9 @@ export default function CritiqueShell(props: Props) {
 
                       </h6>
                       <p id='sub_link'>
-                        <a href={selectedSubmission.sub_link ?? undefined}>{selectedSubmission.sub_link}</a>
+                        {selectedSubmission.sub_link
+                          ? <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
+                          : null}
                       </p>
                     </React.Fragment>
                   ) : null}

@@ -185,13 +185,15 @@ export default function CourseDataAdmin() {
           const procStartDate = procStartInstant.toZonedDateTimeISO(stdName);
           const procEndInstant = Temporal.Instant.from(data.course.end_date);
           const procEndDate = procEndInstant.toZonedDateTimeISO(stdName);
-
+          // Convert offset from nanoseconds to milliseconds using integer arithmetic
+          const startOffsetMs = Math.floor(procStartDate.offsetNanoseconds / 1_000_000);
+          const endOffsetMs = Math.floor(procEndDate.offsetNanoseconds / 1_000_000);
 
           const localCourse: ICourse = Object.assign({},
             data.course,
             {
-              start_date: new Date(procStartDate.epochMilliseconds + procStartDate.offsetNanoseconds / 1e6),
-              end_date: new Date(procEndDate.epochMilliseconds + procEndDate.offsetNanoseconds / 1e6),
+              start_date: new Date(procStartDate.toInstant().epochMilliseconds + startOffsetMs),
+              end_date: new Date(procEndDate.toInstant().epochMilliseconds + endOffsetMs),
             }
           );
           setCourse(localCourse);
