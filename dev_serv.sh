@@ -4,7 +4,11 @@ print_help ( ) {
   echo "dev_serv: Script to interact with dev server in containerized"
   echo "          environment"
   echo "Valid options:"
-  echo " -s             Start the server (cannot be combined)"
+  echo " -s             Start the server over HTTP (cannot be combined)"
+  echo " -t             Start the server over HTTPS/TLS (cannot be combined)"
+  echo "                Generates a self-signed certificate in tmp/ssl/ on"
+  echo "                first run.  Required for LTI Dynamic Registration,"
+  echo "                Deep Linking, and Grade Push testing."
   echo " -f [features]  Specify specific features to run"
   echo ""
   echo " -p             Prepare the DB (run db:create task)"
@@ -53,6 +57,7 @@ RUN_TASK_A=false
 FEATURE=false
 LOAD=false
 STARTUP=false
+STARTUP_TLS=false
 
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
@@ -79,6 +84,9 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
       ;;
     s)
       STARTUP=true
+      ;;
+    t)
+      STARTUP_TLS=true
       ;;
     a)
       RUN_TASK_A=true
@@ -148,9 +156,14 @@ if [ "$FEATURE" = true ]; then
   rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
-# Start the server
+# Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
   overmind start -f Procfile.dev
+fi
+
+# Start the server (HTTPS – required for LTI testing)
+if [ "$STARTUP_TLS" = true ]; then
+  overmind start -f Procfile.dev-https
 fi
 
 

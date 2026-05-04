@@ -28,8 +28,56 @@
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-port ENV.fetch("PORT", 3000)
+# In development you can start the server with HTTPS by setting COLAB_HTTPS=true
+# (e.g. via Procfile.dev-https or `COLAB_HTTPS=true dev_serv.sh -t`).
+# A self-signed certificate is generated on first run using Ruby's built-in
+# OpenSSL and cached in tmp/ssl/.  Add a browser exception once per machine.
+if ENV['COLAB_HTTPS'] == 'true'
+  require 'openssl'
+  require 'fileutils'
+
+  _ssl_dir  = File.expand_path('../tmp/ssl', __dir__)
+  _key_path = File.join(_ssl_dir, 'dev.key')
+  _crt_path = File.join(_ssl_dir, 'dev.crt')
+
+  unless File.exist?(_key_path) && File.exist?(_crt_path)
+    FileUtils.mkdir_p(_ssl_dir)
+
+    _key           = OpenSSL::PKey::RSA.generate(2048)
+    _cert          = OpenSSL::X509::Certificate.new
+    _name          = OpenSSL::X509::Name.parse('/CN=localhost')
+    _cert.subject  = _name
+    _cert.issuer   = _name
+    _cert.not_before = Time.now
+    _cert.not_after  = Time.now + 365 * 24 * 60 * 60
+    _cert.public_key = _key.public_key
+    _cert.serial   = 1
+    _cert.version  = 2
+
+    _ef = OpenSSL::X509::ExtensionFactory.new
+    _ef.subject_certificate = _cert
+    _ef.issuer_certificate  = _cert
+    _cert.add_extension(
+      _ef.create_extension('subjectAltName',
+                           'DNS:localhost,IP:127.0.0.1,DNS:app', false)
+    )
+    _cert.sign(_key, OpenSSL::Digest::SHA256.new)
+
+    File.write(_key_path, _key.to_pem)
+    File.write(_crt_path, _cert.to_pem)
+    $stdout.puts "Generated self-signed TLS certificate in #{_ssl_dir}"
+  end
+
+  # Bind HTTPS only; no plain-HTTP listener in this mode.
+  ssl_bind '0.0.0.0', ENV.fetch('PORT', 3443).to_i, {
+    key:         _key_path,
+    cert:        _crt_path,
+    verify_mode: 'none'
+  }
+else
+  # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
+  port ENV.fetch("PORT", 3000)
+end
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
