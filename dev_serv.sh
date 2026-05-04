@@ -158,6 +158,10 @@ fi
 
 # Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
+  if [ "$STARTUP_TLS" = true ]; then
+    echo "Error: -s and -t cannot be combined. Use -s for HTTP or -t for HTTPS."
+    print_help
+  fi
   overmind start -f Procfile.dev
 fi
 

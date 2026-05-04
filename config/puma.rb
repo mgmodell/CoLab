@@ -65,11 +65,12 @@ if ENV['COLAB_HTTPS'] == 'true'
 
     File.write(_key_path, _key.to_pem)
     File.write(_crt_path, _cert.to_pem)
+    File.chmod(0o600, _key_path)
     $stdout.puts "Generated self-signed TLS certificate in #{_ssl_dir}"
   end
 
   # Bind HTTPS only; no plain-HTTP listener in this mode.
-  ssl_bind '0.0.0.0', ENV.fetch('PORT', 3443).to_i, {
+  ssl_bind '0.0.0.0', Integer(ENV.fetch('PORT', 3443)), {
     key:         _key_path,
     cert:        _crt_path,
     verify_mode: 'none'
