@@ -31,6 +31,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
   config.hosts << "app:3000"
+  config.hosts << "app:3443"
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
