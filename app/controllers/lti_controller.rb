@@ -30,7 +30,12 @@ class LtiController < ApplicationController
   AGS_RESULT_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly'
   AGS_SCORE_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/score'
 
+  # Maximum length for platform error messages included in log warnings
+  # and the registration error view.
+  REGISTRATION_ERROR_TRUNCATE_LENGTH = 200
+
   # GET|POST /lti/tool_connect
+  # GET|POST /lti/lti_connect  (alias — Moodle's Dynamic Registration redirect uses this path)
   # LTI Dynamic Registration endpoint.
   # Called by the platform to register CoLab as an LTI 1.3 tool.
   def register
@@ -50,6 +55,9 @@ class LtiController < ApplicationController
     end
 
     tool_config = build_tool_config
+    @registration_error = nil
+    @client_id = nil
+    @platform_issuer = platform_config['issuer']
 
     # If the platform provided a registration endpoint, POST our config there
     if platform_config['registration_endpoint'].present?
@@ -66,6 +74,7 @@ class LtiController < ApplicationController
           registered = JSON.parse(reg_response.body)
           # Persist the deployment if we get a client_id back
           if registered['client_id'].present?
+            @client_id = registered['client_id']
             LtiDeployment.find_or_create_by(
               issuer: platform_config['issuer'] || registered['client_id'],
               client_id: registered['client_id']
@@ -77,14 +86,25 @@ class LtiController < ApplicationController
             end
           end
         else
+          @registration_error = registration_error_message(
+            "Platform returned #{reg_response.code}", reg_response.body
+          )
           logger.warn "LTI registration POST failed: #{reg_response.code} #{reg_response.body}"
         end
       rescue StandardError => e
+        @registration_error = registration_error_message('Registration error', e.message)
         logger.warn "LTI Dynamic Registration POST error: #{e.message}"
       end
     end
 
-    render json: tool_config
+    respond_to do |format|
+      format.html { render :register }
+      # LTI platforms may not send an explicit JSON Accept header (they may use
+      # Accept: */* or omit the header entirely).  format.any ensures we respond
+      # with the tool configuration for every non-HTML request rather than
+      # raising ActionController::UnknownFormat.
+      format.any { render json: tool_config }
+    end
   end
 
   # GET /.well-known/jwks.json
@@ -387,11 +407,17 @@ class LtiController < ApplicationController
 
   private
 
-  # Use no Rails layout for LTI views (select_content, deep_link_response) that
-  # ship their own complete HTML document.  All other LTI actions render JSON /
-  # plain text where layout is irrelevant anyway.
+  # Use no Rails layout for LTI views (select_content, deep_link_response,
+  # register) that ship their own complete HTML document.  All other LTI
+  # actions render JSON / plain text where layout is irrelevant anyway.
   def lti_layout
-    action_name.in?(%w[select_content deep_link_response]) ? false : 'application'
+    action_name.in?(%w[select_content deep_link_response register]) ? false : 'application'
+  end
+
+  # Format a registration error message consistently, truncating the detail
+  # portion to REGISTRATION_ERROR_TRUNCATE_LENGTH characters.
+  def registration_error_message(prefix, detail)
+    "#{prefix}: #{detail.truncate(REGISTRATION_ERROR_TRUNCATE_LENGTH)}"
   end
 
   def tool_base_url

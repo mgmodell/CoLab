@@ -322,9 +322,13 @@ Rails.application.routes.draw do
   end
 
   # LTI 1.3 endpoints
-  # Dynamic Registration
+  # Dynamic Registration – both path names route to the same action so that
+  # Moodle's redirect (which uses /lti/lti_connect) and any manual entry of
+  # /lti/tool_connect both work.
   get  'lti/tool_connect' => 'lti#register', as: :lti_register
   post 'lti/tool_connect' => 'lti#register'
+  get  'lti/lti_connect'  => 'lti#register'
+  post 'lti/lti_connect'  => 'lti#register'
   # JWKS endpoint for platform JWT verification
   scope '.well-known' do
     get :jwks, to: Keypairs::PublicKeysController.action(:index), as: :lti_jwks
