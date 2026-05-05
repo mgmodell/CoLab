@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CoLab LTI Registration</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; color: #333; }
+    .success { border-left: 4px solid #4caf50; padding: 12px 16px; background: #f1f8f1; }
+    .error   { border-left: 4px solid #f44336; padding: 12px 16px; background: #fdf1f1; }
+    .detail  { margin-top: 16px; font-size: 0.9em; color: #555; }
+    code     { background: #eee; padding: 2px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h2>CoLab &mdash; LTI Dynamic Registration</h2>
+
+  <% if @registration_error.present? %>
+    <div class="error">
+      <strong>Registration error:</strong> <%= @registration_error %>
+    </div>
+    <p class="detail">
+      Check that the CoLab dev server is running (<code>dev_serv.sh -t</code>)
+      and that Moodle can reach <code>https://app:3443</code> over the Docker network.
+    </p>
+  <% elsif @client_id.present? %>
+    <div class="success">
+      <strong>Registration complete.</strong>
+      CoLab has been registered as an LTI&nbsp;1.3 tool in Moodle.
+    </div>
+    <p class="detail">
+      <% if @platform_issuer.present? %>
+        Platform: <code><%= @platform_issuer %></code><br>
+      <% end %>
+      Client ID: <code><%= @client_id %></code><br>
+      You can close this tab and return to Moodle.
+    </p>
+  <% else %>
+    <div class="success">
+      <strong>Tool configuration returned.</strong>
+      CoLab responded to the Dynamic Registration request.
+      <% if @platform_issuer.blank? %>
+        No <code>openid_configuration</code> URL was provided, so no
+        server-to-server registration was performed &mdash; this is expected
+        when fetching the configuration document directly.
+      <% else %>
+        The platform at <code><%= @platform_issuer %></code> did not supply a
+        <code>registration_endpoint</code>; the tool configuration was not
+        automatically saved.  Use the platform details printed by
+        <code>bin/setup_moodle_course</code> to add a deployment manually in
+        CoLab&rsquo;s LTI Deployments admin page.
+      <% end %>
+    </div>
+  <% end %>
+</body>
+</html>

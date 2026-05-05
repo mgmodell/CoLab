@@ -118,6 +118,94 @@ echo "Course shortname:       $COURSE_SHORTNAME"
 echo ""
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Pre-flight – install CoLab's self-signed TLS cert into the trust stores of
+# Moodle (PHP/curl server-side) and the VNC browser container (Chrome) so
+# neither rejects https://app:3443 with a certificate error.
+#
+# Chrome in particular needs this because Moodle's Dynamic Registration
+# redirects the browser to https://app:3443/lti/lti_connect?..., and Chrome
+# will show "temporarily down" for that redirect if the origin isn't already
+# trusted — even if the user previously accepted the exception for another page.
+# ──────────────────────────────────────────────────────────────────────────────
+echo "==> Installing CoLab TLS certificate into container trust stores..."
+
+# Locate the CoLab app container by its Compose service label
+APP_CONTAINER=$(
+  "$RUNTIME" ps \
+    --filter "label=com.docker.compose.service=app" \
+    --format '{{.Names}}' 2>/dev/null \
+  | head -1
+)
+
+CERT_PATH="/home/colab/src/app/tmp/ssl/dev.crt"
+
+# Helper: install the CoLab cert into a target container's system CA store
+# and (if certutil is available) into Chrome's NSS certificate database.
+_install_cert() {
+  local target="$1"
+  local label="$2"
+  if [[ -z "$APP_CONTAINER" ]]; then
+    echo "    [$label] Skipped — CoLab app container not found."
+    return
+  fi
+  if ! "$RUNTIME" exec "$APP_CONTAINER" test -f "$CERT_PATH" 2>/dev/null; then
+    echo "    [$label] Skipped — cert not found at ${CERT_PATH}."
+    echo "              Start 'dev_serv.sh -t' first, then re-run this script."
+    return
+  fi
+  "$RUNTIME" exec "$APP_CONTAINER" cat "$CERT_PATH" | \
+    "$RUNTIME" exec -i "$target" sh -c \
+      'CERT=/usr/local/share/ca-certificates/colab-dev.crt
+       cat > "$CERT"
+       update-ca-certificates 2>&1 | grep -E "(added|Updating)" || true
+       # Also add to Chrome/Chromium NSS store so redirected HTTPS pages work.
+       # Install certutil if missing (Debian/Ubuntu only; Alpine is fine with
+       # the system store alone since Chromium reads it there).
+       if ! command -v certutil >/dev/null 2>&1; then
+         apt-get install -y -q libnss3-tools 2>/dev/null || true
+       fi
+       if command -v certutil >/dev/null 2>&1; then
+         for nssdb in /root/.pki/nssdb /home/*/.pki/nssdb; do
+           mkdir -p "$nssdb"
+           certutil -d "sql:$nssdb" -A -n "CoLab Dev" -t "CT,," \
+             -i "$CERT" 2>/dev/null || true
+         done
+       fi
+       # Reload PHP-FPM workers if present (Moodle container)
+       kill -USR2 "$(cat /var/run/php-fpm.pid 2>/dev/null)" 2>/dev/null || true'
+  echo "    [$label] Certificate installed."
+}
+
+_install_cert "$MOODLE_CONTAINER" "moodle"
+
+# Locate the VNC browser container (fixed container_name in docker-compose).
+BROWSER_CONTAINER=$(
+  "$RUNTIME" ps \
+    --filter "name=vnc-browser" \
+    --format '{{.Names}}' 2>/dev/null \
+  | head -1
+)
+# Fallback: try Compose service label
+if [[ -z "$BROWSER_CONTAINER" ]]; then
+  BROWSER_CONTAINER=$(
+    "$RUNTIME" ps \
+      --filter "label=com.docker.compose.service=browser" \
+      --format '{{.Names}}' 2>/dev/null \
+    | head -1
+  )
+fi
+if [[ -n "$BROWSER_CONTAINER" ]]; then
+  _install_cert "$BROWSER_CONTAINER" "browser"
+  echo "    If Chrome is already open in the VNC browser, restart it so it"
+  echo "    picks up the new certificate."
+else
+  echo "    [browser] VNC browser container not found — skipping."
+  echo "              Navigate to https://app:3443 in Chrome and accept the"
+  echo "              security exception before starting the LTI flow."
+fi
+echo ""
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Helper: run PHP inside the Moodle container
 # ──────────────────────────────────────────────────────────────────────────────
 moodle_php() {
@@ -386,36 +474,56 @@ if (\$cm_exists) {
 
     \$module = \$DB->get_record('modules', ['name' => 'lti'], '*', MUST_EXIST);
 
+    // Look up the General section's record ID (section number 0).
+    // course_modules.section is a FK to course_sections.id, NOT the section
+    // number — using the section number (0) here caused the activity to be
+    // stored without a valid section reference and therefore not appear.
+    \$section = \$DB->get_record(
+        'course_sections',
+        ['course' => \$course_id, 'section' => 0],
+        '*',
+        MUST_EXIST
+    );
+
+    // Retrieve the tool URL from the stored type record (works for both
+    // newly-created and reused tool types without referencing \$type which is
+    // only defined in the else-branch above).
+    \$tool_url = \$DB->get_field('lti_types', 'baseurl', ['id' => \$type_id]);
+
     \$lti_instance              = new stdClass();
     \$lti_instance->course      = \$course_id;
     \$lti_instance->name        = \$tool_name;
     \$lti_instance->intro       = '';
     \$lti_instance->introformat = FORMAT_HTML;
     \$lti_instance->typeid      = \$type_id;
-    \$lti_instance->toolurl     = \$type->baseurl;
+    \$lti_instance->toolurl     = \$tool_url;
     \$lti_instance->ltiversion  = 'LTI-1p3';
     \$lti_instance->grade       = 100;
-    \$lti_instance->timecreated = time();
-    \$lti_instance->timemodified= time();
-    \$lti_instance->id          = \$DB->insert_record('lti', \$lti_instance);
+    \$lti_instance->instructorchoicesendname      = 1;
+    \$lti_instance->instructorchoicesendemailaddr = 1;
+    \$lti_instance->instructorchoiceacceptgrades  = 1;
+    \$lti_instance->showtitlelaunch               = 1;
+    \$lti_instance->showdescriptionlaunch         = 0;
+    \$lti_instance->timecreated  = time();
+    \$lti_instance->timemodified = time();
+    \$lti_instance->id = \$DB->insert_record('lti', \$lti_instance);
 
-    // Create the course_modules record
+    // Create the course_modules record with the correct section record ID.
     \$cm                 = new stdClass();
     \$cm->course         = \$course_id;
     \$cm->module         = \$module->id;
     \$cm->instance       = \$lti_instance->id;
     \$cm->visible        = 1;
-    \$cm->section        = 0;
-    \$cm->id             = \$DB->insert_record('course_modules', \$cm);
+    \$cm->section        = \$section->id;   // FK to course_sections.id, not section number
+    \$cm->added          = time();
+    \$cm->indent         = 0;
+    \$cm->completion     = 0;
+    \$cm->completionview = 0;
+    \$cm->completionexpected = 0;
+    \$cm->id = \$DB->insert_record('course_modules', \$cm);
 
-    // Add to the first section
-    \$section = \$DB->get_record('course_sections',
-        ['course' => \$course_id, 'section' => 0]);
-    if (\$section) {
-        \$section->sequence = trim(\$section->sequence . ',' . \$cm->id, ',');
-        \$DB->update_record('course_sections', \$section);
-    }
-
+    // Append the new cm to section 0's sequence and rebuild the course cache.
+    course_add_cm_to_section(\$course_id, \$cm->id, 0);
     rebuild_course_cache(\$course_id);
     echo "    Added LTI activity to course (cm id=\$cm->id).\n";
 }
@@ -438,6 +546,13 @@ echo ""
 echo "Next steps:"
 echo "  1. Open CoLab admin → LTI Deployments and add a new deployment"
 echo "     using the platform details printed above."
-echo "  2. In Moodle, visit the course and click the CoLab activity to"
-echo "     trigger the OIDC launch flow."
+echo ""
+echo "  --- OR use Moodle Dynamic Registration (automated) ---"
+echo "  a. In Moodle: Site administration → Plugins → External tool → Manage tools"
+echo "  b. Click 'Add LTI Advantage Tool' and enter:"
+echo "       ${COLAB_URL}/lti/lti_connect"
+echo "  c. CoLab will register automatically and show a confirmation page."
+echo ""
+echo "  2. After the LTI deployment is configured, visit the Moodle course"
+echo "     and click the CoLab activity to trigger the OIDC launch flow."
 echo "  3. To start over, run:  bin/setup_moodle_course --clean"

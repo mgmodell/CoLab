@@ -30,8 +30,8 @@ Rails.application.configure do
   else
     config.action_controller.perform_caching = false
   end
-  config.hosts << "app:3000"
-  config.hosts << "app:3443"
+  config.hosts << "app:3000"   # plain-HTTP dev server
+  config.hosts << "app:3443"   # HTTPS dev server (dev_serv.sh -t)
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
@@ -43,7 +43,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  
+
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
