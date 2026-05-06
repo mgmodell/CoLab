@@ -802,10 +802,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-darwin-arm64@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-darwin-arm64@npm:1.15.33"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-darwin-x64@npm:1.15.33"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.15.33"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
 "@swc/core-linux-arm64-gnu@npm:1.15.32":
   version: 1.15.32
   resolution: "@swc/core-linux-arm64-gnu@npm:1.15.32"
   checksum: 10c0/3fb1154d514bf20bd559d654a5da53d39bc31d2e5f645b0d9e7fbbc3f9eebe1f95675d703c71cd85f305461b5e0c5f6c69b78dce8fc64613bc7196b7c966386b
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.15.33"
+  conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -816,7 +844,63 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:1.15.32, @swc/core@npm:^1.15.32":
+"@swc/core-linux-arm64-musl@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-arm64-musl@npm:1.15.33"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-ppc64-gnu@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-ppc64-gnu@npm:1.15.33"
+  conditions: os=linux & cpu=ppc64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-s390x-gnu@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-s390x-gnu@npm:1.15.33"
+  conditions: os=linux & cpu=s390x & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-x64-gnu@npm:1.15.33"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-linux-x64-musl@npm:1.15.33"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.15.33"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.15.33"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core-win32-x64-msvc@npm:1.15.33"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:1.15.32":
   version: 1.15.32
   resolution: "@swc/core@npm:1.15.32"
   dependencies:
@@ -835,6 +919,58 @@ __metadata:
     "@swc/helpers":
       optional: true
   checksum: 10c0/114e2d08a588de6dc0b01106368461d471464ec1bd0d046f4007cd2af9f52c0ddbf473a6dc251aa7f71828b74fe8488221718019187bb91a5f503a45b91b5fb1
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.15.33":
+  version: 1.15.33
+  resolution: "@swc/core@npm:1.15.33"
+  dependencies:
+    "@swc/core-darwin-arm64": "npm:1.15.33"
+    "@swc/core-darwin-x64": "npm:1.15.33"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.15.33"
+    "@swc/core-linux-arm64-gnu": "npm:1.15.33"
+    "@swc/core-linux-arm64-musl": "npm:1.15.33"
+    "@swc/core-linux-ppc64-gnu": "npm:1.15.33"
+    "@swc/core-linux-s390x-gnu": "npm:1.15.33"
+    "@swc/core-linux-x64-gnu": "npm:1.15.33"
+    "@swc/core-linux-x64-musl": "npm:1.15.33"
+    "@swc/core-win32-arm64-msvc": "npm:1.15.33"
+    "@swc/core-win32-ia32-msvc": "npm:1.15.33"
+    "@swc/core-win32-x64-msvc": "npm:1.15.33"
+    "@swc/counter": "npm:^0.1.3"
+    "@swc/types": "npm:^0.1.26"
+  peerDependencies:
+    "@swc/helpers": ">=0.5.17"
+  dependenciesMeta:
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-ppc64-gnu":
+      optional: true
+    "@swc/core-linux-s390x-gnu":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  peerDependenciesMeta:
+    "@swc/helpers":
+      optional: true
+  checksum: 10c0/7d6771fdf8f1e1d41665fb84b3e718feec05e72ed448b1fbc95d3f9f4c0e80ea495e66e778436201e8ab902478042f517da4bd3f6890127248788d8b985f9a52
   languageName: node
   linkType: hard
 
@@ -1574,7 +1710,7 @@ __metadata:
     "@rspack/core": "npm:^2.0.0"
     "@rspack/dev-server": "npm:^2.0.0"
     "@rspack/plugin-react-refresh": "npm:^1.0.0"
-    "@swc/core": "npm:^1.15.32"
+    "@swc/core": "npm:^1.15.33"
     "@types/react": "npm:^19.2.14"
     "@types/react-big-calendar": "npm:^1.16.3"
     "@types/react-dom": "npm:^19.2.3"
@@ -1587,7 +1723,7 @@ __metadata:
     "@visx/wordcloud": "npm:^3.12.0"
     "@visx/xychart": "npm:^3.12.0"
     autosuggest-highlight: "npm:^3.3.4"
-    axios: "npm:^1.15.2"
+    axios: "npm:^1.16.0"
     chroma-js: "npm:^3.2.0"
     css-loader: "npm:^7.1.4"
     d3-color: "npm:^3.1.0"
@@ -1595,7 +1731,7 @@ __metadata:
     dayjs: "npm:^1.11.20"
     driver.js: "npm:^1.4.0"
     email-validator: "npm:^2.0.4"
-    html-react-parser: "npm:^6.0.1"
+    html-react-parser: "npm:^6.1.0"
     i18next: "npm:^26.0.8"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^7.0.0"
@@ -1614,17 +1750,17 @@ __metadata:
     react-cookie-consent: "npm:^10.0.1"
     react-dom: "npm:^19.2.5"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.0.4"
+    react-i18next: "npm:^17.0.6"
     react-on-rails: "npm:16.6.0"
     react-redux: "npm:^9.2.0"
     react-refresh: "npm:^0.18.0"
-    react-router: "npm:^7.14.2"
+    react-router: "npm:^7.15.0"
     react-spring: "npm:10.0.3"
     react-virtualized: "npm:^9.22.6"
     react_ujs: "npm:^3.3.0"
     resize-observer-hook: "npm:^1.0.5"
     rspack-manifest-plugin: "npm:^5.2.1"
-    selfsigned: "npm:^5.0.0"
+    selfsigned: "npm:^5.5.0"
     shakapacker: "npm:10.0.0"
     stopword: "npm:^3.1.5"
     style-loader: "npm:^4.0.0"
@@ -1670,14 +1806,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.15.2":
-  version: 1.15.2
-  resolution: "axios@npm:1.15.2"
+"axios@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "axios@npm:1.16.0"
   dependencies:
-    follow-redirects: "npm:^1.15.11"
+    follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.5"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/4eeae0feeaa7fdc1ef24f81f8b378fdadedf4aebdd6bf224484675160f8744cf17b9b0d1c215279979940f7e8ce463beffa2f713099612e428eac238515c81d5
+  checksum: 10c0/1c91a5221b77b76072026b4cc95ecdf38f7c3e33e63423abec09a85e6e9a12279637dcc9ac2ba1fc333e0c447fb3b0f46d7965acb5d7cea02d188e9c6d425c0b
   languageName: node
   linkType: hard
 
@@ -2532,7 +2668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.15.11":
+"follow-redirects@npm:^1.16.0":
   version: 1.16.0
   resolution: "follow-redirects@npm:1.16.0"
   peerDependenciesMeta:
@@ -2659,13 +2795,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-dom-parser@npm:7.0.1":
-  version: 7.0.1
-  resolution: "html-dom-parser@npm:7.0.1"
+"html-dom-parser@npm:7.1.0":
+  version: 7.1.0
+  resolution: "html-dom-parser@npm:7.1.0"
   dependencies:
     domhandler: "npm:6.0.1"
     htmlparser2: "npm:12.0.0"
-  checksum: 10c0/54e6af1fe7f6db49b1cac794489a0e219fccaac5e9927d7a771c3d3618f7c41c155cbb7cea3d0a8101b88e49180814fa0e98d47ecb8d4299ba1ddd56cc7554b2
+  checksum: 10c0/e73b0c2e8bbe809ff877bf2483f6547f4797ee55c1c6d0f486d54ce7310e799c36986328f11dde1ce99608939a06efdf1d02c45a0abd0ec40b405b230c3dffdf
   languageName: node
   linkType: hard
 
@@ -2678,14 +2814,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-react-parser@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "html-react-parser@npm:6.0.1"
+"html-react-parser@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "html-react-parser@npm:6.1.0"
   dependencies:
-    "@types/react": "npm:19.2.14"
     domhandler: "npm:6.0.1"
-    html-dom-parser: "npm:7.0.1"
-    react: "npm:19.2.5"
+    html-dom-parser: "npm:7.1.0"
     react-property: "npm:2.0.2"
     style-to-js: "npm:1.1.21"
   peerDependencies:
@@ -2694,7 +2828,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/4899ec0fd39da4a0a5d8564cd1c8d4b1cdf9bd3c3c87f7e09dacfe43f5f9d674f455ce86fd6f0548a26f04dc22eafe5a192f2942a4ec72a1d260b80ffe8c1ab8
+  checksum: 10c0/1626454d3e3edf01b8e626b6f4a150b9ab013b4d379e5038506c93c3ce7cfb09a78abff079512ecbd4dd6d840c0bbcd55f722ee3302a70400c760e9109891b49
   languageName: node
   linkType: hard
 
@@ -3757,7 +3891,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.0.4":
+"react-i18next@npm:^17.0.6":
   version: 17.0.6
   resolution: "react-i18next@npm:17.0.6"
   dependencies:
@@ -3864,13 +3998,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^7.14.2":
-  version: 7.14.2
-  resolution: "react-router@npm:7.14.2"
+"react-router@npm:^7.15.0":
+  version: 7.15.0
+  resolution: "react-router@npm:7.15.0"
   dependencies:
     cookie: "npm:^1.0.1"
-    react: "npm:19.2.5"
-    react-dom: "npm:19.2.5"
     set-cookie-parser: "npm:^2.6.0"
   peerDependencies:
     react: ">=18"
@@ -3878,7 +4010,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10c0/83dc99158ff4c6513f2df358ca0e9920ba836672e491824ff9cf8d2218049db2859fafce147834f5c990cfe516cfdeefb5ffc3f49f917c0b30c2b22697ed96b7
+  checksum: 10c0/ce27ff25a0a53afec7f24385be89b779efd9f04d84c5b90c6a8f3fbbac28fc2f8c5f1bb26aff0588d41a225482365997082808f9e098c565435fad09426de114
   languageName: node
   linkType: hard
 
@@ -4162,7 +4294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selfsigned@npm:^5.0.0":
+"selfsigned@npm:^5.5.0":
   version: 5.5.0
   resolution: "selfsigned@npm:5.5.0"
   dependencies:
