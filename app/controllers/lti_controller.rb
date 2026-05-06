@@ -11,6 +11,12 @@ class LtiController < ApplicationController
   # skip_around_action :switch_locale, only: [ :deep_link_response ]
   layout :lti_layout
 
+  # LTI pages that are rendered inside the platform's iframe must not be
+  # blocked by the default X-Frame-Options: SAMEORIGIN header.  We remove the
+  # header entirely for the LTI actions that Moodle embeds in an iframe so that
+  # the browser does not refuse the connection.
+  after_action :allow_iframe, only: %i[register select_content launch deep_link_response]
+
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
   LTI_MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type'
   LTI_RESOURCE_LINK = 'https://purl.imsglobal.org/spec/lti/claim/resource_link'
@@ -412,6 +418,13 @@ class LtiController < ApplicationController
   # actions render JSON / plain text where layout is irrelevant anyway.
   def lti_layout
     action_name.in?(%w[select_content deep_link_response register]) ? false : 'application'
+  end
+
+  # Remove the X-Frame-Options header for LTI actions that Moodle embeds in an
+  # iframe (register confirmation, content selection, deep-link response).
+  # Rails' default SAMEORIGIN would cause Chrome to refuse the connection.
+  def allow_iframe
+    response.headers.delete('X-Frame-Options')
   end
 
   # Format a registration error message consistently, truncating the detail
