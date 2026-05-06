@@ -167,6 +167,13 @@ fi
 
 # Start the server (HTTPS – required for LTI testing)
 if [ "$STARTUP_TLS" = true ]; then
+  HTTPS_PORT="${PORT:-3443}"
+  echo ""
+  echo "Starting CoLab HTTPS dev server on https://app:${HTTPS_PORT}"
+  echo "  LTI Dynamic Registration URL: https://app:${HTTPS_PORT}/lti/lti_connect"
+  echo "  Run bin/setup_moodle_course to configure Moodle automatically."
+  echo "  Activity will be logged to the console (stdout)."
+  echo ""
   overmind start -f Procfile.dev-https
 fi
 
