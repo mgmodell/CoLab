@@ -1,11 +1,13 @@
 en:
   lti:
     select_content:
-      title: "CoLab – Select Activity to Link"
-      heading: "Select a CoLab Activity to Link in Moodle"
+      title: "CoLab – Select Content to Link"
+      heading: "Select CoLab Content to Link in Moodle"
       instructions: >
-        Choose an activity below. Moodle will create a direct link to it in your
-        course, and a gradebook column will be added where applicable.
+        Choose a course or individual activity below. Linking a course creates a single
+        Moodle link that takes students to your CoLab course; you can then deep-link
+        individual activities later. Linking an individual activity creates a direct
+        Moodle link with a gradebook column where applicable.
       no_courses: >
         No courses are available. Make sure you are an instructor in at least one
         CoLab course.
@@ -14,6 +16,10 @@ en:
       select_btn: "Select"
       select_btn_aria: "Select %{name}"
       no_activities: "No activities in this course yet."
+      course:
+        link_btn: "Link Course"
+        link_btn_aria: "Link course %{name} to Moodle"
+        type: "Course"
       bingo:
         name_col: "Terms List (Bingo! Game)"
         type: "Bingo! / Terms List"
@@ -33,25 +39,34 @@ en:
       explanation: >
         This page is only accessible when launched from Moodle as a
         Content Selection activity. A deep-linking session is created
-        when an instructor opens the CoLab tool in Moodle using the
-        "Content Selection" launch type.
+        automatically by Moodle when an instructor uses the CoLab tool
+        in Content Selection (deep-linking) mode — it is not something
+        you open directly in a browser.
       how_to_heading: "How to start a deep-linking session"
       steps_html: >
         <ol>
+          <li>Make sure CoLab has been registered as an LTI Advantage tool in
+              your Moodle site (Site administration → Plugins → Activity modules
+              → External tool → Manage tools). Use
+              <strong>CoLab's LTI Dynamic Registration URL</strong> if your
+              Moodle supports automatic registration, or add the tool manually.</li>
           <li>Open your Moodle course and turn editing on.</li>
           <li>Click <strong>Add an activity or resource</strong> in the
-              desired section.</li>
-          <li>Select the <strong>CoLab</strong> external tool (or whichever
-              tool entry was registered with CoLab's LTI Dynamic
-              Registration URL).</li>
-          <li>In the activity settings, make sure the
-              <strong>Launch container</strong> is set to
-              <em>Embed without blocks</em> or <em>New window</em> and
-              save the activity.</li>
+              desired section, then select the <strong>CoLab</strong>
+              external tool.</li>
+          <li>In the activity settings, set the
+              <strong>Launch container</strong> to
+              <em>Embed without blocks</em> or <em>New window</em>, and
+              make sure <strong>Content-item message</strong> (deep
+              linking) is enabled. Save the activity.</li>
           <li>Click the newly created CoLab link in your course. Moodle
-              will initiate a Content Selection (Deep Linking) flow and
-              redirect you to this page so you can choose an activity to
-              link.</li>
+              initiates a Content Selection (Deep Linking) flow and
+              redirects you here so you can choose a CoLab course or
+              individual activity to link.</li>
+          <li>Select a <strong>course</strong> to create a single Moodle
+              link that takes students to that CoLab course, or select an
+              individual <strong>activity</strong> to create a direct link
+              with an optional gradebook column.</li>
         </ol>
     invalid_deep_link_session:
       title: "Invalid Deep-Linking Session"

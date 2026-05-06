@@ -26,6 +26,7 @@ class LtiController < ApplicationController
   LTI_DEPLOYMENT_ID = 'https://purl.imsglobal.org/spec/lti/claim/deployment_id'
   LTI_NAMES_ROLES_SERVICE = 'https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'
   LTI_AGS_CLAIM = 'https://purl.imsglobal.org/spec/lti-ags/claim/endpoint'
+  LTI_TARGET_LINK_URI = 'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'
 
   # LTI Deep Linking 2.0 claims
   LTI_DEEP_LINKING_SETTINGS = 'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
@@ -666,6 +667,15 @@ class LtiController < ApplicationController
     context = payload[LTI_CONTEXT] || {}
     resource_link.context_id    = context['id']
     resource_link.context_title = context['title']
+
+    # If the resource link was created via a course-level deep link, the
+    # custom parameters will carry the CoLab course ID so we can associate
+    # the link with the course on first launch.
+    custom = payload[LTI_CUSTOM] || {}
+    if custom['colab_course_id'].present? && resource_link.course_id.nil?
+      resource_link.course_id = custom['colab_course_id'].to_i
+    end
+
     resource_link.save
 
     ags_claim = payload[LTI_AGS_CLAIM]
@@ -685,6 +695,8 @@ class LtiController < ApplicationController
     sign_in user
     redirect_destination = if resource_link.assignment
                              "/assignment/#{resource_link.assignment.id}"
+                           elsif resource_link.course
+                             '/home'
                            else
                              '/'
                            end
@@ -712,13 +724,30 @@ class LtiController < ApplicationController
     user
   end
 
-  # Build the array of LTI Deep Linking content items for the selected activity.
-  # Returns a single-item array on success, or an empty array when the activity
-  # is not found.
+  # Build the array of LTI Deep Linking content items for the selected activity
+  # or course. Returns a single-item array on success, or an empty array when
+  # the activity/course is not found.
   def build_content_items(activity_type, activity_id)
     base = tool_base_url
 
     case activity_type
+    when 'course'
+      course = Course.find_by(id: activity_id)
+      return [] unless course
+
+      # Course-level resource link: sends students to the CoLab home page for
+      # this course.  The CoLab course ID is encoded in the custom parameters
+      # so that the LTI launch handler can associate the resource link with the
+      # correct course on first launch.
+      [
+        {
+          type:   'ltiResourceLink',
+          url:    "#{base}/lti/launch",
+          title:  course.get_name(false),
+          custom: { 'colab_course_id' => course.id.to_s }
+        }
+      ]
+
     when 'bingo_game'
       activity = BingoGame.find_by(id: activity_id)
       return [] unless activity

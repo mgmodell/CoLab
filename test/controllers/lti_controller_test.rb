@@ -179,6 +179,24 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
     assert lti_config['messages'].any? { |m| m['type'] == 'LtiDeepLinkingRequest' }
   end
 
+  test 'POST /lti/deep_link_response with course activity_type returns a signed JWT' do
+    course = courses(:one)
+    # Simulate an active deep-linking session
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiDeepLinkingRequest',
+      deep_link_return_url: 'http://moodle:8080/mod/lti/return.php',
+      user_email: 'sim-dl-course@test.local'
+    }
+    assert_redirected_to '/lti/select_content'
+
+    post '/lti/deep_link_response', params: {
+      activity_type: 'course',
+      activity_id: course.id.to_s
+    }
+    assert_response :success
+  end
+
   # ── simulate_launch (test-only route) ────────────────────────────────────────
 
   test 'POST /lti/simulate_launch with unknown issuer returns 401' do
