@@ -28,6 +28,18 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
     assert lti_config.present?
     assert lti_config['target_link_uri'].present?
     assert lti_config['messages'].any? { |m| m['type'] == 'LtiResourceLinkRequest' }
+
+    # The domain claim must match the host (with port when non-standard) of
+    # the target_link_uri so that Moodle's domain_targetlinkuri_mismatch check
+    # passes.  Moodle's PHP extractor appends the port for non-standard ports:
+    #   parse_url($uri)['host'] . ':' . parse_url($uri)['port']
+    # Rails' host_with_port omits the port for standard ports (80/443) and
+    # includes it otherwise, so the two sides always agree.
+    target_host = URI.parse(lti_config['target_link_uri']).then do |u|
+      u.port == u.default_port ? u.host : "#{u.host}:#{u.port}"
+    end
+    assert_equal target_host, lti_config['domain'],
+                 'domain claim must equal host:port of target_link_uri to satisfy Moodle'
   end
 
   test 'POST /lti/tool_connect also returns a valid tool configuration' do

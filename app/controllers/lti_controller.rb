@@ -438,7 +438,13 @@ class LtiController < ApplicationController
       token_endpoint_auth_method: 'private_key_jwt',
       scope: [NRPS_SCOPE, AGS_LINEITEM_SCOPE, AGS_RESULT_SCOPE, AGS_SCORE_SCOPE].join(' '),
       'https://purl.imsglobal.org/spec/lti-tool-configuration' => {
-        domain: request.host,
+        # Use host_with_port so that non-standard ports (e.g. 3443 in dev) are
+        # included in the domain claim.  Moodle's domain_targetlinkuri_mismatch
+        # check extracts host:port from target_link_uri and compares it against
+        # this field; omitting the port causes a mismatch on non-standard ports.
+        # Rails omits the port for standard ports (80/443), so production is
+        # unaffected (e.g. "colab.online" stays unchanged).
+        domain: request.host_with_port,
         description: 'CoLab collaborative learning platform',
         target_link_uri: "#{base}/lti/launch",
         'https://purl.imsglobal.org/spec/lti/claim/custom' => {},
