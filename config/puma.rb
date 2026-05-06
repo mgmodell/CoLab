@@ -124,11 +124,22 @@ if ENV['COLAB_HTTPS'] == 'true'
   end
 
   # Bind HTTPS only; no plain-HTTP listener in this mode.
-  ssl_bind '0.0.0.0', Integer(ENV.fetch('PORT', 3443)), {
+  _https_port = Integer(ENV.fetch('PORT', 3443))
+  ssl_bind '0.0.0.0', _https_port, {
     key:         _key_path,
     cert:        _crt_path,
     verify_mode: 'none'
   }
+
+  # Always print a startup banner so the operator can confirm the server is
+  # live and knows which URL to use (even when the cert is already cached and
+  # no generation message is printed).
+  $stdout.puts ''
+  $stdout.puts "CoLab HTTPS dev server started on https://app:#{_https_port}"
+  $stdout.puts "  LTI Dynamic Registration URL: https://app:#{_https_port}/lti/lti_connect"
+  $stdout.puts '  Run bin/setup_moodle_course to configure Moodle automatically.'
+  $stdout.puts ''
+  $stdout.flush
 else
   # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
   port ENV.fetch("PORT", 3000)

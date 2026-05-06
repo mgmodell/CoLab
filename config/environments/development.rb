@@ -33,6 +33,18 @@ Rails.application.configure do
   config.hosts << "app:3000"   # plain-HTTP dev server
   config.hosts << "app:3443"   # HTTPS dev server (dev_serv.sh -t)
 
+  # When running via Procfile.dev-https (overmind), route Rails logs to stdout
+  # so request activity appears in the overmind console alongside puma output.
+  # RAILS_LOG_TO_STDOUT is set automatically in Procfile.dev-https.
+  # (In production this block lives in config/environments/production.rb;
+  #  development.rb does not add it by default, which is why the console
+  #  stays silent without this explicit check.)
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new($stdout)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
+
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 
