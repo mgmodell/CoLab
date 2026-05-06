@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -477,6 +477,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_220000) do
     t.datetime "updated_at", null: false
     t.index ["deployment_id"], name: "index_lti_deployments_on_deployment_id"
     t.index ["issuer", "client_id"], name: "index_lti_deployments_on_issuer_and_client_id", unique: true
+  end
+
+  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "state", null: false
+    t.string "nonce", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_lti_nonces_on_expires_at"
+    t.index ["state"], name: "index_lti_nonces_on_state", unique: true
   end
 
   create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|

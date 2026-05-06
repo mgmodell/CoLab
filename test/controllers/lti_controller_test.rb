@@ -90,8 +90,7 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /lti/launch with state mismatch returns 401' do
-    session_params = { lti_state: 'correct_state', lti_nonce: 'nonce_abc' }
-    # No way to set session here, but we can confirm mismatched state is rejected
+    # state is looked up in the lti_nonces table; 'wrong_state' won't be found
     post '/lti/launch', params: {
       id_token: 'fake.jwt.token',
       state: 'wrong_state'

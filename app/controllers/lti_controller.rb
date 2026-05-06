@@ -135,12 +135,12 @@ class LtiController < ApplicationController
       return
     end
 
-    state = SecureRandom.urlsafe_base64(32)
-    nonce = SecureRandom.urlsafe_base64(32)
-
-    # Persist state/nonce in session for validation at launch
-    session[:lti_state] = state
-    session[:lti_nonce] = nonce
+    # Persist state/nonce in the database so they survive the cross-site
+    # OIDC round-trip without relying on the browser session cookie (which
+    # is not reliably sent on cross-site form POSTs in all environments).
+    lti_nonce_record = LtiNonce.generate
+    state = lti_nonce_record.state
+    nonce = lti_nonce_record.nonce
 
     auth_params = {
       response_type: 'id_token',
@@ -171,10 +171,19 @@ class LtiController < ApplicationController
       return
     end
 
-    unless state == session[:lti_state]
+    # Look up the state/nonce record in the database.  This avoids any
+    # reliance on the browser session cookie, which may not be sent on
+    # cross-site form POSTs (the final step of the LTI OIDC flow).
+    lti_nonce_record = LtiNonce.find_by(state: state)
+    unless lti_nonce_record && !lti_nonce_record.expired?
       render json: { error: 'State mismatch' }, status: :unauthorized
       return
     end
+
+    stored_nonce = lti_nonce_record.nonce
+
+    # Consume the record immediately (single-use)
+    lti_nonce_record.destroy
 
     # Decode without verification first to get the issuer and client_id
     unverified_payload, _header = JWT.decode(id_token, nil, false)
@@ -194,14 +203,12 @@ class LtiController < ApplicationController
     end
 
     # Nonce check
-    if payload['nonce'] != session[:lti_nonce]
+    if payload['nonce'] != stored_nonce
       render json: { error: 'Nonce mismatch' }, status: :unauthorized
       return
     end
 
-    # Clear single-use state/nonce
-    session.delete(:lti_state)
-    session.delete(:lti_nonce)
+    # state/nonce already destroyed above; no session cleanup needed
 
     message_type = payload[LTI_MESSAGE_TYPE]
 
