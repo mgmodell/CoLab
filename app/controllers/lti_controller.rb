@@ -226,7 +226,7 @@ class LtiController < ApplicationController
   # optionally, a gradebook column).
   def select_content
     unless session[:lti_deep_link_settings].present?
-      render plain: 'No active deep-linking session', status: :bad_request
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -255,7 +255,7 @@ class LtiController < ApplicationController
   # deep_link_return_url (completing the Deep Linking flow).
   def deep_link_response
     unless session[:lti_deep_link_settings].present?
-      render plain: 'No active deep-linking session', status: :bad_request
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -263,7 +263,11 @@ class LtiController < ApplicationController
     deployment   = LtiDeployment.find_by(id: session[:lti_deep_link_deployment_id])
 
     unless deployment && @return_url.present?
-      render plain: 'Invalid deep-linking session', status: :bad_request
+      @page_title       = t('lti.invalid_deep_link_session.title')
+      @page_heading     = t('lti.invalid_deep_link_session.heading')
+      @page_explanation = t('lti.invalid_deep_link_session.explanation')
+      @error_detail     = t('lti.invalid_deep_link_session.guidance')
+      render :no_deep_link_session, status: :bad_request
       return
     end
 

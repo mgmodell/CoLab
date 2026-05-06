@@ -27,3 +27,39 @@ en:
       title: "Returning to Moodle\u2026"
       body: "Sending your selection back to Moodle. Please wait\u2026"
       continue_btn: "Continue to Moodle"
+    no_deep_link_session:
+      title: "No Active Deep-Linking Session"
+      heading: "No Active Deep-Linking Session"
+      explanation: >
+        This page is only accessible when launched from Moodle as a
+        Content Selection activity. A deep-linking session is created
+        when an instructor opens the CoLab tool in Moodle using the
+        "Content Selection" launch type.
+      how_to_heading: "How to start a deep-linking session"
+      steps_html: >
+        <ol>
+          <li>Open your Moodle course and turn editing on.</li>
+          <li>Click <strong>Add an activity or resource</strong> in the
+              desired section.</li>
+          <li>Select the <strong>CoLab</strong> external tool (or whichever
+              tool entry was registered with CoLab's LTI Dynamic
+              Registration URL).</li>
+          <li>In the activity settings, make sure the
+              <strong>Launch container</strong> is set to
+              <em>Embed without blocks</em> or <em>New window</em> and
+              save the activity.</li>
+          <li>Click the newly created CoLab link in your course. Moodle
+              will initiate a Content Selection (Deep Linking) flow and
+              redirect you to this page so you can choose an activity to
+              link.</li>
+        </ol>
+    invalid_deep_link_session:
+      title: "Invalid Deep-Linking Session"
+      heading: "Invalid Deep-Linking Session"
+      explanation: >
+        The deep-linking session is missing required information (return
+        URL or deployment details). This can happen if the session
+        expired or if the page was accessed out of order.
+      guidance: >
+        Please return to Moodle and click the CoLab activity link again
+        to restart the Content Selection flow.
