@@ -5,8 +5,8 @@ en:
       heading: "Select CoLab Content to Link in Moodle"
       instructions: >
         Choose a course or individual activity below. Linking a course creates a single
-        Moodle link that takes students to your CoLab course; you can then deep-link
-        individual activities later. Linking an individual activity creates a direct
+        Moodle link for the entire CoLab course (students are taken to your CoLab
+        dashboard when they click it). Linking an individual activity creates a direct
         Moodle link with a gradebook column where applicable.
       no_courses: >
         No courses are available. Make sure you are an instructor in at least one

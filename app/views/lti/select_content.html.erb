@@ -35,15 +35,13 @@
       <table id="course-link-<%= course.id %>">
         <thead>
           <tr>
-            <th><%= course.get_name(false) %></th>
-            <th><%= t '.type_col' %></th>
+            <th><%= t '.course.type' %></th>
             <th><%= t '.action_col' %></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><%= course.get_name(false) %></td>
-            <td><%= t '.course.type' %></td>
             <td>
               <%= form_tag lti_deep_link_response_path, method: :post,
                                                         id: "dl-form-course-#{course.id}" do %>
