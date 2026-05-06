@@ -684,7 +684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/cli@npm:2.0.0, @rspack/cli@npm:^2.0.0":
+"@rspack/cli@npm:2.0.0, @rspack/cli@npm:^2.0.1":
   version: 2.0.1
   resolution: "@rspack/cli@npm:2.0.1"
   dependencies:
@@ -699,7 +699,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/core@npm:2.0.0, @rspack/core@npm:2.0.1, @rspack/core@npm:^2.0.0":
+"@rspack/core@npm:2.0.0, @rspack/core@npm:2.0.1, @rspack/core@npm:^2.0.1":
   version: 2.0.1
   resolution: "@rspack/core@npm:2.0.1"
   dependencies:
@@ -728,7 +728,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/dev-server@npm:^2.0.0":
+"@rspack/dev-server@npm:^2.0.1":
   version: 2.0.1
   resolution: "@rspack/dev-server@npm:2.0.1"
   dependencies:
@@ -766,7 +766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/plugin-react-refresh@npm:^1.0.0":
+"@rspack/plugin-react-refresh@npm:^1.6.2":
   version: 1.6.2
   resolution: "@rspack/plugin-react-refresh@npm:1.6.2"
   dependencies:
@@ -1706,10 +1706,10 @@ __metadata:
     "@react-spring/types": "npm:10.0.3"
     "@react-spring/web": "npm:10.0.3"
     "@reduxjs/toolkit": "npm:^2.11.2"
-    "@rspack/cli": "npm:^2.0.0"
-    "@rspack/core": "npm:^2.0.0"
-    "@rspack/dev-server": "npm:^2.0.0"
-    "@rspack/plugin-react-refresh": "npm:^1.0.0"
+    "@rspack/cli": "npm:^2.0.1"
+    "@rspack/core": "npm:^2.0.1"
+    "@rspack/dev-server": "npm:^2.0.1"
+    "@rspack/plugin-react-refresh": "npm:^1.6.2"
     "@swc/core": "npm:^1.15.33"
     "@types/react": "npm:^19.2.14"
     "@types/react-big-calendar": "npm:^1.16.3"
@@ -1732,7 +1732,7 @@ __metadata:
     driver.js: "npm:^1.4.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.0"
-    i18next: "npm:^26.0.8"
+    i18next: "npm:^26.0.9"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^7.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -2874,7 +2874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:26.0.8, i18next@npm:^26.0.8":
+"i18next@npm:26.0.8":
   version: 26.0.8
   resolution: "i18next@npm:26.0.8"
   dependencies:
@@ -2885,6 +2885,18 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/48bcb3f8731a17ab586d7371a6d4d155cd8eeaec1a237466d21ffe7b32a6e98432481171a53b0583b397b4ac65c3342b8a64d01cd672b6a1686028329d0c0d8e
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^26.0.9":
+  version: 26.0.9
+  resolution: "i18next@npm:26.0.9"
+  peerDependencies:
+    typescript: ^5 || ^6
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/361d9675a15e4431f89183f03c7ace6c6293cc4efa6a5c517f712945828233fad60e489b8236e144614146c484e448e76a3fe90559e5a57871a914fee191a910
   languageName: node
   linkType: hard
 
