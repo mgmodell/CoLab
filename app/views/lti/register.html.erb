@@ -47,7 +47,7 @@
 
   <div class="instructions">
     <h2><%= t '.generic_instructions_heading' %></h2>
-    <%= sanitize t('.generic_instructions_html'), tags: %w[ol li strong em code] %>
+    <%= sanitize t('.generic_instructions_html'), tags: %w[ol li strong em code], attributes: [] %>
   </div>
 </body>
 </html>
