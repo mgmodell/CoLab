@@ -41,6 +41,15 @@ class LtiController < ApplicationController
   # and the registration error view.
   REGISTRATION_ERROR_TRUNCATE_LENGTH = 200
 
+  # Maps LTI custom-parameter activity types to their model class and SPA path
+  # prefix.  Used by both activity_redirect and associate_and_redirect so the
+  # mapping is defined once and cannot drift.
+  ACTIVITY_TYPE_CONFIG = {
+    'bingo_game' => { model: -> { BingoGame }, path: '/home#bingo/' },
+    'project'    => { model: -> { Project },   path: '/home#project/' },
+    'experience' => { model: -> { Experience }, path: '/home#experience/' }
+  }.freeze
+
   # GET|POST /lti/tool_connect
   # GET|POST /lti/lti_connect  (alias — Moodle's Dynamic Registration redirect uses this path)
   # LTI Dynamic Registration endpoint.
@@ -294,6 +303,10 @@ class LtiController < ApplicationController
   # returning a deep-link JWT to the platform.
   def link_resource
     unless session[:lti_pending_resource_link_id].present?
+      @page_title       = t('lti.link_resource.title')
+      @page_heading     = t('lti.link_resource.heading')
+      @page_explanation = t('lti.link_resource.no_pending')
+      @error_detail     = t('lti.link_resource.no_pending_action')
       render :no_deep_link_session, status: :bad_request
       return
     end
@@ -314,7 +327,11 @@ class LtiController < ApplicationController
   def associate_resource_link
     resource_link = LtiResourceLink.find_by(id: session[:lti_pending_resource_link_id])
     unless resource_link
-      render plain: t('lti.link_resource.no_pending'), status: :bad_request
+      @page_title       = t('lti.link_resource.title')
+      @page_heading     = t('lti.link_resource.heading')
+      @page_explanation = t('lti.link_resource.no_pending')
+      @error_detail     = t('lti.link_resource.no_pending_action')
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -795,54 +812,34 @@ class LtiController < ApplicationController
 
   # Return a CoLab redirect path for a given activity type and ID carried
   # via LTI custom parameters (e.g. from an activity-level deep link).
+  # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for path prefixes.
   def activity_redirect(activity_type, activity_id)
-    case activity_type
-    when 'bingo_game'  then "/home#bingo/#{activity_id}"
-    when 'project'     then "/home#project/#{activity_id}"
-    when 'experience'  then "/home#experience/#{activity_id}"
-    else '/home'
-    end
+    config = ACTIVITY_TYPE_CONFIG[activity_type]
+    config ? "#{config[:path]}#{activity_id}" : '/home'
   end
 
-  # Associate a resource link with the given activity, then return the
-  # redirect path for that activity.  Used by associate_resource_link.
+  # Associate a resource link with the given activity (storing the course
+  # association for future enrollment), then return the redirect path.
+  # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for model classes.
   def associate_and_redirect(resource_link, activity_type, activity_id)
-    case activity_type
-    when 'bingo_game'
-      activity = BingoGame.find_by(id: activity_id)
-      if activity
-        resource_link.course = activity.course
-        resource_link.save
-      end
-      activity_redirect('bingo_game', activity_id)
-
-    when 'project'
-      activity = Project.find_by(id: activity_id)
-      if activity
-        resource_link.course = activity.course
-        resource_link.save
-      end
-      activity_redirect('project', activity_id)
-
-    when 'experience'
-      activity = Experience.find_by(id: activity_id)
-      if activity
-        resource_link.course = activity.course
-        resource_link.save
-      end
-      activity_redirect('experience', activity_id)
-
-    when 'course'
+    if activity_type == 'course'
       course = Course.find_by(id: activity_id)
       if course
         resource_link.course = course
         resource_link.save
       end
-      '/home'
-
-    else
-      '/'
+      return '/home'
     end
+
+    config = ACTIVITY_TYPE_CONFIG[activity_type]
+    return '/' unless config
+
+    activity = config[:model].call.find_by(id: activity_id)
+    if activity
+      resource_link.course = activity.course
+      resource_link.save
+    end
+    activity_redirect(activity_type, activity_id)
   end
 
   # Build the array of LTI Deep Linking content items for the selected activity
