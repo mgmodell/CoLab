@@ -885,7 +885,11 @@ class LtiController < ApplicationController
       return nil
     end
 
-    uri = URI(lineitems_url)
+    uri = parse_uri_or_nil(lineitems_url)
+    unless uri
+      logger.warn 'LTI create_line_item_for_activity: invalid lineitems URL'
+      return nil
+    end
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https'
 
@@ -907,7 +911,8 @@ class LtiController < ApplicationController
     return parsed['id'] if parsed['id'].present?
 
     location_header = response['Location']
-    if location_header.present? && %w[http https].include?(URI.parse(location_header).scheme)
+    location_uri = parse_uri_or_nil(location_header) if location_header.present?
+    if location_uri && %w[http https].include?(location_uri.scheme)
       return location_header
     end
 
@@ -915,6 +920,14 @@ class LtiController < ApplicationController
     nil
   rescue StandardError => e
     logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
+    nil
+  end
+
+  def parse_uri_or_nil(url)
+    return nil if url.blank?
+
+    URI.parse(url)
+  rescue URI::InvalidURIError
     nil
   end
 
