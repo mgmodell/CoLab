@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :switch_locale
 
+  # LTI launches set session[:lti_embedded] so that pages rendered inside
+  # the LMS iframe do not get blocked by the default X-Frame-Options:SAMEORIGIN
+  # header Rails injects on every response.
+  after_action :allow_lti_iframe
+
   protected
 
   def configure_permitted_parameters
@@ -45,5 +50,11 @@ class ApplicationController < ActionController::Base
     else
       action.call
     end
+  end
+
+  def allow_lti_iframe
+    return unless session[:lti_embedded]
+
+    response.headers.delete('X-Frame-Options')
   end
 end

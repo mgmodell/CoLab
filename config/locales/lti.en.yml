@@ -47,12 +47,12 @@ en:
         </ol>
     select_content:
       title: "CoLab – Select Content to Link"
-      heading: "Select CoLab Content to Link in Moodle"
+      heading: "Select CoLab Content to Link"
       instructions: >
         Choose a course or individual activity below. Linking a course creates a single
-        Moodle link for the entire CoLab course (students are taken to your CoLab
+        LMS link for the entire CoLab course (students are taken to your CoLab
         dashboard when they click it). Linking an individual activity creates a direct
-        Moodle link with a gradebook column where applicable.
+        LMS link with a gradebook column where applicable.
       no_courses: >
         No courses are available. Make sure you are an instructor in at least one
         CoLab course.
@@ -63,7 +63,7 @@ en:
       no_activities: "No activities in this course yet."
       course:
         link_btn: "Link Course"
-        link_btn_aria: "Link course %{name} to Moodle"
+        link_btn_aria: "Link course %{name}"
         type: "Course"
       bingo:
         name_col: "Terms List (Bingo! Game)"
@@ -74,44 +74,48 @@ en:
       experience:
         name_col: "Experience"
         type: "Experience"
+    link_resource:
+      title: "CoLab – Link This Activity"
+      heading: "Link This LMS Activity to a CoLab Activity"
+      instructions: >
+        This LMS link has not been connected to a CoLab activity yet. Select a course
+        or activity below to link it. Students will be taken directly to your selection
+        each time they click this link. This step only appears for instructors — students
+        will go straight to the linked content once a selection has been made.
+      no_pending: "No pending resource link found. Please return to your LMS and click the link again."
     deep_link_response:
-      title: "Returning to Moodle\u2026"
-      body: "Sending your selection back to Moodle. Please wait\u2026"
-      continue_btn: "Continue to Moodle"
+      title: "Returning to your LMS\u2026"
+      body: "Sending your selection back to your LMS. Please wait\u2026"
+      continue_btn: "Continue to LMS"
     no_deep_link_session:
       title: "No Active Deep-Linking Session"
       heading: "No Active Deep-Linking Session"
       explanation: >
-        This page is only accessible when launched from Moodle as a
-        Content Selection activity. A deep-linking session is created
-        automatically by Moodle when an instructor uses the CoLab tool
-        in Content Selection (deep-linking) mode — it is not something
-        you open directly in a browser.
+        This page is only accessible when launched from your LMS as a
+        Content Selection (Deep Linking) activity. A deep-linking session is created
+        automatically by your LMS when an instructor uses the CoLab tool
+        in Content Selection mode — it is not something you open directly in a browser.
       how_to_heading: "How to start a deep-linking session"
       steps_html: >
         <ol>
-          <li>Make sure CoLab has been registered as an LTI Advantage tool in
-              your Moodle site (Site administration → Plugins → Activity modules
-              → External tool → Manage tools). Use
-              <strong>CoLab's LTI Dynamic Registration URL</strong> if your
-              Moodle supports automatic registration, or add the tool manually.</li>
-          <li>Open your Moodle course and turn editing on.</li>
-          <li>Click <strong>Add an activity or resource</strong> in the
-              desired section, then select the <strong>CoLab</strong>
-              external tool.</li>
-          <li>In the activity settings, set the
-              <strong>Launch container</strong> to
-              <em>Embed without blocks</em> or <em>New window</em>, and
-              make sure <strong>Content-item message</strong> (deep
-              linking) is enabled. Save the activity.</li>
-          <li>Click the newly created CoLab link in your course. Moodle
-              initiates a Content Selection (Deep Linking) flow and
-              redirects you here so you can choose a CoLab course or
-              individual activity to link.</li>
-          <li>Select a <strong>course</strong> to create a single Moodle
-              link that takes students to that CoLab course, or select an
-              individual <strong>activity</strong> to create a direct link
-              with an optional gradebook column.</li>
+          <li>Make sure CoLab has been registered as an LTI Advantage (1.3) tool in
+              your LMS. Use <strong>CoLab's LTI Dynamic Registration URL</strong>
+              if your LMS supports automatic registration, or add the tool manually.</li>
+          <li>Open your LMS course and enable editing.</li>
+          <li>Add a new external tool activity and select the <strong>CoLab</strong>
+              tool. In <strong>Moodle</strong>, click
+              <em>Add an activity or resource</em> and choose External tool.</li>
+          <li>In the activity settings, ensure <strong>Content-item message</strong>
+              (deep linking) is enabled. In Moodle, set the
+              <strong>Launch container</strong> to <em>New window</em> and make
+              sure <em>Content-item message</em> is checked. Save the activity.</li>
+          <li>Click the newly created CoLab link in your course. Your LMS
+              initiates a Content Selection (Deep Linking) flow and redirects you
+              here so you can choose a CoLab course or individual activity to link.</li>
+          <li>Select a <strong>course</strong> to create a single LMS link that
+              takes students to that CoLab course, or select an individual
+              <strong>activity</strong> to create a direct link with an optional
+              gradebook column.</li>
         </ol>
     invalid_deep_link_session:
       title: "Invalid Deep-Linking Session"
@@ -121,5 +125,5 @@ en:
         URL or deployment details). This can happen if the session
         expired or if the page was accessed out of order.
       guidance: >
-        Please return to Moodle and click the CoLab activity link again
+        Please return to your LMS and click the CoLab activity link again
         to restart the Content Selection flow.

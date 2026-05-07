@@ -15,7 +15,8 @@ class LtiController < ApplicationController
   # blocked by the default X-Frame-Options: SAMEORIGIN header.  We remove the
   # header entirely for the LTI actions that Moodle embeds in an iframe so that
   # the browser does not refuse the connection.
-  after_action :allow_iframe, only: %i[register select_content launch deep_link_response]
+  after_action :allow_iframe, only: %i[register select_content launch deep_link_response
+                                       link_resource associate_resource_link]
 
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
   LTI_MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type'
@@ -286,7 +287,45 @@ class LtiController < ApplicationController
     render :deep_link_response
   end
 
-  # POST /lti/names_roles/:id
+  # GET /lti/link_resource
+  # Shown when an instructor launches an LTI resource link that has no
+  # associated CoLab activity yet.  Presents the same course/activity listing
+  # as select_content but posts back to associate_resource_link instead of
+  # returning a deep-link JWT to the platform.
+  def link_resource
+    unless session[:lti_pending_resource_link_id].present?
+      render :no_deep_link_session, status: :bad_request
+      return
+    end
+
+    @courses = if current_user&.admin?
+                 Course.all
+               else
+                 Course.joins(:rosters).where(
+                   rosters: { user: current_user,
+                               role: [Roster.roles[:instructor], Roster.roles[:assistant]] }
+                 )
+               end
+  end
+
+  # POST /lti/link_resource
+  # Associates the pending resource link with the selected CoLab activity and
+  # redirects the instructor to that activity.
+  def associate_resource_link
+    resource_link = LtiResourceLink.find_by(id: session[:lti_pending_resource_link_id])
+    unless resource_link
+      render plain: t('lti.link_resource.no_pending'), status: :bad_request
+      return
+    end
+
+    activity_type = params[:activity_type]
+    activity_id   = params[:activity_id]
+
+    redirect_destination = associate_and_redirect(resource_link, activity_type, activity_id)
+
+    session.delete(:lti_pending_resource_link_id)
+    redirect_to redirect_destination
+  end
   # Uses the LTI Names and Role Provisioning Services (NRPS) to sync the
   # roster from the platform into the linked CoLab course.
   def names_roles
@@ -401,6 +440,7 @@ class LtiController < ApplicationController
       }
       session[:lti_deep_link_deployment_id] = deployment.id
       session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
+      session[:lti_embedded] = true
 
       sign_in user
       redirect_to lti_select_content_path
@@ -418,6 +458,7 @@ class LtiController < ApplicationController
       enroll_lti_user(user, { LTI_ROLES => roles }, resource_link.course) if resource_link.course
 
       sign_in user
+      session[:lti_embedded] = true
       redirect_to '/'
     end
   end
@@ -425,10 +466,10 @@ class LtiController < ApplicationController
   private
 
   # Use no Rails layout for LTI views (select_content, deep_link_response,
-  # register) that ship their own complete HTML document.  All other LTI
-  # actions render JSON / plain text where layout is irrelevant anyway.
+  # register, link_resource) that ship their own complete HTML document.  All
+  # other LTI actions render JSON / plain text where layout is irrelevant.
   def lti_layout
-    action_name.in?(%w[select_content deep_link_response register]) ? false : 'application'
+    action_name.in?(%w[select_content deep_link_response register link_resource]) ? false : 'application'
   end
 
   # Remove the X-Frame-Options header for LTI actions that Moodle embeds in an
@@ -643,6 +684,7 @@ class LtiController < ApplicationController
     session[:lti_deep_link_settings]     = deep_link_settings
     session[:lti_deep_link_deployment_id] = deployment.id
     session[:lti_deep_link_context]      = payload[LTI_CONTEXT]
+    session[:lti_embedded]               = true
 
     user = find_or_provision_user(payload)
     unless user
@@ -667,9 +709,9 @@ class LtiController < ApplicationController
     resource_link.context_id    = context['id']
     resource_link.context_title = context['title']
 
-    # If the resource link was created via a course-level deep link, the
-    # custom parameters will carry the CoLab course ID so we can associate
-    # the link with the course on first launch.
+    # Custom parameters may carry a CoLab course ID (course-level deep link)
+    # or an activity type + ID (activity-level deep link).  Use these to
+    # associate the resource link on first launch.
     custom = payload[LTI_CUSTOM] || {}
     if custom['colab_course_id'].present? && resource_link.course_id.nil?
       resource_link.course_id = custom['colab_course_id'].to_i
@@ -692,6 +734,34 @@ class LtiController < ApplicationController
     enroll_lti_user(user, payload, resource_link.course) if resource_link.course
 
     sign_in user
+
+    # Mark the session as LTI-embedded so that ApplicationController removes
+    # X-Frame-Options from all subsequent responses in this session, preventing
+    # Chrome from blocking CoLab pages inside the LMS iframe.
+    session[:lti_embedded] = true
+
+    # If the resource link has no associated activity or course yet, check
+    # custom params for an activity hint from the deep-link content item.
+    # If the user is an instructor and there is still no target, show the
+    # activity-linking screen so they can connect the link to a CoLab activity.
+    if resource_link.assignment.nil? && resource_link.course.nil?
+      activity_type = custom['colab_activity_type']
+      activity_id   = custom['colab_activity_id']
+
+      if activity_type.present? && activity_id.present?
+        redirect_destination = activity_redirect(activity_type, activity_id)
+        redirect_to redirect_destination
+        return
+      end
+
+      roles = payload[LTI_ROLES] || []
+      if roles.any? { |r| r.include?('Instructor') }
+        session[:lti_pending_resource_link_id] = resource_link.id
+        redirect_to lti_link_resource_path
+        return
+      end
+    end
+
     redirect_destination = if resource_link.assignment
                              "/assignment/#{resource_link.assignment.id}"
                            elsif resource_link.course
@@ -723,6 +793,58 @@ class LtiController < ApplicationController
     user
   end
 
+  # Return a CoLab redirect path for a given activity type and ID carried
+  # via LTI custom parameters (e.g. from an activity-level deep link).
+  def activity_redirect(activity_type, activity_id)
+    case activity_type
+    when 'bingo_game'  then "/home#bingo/#{activity_id}"
+    when 'project'     then "/home#project/#{activity_id}"
+    when 'experience'  then "/home#experience/#{activity_id}"
+    else '/home'
+    end
+  end
+
+  # Associate a resource link with the given activity, then return the
+  # redirect path for that activity.  Used by associate_resource_link.
+  def associate_and_redirect(resource_link, activity_type, activity_id)
+    case activity_type
+    when 'bingo_game'
+      activity = BingoGame.find_by(id: activity_id)
+      if activity
+        resource_link.course = activity.course
+        resource_link.save
+      end
+      activity_redirect('bingo_game', activity_id)
+
+    when 'project'
+      activity = Project.find_by(id: activity_id)
+      if activity
+        resource_link.course = activity.course
+        resource_link.save
+      end
+      activity_redirect('project', activity_id)
+
+    when 'experience'
+      activity = Experience.find_by(id: activity_id)
+      if activity
+        resource_link.course = activity.course
+        resource_link.save
+      end
+      activity_redirect('experience', activity_id)
+
+    when 'course'
+      course = Course.find_by(id: activity_id)
+      if course
+        resource_link.course = course
+        resource_link.save
+      end
+      '/home'
+
+    else
+      '/'
+    end
+  end
+
   # Build the array of LTI Deep Linking content items for the selected activity
   # or course. Returns a single-item array on success, or an empty array when
   # the activity/course is not found.
@@ -752,9 +874,14 @@ class LtiController < ApplicationController
       return [] unless activity
 
       item = {
-        type:  'ltiResourceLink',
-        url:   "#{base}/home#bingo/#{activity.id}",
-        title: activity.get_topic(false),
+        type:   'ltiResourceLink',
+        url:    "#{base}/lti/launch",
+        title:  activity.get_topic(false),
+        custom: {
+          'colab_activity_type' => 'bingo_game',
+          'colab_activity_id'   => activity.id.to_s,
+          'colab_course_id'     => activity.course_id.to_s
+        },
         lineItem: {
           scoreMaximum: 100,
           label:        activity.get_topic(false),
@@ -768,9 +895,14 @@ class LtiController < ApplicationController
       return [] unless activity
 
       item = {
-        type:  'ltiResourceLink',
-        url:   "#{base}/home#project/#{activity.id}",
-        title: activity.get_name(false),
+        type:   'ltiResourceLink',
+        url:    "#{base}/lti/launch",
+        title:  activity.get_name(false),
+        custom: {
+          'colab_activity_type' => 'project',
+          'colab_activity_id'   => activity.id.to_s,
+          'colab_course_id'     => activity.course_id.to_s
+        },
         lineItem: {
           scoreMaximum: 100,
           label:        activity.get_name(false),
@@ -786,9 +918,14 @@ class LtiController < ApplicationController
       # Experiences do not currently produce a numeric grade, so no lineItem
       [
         {
-          type:  'ltiResourceLink',
-          url:   "#{base}/home#experience/#{activity.id}",
-          title: activity.get_name(false)
+          type:   'ltiResourceLink',
+          url:    "#{base}/lti/launch",
+          title:  activity.get_name(false),
+          custom: {
+            'colab_activity_type' => 'experience',
+            'colab_activity_id'   => activity.id.to_s,
+            'colab_course_id'     => activity.course_id.to_s
+          }
         }
       ]
 

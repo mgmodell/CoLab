@@ -341,6 +341,9 @@ Rails.application.routes.draw do
   # Deep Linking – content selection and response
   get  'lti/select_content' => 'lti#select_content', as: :lti_select_content
   post 'lti/deep_link_response' => 'lti#deep_link_response', as: :lti_deep_link_response
+  # Resource-link linking – instructor selects an activity when a resource link has no target
+  get  'lti/link_resource' => 'lti#link_resource', as: :lti_link_resource
+  post 'lti/link_resource' => 'lti#associate_resource_link', as: :lti_associate_resource_link
   # Names and Role Provisioning Services (roster sync)
   post 'lti/names_roles/:id' => 'lti#names_roles', as: :lti_names_roles
   # Assignment and Grade Services (grade push)
