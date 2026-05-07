@@ -630,6 +630,7 @@ class LtiController < ApplicationController
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https'
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
 
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{access_token}"
@@ -928,7 +929,7 @@ class LtiController < ApplicationController
     logger.warn 'LTI create_line_item_for_activity: no usable line item URL in response body or Location header'
     nil
   rescue JSON::ParserError => e
-    logger.warn "LTI create_line_item_for_activity: invalid JSON response (#{e.message})"
+    logger.warn "LTI create_line_item_for_activity: invalid JSON response (#{e.message}), body: #{response&.body.inspect}"
     nil
   rescue StandardError => e
     logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
