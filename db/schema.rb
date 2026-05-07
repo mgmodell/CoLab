@@ -479,11 +479,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
     t.index ["issuer", "client_id"], name: "index_lti_deployments_on_issuer_and_client_id", unique: true
   end
 
-  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
-    t.string "state", null: false
-    t.string "nonce", null: false
-    t.datetime "expires_at", null: false
+  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "nonce", null: false
+    t.string "state", null: false
     t.datetime "updated_at", null: false
     t.index ["expires_at"], name: "index_lti_nonces_on_expires_at"
     t.index ["state"], name: "index_lti_nonces_on_state", unique: true

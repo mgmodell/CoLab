@@ -122,7 +122,7 @@ fi
 
 if [ "$MIGRATE" = true ]; then
   echo "Preparing (creating) the DB..."
-  db:create
+  rails db:create COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
 
