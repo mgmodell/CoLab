@@ -916,6 +916,7 @@ class LtiController < ApplicationController
     location_header = response['Location']
     location_uri = parse_uri_or_nil(location_header) if location_header.present?
     if location_uri && %w[http https].include?(location_uri.scheme)
+      logger.info 'LTI create_line_item_for_activity: using Location header fallback for line item URL'
       return location_uri.to_s
     end
 
@@ -955,6 +956,10 @@ class LtiController < ApplicationController
       deployment_id: deployment.deployment_id,
       iss: deployment.issuer
     }
+    # Preserve any existing activity line_item_url when the current resource
+    # link has no line item yet (for example, when an instructor links without
+    # creating a gradebook item). This avoids unintentionally clearing a valid
+    # previously configured grade passback target.
     attributes[:line_item_url] = resource_link.line_item_url if resource_link.line_item_url.present?
 
     connection.assign_attributes(attributes)
