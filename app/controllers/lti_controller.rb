@@ -45,9 +45,9 @@ class LtiController < ApplicationController
   # prefix.  Used by both activity_redirect and associate_and_redirect so the
   # mapping is defined once and cannot drift.
   ACTIVITY_TYPE_CONFIG = {
-    'bingo_game' => { model: -> { BingoGame }, path: '/home#bingo/' },
-    'project'    => { model: -> { Project },   path: '/home#project/' },
-    'experience' => { model: -> { Experience }, path: '/home#experience/' }
+    'bingo_game' => { model: BingoGame, path: '/home#bingo/' },
+    'project'    => { model: Project,   path: '/home#project/' },
+    'experience' => { model: Experience, path: '/home#experience/' }
   }.freeze
 
   # GET|POST /lti/tool_connect
@@ -311,10 +311,11 @@ class LtiController < ApplicationController
       return
     end
 
+    activity_includes = %i[bingo_games projects experiences]
     @courses = if current_user&.admin?
-                 Course.all
+                 Course.includes(activity_includes)
                else
-                 Course.joins(:rosters).where(
+                 Course.includes(activity_includes).joins(:rosters).where(
                    rosters: { user: current_user,
                                role: [Roster.roles[:instructor], Roster.roles[:assistant]] }
                  )
@@ -815,7 +816,11 @@ class LtiController < ApplicationController
   # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for path prefixes.
   def activity_redirect(activity_type, activity_id)
     config = ACTIVITY_TYPE_CONFIG[activity_type]
-    config ? "#{config[:path]}#{activity_id}" : '/home'
+    unless config
+      logger.warn "LTI activity_redirect: unrecognized activity_type #{activity_type.inspect}"
+      return '/home'
+    end
+    "#{config[:path]}#{activity_id}"
   end
 
   # Associate a resource link with the given activity (storing the course
@@ -832,9 +837,12 @@ class LtiController < ApplicationController
     end
 
     config = ACTIVITY_TYPE_CONFIG[activity_type]
-    return '/' unless config
+    unless config
+      logger.warn "LTI associate_and_redirect: unrecognized activity_type #{activity_type.inspect}"
+      return '/'
+    end
 
-    activity = config[:model].call.find_by(id: activity_id)
+    activity = config[:model].find_by(id: activity_id)
     if activity
       resource_link.course = activity.course
       resource_link.save
