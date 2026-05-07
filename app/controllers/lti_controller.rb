@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'net/http'
+require 'openssl'
 
 # LTI 1.3 controller
 # Implements Dynamic Registration, OIDC Login Initiation, Launch,
@@ -354,6 +355,9 @@ class LtiController < ApplicationController
     )
 
     session.delete(:lti_pending_resource_link_id)
+    # lineitems endpoint is captured from the launch claim and only needed for
+    # this one linking submit; clear it after association to keep session data
+    # single-use like other LTI flow state.
     session.delete(:lti_pending_lineitems_url)
     redirect_to redirect_destination
   end
@@ -625,6 +629,7 @@ class LtiController < ApplicationController
     uri = URI(membership_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https'
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
 
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{access_token}"
@@ -922,6 +927,9 @@ class LtiController < ApplicationController
 
     logger.warn 'LTI create_line_item_for_activity: no usable line item URL in response body or Location header'
     nil
+  rescue JSON::ParserError => e
+    logger.warn "LTI create_line_item_for_activity: invalid JSON response (#{e.message})"
+    nil
   rescue StandardError => e
     logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
     nil
@@ -963,7 +971,9 @@ class LtiController < ApplicationController
     attributes[:line_item_url] = resource_link.line_item_url if resource_link.line_item_url.present?
 
     connection.assign_attributes(attributes)
-    connection.save
+    return if connection.save
+
+    logger.warn "LTI sync_activity_lti_connection: save failed (#{connection.errors.full_messages.join(', ')})"
   rescue StandardError => e
     logger.warn "LTI sync_activity_lti_connection failed: #{e.message}"
   end
