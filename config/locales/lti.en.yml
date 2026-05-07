@@ -82,6 +82,7 @@ en:
         or activity below to link it. Students will be taken directly to your selection
         each time they click this link. This step only appears for instructors — students
         will go straight to the linked content once a selection has been made.
+      create_gradebook_item: "Create an LMS gradebook item for this activity (if supported)"
       no_pending: "No pending resource link found. Your session may have expired."
       no_pending_action: "Please return to your LMS and click the activity link again to start the linking flow."
     deep_link_response:

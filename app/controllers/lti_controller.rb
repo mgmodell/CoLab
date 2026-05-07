@@ -49,6 +49,7 @@ class LtiController < ApplicationController
     'project'    => { model: Project,   path: '/home#project/' },
     'experience' => { model: Experience, path: '/home#experience/' }
   }.freeze
+  GRADEBOOK_SUPPORTED_ACTIVITY_TYPES = %w[bingo_game project].freeze
 
   # GET|POST /lti/tool_connect
   # GET|POST /lti/lti_connect  (alias — Moodle's Dynamic Registration redirect uses this path)
@@ -235,6 +236,11 @@ class LtiController < ApplicationController
   # one to deep-link into Moodle (creating a direct activity link and,
   # optionally, a gradebook column).
   def select_content
+    if session[:lti_pending_resource_link_id].present?
+      redirect_to lti_link_resource_path
+      return
+    end
+
     unless session[:lti_deep_link_settings].present?
       render :no_deep_link_session, status: :bad_request
       return
@@ -338,10 +344,14 @@ class LtiController < ApplicationController
 
     activity_type = params[:activity_type]
     activity_id   = params[:activity_id]
+    create_gradebook_item = params[:create_gradebook_item] == '1'
 
-    redirect_destination = associate_and_redirect(resource_link, activity_type, activity_id)
+    redirect_destination = associate_and_redirect(
+      resource_link, activity_type, activity_id, create_gradebook_item:
+    )
 
     session.delete(:lti_pending_resource_link_id)
+    session.delete(:lti_pending_lineitems_url)
     redirect_to redirect_destination
   end
   # Uses the LTI Names and Role Provisioning Services (NRPS) to sync the
@@ -767,7 +777,9 @@ class LtiController < ApplicationController
       activity_id   = custom['colab_activity_id']
 
       if activity_type.present? && activity_id.present?
-        redirect_destination = activity_redirect(activity_type, activity_id)
+        redirect_destination = associate_and_redirect(
+          resource_link, activity_type, activity_id, create_gradebook_item: false
+        )
         redirect_to redirect_destination
         return
       end
@@ -775,6 +787,7 @@ class LtiController < ApplicationController
       roles = payload[LTI_ROLES] || []
       if roles.any? { |r| r.include?('Instructor') }
         session[:lti_pending_resource_link_id] = resource_link.id
+        session[:lti_pending_lineitems_url] = ags_claim['lineitems'] if ags_claim&.dig('lineitems').present?
         redirect_to lti_link_resource_path
         return
       end
@@ -826,7 +839,7 @@ class LtiController < ApplicationController
   # Associate a resource link with the given activity (storing the course
   # association for future enrollment), then return the redirect path.
   # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for model classes.
-  def associate_and_redirect(resource_link, activity_type, activity_id)
+  def associate_and_redirect(resource_link, activity_type, activity_id, create_gradebook_item: false)
     if activity_type == 'course'
       course = Course.find_by(id: activity_id)
       if course
@@ -845,9 +858,73 @@ class LtiController < ApplicationController
     activity = config[:model].find_by(id: activity_id)
     if activity
       resource_link.course = activity.course
+      if create_gradebook_item &&
+         GRADEBOOK_SUPPORTED_ACTIVITY_TYPES.include?(activity_type) &&
+         resource_link.line_item_url.blank?
+        line_item_url = create_line_item_for_activity(resource_link, activity_type, activity)
+        resource_link.line_item_url = line_item_url if line_item_url.present?
+      end
       resource_link.save
+      sync_activity_lti_connection(activity, resource_link)
     end
     activity_redirect(activity_type, activity_id)
+  end
+
+  def create_line_item_for_activity(resource_link, activity_type, activity)
+    lineitems_url = session[:lti_pending_lineitems_url]
+    return nil unless lineitems_url.present?
+
+    deployment = resource_link.lti_deployment
+    token_response = deployment.request_access_token(scopes: [AGS_LINEITEM_SCOPE])
+    access_token = token_response['access_token']
+    return nil unless access_token.present?
+
+    uri = URI(lineitems_url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == 'https'
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request['Authorization'] = "Bearer #{access_token}"
+    request['Content-Type'] = 'application/vnd.ims.lis.v2.lineitem+json'
+    request['Accept'] = 'application/vnd.ims.lis.v2.lineitem+json'
+    request.body = {
+      label: activity_title(activity_type, activity),
+      scoreMaximum: 100,
+      tag: 'grade',
+      resourceId: "#{activity_type}:#{activity.id}"
+    }.to_json
+
+    response = http.request(request)
+    return nil unless response.is_a?(Net::HTTPSuccess) || response.code.to_i == 201
+
+    parsed = JSON.parse(response.body.presence || '{}')
+    parsed['id'].presence || response['Location']
+  rescue StandardError => e
+    logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
+    nil
+  end
+
+  def activity_title(activity_type, activity)
+    case activity_type
+    when 'bingo_game' then activity.get_topic(false)
+    else activity.get_name(false)
+    end
+  end
+
+  def sync_activity_lti_connection(activity, resource_link)
+    deployment = resource_link.lti_deployment
+    connection = activity.lti_connection || activity.build_lti_connection
+
+    connection.assign_attributes(
+      line_item_url: resource_link.line_item_url,
+      ags_access_token_url: deployment.auth_token_url,
+      client_id: deployment.client_id,
+      deployment_id: deployment.deployment_id,
+      iss: deployment.issuer
+    )
+    connection.save
+  rescue StandardError => e
+    logger.warn "LTI sync_activity_lti_connection failed: #{e.message}"
   end
 
   # Build the array of LTI Deep Linking content items for the selected activity
