@@ -10,7 +10,7 @@
     "@react-spring/web": "10.0.3",
     "@reduxjs/toolkit": "^2.11.2",
     "@rspack/cli": "^2.0.0",
-    "@rspack/core": "^2.0.0",
+    "@rspack/core": "^2.0.2",
     "@rspack/dev-server": "^2.0.0",
     "@rspack/plugin-react-refresh": "^1.0.0",
     "@swc/core": "^1.15.32",
