@@ -236,6 +236,9 @@ class LtiController < ApplicationController
   # one to deep-link into Moodle (creating a direct activity link and,
   # optionally, a gradebook column).
   def select_content
+    # When a resource-link launch has queued an instructor linking session,
+    # always route the user to link_resource so the LMS "Select content"
+    # interaction can complete that pending association first.
     if session[:lti_pending_resource_link_id].present?
       redirect_to lti_link_resource_path
       return
@@ -913,7 +916,7 @@ class LtiController < ApplicationController
     location_header = response['Location']
     location_uri = parse_uri_or_nil(location_header) if location_header.present?
     if location_uri && %w[http https].include?(location_uri.scheme)
-      return location_header
+      return location_uri.to_s
     end
 
     logger.warn 'LTI create_line_item_for_activity: no usable line item URL in response body or Location header'
@@ -946,13 +949,15 @@ class LtiController < ApplicationController
     deployment = resource_link.lti_deployment
     connection = activity.lti_connection || activity.build_lti_connection
 
-    connection.assign_attributes(
-      line_item_url: resource_link.line_item_url,
+    attributes = {
       ags_access_token_url: deployment.auth_token_url,
       client_id: deployment.client_id,
       deployment_id: deployment.deployment_id,
       iss: deployment.issuer
-    )
+    }
+    attributes[:line_item_url] = resource_link.line_item_url if resource_link.line_item_url.present?
+
+    connection.assign_attributes(attributes)
     connection.save
   rescue StandardError => e
     logger.warn "LTI sync_activity_lti_connection failed: #{e.message}"
