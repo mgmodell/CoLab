@@ -347,7 +347,7 @@ class LtiController < ApplicationController
     create_gradebook_item = params[:create_gradebook_item] == '1'
 
     redirect_destination = associate_and_redirect(
-      resource_link, activity_type, activity_id, create_gradebook_item:
+      resource_link, activity_type, activity_id, create_gradebook_item: create_gradebook_item
     )
 
     session.delete(:lti_pending_resource_link_id)
@@ -877,7 +877,10 @@ class LtiController < ApplicationController
     deployment = resource_link.lti_deployment
     token_response = deployment.request_access_token(scopes: [AGS_LINEITEM_SCOPE])
     access_token = token_response['access_token']
-    return nil unless access_token.present?
+    unless access_token.present?
+      logger.warn "LTI create_line_item_for_activity: token response missing access_token"
+      return nil
+    end
 
     uri = URI(lineitems_url)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -895,10 +898,18 @@ class LtiController < ApplicationController
     }.to_json
 
     response = http.request(request)
-    return nil unless response.is_a?(Net::HTTPSuccess) || response.code.to_i == 201
+    return nil unless response.is_a?(Net::HTTPSuccess)
 
     parsed = JSON.parse(response.body.presence || '{}')
-    parsed['id'].presence || response['Location']
+    return parsed['id'] if parsed['id'].present?
+
+    location_header = response['Location']
+    if location_header.present? && URI.parse(location_header).is_a?(URI::HTTP)
+      return location_header
+    end
+
+    logger.warn 'LTI create_line_item_for_activity: no usable line item URL in response body or Location header'
+    nil
   rescue StandardError => e
     logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
     nil
