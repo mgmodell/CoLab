@@ -46,9 +46,9 @@ class LtiController < ApplicationController
   # prefix.  Used by both activity_redirect and associate_and_redirect so the
   # mapping is defined once and cannot drift.
   ACTIVITY_TYPE_CONFIG = {
-    'bingo_game' => { model: BingoGame, path: '/home#bingo/' },
-    'project'    => { model: Project,   path: '/home#project/' },
-    'experience' => { model: Experience, path: '/home#experience/' }
+    'bingo_game' => { model: BingoGame, path: '/home/bingo/enter_candidates/' },
+    'project'    => { model: Project,   path: '/home/project/checkin/' },
+    'experience' => { model: Experience, path: '/home/experience/' }
   }.freeze
   GRADEBOOK_SUPPORTED_ACTIVITY_TYPES = %w[bingo_game project].freeze
 
