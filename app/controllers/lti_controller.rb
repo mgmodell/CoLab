@@ -870,6 +870,9 @@ class LtiController < ApplicationController
     activity_redirect(activity_type, activity_id)
   end
 
+  # Create an LMS line item for the selected activity using the platform's AGS
+  # lineitems endpoint captured from the launch claim. Returns the created line
+  # item URL (id) when successful, or nil when creation is unavailable/failed.
   def create_line_item_for_activity(resource_link, activity_type, activity)
     lineitems_url = session[:lti_pending_lineitems_url]
     return nil unless lineitems_url.present?
@@ -904,7 +907,7 @@ class LtiController < ApplicationController
     return parsed['id'] if parsed['id'].present?
 
     location_header = response['Location']
-    if location_header.present? && URI.parse(location_header).is_a?(URI::HTTP)
+    if location_header.present? && %w[http https].include?(URI.parse(location_header).scheme)
       return location_header
     end
 
@@ -915,6 +918,7 @@ class LtiController < ApplicationController
     nil
   end
 
+  # Return the human-readable activity title used when creating AGS line items.
   def activity_title(activity_type, activity)
     case activity_type
     when 'bingo_game' then activity.get_topic(false)
@@ -922,6 +926,9 @@ class LtiController < ApplicationController
     end
   end
 
+  # Sync deployment and AGS settings from an LTI resource link to the selected
+  # activity's LtiConnection so the activity's LTI Grade Passback panel is
+  # automatically populated after linking.
   def sync_activity_lti_connection(activity, resource_link)
     deployment = resource_link.lti_deployment
     connection = activity.lti_connection || activity.build_lti_connection
