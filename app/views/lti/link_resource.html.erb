@@ -43,7 +43,7 @@
           <tr>
             <td><%= course.get_name(false) %></td>
             <td>
-                <%= form_tag lti_associate_resource_link_path, method: :post,
+              <%= form_tag lti_associate_resource_link_path, method: :post,
                                                             id: "lr-form-course-#{course.id}" do %>
                 <%= hidden_field_tag :activity_type, 'course' %>
                 <%= hidden_field_tag :activity_id,   course.id %>
