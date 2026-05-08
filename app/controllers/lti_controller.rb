@@ -804,7 +804,7 @@ class LtiController < ApplicationController
 
     redirect_destination = if resource_link.assignment
                              "/assignment/#{resource_link.assignment.id}"
-                           elsif resource_link.activity_type.present?
+                           elsif resource_link.activity_type.present? && resource_link.activity_id.present?
                              activity_redirect(resource_link.activity_type, resource_link.activity_id.to_s)
                            elsif resource_link.course
                              '/home'
