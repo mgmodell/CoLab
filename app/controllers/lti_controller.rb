@@ -781,7 +781,7 @@ class LtiController < ApplicationController
     # custom params for an activity hint from the deep-link content item.
     # If the user is an instructor and there is still no target, show the
     # activity-linking screen so they can connect the link to a CoLab activity.
-    if resource_link.assignment.nil? && resource_link.course.nil?
+    if resource_link.assignment.nil? && resource_link.course.nil? && resource_link.activity_type.nil?
       activity_type = custom['colab_activity_type']
       activity_id   = custom['colab_activity_id']
 
@@ -804,6 +804,8 @@ class LtiController < ApplicationController
 
     redirect_destination = if resource_link.assignment
                              "/assignment/#{resource_link.assignment.id}"
+                           elsif resource_link.activity_type.present?
+                             activity_redirect(resource_link.activity_type, resource_link.activity_id.to_s)
                            elsif resource_link.course
                              '/home'
                            else
@@ -866,7 +868,9 @@ class LtiController < ApplicationController
 
     activity = config[:model].find_by(id: activity_id)
     if activity
-      resource_link.course = activity.course
+      resource_link.course        = activity.course
+      resource_link.activity_type = activity_type
+      resource_link.activity_id   = activity_id.to_i
       if create_gradebook_item &&
          GRADEBOOK_SUPPORTED_ACTIVITY_TYPES.include?(activity_type) &&
          resource_link.line_item_url.blank?

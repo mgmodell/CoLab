@@ -197,6 +197,35 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # ── Resource Link Linking ─────────────────────────────────────────────────────
+
+  test 'POST /lti/link_resource stores activity_type and activity_id and redirects to the activity' do
+    # Sign in via simulate_launch so we have an active session
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiResourceLinkRequest',
+      resource_link_id: 'test_link_activity_store',
+      user_email: 'link-activity-test@test.local'
+    }
+    assert_response :redirect
+
+    link = LtiResourceLink.find_by!(resource_link_id: 'test_link_activity_store')
+    bingo = bingo_games(:one)
+
+    # Emulate the instructor-linking session state set by handle_resource_link_request
+    session[:lti_pending_resource_link_id] = link.id
+
+    post '/lti/link_resource', params: {
+      activity_type: 'bingo_game',
+      activity_id: bingo.id.to_s
+    }
+
+    link.reload
+    assert_equal 'bingo_game', link.activity_type
+    assert_equal bingo.id,     link.activity_id
+    assert_redirected_to "/home/bingo/enter_candidates/#{bingo.id}"
+  end
+
   # ── simulate_launch (test-only route) ────────────────────────────────────────
 
   test 'POST /lti/simulate_launch with unknown issuer returns 401' do

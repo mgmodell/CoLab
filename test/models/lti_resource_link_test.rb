@@ -78,4 +78,18 @@ class LtiResourceLinkTest < ActiveSupport::TestCase
     assert_equal 'res_link_002', link.resource_link_id
     assert link.line_item_url.present?
   end
+
+  test 'activity_type and activity_id are optional' do
+    link = LtiResourceLink.new(valid_attrs)
+    assert link.valid?
+    assert_nil link.activity_type
+    assert_nil link.activity_id
+  end
+
+  test 'activity_type and activity_id are persisted when set' do
+    link = LtiResourceLink.create!(valid_attrs.merge(activity_type: 'bingo_game', activity_id: 42))
+    link.reload
+    assert_equal 'bingo_game', link.activity_type
+    assert_equal 42, link.activity_id
+  end
 end

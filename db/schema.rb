@@ -500,6 +500,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_06_120000) do
     t.string "names_roles_url"
     t.string "resource_link_id", null: false
     t.datetime "updated_at", null: false
+    t.string "activity_type"
+    t.integer "activity_id"
     t.index ["assignment_id"], name: "index_lti_resource_links_on_assignment_id"
     t.index ["course_id"], name: "index_lti_resource_links_on_course_id"
     t.index ["lti_deployment_id", "resource_link_id"], name: "index_lti_resource_links_on_deployment_and_link", unique: true
