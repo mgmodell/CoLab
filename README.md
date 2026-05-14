@@ -147,6 +147,8 @@ The `.env` file is gitignored. Add any environment variables you need here; see 
 
 #### Linux rootless Podman — manual fallback
 
+Use this manual fallback only if automatic compose selection did not choose the Linux rootless override correctly, or if you want to force the Linux rootless configuration explicitly.
+
 On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: keep-id` so that container file writes are owned by your host user. Enable it by referencing the provided override in `.devcontainer/devcontainer.json`:
 
 ```json
@@ -159,6 +161,8 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 > **Windows**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container.
 
 #### macOS rootless Podman — manual fallback
+
+Use this manual fallback only if automatic compose selection did not choose the macOS rootless override correctly, or if you want to force the macOS rootless configuration explicitly.
 
 On macOS, Podman shares the host filesystem into its Linux VM via virtiofs. Without the macOS override, the bind-mounted files appear as `uid:0 / nogroup` inside the container (not writable) because rootless Podman's user namespace remaps the macOS user UID 501 to container UID 0 without the `userns_mode: keep-id` setting.
 

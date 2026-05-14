@@ -63,9 +63,9 @@ if count != 1:
 if updated != original:
     target.write_text(updated, encoding="utf-8")
 PY
-rc=$?
-if [ "${rc}" -ne 0 ]; then
-  echo "ERROR: Failed to update ${DEVCONTAINER_FILE} (python exit code: ${rc})." >&2
+python_exit_code=$?
+if [ "${python_exit_code}" -ne 0 ]; then
+  echo "ERROR: Failed to update ${DEVCONTAINER_FILE} (python exit code: ${python_exit_code})." >&2
   exit 1
 fi
 

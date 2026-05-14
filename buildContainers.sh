@@ -67,8 +67,8 @@ done
 
 echo "Configuring .devcontainer/devcontainer.json compose overrides"
 bash ./configureDevcontainer.sh
-rc=$?
-if [ ${rc} -ne 0 ]; then
+configure_exit_code=$?
+if [ "${configure_exit_code}" -ne 0 ]; then
   echo "Failed to configure .devcontainer/devcontainer.json compose overrides." >&2
   exit 1
 fi
