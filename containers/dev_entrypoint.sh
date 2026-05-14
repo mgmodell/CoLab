@@ -9,7 +9,7 @@ mise_dir="${HOME}/.local/share/mise"
 
 extract_mise_version() {
   local tool="$1"
-  awk -F'"' -v prefix="${tool} = " '$1 == prefix { print $2 }' mise.toml
+  awk -F'"' -v t="${tool}" '$0 ~ ("^[[:space:]]*" t "[[:space:]]*=[[:space:]]*\"") { print $2 }' mise.toml
 }
 
 # Set up the version managers
@@ -59,7 +59,11 @@ echo "Installing gems"
 # When BUNDLED WITH is present, bundler auto-upgrades itself at runtime to that
 # version — but that auto-install can produce a partial gem (missing rubygems_ext)
 # if the devmise volume has stale state. Installing explicitly here is reliable.
-bundler_version="$(grep -A1 'BUNDLED WITH' Gemfile.lock 2>/dev/null | tail -1 | tr -d ' ')"
+bundler_version="$(awk '/^BUNDLED WITH$/ { getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print; exit }' Gemfile.lock 2>/dev/null)"
+if [ -n "${bundler_version}" ] && [[ ! "${bundler_version}" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]; then
+  echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
+  exit 1
+fi
 if [ -n "${bundler_version}" ]; then
   mise exec -- gem install bundler -v "${bundler_version}" --no-document
 fi
