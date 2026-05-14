@@ -47,7 +47,7 @@ from pathlib import Path
 target = Path(sys.argv[1])
 compose_json = sys.argv[2]
 original = target.read_text(encoding="utf-8")
-pattern = r'("dockerComposeFile"\s*:\s*)(\[[\s\S]*?\]|"[^"]*")(\s*,)'
+pattern = r'("dockerComposeFile"\s*:\s*)(\[[\s\S]*?\]|"[^"]*")(\s*,?)'
 
 updated, count = re.subn(
     pattern,
