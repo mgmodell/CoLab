@@ -43,6 +43,9 @@ elseif ($rootless -eq "true" -and $isMacOS) {
 
 $content = Get-Content -Raw -Path $devcontainerFile
 $pattern = '"dockerComposeFile"\s*:\s*(\[[\s\S]*?\]|"[^"]*")\s*,'
+if (-not [System.Text.RegularExpressions.Regex]::IsMatch($content, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)) {
+    throw "Could not locate dockerComposeFile in .devcontainer/devcontainer.json"
+}
 $replacement = '"dockerComposeFile": ' + $composeJson + ','
 $updated = [System.Text.RegularExpressions.Regex]::Replace(
     $content,
@@ -50,10 +53,6 @@ $updated = [System.Text.RegularExpressions.Regex]::Replace(
     $replacement,
     [System.Text.RegularExpressions.RegexOptions]::Singleline
 )
-
-if ($updated -eq $content) {
-    throw "Could not locate dockerComposeFile in .devcontainer/devcontainer.json"
-}
 
 Set-Content -Path $devcontainerFile -Value $updated -NoNewline
 Write-Host "Updated .devcontainer/devcontainer.json dockerComposeFile ($selectionNote)."

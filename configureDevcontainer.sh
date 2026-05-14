@@ -39,7 +39,7 @@ elif [ "${ROOTLESS}" = "true" ] && [ "${OS_NAME}" = "Darwin" ]; then
   SELECTION_NOTE="macOS rootless override"
 fi
 
-python3 - "${DEVCONTAINER_FILE}" "${COMPOSE_JSON}" <<'PY'
+if ! python3 - "${DEVCONTAINER_FILE}" "${COMPOSE_JSON}" <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -57,11 +57,15 @@ updated, count = re.subn(
 )
 
 if count != 1:
-    print("ERROR: Could not locate dockerComposeFile in .devcontainer/devcontainer.json")
+    print("ERROR: Could not locate dockerComposeFile in .devcontainer/devcontainer.json", file=sys.stderr)
     sys.exit(1)
 
 if updated != original:
     target.write_text(updated, encoding="utf-8")
 PY
+then
+  echo "ERROR: Failed to update ${DEVCONTAINER_FILE}."
+  exit 1
+fi
 
 echo "Updated .devcontainer/devcontainer.json dockerComposeFile (${SELECTION_NOTE})."
