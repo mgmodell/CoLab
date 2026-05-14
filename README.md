@@ -94,7 +94,10 @@ To build only the dev containers (faster, skips the test container):
 
 Run `./buildContainers.sh -h` for a full list of options.
 
-> **Automatic devcontainer compose selection**: `buildContainers.sh` now runs `./configureDevcontainer.sh` before building images. It detects `podman info --format '{{.Host.Security.Rootless}}'` and host OS, then updates `.devcontainer/devcontainer.json` to include:
+> **Automatic devcontainer compose selection**: `buildContainers.sh` runs
+> `./configureDevcontainer.sh` before building images. It detects
+> `podman info --format '{{.Host.Security.Rootless}}'` and host OS, then updates
+> `.devcontainer/devcontainer.json` to include:
 > - `docker-compose.rootless.yml` on Linux rootless Podman
 > - `docker-compose.macos.yml` on macOS rootless Podman
 > - base `docker-compose.yml` otherwise
@@ -111,7 +114,9 @@ To build only the dev containers:
 
 Run `.\buildContainers.ps1 -Help` for a full list of options.
 
-> **Automatic devcontainer compose selection**: `buildContainers.ps1` runs `.\configureDevcontainer.ps1` before building images, applying the same rootless/OS detection and `.devcontainer/devcontainer.json` update.
+> **Automatic devcontainer compose selection**: `buildContainers.ps1` runs
+> `.\configureDevcontainer.ps1` before building images, applying the same
+> rootless/OS detection and `.devcontainer/devcontainer.json` update.
 
 > **Note**: The build uses the project root as the build context (required for `COPY` instructions inside the Dockerfiles). Run the script from the project root directory.
 

@@ -10,12 +10,12 @@ LINUX_ROOTLESS_COMPOSE="../containers/dev_env/docker-compose.rootless.yml"
 MACOS_ROOTLESS_COMPOSE="../containers/dev_env/docker-compose.macos.yml"
 
 if [ ! -f "${DEVCONTAINER_FILE}" ]; then
-  echo "ERROR: ${DEVCONTAINER_FILE} not found."
+  echo "ERROR: ${DEVCONTAINER_FILE} not found." >&2
   exit 1
 fi
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "ERROR: python3 is required to update ${DEVCONTAINER_FILE}."
+  echo "ERROR: python3 is required to update ${DEVCONTAINER_FILE}." >&2
   exit 1
 fi
 
