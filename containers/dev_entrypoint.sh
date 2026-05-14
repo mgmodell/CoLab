@@ -14,7 +14,22 @@ extract_mise_version() {
     return 1
   fi
   local version
-  version="$(awk -F'"' -v t="${tool}" '$0 ~ ("^[[:space:]]*" t "[[:space:]]*=[[:space:]]*\"") { print $2; exit }' mise.toml)"
+  version="$(
+    awk -F'=' -v t="${tool}" '
+      {
+        key=$1
+        value=$2
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+        gsub(/^"/, "", value)
+        gsub(/"$/, "", value)
+        if (key == t) {
+          print value
+          exit
+        }
+      }
+    ' mise.toml
+  )"
   if [ -z "${version}" ]; then
     echo "ERROR: ${tool} is not configured in mise.toml." >&2
     return 1
@@ -79,7 +94,8 @@ echo "Installing gems"
 # version — but that auto-install can produce a partial gem (missing rubygems_ext)
 # if the devmise volume has stale state. Installing explicitly here is reliable.
 bundler_version="$(extract_bundler_version)"
-if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+semver_pattern='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+if [[ ! "${bundler_version}" =~ ${semver_pattern} ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
