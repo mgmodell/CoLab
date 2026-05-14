@@ -65,6 +65,9 @@ while getopts "nbhdt" opt; do
   esac
 done
 
+echo "Configuring .devcontainer/devcontainer.json compose overrides"
+bash ./configureDevcontainer.sh
+
 echo -e '\t*****\n\tbuilding db'
 podman build $BUILD_OPTS -f ./containers/agnostic/db/Dockerfile -t colab_db .
 test_result $? 'colab_db'
