@@ -9,7 +9,31 @@ mise_dir="${HOME}/.local/share/mise"
 
 extract_mise_version() {
   local tool="$1"
-  awk -F'"' -v t="${tool}" '$0 ~ ("^[[:space:]]*" t "[[:space:]]*=[[:space:]]*\"") { print $2 }' mise.toml
+  if [ ! -f mise.toml ]; then
+    echo "ERROR: mise.toml not found in ${PWD}." >&2
+    return 1
+  fi
+  local version
+  version="$(awk -F'"' -v t="${tool}" '$0 ~ ("^[[:space:]]*" t "[[:space:]]*=[[:space:]]*\"") { print $2; exit }' mise.toml)"
+  if [ -z "${version}" ]; then
+    echo "ERROR: ${tool} is not configured in mise.toml." >&2
+    return 1
+  fi
+  echo "${version}"
+}
+
+extract_bundler_version() {
+  if [ ! -f Gemfile.lock ]; then
+    echo "ERROR: Gemfile.lock not found in ${PWD}." >&2
+    return 1
+  fi
+  local version
+  version="$(awk '/^BUNDLED WITH$/ { getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print; exit }' Gemfile.lock)"
+  if [ -z "${version}" ]; then
+    echo "ERROR: Could not find a bundler version in Gemfile.lock (BUNDLED WITH)." >&2
+    return 1
+  fi
+  echo "${version}"
 }
 
 # Set up the version managers
@@ -59,12 +83,8 @@ echo "Installing gems"
 # When BUNDLED WITH is present, bundler auto-upgrades itself at runtime to that
 # version — but that auto-install can produce a partial gem (missing rubygems_ext)
 # if the devmise volume has stale state. Installing explicitly here is reliable.
-bundler_version="$(awk '/^BUNDLED WITH$/ { getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print; exit }' Gemfile.lock 2>/dev/null)"
-if [ -z "${bundler_version}" ]; then
-  echo "ERROR: Could not find a bundler version in Gemfile.lock (BUNDLED WITH)."
-  exit 1
-fi
-if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+bundler_version="$(extract_bundler_version)"
+if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
