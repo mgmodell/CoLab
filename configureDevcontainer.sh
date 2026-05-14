@@ -39,7 +39,7 @@ elif [ "${ROOTLESS}" = "true" ] && [ "${OS_NAME}" = "Darwin" ]; then
   SELECTION_NOTE="macOS rootless override"
 fi
 
-if ! python3 - "${DEVCONTAINER_FILE}" "${COMPOSE_JSON}" <<'PY'
+python3 - "${DEVCONTAINER_FILE}" "${COMPOSE_JSON}" <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -63,8 +63,9 @@ if count != 1:
 if updated != original:
     target.write_text(updated, encoding="utf-8")
 PY
-then
-  echo "ERROR: Failed to update ${DEVCONTAINER_FILE}."
+rc=$?
+if [ "${rc}" -ne 0 ]; then
+  echo "ERROR: Failed to update ${DEVCONTAINER_FILE} (python exit code: ${rc})." >&2
   exit 1
 fi
 
