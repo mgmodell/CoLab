@@ -67,11 +67,6 @@ ruby_version="$(extract_mise_version ruby)"
 node_version="$(extract_mise_version node)"
 yarn_version="$(extract_mise_version yarn)"
 
-if [ -z "${ruby_version}" ] || [ -z "${node_version}" ] || [ -z "${yarn_version}" ]; then
-  echo "ERROR: Could not read ruby/node/yarn versions from mise.toml"
-  exit 1
-fi
-
 echo "Installing platforms"
 if ! mise self-update -y; then
   echo "WARN: mise self-update failed; continuing with the existing mise version."
@@ -84,7 +79,7 @@ echo "Installing gems"
 # version — but that auto-install can produce a partial gem (missing rubygems_ext)
 # if the devmise volume has stale state. Installing explicitly here is reliable.
 bundler_version="$(extract_bundler_version)"
-if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]]; then
+if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
