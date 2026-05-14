@@ -9,7 +9,7 @@ mise_dir="${HOME}/.local/share/mise"
 
 extract_mise_version() {
   local tool="$1"
-  awk -F'"' -v t="${tool}" '$1 ~ ("^" t " = ") { print $2 }' mise.toml
+  awk -F'"' -v prefix="${tool} = " '$1 == prefix { print $2 }' mise.toml
 }
 
 # Set up the version managers
@@ -33,7 +33,7 @@ fi
 
 if [ ! -w "${mise_dir}" ]; then
   echo "ERROR: ${mise_dir} is not writable by $(id -un)."
-  echo "If this is a stale devmise volume with incorrect ownership, remove it:"
+  echo "If this is a stale dev_env_devmise volume with incorrect ownership, remove it:"
   echo "  podman volume rm dev_env_devmise"
   echo "Then run: Dev Containers: Rebuild and Reopen in Container"
   exit 1
@@ -49,7 +49,9 @@ if [ -z "${ruby_version}" ] || [ -z "${node_version}" ] || [ -z "${yarn_version}
 fi
 
 echo "Installing platforms"
-mise self-update -y || true
+if ! mise self-update -y; then
+  echo "WARN: mise self-update failed; continuing with the existing mise version."
+fi
 mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
 
 echo "Installing gems"
