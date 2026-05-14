@@ -42,6 +42,7 @@ elseif ($rootless -eq "true" -and $isMacOS) {
 }
 
 $content = Get-Content -Raw -Path $devcontainerFile
+$hadTrailingNewline = $content.EndsWith("`n")
 $pattern = '"dockerComposeFile"\s*:\s*(\[[\s\S]*?\]|"[^"]*")\s*,'
 $regexOptions = [System.Text.RegularExpressions.RegexOptions]::Singleline
 if (-not [System.Text.RegularExpressions.Regex]::IsMatch($content, $pattern, $regexOptions)) {
@@ -55,5 +56,10 @@ $updated = [System.Text.RegularExpressions.Regex]::Replace(
     $regexOptions
 )
 
-Set-Content -Path $devcontainerFile -Value $updated -NoNewline
+if ($hadTrailingNewline) {
+    Set-Content -Path $devcontainerFile -Value $updated
+}
+else {
+    Set-Content -Path $devcontainerFile -Value $updated -NoNewline
+}
 Write-Host "Updated .devcontainer/devcontainer.json dockerComposeFile ($selectionNote)."

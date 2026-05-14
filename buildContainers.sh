@@ -67,6 +67,10 @@ done
 
 echo "Configuring .devcontainer/devcontainer.json compose overrides"
 bash ./configureDevcontainer.sh
+if [ $? -ne 0 ]; then
+  echo "Failed to configure .devcontainer/devcontainer.json compose overrides." >&2
+  exit 1
+fi
 
 echo -e '\t*****\n\tbuilding db'
 podman build $BUILD_OPTS -f ./containers/agnostic/db/Dockerfile -t colab_db .
