@@ -60,13 +60,15 @@ echo "Installing gems"
 # version — but that auto-install can produce a partial gem (missing rubygems_ext)
 # if the devmise volume has stale state. Installing explicitly here is reliable.
 bundler_version="$(awk '/^BUNDLED WITH$/ { getline; gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0); print; exit }' Gemfile.lock 2>/dev/null)"
-if [ -n "${bundler_version}" ] && [[ ! "${bundler_version}" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]; then
+if [ -z "${bundler_version}" ]; then
+  echo "ERROR: Could not find a bundler version in Gemfile.lock (BUNDLED WITH)."
+  exit 1
+fi
+if [[ ! "${bundler_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
-if [ -n "${bundler_version}" ]; then
-  mise exec -- gem install bundler -v "${bundler_version}" --no-document
-fi
+mise exec -- gem install bundler -v "${bundler_version}" --no-document
 mise exec -- bundle install --quiet
 
 echo "Installing packages using yarn"
