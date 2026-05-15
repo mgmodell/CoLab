@@ -12,11 +12,12 @@ RUN apt-get update && apt-get upgrade -y && \
   gettext \
   git \
   bash \
+  libffi-dev \
   libmysqlclient-dev \
   libsecret-1-dev \
   libyaml-dev && \
   apt-get autoremove -y && \
-  apt-get clean 
+  apt-get clean
 
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
@@ -40,7 +41,7 @@ RUN echo "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
   echo "export DISPLAY=:0" >> ~/.bashrc &&\
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
-  echo "export DRIVER=docker" >> ~/.bashrc 
+  echo "export DRIVER=docker" >> ~/.bashrc
 
 RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\

@@ -9,6 +9,7 @@ RUN apt-get update && apt-get upgrade -y && \
   gettext \
   git \
   imagemagick \
+  libffi-dev \
   libvips \
   libssl-dev \
   libreadline-dev \
