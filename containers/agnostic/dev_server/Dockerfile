@@ -3,14 +3,18 @@ FROM docker.io/ubuntu:22.04
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \
   autoconf \
+  bison \
   bash \
   build-essential \
   curl \
   gettext \
   git \
   imagemagick \
+  libdb-dev \
   libffi-dev \
+  libgdbm-dev \
   libvips \
+  libncurses-dev \
   libssl-dev \
   libreadline-dev \
   libmysqlclient-dev \

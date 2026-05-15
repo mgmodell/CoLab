@@ -86,7 +86,9 @@ echo "Installing platforms"
 if ! mise self-update -y; then
   echo "WARN: mise self-update failed; continuing with the existing mise version."
 fi
-mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
+# Ruby 4.0.x on modern distros can fail against system OpenSSL; let ruby-build
+# vendor a compatible OpenSSL while keeping Node/Yarn installs on mise.
+RUBY_BUILD_VENDOR_OPENSSL=1 mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
 
 echo "Installing gems"
 # Ensure the exact bundler version required by Gemfile.lock is installed.
