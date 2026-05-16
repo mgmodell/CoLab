@@ -77,6 +77,8 @@ if [ ! -w "${mise_dir}" ]; then
   echo "Then run: Dev Containers: Rebuild and Reopen in Container"
   exit 1
 fi
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
 
 ruby_version="$(extract_mise_version ruby)"
 node_version="$(extract_mise_version node)"
@@ -88,6 +90,7 @@ if ! mise self-update -y; then
 fi
 # Ruby 4.0.x on modern distros can fail against system OpenSSL; let ruby-build
 # vendor a compatible OpenSSL while keeping Node/Yarn installs on mise.
+export 
 RUBY_BUILD_VENDOR_OPENSSL=1 mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
 
 echo "Installing gems"

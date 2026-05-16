@@ -12,6 +12,10 @@ RUN apt-get update && apt-get upgrade -y && \
   gettext \
   git \
   bash \
+  bison \
+  libdb-dev \
+  libgdbm-dev \
+  libncurses-dev \
   libffi-dev \
   libmysqlclient-dev \
   libsecret-1-dev \
