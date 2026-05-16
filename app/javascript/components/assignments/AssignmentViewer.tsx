@@ -13,7 +13,7 @@ import { IRubricData } from "./RubricViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { DateTime, Settings } from "luxon";
+import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastructure/TemporalSettings";
 
 import { useTranslation } from "react-i18next";
 
@@ -27,8 +27,8 @@ import FeedbackVisualization from "./FeedbackVisualization";
 interface ISubmissionCondensed {
   id: number;
   recordedScore: number;
-  submitted: DateTime;
-  withdrawn: DateTime;
+  submitted: Temporal.ZonedDateTime | string | null;
+  withdrawn: Temporal.ZonedDateTime | string | null;
   user: string;
   group: string;
   submission_feedback: ISubmissionFeedback;
@@ -37,7 +37,7 @@ interface ISubmissionCondensed {
 
 interface ISubmissionFeedback {
   feedback: string;
-  submitted: DateTime;
+  submitted: Temporal.ZonedDateTime | string | null;
 }
 
 interface IRubricRowFeedback {
@@ -50,8 +50,8 @@ interface IAssignment {
   id: number | null;
   name: string;
   description: string;
-  startDate: DateTime;
-  endDate: DateTime;
+  startDate: Temporal.ZonedDateTime;
+  endDate: Temporal.ZonedDateTime;
   textSub: boolean;
   linkSub: boolean;
   fileSub: boolean;
@@ -63,8 +63,8 @@ const CLEAN_ASSIGNMENT: IAssignment = {
   id: null,
   name: "",
   description: "",
-  startDate: DateTime.local(),
-  endDate: DateTime.local(),
+  startDate: Temporal.Now.zonedDateTimeISO(),
+  endDate: Temporal.Now.zonedDateTimeISO(),
   textSub: false,
   linkSub: false,
   fileSub: false,
@@ -132,13 +132,9 @@ export default function AssignmentViewer(props) {
 
         //Process, clean and set the data received
         const receivedAssignment: IAssignment = { ...data.assignment };
-        let receivedDate = DateTime.fromISO(data.assignment.start_date).setZone(
-          Settings.timezone
-        );
+        let receivedDate = parseISO(data.assignment.start_date, Settings.timezone);
         receivedAssignment.startDate = receivedDate;
-        receivedDate = DateTime.fromISO(data.assignment.end_date).setZone(
-          Settings.timezone
-        );
+        receivedDate = parseISO(data.assignment.end_date, Settings.timezone);
         receivedAssignment.endDate = receivedDate;
         receivedAssignment.rubric = data.rubric;
         receivedAssignment.submissions = data.submissions;
@@ -168,7 +164,7 @@ export default function AssignmentViewer(props) {
 
 
   let output = null;
-  const curDate = DateTime.local();
+  const curDate = Temporal.Now.zonedDateTimeISO();
   if (!endpointsLoaded) {
     output = <Skeleton className="mb-2" />;
   } else {

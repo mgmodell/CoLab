@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 
-import { Info } from "luxon";
+import { getWeekdays } from "../infrastructure/TemporalSettings";
 
 import { useDispatch } from "react-redux";
 import {
@@ -67,9 +67,8 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const [projectDescription, setProjectDescription] = useState("");
   const now = new Date();
   const [projectStartDate, setProjectStartDate] = useState(now);
-  //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(
-    Info.weekdays().map((day, index) => {
+    getWeekdays().map((day, index) => {
       //Not sure why there's an off-by-one error here, but this fixes it 9/26
       return { id: index + 1, day: day };
     })

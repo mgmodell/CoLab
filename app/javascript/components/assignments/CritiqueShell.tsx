@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
-import { DateTime } from 'luxon';
+import { Temporal, parseISO, formatZonedDateTime, DATETIME_MED } from "../infrastructure/TemporalSettings";
 import { useTranslation } from "react-i18next";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
@@ -112,11 +112,11 @@ const SubmissionReducer = (state, action) => {
 }
 interface ISubmissionData {
   id: number;
-  recordedScore: number;
-  submitted: DateTime;
-  withdrawn: DateTime;
-  sub_text: string;
-  sub_link: string;
+  recordedScore: number | null;
+  submitted: Temporal.ZonedDateTime | Date | null;
+  withdrawn: Temporal.ZonedDateTime | Date | null;
+  sub_text: string | null;
+  sub_link: string | null;
   rubric: IRubricData;
   submission_feedback: ISubmissionFeedback;
 }
@@ -228,8 +228,8 @@ export default function CritiqueShell(props: Props) {
         setAssignmentAcceptsLink(data.assignment.link_sub);
         setAssignmentGroupEnabled(data.assignment.group_enabled);
         data.assignment.submissions.forEach((submission: ISubmissionCondensed) => {
-          submission.submitted = submission.submitted !== null ? DateTime.fromISO(submission.submitted) : null;
-          submission.withdrawn = submission.withdrawn !== null ? DateTime.fromISO(submission.withdrawn) : null;
+          submission.submitted = submission.submitted !== null ? parseISO(submission.submitted as string) : null;
+          submission.withdrawn = submission.withdrawn !== null ? parseISO(submission.withdrawn as string) : null;
         })
         setSubmissionsIndex(data.assignment.submissions);
 
@@ -323,8 +323,8 @@ export default function CritiqueShell(props: Props) {
                             if (rowData.withdrawn === null) {
                               return <span>{t('submissions.score_na')}</span>;
                             } else {
-                              const dt = DateTime.fromISO(rowData.withdrawn);
-                              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                              const dt = parseISO(rowData.withdrawn);
+                              return <span>{formatZonedDateTime(dt, DATETIME_MED)}</span>;
                             }
 
                           }}
@@ -334,8 +334,8 @@ export default function CritiqueShell(props: Props) {
                           sortable
                           header={t("submissions.submitted")}
                           body={(rowData) => {
-                            const dt = DateTime.fromISO(rowData.submitted);
-                            return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                            const dt = parseISO(rowData.submitted);
+                            return <span>{formatZonedDateTime(dt, DATETIME_MED)}</span>;
 
                           }}
                         />
@@ -347,8 +347,8 @@ export default function CritiqueShell(props: Props) {
                             if (rowData.withdrawn === null) {
                               return <span>{t('submissions.not_withdrawn')}</span>;
                             } else {
-                              const dt = DateTime.fromISO(rowData.withdrawn);
-                              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+                              const dt = parseISO(rowData.withdrawn);
+                              return <span>{formatZonedDateTime(dt, DATETIME_MED)}</span>;
                             }
 
                           }}
@@ -379,7 +379,9 @@ export default function CritiqueShell(props: Props) {
 
                       </h6>
                       <p id='sub_link'>
-                        <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
+                        {selectedSubmission.sub_link
+                          ? <a href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</a>
+                          : null}
                       </p>
                     </React.Fragment>
                   ) : null}

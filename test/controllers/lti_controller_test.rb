@@ -28,6 +28,18 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
     assert lti_config.present?
     assert lti_config['target_link_uri'].present?
     assert lti_config['messages'].any? { |m| m['type'] == 'LtiResourceLinkRequest' }
+
+    # The domain claim must match the host (with port when non-standard) of
+    # the target_link_uri so that Moodle's domain_targetlinkuri_mismatch check
+    # passes.  Moodle's PHP extractor appends the port for non-standard ports:
+    #   parse_url($uri)['host'] . ':' . parse_url($uri)['port']
+    # Rails' host_with_port omits the port for standard ports (80/443) and
+    # includes it otherwise, so the two sides always agree.
+    target_host = URI.parse(lti_config['target_link_uri']).then do |u|
+      u.port == u.default_port ? u.host : "#{u.host}:#{u.port}"
+    end
+    assert_equal target_host, lti_config['domain'],
+                 'domain claim must equal host:port of target_link_uri to satisfy Moodle'
   end
 
   test 'POST /lti/tool_connect also returns a valid tool configuration' do
@@ -78,8 +90,7 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /lti/launch with state mismatch returns 401' do
-    session_params = { lti_state: 'correct_state', lti_nonce: 'nonce_abc' }
-    # No way to set session here, but we can confirm mismatched state is rejected
+    # state is looked up in the lti_nonces table; 'wrong_state' won't be found
     post '/lti/launch', params: {
       id_token: 'fake.jwt.token',
       state: 'wrong_state'
@@ -166,6 +177,53 @@ class LtiControllerTest < ActionDispatch::IntegrationTest
     body = JSON.parse(response.body)
     lti_config = body['https://purl.imsglobal.org/spec/lti-tool-configuration']
     assert lti_config['messages'].any? { |m| m['type'] == 'LtiDeepLinkingRequest' }
+  end
+
+  test 'POST /lti/deep_link_response with course activity_type returns a signed JWT' do
+    course = courses(:one)
+    # Simulate an active deep-linking session
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiDeepLinkingRequest',
+      deep_link_return_url: 'http://moodle:8080/mod/lti/return.php',
+      user_email: 'sim-dl-course@test.local'
+    }
+    assert_redirected_to '/lti/select_content'
+
+    post '/lti/deep_link_response', params: {
+      activity_type: 'course',
+      activity_id: course.id.to_s
+    }
+    assert_response :success
+  end
+
+  # ── Resource Link Linking ─────────────────────────────────────────────────────
+
+  test 'POST /lti/link_resource stores activity_type and activity_id and redirects to the activity' do
+    # Sign in via simulate_launch so we have an active session
+    post '/lti/simulate_launch', params: {
+      iss: @deployment.issuer,
+      message_type: 'LtiResourceLinkRequest',
+      resource_link_id: 'test_link_activity_store',
+      user_email: 'link-activity-test@test.local'
+    }
+    assert_response :redirect
+
+    link = LtiResourceLink.find_by!(resource_link_id: 'test_link_activity_store')
+    bingo = bingo_games(:one)
+
+    # Emulate the instructor-linking session state set by handle_resource_link_request
+    session[:lti_pending_resource_link_id] = link.id
+
+    post '/lti/link_resource', params: {
+      activity_type: 'bingo_game',
+      activity_id: bingo.id.to_s
+    }
+
+    link.reload
+    assert_equal 'bingo_game', link.activity_type
+    assert_equal bingo.id,     link.activity_id
+    assert_redirected_to "/home/bingo/enter_candidates/#{bingo.id}"
   end
 
   # ── simulate_launch (test-only route) ────────────────────────────────────────

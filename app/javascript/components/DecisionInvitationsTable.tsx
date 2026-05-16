@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import axios from "axios";
 
-import { DateTime } from "luxon";
+import { Temporal, parseISO, formatZonedDateTime, DATETIME_MED } from "./infrastructure/TemporalSettings";
 import { DataTable } from "primereact/datatable";
 import StandardListToolbar from "./toolbars/StandardListToolbar";
 import { Column } from "primereact/column";
@@ -18,8 +18,8 @@ import { Button } from "primereact/button";
 interface IInvitation {
   id: number;
   name: string;
-  startDate: DateTime;
-  endDate: DateTime;
+  startDate: Temporal.ZonedDateTime;
+  endDate: Temporal.ZonedDateTime;
   acceptPath: string;
   declinePath: string;
 }
@@ -137,8 +137,8 @@ export default function DecisionInvitationsTable(props: Props) {
           body={rowData => {
             var retVal = <React.Fragment>{t("not_available")}</React.Fragment>;
             if (null !== rowData.startDate) {
-              const dt = DateTime.fromISO(rowData.startDate);
-              retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+              const dt = parseISO(rowData.startDate);
+              retVal = <span>{formatZonedDateTime(dt, DATETIME_MED)}</span>;
             }
             return retVal;
           }}
@@ -151,8 +151,8 @@ export default function DecisionInvitationsTable(props: Props) {
           body={rowData => {
             var retVal = <React.Fragment>{t("not_available")}</React.Fragment>;
             if (null !== rowData.endDate) {
-              const dt = DateTime.fromISO(rowData.endDate);
-              retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+              const dt = parseISO(rowData.endDate);
+              retVal = <span>{formatZonedDateTime(dt, DATETIME_MED)}</span>;
             }
             return retVal;
           }}

@@ -5,7 +5,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { DateTime } from "luxon";
+import { Temporal } from "../infrastructure/TemporalSettings";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Panel } from "primereact/panel";
@@ -16,8 +16,8 @@ interface IConsentForm {
   link: string;
   accepted: boolean;
   active: boolean;
-  end_date: DateTime;
-  open_date: DateTime;
+  end_date: Temporal.ZonedDateTime;
+  open_date: Temporal.ZonedDateTime;
 }
 type Props = {
   retrievalUrl: string;
