@@ -31,15 +31,20 @@ development:
     client:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
-      # Explicit WebSocket URL so the client connects to the dev server (not the Rails server)
+      # WebSocket URL for HMR.  hostname is intentionally omitted so the browser
+      # auto-detects it from the current page location — this lets the VNC browser
+      # container reach the dev server via `app:3035` while plain localhost access
+      # continues to work as `localhost:3035`.
       webSocketURL:
-        hostname: "localhost"
         pathname: "/ws"
         port: 3035
         protocol: "wss"
     compress: true
-    # Note that apps that do not check the host are vulnerable to DNS rebinding attacks
-    allowed_hosts: [ 'localhost' ]
+    # 'all' is appropriate in the containerised dev environment: the dev server is
+    # only reachable inside the Docker network so DNS-rebinding risk is minimal.
+    # This allows access via `localhost`, `app`, and the container hostname without
+    # triggering "Invalid Host header" errors in the VNC browser container.
+    allowed_hosts: 'all'
     pretty: true
     headers:
       'Access-Control-Allow-Origin': '*'

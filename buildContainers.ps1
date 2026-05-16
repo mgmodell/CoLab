@@ -54,6 +54,14 @@ if ($NoCache) {
     $BuildOpts += "--no-cache"
 }
 
+Write-Host "Configuring .devcontainer/devcontainer.json compose overrides"
+try {
+    & "$PSScriptRoot/configureDevcontainer.ps1"
+}
+catch {
+    throw "Failed to configure .devcontainer/devcontainer.json compose overrides: $($_.Exception.Message)"
+}
+
 Write-Host "`t*****`n`tbuilding db"
 podman build @BuildOpts -f ./containers/agnostic/db/Dockerfile -t colab_db .
 Test-BuildResult 'colab_db'
