@@ -21,6 +21,11 @@ fi
 
 OS_NAME="$(uname -s)"
 ROOTLESS="false"
+IS_WSL="false"
+
+if [ -f /proc/sys/kernel/osrelease ] && grep -qiE 'microsoft|wsl' /proc/sys/kernel/osrelease; then
+  IS_WSL="true"
+fi
 
 if command -v podman >/dev/null 2>&1; then
   ROOTLESS="$(podman info --format '{{.Host.Security.Rootless}}' 2>/dev/null || echo false)"
@@ -31,12 +36,14 @@ ROOTLESS="$(echo "${ROOTLESS}" | tr '[:upper:]' '[:lower:]')"
 COMPOSE_JSON="\"${BASE_COMPOSE}\""
 SELECTION_NOTE="base compose file"
 
-if [ "${ROOTLESS}" = "true" ] && [ "${OS_NAME}" = "Linux" ]; then
+if [ "${ROOTLESS}" = "true" ] && [ "${OS_NAME}" = "Linux" ] && [ "${IS_WSL}" != "true" ]; then
   COMPOSE_JSON="[\"${BASE_COMPOSE}\", \"${LINUX_ROOTLESS_COMPOSE}\"]"
   SELECTION_NOTE="Linux rootless override"
 elif [ "${ROOTLESS}" = "true" ] && [ "${OS_NAME}" = "Darwin" ]; then
   COMPOSE_JSON="[\"${BASE_COMPOSE}\", \"${MACOS_ROOTLESS_COMPOSE}\"]"
   SELECTION_NOTE="macOS rootless override"
+elif [ "${ROOTLESS}" = "true" ] && [ "${IS_WSL}" = "true" ]; then
+  SELECTION_NOTE="base compose file (WSL detected; skipping Linux rootless override)"
 fi
 
 python3 - "${DEVCONTAINER_FILE}" "${COMPOSE_JSON}" <<'PY'
