@@ -87,7 +87,7 @@ The container images must be built before opening the devcontainer in VS Code.
 ./buildContainers.sh -b
 ```
 
-> **Windows note**: If you're on Windows, run the PowerShell script (`.\buildContainers.ps1`) from PowerShell/Windows Terminal. Running the bash script from Git Bash/WSL is not the recommended path.
+> **Windows note**: If you're on Windows, run the PowerShell script (`.\buildContainers.ps1`) from PowerShell/Windows Terminal. Running the bash script from Git Bash/WSL is not the recommended path, because the PowerShell path keeps Podman/Dev Containers integration aligned with Windows host settings.
 
 To build only the dev containers (faster, skips the test container):
 ```bash

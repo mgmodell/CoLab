@@ -23,7 +23,11 @@ OS_NAME="$(uname -s)"
 ROOTLESS="false"
 IS_WSL="false"
 
-if [ -f /proc/sys/kernel/osrelease ] && grep -qiE 'microsoft|wsl' /proc/sys/kernel/osrelease; then
+if [ -n "${WSL_DISTRO_NAME:-}" ]; then
+  IS_WSL="true"
+elif [ -f /proc/sys/kernel/osrelease ] && grep -qiE 'microsoft|wsl' /proc/sys/kernel/osrelease; then
+  IS_WSL="true"
+elif [ -f /proc/version ] && grep -qiE 'microsoft|wsl' /proc/version; then
   IS_WSL="true"
 fi
 
