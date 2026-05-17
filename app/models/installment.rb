@@ -56,27 +56,27 @@ class Installment < ApplicationRecord
     return if comments.blank?
 
     working_space = comments.dup
-    whole_word_pattern = ->( value ) { /\b#{Regexp.escape( value )}\b/i }
+    escaped_word_pattern = ->( value ) { /\b#{Regexp.escape( value )}\b/i }
 
     # Phase 1 - convert to codes
     this_course = Course.readonly.includes( :school, :users, projects: :users )
                         .find( assessment.project_course_id )
 
     this_school = this_course.school
-    working_space.gsub!( whole_word_pattern.call( this_school.name ), "[s_#{this_school.id}]" ) if this_school.name.present?
-    working_space.gsub!( whole_word_pattern.call( this_course.name ), "[cnam_#{this_course.id}]" ) if this_course.name.present?
-    working_space.gsub!( whole_word_pattern.call( this_course.number.to_s ), "[cnum_#{this_course.id}]" ) if this_course.number.present?
+    working_space.gsub!( escaped_word_pattern.call( this_school.name ), "[s_#{this_school.id}]" ) if this_school.name.present?
+    working_space.gsub!( escaped_word_pattern.call( this_course.name ), "[cnam_#{this_course.id}]" ) if this_course.name.present?
+    working_space.gsub!( escaped_word_pattern.call( this_course.number.to_s ), "[cnum_#{this_course.id}]" ) if this_course.number.present?
 
     this_course.projects.each do | project |
-      working_space.gsub!( whole_word_pattern.call( project.name ), "[p_#{project.id}]" ) if project.name?
+      working_space.gsub!( escaped_word_pattern.call( project.name ), "[p_#{project.id}]" ) if project.name?
       project.groups.each do | group |
-        working_space.gsub!( whole_word_pattern.call( group.name ), "[g_#{group.id}]" ) if group.name?
+        working_space.gsub!( escaped_word_pattern.call( group.name ), "[g_#{group.id}]" ) if group.name?
       end
     end
 
     this_course.users.each do | user |
-      working_space.gsub!( whole_word_pattern.call( user.first_name ), "[ufn_#{user.id}]" ) if user.first_name?
-      working_space.gsub!( whole_word_pattern.call( user.last_name ), "[uln_#{user.id}]" ) if user.last_name?
+      working_space.gsub!( escaped_word_pattern.call( user.first_name ), "[ufn_#{user.id}]" ) if user.first_name?
+      working_space.gsub!( escaped_word_pattern.call( user.last_name ), "[uln_#{user.id}]" ) if user.last_name?
     end
 
     # Phase 2 - convert from codes
