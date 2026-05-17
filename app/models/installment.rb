@@ -56,39 +56,39 @@ class Installment < ApplicationRecord
     return if comments.blank?
 
     working_space = comments.dup
-    escaped_word_regex = ->( value ) { value.present? ? /\b#{Regexp.escape( value.to_s )}\b/i : nil }
+    safe_word_regex = ->( value ) { value.present? ? /\b#{Regexp.escape( value.to_s )}\b/i : nil }
 
     # Phase 1 - convert to codes
     this_course = Course.readonly.includes( :school, :users, projects: :users )
                         .find( assessment.project_course_id )
 
     this_school = this_course.school
-    if ( school_regex = escaped_word_regex.call( this_school.name ) )
+    if ( school_regex = safe_word_regex.call( this_school.name ) )
       working_space.gsub!( school_regex, "[s_#{this_school.id}]" )
     end
-    if ( course_name_regex = escaped_word_regex.call( this_course.name ) )
+    if ( course_name_regex = safe_word_regex.call( this_course.name ) )
       working_space.gsub!( course_name_regex, "[cnam_#{this_course.id}]" )
     end
-    if ( course_number_regex = escaped_word_regex.call( this_course.number ) )
+    if ( course_number_regex = safe_word_regex.call( this_course.number ) )
       working_space.gsub!( course_number_regex, "[cnum_#{this_course.id}]" )
     end
 
     this_course.projects.each do | project |
-      if ( project_regex = escaped_word_regex.call( project.name ) )
+      if ( project_regex = safe_word_regex.call( project.name ) )
         working_space.gsub!( project_regex, "[p_#{project.id}]" )
       end
       project.groups.each do | group |
-        if ( group_regex = escaped_word_regex.call( group.name ) )
+        if ( group_regex = safe_word_regex.call( group.name ) )
           working_space.gsub!( group_regex, "[g_#{group.id}]" )
         end
       end
     end
 
     this_course.users.each do | user |
-      if ( first_name_regex = escaped_word_regex.call( user.first_name ) )
+      if ( first_name_regex = safe_word_regex.call( user.first_name ) )
         working_space.gsub!( first_name_regex, "[ufn_#{user.id}]" )
       end
-      if ( last_name_regex = escaped_word_regex.call( user.last_name ) )
+      if ( last_name_regex = safe_word_regex.call( user.last_name ) )
         working_space.gsub!( last_name_regex, "[uln_#{user.id}]" )
       end
     end
