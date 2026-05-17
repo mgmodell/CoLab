@@ -148,6 +148,6 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
+    self.anon_name ||= "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
   end
 end

@@ -331,6 +331,9 @@ namespace :testing do
     digest_token = lambda do | key, id, size = 12 |
       Digest::SHA256.hexdigest( "#{anonymization_salt}:#{key}:#{id}" )[0, size]
     end
+    deterministic_ratio = lambda do | key, id |
+      digest_token.call( key, id, 12 ).to_i( 16 ) / 0xFFFFFFFFFFFF.to_f
+    end
     redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
     anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
     anon_subject = ->(prefix, id) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
@@ -341,6 +344,8 @@ namespace :testing do
       email.confirmation_sent_at = nil
       email.confirmed_at = Time.current
     end
+    home_state_ids = HomeState.pluck( :id )
+    cip_code_ids = CipCode.pluck( :id )
 
     count.times do | index |
       puts "Anonymizing DB contents, pass #{index + 1} of #{count}"
@@ -387,17 +392,28 @@ namespace :testing do
           user.tokens = nil
           user.current_sign_in_ip = nil
           user.last_sign_in_ip = nil
-          user.date_of_birth = nil
+          age = 15 + ( deterministic_ratio.call( 'date-of-birth-age', user.id )**5 * 45 ).floor
+          user.date_of_birth = age.years.ago.to_date
           user.country = nil
-          user.home_state_id = nil
-          user.cip_code_id = nil
+          home_state_selector = deterministic_ratio.call( 'home-state-id', user.id )
+          user.home_state_id = if home_state_ids.empty? || home_state_selector < 0.25
+                                 nil
+                               else
+                                 home_state_ids[( home_state_selector * home_state_ids.size ).floor % home_state_ids.size]
+                               end
+          cip_selector = deterministic_ratio.call( 'cip-code-id', user.id )
+          user.cip_code_id = if cip_code_ids.empty? || cip_selector < 0.25
+                               nil
+                             else
+                               cip_code_ids[( cip_selector * cip_code_ids.size ).floor % cip_code_ids.size]
+                             end
           user.gender_id = nil
           user.started_school = nil
-          user.impairment_auditory = nil
-          user.impairment_cognitive = nil
-          user.impairment_motor = nil
-          user.impairment_other = nil
-          user.impairment_visual = nil
+          user.impairment_auditory = deterministic_ratio.call( 'impairment-auditory', user.id ) < 0.02
+          user.impairment_cognitive = deterministic_ratio.call( 'impairment-cognitive', user.id ) < 0.02
+          user.impairment_motor = deterministic_ratio.call( 'impairment-motor', user.id ) < 0.02
+          user.impairment_other = deterministic_ratio.call( 'impairment-other', user.id ) < 0.02
+          user.impairment_visual = deterministic_ratio.call( 'impairment-visual', user.id ) < 0.02
           user.uid = if user.provider == 'email'
                        user.email
                      else
@@ -442,6 +458,7 @@ namespace :testing do
         end
 
         Assignment.find_each do | assignment |
+          assignment.send( :anonymize ) unless assignment.anon_name? && assignment.anon_description?
           assignment.anon_name = anon_subject.call( 'Assignment', assignment.id ) unless assignment.anon_name?
           assignment.anon_description = redacted.call( 'assignment-description', assignment.id ) if assignment.anon_description.blank?
           assignment.name = assignment.anon_name
@@ -450,6 +467,7 @@ namespace :testing do
         end
 
         Rubric.find_each do | rubric |
+          rubric.send( :anonymize ) unless rubric.anon_name? && rubric.anon_description?
           rubric.anon_name = anon_subject.call( 'Rubric', rubric.id ) unless rubric.anon_name?
           rubric.anon_description = redacted.call( 'rubric-description', rubric.id ) if rubric.anon_description.blank?
           rubric.name = rubric.anon_name

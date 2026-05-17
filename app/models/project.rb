@@ -233,6 +233,6 @@ class Project < ApplicationRecord
       Faker::Movies::HowToTrainYourDragon,
       Faker::Fantasy::Tolkien
     ]
-    self.anon_name = "#{locations.sample.location} #{Faker::Job.field}"
+    self.anon_name ||= "#{locations.sample.location} #{Faker::Job.field}"
   end
 end

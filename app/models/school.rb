@@ -27,6 +27,6 @@ class School < ApplicationRecord
   private
 
   def anonymize
-    self.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}"
+    self.anon_name ||= "#{Faker::Color.color_name} #{Faker::Educator.university}"
   end
 end

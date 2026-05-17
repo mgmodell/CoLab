@@ -36,13 +36,13 @@ class Rubric < ApplicationRecord
   private
 
   def anonymize
-    self.anon_name = Faker::Company.bs.to_s
-    self.anon_description = Faker::Lorem.sentence(
+    self.anon_name ||= Faker::Company.bs.to_s
+    self.anon_description ||= Faker::Lorem.sentence(
       word_count: 8,
       supplemental: true,
       random_words_to_add: 9
     ).to_s
-    self.anon_version = version + ( Random.rand * 11 ).floor
+    self.anon_version ||= version + ( Random.rand * 11 ).floor
   end
 
   def publish_logic

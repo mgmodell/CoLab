@@ -446,5 +446,7 @@ class User < ApplicationRecord
       self.anon_first_name = Faker::Name.first_name
       self.anon_last_name = Faker::Name.last_name
     end
+    self.anon_first_name ||= Faker::Name.first_name
+    self.anon_last_name ||= Faker::Name.last_name
   end
 end
