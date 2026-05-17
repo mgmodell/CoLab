@@ -404,13 +404,13 @@ namespace :testing do
           user.home_state_id = if home_state_ids.empty? || home_state_selector < quasi_identifier_nil_rate
                                  nil
                                else
-                                 home_state_ids[( home_state_selector * home_state_ids.size ).floor % home_state_ids.size]
+                                 home_state_ids[( home_state_selector * home_state_ids.size ).floor]
                                end
           cip_selector = deterministic_ratio.call( 'cip-code-id', user.id )
           user.cip_code_id = if cip_code_ids.empty? || cip_selector < quasi_identifier_nil_rate
                                nil
                              else
-                               cip_code_ids[( cip_selector * cip_code_ids.size ).floor % cip_code_ids.size]
+                               cip_code_ids[( cip_selector * cip_code_ids.size ).floor]
                              end
           user.gender_id = nil
           user.started_school = nil

@@ -148,7 +148,7 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    locale_prefix = Faker::Boolean.boolean ? Faker::Nation.language : Faker::Nation.nationality
-    self.anon_name ||= "#{locale_prefix} #{Faker::Company.name}s"
+    nation_descriptor = Faker::Boolean.boolean ? Faker::Nation.language : Faker::Nation.nationality
+    self.anon_name ||= "#{nation_descriptor} #{Faker::Company.name}s"
   end
 end
