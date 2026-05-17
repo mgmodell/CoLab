@@ -99,7 +99,7 @@ elif [ "$DROP_SUPPORT" = true ]; then
 
 else
   if [ "$RUN" = true ]; then
-    DB_EXISTS=$(podman compose exec -T db mysqlshow -u test -ptest 2>/dev/null | grep -c colab_test_ || echo 0)
+    DB_EXISTS=$(podman compose exec -T db mysqlshow -u test -ptest 2>/dev/null | awk '/colab_test_/ { count++ } END { print count + 0 }')
     if [ "$DB_EXISTS" -eq 0 ]; then
       echo "Creating the DB"
         podman compose run --rm app -c
