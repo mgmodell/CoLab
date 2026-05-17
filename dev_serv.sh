@@ -183,8 +183,9 @@ ensure_rspack_binding() {
 
   if ! node -e "require('@rspack/binding')" >/dev/null 2>&1; then
     echo "ERROR: @rspack/binding is still unavailable after reinstall." >&2
-    echo "Try removing the volume and rebuilding the devcontainer:" >&2
-    echo "  podman volume rm dev_env_devnodemodules" >&2
+    echo "Try removing your devnodemodules volume and rebuilding the devcontainer:" >&2
+    echo "  podman volume ls | grep devnodemodules" >&2
+    echo "  podman volume rm <project>_devnodemodules" >&2
     echo "  Dev Containers: Rebuild and Reopen in Container" >&2
     return 1
   fi
