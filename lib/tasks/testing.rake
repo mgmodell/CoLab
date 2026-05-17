@@ -488,7 +488,8 @@ namespace :testing do
         Session.find_each do | session |
           session.session_id = "anon-session-#{session.id}"
           session.data = ''
-          # Session payloads may fail legacy serializer validations once redacted.
+          # Session payload redaction can break legacy serializer expectations in SessionStore models;
+          # bypass validations intentionally because these session rows are test fixtures, not user-facing records.
           session.save! validate: false
         end
       end
@@ -530,7 +531,7 @@ namespace :testing do
     end
     if findings.any?
       shown = findings.take( 20 )
-      raise "PII residue detected (showing first #{shown.size} of #{findings.size}): #{shown.join( ', ' )}"
+      raise "PII residue detected (showing first #{shown.size} of #{findings.size}): #{shown.join( ', ' )}. Review testing:anon_db_init and extend scrubbing rules."
     end
   end
 end
