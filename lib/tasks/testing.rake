@@ -327,8 +327,9 @@ namespace :testing do
   task :anon_db_init, [:times] => [:environment] do | _t, args |
     count = args[:times].to_i
     count = 2 if count < 2
+    anonymization_salt = Rails.application.secret_key_base.presence || 'colab-anon-db-salt'
     digest_token = lambda do | key, id, size = 12 |
-      Digest::SHA256.hexdigest( "#{key}:#{id}" )[0, size]
+      Digest::SHA256.hexdigest( "#{anonymization_salt}:#{key}:#{id}" )[0, size]
     end
     redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
     anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
@@ -486,6 +487,7 @@ namespace :testing do
         Session.find_each do | session |
           session.session_id = "anon-session-#{session.id}"
           session.data = ''
+          # Session payloads may fail legacy serializer validations once redacted.
           session.save! validate: false
         end
       end
@@ -494,7 +496,7 @@ namespace :testing do
 
     findings = []
     email_pattern = /[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i
-    ip_pattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/
+    ip_pattern = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/
     token_pattern = /(bearer|token|oauth|refresh|access)[\s:_-]*[A-Z0-9]/i
 
     Email.find_each do | email |
@@ -525,6 +527,8 @@ namespace :testing do
                                                                 value.match?( token_pattern ) )
       end
     end
-    raise "PII residue detected: #{findings.take( 20 ).join( ', ' )}" if findings.any?
+    if findings.any?
+      raise "PII residue detected (showing #{[20, findings.size].min} of #{findings.size}): #{findings.take( 20 ).join( ', ' )}"
+    end
   end
 end
