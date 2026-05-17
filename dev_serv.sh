@@ -120,7 +120,7 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-if [ "$MIGRATE" = true ]; then
+if [ "$PREPARE" = true ]; then
   echo "Preparing (creating) the DB..."
   rails db:create COLAB_DB=db COLAB_DB_PORT=3306
 fi
