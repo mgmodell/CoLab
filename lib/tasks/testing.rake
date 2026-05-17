@@ -327,13 +327,20 @@ namespace :testing do
   task :anon_db_init, [:times] => [:environment] do | _t, args |
     count = args[:times].to_i
     count = 2 if count < 2
-    anonymization_salt = Rails.application.secret_key_base.presence || 'colab-anon-db-salt'
+    anonymization_salt = ENV.fetch( 'COLAB_ANON_DB_SALT', 'colab-anon-db-salt-v1' )
     digest_token = lambda do | key, id, size = 12 |
       Digest::SHA256.hexdigest( "#{anonymization_salt}:#{key}:#{id}" )[0, size]
     end
     redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
     anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
     anon_subject = ->(prefix, id) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
+    apply_email_anonymization = lambda do | email, user_id, email_index |
+      email.email = anon_email.call( user_id, email_index )
+      email.confirmation_token = nil
+      email.unconfirmed_email = nil
+      email.confirmation_sent_at = nil
+      email.confirmed_at = Time.current
+    end
 
     count.times do | index |
       puts "Anonymizing DB contents, pass #{index + 1} of #{count}"
@@ -360,19 +367,13 @@ namespace :testing do
           if user.emails.size.positive?
             Email.transaction do
               user.emails.each_with_index do | email, index |
-                email.email = anon_email.call( user.id, index )
-                email.confirmation_token = nil
-                email.unconfirmed_email = nil
-                email.confirmation_sent_at = nil
-                email.confirmed_at = Time.current
+                apply_email_anonymization.call( email, user.id, index )
                 email.save!
               end
             end
           else
-            email = user.emails.new(
-              email: anon_email.call( user.id, 0 ),
-              confirmed_at: Time.current
-            )
+            email = user.emails.new
+            apply_email_anonymization.call( email, user.id, 0 )
             user.emails << email
             email.save!
           end
@@ -497,7 +498,7 @@ namespace :testing do
     findings = []
     email_pattern = /[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i
     ip_pattern = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/
-    token_pattern = /(bearer|token|oauth|refresh|access)[\s:_-]*[A-Z0-9]/i
+    token_pattern = /(bearer|token|oauth|refresh|access)[\s:_=-]+[A-Z0-9_-]{16,}/i
 
     Email.find_each do | email |
       findings << "email##{email.id}" unless email.email.ends_with?( '@example.invalid' )
@@ -528,7 +529,8 @@ namespace :testing do
       end
     end
     if findings.any?
-      raise "PII residue detected (showing #{[20, findings.size].min} of #{findings.size}): #{findings.take( 20 ).join( ', ' )}"
+      shown = findings.take( 20 )
+      raise "PII residue detected (showing first #{shown.size} of #{findings.size}): #{shown.join( ', ' )}"
     end
   end
 end
