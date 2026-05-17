@@ -486,11 +486,9 @@ namespace :testing do
         end
 
         Session.find_each do | session |
-          session.session_id = "anon-session-#{session.id}"
-          session.data = ''
-          # Session payload redaction can break legacy serializer expectations in SessionStore models;
-          # bypass validations intentionally because these session rows are test fixtures, not user-facing records.
-          session.save! validate: false
+          # Session payload redaction can break legacy serializer expectations in SessionStore models.
+          # Persist directly because these session rows are test fixtures, not user-facing records.
+          session.update_columns( session_id: "anon-session-#{session.id}", data: '' )
         end
       end
     end
@@ -500,18 +498,19 @@ namespace :testing do
     email_pattern = /[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i
     ip_pattern = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/
     token_pattern = /(bearer|token|oauth|refresh|access)[\s:_=-]+[A-Z0-9_-]{16,}/i
+    jwt_pattern = /\beyJ[A-Z0-9_-]+\.[A-Z0-9_-]+\.[A-Z0-9_-]+\b/i
 
     Email.find_each do | email |
       findings << "email##{email.id}" unless email.email.ends_with?( '@example.invalid' )
     end
     User.find_each do | user |
-      findings << "user-token##{user.id}" if user.tokens.present? || user.confirmation_token.present? ||
-                                             user.reset_password_token.present? || user.unlock_token.present?
-      findings << "user-ip##{user.id}" if user.current_sign_in_ip.present? || user.last_sign_in_ip.present?
-      findings << "user-unconfirmed-email##{user.id}" if user.unconfirmed_email.present?
+      findings << "user-token##{user.id} (auth token field)" if user.tokens.present? || user.confirmation_token.present? ||
+                                                                 user.reset_password_token.present? || user.unlock_token.present?
+      findings << "user-ip##{user.id} (ip field)" if user.current_sign_in_ip.present? || user.last_sign_in_ip.present?
+      findings << "user-unconfirmed-email##{user.id} (unconfirmed email field)" if user.unconfirmed_email.present?
     end
     Session.find_each do | session |
-      findings << "session##{session.id}" if session.data.present?
+      findings << "session##{session.id} (session payload)" if session.data.present?
     end
     [
       [Installment, :comments],
@@ -523,10 +522,11 @@ namespace :testing do
     ].each do | model, field |
       model.find_each do | record |
         value = record.public_send( field )
-        findings << "#{model.name}##{record.id}.#{field}" if value.present? &&
-                                                              ( value.match?( email_pattern ) ||
-                                                                value.match?( ip_pattern ) ||
-                                                                value.match?( token_pattern ) )
+        next unless value.present?
+
+        findings << "#{model.name}##{record.id}.#{field} (email-like)" if value.match?( email_pattern )
+        findings << "#{model.name}##{record.id}.#{field} (ip-like)" if value.match?( ip_pattern )
+        findings << "#{model.name}##{record.id}.#{field} (token-like)" if value.match?( token_pattern ) || value.match?( jwt_pattern )
       end
     end
     if findings.any?
