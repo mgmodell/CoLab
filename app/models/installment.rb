@@ -115,27 +115,31 @@ class Installment < ApplicationRecord
 
   def normalize_sums
     values_by_factor.each do | _factor, au_hash |
-      total = au_hash.values.inject( 0 ) { | sum, v | sum + v.value }
+      factor_values = au_hash.values
+      next if factor_values.empty?
 
-      au_hash.values.each do | v |
+      total = factor_values.inject( 0 ) { | sum, v | sum + v.value }
+
+      factor_value_count = factor_values.count
+      factor_values.each do | v |
         prelim = ( Installment::TOTAL_VAL * v.value ) / total
         v.value = if prelim.nan?
-                    ( Installment::TOTAL_VAL / v.installment.values.count ).round
+                    ( Installment::TOTAL_VAL / factor_value_count ).round
                   else
                     prelim.round
                   end
       end
 
-      total = au_hash.values.inject( 0 ) { | sum, v | sum + v.value }
+      total = factor_values.inject( 0 ) { | sum, v | sum + v.value }
       difference = Installment::TOTAL_VAL - total
       if 0 != difference
         delta = difference <=> 0
         index = 0
         difference.abs.to_i.times do
-          au_hash.values[index].value += delta
-          index += 1
+          factor_values[index].value += delta
+          index = ( index + 1 ) % factor_value_count
         end
-        total = au_hash.values.inject( 0 ) { | sum, v | sum + v.value }
+        total = factor_values.inject( 0 ) { | sum, v | sum + v.value }
       end
       errors[:base] << I18n.t( 'err_normalize_sums' ) if Installment::TOTAL_VAL != total
     end

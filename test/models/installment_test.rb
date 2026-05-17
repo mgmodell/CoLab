@@ -151,4 +151,22 @@ class InstallmentTest < ActiveSupport::TestCase
     assert_equal assessment.id,       payload['assessment_id']
     assert_equal group.id,            payload['group_id']
   end
+
+  test 'normalize_sums handles zero-total factor values without nil errors' do
+    installment = Installment.new
+    placeholder_values = Array.new( 50 ) { Object.new }
+    factor_installment = Struct.new( :values ).new( placeholder_values )
+    value_struct = Struct.new( :value, :installment )
+    factor_values = [
+      value_struct.new( 0.0, factor_installment ),
+      value_struct.new( 0.0, factor_installment )
+    ]
+
+    installment.singleton_class.define_method( :values_by_factor ) do
+      { :factor_a => { :user_a => factor_values[0], :user_b => factor_values[1] } }
+    end
+
+    assert_nothing_raised { installment.normalize_sums }
+    assert_equal Installment::TOTAL_VAL, factor_values.sum( &:value )
+  end
 end
