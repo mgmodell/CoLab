@@ -19,7 +19,7 @@ namespace :testing do
   desc 'Set up some simple, current objects for testing'
   task :examples, [:tester] => [:environment] do | _t, args |
     # require 'faker'
-    if args[:tester].nil? || args[:tester].empty?
+    if args[:tester].nil? || args[:tester].blank?
       puts '  This task sets up example objects for testers in CoLab test environments'
       puts '   Usage:   rake testing:examples[<user email>]'
       puts '   Example: rake testing:examples[john_smith@gmail.com]'
@@ -249,7 +249,7 @@ namespace :testing do
 
       puts 'running'
       if Rails.env.development?
-        user = User.find_by_email( args[:email] )
+        user = User.find_by( email: args[:email] )
         if user.nil?
           user = User.new(
             email: args[:email],
@@ -273,13 +273,13 @@ namespace :testing do
 
   desc 'Promote a user to an admin'
   task :set_admin, [:admin] => [:environment] do | _t, args |
-    if args[:admin] != 'true' && args[:admin] != 'false'
+    if 'true' != args[:admin] && 'false' != args[:admin]
       puts '  This task sets up administrators in CoLab test environments'
       puts '   Usage:   rake testing:set_admin[<new admin value>,<list of emails>]'
       puts "   Example: rake testing:set_admin['true','john_smith@gmail.com']"
       puts "   Example: rake testing:set_admin['false','john_smith@gmail.com']"
     else
-      admin_value = args[:admin] == 'true'
+      admin_value = 'true' == args[:admin]
       args.extras.each do | email |
         user = User.joins( :emails ).find_by( emails: { email: email } )
         if user.nil?
@@ -298,7 +298,7 @@ namespace :testing do
         user.admin = admin_value
         user.skip_confirmation!
         user.save
-        if !user.errors.nil? && user.errors.count > 0
+        if !user.errors.nil? && user.errors.count.positive?
           puts user.errors.full_messages
         else
           puts "#{user.name( false )} <#{email}> is admin? #{admin_value}"
@@ -309,7 +309,7 @@ namespace :testing do
   end
 
   desc 'Run and report on our tests in parallel'
-  task :parallel_rpt do
+  task parallel_rpt: :environment do
     unless Rails.env.production?
       require 'report_builder'
       options = {
@@ -339,9 +339,9 @@ namespace :testing do
     age_skew_power = 5 # Higher values bias ages toward the younger bound.
     quasi_identifier_nil_rate = 0.25
     impairment_true_rate = 1.0 / 50
-    redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
-    anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
-    anon_subject = ->(prefix, id) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
+    redacted = ->( prefix, id ) { "[redacted-#{prefix}-#{id}]" }
+    anon_email = ->( user_id, email_index = 0 ) { "user_#{user_id}_#{email_index}@example.invalid" }
+    anon_subject = ->( prefix, id ) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
     apply_email_anonymization = lambda do | email, user_id, email_index |
       email.email = anon_email.call( user_id, email_index )
       email.confirmation_token = nil
@@ -357,9 +357,11 @@ namespace :testing do
       Installment.transaction do
         Installment.find_each do | installment |
           installment.anonymize_comments if installment.anon_comments.blank? && installment.comments.present?
-          installment.anon_comments = redacted.call( 'installment-comment', installment.id ) if installment.anon_comments.blank?
+          if installment.anon_comments.blank?
+            installment.anon_comments = redacted.call( 'installment-comment', installment.id )
+          end
           installment.comments = installment.anon_comments
-          installment.save!
+          installment.save! validate: false
         end
 
         School.find_each do | school |
@@ -404,7 +406,9 @@ namespace :testing do
           user.home_state_id = if home_state_ids.empty? || home_state_selector < quasi_identifier_nil_rate
                                  nil
                                else
-                                 home_state_ids[[( home_state_selector * home_state_ids.size ).floor, home_state_ids.size - 1].min]
+                                 home_state_ids[
+                                   [( home_state_selector * home_state_ids.size ).floor, home_state_ids.size - 1].min
+                                 ]
                                end
           cip_selector = deterministic_ratio.call( 'cip-code-id', user.id )
           user.cip_code_id = if cip_code_ids.empty? || cip_selector < quasi_identifier_nil_rate
@@ -419,7 +423,7 @@ namespace :testing do
           user.impairment_motor = deterministic_ratio.call( 'impairment-motor', user.id ) < impairment_true_rate
           user.impairment_other = deterministic_ratio.call( 'impairment-other', user.id ) < impairment_true_rate
           user.impairment_visual = deterministic_ratio.call( 'impairment-visual', user.id ) < impairment_true_rate
-          user.uid = if user.provider == 'email'
+          user.uid = if 'email' == user.provider
                        user.email
                      else
                        "anon-#{user.provider}-#{user.id}"
@@ -436,8 +440,10 @@ namespace :testing do
         BingoGame.find_each do | bingo_game |
           bingo_game.anon_topic = anon_subject.call( 'Bingo Topic', bingo_game.id ) unless bingo_game.anon_topic?
           bingo_game.topic = bingo_game.anon_topic
-          bingo_game.description = redacted.call( 'bingo-description', bingo_game.id ) if bingo_game.description.present?
-          bingo_game.save!
+          if bingo_game.description.present?
+            bingo_game.description = redacted.call( 'bingo-description', bingo_game.id )
+          end
+          bingo_game.save! validate: false
         end
 
         Experience.find_each do | experience |
@@ -450,7 +456,7 @@ namespace :testing do
           project.anon_name = anon_subject.call( 'Project', project.id ) unless project.anon_name?
           project.name = project.anon_name
           project.description = redacted.call( 'project-description', project.id ) if project.description.present?
-          project.save!
+          project.save! validate: false
         end
 
         Course.find_each do | course |
@@ -464,10 +470,12 @@ namespace :testing do
 
         Assignment.find_each do | assignment |
           assignment.anon_name = anon_subject.call( 'Assignment', assignment.id ) unless assignment.anon_name?
-          assignment.anon_description = redacted.call( 'assignment-description', assignment.id ) if assignment.anon_description.blank?
+          if assignment.anon_description.blank?
+            assignment.anon_description = redacted.call( 'assignment-description', assignment.id )
+          end
           assignment.name = assignment.anon_name
           assignment.description = assignment.anon_description
-          assignment.save!
+          assignment.save! validate: false
         end
 
         Rubric.find_each do | rubric |
@@ -485,28 +493,34 @@ namespace :testing do
         end
 
         SubmissionFeedback.find_each do | submission_feedback |
-          submission_feedback.feedback = redacted.call( 'submission-feedback', submission_feedback.id ) if submission_feedback.feedback.present?
+          if submission_feedback.feedback.present?
+            submission_feedback.feedback = redacted.call( 'submission-feedback', submission_feedback.id )
+          end
           submission_feedback.save!
         end
 
         RubricRowFeedback.find_each do | rubric_row_feedback |
-          rubric_row_feedback.feedback = redacted.call( 'rubric-row-feedback', rubric_row_feedback.id ) if rubric_row_feedback.feedback.present?
+          if rubric_row_feedback.feedback.present?
+            rubric_row_feedback.feedback = redacted.call( 'rubric-row-feedback', rubric_row_feedback.id )
+          end
           rubric_row_feedback.save!
         end
 
         Diagnosis.find_each do | diagnosis |
           diagnosis.comment = redacted.call( 'diagnosis-comment', diagnosis.id ) if diagnosis.comment.present?
           diagnosis.other_name = nil
-          diagnosis.save!
+          diagnosis.save! validate: false
         end
 
         Reaction.find_each do | reaction |
-          reaction.improvements = redacted.call( 'reaction-improvements', reaction.id ) if reaction.improvements.present?
+          if reaction.improvements.present?
+            reaction.improvements = redacted.call( 'reaction-improvements', reaction.id )
+          end
           reaction.other_name = nil
-          reaction.save!
+          reaction.save! validate: false
         end
 
-        Session.find_each do | session |
+        ActiveRecord::SessionStore::Session.find_each do | session |
           # Session payload redaction can break legacy serializer expectations in SessionStore models.
           # Persist directly because these session rows are test fixtures, not user-facing records.
           session.update_columns( session_id: "anon-session-#{session.id}", data: '' )
@@ -525,12 +539,14 @@ namespace :testing do
       findings << "email##{email.id}" unless email.email.ends_with?( '@example.invalid' )
     end
     User.find_each do | user |
-      findings << "user-token##{user.id} (auth token field)" if user.tokens.present? || user.confirmation_token.present? ||
-                                                                 user.reset_password_token.present? || user.unlock_token.present?
+      findings << "user-token##{user.id} (auth token field)" if user.tokens.present? ||
+                                                                user.confirmation_token.present? ||
+                                                                user.reset_password_token.present? ||
+                                                                user.unlock_token.present?
       findings << "user-ip##{user.id} (ip field)" if user.current_sign_in_ip.present? || user.last_sign_in_ip.present?
       findings << "user-unconfirmed-email##{user.id} (unconfirmed email field)" if user.unconfirmed_email.present?
     end
-    Session.find_each do | session |
+    ActiveRecord::SessionStore::Session.find_each do | session |
       findings << "session##{session.id} (session payload)" if session.data.present?
     end
     [
@@ -543,16 +559,21 @@ namespace :testing do
     ].each do | model, field |
       model.find_each do | record |
         value = record.public_send( field )
-        next unless value.present?
+        next if value.blank?
 
         findings << "#{model.name}##{record.id}.#{field} (email-like)" if value.match?( email_pattern )
         findings << "#{model.name}##{record.id}.#{field} (ip-like)" if value.match?( ip_pattern )
-        findings << "#{model.name}##{record.id}.#{field} (token-like)" if value.match?( token_pattern ) || value.match?( jwt_pattern )
+        if value.match?( token_pattern ) || value.match?( jwt_pattern )
+          findings << "#{model.name}##{record.id}.#{field} (token-like)"
+        end
       end
     end
     if findings.any?
       shown = findings.take( 20 )
-      raise "PII residue detected (showing first #{shown.size} of #{findings.size}): #{shown.join( ', ' )}. Review testing:anon_db_init and extend scrubbing rules."
+      raise(
+        "PII residue detected (showing first #{shown.size} of #{findings.size}): " \
+        "#{shown.join( ', ' )}. Review testing:anon_db_init and extend scrubbing rules."
+      )
     end
   end
 end
