@@ -168,12 +168,35 @@ skip_overmind() {
   [ "$(stat -f -c %T . 2>/dev/null)" = "v9fs" ]
 }
 
+# On Windows-hosted containers (v9fs), native Node optional dependencies can be
+# stale or missing if node_modules was seeded from a different platform. Ensure
+# @rspack/binding can load before starting the dev server processes.
+ensure_rspack_binding() {
+  [ "$(stat -f -c %T . 2>/dev/null)" = "v9fs" ] || return 0
+
+  if node -e "require('@rspack/binding')" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "Detected missing/incompatible @rspack/binding native module; reinstalling JS dependencies..."
+  yarn install --check-files
+
+  if ! node -e "require('@rspack/binding')" >/dev/null 2>&1; then
+    echo "ERROR: @rspack/binding is still unavailable after reinstall." >&2
+    echo "Try removing your node_modules volume with your container runtime" >&2
+    echo "(for example Docker/Podman) and then:" >&2
+    echo "  Dev Containers: Rebuild and Reopen in Container." >&2
+    return 1
+  fi
+}
+
 # Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
   if [ "$STARTUP_TLS" = true ]; then
     echo "Error: -s and -t cannot be combined. Use -s for HTTP or -t for HTTPS."
     print_help
   fi
+  ensure_rspack_binding || exit 1
   if ! skip_overmind && command -v overmind &> /dev/null; then
     overmind start -f Procfile.dev
   elif command -v foreman &> /dev/null; then
@@ -189,6 +212,7 @@ fi
 # Start the server (HTTPS – required for LTI testing)
 if [ "$STARTUP_TLS" = true ]; then
   HTTPS_PORT="${PORT:-3443}"
+  ensure_rspack_binding || exit 1
   echo ""
   echo "Starting CoLab HTTPS dev server on https://app:${HTTPS_PORT}"
   echo "  LTI Dynamic Registration URL: https://app:${HTTPS_PORT}/lti/lti_connect"
@@ -197,4 +221,3 @@ if [ "$STARTUP_TLS" = true ]; then
   echo ""
   overmind start -f Procfile.dev-https
 fi
-
