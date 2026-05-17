@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 namespace :testing do
   desc 'Initialise the Testing DB'
   task db_init: [:environment] do | _t, _args |
@@ -325,112 +327,204 @@ namespace :testing do
   task :anon_db_init, [:times] => [:environment] do | _t, args |
     count = args[:times].to_i
     count = 2 if count < 2
+    digest_token = lambda do | key, id, size = 12 |
+      Digest::SHA256.hexdigest( "#{key}:#{id}" )[0, size]
+    end
+    redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
+    anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
+    anon_subject = ->(prefix, id) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
 
     count.times do | index |
       puts "Anonymizing DB contents, pass #{index + 1} of #{count}"
       Installment.transaction do
         Installment.find_each do | installment |
+          installment.anonymize_comments if installment.anon_comments.blank? && installment.comments.present?
+          installment.anon_comments = redacted.call( 'installment-comment', installment.id ) if installment.anon_comments.blank?
           installment.comments = installment.anon_comments
-          installment.anon_comments = ''
-          installment.save
+          installment.save!
         end
 
         School.find_each do | school |
+          school.anon_name = anon_subject.call( 'School', school.id ) unless school.anon_name?
           school.name = school.anon_name
-          school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" unless school.anon_name?
-          school.save
+          school.description = redacted.call( 'school-description', school.id ) if school.description.present?
+          school.save!
         end
 
         User.find_each do | user |
+          user.anon_first_name = "User#{user.id}" unless user.anon_first_name?
+          user.anon_last_name = "Anon#{digest_token.call( 'last', user.id, 6 )}" unless user.anon_last_name?
           user.first_name = user.anon_first_name
           user.last_name = user.anon_last_name
-          if user.emails.size > 0
+          if user.emails.size.positive?
             Email.transaction do
               user.emails.each_with_index do | email, index |
-                email.email =
-                  "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}_#{index}@#{Faker::Internet.domain_name(
-                    subdomain: true, domain: 'example'
-                  )}"
+                email.email = anon_email.call( user.id, index )
+                email.confirmation_token = nil
+                email.unconfirmed_email = nil
+                email.confirmation_sent_at = nil
+                email.confirmed_at = Time.current
                 email.save!
-                email.confirm
               end
             end
           else
             email = user.emails.new(
-              email: "#{user.anon_first_name}_#{user.anon_last_name}_#{user.id}@#{Faker::Internet.domain_name(
-                subdomain: true, domain: 'example'
-              )}"
+              email: anon_email.call( user.id, 0 ),
+              confirmed_at: Time.current
             )
             user.emails << email
-            user.email = email.email
             email.save!
-            email.confirm
           end
-          user.anon_first_name = Faker::Name.first_name unless user.anon_first_name?
-          user.anon_last_name = Faker::Name.last_name unless user.anon_last_name?
-          user.researcher = false unless user.researcher?
-
-          user.uid = user.email if user.provider == 'email'
+          primary_email = user.emails.order( :id ).first
+          user.email = primary_email.email if primary_email.present?
+          user.researcher = false
+          user.confirmation_token = nil
+          user.reset_password_token = nil
+          user.unlock_token = nil
+          user.unconfirmed_email = nil
+          user.tokens = nil
+          user.current_sign_in_ip = nil
+          user.last_sign_in_ip = nil
+          user.date_of_birth = nil
+          user.country = nil
+          user.home_state_id = nil
+          user.cip_code_id = nil
+          user.gender_id = nil
+          user.started_school = nil
+          user.impairment_auditory = nil
+          user.impairment_cognitive = nil
+          user.impairment_motor = nil
+          user.impairment_other = nil
+          user.impairment_visual = nil
+          user.uid = if user.provider == 'email'
+                       user.email
+                     else
+                       "anon-#{user.provider}-#{user.id}"
+                     end
           user.save!
         end
 
         Group.find_each do | group |
+          group.anon_name = anon_subject.call( 'Group', group.id ) unless group.anon_name?
           group.name = group.anon_name
-          unless group.anon_name?
-            group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
-          end
-          group.save
+          group.save!
         end
 
         BingoGame.find_each do | bingo_game |
-          if !bingo_game.anon_topic? || ( bingo_game.anon_topic.starts_with? 'Lorem' )
-            trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-            bingo_game.topic = bingo_game.anon_topic
-            bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
-            bingo_game.save
-          end
+          bingo_game.anon_topic = anon_subject.call( 'Bingo Topic', bingo_game.id ) unless bingo_game.anon_topic?
+          bingo_game.topic = bingo_game.anon_topic
+          bingo_game.description = redacted.call( 'bingo-description', bingo_game.id ) if bingo_game.description.present?
+          bingo_game.save!
         end
 
         Experience.find_each do | experience |
+          experience.anon_name = anon_subject.call( 'Experience', experience.id ) unless experience.anon_name?
           experience.name = experience.anon_name
-          experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" unless experience.anon_name?
-          experience.save
+          experience.save!
         end
 
-        locations = [
-          Faker::Games::Pokemon,
-          Faker::Games::Touhou,
-          Faker::Games::Overwatch,
-          Faker::Movies::HowToTrainYourDragon,
-          Faker::Fantasy::Tolkien
-        ]
         Project.find_each do | project |
+          project.anon_name = anon_subject.call( 'Project', project.id ) unless project.anon_name?
           project.name = project.anon_name
-          project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" unless project.anon_name?
-          project.save
+          project.description = redacted.call( 'project-description', project.id ) if project.description.present?
+          project.save!
         end
 
-        depts = %w[BUS MED ENG RTG MSM LEH EDP
-                   GEO IST MAT YOW GFB RSV CSV MBV]
-        levels = %w[Beginning Intermediate Advanced]
         Course.find_each do | course |
+          course.anon_name = anon_subject.call( 'Course', course.id ) unless course.anon_name?
+          course.anon_number = "CRS-#{course.id}" unless course.anon_number?
           course.name = course.anon_name
           course.number = course.anon_number
-          course.anon_name = "#{levels.sample} #{Faker::Company.industry}" unless course.anon_name?
-          course.anon_number = "#{depts.sample}-#{rand( 100..700 )}" unless course.anon_number?
-          course.save
+          course.description = redacted.call( 'course-description', course.id ) if course.description.present?
+          course.save!
         end
 
         Assignment.find_each do | assignment |
-          assignment.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"
-          assignment.anon_description = "#{Faker::Lorem.sentence(
-            word_count: 8,
-            supplemental: true,
-            random_words_to_add: 9
-          )}"
+          assignment.anon_name = anon_subject.call( 'Assignment', assignment.id ) unless assignment.anon_name?
+          assignment.anon_description = redacted.call( 'assignment-description', assignment.id ) if assignment.anon_description.blank?
+          assignment.name = assignment.anon_name
+          assignment.description = assignment.anon_description
+          assignment.save!
+        end
+
+        Rubric.find_each do | rubric |
+          rubric.anon_name = anon_subject.call( 'Rubric', rubric.id ) unless rubric.anon_name?
+          rubric.anon_description = redacted.call( 'rubric-description', rubric.id ) if rubric.anon_description.blank?
+          rubric.name = rubric.anon_name
+          rubric.description = rubric.anon_description
+          rubric.save!
+        end
+
+        Submission.find_each do | submission |
+          submission.sub_text = redacted.call( 'submission-text', submission.id ) if submission.sub_text.present?
+          submission.sub_link = nil
+          submission.save!
+        end
+
+        SubmissionFeedback.find_each do | submission_feedback |
+          submission_feedback.feedback = redacted.call( 'submission-feedback', submission_feedback.id ) if submission_feedback.feedback.present?
+          submission_feedback.save!
+        end
+
+        RubricRowFeedback.find_each do | rubric_row_feedback |
+          rubric_row_feedback.feedback = redacted.call( 'rubric-row-feedback', rubric_row_feedback.id ) if rubric_row_feedback.feedback.present?
+          rubric_row_feedback.save!
+        end
+
+        Diagnosis.find_each do | diagnosis |
+          diagnosis.comment = redacted.call( 'diagnosis-comment', diagnosis.id ) if diagnosis.comment.present?
+          diagnosis.other_name = nil
+          diagnosis.save!
+        end
+
+        Reaction.find_each do | reaction |
+          reaction.improvements = redacted.call( 'reaction-improvements', reaction.id ) if reaction.improvements.present?
+          reaction.other_name = nil
+          reaction.save!
+        end
+
+        Session.find_each do | session |
+          session.session_id = "anon-session-#{session.id}"
+          session.data = ''
+          session.save! validate: false
         end
       end
     end
     ActiveRecord::Base.connection.execute( 'TRUNCATE ahoy_messages' )
+
+    findings = []
+    email_pattern = /[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i
+    ip_pattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/
+    token_pattern = /(bearer|token|oauth|refresh|access)[\s:_-]*[A-Z0-9]/i
+
+    Email.find_each do | email |
+      findings << "email##{email.id}" unless email.email.ends_with?( '@example.invalid' )
+    end
+    User.find_each do | user |
+      findings << "user-token##{user.id}" if user.tokens.present? || user.confirmation_token.present? ||
+                                             user.reset_password_token.present? || user.unlock_token.present?
+      findings << "user-ip##{user.id}" if user.current_sign_in_ip.present? || user.last_sign_in_ip.present?
+      findings << "user-unconfirmed-email##{user.id}" if user.unconfirmed_email.present?
+    end
+    Session.find_each do | session |
+      findings << "session##{session.id}" if session.data.present?
+    end
+    [
+      [Installment, :comments],
+      [Submission, :sub_text],
+      [SubmissionFeedback, :feedback],
+      [RubricRowFeedback, :feedback],
+      [Diagnosis, :comment],
+      [Reaction, :improvements]
+    ].each do | model, field |
+      model.find_each do | record |
+        value = record.public_send( field )
+        findings << "#{model.name}##{record.id}.#{field}" if value.present? &&
+                                                              ( value.match?( email_pattern ) ||
+                                                                value.match?( ip_pattern ) ||
+                                                                value.match?( token_pattern ) )
+      end
+    end
+    raise "PII residue detected: #{findings.take( 20 ).join( ', ' )}" if findings.any?
   end
 end
