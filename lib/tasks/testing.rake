@@ -334,6 +334,11 @@ namespace :testing do
     deterministic_ratio = lambda do | key, id |
       digest_token.call( key, id, 12 ).to_i( 16 ) / 0xFFFFFFFFFFFF.to_f
     end
+    min_age = 15
+    age_span = 45
+    age_skew_power = 5 # Higher values bias ages toward the younger bound.
+    quasi_identifier_nil_rate = 0.25
+    impairment_true_rate = 1.0 / 50
     redacted = ->(prefix, id) { "[redacted-#{prefix}-#{id}]" }
     anon_email = ->(user_id, email_index = 0) { "user_#{user_id}_#{email_index}@example.invalid" }
     anon_subject = ->(prefix, id) { "#{prefix} #{digest_token.call( prefix, id, 8 )}" }
@@ -392,28 +397,28 @@ namespace :testing do
           user.tokens = nil
           user.current_sign_in_ip = nil
           user.last_sign_in_ip = nil
-          age = 15 + ( deterministic_ratio.call( 'date-of-birth-age', user.id )**5 * 45 ).floor
+          age = min_age + ( deterministic_ratio.call( 'date-of-birth-age', user.id )**age_skew_power * age_span ).floor
           user.date_of_birth = age.years.ago.to_date
           user.country = nil
           home_state_selector = deterministic_ratio.call( 'home-state-id', user.id )
-          user.home_state_id = if home_state_ids.empty? || home_state_selector < 0.25
+          user.home_state_id = if home_state_ids.empty? || home_state_selector < quasi_identifier_nil_rate
                                  nil
                                else
                                  home_state_ids[( home_state_selector * home_state_ids.size ).floor % home_state_ids.size]
                                end
           cip_selector = deterministic_ratio.call( 'cip-code-id', user.id )
-          user.cip_code_id = if cip_code_ids.empty? || cip_selector < 0.25
+          user.cip_code_id = if cip_code_ids.empty? || cip_selector < quasi_identifier_nil_rate
                                nil
                              else
                                cip_code_ids[( cip_selector * cip_code_ids.size ).floor % cip_code_ids.size]
                              end
           user.gender_id = nil
           user.started_school = nil
-          user.impairment_auditory = deterministic_ratio.call( 'impairment-auditory', user.id ) < 0.02
-          user.impairment_cognitive = deterministic_ratio.call( 'impairment-cognitive', user.id ) < 0.02
-          user.impairment_motor = deterministic_ratio.call( 'impairment-motor', user.id ) < 0.02
-          user.impairment_other = deterministic_ratio.call( 'impairment-other', user.id ) < 0.02
-          user.impairment_visual = deterministic_ratio.call( 'impairment-visual', user.id ) < 0.02
+          user.impairment_auditory = deterministic_ratio.call( 'impairment-auditory', user.id ) < impairment_true_rate
+          user.impairment_cognitive = deterministic_ratio.call( 'impairment-cognitive', user.id ) < impairment_true_rate
+          user.impairment_motor = deterministic_ratio.call( 'impairment-motor', user.id ) < impairment_true_rate
+          user.impairment_other = deterministic_ratio.call( 'impairment-other', user.id ) < impairment_true_rate
+          user.impairment_visual = deterministic_ratio.call( 'impairment-visual', user.id ) < impairment_true_rate
           user.uid = if user.provider == 'email'
                        user.email
                      else
@@ -458,7 +463,6 @@ namespace :testing do
         end
 
         Assignment.find_each do | assignment |
-          assignment.send( :anonymize ) unless assignment.anon_name? && assignment.anon_description?
           assignment.anon_name = anon_subject.call( 'Assignment', assignment.id ) unless assignment.anon_name?
           assignment.anon_description = redacted.call( 'assignment-description', assignment.id ) if assignment.anon_description.blank?
           assignment.name = assignment.anon_name
@@ -467,7 +471,6 @@ namespace :testing do
         end
 
         Rubric.find_each do | rubric |
-          rubric.send( :anonymize ) unless rubric.anon_name? && rubric.anon_description?
           rubric.anon_name = anon_subject.call( 'Rubric', rubric.id ) unless rubric.anon_name?
           rubric.anon_description = redacted.call( 'rubric-description', rubric.id ) if rubric.anon_description.blank?
           rubric.name = rubric.anon_name
