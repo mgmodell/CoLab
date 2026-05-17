@@ -116,11 +116,11 @@ class Installment < ApplicationRecord
   def normalize_sums
     values_by_factor.each do | _factor, au_hash |
       factor_values = au_hash.values
-      next if factor_values.empty?
+      factor_value_count = factor_values.count
+      next if factor_value_count.zero?
 
       total = factor_values.inject( 0 ) { | sum, v | sum + v.value }
 
-      factor_value_count = factor_values.count
       factor_values.each do | v |
         prelim = ( Installment::TOTAL_VAL * v.value ) / total
         v.value = if prelim.nan?
