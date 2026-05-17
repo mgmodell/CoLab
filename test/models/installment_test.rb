@@ -154,12 +154,13 @@ class InstallmentTest < ActiveSupport::TestCase
 
   test 'normalize_sums handles zero-total factor values without nil errors' do
     installment = Installment.new
-    placeholder_values = Array.new( 50 ) { Object.new }
-    factor_installment = Struct.new( :values ).new( placeholder_values )
+    total_value_count_for_zero_path = 50
+    placeholder_values = Array.new( total_value_count_for_zero_path ) { Object.new }
+    stub_installment = Struct.new( :values ).new( placeholder_values )
     value_struct = Struct.new( :value, :installment )
     factor_values = [
-      value_struct.new( 0.0, factor_installment ),
-      value_struct.new( 0.0, factor_installment )
+      value_struct.new( 0.0, stub_installment ),
+      value_struct.new( 0.0, stub_installment )
     ]
 
     installment.singleton_class.define_method( :values_by_factor ) do
