@@ -65,6 +65,14 @@ while getopts "nbhdt" opt; do
   esac
 done
 
+echo "Configuring .devcontainer/devcontainer.json compose overrides"
+bash ./configureDevcontainer.sh
+configure_exit_code=$?
+if [ "${configure_exit_code}" -ne 0 ]; then
+  echo "Failed to configure .devcontainer/devcontainer.json compose overrides." >&2
+  exit 1
+fi
+
 echo -e '\t*****\n\tbuilding db'
 podman build $BUILD_OPTS -f ./containers/agnostic/db/Dockerfile -t colab_db .
 test_result $? 'colab_db'

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @page_title || t(".title") %></title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; color: #333; }
+    h1   { font-size: 1.4rem; }
+    h2   { font-size: 1.1rem; margin-top: 1.5rem; }
+    .notice { border-left: 4px solid #f9a825; padding: 12px 16px; background: #fffde7; }
+    ol { padding-left: 1.4rem; line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <h1><%= @page_heading || t(".heading") %></h1>
+
+  <div class="notice">
+    <p><%= @page_explanation || t(".explanation") %></p>
+  </div>
+
+  <% if @error_detail.present? %>
+    <p><%= @error_detail %></p>
+  <% else %>
+    <h2><%= t ".how_to_heading" %></h2>
+    <%= sanitize t(".steps_html"), tags: %w[ol li strong em] %>
+  <% end %>
+</body>
+</html>

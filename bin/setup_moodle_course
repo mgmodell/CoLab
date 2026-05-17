@@ -1,0 +1,558 @@
+#!/bin/bash
+# bin/setup_moodle_course
+#
+# Create (or clean up) a Moodle test course for LTI 1.3 integration testing
+# between CoLab and the containerised Moodle instance.
+#
+# Prerequisites
+# -------------
+#   • The dev container stack must be running (docker-compose / podman-compose).
+#   • The Moodle container must be healthy (Moodle 5.x, erseco/alpine-moodle).
+#   • The CoLab dev server should be running with HTTPS (dev_serv.sh -t) so
+#     that Moodle can reach it for the LTI OIDC flow.
+#
+# Usage
+# -----
+#   bin/setup_moodle_course [OPTIONS]
+#
+# Options
+#   --colab-url URL          Base HTTPS URL CoLab is reachable at FROM inside
+#                            the container network.
+#                            Default: https://app:3443
+#   --course-shortname NAME  Moodle course shortname.  Default: COLAB_LTI_TEST
+#   --course-fullname NAME   Moodle course full name.
+#                            Default: "Introduction to CoLab"
+#   --moodle-container NAME  Name / ID of the running Moodle container.
+#                            Auto-detected if omitted.
+#   --runtime RUNTIME        Container runtime to use (docker or podman).
+#                            Defaults to podman when available, else docker.
+#   --clean                  Remove the test course (and its LTI tool entry)
+#                            instead of creating it.
+#   -h, --help               Show this help and exit.
+#
+# What the script does (create mode)
+# ------------------------------------
+#  1. Enable Moodle REST web services via PHP CLI inside the Moodle container.
+#  2. Create (or reuse) an admin web-service token.
+#  3. Create the test course via Moodle's REST API.
+#  4. Register CoLab as a site-wide LTI 1.3 preconfigured external tool inside
+#     Moodle (using the CoLab Dynamic Registration endpoint).
+#  5. Add an LTI activity to the course that points at the registered tool.
+#  6. Print the Moodle course URL and the LTI deployment details for use in
+#     CoLab's admin UI.
+#
+# What the script does (--clean mode)
+# -------------------------------------
+#  1. Delete the test course.
+#  2. Remove the site-wide CoLab LTI tool entry.
+
+set -euo pipefail
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Defaults
+# ──────────────────────────────────────────────────────────────────────────────
+COLAB_URL="${COLAB_URL:-https://app:3443}"
+COURSE_SHORTNAME="${COURSE_SHORTNAME:-COLAB_LTI_TEST}"
+COURSE_FULLNAME="${COURSE_FULLNAME:-Introduction to CoLab}"
+MOODLE_CONTAINER=""
+CLEAN=false
+
+# Pick container runtime: prefer podman, fall back to docker
+if command -v podman &>/dev/null; then
+  RUNTIME="podman"
+elif command -v docker &>/dev/null; then
+  RUNTIME="docker"
+else
+  echo "Error: neither podman nor docker found in PATH." >&2
+  exit 1
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Argument parsing
+# ──────────────────────────────────────────────────────────────────────────────
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --colab-url)          COLAB_URL="$2";          shift 2 ;;
+    --colab-url=*)        COLAB_URL="${1#*=}";      shift   ;;
+    --course-shortname)   COURSE_SHORTNAME="$2";   shift 2 ;;
+    --course-shortname=*) COURSE_SHORTNAME="${1#*=}"; shift ;;
+    --course-fullname)    COURSE_FULLNAME="$2";    shift 2 ;;
+    --course-fullname=*)  COURSE_FULLNAME="${1#*=}"; shift  ;;
+    --moodle-container)   MOODLE_CONTAINER="$2";   shift 2 ;;
+    --moodle-container=*) MOODLE_CONTAINER="${1#*=}"; shift ;;
+    --runtime)            RUNTIME="$2";            shift 2 ;;
+    --runtime=*)          RUNTIME="${1#*=}";        shift   ;;
+    --clean)              CLEAN=true;              shift   ;;
+    -h|--help)
+      sed -n '/^# /p' "$0" | sed 's/^# \?//'
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Locate the Moodle container
+# ──────────────────────────────────────────────────────────────────────────────
+if [[ -z "$MOODLE_CONTAINER" ]]; then
+  MOODLE_CONTAINER=$(
+    "$RUNTIME" ps \
+      --filter "name=moodle" \
+      --format '{{.Names}}' 2>/dev/null \
+    | head -1
+  )
+fi
+
+if [[ -z "$MOODLE_CONTAINER" ]]; then
+  echo "Error: Could not find a running Moodle container." >&2
+  echo "  Start the dev stack first, or pass --moodle-container NAME." >&2
+  exit 1
+fi
+
+echo "Using Moodle container: $MOODLE_CONTAINER"
+echo "CoLab base URL:         $COLAB_URL"
+echo "Course shortname:       $COURSE_SHORTNAME"
+echo ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Pre-flight – install CoLab's self-signed TLS cert into the trust stores of
+# Moodle (PHP/curl server-side) and the VNC browser container (Chrome) so
+# neither rejects https://app:3443 with a certificate error.
+#
+# Chrome in particular needs this because Moodle's Dynamic Registration
+# redirects the browser to https://app:3443/lti/lti_connect?..., and Chrome
+# will show "temporarily down" for that redirect if the origin isn't already
+# trusted — even if the user previously accepted the exception for another page.
+# ──────────────────────────────────────────────────────────────────────────────
+echo "==> Installing CoLab TLS certificate into container trust stores..."
+
+# Locate the CoLab app container by its Compose service label
+APP_CONTAINER=$(
+  "$RUNTIME" ps \
+    --filter "label=com.docker.compose.service=app" \
+    --format '{{.Names}}' 2>/dev/null \
+  | head -1
+)
+
+CERT_PATH="/home/colab/src/app/tmp/ssl/dev.crt"
+
+# Helper: install the CoLab cert into a target container's system CA store
+# and (if certutil is available) into Chrome's NSS certificate database.
+_install_cert() {
+  local target="$1"
+  local label="$2"
+  if [[ -z "$APP_CONTAINER" ]]; then
+    echo "    [$label] Skipped — CoLab app container not found."
+    return
+  fi
+  if ! "$RUNTIME" exec "$APP_CONTAINER" test -f "$CERT_PATH" 2>/dev/null; then
+    echo "    [$label] Skipped — cert not found at ${CERT_PATH}."
+    echo "              Start 'dev_serv.sh -t' first, then re-run this script."
+    return
+  fi
+  "$RUNTIME" exec "$APP_CONTAINER" cat "$CERT_PATH" | \
+    "$RUNTIME" exec -i "$target" sh -c \
+      'CERT=/usr/local/share/ca-certificates/colab-dev.crt
+       cat > "$CERT"
+       update-ca-certificates 2>&1 | grep -E "(added|Updating)" || true
+       # Also add to Chrome/Chromium NSS store so redirected HTTPS pages work.
+       # Install certutil if missing (Debian/Ubuntu only; Alpine is fine with
+       # the system store alone since Chromium reads it there).
+       if ! command -v certutil >/dev/null 2>&1; then
+         apt-get install -y -q libnss3-tools 2>/dev/null || true
+       fi
+       if command -v certutil >/dev/null 2>&1; then
+         for nssdb in /root/.pki/nssdb /home/*/.pki/nssdb; do
+           mkdir -p "$nssdb"
+           certutil -d "sql:$nssdb" -A -n "CoLab Dev" -t "CT,," \
+             -i "$CERT" 2>/dev/null || true
+         done
+       fi
+       # Reload PHP-FPM workers if present (Moodle container)
+       kill -USR2 "$(cat /var/run/php-fpm.pid 2>/dev/null)" 2>/dev/null || true'
+  echo "    [$label] Certificate installed."
+}
+
+_install_cert "$MOODLE_CONTAINER" "moodle"
+
+# Locate the VNC browser container (fixed container_name in docker-compose).
+BROWSER_CONTAINER=$(
+  "$RUNTIME" ps \
+    --filter "name=vnc-browser" \
+    --format '{{.Names}}' 2>/dev/null \
+  | head -1
+)
+# Fallback: try Compose service label
+if [[ -z "$BROWSER_CONTAINER" ]]; then
+  BROWSER_CONTAINER=$(
+    "$RUNTIME" ps \
+      --filter "label=com.docker.compose.service=browser" \
+      --format '{{.Names}}' 2>/dev/null \
+    | head -1
+  )
+fi
+if [[ -n "$BROWSER_CONTAINER" ]]; then
+  _install_cert "$BROWSER_CONTAINER" "browser"
+  echo "    If Chrome is already open in the VNC browser, restart it so it"
+  echo "    picks up the new certificate."
+else
+  echo "    [browser] VNC browser container not found — skipping."
+  echo "              Navigate to https://app:3443 in Chrome and accept the"
+  echo "              security exception before starting the LTI flow."
+fi
+echo ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helper: run PHP inside the Moodle container
+# ──────────────────────────────────────────────────────────────────────────────
+moodle_php() {
+  # Pipe a PHP script (passed via stdin) into the container.
+  "$RUNTIME" exec -i "$MOODLE_CONTAINER" \
+    php -d error_reporting=E_ALL -d display_errors=On
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helper: call the Moodle REST web service from *inside* the container (so the
+#         internal hostname moodle:8080 resolves correctly).
+# ──────────────────────────────────────────────────────────────────────────────
+moodle_ws() {
+  local token="$1"
+  local function="$2"
+  local params="$3"
+  "$RUNTIME" exec "$MOODLE_CONTAINER" \
+    wget -q -O - \
+      --post-data "wstoken=${token}&moodlewsrestformat=json&wsfunction=${function}&${params}" \
+      "http://localhost:8080/webservice/rest/server.php"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Step 1 – Enable REST web services and create an admin token (via PHP CLI)
+# ──────────────────────────────────────────────────────────────────────────────
+echo "==> Enabling Moodle REST web services..."
+WS_TOKEN=$(moodle_php <<'PHP'
+<?php
+define('CLI_SCRIPT', true);
+chdir('/var/www/html');
+require_once('/var/www/html/config.php');
+require_once($CFG->libdir . '/clilib.php');
+
+// Enable web services and the REST protocol
+set_config('enablewebservices', 1);
+set_config('webserviceprotocols', 'rest');
+
+// Ensure the site admin user has the webservice/rest:use capability
+$syscontext = context_system::instance();
+$admin      = get_admin();
+
+// Locate (or create) a web-service that grants everything
+$wsname = 'colab_setup';
+$ws     = $DB->get_record('external_services', ['shortname' => $wsname]);
+if (!$ws) {
+    $ws               = new stdClass();
+    $ws->name         = 'CoLab Setup';
+    $ws->shortname    = $wsname;
+    $ws->enabled      = 1;
+    $ws->restrictedusers = 0;
+    $ws->downloadfiles   = 1;
+    $ws->uploadfiles     = 1;
+    $ws->id = $DB->insert_record('external_services', $ws);
+}
+
+// Grant all functions that we need
+$needed = [
+    'core_course_create_courses',
+    'core_course_delete_courses',
+    'core_course_get_courses_by_field',
+];
+foreach ($needed as $fname) {
+    if (!$DB->record_exists('external_services_functions',
+            ['externalserviceid' => $ws->id, 'functionname' => $fname])) {
+        $DB->insert_record('external_services_functions', [
+            'externalserviceid' => $ws->id,
+            'functionname'      => $fname,
+        ]);
+    }
+}
+
+// Create or retrieve a token for admin
+$existing = $DB->get_record('external_tokens', [
+    'userid'            => $admin->id,
+    'externalserviceid' => $ws->id,
+    'tokentype'         => 0,
+]);
+if ($existing) {
+    echo $existing->token;
+} else {
+    require_once($CFG->dirroot . '/lib/externallib.php');
+    $token = external_generate_token(
+        EXTERNAL_TOKEN_PERMANENT,
+        $ws->id,
+        $admin->id,
+        context_system::instance()
+    );
+    echo $token;
+}
+PHP
+)
+
+if [[ -z "$WS_TOKEN" ]]; then
+  echo "Error: Failed to obtain a Moodle web-service token." >&2
+  exit 1
+fi
+echo "    Web-service token obtained."
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CLEAN mode – delete course and tool, then exit
+# ──────────────────────────────────────────────────────────────────────────────
+if [[ "$CLEAN" == "true" ]]; then
+  echo "==> Cleaning up test course '$COURSE_SHORTNAME'..."
+
+  # Find the course id
+  COURSE_JSON=$(moodle_ws "$WS_TOKEN" "core_course_get_courses_by_field" \
+    "field=shortname&value=${COURSE_SHORTNAME}")
+  COURSE_ID=$(echo "$COURSE_JSON" | \
+    "$RUNTIME" exec -i "$MOODLE_CONTAINER" \
+      php -r '
+        $j = json_decode(file_get_contents("php://stdin"), true);
+        $courses = $j["courses"] ?? [];
+        echo empty($courses) ? "" : $courses[0]["id"];
+      ')
+
+  if [[ -n "$COURSE_ID" ]]; then
+    moodle_ws "$WS_TOKEN" "core_course_delete_courses" "courseids[0]=${COURSE_ID}" \
+      >/dev/null
+    echo "    Deleted course (id=${COURSE_ID})."
+  else
+    echo "    Course '${COURSE_SHORTNAME}' not found — nothing to delete."
+  fi
+
+  # Remove the CoLab LTI tool type via PHP (no REST function available for this)
+  echo "==> Removing CoLab LTI tool entry..."
+  moodle_php <<PHP
+<?php
+define('CLI_SCRIPT', true);
+chdir('/var/www/html');
+require_once('/var/www/html/config.php');
+
+\$DB->delete_records_select(
+    'lti_types',
+    "baseurl LIKE ?",
+    ['%/lti/launch%']
+);
+echo "Done.\n";
+PHP
+
+  echo ""
+  echo "Clean-up complete.  You can now run bin/setup_moodle_course again."
+  exit 0
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Step 2 – Create the test course
+# ──────────────────────────────────────────────────────────────────────────────
+echo "==> Creating Moodle course '${COURSE_FULLNAME}' (${COURSE_SHORTNAME})..."
+
+COURSE_JSON=$(moodle_ws "$WS_TOKEN" "core_course_create_courses" \
+  "courses[0][fullname]=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$COURSE_FULLNAME")&courses[0][shortname]=${COURSE_SHORTNAME}&courses[0][categoryid]=1&courses[0][visible]=1")
+
+COURSE_ID=$(echo "$COURSE_JSON" | \
+  "$RUNTIME" exec -i "$MOODLE_CONTAINER" \
+    php -r '
+      $j = json_decode(file_get_contents("php://stdin"), true);
+      // Handle "course already exists" by looking it up
+      if (isset($j["exception"])) {
+          echo "";
+      } else {
+          echo $j[0]["id"] ?? "";
+      }
+    ')
+
+# If course already exists, look it up
+if [[ -z "$COURSE_ID" ]]; then
+  COURSE_JSON=$(moodle_ws "$WS_TOKEN" "core_course_get_courses_by_field" \
+    "field=shortname&value=${COURSE_SHORTNAME}")
+  COURSE_ID=$(echo "$COURSE_JSON" | \
+    "$RUNTIME" exec -i "$MOODLE_CONTAINER" \
+      php -r '
+        $j = json_decode(file_get_contents("php://stdin"), true);
+        $courses = $j["courses"] ?? [];
+        echo empty($courses) ? "" : $courses[0]["id"];
+      ')
+fi
+
+if [[ -z "$COURSE_ID" ]]; then
+  echo "Error: Could not create or locate the Moodle course." >&2
+  exit 1
+fi
+echo "    Course id: ${COURSE_ID}"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Step 3 – Register CoLab as a site-wide LTI 1.3 preconfigured external tool
+#           and add an LTI activity to the course.
+# ──────────────────────────────────────────────────────────────────────────────
+echo "==> Registering CoLab as an LTI 1.3 external tool in Moodle..."
+moodle_php <<PHP
+<?php
+define('CLI_SCRIPT', true);
+chdir('/var/www/html');
+require_once('/var/www/html/config.php');
+require_once(\$CFG->dirroot . '/mod/lti/lib.php');
+require_once(\$CFG->dirroot . '/mod/lti/locallib.php');
+
+\$colab_url  = '${COLAB_URL}';
+\$course_id  = ${COURSE_ID};
+\$tool_name  = 'CoLab';
+
+// ── Site-wide tool type (preconfigured tool) ────────────────────────────────
+\$existing = \$DB->get_record_select(
+    'lti_types',
+    "baseurl LIKE ?",
+    ['%/lti/launch%']
+);
+if (\$existing) {
+    \$type_id = \$existing->id;
+    echo "    Reusing existing LTI tool type (id=\$type_id).\n";
+} else {
+    \$type                 = new stdClass();
+    \$type->state          = LTI_TOOL_STATE_CONFIGURED;
+    \$type->name           = \$tool_name;
+    \$type->baseurl        = \$colab_url . '/lti/launch';
+    \$type->ltiversion     = 'LTI-1p3';
+    // LTI 1.3 endpoints
+    \$type->initiatelogin  = \$colab_url . '/lti/login';
+    \$type->redirectionuris= \$colab_url . '/lti/launch';
+    \$type->publickeyset   = \$colab_url . '/.well-known/jwks.json';
+    \$type->coursevisible  = 2;   // Show in course
+    \$type->clientid       = '';  // Moodle generates this
+
+    \$config                         = new stdClass();
+    \$config->lti_toolurl            = \$type->baseurl;
+    \$config->lti_ltiversion         = \$type->ltiversion;
+    \$config->lti_initiatelogin      = \$type->initiatelogin;
+    \$config->lti_redirectionuris    = \$type->redirectionuris;
+    \$config->lti_publickeyset       = \$type->publickeyset;
+    \$config->lti_sendname           = 1;
+    \$config->lti_sendemailaddr      = 1;
+    \$config->lti_acceptgrades       = 1;
+
+    \$type_id = lti_add_type(\$type, \$config);
+    echo "    Created LTI tool type (id=\$type_id).\n";
+}
+
+// ── Retrieve the client_id Moodle assigned to this tool ─────────────────────
+\$type_record = \$DB->get_record('lti_types', ['id' => \$type_id]);
+\$client_id   = \$type_record->clientid ?? '(not yet assigned)';
+\$platform_id = \$CFG->wwwroot;
+
+echo "\n";
+echo "══════════════════════════════════════════════════════════════════════\n";
+echo " Moodle LTI Platform details — add these to CoLab's LTI Deployments\n";
+echo "══════════════════════════════════════════════════════════════════════\n";
+echo " Platform ID (issuer) : \$platform_id\n";
+echo " Client ID            : \$client_id\n";
+echo " Auth login URL       : \$platform_id/mod/lti/auth.php\n";
+echo " Token URL            : \$platform_id/mod/lti/token.php\n";
+echo " JWKS URL             : \$platform_id/mod/lti/certs.php\n";
+echo " Deployment ID        : \$type_id\n";
+echo "══════════════════════════════════════════════════════════════════════\n";
+echo "\n";
+
+// ── Add an LTI activity module to the course ────────────────────────────────
+\$cm_exists = \$DB->record_exists_select(
+    'course_modules',
+    "course = ? AND module = (SELECT id FROM {modules} WHERE name = 'lti')",
+    [\$course_id]
+);
+
+if (\$cm_exists) {
+    echo "    LTI activity already present in course — skipping.\n";
+} else {
+    require_once(\$CFG->dirroot . '/course/lib.php');
+
+    \$module = \$DB->get_record('modules', ['name' => 'lti'], '*', MUST_EXIST);
+
+    // Look up the General section's record ID (section number 0).
+    // course_modules.section is a FK to course_sections.id, NOT the section
+    // number — using the section number (0) here caused the activity to be
+    // stored without a valid section reference and therefore not appear.
+    \$section = \$DB->get_record(
+        'course_sections',
+        ['course' => \$course_id, 'section' => 0],
+        '*',
+        MUST_EXIST
+    );
+
+    // Retrieve the tool URL from the stored type record (works for both
+    // newly-created and reused tool types without referencing \$type which is
+    // only defined in the else-branch above).
+    \$tool_url = \$DB->get_field('lti_types', 'baseurl', ['id' => \$type_id]);
+
+    \$lti_instance              = new stdClass();
+    \$lti_instance->course      = \$course_id;
+    \$lti_instance->name        = \$tool_name;
+    \$lti_instance->intro       = '';
+    \$lti_instance->introformat = FORMAT_HTML;
+    \$lti_instance->typeid      = \$type_id;
+    \$lti_instance->toolurl     = \$tool_url;
+    \$lti_instance->ltiversion  = 'LTI-1p3';
+    \$lti_instance->grade       = 100;
+    \$lti_instance->instructorchoicesendname      = 1;
+    \$lti_instance->instructorchoicesendemailaddr = 1;
+    \$lti_instance->instructorchoiceacceptgrades  = 1;
+    \$lti_instance->showtitlelaunch               = 1;
+    \$lti_instance->showdescriptionlaunch         = 0;
+    \$lti_instance->timecreated  = time();
+    \$lti_instance->timemodified = time();
+    \$lti_instance->id = \$DB->insert_record('lti', \$lti_instance);
+
+    // Create the course_modules record with the correct section record ID.
+    \$cm                 = new stdClass();
+    \$cm->course         = \$course_id;
+    \$cm->module         = \$module->id;
+    \$cm->instance       = \$lti_instance->id;
+    \$cm->visible        = 1;
+    \$cm->section        = \$section->id;   // FK to course_sections.id, not section number
+    \$cm->added          = time();
+    \$cm->indent         = 0;
+    \$cm->completion     = 0;
+    \$cm->completionview = 0;
+    \$cm->completionexpected = 0;
+    \$cm->id = \$DB->insert_record('course_modules', \$cm);
+
+    // Append the new cm to section 0's sequence and rebuild the course cache.
+    course_add_cm_to_section(\$course_id, \$cm->id, 0);
+    rebuild_course_cache(\$course_id);
+    echo "    Added LTI activity to course (cm id=\$cm->id).\n";
+}
+PHP
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Done
+# ──────────────────────────────────────────────────────────────────────────────
+MOODLE_BASE=$(
+  "$RUNTIME" exec "$MOODLE_CONTAINER" \
+    php -r "define('CLI_SCRIPT',true); chdir('/var/www/html');
+            require_once('/var/www/html/config.php'); echo \$CFG->wwwroot;"
+)
+
+echo ""
+echo "Setup complete."
+echo ""
+echo "  Moodle course URL : ${MOODLE_BASE}/course/view.php?id=${COURSE_ID}"
+echo ""
+echo "Next steps:"
+echo "  1. Open CoLab admin → LTI Deployments and add a new deployment"
+echo "     using the platform details printed above."
+echo ""
+echo "  --- OR use Moodle Dynamic Registration (automated) ---"
+echo "  a. In Moodle: Site administration → Plugins → External tool → Manage tools"
+echo "  b. Click 'Add LTI Advantage Tool' and enter:"
+echo "       ${COLAB_URL}/lti/lti_connect"
+echo "  c. CoLab will register automatically and show a confirmation page."
+echo ""
+echo "  2. After the LTI deployment is configured, visit the Moodle course"
+echo "     and click the CoLab activity to trigger the OIDC launch flow."
+echo "  3. To start over, run:  bin/setup_moodle_course --clean"

@@ -25,7 +25,7 @@
 
   <% if @courses.empty? %>
     <p class="no-activities" id="no-courses">
-      <%= t '.no_courses' %>
+      <%= t 'lti.select_content.no_courses' %>
     </p>
   <% else %>
     <% @courses.each do |course| %>
@@ -35,21 +35,21 @@
       <table id="course-link-<%= course.id %>">
         <thead>
           <tr>
-            <th><%= t '.course.type' %></th>
-            <th><%= t '.action_col' %></th>
+            <th><%= t 'lti.select_content.course.type' %></th>
+            <th><%= t 'lti.select_content.action_col' %></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><%= course.get_name(false) %></td>
             <td>
-              <%= form_tag lti_deep_link_response_path, method: :post,
-                                                        id: "dl-form-course-#{course.id}" do %>
+              <%= form_tag lti_associate_resource_link_path, method: :post,
+                                                            id: "lr-form-course-#{course.id}" do %>
                 <%= hidden_field_tag :activity_type, 'course' %>
                 <%= hidden_field_tag :activity_id,   course.id %>
                 <button type="submit" class="select-btn"
-                        aria-label="<%= t '.course.link_btn_aria', name: course.get_name(false) %>">
-                  <%= t '.course.link_btn' %>
+                        aria-label="<%= t 'lti.select_content.course.link_btn_aria', name: course.get_name(false) %>">
+                  <%= t 'lti.select_content.course.link_btn' %>
                 </button>
               <% end %>
             </td>
@@ -62,24 +62,29 @@
         <table id="bingo-games-<%= course.id %>">
           <thead>
             <tr>
-              <th><%= t '.bingo.name_col' %></th>
-              <th><%= t '.type_col' %></th>
-              <th><%= t '.action_col' %></th>
+              <th><%= t 'lti.select_content.bingo.name_col' %></th>
+              <th><%= t 'lti.select_content.type_col' %></th>
+              <th><%= t 'lti.select_content.action_col' %></th>
             </tr>
           </thead>
           <tbody>
             <% course.bingo_games.each do |bingo| %>
               <tr>
                 <td><%= bingo.get_topic(false) %></td>
-                <td><%= t '.bingo.type' %></td>
+                <td><%= t 'lti.select_content.bingo.type' %></td>
                 <td>
-                  <%= form_tag lti_deep_link_response_path, method: :post,
-                                                            id: "dl-form-bingo-#{bingo.id}" do %>
+                  <%= form_tag lti_associate_resource_link_path, method: :post,
+                                                                id: "lr-form-bingo-#{bingo.id}" do %>
                     <%= hidden_field_tag :activity_type, 'bingo_game' %>
                     <%= hidden_field_tag :activity_id,   bingo.id %>
+                    <label>
+                      <%= check_box_tag :create_gradebook_item, '1', true %>
+                      <%= t 'lti.link_resource.create_gradebook_item' %>
+                    </label>
+                    <br>
                     <button type="submit" class="select-btn"
-                            aria-label="<%= t '.select_btn_aria', name: bingo.get_topic(false) %>">
-                      <%= t '.select_btn' %>
+                            aria-label="<%= t 'lti.select_content.select_btn_aria', name: bingo.get_topic(false) %>">
+                      <%= t 'lti.select_content.select_btn' %>
                     </button>
                   <% end %>
                 </td>
@@ -94,24 +99,29 @@
         <table id="projects-<%= course.id %>">
           <thead>
             <tr>
-              <th><%= t '.project.name_col' %></th>
-              <th><%= t '.type_col' %></th>
-              <th><%= t '.action_col' %></th>
+              <th><%= t 'lti.select_content.project.name_col' %></th>
+              <th><%= t 'lti.select_content.type_col' %></th>
+              <th><%= t 'lti.select_content.action_col' %></th>
             </tr>
           </thead>
           <tbody>
             <% course.projects.each do |project| %>
               <tr>
                 <td><%= project.get_name(false) %></td>
-                <td><%= t '.project.type' %></td>
+                <td><%= t 'lti.select_content.project.type' %></td>
                 <td>
-                  <%= form_tag lti_deep_link_response_path, method: :post,
-                                                            id: "dl-form-project-#{project.id}" do %>
+                  <%= form_tag lti_associate_resource_link_path, method: :post,
+                                                                id: "lr-form-project-#{project.id}" do %>
                     <%= hidden_field_tag :activity_type, 'project' %>
                     <%= hidden_field_tag :activity_id,   project.id %>
+                    <label>
+                      <%= check_box_tag :create_gradebook_item, '1', true %>
+                      <%= t 'lti.link_resource.create_gradebook_item' %>
+                    </label>
+                    <br>
                     <button type="submit" class="select-btn"
-                            aria-label="<%= t '.select_btn_aria', name: project.get_name(false) %>">
-                      <%= t '.select_btn' %>
+                            aria-label="<%= t 'lti.select_content.select_btn_aria', name: project.get_name(false) %>">
+                      <%= t 'lti.select_content.select_btn' %>
                     </button>
                   <% end %>
                 </td>
@@ -126,24 +136,24 @@
         <table id="experiences-<%= course.id %>">
           <thead>
             <tr>
-              <th><%= t '.experience.name_col' %></th>
-              <th><%= t '.type_col' %></th>
-              <th><%= t '.action_col' %></th>
+              <th><%= t 'lti.select_content.experience.name_col' %></th>
+              <th><%= t 'lti.select_content.type_col' %></th>
+              <th><%= t 'lti.select_content.action_col' %></th>
             </tr>
           </thead>
           <tbody>
             <% course.experiences.each do |experience| %>
               <tr>
                 <td><%= experience.get_name(false) %></td>
-                <td><%= t '.experience.type' %></td>
+                <td><%= t 'lti.select_content.experience.type' %></td>
                 <td>
-                  <%= form_tag lti_deep_link_response_path, method: :post,
-                                                            id: "dl-form-experience-#{experience.id}" do %>
+                  <%= form_tag lti_associate_resource_link_path, method: :post,
+                                                                id: "lr-form-experience-#{experience.id}" do %>
                     <%= hidden_field_tag :activity_type, 'experience' %>
                     <%= hidden_field_tag :activity_id,   experience.id %>
                     <button type="submit" class="select-btn"
-                            aria-label="<%= t '.select_btn_aria', name: experience.get_name(false) %>">
-                      <%= t '.select_btn' %>
+                            aria-label="<%= t 'lti.select_content.select_btn_aria', name: experience.get_name(false) %>">
+                      <%= t 'lti.select_content.select_btn' %>
                     </button>
                   <% end %>
                 </td>
@@ -154,7 +164,7 @@
       <% end %>
 
       <% if course.bingo_games.empty? && course.projects.empty? && course.experiences.empty? %>
-        <p class="no-activities"><%= t '.no_activities' %></p>
+        <p class="no-activities"><%= t 'lti.select_content.no_activities' %></p>
       <% end %>
     <% end %>
   <% end %>

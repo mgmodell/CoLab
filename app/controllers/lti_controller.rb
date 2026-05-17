@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'net/http'
+require 'openssl'
 
 # LTI 1.3 controller
 # Implements Dynamic Registration, OIDC Login Initiation, Launch,
@@ -10,6 +11,13 @@ class LtiController < ApplicationController
   skip_before_action :authenticate_user!
   # skip_around_action :switch_locale, only: [ :deep_link_response ]
   layout :lti_layout
+
+  # LTI pages that are rendered inside the platform's iframe must not be
+  # blocked by the default X-Frame-Options: SAMEORIGIN header.  We remove the
+  # header entirely for the LTI actions that Moodle embeds in an iframe so that
+  # the browser does not refuse the connection.
+  after_action :allow_iframe, only: %i[register select_content launch deep_link_response
+                                       link_resource associate_resource_link]
 
   LTI_VERSION = 'http://imsglobal.org/spec/lti/claim/version'
   LTI_MESSAGE_TYPE = 'https://purl.imsglobal.org/spec/lti/claim/message_type'
@@ -30,7 +38,22 @@ class LtiController < ApplicationController
   AGS_RESULT_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly'
   AGS_SCORE_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/score'
 
+  # Maximum length for platform error messages included in log warnings
+  # and the registration error view.
+  REGISTRATION_ERROR_TRUNCATE_LENGTH = 200
+
+  # Maps LTI custom-parameter activity types to their model class and SPA path
+  # prefix.  Used by both activity_redirect and associate_and_redirect so the
+  # mapping is defined once and cannot drift.
+  ACTIVITY_TYPE_CONFIG = {
+    'bingo_game' => { model: BingoGame, path: '/home/bingo/enter_candidates/' },
+    'project'    => { model: Project,   path: '/home/project/checkin/' },
+    'experience' => { model: Experience, path: '/home/experience/' }
+  }.freeze
+  GRADEBOOK_SUPPORTED_ACTIVITY_TYPES = %w[bingo_game project].freeze
+
   # GET|POST /lti/tool_connect
+  # GET|POST /lti/lti_connect  (alias — Moodle's Dynamic Registration redirect uses this path)
   # LTI Dynamic Registration endpoint.
   # Called by the platform to register CoLab as an LTI 1.3 tool.
   def register
@@ -50,6 +73,9 @@ class LtiController < ApplicationController
     end
 
     tool_config = build_tool_config
+    @registration_error = nil
+    @client_id = nil
+    @platform_issuer = platform_config['issuer']
 
     # If the platform provided a registration endpoint, POST our config there
     if platform_config['registration_endpoint'].present?
@@ -66,6 +92,7 @@ class LtiController < ApplicationController
           registered = JSON.parse(reg_response.body)
           # Persist the deployment if we get a client_id back
           if registered['client_id'].present?
+            @client_id = registered['client_id']
             LtiDeployment.find_or_create_by(
               issuer: platform_config['issuer'] || registered['client_id'],
               client_id: registered['client_id']
@@ -77,14 +104,25 @@ class LtiController < ApplicationController
             end
           end
         else
+          @registration_error = registration_error_message(
+            "Platform returned #{reg_response.code}", reg_response.body
+          )
           logger.warn "LTI registration POST failed: #{reg_response.code} #{reg_response.body}"
         end
       rescue StandardError => e
+        @registration_error = registration_error_message('Registration error', e.message)
         logger.warn "LTI Dynamic Registration POST error: #{e.message}"
       end
     end
 
-    render json: tool_config
+    respond_to do |format|
+      format.html { render :register }
+      # LTI platforms may not send an explicit JSON Accept header (they may use
+      # Accept: */* or omit the header entirely).  format.any ensures we respond
+      # with the tool configuration for every non-HTML request rather than
+      # raising ActionController::UnknownFormat.
+      format.any { render json: tool_config }
+    end
   end
 
   # GET /.well-known/jwks.json
@@ -109,12 +147,12 @@ class LtiController < ApplicationController
       return
     end
 
-    state = SecureRandom.urlsafe_base64(32)
-    nonce = SecureRandom.urlsafe_base64(32)
-
-    # Persist state/nonce in session for validation at launch
-    session[:lti_state] = state
-    session[:lti_nonce] = nonce
+    # Persist state/nonce in the database so they survive the cross-site
+    # OIDC round-trip without relying on the browser session cookie (which
+    # is not reliably sent on cross-site form POSTs in all environments).
+    lti_nonce_record = LtiNonce.generate
+    state = lti_nonce_record.state
+    nonce = lti_nonce_record.nonce
 
     auth_params = {
       response_type: 'id_token',
@@ -145,10 +183,19 @@ class LtiController < ApplicationController
       return
     end
 
-    unless state == session[:lti_state]
+    # Look up the state/nonce record in the database.  This avoids any
+    # reliance on the browser session cookie, which may not be sent on
+    # cross-site form POSTs (the final step of the LTI OIDC flow).
+    lti_nonce_record = LtiNonce.find_by(state: state)
+    unless lti_nonce_record && !lti_nonce_record.expired?
       render json: { error: 'State mismatch' }, status: :unauthorized
       return
     end
+
+    stored_nonce = lti_nonce_record.nonce
+
+    # Consume the record immediately (single-use)
+    lti_nonce_record.destroy
 
     # Decode without verification first to get the issuer and client_id
     unverified_payload, _header = JWT.decode(id_token, nil, false)
@@ -168,14 +215,12 @@ class LtiController < ApplicationController
     end
 
     # Nonce check
-    if payload['nonce'] != session[:lti_nonce]
+    if payload['nonce'] != stored_nonce
       render json: { error: 'Nonce mismatch' }, status: :unauthorized
       return
     end
 
-    # Clear single-use state/nonce
-    session.delete(:lti_state)
-    session.delete(:lti_nonce)
+    # state/nonce already destroyed above; no session cleanup needed
 
     message_type = payload[LTI_MESSAGE_TYPE]
 
@@ -192,8 +237,16 @@ class LtiController < ApplicationController
   # one to deep-link into Moodle (creating a direct activity link and,
   # optionally, a gradebook column).
   def select_content
+    # When a resource-link launch has queued an instructor linking session,
+    # always route the user to link_resource so the LMS "Select content"
+    # interaction can complete that pending association first.
+    if session[:lti_pending_resource_link_id].present?
+      redirect_to lti_link_resource_path
+      return
+    end
+
     unless session[:lti_deep_link_settings].present?
-      render plain: 'No active deep-linking session', status: :bad_request
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -222,7 +275,7 @@ class LtiController < ApplicationController
   # deep_link_return_url (completing the Deep Linking flow).
   def deep_link_response
     unless session[:lti_deep_link_settings].present?
-      render plain: 'No active deep-linking session', status: :bad_request
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -230,7 +283,11 @@ class LtiController < ApplicationController
     deployment   = LtiDeployment.find_by(id: session[:lti_deep_link_deployment_id])
 
     unless deployment && @return_url.present?
-      render plain: 'Invalid deep-linking session', status: :bad_request
+      @page_title       = t('lti.invalid_deep_link_session.title')
+      @page_heading     = t('lti.invalid_deep_link_session.heading')
+      @page_explanation = t('lti.invalid_deep_link_session.explanation')
+      @error_detail     = t('lti.invalid_deep_link_session.guidance')
+      render :no_deep_link_session, status: :bad_request
       return
     end
 
@@ -249,7 +306,61 @@ class LtiController < ApplicationController
     render :deep_link_response
   end
 
-  # POST /lti/names_roles/:id
+  # GET /lti/link_resource
+  # Shown when an instructor launches an LTI resource link that has no
+  # associated CoLab activity yet.  Presents the same course/activity listing
+  # as select_content but posts back to associate_resource_link instead of
+  # returning a deep-link JWT to the platform.
+  def link_resource
+    unless session[:lti_pending_resource_link_id].present?
+      @page_title       = t('lti.link_resource.title')
+      @page_heading     = t('lti.link_resource.heading')
+      @page_explanation = t('lti.link_resource.no_pending')
+      @error_detail     = t('lti.link_resource.no_pending_action')
+      render :no_deep_link_session, status: :bad_request
+      return
+    end
+
+    activity_includes = %i[bingo_games projects experiences]
+    @courses = if current_user&.admin?
+                 Course.includes(activity_includes)
+               else
+                 Course.includes(activity_includes).joins(:rosters).where(
+                   rosters: { user: current_user,
+                               role: [Roster.roles[:instructor], Roster.roles[:assistant]] }
+                 )
+               end
+  end
+
+  # POST /lti/link_resource
+  # Associates the pending resource link with the selected CoLab activity and
+  # redirects the instructor to that activity.
+  def associate_resource_link
+    resource_link = LtiResourceLink.find_by(id: session[:lti_pending_resource_link_id])
+    unless resource_link
+      @page_title       = t('lti.link_resource.title')
+      @page_heading     = t('lti.link_resource.heading')
+      @page_explanation = t('lti.link_resource.no_pending')
+      @error_detail     = t('lti.link_resource.no_pending_action')
+      render :no_deep_link_session, status: :bad_request
+      return
+    end
+
+    activity_type = params[:activity_type]
+    activity_id   = params[:activity_id]
+    create_gradebook_item = params[:create_gradebook_item] == '1'
+
+    redirect_destination = associate_and_redirect(
+      resource_link, activity_type, activity_id, create_gradebook_item: create_gradebook_item
+    )
+
+    session.delete(:lti_pending_resource_link_id)
+    # lineitems endpoint is captured from the launch claim and only needed for
+    # this one linking submit; clear it after association to keep session data
+    # single-use like other LTI flow state.
+    session.delete(:lti_pending_lineitems_url)
+    redirect_to redirect_destination
+  end
   # Uses the LTI Names and Role Provisioning Services (NRPS) to sync the
   # roster from the platform into the linked CoLab course.
   def names_roles
@@ -364,6 +475,7 @@ class LtiController < ApplicationController
       }
       session[:lti_deep_link_deployment_id] = deployment.id
       session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
+      session[:lti_embedded] = true
 
       sign_in user
       redirect_to lti_select_content_path
@@ -381,17 +493,31 @@ class LtiController < ApplicationController
       enroll_lti_user(user, { LTI_ROLES => roles }, resource_link.course) if resource_link.course
 
       sign_in user
+      session[:lti_embedded] = true
       redirect_to '/'
     end
   end
 
   private
 
-  # Use no Rails layout for LTI views (select_content, deep_link_response) that
-  # ship their own complete HTML document.  All other LTI actions render JSON /
-  # plain text where layout is irrelevant anyway.
+  # Use no Rails layout for LTI views (select_content, deep_link_response,
+  # register, link_resource) that ship their own complete HTML document.  All
+  # other LTI actions render JSON / plain text where layout is irrelevant.
   def lti_layout
-    action_name.in?(%w[select_content deep_link_response]) ? false : 'application'
+    action_name.in?(%w[select_content deep_link_response register link_resource]) ? false : 'application'
+  end
+
+  # Remove the X-Frame-Options header for LTI actions that Moodle embeds in an
+  # iframe (register confirmation, content selection, deep-link response).
+  # Rails' default SAMEORIGIN would cause Chrome to refuse the connection.
+  def allow_iframe
+    response.headers.delete('X-Frame-Options')
+  end
+
+  # Format a registration error message consistently, truncating the detail
+  # portion to REGISTRATION_ERROR_TRUNCATE_LENGTH characters.
+  def registration_error_message(prefix, detail)
+    "#{prefix}: #{detail.truncate(REGISTRATION_ERROR_TRUNCATE_LENGTH)}"
   end
 
   def tool_base_url
@@ -412,7 +538,13 @@ class LtiController < ApplicationController
       token_endpoint_auth_method: 'private_key_jwt',
       scope: [NRPS_SCOPE, AGS_LINEITEM_SCOPE, AGS_RESULT_SCOPE, AGS_SCORE_SCOPE].join(' '),
       'https://purl.imsglobal.org/spec/lti-tool-configuration' => {
-        domain: request.host,
+        # Use host_with_port so that non-standard ports (e.g. 3443 in dev) are
+        # included in the domain claim.  Moodle's domain_targetlinkuri_mismatch
+        # check extracts host:port from target_link_uri and compares it against
+        # this field; omitting the port causes a mismatch on non-standard ports.
+        # Rails omits the port for standard ports (80/443), so production is
+        # unaffected (e.g. "colab.online" stays unchanged).
+        domain: request.host_with_port,
         description: 'CoLab collaborative learning platform',
         target_link_uri: "#{base}/lti/launch",
         'https://purl.imsglobal.org/spec/lti/claim/custom' => {},
@@ -497,6 +629,8 @@ class LtiController < ApplicationController
     uri = URI(membership_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https'
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
 
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{access_token}"
@@ -587,6 +721,7 @@ class LtiController < ApplicationController
     session[:lti_deep_link_settings]     = deep_link_settings
     session[:lti_deep_link_deployment_id] = deployment.id
     session[:lti_deep_link_context]      = payload[LTI_CONTEXT]
+    session[:lti_embedded]               = true
 
     user = find_or_provision_user(payload)
     unless user
@@ -610,6 +745,15 @@ class LtiController < ApplicationController
     context = payload[LTI_CONTEXT] || {}
     resource_link.context_id    = context['id']
     resource_link.context_title = context['title']
+
+    # Custom parameters may carry a CoLab course ID (course-level deep link)
+    # or an activity type + ID (activity-level deep link).  Use these to
+    # associate the resource link on first launch.
+    custom = payload[LTI_CUSTOM] || {}
+    if custom['colab_course_id'].present? && resource_link.course_id.nil?
+      resource_link.course_id = custom['colab_course_id'].to_i
+    end
+
     resource_link.save
 
     ags_claim = payload[LTI_AGS_CLAIM]
@@ -627,8 +771,43 @@ class LtiController < ApplicationController
     enroll_lti_user(user, payload, resource_link.course) if resource_link.course
 
     sign_in user
+
+    # Mark the session as LTI-embedded so that ApplicationController removes
+    # X-Frame-Options from all subsequent responses in this session, preventing
+    # Chrome from blocking CoLab pages inside the LMS iframe.
+    session[:lti_embedded] = true
+
+    # If the resource link has no associated activity or course yet, check
+    # custom params for an activity hint from the deep-link content item.
+    # If the user is an instructor and there is still no target, show the
+    # activity-linking screen so they can connect the link to a CoLab activity.
+    if resource_link.assignment.nil? && resource_link.course.nil? && resource_link.activity_type.nil?
+      activity_type = custom['colab_activity_type']
+      activity_id   = custom['colab_activity_id']
+
+      if activity_type.present? && activity_id.present?
+        redirect_destination = associate_and_redirect(
+          resource_link, activity_type, activity_id, create_gradebook_item: false
+        )
+        redirect_to redirect_destination
+        return
+      end
+
+      roles = payload[LTI_ROLES] || []
+      if roles.any? { |r| r.include?('Instructor') }
+        session[:lti_pending_resource_link_id] = resource_link.id
+        session[:lti_pending_lineitems_url] = ags_claim['lineitems'] if ags_claim&.dig('lineitems').present?
+        redirect_to lti_link_resource_path
+        return
+      end
+    end
+
     redirect_destination = if resource_link.assignment
                              "/assignment/#{resource_link.assignment.id}"
+                           elsif resource_link.activity_type.present? && resource_link.activity_id.present?
+                             activity_redirect(resource_link.activity_type, resource_link.activity_id.to_s)
+                           elsif resource_link.course
+                             '/home'
                            else
                              '/'
                            end
@@ -656,21 +835,191 @@ class LtiController < ApplicationController
     user
   end
 
-  # Build the array of LTI Deep Linking content items for the selected activity.
-  # Returns a single-item array on success, or an empty array when the activity
-  # is not found.
+  # Return a CoLab redirect path for a given activity type and ID carried
+  # via LTI custom parameters (e.g. from an activity-level deep link).
+  # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for path prefixes.
+  def activity_redirect(activity_type, activity_id)
+    config = ACTIVITY_TYPE_CONFIG[activity_type]
+    unless config
+      logger.warn "LTI activity_redirect: unrecognized activity_type #{activity_type.inspect}"
+      return '/home'
+    end
+    "#{config[:path]}#{activity_id}"
+  end
+
+  # Associate a resource link with the given activity (storing the course
+  # association for future enrollment), then return the redirect path.
+  # Uses ACTIVITY_TYPE_CONFIG as the single source of truth for model classes.
+  def associate_and_redirect(resource_link, activity_type, activity_id, create_gradebook_item: false)
+    if activity_type == 'course'
+      course = Course.find_by(id: activity_id)
+      if course
+        resource_link.course = course
+        resource_link.save
+      end
+      return '/home'
+    end
+
+    config = ACTIVITY_TYPE_CONFIG[activity_type]
+    unless config
+      logger.warn "LTI associate_and_redirect: unrecognized activity_type #{activity_type.inspect}"
+      return '/'
+    end
+
+    activity = config[:model].find_by(id: activity_id)
+    if activity
+      resource_link.course        = activity.course
+      resource_link.activity_type = activity_type
+      resource_link.activity_id   = activity_id.to_i
+      if create_gradebook_item &&
+         GRADEBOOK_SUPPORTED_ACTIVITY_TYPES.include?(activity_type) &&
+         resource_link.line_item_url.blank?
+        line_item_url = create_line_item_for_activity(resource_link, activity_type, activity)
+        resource_link.line_item_url = line_item_url if line_item_url.present?
+      end
+      resource_link.save
+      sync_activity_lti_connection(activity, resource_link)
+    end
+    activity_redirect(activity_type, activity_id)
+  end
+
+  # Create an LMS line item for the selected activity using the platform's AGS
+  # lineitems endpoint captured from the launch claim. Returns the created line
+  # item URL (id) when successful, or nil when creation is unavailable/failed.
+  def create_line_item_for_activity(resource_link, activity_type, activity)
+    lineitems_url = session[:lti_pending_lineitems_url]
+    return nil unless lineitems_url.present?
+
+    deployment = resource_link.lti_deployment
+    token_response = deployment.request_access_token(scopes: [AGS_LINEITEM_SCOPE])
+    access_token = token_response['access_token']
+    unless access_token.present?
+      logger.warn "LTI create_line_item_for_activity: token response missing access_token"
+      return nil
+    end
+
+    uri = parse_uri_or_nil(lineitems_url)
+    unless uri
+      logger.warn 'LTI create_line_item_for_activity: invalid lineitems URL'
+      return nil
+    end
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme == 'https'
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request['Authorization'] = "Bearer #{access_token}"
+    request['Content-Type'] = 'application/vnd.ims.lis.v2.lineitem+json'
+    request['Accept'] = 'application/vnd.ims.lis.v2.lineitem+json'
+    request.body = {
+      label: activity_title(activity_type, activity),
+      scoreMaximum: 100,
+      tag: 'grade',
+      resourceId: "#{activity_type}:#{activity.id}"
+    }.to_json
+
+    response = http.request(request)
+    return nil unless response.is_a?(Net::HTTPSuccess)
+
+    parsed = JSON.parse(response.body.presence || '{}')
+    return parsed['id'] if parsed['id'].present?
+
+    location_header = response['Location']
+    location_uri = parse_uri_or_nil(location_header) if location_header.present?
+    if location_uri && %w[http https].include?(location_uri.scheme)
+      logger.info 'LTI create_line_item_for_activity: using Location header fallback for line item URL'
+      return location_uri.to_s
+    end
+
+    logger.warn 'LTI create_line_item_for_activity: no usable line item URL in response body or Location header'
+    nil
+  rescue JSON::ParserError => e
+    logger.warn "LTI create_line_item_for_activity: invalid JSON response (#{e.message}), body: #{response&.body.inspect}"
+    nil
+  rescue StandardError => e
+    logger.warn "LTI create_line_item_for_activity failed: #{e.message}"
+    nil
+  end
+
+  def parse_uri_or_nil(url)
+    return nil if url.blank?
+
+    URI.parse(url)
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  # Return the human-readable activity title used when creating AGS line items.
+  def activity_title(activity_type, activity)
+    case activity_type
+    when 'bingo_game' then activity.get_topic(false)
+    else activity.get_name(false)
+    end
+  end
+
+  # Sync deployment and AGS settings from an LTI resource link to the selected
+  # activity's LtiConnection so the activity's LTI Grade Passback panel is
+  # automatically populated after linking.
+  def sync_activity_lti_connection(activity, resource_link)
+    deployment = resource_link.lti_deployment
+    connection = activity.lti_connection || activity.build_lti_connection
+
+    attributes = {
+      ags_access_token_url: deployment.auth_token_url,
+      client_id: deployment.client_id,
+      deployment_id: deployment.deployment_id,
+      iss: deployment.issuer
+    }
+    # Preserve any existing activity line_item_url when the current resource
+    # link has no line item yet (for example, when an instructor links without
+    # creating a gradebook item). This avoids unintentionally clearing a valid
+    # previously configured grade passback target.
+    attributes[:line_item_url] = resource_link.line_item_url if resource_link.line_item_url.present?
+
+    connection.assign_attributes(attributes)
+    return if connection.save
+
+    logger.warn "LTI sync_activity_lti_connection: save failed (#{connection.errors.full_messages.join(', ')})"
+  rescue StandardError => e
+    logger.warn "LTI sync_activity_lti_connection failed: #{e.message}"
+  end
+
+  # Build the array of LTI Deep Linking content items for the selected activity
+  # or course. Returns a single-item array on success, or an empty array when
+  # the activity/course is not found.
   def build_content_items(activity_type, activity_id)
     base = tool_base_url
 
     case activity_type
+    when 'course'
+      course = Course.find_by(id: activity_id)
+      return [] unless course
+
+      # Course-level resource link: sends students to the CoLab home page for
+      # this course.  The CoLab course ID is encoded in the custom parameters
+      # so that the LTI launch handler can associate the resource link with the
+      # correct course on first launch.
+      [
+        {
+          type:   'ltiResourceLink',
+          url:    "#{base}/lti/launch",
+          title:  course.get_name(false),
+          custom: { 'colab_course_id' => course.id.to_s }
+        }
+      ]
+
     when 'bingo_game'
       activity = BingoGame.find_by(id: activity_id)
       return [] unless activity
 
       item = {
-        type:  'ltiResourceLink',
-        url:   "#{base}/home#bingo/#{activity.id}",
-        title: activity.get_topic(false),
+        type:   'ltiResourceLink',
+        url:    "#{base}/lti/launch",
+        title:  activity.get_topic(false),
+        custom: {
+          'colab_activity_type' => 'bingo_game',
+          'colab_activity_id'   => activity.id.to_s,
+          'colab_course_id'     => activity.course_id.to_s
+        },
         lineItem: {
           scoreMaximum: 100,
           label:        activity.get_topic(false),
@@ -684,9 +1033,14 @@ class LtiController < ApplicationController
       return [] unless activity
 
       item = {
-        type:  'ltiResourceLink',
-        url:   "#{base}/home#project/#{activity.id}",
-        title: activity.get_name(false),
+        type:   'ltiResourceLink',
+        url:    "#{base}/lti/launch",
+        title:  activity.get_name(false),
+        custom: {
+          'colab_activity_type' => 'project',
+          'colab_activity_id'   => activity.id.to_s,
+          'colab_course_id'     => activity.course_id.to_s
+        },
         lineItem: {
           scoreMaximum: 100,
           label:        activity.get_name(false),
@@ -702,9 +1056,14 @@ class LtiController < ApplicationController
       # Experiences do not currently produce a numeric grade, so no lineItem
       [
         {
-          type:  'ltiResourceLink',
-          url:   "#{base}/home#experience/#{activity.id}",
-          title: activity.get_name(false)
+          type:   'ltiResourceLink',
+          url:    "#{base}/lti/launch",
+          title:  activity.get_name(false),
+          custom: {
+            'colab_activity_type' => 'experience',
+            'colab_activity_id'   => activity.id.to_s,
+            'colab_course_id'     => activity.course_id.to_s
+          }
         }
       ]
 

@@ -3,13 +3,18 @@ FROM docker.io/ubuntu:22.04
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \
   autoconf \
+  bison \
   bash \
   build-essential \
   curl \
   gettext \
   git \
   imagemagick \
+  libdb-dev \
+  libffi-dev \
+  libgdbm-dev \
   libvips \
+  libncurses-dev \
   libssl-dev \
   libreadline-dev \
   libmysqlclient-dev \
@@ -36,9 +41,8 @@ USER colab
 WORKDIR /home/colab
 
 RUN curl -fsSL https://mise.jdx.dev/install.sh | sh
-ENV PATH="/home/colab/src/app/node_modules/.bin:/home/colab/.local/bin:$PATH"
+ENV PATH="/home/colab/src/app/node_modules/.bin:/home/colab/.local/share/mise/shims:/home/colab/.local/bin:$PATH"
 RUN mkdir -p /home/colab/.local/share/mise && \
-  echo 'eval "$(~/.local/bin/mise activate zsh)"' >> /home/colab/.zshrc && \
   # echo "export PATH=/home/colab/.local/bin:$PATH" >> ~/.zshrc && \
   printf 'bundler\nforeman\nrubocop\n' >> ~/.default-gems
 
@@ -56,6 +60,10 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 
 #Set up the app materials
 RUN sed -i 's/(git)/(\ngit\n\tmise\n\tbundler\n\trails\n\tyarn\n\trake\n\t)/g' ~/.zshrc
+RUN grep -qxF 'eval "$(~/.local/bin/mise activate zsh)"' ~/.zshrc || \
+  echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
+RUN grep -qxF 'eval "$(~/.local/bin/mise activate bash)"' ~/.bashrc || \
+  echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
 RUN mkdir -p /home/colab/src/app
 COPY --chown=colab:colab containers/dev_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
