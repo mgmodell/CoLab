@@ -185,7 +185,7 @@ ensure_rspack_binding() {
     echo "ERROR: @rspack/binding is still unavailable after reinstall." >&2
     echo "Try removing your node_modules volume with your container runtime" >&2
     echo "(for example Docker/Podman) and then:" >&2
-    echo "  Dev Containers: Rebuild and Reopen in Container" >&2
+    echo "  Dev Containers: Rebuild and Reopen in Container." >&2
     return 1
   fi
 }
