@@ -547,7 +547,8 @@ namespace :testing do
       findings << "user-unconfirmed-email##{user.id} (unconfirmed email field)" if user.unconfirmed_email.present?
     end
     ActiveRecord::SessionStore::Session.find_each do | session |
-      findings << "session##{session.id} (session payload)" if session.data.present?
+      raw_payload = session.read_attribute_before_type_cast( :data )
+      findings << "session##{session.id} (session payload)" if raw_payload.present?
     end
     [
       [Installment, :comments],
