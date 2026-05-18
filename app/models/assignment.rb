@@ -103,8 +103,8 @@ class Assignment < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"
-    self.anon_description = Faker::Lorem.sentence(
+    self.anon_name ||= "#{Faker::Company.profession} #{Faker::Company.industry}"
+    self.anon_description ||= Faker::Lorem.sentence(
       word_count: 8,
       supplemental: true,
       random_words_to_add: 9

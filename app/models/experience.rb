@@ -248,6 +248,6 @@ class Experience < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}"
+    self.anon_name ||= "#{Faker::Company.industry} #{Faker::Company.suffix}"
   end
 end

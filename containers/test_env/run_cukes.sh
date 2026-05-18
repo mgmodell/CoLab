@@ -122,6 +122,9 @@ fi
 # Set up run context
 RAILS_ENV=test
 COLAB_DB=db
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 echo "Installing platforms"
 mise self-update -y
 mise install

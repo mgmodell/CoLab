@@ -351,12 +351,12 @@ class Course < ApplicationRecord
 
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
-    self.anon_name = "#{levels.sample} #{Faker::Company.industry}"
+    self.anon_name ||= "#{levels.sample} #{Faker::Company.industry}"
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
-    self.anon_number = "#{dpts.sample}-#{rand( 100..700 )}"
+    self.anon_number ||= "#{dpts.sample}-#{rand( 100..700 )}"
     # Data offset in days
-    self.anon_offset = - Random.rand( 1000 ).days.to_i + 35
+    self.anon_offset ||= - Random.rand( 1000 ).days.to_i + 35
   end
 
   def timezone_adjust_comprehensive

@@ -299,6 +299,6 @@ class BingoGame < ApplicationRecord
 
   def anonymize
     trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-    self.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
+    self.anon_topic ||= "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
   end
 end
