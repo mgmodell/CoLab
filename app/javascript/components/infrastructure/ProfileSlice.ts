@@ -1,7 +1,7 @@
 import axios from "axios";
 import { startTask, endTask, addMessage, Priorities } from "./StatusSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Settings } from "luxon";
+import { TemporalSettings as Settings } from "./TemporalSettings";
 import i18n from "i18next";
 
 interface IEmail {

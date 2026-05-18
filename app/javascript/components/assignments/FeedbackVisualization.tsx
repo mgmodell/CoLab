@@ -14,7 +14,7 @@ import { interpolateTurbo as colorScheme } from "d3-scale-chromatic";
 
 import parse from "html-react-parser";
 import { ICriteria } from "./RubricViewer";
-import { DateTime, Settings } from "luxon";
+import { Temporal, TemporalSettings as Settings, parseISO, formatZonedDateTime, DATETIME_SHORT } from "../infrastructure/TemporalSettings";
 import {
   IAssignment,
   IRubricRowFeedback,
@@ -144,9 +144,10 @@ export default function FeedbackVisualization(props: Props) {
               <div>
                 <p>
                   <strong>Date:</strong>
-                  {DateTime.fromISO(tooltipData.nearestDatum.datum.submitted)
-                    .setZone(Settings.timezone)
-                    .toLocaleString(DateTime.DATETIME_SHORT)}
+                  {formatZonedDateTime(
+                    parseISO(tooltipData.nearestDatum.datum.submitted, Settings.timezone),
+                    DATETIME_SHORT
+                  )}
                 </p>
                 <ul>{content}</ul>
               </div>
@@ -161,9 +162,10 @@ export default function FeedbackVisualization(props: Props) {
                 return (
                   <AnimatedLineSeries
                     xAccessor={d => {
-                      return DateTime.fromISO(d.submitted)
-                        .setZone(Settings.timezone)
-                        .toLocaleString(DateTime.DATETIME_SHORT);
+                      return formatZonedDateTime(
+                        parseISO(d.submitted, Settings.timezone),
+                        DATETIME_SHORT
+                      );
                     }}
                     yAccessor={(d: IRubricRowFeedback) => {
                       return d.feedbacks[criteriumId].score;
@@ -189,9 +191,10 @@ export default function FeedbackVisualization(props: Props) {
                 return (
                   <AnimatedAreaSeries
                     xAccessor={d => {
-                      return DateTime.fromISO(d.submitted)
-                        .setZone(Settings.timezone)
-                        .toLocaleString(DateTime.DATETIME_SHORT);
+                      return formatZonedDateTime(
+                        parseISO(d.submitted, Settings.timezone),
+                        DATETIME_SHORT
+                      );
                     }}
                     yAccessor={(d: IRubricRowFeedback) => {
                       return d.feedbacks[criteriumId].score;
@@ -218,9 +221,10 @@ export default function FeedbackVisualization(props: Props) {
                 return (
                   <AnimatedAreaSeries
                     xAccessor={d => {
-                      return DateTime.fromISO(d.submitted)
-                        .setZone(Settings.timezone)
-                        .toLocaleString(DateTime.DATETIME_SHORT);
+                      return formatZonedDateTime(
+                        parseISO(d.submitted, Settings.timezone),
+                        DATETIME_SHORT
+                      );
                     }}
                     yAccessor={(d: IRubricRowFeedback) => {
                       return d.feedbacks[criteriumId].score;

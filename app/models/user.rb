@@ -438,13 +438,12 @@ class User < ApplicationRecord
                                Faker::Name.male_first_name
                              when 'f'
                                Faker::Name.female_first_name
-                             else
-                               Faker::Name.first_name
-                             end
-      self.anon_last_name = Faker::Name.last_name
-    elsif !persisted?
-      self.anon_first_name = Faker::Name.first_name
+                              else
+                                Faker::Name.first_name
+                              end
       self.anon_last_name = Faker::Name.last_name
     end
+    self.anon_first_name ||= Faker::Name.first_name
+    self.anon_last_name ||= Faker::Name.last_name
   end
 end

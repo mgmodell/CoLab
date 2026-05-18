@@ -10,7 +10,6 @@ import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import { Container, Row, Col } from "react-grid-system";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import { useTranslation } from "react-i18next";
-import { C } from "@fullcalendar/core/internal-common";
 
 type TextPresentationProps = {
   x: number;

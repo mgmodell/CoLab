@@ -2,10 +2,10 @@ import React, { Suspense, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import luxonPlugin from "@fullcalendar/luxon";
-import { DateTime, Settings } from "luxon";
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import dayjs from "dayjs";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Temporal, TemporalSettings as Settings, parseISO } from "./infrastructure/TemporalSettings";
 
 import { Skeleton } from "primereact/skeleton";
 
@@ -66,9 +66,16 @@ export default function HomeShell(props: Props) {
   useEffect(() => {
     if (null !== user.lastRetrieved && undefined !== tasks) {
       const newTasks = tasks;
-      newTasks.forEach((value, index, array) => {
-        value.next_date = value.next_date.setZone(Settings.defaultZone);
-        value.start_date = value.start_date.setZone(Settings.defaultZone);
+      newTasks.forEach((value, _index, _array) => {
+        if (value.next_date) {
+          value.next_date = parseISO(value.next_date, Settings.defaultZone);
+        }
+        if (value.start_date) {
+          value.start_date = parseISO(value.start_date, Settings.defaultZone);
+        }
+        if (value.end_date) {
+          value.end_date = parseISO(value.end_date, Settings.defaultZone);
+        }
       });
 
       setTasks(newTasks);
@@ -119,13 +126,19 @@ export default function HomeShell(props: Props) {
           }
 
           value.link = value.url;
-          // Set the dates properly - close may need work
-          value.start = value.next_date;
+          // Set the dates for the calendar. Use next_date as start, end_date as end.
           if (null !== value.next_date) {
-            value.next_date = DateTime.fromISO(value.next_date);
+            value.next_date = parseISO(value.next_date);
+            value.start = new Date(value.next_date.toInstant().epochMilliseconds);
           }
           if (null !== value.start_date) {
-            value.start_date = DateTime.fromISO(value.start_date);
+            value.start_date = parseISO(value.start_date);
+          }
+          if (null !== value.end_date) {
+            value.end_date = parseISO(value.end_date);
+            value.end = new Date(value.end_date.toInstant().epochMilliseconds);
+          } else {
+            value.end = value.start || new Date();
           }
         });
         setTasks(data.tasks);
@@ -180,29 +193,23 @@ export default function HomeShell(props: Props) {
             </TabPanel>
 
             <TabPanel header="Calendar View">
-              <FullCalendar
-                headerToolbar={{
-                  center: "thisWeek,dayGridMonth"
+              <Calendar
+                localizer={dayjsLocalizer(dayjs)}
+                events={Array.isArray(tasks) ? (tasks as any[])
+                  // Only include tasks that have a resolved start date
+                  .filter(task => task.start instanceof Date)
+                  .map(task => ({
+                    title: task.title,
+                    start: task.start,
+                    end: task.end instanceof Date ? task.end : task.start,
+                    resource: task
+                  })) : []}
+                onSelectEvent={event => {
+                  navigate(event.resource.url);
                 }}
-                initialView="thisWeek"
-                views={{
-                  thisWeek: {
-                    type: "dayGrid",
-                    duration: {
-                      weeks: 2
-                    },
-                    buttonText: "Two Weeks"
-                  },
-                  dayGridMonth: {
-                    buttonText: "One Month"
-                  }
-                }}
-                displayEventTime={false}
-                events={tasks}
-                eventClick={info => {
-                  navigate(info.event.url);
-                }}
-                plugins={[dayGridPlugin, luxonPlugin]}
+                defaultView="week"
+                views={["week", "month"]}
+                style={{ height: 500 }}
               />
             </TabPanel>
           </TabView>

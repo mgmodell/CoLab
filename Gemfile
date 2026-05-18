@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '4.0.3'
+ruby '4.0.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.2'
@@ -53,12 +53,11 @@ gem 'lockbox'
 gem 'matrix'
 gem 'net-smtp'
 gem 'omniauth'
-#This one is currently preventing oauth2 up update
-gem 'omniauth-google-oauth2'
 gem 'oj'
+gem 'omniauth-google-oauth2'
 gem 'prawn'
-gem 'prawn-table'
 gem 'prawn-qrcode'
+gem 'prawn-table'
 gem 'rails_12factor', group: :production
 gem 'react_on_rails', '16.6.0'
 
@@ -100,7 +99,7 @@ group :development, :test do
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
   gem 'ruby-lsp'
-  gem 'solargraph'
+  gem 'ruby-lsp-rails'
   gem 'traceroute'
 end
 

@@ -31,6 +31,32 @@
     <% @courses.each do |course| %>
       <h2><%= course.get_name(false) %></h2>
 
+      <%# ── Course-level link ─────────────────────────────────────────── %>
+      <table id="course-link-<%= course.id %>">
+        <thead>
+          <tr>
+            <th><%= t '.course.type' %></th>
+            <th><%= t '.action_col' %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= course.get_name(false) %></td>
+            <td>
+              <%= form_tag lti_deep_link_response_path, method: :post,
+                                                        id: "dl-form-course-#{course.id}" do %>
+                <%= hidden_field_tag :activity_type, 'course' %>
+                <%= hidden_field_tag :activity_id,   course.id %>
+                <button type="submit" class="select-btn"
+                        aria-label="<%= t '.course.link_btn_aria', name: course.get_name(false) %>">
+                  <%= t '.course.link_btn' %>
+                </button>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       <%# ── Bingo! games ──────────────────────────────────────────────── %>
       <% if course.bingo_games.any? %>
         <table id="bingo-games-<%= course.id %>">

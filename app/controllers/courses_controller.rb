@@ -329,9 +329,9 @@ class CoursesController < ApplicationController
   def index
     @courses = []
     if current_user.admin?
-      @courses = Course.includes( :school ).all
+      @courses = Course.includes( :school, :rosters, :projects, :experiences, :bingo_games ).all
     else
-      rosters = current_user.rosters.instructor.includes( course: :school )
+      rosters = current_user.rosters.instructor.includes( course: [ :school, :rosters, :projects, :experiences, :bingo_games ] )
       rosters.each do | roster |
         @courses << roster.course
       end
@@ -339,7 +339,7 @@ class CoursesController < ApplicationController
 
     respond_to do | format |
       format.json do
-        resp = @courses.includes( :school, :rosters, :projects, :experiences, :bingo_games ).collect do | r |
+        resp = @courses.collect do | r |
           { id: r.id,
             name: r.name,
             number: r.number,

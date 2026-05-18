@@ -1,7 +1,7 @@
 import React from 'react';
 
 import parse from 'html-react-parser';
-import { DateTime } from 'luxon';
+import { parseISO } from '../../infrastructure/TemporalSettings';
 
 import { Col, Container, Row } from 'react-grid-system';
 import { useTranslation } from 'react-i18next';
@@ -76,7 +76,11 @@ export default function CourseSummaryWizard(props: Props) {
                   parse(
                     t('wizard.confirm_save_dates',
                       {
-                        open_date: DateTime.fromISO( props.course.start_date ),
+                        open_date: parseISO(
+                          props.course.start_date instanceof Date
+                            ? props.course.start_date.toISOString()
+                            : String(props.course.start_date)
+                        ).toLocaleString(),
                         close_date: props.course.end_date?.toLocaleDateString(),
                         timezone: props.course.timezone
                       })

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { DateTime, Settings } from "luxon";
+import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastructure/TemporalSettings";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -43,9 +43,9 @@ export default function AssignmentSubmission(props: Props) {
   const [dirty, setDirty] = useState(false);
 
   const [submissionId, setSubmissionId] = useState<string>();
-  const [updatedDate, setUpdatedDate] = useState<DateTime | null>(null);
-  const [submittedDate, setSubmittedDate] = useState<DateTime | null>(null);
-  const [withdrawnDate, setWithdrawnDate] = useState<DateTime | null>(null);
+  const [updatedDate, setUpdatedDate] = useState<Temporal.ZonedDateTime | null>(null);
+  const [submittedDate, setSubmittedDate] = useState<Temporal.ZonedDateTime | null>(null);
+  const [withdrawnDate, setWithdrawnDate] = useState<Temporal.ZonedDateTime | null>(null);
   const [recordedScore, setRecordedScore] = useState(0);
   const [submissionTextEditor, setSubmissionTextEditor] = useState("");
   const [submissionLink, setSubmissionLink] = useState("");
@@ -73,23 +73,17 @@ export default function AssignmentSubmission(props: Props) {
       .then(response => {
         const data = response.data;
 
-        let receivedDate = DateTime.fromISO(data.submission.updated_at).setZone(
-          Settings.timezone
-        );
+        let receivedDate = parseISO(data.submission.updated_at, Settings.timezone);
         setUpdatedDate(receivedDate);
         if (null !== data.submission.submitted) {
-          receivedDate = DateTime.fromISO(data.submission.submitted).setZone(
-            Settings.timezone
-          );
+          receivedDate = parseISO(data.submission.submitted, Settings.timezone);
           setSubmittedDate(receivedDate);
         } else {
           setSubmittedDate(null);
         }
 
         if (null !== data.submission.withdrawn) {
-          receivedDate = DateTime.fromISO(data.submission.withdrawn).setZone(
-            Settings.timezone
-          );
+          receivedDate = parseISO(data.submission.withdrawn, Settings.timezone);
           setWithdrawnDate(receivedDate);
         } else {
           setWithdrawnDate(null);
@@ -174,20 +168,14 @@ export default function AssignmentSubmission(props: Props) {
         const data = response.data;
         if (data.messages !== null && Object.keys(data.messages).length < 2) {
           setSubmissionId(data.submission.id);
-          let receivedDate = DateTime.fromISO(
-            data.submission.updated_at
-          ).setZone(Settings.timezone);
+          let receivedDate = parseISO(data.submission.updated_at, Settings.timezone);
           setUpdatedDate(receivedDate);
           if (data.submission.submitted !== null) {
-            receivedDate = DateTime.fromISO(data.submission.submitted).setZone(
-              Settings.timezone
-            );
+            receivedDate = parseISO(data.submission.submitted, Settings.timezone);
             setSubmittedDate(receivedDate);
           }
           if (data.submission.withdrawn !== null) {
-            receivedDate = DateTime.fromISO(data.submission.withdrawn).setZone(
-              Settings.timezone
-            );
+            receivedDate = parseISO(data.submission.withdrawn, Settings.timezone);
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
@@ -212,20 +200,14 @@ export default function AssignmentSubmission(props: Props) {
         const data = response.data;
         if (data.messages !== null && Object.keys(data.messages).length < 2) {
           setSubmissionId(data.submission.id);
-          let receivedDate = DateTime.fromISO(
-            data.submission.updated_at
-          ).setZone(Settings.timezone);
+          let receivedDate = parseISO(data.submission.updated_at, Settings.timezone);
           setUpdatedDate(receivedDate);
           if (data.submission.submitted !== null) {
-            receivedDate = DateTime.fromISO(data.submission.submitted).setZone(
-              Settings.timezone
-            );
+            receivedDate = parseISO(data.submission.submitted, Settings.timezone);
             setSubmittedDate(receivedDate);
           }
           if (data.submission.withdrawn !== null) {
-            receivedDate = DateTime.fromISO(data.submission.withdrawn).setZone(
-              Settings.timezone
-            );
+            receivedDate = parseISO(data.submission.withdrawn, Settings.timezone);
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);

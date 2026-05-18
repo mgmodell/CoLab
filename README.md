@@ -87,12 +87,22 @@ The container images must be built before opening the devcontainer in VS Code.
 ./buildContainers.sh -b
 ```
 
+> **Windows note**: If you're on Windows, run the PowerShell script (`.\buildContainers.ps1`) from PowerShell/Windows Terminal. Running the bash script from Git Bash/WSL is not the recommended path, because the PowerShell path keeps Podman/Dev Containers integration aligned with Windows host settings.
+
 To build only the dev containers (faster, skips the test container):
 ```bash
 ./buildContainers.sh -d
 ```
 
 Run `./buildContainers.sh -h` for a full list of options.
+
+> **Automatic devcontainer compose selection**: `buildContainers.sh` runs
+> `./configureDevcontainer.sh` before building images. It detects
+> `podman info --format '{{.Host.Security.Rootless}}'` and host OS, then updates
+> `.devcontainer/devcontainer.json` to include:
+> - `docker-compose.rootless.yml` on Linux rootless Podman
+> - `docker-compose.macos.yml` on macOS rootless Podman
+> - base `docker-compose.yml` otherwise
 
 #### Windows (PowerShell)
 ```powershell
@@ -105,6 +115,10 @@ To build only the dev containers:
 ```
 
 Run `.\buildContainers.ps1 -Help` for a full list of options.
+
+> **Automatic devcontainer compose selection**: `buildContainers.ps1` runs
+> `.\configureDevcontainer.ps1` before building images, applying the same
+> rootless/OS detection and `.devcontainer/devcontainer.json` update.
 
 > **Note**: The build uses the project root as the build context (required for `COPY` instructions inside the Dockerfiles). Run the script from the project root directory.
 
@@ -133,7 +147,9 @@ The `.env` file is gitignored. Add any environment variables you need here; see 
 3. VS Code will start all services (`db`, `redis`, `browser`, `moodle`, `selenium`) and attach to the `app` container.
 4. On first open, `postCreateCommand` runs automatically to install the Ruby/Node toolchain via `mise` and install all gems. This takes a few minutes.
 
-#### Linux rootless Podman — extra step
+#### Linux rootless Podman — manual fallback
+
+Use this manual fallback only if automatic compose selection did not choose the Linux rootless override correctly, or if you want to force the Linux rootless configuration explicitly.
 
 On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: keep-id` so that container file writes are owned by your host user. Enable it by referencing the provided override in `.devcontainer/devcontainer.json`:
 
@@ -146,7 +162,9 @@ On Linux with rootless Podman, the bind-mounted source tree needs `userns_mode: 
 
 > **Windows**: do **not** add the rootless override. On Windows/WSL2 it causes an *"unsupported UNC path"* error when Podman tries to forward the WSLg Wayland socket into the container.
 
-#### macOS rootless Podman — extra step
+#### macOS rootless Podman — manual fallback
+
+Use this manual fallback only if automatic compose selection did not choose the macOS rootless override correctly, or if you want to force the macOS rootless configuration explicitly.
 
 On macOS, Podman shares the host filesystem into its Linux VM via virtiofs. Without the macOS override, the bind-mounted files appear as `uid:0 / nogroup` inside the container (not writable) because rootless Podman's user namespace remaps the macOS user UID 501 to container UID 0 without the `userns_mode: keep-id` setting.
 

@@ -14,7 +14,6 @@ import { Dropdown } from "primereact/dropdown";
 import { Skeleton } from "primereact/skeleton";
 import { FloatLabel } from "primereact/floatlabel";
 import { utcAdjustDate, utcAdjustEndDate } from "../../infrastructure/Utilities";
-import { co } from "@fullcalendar/core/internal-common";
 
 type Props = {
   course: ICourse;
