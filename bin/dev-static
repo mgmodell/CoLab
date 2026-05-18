@@ -1,6 +1,20 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rbconfig"
+
+# Returns truthy when overmind should be skipped:
+#   1. Native Windows shell (MSYS2/Git Bash/Cygwin) — host_os matches mswin/mingw/cygwin
+#   2. Inside a container hosted on Windows (Podman/Docker) — filesystem type is v9fs
+# WSL reports a linux host_os and uses a normal ext4/overlay filesystem, so it
+# continues to use overmind.
+def skip_overmind?
+  return true if RbConfig::CONFIG["host_os"] =~ /mswin|mingw|cygwin/i
+
+  fs_type = `stat -f -c %T . 2>/dev/null`.strip rescue ""
+  fs_type == "v9fs"
+end
+
 def installed?(process)
   IO.popen "#{process} -v"
 rescue Errno::ENOENT
@@ -17,7 +31,7 @@ rescue Errno::ENOENT
   exit!
 end
 
-if installed? "overmind"
+if !skip_overmind? && installed?("overmind")
   run "overmind"
 elsif installed? "foreman"
   run "foreman"
