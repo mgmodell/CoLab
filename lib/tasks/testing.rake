@@ -383,6 +383,7 @@ namespace :testing do
               user.emails.each_with_index do | email, index |
                 apply_email_anonymization.call( email, user.id, index )
                 email.save!
+                email.confirm
               end
             end
           else
@@ -390,6 +391,7 @@ namespace :testing do
             apply_email_anonymization.call( email, user.id, 0 )
             user.emails << email
             email.save!
+            email.confirm
           end
           primary_email = user.emails.order( :id ).first
           user.email = primary_email.email if primary_email.present?
@@ -430,6 +432,7 @@ namespace :testing do
                      else
                        "anon-#{user.provider}-#{user.id}"
                      end
+          user.confirm
           user.save!
         end
 
