@@ -158,11 +158,16 @@ fi
 
 # Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
-  if [ "$STARTUP_TLS" = true ]; then
-    echo "Error: -s and -t cannot be combined. Use -s for HTTP or -t for HTTPS."
-    print_help
+  if command -v overmind &> /dev/null; then
+    overmind start -f Procfile.dev
+  elif command -v foreman &> /dev/null; then
+    foreman start -f Procfile.dev
+  else
+    echo "ERROR: Neither 'overmind' nor 'foreman' is installed." >&2
+    echo "  Install overmind: https://github.com/DarthSim/overmind" >&2
+    echo "  Install foreman:  gem install foreman" >&2
+    exit 1
   fi
-  overmind start -f Procfile.dev
 fi
 
 # Start the server (HTTPS – required for LTI testing)

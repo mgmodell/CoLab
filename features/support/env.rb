@@ -235,10 +235,10 @@ end
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
-  puts "Aggregate Testing Time: #{( total_time / 60).floor } minutes and #{total_time % 60} seconds"
+  puts "Aggregate Testing Time: #{( total_time / 60).floor } minutes and #{( total_time % 60 ).ceil} seconds"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do | key, value |
-    puts "#{ (value / 60 ).floor } minutes and #{value.round( 2 ) % 60} seconds  #{key}"
+    puts "#{ (value / 60 ).floor } minutes and #{(value % 60 ).ceil} seconds  #{key}"
   end
 end
