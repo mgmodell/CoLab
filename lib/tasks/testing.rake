@@ -351,6 +351,8 @@ namespace :testing do
     end
     home_state_ids = HomeState.pluck( :id )
     cip_code_ids = CipCode.pluck( :id )
+    ActiveRecord::Base.connection.execute( 'TRUNCATE ahoy_messages' )
+    ActiveRecord::Base.connection.execute( 'TRUNCATE sessions' )
 
     count.times do | index |
       puts "Anonymizing DB contents, pass #{index + 1} of #{count}"
