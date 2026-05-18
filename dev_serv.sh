@@ -120,7 +120,7 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-if [ "$MIGRATE" = true ]; then
+if [ "$PREPARE" = true ]; then
   echo "Preparing (creating) the DB..."
   rails db:create COLAB_DB=db COLAB_DB_PORT=3306
 fi
@@ -156,9 +156,54 @@ if [ "$FEATURE" = true ]; then
   rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
+# Returns true (exit 0) when overmind should be skipped:
+#   1. Native Windows shell (MSYS2/Git Bash/Cygwin) — uname reports MINGW/CYGWIN/MSYS
+#   2. Inside a container hosted on Windows (Podman/Docker) — filesystem type is v9fs
+# WSL reports "Linux" via uname and uses a normal ext4/overlay filesystem, so it
+# continues to use overmind.
+skip_overmind() {
+  case "$(uname -s)" in
+    MINGW*|CYGWIN*|MSYS*) return 0 ;;
+  esac
+  [ "$(stat -f -c %T . 2>/dev/null)" = "v9fs" ]
+}
+
+# On Windows-hosted containers (v9fs), native Node optional dependencies can be
+# stale or missing if node_modules was seeded from a different platform. Ensure
+# @rspack/binding can load before starting the dev server processes.
+ensure_rspack_binding() {
+  [ "$(stat -f -c %T . 2>/dev/null)" = "v9fs" ] || return 0
+
+  if node -e "require('@rspack/binding')" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "Detected missing/incompatible @rspack/binding native module; reinstalling JS dependencies..."
+  yarn install --check-files
+
+  if ! node -e "require('@rspack/binding')" >/dev/null 2>&1; then
+    echo "ERROR: @rspack/binding is still unavailable after reinstall." >&2
+    echo "Try removing your node_modules volume with your container runtime" >&2
+    echo "(for example Docker/Podman) and then:" >&2
+    echo "  Dev Containers: Rebuild and Reopen in Container." >&2
+    return 1
+  fi
+}
+
 # Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
   if command -v overmind &> /dev/null; then
+    overmind start -f Procfile.dev
+  elif command -v foreman &> /dev/null; then
+    foreman start -f Procfile.dev
+  else
+    echo "ERROR: Neither 'overmind' nor 'foreman' is installed." >&2
+    echo "  Install overmind: https://github.com/DarthSim/overmind" >&2
+    echo "  Install foreman:  gem install foreman" >&2
+    exit 1
+  fi
+  ensure_rspack_binding || exit 1
+  if ! skip_overmind && command -v overmind &> /dev/null; then
     overmind start -f Procfile.dev
   elif command -v foreman &> /dev/null; then
     foreman start -f Procfile.dev
@@ -173,6 +218,7 @@ fi
 # Start the server (HTTPS – required for LTI testing)
 if [ "$STARTUP_TLS" = true ]; then
   HTTPS_PORT="${PORT:-3443}"
+  ensure_rspack_binding || exit 1
   echo ""
   echo "Starting CoLab HTTPS dev server on https://app:${HTTPS_PORT}"
   echo "  LTI Dynamic Registration URL: https://app:${HTTPS_PORT}/lti/lti_connect"
@@ -181,5 +227,3 @@ if [ "$STARTUP_TLS" = true ]; then
   echo ""
   overmind start -f Procfile.dev-https
 fi
-
-
