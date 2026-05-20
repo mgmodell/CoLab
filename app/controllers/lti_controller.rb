@@ -251,6 +251,13 @@ class LtiController < ApplicationController
       render :no_deep_link_session, status: :bad_request
       return
     end
+    if deep_link_state[:restore_session]
+      set_deep_link_session_state(
+        settings: deep_link_state[:settings],
+        deployment_id: deep_link_state[:deployment_id],
+        context: deep_link_state[:context]
+      )
+    end
 
     unless current_user
       redirect_to new_user_session_path
@@ -281,6 +288,13 @@ class LtiController < ApplicationController
     unless deep_link_state
       render :no_deep_link_session, status: :bad_request
       return
+    end
+    if deep_link_state[:restore_session]
+      set_deep_link_session_state(
+        settings: deep_link_state[:settings],
+        deployment_id: deep_link_state[:deployment_id],
+        context: deep_link_state[:context]
+      )
     end
 
     @return_url = deep_link_state[:settings]['deep_link_return_url']
@@ -1140,14 +1154,17 @@ class LtiController < ApplicationController
 
   def resolve_deep_link_state(token_param)
     if session[:lti_deep_link_settings].present? && session[:lti_deep_link_deployment_id].present?
+      context = session[:lti_deep_link_context]
       return {
         settings: session[:lti_deep_link_settings],
         deployment_id: session[:lti_deep_link_deployment_id],
+        context: context,
         token: token_param.presence || build_deep_link_token(
           settings: session[:lti_deep_link_settings],
           deployment_id: session[:lti_deep_link_deployment_id],
-          context: session[:lti_deep_link_context]
-        )
+          context:
+        ),
+        restore_session: false
       }
     end
 
@@ -1158,18 +1175,15 @@ class LtiController < ApplicationController
 
     settings = decoded['settings']
     deployment_id = decoded['deployment_id']
+    context = decoded['context']
     return nil unless settings.present? && deployment_id.present?
-
-    set_deep_link_session_state(
-      settings:,
-      deployment_id:,
-      context: decoded['context']
-    )
 
     {
       settings:,
       deployment_id:,
-      token: token_param
+      context:,
+      token: token_param,
+      restore_session: true
     }
   end
 
