@@ -1162,7 +1162,7 @@ class LtiController < ApplicationController
         token: token_param.presence || build_deep_link_token(
           settings: session[:lti_deep_link_settings],
           deployment_id: session[:lti_deep_link_deployment_id],
-          context:
+          context: context
         ),
         restore_session: false
       }
