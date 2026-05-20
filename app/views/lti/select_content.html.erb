@@ -47,6 +47,7 @@
                                                         id: "dl-form-course-#{course.id}" do %>
                 <%= hidden_field_tag :activity_type, 'course' %>
                 <%= hidden_field_tag :activity_id,   course.id %>
+                <%= hidden_field_tag :dl_token, @deep_link_token if @deep_link_token.present? %>
                 <button type="submit" class="select-btn"
                         aria-label="<%= t '.course.link_btn_aria', name: course.get_name(false) %>">
                   <%= t '.course.link_btn' %>
@@ -77,6 +78,7 @@
                                                             id: "dl-form-bingo-#{bingo.id}" do %>
                     <%= hidden_field_tag :activity_type, 'bingo_game' %>
                     <%= hidden_field_tag :activity_id,   bingo.id %>
+                    <%= hidden_field_tag :dl_token, @deep_link_token if @deep_link_token.present? %>
                     <button type="submit" class="select-btn"
                             aria-label="<%= t '.select_btn_aria', name: bingo.get_topic(false) %>">
                       <%= t '.select_btn' %>
@@ -109,6 +111,7 @@
                                                             id: "dl-form-project-#{project.id}" do %>
                     <%= hidden_field_tag :activity_type, 'project' %>
                     <%= hidden_field_tag :activity_id,   project.id %>
+                    <%= hidden_field_tag :dl_token, @deep_link_token if @deep_link_token.present? %>
                     <button type="submit" class="select-btn"
                             aria-label="<%= t '.select_btn_aria', name: project.get_name(false) %>">
                       <%= t '.select_btn' %>
@@ -141,6 +144,7 @@
                                                             id: "dl-form-experience-#{experience.id}" do %>
                     <%= hidden_field_tag :activity_type, 'experience' %>
                     <%= hidden_field_tag :activity_id,   experience.id %>
+                    <%= hidden_field_tag :dl_token, @deep_link_token if @deep_link_token.present? %>
                     <button type="submit" class="select-btn"
                             aria-label="<%= t '.select_btn_aria', name: experience.get_name(false) %>">
                       <%= t '.select_btn' %>

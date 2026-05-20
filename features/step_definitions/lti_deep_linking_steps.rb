@@ -67,7 +67,7 @@ end
 
 Then( 'the content-selection page is displayed' ) do
   wait_for_render
-  page.should have_content( 'Select a CoLab Activity to Link in Moodle' )
+  page.should have_content( 'Select CoLab Content to Link' )
 end
 
 Then( 'the page lists the CoLab course with its bingo game' ) do
@@ -130,24 +130,30 @@ Then( 'the deep-link content item is for the bingo game' ) do
   item = @dl_payload[LTI_DL_CONTENT_ITEMS].first
   item.should be_present
   item['type'].should eq 'ltiResourceLink'
-  item['url'].should include( "/home#bingo/#{@bingo.id}" )
+  item['url'].should end_with( '/lti/launch' )
   item['title'].should include( @bingo.get_topic( false ) )
+  item['custom']['colab_activity_type'].should eq 'bingo_game'
+  item['custom']['colab_activity_id'].should eq @bingo.id.to_s
 end
 
 Then( 'the deep-link content item is for the project' ) do
   item = @dl_payload[LTI_DL_CONTENT_ITEMS].first
   item.should be_present
   item['type'].should eq 'ltiResourceLink'
-  item['url'].should include( "/home#project/#{@project.id}" )
+  item['url'].should end_with( '/lti/launch' )
   item['title'].should include( @project.get_name( false ) )
+  item['custom']['colab_activity_type'].should eq 'project'
+  item['custom']['colab_activity_id'].should eq @project.id.to_s
 end
 
 Then( 'the deep-link content item is for the experience' ) do
   item = @dl_payload[LTI_DL_CONTENT_ITEMS].first
   item.should be_present
   item['type'].should eq 'ltiResourceLink'
-  item['url'].should include( "/home#experience/#{@experience.id}" )
+  item['url'].should end_with( '/lti/launch' )
   item['title'].should include( @experience.get_name( false ) )
+  item['custom']['colab_activity_type'].should eq 'experience'
+  item['custom']['colab_activity_id'].should eq @experience.id.to_s
 end
 
 Then( 'the deep-link content item includes a line item for gradebook tracking' ) do
