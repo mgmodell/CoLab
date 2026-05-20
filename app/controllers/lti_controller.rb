@@ -246,7 +246,7 @@ class LtiController < ApplicationController
       return
     end
 
-    deep_link_state = resolve_deep_link_state(params[:dl_token])
+    deep_link_state = resolve_deep_link_state(params[:dl_token], include_token: true)
     unless deep_link_state
       render :no_deep_link_session, status: :bad_request
       return
@@ -284,7 +284,7 @@ class LtiController < ApplicationController
   # auto-submitting form that POSTs it back to the platform's
   # deep_link_return_url (completing the Deep Linking flow).
   def deep_link_response
-    deep_link_state = resolve_deep_link_state(params[:dl_token])
+    deep_link_state = resolve_deep_link_state(params[:dl_token], include_token: false)
     unless deep_link_state
       render :no_deep_link_session, status: :bad_request
       return
@@ -1150,25 +1150,28 @@ class LtiController < ApplicationController
     verifier.verify(token)
   rescue ActiveSupport::MessageVerifier::InvalidSignature,
          ActiveSupport::MessageEncryptor::InvalidMessage
-    logger.warn('LTI deep-link token verification failed')
+    logger.warn("LTI deep-link token verification failed (request_id=#{request.request_id})")
     nil
   end
 
-  def resolve_deep_link_state(token_param)
+  def resolve_deep_link_state(token_param, include_token:)
     session_settings = session[:lti_deep_link_settings]
     session_deployment_id = session[:lti_deep_link_deployment_id]
     session_context = session[:lti_deep_link_context]
 
     if session_settings.present? && session_deployment_id.present?
+      token = if include_token
+                token_param.presence || build_deep_link_token(
+                  settings: session_settings,
+                  deployment_id: session_deployment_id,
+                  context: session_context
+                )
+              end
       return {
         settings: session_settings,
         deployment_id: session_deployment_id,
         context: session_context,
-        token: token_param.presence || build_deep_link_token(
-          settings: session_settings,
-          deployment_id: session_deployment_id,
-          context: session_context
-        ),
+        token:,
         restore_session: false
       }
     end
@@ -1184,10 +1187,10 @@ class LtiController < ApplicationController
     return nil unless settings.present? && deployment_id.present?
 
     {
-      settings:,
-      deployment_id:,
-      context:,
-      token: token_param,
+      settings: settings,
+      deployment_id: deployment_id,
+      context: context,
+      token: include_token ? token_param : nil,
       restore_session: true
     }
   end
