@@ -67,7 +67,7 @@ end
 
 Then( 'the content-selection page is displayed' ) do
   wait_for_render
-  page.should have_content( 'Select a CoLab Activity to Link in Moodle' )
+  page.should have_content( 'Select CoLab Content to Link' )
 end
 
 Then( 'the page lists the CoLab course with its bingo game' ) do
