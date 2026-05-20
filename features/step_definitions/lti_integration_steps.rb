@@ -5,7 +5,7 @@ require 'json'
 # ── Dynamic Registration steps ────────────────────────────────────────────────
 
 When('the LMS requests the LTI tool configuration') do
-  visit '/lti/tool_connect'
+  visit '/lti/tool_connect.json'
   @response_body = JSON.parse(page.body)
 end
 

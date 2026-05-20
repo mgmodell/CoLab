@@ -468,6 +468,10 @@ class LtiController < ApplicationController
     end
 
     if message_type == 'LtiDeepLinkingRequest'
+      # A fresh deep-linking launch must not inherit pending resource-link state
+      # from an earlier instructor linking flow.
+      session.delete(:lti_pending_resource_link_id)
+      session.delete(:lti_pending_lineitems_url)
       session[:lti_deep_link_settings] = {
         'deep_link_return_url'                 => deep_link_return_url,
         'accept_types'                         => ['ltiResourceLink'],
@@ -717,6 +721,11 @@ class LtiController < ApplicationController
   # Route an LtiDeepLinkingRequest: store settings, sign the user in, and
   # redirect to the content-selection page.
   def handle_deep_linking_request(payload, deployment)
+    # A fresh deep-linking launch must not inherit pending resource-link state
+    # from an earlier instructor linking flow.
+    session.delete(:lti_pending_resource_link_id)
+    session.delete(:lti_pending_lineitems_url)
+
     deep_link_settings = payload[LTI_DEEP_LINKING_SETTINGS] || {}
     session[:lti_deep_link_settings]     = deep_link_settings
     session[:lti_deep_link_deployment_id] = deployment.id

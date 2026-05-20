@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'json'
 require 'webmock'
 include WebMock::API
 
@@ -52,12 +53,15 @@ end
 # ---------------------------------------------------------------------------
 
 When( 'the user visits the CoLab LTI Dynamic Registration URL' ) do
-  visit '/lti/tool_connect'
+  visit '/lti/tool_connect.json'
 end
 
 Then( 'the LTI tool configuration is returned' ) do
-  # The browser renders the JSON body as text.  Parse it from page.body.
-  body_text = find( 'pre' ).text
+  body_text = begin
+    find( 'pre', wait: 1 ).text
+  rescue Capybara::ElementNotFound
+    page.body
+  end
   @lti_config = JSON.parse( body_text )
   @lti_config.should be_a( Hash )
   @lti_config['application_type'].should eq 'web'
