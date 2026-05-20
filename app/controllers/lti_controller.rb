@@ -1148,21 +1148,25 @@ class LtiController < ApplicationController
   def verify_deep_link_token(token)
     verifier = Rails.application.message_verifier(:lti_deep_link_flow)
     verifier.verify(token)
-  rescue ActiveSupport::MessageVerifier::InvalidSignature
+  rescue ActiveSupport::MessageVerifier::InvalidSignature,
+         ActiveSupport::MessageEncryptor::InvalidMessage
     nil
   end
 
   def resolve_deep_link_state(token_param)
-    if session[:lti_deep_link_settings].present? && session[:lti_deep_link_deployment_id].present?
-      context = session[:lti_deep_link_context]
+    session_settings = session[:lti_deep_link_settings]
+    session_deployment_id = session[:lti_deep_link_deployment_id]
+    session_context = session[:lti_deep_link_context]
+
+    if session_settings.present? && session_deployment_id.present?
       return {
-        settings: session[:lti_deep_link_settings],
-        deployment_id: session[:lti_deep_link_deployment_id],
-        context: context,
+        settings: session_settings,
+        deployment_id: session_deployment_id,
+        context: session_context,
         token: token_param.presence || build_deep_link_token(
-          settings: session[:lti_deep_link_settings],
-          deployment_id: session[:lti_deep_link_deployment_id],
-          context: context
+          settings: session_settings,
+          deployment_id: session_deployment_id,
+          context: session_context
         ),
         restore_session: false
       }
