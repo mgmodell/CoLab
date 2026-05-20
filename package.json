@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.15.0",
   "dependencies": {
     "@rails/actioncable": "8.1.300",
     "@react-oauth/google": "^0.13.5",
