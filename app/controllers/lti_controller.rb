@@ -255,10 +255,12 @@ class LtiController < ApplicationController
       set_deep_link_session_state(
         settings: deep_link_state[:settings],
         deployment_id: deep_link_state[:deployment_id],
-        context: deep_link_state[:context]
+        context: deep_link_state[:context],
+        user_id: deep_link_state[:user_id]
       )
     end
 
+    ensure_deep_link_user_authenticated(deep_link_state)
     unless current_user
       redirect_to new_user_session_path
       return
@@ -293,9 +295,11 @@ class LtiController < ApplicationController
       set_deep_link_session_state(
         settings: deep_link_state[:settings],
         deployment_id: deep_link_state[:deployment_id],
-        context: deep_link_state[:context]
+        context: deep_link_state[:context],
+        user_id: deep_link_state[:user_id]
       )
     end
+    ensure_deep_link_user_authenticated(deep_link_state)
 
     @return_url = deep_link_state[:settings]['deep_link_return_url']
     deployment = LtiDeployment.find_by(id: deep_link_state[:deployment_id])
@@ -320,6 +324,7 @@ class LtiController < ApplicationController
     session.delete(:lti_deep_link_settings)
     session.delete(:lti_deep_link_deployment_id)
     session.delete(:lti_deep_link_context)
+    session.delete(:lti_deep_link_user_id)
 
     render :deep_link_response
   end
@@ -497,14 +502,16 @@ class LtiController < ApplicationController
       set_deep_link_session_state(
         settings: deep_link_settings,
         deployment_id: deployment.id,
-        context: deep_link_context
+        context: deep_link_context,
+        user_id: user.id
       )
 
       redirect_to lti_select_content_path(
         dl_token: build_deep_link_token(
           settings: deep_link_settings,
           deployment_id: deployment.id,
-          context: deep_link_context
+          context: deep_link_context,
+          user_id: user.id
         )
       )
     else
@@ -757,13 +764,15 @@ class LtiController < ApplicationController
     set_deep_link_session_state(
       settings: deep_link_settings,
       deployment_id: deployment.id,
-      context: payload[LTI_CONTEXT]
+      context: payload[LTI_CONTEXT],
+      user_id: user.id
     )
     redirect_to lti_select_content_path(
       dl_token: build_deep_link_token(
         settings: deep_link_settings,
         deployment_id: deployment.id,
-        context: payload[LTI_CONTEXT]
+        context: payload[LTI_CONTEXT],
+        user_id: user.id
       )
     )
   end
@@ -1133,13 +1142,14 @@ class LtiController < ApplicationController
     session.delete(:lti_pending_lineitems_url)
   end
 
-  def build_deep_link_token(settings:, deployment_id:, context:)
+  def build_deep_link_token(settings:, deployment_id:, context:, user_id:)
     verifier = Rails.application.message_verifier(:lti_deep_link_flow)
     verifier.generate(
       {
         'settings' => settings,
         'deployment_id' => deployment_id,
-        'context' => context
+        'context' => context,
+        'user_id' => user_id
       },
       expires_in: LTI_DEEP_LINK_TOKEN_TTL
     )
@@ -1157,13 +1167,15 @@ class LtiController < ApplicationController
     session_settings = session[:lti_deep_link_settings]
     session_deployment_id = session[:lti_deep_link_deployment_id]
     session_context = session[:lti_deep_link_context]
+    session_user_id = session[:lti_deep_link_user_id]
 
     if session_settings.present? && session_deployment_id.present?
       token = if include_token
                 token_param.presence || build_deep_link_token(
                   settings: session_settings,
                   deployment_id: session_deployment_id,
-                  context: session_context
+                  context: session_context,
+                  user_id: session_user_id
                 )
               else
                 nil
@@ -1172,6 +1184,7 @@ class LtiController < ApplicationController
         settings: session_settings,
         deployment_id: session_deployment_id,
         context: session_context,
+        user_id: session_user_id,
         token:,
         restore_session: false
       }
@@ -1185,21 +1198,34 @@ class LtiController < ApplicationController
     settings = decoded['settings']
     deployment_id = decoded['deployment_id']
     context = decoded['context']
+    user_id = decoded['user_id']
     return nil unless settings.present? && deployment_id.present?
 
     {
       settings: settings,
       deployment_id: deployment_id,
       context: context,
+      user_id: user_id,
       token: include_token ? token_param : nil,
       restore_session: true
     }
   end
 
-  def set_deep_link_session_state(settings:, deployment_id:, context:)
+  def set_deep_link_session_state(settings:, deployment_id:, context:, user_id:)
     session[:lti_deep_link_settings] = settings
     session[:lti_deep_link_deployment_id] = deployment_id
     session[:lti_deep_link_context] = context
+    session[:lti_deep_link_user_id] = user_id
     session[:lti_embedded] = true
+  end
+
+  def ensure_deep_link_user_authenticated(deep_link_state)
+    return if current_user.present?
+
+    user_id = deep_link_state[:user_id]
+    return if user_id.blank?
+
+    user = User.find_by(id: user_id)
+    sign_in user if user
   end
 end
