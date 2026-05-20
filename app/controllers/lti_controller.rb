@@ -1148,8 +1148,7 @@ class LtiController < ApplicationController
   def verify_deep_link_token(token)
     verifier = Rails.application.message_verifier(:lti_deep_link_flow)
     verifier.verify(token)
-  rescue ActiveSupport::MessageVerifier::InvalidSignature,
-         ActiveSupport::MessageEncryptor::InvalidMessage
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
     logger.warn("LTI deep-link token verification failed (request_id=#{request.request_id})")
     nil
   end
@@ -1166,6 +1165,8 @@ class LtiController < ApplicationController
                   deployment_id: session_deployment_id,
                   context: session_context
                 )
+              else
+                nil
               end
       return {
         settings: session_settings,
