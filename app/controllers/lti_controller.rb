@@ -474,20 +474,23 @@ class LtiController < ApplicationController
     if message_type == 'LtiDeepLinkingRequest'
       sign_in user
       clear_pending_resource_link_state
-      session[:lti_deep_link_settings] = {
+      deep_link_settings = {
         'deep_link_return_url'                 => deep_link_return_url,
         'accept_types'                         => ['ltiResourceLink'],
         'accept_presentation_document_targets' => %w[iframe window]
       }
-      session[:lti_deep_link_deployment_id] = deployment.id
-      session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
-      session[:lti_embedded] = true
+      deep_link_context = { 'id' => context_id, 'title' => context_title }
+      set_deep_link_session_state(
+        settings: deep_link_settings,
+        deployment_id: deployment.id,
+        context: deep_link_context
+      )
 
       redirect_to lti_select_content_path(
         dl_token: build_deep_link_token(
-          settings: session[:lti_deep_link_settings],
-          deployment_id: session[:lti_deep_link_deployment_id],
-          context: session[:lti_deep_link_context]
+          settings: deep_link_settings,
+          deployment_id: deployment.id,
+          context: deep_link_context
         )
       )
     else
@@ -737,10 +740,11 @@ class LtiController < ApplicationController
     sign_in user
     clear_pending_resource_link_state
     deep_link_settings = payload[LTI_DEEP_LINKING_SETTINGS] || {}
-    session[:lti_deep_link_settings]      = deep_link_settings
-    session[:lti_deep_link_deployment_id] = deployment.id
-    session[:lti_deep_link_context]       = payload[LTI_CONTEXT]
-    session[:lti_embedded]                = true
+    set_deep_link_session_state(
+      settings: deep_link_settings,
+      deployment_id: deployment.id,
+      context: payload[LTI_CONTEXT]
+    )
     redirect_to lti_select_content_path(
       dl_token: build_deep_link_token(
         settings: deep_link_settings,
@@ -1139,7 +1143,7 @@ class LtiController < ApplicationController
       return {
         settings: session[:lti_deep_link_settings],
         deployment_id: session[:lti_deep_link_deployment_id],
-        token: build_deep_link_token(
+        token: token_param.presence || build_deep_link_token(
           settings: session[:lti_deep_link_settings],
           deployment_id: session[:lti_deep_link_deployment_id],
           context: session[:lti_deep_link_context]
@@ -1156,15 +1160,23 @@ class LtiController < ApplicationController
     deployment_id = decoded['deployment_id']
     return nil unless settings.present? && deployment_id.present?
 
-    session[:lti_deep_link_settings] = settings
-    session[:lti_deep_link_deployment_id] = deployment_id
-    session[:lti_deep_link_context] = decoded['context']
-    session[:lti_embedded] = true
+    set_deep_link_session_state(
+      settings:,
+      deployment_id:,
+      context: decoded['context']
+    )
 
     {
       settings:,
       deployment_id:,
       token: token_param
     }
+  end
+
+  def set_deep_link_session_state(settings:, deployment_id:, context:)
+    session[:lti_deep_link_settings] = settings
+    session[:lti_deep_link_deployment_id] = deployment_id
+    session[:lti_deep_link_context] = context
+    session[:lti_embedded] = true
   end
 end
