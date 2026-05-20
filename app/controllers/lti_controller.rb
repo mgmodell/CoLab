@@ -468,6 +468,7 @@ class LtiController < ApplicationController
     end
 
     if message_type == 'LtiDeepLinkingRequest'
+      sign_in user
       clear_pending_resource_link_state
       session[:lti_deep_link_settings] = {
         'deep_link_return_url'                 => deep_link_return_url,
@@ -478,7 +479,6 @@ class LtiController < ApplicationController
       session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
       session[:lti_embedded] = true
 
-      sign_in user
       redirect_to lti_select_content_path
     else
       resource_link_id = params.fetch(:resource_link_id, "sim_rl_#{SecureRandom.hex(4)}")
@@ -718,13 +718,6 @@ class LtiController < ApplicationController
   # Route an LtiDeepLinkingRequest: store settings, sign the user in, and
   # redirect to the content-selection page.
   def handle_deep_linking_request(payload, deployment)
-    clear_pending_resource_link_state
-    deep_link_settings = payload[LTI_DEEP_LINKING_SETTINGS] || {}
-    session[:lti_deep_link_settings]     = deep_link_settings
-    session[:lti_deep_link_deployment_id] = deployment.id
-    session[:lti_deep_link_context]      = payload[LTI_CONTEXT]
-    session[:lti_embedded]               = true
-
     user = find_or_provision_user(payload)
     unless user
       render json: { error: 'Could not identify or provision user' }, status: :unprocessable_entity
@@ -732,6 +725,12 @@ class LtiController < ApplicationController
     end
 
     sign_in user
+    clear_pending_resource_link_state
+    deep_link_settings = payload[LTI_DEEP_LINKING_SETTINGS] || {}
+    session[:lti_deep_link_settings]      = deep_link_settings
+    session[:lti_deep_link_deployment_id] = deployment.id
+    session[:lti_deep_link_context]       = payload[LTI_CONTEXT]
+    session[:lti_embedded]                = true
     redirect_to lti_select_content_path
   end
 
