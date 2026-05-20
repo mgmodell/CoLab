@@ -1219,6 +1219,10 @@ class LtiController < ApplicationController
     session[:lti_embedded] = true
   end
 
+  # Restore authenticated user context for deep-link flows when the browser
+  # session lost Devise auth between launch and select/response requests.
+  # The state payload is signed and short-lived; we still enforce Devise's
+  # active_for_authentication? check before re-authenticating.
   def ensure_deep_link_user_authenticated(deep_link_state)
     return if current_user.present?
 
@@ -1226,6 +1230,9 @@ class LtiController < ApplicationController
     return if user_id.blank?
 
     user = User.find_by(id: user_id)
-    sign_in user if user
+    return unless user&.active_for_authentication?
+
+    logger.info("LTI deep-link auth restored from signed state (request_id=#{request.request_id} user_id=#{user.id})")
+    sign_in user
   end
 end
