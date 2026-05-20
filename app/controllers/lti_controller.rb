@@ -1150,6 +1150,7 @@ class LtiController < ApplicationController
     verifier.verify(token)
   rescue ActiveSupport::MessageVerifier::InvalidSignature,
          ActiveSupport::MessageEncryptor::InvalidMessage
+    logger.warn('LTI deep-link token verification failed')
     nil
   end
 
@@ -1175,7 +1176,7 @@ class LtiController < ApplicationController
     return nil if token_param.blank?
 
     decoded = verify_deep_link_token(token_param)
-    return nil unless decoded.is_a?(Hash)
+    return nil unless decoded
 
     settings = decoded['settings']
     deployment_id = decoded['deployment_id']
