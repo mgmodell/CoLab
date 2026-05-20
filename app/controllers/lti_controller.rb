@@ -32,6 +32,7 @@ class LtiController < ApplicationController
   # LTI Deep Linking 2.0 claims
   LTI_DEEP_LINKING_SETTINGS = 'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings'
   LTI_DEEP_LINKING_CONTENT_ITEMS = 'https://purl.imsglobal.org/spec/lti-dl/claim/content_items'
+  LTI_DEEP_LINK_TOKEN_TTL = 20.minutes
 
   NRPS_SCOPE = 'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly'
   AGS_LINEITEM_SCOPE = 'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem'
@@ -245,7 +246,8 @@ class LtiController < ApplicationController
       return
     end
 
-    unless session[:lti_deep_link_settings].present?
+    deep_link_state = resolve_deep_link_state(params[:dl_token])
+    unless deep_link_state
       render :no_deep_link_session, status: :bad_request
       return
     end
@@ -255,8 +257,9 @@ class LtiController < ApplicationController
       return
     end
 
-    @deep_link_return_url = session[:lti_deep_link_settings]['deep_link_return_url']
-    @accept_types = session[:lti_deep_link_settings]['accept_types'] || ['ltiResourceLink']
+    @deep_link_token = deep_link_state[:token]
+    @deep_link_return_url = deep_link_state[:settings]['deep_link_return_url']
+    @accept_types = deep_link_state[:settings]['accept_types'] || ['ltiResourceLink']
 
     # Show courses where the signed-in user is an instructor (or all courses for admins)
     @courses = if current_user.admin?
@@ -274,13 +277,14 @@ class LtiController < ApplicationController
   # auto-submitting form that POSTs it back to the platform's
   # deep_link_return_url (completing the Deep Linking flow).
   def deep_link_response
-    unless session[:lti_deep_link_settings].present?
+    deep_link_state = resolve_deep_link_state(params[:dl_token])
+    unless deep_link_state
       render :no_deep_link_session, status: :bad_request
       return
     end
 
-    @return_url = session[:lti_deep_link_settings]['deep_link_return_url']
-    deployment   = LtiDeployment.find_by(id: session[:lti_deep_link_deployment_id])
+    @return_url = deep_link_state[:settings]['deep_link_return_url']
+    deployment = LtiDeployment.find_by(id: deep_link_state[:deployment_id])
 
     unless deployment && @return_url.present?
       @page_title       = t('lti.invalid_deep_link_session.title')
@@ -479,7 +483,13 @@ class LtiController < ApplicationController
       session[:lti_deep_link_context] = { 'id' => context_id, 'title' => context_title }
       session[:lti_embedded] = true
 
-      redirect_to lti_select_content_path
+      redirect_to lti_select_content_path(
+        dl_token: build_deep_link_token(
+          settings: session[:lti_deep_link_settings],
+          deployment_id: session[:lti_deep_link_deployment_id],
+          context: session[:lti_deep_link_context]
+        )
+      )
     else
       resource_link_id = params.fetch(:resource_link_id, "sim_rl_#{SecureRandom.hex(4)}")
       resource_link = deployment.lti_resource_links.find_or_initialize_by(
@@ -731,7 +741,13 @@ class LtiController < ApplicationController
     session[:lti_deep_link_deployment_id] = deployment.id
     session[:lti_deep_link_context]       = payload[LTI_CONTEXT]
     session[:lti_embedded]                = true
-    redirect_to lti_select_content_path
+    redirect_to lti_select_content_path(
+      dl_token: build_deep_link_token(
+        settings: deep_link_settings,
+        deployment_id: deployment.id,
+        context: payload[LTI_CONTEXT]
+      )
+    )
   end
 
   # Route an LtiResourceLinkRequest: find/create the resource link, enroll the
@@ -1097,5 +1113,58 @@ class LtiController < ApplicationController
   def clear_pending_resource_link_state
     session.delete(:lti_pending_resource_link_id)
     session.delete(:lti_pending_lineitems_url)
+  end
+
+  def build_deep_link_token(settings:, deployment_id:, context:)
+    verifier = Rails.application.message_verifier(:lti_deep_link_flow)
+    verifier.generate(
+      {
+        'settings' => settings,
+        'deployment_id' => deployment_id,
+        'context' => context
+      },
+      expires_in: LTI_DEEP_LINK_TOKEN_TTL
+    )
+  end
+
+  def verify_deep_link_token(token)
+    verifier = Rails.application.message_verifier(:lti_deep_link_flow)
+    verifier.verify(token)
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
+  end
+
+  def resolve_deep_link_state(token_param)
+    if session[:lti_deep_link_settings].present? && session[:lti_deep_link_deployment_id].present?
+      return {
+        settings: session[:lti_deep_link_settings],
+        deployment_id: session[:lti_deep_link_deployment_id],
+        token: build_deep_link_token(
+          settings: session[:lti_deep_link_settings],
+          deployment_id: session[:lti_deep_link_deployment_id],
+          context: session[:lti_deep_link_context]
+        )
+      }
+    end
+
+    return nil if token_param.blank?
+
+    decoded = verify_deep_link_token(token_param)
+    return nil unless decoded.is_a?(Hash)
+
+    settings = decoded['settings']
+    deployment_id = decoded['deployment_id']
+    return nil unless settings.present? && deployment_id.present?
+
+    session[:lti_deep_link_settings] = settings
+    session[:lti_deep_link_deployment_id] = deployment_id
+    session[:lti_deep_link_context] = decoded['context']
+    session[:lti_embedded] = true
+
+    {
+      settings:,
+      deployment_id:,
+      token: token_param
+    }
   end
 end
