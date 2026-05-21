@@ -52,14 +52,15 @@ gem 'listen'
 gem 'lockbox'
 gem 'matrix'
 gem 'net-smtp'
-gem 'omniauth'
 gem 'oj'
+gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'prawn'
 gem 'prawn-qrcode'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
 gem 'react_on_rails', '16.6.0'
+gem 'ruby-vips', '~> 2.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -121,3 +122,4 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
+
