@@ -22,12 +22,12 @@ Feature: Score Bingo Worksheet with Image Upload
     Given the user is the instructor for the course
     Given the user logs in
     When the instructor visits the worksheet score page
-    Then the instructor sees the worksheet scoring form
+    Then the user sees the worksheet scoring form
     When the instructor sets the score to 85
     When the instructor uploads a result image
-    When the instructor submits the score
+    When the user submits the score
     Then the scored worksheet has an image stored in Active Storage
-    Then the instructor sees the result image on the score page
+    Then the user sees the result image on the score page
 
   @javascript
   Scenario: Student sees the scored image in BingoBuilder after instructor uploads it

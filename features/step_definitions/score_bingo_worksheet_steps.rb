@@ -26,7 +26,7 @@ When( 'the instructor visits the worksheet score page' ) do
   wait_for_render
 end
 
-Then( 'the instructor sees the worksheet scoring form' ) do
+Then( 'the user sees the worksheet scoring form' ) do
   page.should have_css( "input[id='score']" )
 end
 
@@ -40,7 +40,7 @@ When( 'the instructor uploads a result image' ) do
   page.attach_file( 'result_photo', @image_path.to_s, make_visible: true )
 end
 
-When( 'the instructor submits the score' ) do
+When( 'the user submits the score' ) do
   click_button I18n.t( 'bingo_games.submit_scores' )
   wait_for_render
 end
@@ -50,7 +50,7 @@ Then( 'the scored worksheet has an image stored in Active Storage' ) do
   @worksheet_board.result_img.attached?.should be true
 end
 
-Then( 'the instructor sees the result image on the score page' ) do
+Then( 'the user sees the result image on the score page' ) do
   wait_for_render
   page.should have_css( "img[src*='/rails/active_storage']",
                         wait: 10 )

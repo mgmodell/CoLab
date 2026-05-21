@@ -89,20 +89,17 @@ end
 # Activity selection
 # ---------------------------------------------------------------------------
 
-When( 'the instructor selects the bingo game for deep linking' ) do
-  btn = find( :css, "button[aria-label='Select #{@bingo.get_topic( false )}']" )
-  btn.click
-  wait_for_render
-end
-
-When( 'the instructor selects the project for deep linking' ) do
-  btn = find( :css, "button[aria-label='Select #{@project.get_name( false )}']" )
-  btn.click
-  wait_for_render
-end
-
-When( 'the instructor selects the experience for deep linking' ) do
-  btn = find( :css, "button[aria-label='Select #{@experience.get_name( false )}']" )
+When( 'the user selects the {string} for deep linking' ) do | activity |
+  case activity
+    when 'bingo game'
+      btn = find( :css, "button[aria-label='Select #{@bingo.get_topic( false )}']" )
+    when 'project'
+      btn = find( :css, "button[aria-label='Select #{@project.get_name( false )}']" )
+    when 'experience'
+      btn = find( :css, "button[aria-label='Select #{@experience.get_name( false )}']" )
+    else
+      raise "Unknown activity: #{activity}"
+  end
   btn.click
   wait_for_render
 end
