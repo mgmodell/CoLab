@@ -1456,7 +1456,7 @@ __metadata:
     mini-css-extract-plugin: "npm:^2.10.2"
     mockdate: "npm:^3.0.5"
     primeicons: "npm:^7.0.0"
-    primereact: "npm:10.9.3"
+    primereact: "npm:10.9.8"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
     quill: "npm:^2.0.3"
@@ -2713,9 +2713,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primereact@npm:10.9.3":
-  version: 10.9.3
-  resolution: "primereact@npm:10.9.3"
+"primereact@npm:10.9.8":
+  version: 10.9.8
+  resolution: "primereact@npm:10.9.8"
   dependencies:
     "@types/react-transition-group": "npm:^4.4.1"
     react-transition-group: "npm:^4.4.1"
@@ -2726,7 +2726,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/e3ee563345c2429ca0b2221e6a7e85e4d2b1345600b4169cc66413f21921fcb5e3a38792c7aec7a9d7d232d88070021d84fbd3721e4ff507d5b0a2b84b05c01a
+  checksum: 10c0/dcbff6a1db6a19f6e66403587b159e5e08bccba0eee4dd8daf1a17ee4a27d32c256f69a8f00f0f9573910a9ee27c227d7bab44732fc8f0482472753e782cf971
   languageName: node
   linkType: hard
 
