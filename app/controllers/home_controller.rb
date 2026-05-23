@@ -54,7 +54,7 @@ class HomeController < ApplicationController
       }
     }
     ep_hash[:installment] = {
-      baseUrl: edit_installment_path( assessment_id: '' ),
+      baseUrl: edit_installment_path( project_id: '' ),
       saveInstallmentUrl: installments_path
     }
     ep_hash[:candidate_list] = {

@@ -23,6 +23,8 @@ import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
+import GuardRedirect, { RedirectState } from "./GuardRedirect";
+import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 interface IContribution {
   userId: number;
@@ -50,9 +52,9 @@ interface Props {
 }
 
 export default function InstallmentReport(props: Props) {
-  const endpointSet = "installment";
+  const category = "installment";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -61,12 +63,11 @@ export default function InstallmentReport(props: Props) {
   const user = useTypedSelector(state => state.profile.user);
   const navigate = useNavigate();
 
-  const { installmentId } = useParams();
+  const { projectId } = useParams();
 
   const dispatch = useDispatch();
-  const [dirty, setDirty] = useState(false);
 
-  const [t] = useTranslation("installments");
+  const [t] = useTranslation(`${category}s`);
 
   const [curPanel, setCurPanel] = useState(0);
   const [group, setGroup] = useState<IGroupState>({});
@@ -77,6 +78,12 @@ export default function InstallmentReport(props: Props) {
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
+  const [dirty, setDirty] = useState(false);
+
+  const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
+  const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
+  const [redirectMessage, setRedirectMessage] = useState("");
+  const [redirectMessageHeading, setRedirectMessageHeading] = useState("");
 
   const updateSlice = (id, update) => {
     const lContributions = { ...contributions};
@@ -111,10 +118,8 @@ export default function InstallmentReport(props: Props) {
   };
 
   const saveButton = (
-    <Button onClick={() => saveContributions()}>
-      <Suspense fallback={<Skeleton className="mb-2" />}>
+    <Button disabled={!dirty} onClick={() => saveContributions()}>
         {t("submit")}
-      </Suspense>
     </Button>
   );
 
@@ -122,14 +127,44 @@ export default function InstallmentReport(props: Props) {
   const getContributions = () => {
     const url =
       props.rootPath === undefined
-        ? `${endpoints.baseUrl}${installmentId}.json`
-        : `/${props.rootPath}${endpoints.baseUrl}${installmentId}.json`;
+        ? `${endpoints.baseUrl}${projectId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${projectId}.json`;
 
     dispatch(startTask());
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
+        console.log( 'response', response );
+        if ( data.messages?.error) {
+          if ( 'instructor' === data.messages.error_type ){
+            navigate(`/admin/courses/${data.messages.error_data.course_id}/project/${data.messages.error_data.project_id}`);
+          } else if ( 'not_enrolled' === data.messages.error_type ) {
+            setRedirectMessageHeading(t("not_enrolled_heading"));
+            setRedirectMessage(t("not_enrolled_message"));
+            setRedirectUrl( "/home" );
+            setRedirectState(RedirectState.REDIRECT);
+          } else {
+            setRedirectMessageHeading(t("not_open_heading"));
+            setRedirectMessage(t("not_open_message", {
+              close_date: formatZonedDateTime(
+                parseISO(data.messages.error_data.close_date, TemporalSettings.timezone),
+                DATETIME_SHORT
+              ),
+              next_date: formatZonedDateTime(
+                parseISO(data.messages.error_data.next_date, TemporalSettings.timezone),
+                DATETIME_SHORT
+              ),
+              project_name: parse( data.messages.error_data.project_name )
+            }) );
+            setRedirectUrl( "/home" );
+            setRedirectState(RedirectState.REDIRECT);
+
+          }
+        } else {
+          setRedirectState( RedirectState.STAY)
+        }
+
         const factorsData = { ...data.factors};
         setFactors(factorsData);
 
@@ -163,6 +198,9 @@ export default function InstallmentReport(props: Props) {
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   };
   //Store what we've got
@@ -230,6 +268,12 @@ export default function InstallmentReport(props: Props) {
   };
 
   return (
+    <GuardRedirect
+      redirectState={redirectState}
+      redirectUrl={redirectUrl}
+      messageHeading={redirectMessageHeading}
+      message={redirectMessage}
+    >
     <Panel>
       <Suspense fallback={<Skeleton className="mb-2" height={"10rem"} />}>
         <h1>{t("subtitle")}</h1>
@@ -359,6 +403,7 @@ export default function InstallmentReport(props: Props) {
         }}
       />
     </Panel>
+    </GuardRedirect>
   );
 }
 export { IContribution };
