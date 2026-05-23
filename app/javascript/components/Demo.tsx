@@ -25,7 +25,7 @@ export default function Demo(props: Props) {
         }
       >
         <Route
-          path={`project/checkin/:installmentId`}
+          path={`project/checkin/:projectId`}
           element={<InstallmentReport rootPath={props.rootPath} />}
         />
         {/* Perhaps subgroup under Bingo */}

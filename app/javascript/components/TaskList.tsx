@@ -61,8 +61,6 @@ export default function TaskList(props: Props) {
   const { t } = useTranslation(category);
   const user = useTypedSelector(state => state.profile.user);
 
-  console.log("Tasks: ", props.tasks);
-
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
   const optColumns = [
