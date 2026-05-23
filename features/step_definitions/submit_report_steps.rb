@@ -281,3 +281,30 @@ Then( /^user will be presented with the installment form$/ ) do
   page.should have_content 'Your weekly check-in'
   page.should have_content @project.name
 end
+
+Then('the user accesses the check-in page') do
+  visit "/home/project/checkin/#{@project.id}"
+  wait_for_render
+end
+
+Then('the user should see the group project\'s reporting page') do
+  wait_for_render
+  all(:xpath, "//span[text()='Reporting']")[0].click
+  page.should have_content "Data for #{@project.name}"
+end
+
+Then('the user is not enrolled in the course') do 
+  @user = User.new(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Faker::Internet.email,
+    timezone: 'UTC',
+    school: School.find( 1 ),
+    welcomed: true
+  )
+  @user.skip_confirmation!
+  @user.save
+  log @user.errors.full_messages if @user.errors.present?
+end

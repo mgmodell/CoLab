@@ -34,8 +34,7 @@ export default function Experience(props) {
   const { experienceId } = useParams();
 
   const dispatch = useDispatch();
-  const [t, i18n] = useTranslation("installments");
-  const [tExp] = useTranslation("experiences");
+  const [t] = useTranslation("experiences");
   const navigate = useNavigate();
   const { setTourSteps } = useTour();
 
@@ -44,7 +43,7 @@ export default function Experience(props) {
       {
         element: ".journal_entry",
         popover: {
-          description: tExp("inst_p1"),
+          description: t("inst_p1"),
           align: "center",
           side: "left"
         }
@@ -52,7 +51,7 @@ export default function Experience(props) {
       {
         element: ".behaviors",
         popover: {
-          description: tExp("inst_p2"),
+          description: t("inst_p2"),
           align: "center",
           side: "right"
         }
@@ -60,14 +59,14 @@ export default function Experience(props) {
       {
         element: "body",
         popover: {
-          description: tExp("inst_p3"),
+          description: t("inst_p3"),
           align: "center",
           side: "top"
         }
       }
     ]);
     return () => setTourSteps([]);
-  }, [setTourSteps, tExp]);
+  }, [setTourSteps, t]);
 
   const [reactionId, setReactionId] = useState();
   const [instructed, setInstructed] = useState(false);

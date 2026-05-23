@@ -6,9 +6,61 @@ class InstallmentsController < ApplicationController
 
   include Demoable
 
+  def check_student( project: )
+    status = nil
+    error_type = :not_enrolled
+    error = true
+    error_data = {}
+    if project.course.rosters.faculty.where( user: current_user ).exists?
+      # Respond with error_instructor
+      status = t( 'installments.error_instructor' )
+      error_data = {
+        project_id: project.id,
+        course_id: project.course.id
+      }
+      error_type = :instructor
+    elsif project.course.rosters.enrolled_student.where( user: current_user ).empty?
+      # Respond with error_student
+      status = t( 'installments.error_student' )
+      error_type = :not_enrolled
+    elsif project.assessments.active_at( DateTime.current ).empty?
+      # Respond with error_no_active_assessment
+      status = t( 'installments.error_no_active_assessment' )
+      error_type = :no_active_assessment
+      assessment = project.assessments.last
+      error_data = {
+        close_date: assessment.end_date,
+        next_date: assessment.next_deadline,
+        project_name: project.name
+      }
+    else
+      error = false
+    end
+
+    if error
+      respond_to do | format |
+        format.json do
+          render json: {
+            messages: {
+              error:,
+              error_type:,
+              error_data:,
+              status:
+            }
+          }
+        end
+      end
+    end
+    !error
+  end
+
   def submit_installment
-    assessment = Assessment.find( params[:assessment_id] )
-    project = assessment.project
+    cur_date = DateTime.current
+    project_id = params[:project_id]
+    project = Project.find( project_id )
+    return unless check_student( project: project )
+
+    assessment = project.assessments.active_at( cur_date ).first
 
     # TODO: Consent Log logic ought to move into a before_action
     consent_log = project.course.get_consent_log user: current_user
@@ -77,6 +129,7 @@ class InstallmentsController < ApplicationController
           sliderSum: Installment::TOTAL_VAL,
           messages: {
             error: false,
+            error_type: nil,
             status: t( 'installments.success' )
           }
         }
@@ -121,6 +174,7 @@ class InstallmentsController < ApplicationController
           render json: {
             messages: {
               error: true,
+              error_type: :installment_invalid,
               status: e.message
             },
             error: true
@@ -134,11 +188,12 @@ class InstallmentsController < ApplicationController
     result = {
       messages: {
         error: false,
+        error_type: nil,
         status: t( 'installments.demo_success' )
       },
       installment: {
         id: -42,
-        assessment_id: params[:assessment_id],
+        assessment_id: params[:project_id],
         group_id: params[:group_id],
         values: params[:contributions].values
                                       .reduce( [] ) do | tmp_arr, item_set |
@@ -167,7 +222,19 @@ class InstallmentsController < ApplicationController
     id = params[:id].to_i
 
     ActiveRecord::Base.transaction do
-      installment = Installment.includes( :values ).find( id )
+      installment = Installment.includes( :values ).where( id: id, user: current_user ).first
+      if installment.nil?
+        render json: {
+          messages: {
+            error: true,
+            error_type: :installment_not_found,
+            status: t( 'installments.not_found' )
+          },
+          error: true
+        }
+        return
+      end
+
       installment.comments = params[:installment][:comments]
       installment.save!
 

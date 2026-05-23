@@ -116,7 +116,7 @@ export default function PageWrapper(props: Readonly<Props>) {
               element={<Navigate to={"/home"} relative={"path"} />}
             />
             <Route
-              path={`project/checkin/:installmentId`}
+              path={`project/checkin/:projectId`}
               element={<InstallmentReport />}
             />
             <Route path="bingo/*" element={<BingoShell />} />
