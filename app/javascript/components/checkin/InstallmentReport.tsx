@@ -23,7 +23,7 @@ import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
-import GuardRedirect, { RedirectState } from "./GuardRedirect";
+import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
 import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 interface IContribution {

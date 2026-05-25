@@ -43,6 +43,7 @@ import TermsOfService from "./info/TermsOfService";
 import AppInit from "./infrastructure/AppInit";
 import Demo from "./Demo";
 import PasswordEdit from "./PasswordEdit";
+import { useTranslation } from "react-i18next";
 
 
 type Props = {
@@ -52,6 +53,8 @@ type Props = {
 
 export default function PageWrapper(props: Readonly<Props>) {
   const store = appStatus;
+
+  const [ t] = useTranslation('');
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -171,7 +174,7 @@ export default function PageWrapper(props: Readonly<Props>) {
       <PrimeReactProvider>
         <AppInit endpointsUrl={props.getEndpointsUrl} debug={props.debug}>
           <CookieConsent>
-            This website uses cookies to enhance the user experience.
+            {t('cookie_consent_message') }
           </CookieConsent>
           <TourProvider>
             <RouterProvider router={router} />

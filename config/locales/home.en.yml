@@ -36,6 +36,8 @@ en:
   student_names: Student names
   group: Group
   groups: Groups
+  redirect_now: Click here to go now.
+  cookie_consent_message: This website uses cookies to enhance the user experience.
   group_names: Group names
   history: History
   about_you: About You

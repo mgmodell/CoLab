@@ -53,7 +53,13 @@ en:
     update_success: Experience was successfully updated.
     destroy_success: Experience was successfully destroyed.
     soft_delete_success: Experience has been deactivated and marked as deleted.
-    wrong_course: That experience is a part of another course.
+    experience_instructor_redirect_msg: >
+      As instructor for this course, you cannot participate in this experience. You
+      will be redirected to the results page.
+    experience_not_yet_open_msg: >
+      This experience is not currently open. It opens on %{start_date} and closes on %{end_date}.
+    no_available_experience_msg: >
+      No such experience is currently available to you. Please check back later.
     instr_title: Experience Instruction
     not_started: Not Started
     not_completed: Not Completed

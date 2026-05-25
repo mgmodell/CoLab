@@ -23,8 +23,7 @@ interface Props {
 }
 
 export default function GuardRedirect(props: Props) {
-  const category = "installment";
-  const [t] = useTranslation(`${category}s`);
+  const [t] = useTranslation('');
   const navigate = useNavigate();
 
   useEffect(() => {
