@@ -56,8 +56,10 @@ en:
     experience_instructor_redirect_msg: >
       As instructor for this course, you cannot participate in this experience. You
       will be redirected to the results page.
-    experience_not_yet_open_msg: >
+    experience_not_open_hdng: Experience not open
+    experience_not_open_msg: >
       This experience is not currently open. It opens on %{start_date} and closes on %{end_date}.
+    no_available_experience_hdng: No Experience available
     no_available_experience_msg: >
       No such experience is currently available to you. Please check back later.
     instr_title: Experience Instruction

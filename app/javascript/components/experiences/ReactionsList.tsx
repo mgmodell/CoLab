@@ -53,7 +53,7 @@ export default function ReactionsList(props: Props) {
     t(OPT_COLS.RESPONSE),
     t(OPT_COLS.IMPROVEMENTS)
   ];
-  const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState([OPT_COLS.STATUS, OPT_COLS.IMPROVEMENTS]);
 
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
@@ -104,7 +104,7 @@ export default function ReactionsList(props: Props) {
         rowsPerPageOptions={[5, 10, 20, props.reactionsList.length]}
         header={
           <StandardListToolbar
-            itemType={"activity"}
+            itemType={"Response"}
             filtering={{
               filterValue: filterText,
               setFilterFunc: setFilterText

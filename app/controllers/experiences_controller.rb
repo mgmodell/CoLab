@@ -172,13 +172,17 @@ class ExperiencesController < ApplicationController
         # An instructor cannot enter info.
         response[:messages][:error_type] = :experience_instructor_redirect
         response[:messages][:status] = t( 'experiences.instructor_redirect_msg' )
+        response[:messages][:error_data] = {
+          course_id: experience.course_id,
+          experience_id: experience.id
+        }
       elsif ! experience.is_open? || !experience.active
         # If the experience is not open, they need to know that they cannot access it... yet.
         response[:messages][:error_type] = :experience_not_open
         response[:messages][:status] = t( 'experiences.not_open_msg' )
         response[:messages][:error_data] = {
           start_date: experience.start_date,
-          end_date: experience.end
+          end_date: experience.end_date
         }
       else
         response[:messages][:error] = false

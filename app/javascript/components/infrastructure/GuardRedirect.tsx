@@ -19,9 +19,11 @@ interface Props {
   messageHeading: string;
   message: string;
   redirectState: RedirectState;
+  secondsUntilRedirect?: number;
   children: React.ReactNode;
 }
 
+const SECONDS = 1000;
 export default function GuardRedirect(props: Props) {
   const [t] = useTranslation('');
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ export default function GuardRedirect(props: Props) {
     if( RedirectState.REDIRECT === props.redirectState && props.redirectUrl !== undefined ) {
       const timer = setTimeout(() => {
         navigate(props.redirectUrl);
-      }, 5000);
+      }, (props.secondsUntilRedirect || 5) * SECONDS);
       return () => clearTimeout(timer);
     }
   }, [props.redirectUrl, props.redirectState, navigate]);

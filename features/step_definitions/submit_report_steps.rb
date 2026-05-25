@@ -287,7 +287,7 @@ Then('the user accesses the {string} page') do | activity_type |
   when 'check-in'
     visit "/home/project/checkin/#{@project.id}"
   when 'experience'
-    visit "/home/project/experience/#{@experience.id}"
+    visit "/home/experience/#{@experience.id}"
   end
   wait_for_render
 end
@@ -299,8 +299,10 @@ Then('the user should see the {string} reporting page') do | activity_type |
     all(:xpath, "//span[text()='Reporting']")[0].click
     page.should have_content "Data for #{@project.name}"
   when 'experience'
+    all(:xpath, "//span[text()='Results']")[0].click
+    page.should have_content "Responses"
+  else
     pending
-    page.should have_content "Reporting for #{@experience.get_name( false )}"
   end
 end
 

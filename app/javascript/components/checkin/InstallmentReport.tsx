@@ -135,7 +135,6 @@ export default function InstallmentReport(props: Props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( 'response', response );
         if ( data.messages?.error) {
           if ( 'instructor' === data.messages.error_type ){
             navigate(`/admin/courses/${data.messages.error_data.course_id}/project/${data.messages.error_data.project_id}`);
