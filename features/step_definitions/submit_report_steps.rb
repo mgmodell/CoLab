@@ -282,15 +282,26 @@ Then( /^user will be presented with the installment form$/ ) do
   page.should have_content @project.name
 end
 
-Then('the user accesses the check-in page') do
-  visit "/home/project/checkin/#{@project.id}"
+Then('the user accesses the {string} page') do | activity_type |
+  case activity_type.downcase
+  when 'check-in'
+    visit "/home/project/checkin/#{@project.id}"
+  when 'experience'
+    visit "/home/project/experience/#{@experience.id}"
+  end
   wait_for_render
 end
 
-Then('the user should see the group project\'s reporting page') do
+Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
-  all(:xpath, "//span[text()='Reporting']")[0].click
-  page.should have_content "Data for #{@project.name}"
+  case activity_type.downcase
+  when 'project'
+    all(:xpath, "//span[text()='Reporting']")[0].click
+    page.should have_content "Data for #{@project.name}"
+  when 'experience'
+    pending
+    page.should have_content "Reporting for #{@experience.get_name( false )}"
+  end
 end
 
 Then('the user is not enrolled in the course') do 

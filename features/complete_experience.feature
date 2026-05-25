@@ -12,6 +12,28 @@ Feature: Users can complete 'experiences'
     When the user logs in
     Then the user should see a successful login message
 
+
+  @javascript
+  Scenario: A student who is not enrolled should not see the check-in
+    Given the user is not enrolled in the course
+    When the user logs in
+     Then the user accesses the "experience" page
+     And the user should see "You are not enrolled in this course"
+
+  @javascript
+  Scenario: Instructor user should be directed to the project page for reporting
+    Given the user is the instructor for the course
+    When the user logs in
+     Then the user accesses the "experience" page
+     Then the user should see the "experience" reporting page
+
+  @javascript
+  Scenario: The student should not be able to access the experience if it's not open
+    Given today is "3 months from now"
+    When the user logs in
+     Then the user accesses the "experience" page
+     Then the user should see the "experience" reporting page
+
   @javascript
   Scenario: The student should not be able to proceed without selecting a behavior
     Given the course has a consent form
