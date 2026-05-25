@@ -47,7 +47,7 @@ Feature: LTI Deep Linking – Connect CoLab Activities to Moodle
   Scenario: Selecting a Terms List creates a deep-link response with a gradebook entry
     When a deep-linking LTI launch arrives from "http://moodle:8080"
     Then the content-selection page is displayed
-    When the instructor selects the bingo game for deep linking
+    When the user selects the "bingo game" for deep linking
     Then a deep-linking response JWT is returned to Moodle
     And the deep-link content item is for the bingo game
     And the deep-link content item includes a line item for gradebook tracking
@@ -60,7 +60,7 @@ Feature: LTI Deep Linking – Connect CoLab Activities to Moodle
   Scenario: Selecting a Project creates a deep-link response with a gradebook entry
     When a deep-linking LTI launch arrives from "http://moodle:8080"
     Then the content-selection page is displayed
-    When the instructor selects the project for deep linking
+    When the user selects the "project" for deep linking
     Then a deep-linking response JWT is returned to Moodle
     And the deep-link content item is for the project
     And the deep-link content item includes a line item for gradebook tracking
@@ -75,7 +75,7 @@ Feature: LTI Deep Linking – Connect CoLab Activities to Moodle
     Given the experience started "2/29/1980" and ends "7/10/2008"
     When a deep-linking LTI launch arrives from "http://moodle:8080"
     Then the content-selection page is displayed
-    When the instructor selects the experience for deep linking
+    When the user selects the "experience" for deep linking
     Then a deep-linking response JWT is returned to Moodle
     And the deep-link content item is for the experience
     And the deep-link content item does not include a line item
