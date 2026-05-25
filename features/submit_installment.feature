@@ -23,15 +23,15 @@ Feature: Submitting Reports
   Scenario: A student who is not enrolled should not see the check-in
     Given the user is not enrolled in the course
     When the user logs in
-     Then the user accesses the check-in page
+     Then the user accesses the "check-in" page
      And the user should see "You are not enrolled in this course"
 
   @javascript
   Scenario: Instructor user should be directed to the project page for reporting
     Given the user is the instructor for the course
     When the user logs in
-     Then the user accesses the check-in page
-     Then the user should see the group project's reporting page
+     Then the user accesses the "check-in" page
+     Then the user should see the "project" reporting page
 
   @javascript
   Scenario: User should be able to complete an open weekly installment
@@ -164,7 +164,7 @@ Feature: Submitting Reports
     Given today is "in 10 minutes"
     When the user submits the installment
     Then the user should see an error indicating that the installment request expired
-    Then the user accesses the check-in page
+    Then the user accesses the "check-in" page
      And the user should see "project's check-in period is not currently open."
      And the user should see "it will open again on"
 

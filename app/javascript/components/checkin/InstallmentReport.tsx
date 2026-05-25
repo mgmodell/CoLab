@@ -23,7 +23,7 @@ import { Col, Container, Row } from "react-grid-system";
 import { Slider } from "primereact/slider";
 import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
-import GuardRedirect, { RedirectState } from "./GuardRedirect";
+import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
 import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 interface IContribution {
@@ -135,7 +135,6 @@ export default function InstallmentReport(props: Props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( 'response', response );
         if ( data.messages?.error) {
           if ( 'instructor' === data.messages.error_type ){
             navigate(`/admin/courses/${data.messages.error_data.course_id}/project/${data.messages.error_data.project_id}`);

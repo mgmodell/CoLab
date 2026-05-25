@@ -22,6 +22,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTour } from "../infrastructure/TourContext";
 import axios from "axios";
 import { Skeleton } from "primereact/skeleton";
+import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
+import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 export default function Experience(props) {
   const endpointSet = "experience";
@@ -37,6 +39,10 @@ export default function Experience(props) {
   const [t] = useTranslation("experiences");
   const navigate = useNavigate();
   const { setTourSteps } = useTour();
+  const [redirectState, setRedirectState] = useState( RedirectState.DECIDING );
+  const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
+  const [redirectMessage, setRedirectMessage] = useState("");
+  const [redirectMessageHeading, setRedirectMessageHeading] = useState("");
 
   useEffect(() => {
     setTourSteps([
@@ -88,17 +94,46 @@ export default function Experience(props) {
     axios(url, {})
       .then(response => {
         const data = response.data;
-        setWeekId(data.week_id);
-        setWeekNum(data.week_num);
-        setWeekText(data.week_text);
+        if( data.messages?.error ){
+          if( 'experience_instructor_redirect' === data.messages.error_type ){
+            navigate(`/admin/courses/${data.messages.error_data.course_id}/experience/${data.messages.error_data.experience_id}`);
+          } else if( 'no_available_experience' === data.messages.error_type ){
+            setRedirectMessage( t("no_available_experience_msg") );
+            setRedirectMessageHeading( t("no_available_experience_hdng") );
+            setRedirectUrl("/home");
+            setRedirectState( RedirectState.REDIRECT );
+          } else {
+            setRedirectMessageHeading( t("experience_not_open_hdng")  );
+            setRedirectMessage( t("experience_not_open_msg", { 
+              start_date: formatZonedDateTime(
+                parseISO( data.messages.error_data.start_date, TemporalSettings.timezone ),
+                DATETIME_SHORT
+              ),
+              end_date:
+                formatZonedDateTime(
+                  parseISO( data.messages.error_data.end_date, TemporalSettings.timezone ),
+                  DATETIME_SHORT
+              ) }) );
+            setRedirectUrl("/home");
+            setRedirectState( RedirectState.REDIRECT );
+          }
+        } else {
+          const data = response.data;
+          setWeekId(data.week_id);
+          setWeekNum(data.week_num);
+          setWeekText(data.week_text);
 
-        setReactionId(data.reaction_id);
-        setInstructed(data.instructed);
+          setReactionId(data.reaction_id);
+          setInstructed(data.instructed);
+          setRedirectState( RedirectState.STAY );
+        }
 
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   //Store what we've got
@@ -177,5 +212,15 @@ export default function Experience(props) {
     );
   }
 
-  return output;
+  return(
+    <GuardRedirect
+      redirectState={redirectState}
+      redirectUrl={redirectUrl}
+      message={redirectMessage}
+      messageHeading={redirectMessageHeading}
+      secondsUntilRedirect={4.5}
+    >
+      {output}
+    </GuardRedirect>
+  )
 }
