@@ -341,7 +341,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/types@npm:10.0.3, @react-spring/types@npm:~10.0.3":
+"@react-spring/types@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@react-spring/types@npm:10.1.0"
+  checksum: 10c0/c94d6951c2cc3de0c6d9a2c11996bfd1ef0f38b38162f629a814f30a5670ee58c1b82107ee97bd469b750bc14ddf8130e3eeb5b033ac00f1e43f344e5a5c1dab
+  languageName: node
+  linkType: hard
+
+"@react-spring/types@npm:~10.0.3":
   version: 10.0.3
   resolution: "@react-spring/types@npm:10.0.3"
   checksum: 10c0/f9bc2619dc9997fe93ebab90fd98118106e53bc45c9c279caaa7081b69d3ed0186d603d5ed445e56bb8ad0075553d15908a2a54e3a0a36ef7cd43a03c1650b02
@@ -1418,7 +1425,7 @@ __metadata:
     "@rails/actioncable": "npm:8.1.300"
     "@react-oauth/google": "npm:^0.13.5"
     "@react-spring/parallax": "npm:10.0.3"
-    "@react-spring/types": "npm:10.0.3"
+    "@react-spring/types": "npm:10.1.0"
     "@react-spring/web": "npm:10.0.3"
     "@reduxjs/toolkit": "npm:^2.12.0"
     "@rspack/cli": "npm:^2.0.4"
