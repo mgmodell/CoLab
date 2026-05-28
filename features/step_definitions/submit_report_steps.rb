@@ -288,13 +288,28 @@ Then('the user accesses the {string} page') do | activity_type |
     visit "/home/project/checkin/#{@project.id}"
   when 'experience'
     visit "/home/experience/#{@experience.id}"
+  when 'bingo'
+    visit "/home/bingo/#{@bingo.id}"
+  else
+    pending
   end
   wait_for_render
+end
+
+Then('the user should see the bingo builder page') do
+  wait_for_render
+  page.should have_content @bingo.topic
+  page.should have_content "Bingo game builder"
 end
 
 Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
   case activity_type.downcase
+  when 'bingo'
+    page.should have_content "Data for #{@bingo.name}"
+    all(:xpath, "//input[text()='#{@bingo.name}']").size.should eq 1
+    all(:xpath, "//span[text()='Response data']")[0].click
+    page should have content "Results"
   when 'project'
     all(:xpath, "//span[text()='Reporting']")[0].click
     page.should have_content "Data for #{@project.name}"

@@ -10,6 +10,10 @@ en:
       credit: Credit
       average_score: Average score
     create_bingo_btn: Create Bingo Game
+    no_available_bingo_heading: No such activity available
+    no_available_bingo_message: >
+      There is no bingo game available for you using that id that is available
+      for you to play at this time.
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game

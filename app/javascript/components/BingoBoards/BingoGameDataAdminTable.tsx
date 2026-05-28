@@ -78,7 +78,7 @@ export default function BingoGameDataAdminTable(props: Props) {
         }}
         header={
           <StandardListToolbar
-            itemType={"invitation"}
+            itemType={"result"}
             filtering={{
               filterValue: filterText,
               setFilterFunc: setFilterText

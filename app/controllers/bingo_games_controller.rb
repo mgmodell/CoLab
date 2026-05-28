@@ -47,6 +47,66 @@ class BingoGamesController < ApplicationController
         credit: c.candidate_feedback.credit }
     end
 
+    def actvity_director
+      bingo_game = BingoGame.where( id: params[:bingo_game_id],
+                                    active: true,
+                                    course: { rosters: { user: current_user } } ).first
+      response = {
+        messages: {
+          target: :no_available_bingo,
+          metadata: {},
+          status: t( 'bingo_games.no_available_bingo' ),
+        }
+      }
+      unless bingo_game.nil?
+        roster = bingo_game.course.rosters.find_by( user: current_user )
+        if roster.enrolled_student?
+          if bingo_game.is_open?
+            # go to candidate entry
+            messages [:target ] = :candidate_entry
+            messages[:status] = t( 'bingo_games.candidate_entry_heading' )
+
+          elsif bingo_game.reviewed?
+            # go to results
+            messages[:target] = :results_review
+            messages[:status] = t( 'bingo_games.results_review_heading' )
+          elsif bingo_game.awaiting_review?
+            # go to be patient
+            messages[:target] = :review_in_progress
+            messages[:status] = t( 'bingo_games.review_in_progress_heading' )
+            messages[:metadata] = {
+              start_date: bingo_game.term_list_date,
+              end_date: bingo_game.next_deadline
+            }
+          else
+            # not available yet
+            messages[:target] = :not_available_yet
+            messages[:status] = t( 'bingo_games.not_available_yet_heading' )
+            messages[:metadata] = {
+              start_date: bingo_game.term_list_date
+            }
+          end
+        elsif roster.instructor? || roster.assistant?
+          if bingo_game.is_open? || bingo_game.reviewed?
+            # go to admin
+            messages[:target] = :admin
+            messages[:status] = t( 'bingo_games.admin_review_heading' )
+            messages[:metadata] = {
+              course_id: bingo_game.course_id,
+              bingo_game_id: bingo_game.id
+            }
+          else
+            # go candidate review
+            messages[:target] = :review_candidates
+            messages[:status] = t( 'bingo_games.review_candidates_heading' )
+          end
+        end
+      end
+      respond_to do | format |
+        format.json { render json: response }
+      end
+    end
+
     words = candidate_list.candidates.collect do | c |
       c.definition.split( ' ' )
     end

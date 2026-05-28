@@ -280,6 +280,9 @@ Rails.application.routes.draw do
       get 'task_list' => 'home#demo_start', as: :demo_task_list
       get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
       patch 'installments/:id' => 'installments#demo_update'
+      put 'bingo/director/:bingo_game_id' => 'bingo_games#activity_director',
+          as: :bingo_director,
+          constraints: ->(req) { req.format == :json }
       get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
       get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
       get 'bingo/bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game_demo',

@@ -57,6 +57,9 @@ class HomeController < ApplicationController
       baseUrl: edit_installment_path( project_id: '' ),
       saveInstallmentUrl: installments_path
     }
+    ep_hash[:bingo_game] = {
+      activityDirectorUrl: bingo_director_path( bingo_game_id: '' )
+    }
     ep_hash[:candidate_list] = {
       baseUrl: get_candidate_list_path( bingo_game_id: '' )
     }

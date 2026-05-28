@@ -9,6 +9,7 @@ import CandidatesReviewTable from "./CandidatesReviewTable";
 import CandidateListEntry from "./CandidateListEntry";
 import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
+import BingoDirector from "./BingoDirector";
 
 type Props = {
   rootPath?: string;
@@ -41,6 +42,9 @@ export default function BingoShell(props: Props) {
           path={`enter_candidates/:bingoGameId`}
           element={<CandidateListEntry rootPath={props.rootPath} />}
         />
+        <Route path={':bingoGameId'} element={
+          <BingoDirector rootPath={props.rootPath} />
+        } />
         <Route
           path={`review_candidates/:bingoGameId`}
           element={
