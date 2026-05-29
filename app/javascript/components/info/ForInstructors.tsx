@@ -77,7 +77,7 @@ export default function ForInstructors(props: Props) {
         role="img"
         aria-label="Instructor support views"
       >
-        <title>Instructor support stages: plan, monitor, and intervene</title>
+        <title>Instructor support areas: group work, reading, and perspectives</title>
         {(
           [
             { key: "experiences", x: 65, color: "#53b0ff", label: "Group Work" },
