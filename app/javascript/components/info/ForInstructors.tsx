@@ -70,6 +70,7 @@ export default function ForInstructors(props: Props) {
         to action while teams are still working.
       </p>
       <svg width="390" height="72" viewBox="0 0 390 72" role="img" aria-label="Instructor support views">
+        <title>Instructor support stages: plan, monitor, and intervene</title>
         {(
           [
             { key: "planning", x: 65, color: "#53b0ff", label: "Plan" },
@@ -85,7 +86,7 @@ export default function ForInstructors(props: Props) {
                 cy={24}
                 r={isActive ? 19 : 16}
                 fill={item.color}
-                stroke={isActive ? "white" : "midnightblue"}
+                stroke={isActive ? "midnightblue" : "#1f1f1f"}
                 strokeWidth={isActive ? 3 : 1.5}
                 className="intro_nav"
                 onClick={() => handleSelect(item.key)}
