@@ -69,7 +69,13 @@ export default function ForInstructors(props: Props) {
         CoLab gives instructors a quick way to move from setup, to monitoring,
         to action while teams are still working.
       </p>
-      <svg width="390" height="72" viewBox="0 0 390 72" role="img" aria-label="Instructor support views">
+      <svg
+        viewBox="0 0 390 72"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: "100%", maxWidth: "390px", height: "auto" }}
+        role="img"
+        aria-label="Instructor support views"
+      >
         <title>Instructor support stages: plan, monitor, and intervene</title>
         {(
           [
@@ -101,7 +107,7 @@ export default function ForInstructors(props: Props) {
                 y={56}
                 textAnchor="middle"
                 style={{
-                  fill: "azure",
+                  fill: "#10243f",
                   fontFamily: "sans-serif",
                   fontSize: "13px",
                   fontWeight: isActive ? "bold" : "normal"
