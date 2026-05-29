@@ -39,6 +39,20 @@ export default function ForInstructors(props: Props) {
   const [activeSection, setActiveSection] = useState<SupportSection>("monitoring");
 
   const section = supportSections[activeSection];
+  const handleSelect = (sectionKey: SupportSection) => {
+    setActiveSection(sectionKey);
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<SVGCircleElement>,
+    sectionKey: SupportSection
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSelect(sectionKey);
+    }
+  };
+
   const panelStyles = useSpring({
     opacity: 1,
     transform: "translate3d(0px, 0px, 0px)",
@@ -74,7 +88,12 @@ export default function ForInstructors(props: Props) {
                 stroke={isActive ? "white" : "midnightblue"}
                 strokeWidth={isActive ? 3 : 1.5}
                 className="intro_nav"
-                onClick={() => setActiveSection(item.key)}
+                onClick={() => handleSelect(item.key)}
+                onKeyDown={(event) => handleKeyDown(event, item.key)}
+                tabIndex={0}
+                role="button"
+                aria-label={`${item.label} support details`}
+                aria-pressed={isActive}
               />
               <text
                 x={item.x}
