@@ -66,9 +66,9 @@ export default function ForInstructors(props: Props) {
   return (
     <div className={"intro"}>
       <p>
-        CoLab.online extends SAPA with practical instructor supports for group
-        work experiences, collaborative reading, and perspective-focused team
-        development.
+        CoLab.online extends self- and peer-assessment (SAPA) with practical
+        instructor supports for group work experiences, collaborative reading,
+        and perspective-focused team development.
       </p>
       <svg
         viewBox="0 0 390 72"
