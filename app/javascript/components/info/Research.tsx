@@ -6,16 +6,17 @@ export default function Research(props: Props) {
   return (
     <div className={"intro"}>
       <p>
-        CoLab is informed by research on peer assessment, collaborative
-        learning, and instructor intervention in team-based courses.
+        The SAPA work began with Continuous Assessment (a 2011 PHP prototype)
+        used across five classes spanning three semesters, followed by S2 (a
+        Ruby on Rails rewrite).
       </p>
       <p>
-        We are streamlining this bibliography and keeping the publications by
-        Micah G. Modell and collaborators as the core references for the
-        platform.
+        A design case from this line of work was presented at AECT 2012, and
+        the publications by Micah G. Modell and collaborators remain the core
+        references behind CoLab.
       </p>
       <p>
-        For the full publication list and project background, visit{" "}
+        For the full publication list and broader project background, visit{" "}
         <a href="http://www.peerassess.info/">PeerAssess.info</a>.
       </p>
     </div>

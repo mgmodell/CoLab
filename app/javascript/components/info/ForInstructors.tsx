@@ -4,31 +4,31 @@ import { animated, useSpring } from "@react-spring/web";
 type Props = {};
 
 const supportSections = {
-  planning: {
-    title: "Plan",
-    subtitle: "Set teams up for success",
+  experiences: {
+    title: "Group Work",
+    subtitle: "Facilitate authentic in-class collaboration",
     points: [
-      "Structure team roles and expectations before project pressure builds.",
-      "Use kickoff check-ins to normalize communication and accountability.",
-      "Align collaboration goals with assignment milestones."
+      "Use simulated authentic group work experiences to anchor in-class discussion.",
+      "Coach teams with scenarios that surface common collaboration challenges.",
+      "Build shared expectations for productive team process."
     ]
   },
-  monitoring: {
-    title: "Monitor",
-    subtitle: "Track team health over time",
+  reading: {
+    title: "Reading",
+    subtitle: "Encourage collaboration around assigned texts",
     points: [
-      "Review periodic self- and peer-check-ins for emerging risks.",
-      "See trends in participation before a team reaches a crisis point.",
-      "Use quick summaries to prioritize where your support is needed."
+      "Use gamified reading supports to increase preparation and participation.",
+      "Prompt students to engage with ideas before class activities begin.",
+      "Reinforce discussion habits that transfer to team project work."
     ]
   },
-  intervention: {
-    title: "Intervene",
-    subtitle: "Offer targeted supports",
+  perspectives: {
+    title: "Perspectives",
+    subtitle: "Develop appreciation for different viewpoints",
     points: [
-      "Start coaching conversations with clear, behavior-based evidence.",
-      "Guide teams through repair steps when conflict or uneven effort appears.",
-      "Follow up after interventions to reinforce productive collaboration."
+      "Calculate diversity points to foreground perspective-taking in team formation.",
+      "Use diversity-point information as a support for reflective team dialogue.",
+      "Connect perspective awareness to equitable collaboration practices."
     ]
   }
 } as const;
@@ -36,7 +36,7 @@ const supportSections = {
 type SupportSection = keyof typeof supportSections;
 
 export default function ForInstructors(props: Props) {
-  const [activeSection, setActiveSection] = useState<SupportSection>("monitoring");
+  const [activeSection, setActiveSection] = useState<SupportSection>("reading");
 
   const section = supportSections[activeSection];
   const handleSelect = (sectionKey: SupportSection) => {
@@ -66,8 +66,9 @@ export default function ForInstructors(props: Props) {
   return (
     <div className={"intro"}>
       <p>
-        CoLab gives instructors a quick way to move from setup, to monitoring,
-        to action while teams are still working.
+        CoLab.online extends SAPA with practical instructor supports for group
+        work experiences, collaborative reading, and perspective-focused team
+        development.
       </p>
       <svg
         viewBox="0 0 390 72"
@@ -79,9 +80,9 @@ export default function ForInstructors(props: Props) {
         <title>Instructor support stages: plan, monitor, and intervene</title>
         {(
           [
-            { key: "planning", x: 65, color: "#53b0ff", label: "Plan" },
-            { key: "monitoring", x: 195, color: "#7ad35a", label: "Monitor" },
-            { key: "intervention", x: 325, color: "#ff9f5a", label: "Intervene" }
+            { key: "experiences", x: 65, color: "#53b0ff", label: "Group Work" },
+            { key: "reading", x: 195, color: "#7ad35a", label: "Reading" },
+            { key: "perspectives", x: 325, color: "#ff9f5a", label: "Perspectives" }
           ] as const
         ).map((item) => {
           const isActive = activeSection === item.key;
