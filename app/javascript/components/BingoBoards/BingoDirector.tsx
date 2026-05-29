@@ -10,6 +10,7 @@ import {
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
+import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 
 export default function BingoDirector() {
@@ -41,7 +42,7 @@ export default function BingoDirector() {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        switch (data.target) {
+        switch (data.messages.target) {
           case 'review_in_progress':
             setRedirectMessageHeading(t("terms_review_in_progress_heading"));
             setRedirectMessage(t("terms_review_in_progress_msg", {
@@ -55,7 +56,10 @@ export default function BingoDirector() {
           case 'not_available_yet':
             setRedirectMessageHeading(t("not_available_yet_heading"));
             setRedirectMessage(t("not_available_yet_msg", {
-              start_date: data.messages.start_date
+              start_date: formatZonedDateTime(
+                parseISO(data.messages.metadata.start_date, TemporalSettings.timezone),
+                DATETIME_SHORT
+              ) 
             }));
             setRedirectUrl('/home');
             setRedirectState(RedirectState.REDIRECT);
@@ -109,12 +113,15 @@ export default function BingoDirector() {
 
   return(
     <GuardRedirect
-      state={redirectState}
-      url={redirectUrl}
+      redirectState={redirectState}
+      redirectUrl={redirectUrl}
+      messageHeading={redirectMessageHeading}
       message={redirectMessage}
-      heading={redirectMessageHeading}
+      secondsUntilRedirect={30}
     >
-      {t("determining_status")}
+      <h1>
+        {t("determining_status")}
+      </h1>
 
     </GuardRedirect>
   )

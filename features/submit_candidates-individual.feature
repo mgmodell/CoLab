@@ -26,15 +26,15 @@ Feature: Submitting Candidate words for Bingo!
     Given the user is not enrolled in the course
     When the user logs in
      Then the user accesses the "bingo" page
-     Then we debug
      And the user should see "No such activity available"
 
   @javascript
   Scenario: As student enrolled in the course should see a not yet available message
-    Given the user is not enrolled in the course
+    Given today is "two months ago"
     When the user logs in
      Then the user accesses the "bingo" page
-     And the user should see "Terms cannot be entered yet. Please check back"
+     And the user should see "Terms cannot be entered yet"
+     And the user should see "This bingo game is not yet open for term entry. It will open on"
 
   @javascript
   Scenario: An instructor during the entry period should see the admin page
