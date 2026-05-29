@@ -87,6 +87,14 @@ export default function ForInstructors(props: Props) {
           const isActive = activeSection === item.key;
           return (
             <g key={item.key}>
+              <rect
+                x={item.x - 43}
+                y={44}
+                width={86}
+                height={19}
+                rx={9}
+                fill="rgba(255, 255, 255, 0.88)"
+              />
               <circle
                 cx={item.x}
                 cy={24}
@@ -124,8 +132,8 @@ export default function ForInstructors(props: Props) {
           <strong>{section.title}:</strong> {section.subtitle}
         </p>
         <ul>
-          {section.points.map((point) => (
-            <li key={point}>{point}</li>
+          {section.points.map((point, index) => (
+            <li key={index}>{point}</li>
           ))}
         </ul>
       </animated.div>
