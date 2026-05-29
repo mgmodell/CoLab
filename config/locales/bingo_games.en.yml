@@ -17,6 +17,7 @@ en:
     not_available_yet_heading: Terms cannot be entered yet
     not_available_yet_msg: >
       This bingo game is not yet open for term entry. It will open on {{start_date}}. Please check back then!
+    determining_status: Please be patient while we direct your call...
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game

@@ -78,7 +78,7 @@ export default function BingoDirector() {
             break;
           case 'admin':
             navigate(
-              `/admin/courses/${data.messages.course_id}/bingo_game/${bingoGameId}`,
+              `/admin/courses/${data.messages.metadata.course_id}/bingo_game/${bingoGameId}`,
               { replace: true }
             );
             break;
@@ -117,7 +117,6 @@ export default function BingoDirector() {
       redirectUrl={redirectUrl}
       messageHeading={redirectMessageHeading}
       message={redirectMessage}
-      secondsUntilRedirect={30}
     >
       <h1>
         {t("determining_status")}

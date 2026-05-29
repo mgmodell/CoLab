@@ -41,7 +41,6 @@ Feature: Submitting Candidate words for Bingo!
     Given the user is the instructor for the course
     When the user logs in
      Then the user accesses the "bingo" page
-     And the user should see "No such activity available"
      And the user should see the "bingo" reporting page
 
   @javascript

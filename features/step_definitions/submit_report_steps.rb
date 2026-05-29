@@ -306,10 +306,9 @@ Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
   case activity_type.downcase
   when 'bingo'
-    page.should have_content "Data for #{@bingo.name}"
-    all(:xpath, "//input[text()='#{@bingo.name}']").size.should eq 1
+    page.should have_field with: @bingo.topic
     all(:xpath, "//span[text()='Response data']")[0].click
-    page should have content "Results"
+    page.should have_content "Results"
   when 'project'
     all(:xpath, "//span[text()='Reporting']")[0].click
     page.should have_content "Data for #{@project.name}"
