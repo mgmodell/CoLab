@@ -157,6 +157,9 @@ Rails.application.routes.draw do
     scope 'bingo' do
       resources :candidate_lists, only: %i[create edit update show]
       # TODO: remove the next line
+      get 'director/:bingo_game_id' => 'bingo_games#actvity_director',
+          as: :bingo_director,
+          constraints: ->(req) { req.format == :json }
       get 'request_collaboration/:id/:desired' => 'candidate_lists#request_collaboration',
           as: :request_bingo_collaboration
       get 'candidates_review/:id' => 'bingo_games#review_candidates',

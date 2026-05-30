@@ -165,10 +165,12 @@ class ExperiencesController < ApplicationController
     }
 
     experience = Experience.joins( course: { rosters: :user } )
-                           .find_by( id: experience_id, users: { id: current_user } )
-    if !experience.nil? && experience.active
+                           .find_by( id: experience_id,
+                                     active: true,
+                                     users: { id: current_user } )
+    if !experience.nil?
       roster = experience.course.rosters.find_by( user: current_user )
-      if roster.instructor?
+      if roster.instructor? || roster.assistant?
         # An instructor cannot enter info.
         response[:messages][:error_type] = :experience_instructor_redirect
         response[:messages][:status] = t( 'experiences.instructor_redirect_msg' )

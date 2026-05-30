@@ -48,6 +48,27 @@ Feature: Students review Candidate words for Bingo!
     Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
+     Then the user accesses the "bingo" page
+     Then the user should see the "bingo" reporting page
+
+  @javascript
+  Scenario: Student accessing Bingo after close sees the history page
+    Given the user assigns "Accept" feedback to all candidates
+    Given the user checks the review completed checkbox
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then the user accesses the "bingo" page
+     Then the user should see the "bingo" reporting page
+
+  @javascript
+  Scenario: Instructor completes the review and the user checks their account
+    Given the user assigns "Accept" feedback to all candidates
+    Given the user checks the review completed checkbox
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -61,6 +82,8 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 0 open task
      Then user opens their profile
      Then user sees the Bingo! in the history
+     Then the user accesses the "bingo" page
+     Then the user should see the "bingo" reporting page
 
   @javascript
   Scenario: Instructor logs in and accepts all candidates
