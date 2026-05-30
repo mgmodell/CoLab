@@ -74,7 +74,7 @@ export default function BingoDirector() {
             navigate(`/home/bingo/enter_candidates/${bingoGameId}`, { replace: true });
             break;
           case 'results_review':
-            navigate(`/home/bingo/results_review/${bingoGameId}`, { replace: true });
+            navigate(`/home/bingo/candidate_results/${bingoGameId}`, { replace: true });
             break;
           case 'admin':
             navigate(

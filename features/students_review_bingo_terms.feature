@@ -59,6 +59,7 @@ Feature: Students review Candidate words for Bingo!
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
+     Then the user logs in
      Then the user accesses the "bingo" page
      Then the user should see the "bingo" reporting page
 
@@ -82,7 +83,7 @@ Feature: Students review Candidate words for Bingo!
      Then user opens their profile
      Then user sees the Bingo! in the history
      Then the user accesses the "bingo" page
-     Then the user should see the bingo builder page
+     Then the user should see the "bingo" reporting page
 
   @javascript
   Scenario: Instructor logs in and accepts all candidates

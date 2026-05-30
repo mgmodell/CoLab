@@ -34,6 +34,7 @@ class BingoGamesController < ApplicationController
   end
 
   def actvity_director
+    puts "Activity Director called with params: #{params}"
     bingo_game = BingoGame.joins( course: :rosters )
                           .where( id: params[:bingo_game_id],
                                   active: true,
