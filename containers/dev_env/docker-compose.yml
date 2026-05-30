@@ -59,7 +59,7 @@ services:
     build:
       context: ../..
       dockerfile: containers/agnostic/browser/Dockerfile
-    shm_size: '256mb'
+    shm_size: '512mb'
     ports:
       - 4444:4444
       - 5900:5900

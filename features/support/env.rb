@@ -232,13 +232,24 @@ Around() do | scenario, block |
   scenario_times["#{scenario.location}::#{scenario.name}"] = Time.zone.now - start
 end
 
+def time_disp time
+  hours = ( time / 3600 ).floor
+  minutes = ( time % 3600 / 60 ).floor
+  seconds = ( time % 60 ).ceil
+  if hours > 0
+    "#{hours}hrs, #{minutes}m #{seconds}s"
+  else
+    "#{minutes}m #{seconds}s"
+  end
+end
+
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
-  puts "Aggregate Testing Time: #{( total_time / 60).floor } minutes and #{( total_time % 60 ).ceil} seconds"
+  puts "Aggregate Testing Time: #{time_disp(total_time)}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do | key, value |
-    puts "#{ (value / 60 ).floor } minutes and #{(value % 60 ).ceil} seconds  #{key}"
+    puts "#{time_disp(value)}  #{key}"
   end
 end

@@ -225,6 +225,7 @@ Given( /^the saved reviews match the list$/ ) do
 end
 
 Given( 'the user checks the review completed checkbox' ) do
+  wait_for_render
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]

@@ -137,7 +137,7 @@ export default function InstallmentReport(props: Props) {
         const data = response.data;
         if ( data.messages?.error) {
           if ( 'instructor' === data.messages.error_type ){
-            navigate(`/admin/courses/${data.messages.error_data.course_id}/project/${data.messages.error_data.project_id}`);
+            navigate(`/admin/courses/${data.messages.error_data.course_id}/project/${data.messages.error_data.project_id}`, { replace: true });
           } else if ( 'not_enrolled' === data.messages.error_type ) {
             setRedirectMessageHeading(t("not_enrolled_heading"));
             setRedirectMessage(t("not_enrolled_message"));
