@@ -34,7 +34,6 @@
 		"vscode": {
 			"extensions": [
 				"shopify.ruby-lsp",
-				"castwide.solargraph",
 				"misogi.ruby-rubocop",
 				"eamodio.gitlens",
 				"esbenp.prettier-vscode",

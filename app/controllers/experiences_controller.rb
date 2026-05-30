@@ -155,43 +155,66 @@ class ExperiencesController < ApplicationController
   # Maybe build in JSON API support
   def next
     experience_id = params[:experience_id]
-
-    experience = Experience.joins( course: { rosters: :user } )
-                           .find_by( id: experience_id, users: { id: current_user } )
-
     response = {
-      messages: {}
+      messages: {
+        error: true,
+        error_type: :no_available_experience,
+        error_data: {},
+        status: t( 'experiences.no_available_experience' ),
+      }
     }
 
-    if experience.nil? && !experience.is_open
-      response[:messages][ :main ] = t( 'experiences.wrong_course' )
+    experience = Experience.joins( course: { rosters: :user } )
+                           .find_by( id: experience_id,
+                                     active: true,
+                                     users: { id: current_user } )
+    if !experience.nil?
+      roster = experience.course.rosters.find_by( user: current_user )
+      if roster.instructor? || roster.assistant?
+        # An instructor cannot enter info.
+        response[:messages][:error_type] = :experience_instructor_redirect
+        response[:messages][:status] = t( 'experiences.instructor_redirect_msg' )
+        response[:messages][:error_data] = {
+          course_id: experience.course_id,
+          experience_id: experience.id
+        }
+      elsif ! experience.is_open? || !experience.active
+        # If the experience is not open, they need to know that they cannot access it... yet.
+        response[:messages][:error_type] = :experience_not_open
+        response[:messages][:status] = t( 'experiences.not_open_msg' )
+        response[:messages][:error_data] = {
+          start_date: experience.start_date,
+          end_date: experience.end_date
+        }
+      else
+        response[:messages][:error] = false
 
-    else
-      reaction = experience.get_user_reaction( current_user )
-      week = reaction.next_week
+        reaction = experience.get_user_reaction( current_user )
+        week = reaction.next_week
 
-      response = response.merge( {
-                                  reaction_id: reaction.id,
-                                  instructed: reaction.instructed
-                                } )
-
-      if !reaction.instructed
-        reaction.instructed = true
-        reaction.save
-
-        logger.debug reaction.errors.full_messages unless reaction.errors.empty?
-      elsif !week.nil?
         response = response.merge( {
-                                    week_id: week.id,
-                                    week_num: week.week_num,
-                                    week_text: week.text
+                                    reaction_id: reaction.id,
+                                    instructed: reaction.instructed
                                   } )
-      end
 
-      respond_to do | format |
-        format.json { render json: response.as_json }
-      end
+        if !reaction.instructed
+          reaction.instructed = true
+          reaction.save
 
+          logger.debug reaction.errors.full_messages unless reaction.errors.empty?
+        elsif !week.nil?
+          response = response.merge( {
+                                      week_id: week.id,
+                                      week_num: week.week_num,
+                                      week_text: week.text
+                                    } )
+        end
+
+      end
+    end
+
+    respond_to do | format |
+      format.json { render json: response }
     end
   end
 

@@ -282,15 +282,42 @@ Then( /^user will be presented with the installment form$/ ) do
   page.should have_content @project.name
 end
 
-Then('the user accesses the check-in page') do
-  visit "/home/project/checkin/#{@project.id}"
+Then('the user accesses the {string} page') do | activity_type |
+  case activity_type.downcase
+  when 'check-in'
+    visit "/home/project/checkin/#{@project.id}"
+  when 'experience'
+    visit "/home/experience/#{@experience.id}"
+  when 'bingo'
+    visit "/home/bingo/#{@bingo.id}"
+  else
+    pending
+  end
   wait_for_render
 end
 
-Then('the user should see the group project\'s reporting page') do
+Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
-  all(:xpath, "//span[text()='Reporting']")[0].click
-  page.should have_content "Data for #{@project.name}"
+  is_instructor = @project.course.rosters.faculty.include? @user
+  case activity_type.downcase
+  when 'bingo'
+    if is_instructor
+      page.should have_field with: @bingo.topic
+      all(:xpath, "//span[text()='Response data']")[0].click
+      page.should have_content 'Results'
+    else
+      page.should have_content @bingo.topic
+      all(:xpath, "//span[text()='Your performance']")[0].click
+    end
+  when 'project'
+    all(:xpath, "//span[text()='Reporting']")[0].click
+    page.should have_content "Data for #{@project.name}"
+  when 'experience'
+    all(:xpath, "//span[text()='Results']")[0].click
+    page.should have_content 'Responses'
+  else
+    pending
+  end
 end
 
 Then('the user is not enrolled in the course') do 

@@ -42,6 +42,8 @@ Feature: Review Candidate words for Bingo!
     Given the user is any student in the course
     Given the user logs in
      Then user should see 0 open task
+     Then the user accesses the "bingo" page
+      And the user should see "Terms are being reviewed. Please check back soon."
 
   @javascript
   Scenario: Instructor does not see the review until the prep time
