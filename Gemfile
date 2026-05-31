@@ -79,9 +79,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  # gem 'derailed'
-  # gem 'ruby-debug-ide'
-  # gem 'debase'
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
@@ -90,28 +87,26 @@ group :development, :test do
   gem 'railroady'
   gem 'rails-erd', require: false
   # gem 'rb-readline'
-  gem 'report_builder'
-  gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.82', require: false
+  gem 'report_builder'
   gem 'reek'
-  gem 'rubocop-thread_safety'
+  gem 'rspec'
+  gem 'rubocop', '~> 1.82', require: false
+  gem 'rubocop-capybara'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
-  gem 'rubocop-capybara'
+  gem 'rubocop-thread_safety'
   gem 'ruby-lsp'
   gem 'ruby-lsp-rails'
   gem 'traceroute'
 end
 
 group :test do
-  gem 'simplecov', require: false
-  # gem 'webdrivers', '~> 5.3.1', require: false
-  gem 'selenium-webdriver'
-  gem 'cucumber-rails',require: false
   gem 'capybara'
+  gem 'cucumber-rails',require: false
   gem 'database_cleaner-active_record'
   gem 'machinist', '~> 2.0'
+  gem 'selenium-webdriver'
   gem 'webmock'
 end
 

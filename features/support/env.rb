@@ -9,9 +9,6 @@
 require 'cucumber/rails'
 require 'selenium/webdriver'
 # require 'webdrivers'
-require 'simplecov'
-
-SimpleCov.start 'rails'
 
 World( Warden::Test::Helpers )
 Warden.test_mode!
