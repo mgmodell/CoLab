@@ -48,7 +48,7 @@
     "prop-types": "^15.8.1",
     "quill": "^2.0.3",
     "react": "^19.2.6",
-    "react-big-calendar": "^1.19.6",
+    "react-big-calendar": "^1.20.0",
     "react-cookie-consent": "^10.0.1",
     "react-dom": "^19.2.6",
     "react-grid-system": "^8.2.1",
