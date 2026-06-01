@@ -298,9 +298,9 @@ end
 
 Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
-  is_instructor = @project.course.rosters.faculty.where( user: @user ).exists?
   case activity_type.downcase
   when 'bingo'
+    is_instructor = @project.course.rosters.faculty.where( user: @user ).exists?
     if is_instructor
       page.should have_field with: @bingo.topic
       all(:xpath, "//span[text()='Response data']")[0].click
