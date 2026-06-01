@@ -58,7 +58,7 @@ class BingoGamesController < ApplicationController
         elsif bingo_game.awaiting_review?
           # go to be patient
           messages[:target] = :review_in_progress
-          messages[:status] = t( 'bingo_games.review_in_progress_heading' )
+          messages[:status] = t( 'bingo_games.terms_review_in_progress_heading' )
           messages[:metadata] = {
             start_date: bingo_game.term_list_date,
             end_date: bingo_game.next_deadline

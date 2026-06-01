@@ -46,8 +46,14 @@ export default function BingoDirector() {
           case 'review_in_progress':
             setRedirectMessageHeading(t("terms_review_in_progress_heading"));
             setRedirectMessage(t("terms_review_in_progress_msg", {
-              start_date: data.messages.start_date,
-              end_date: data.messages.end_date
+              start_date: formatZonedDateTime(
+                parseISO(data.messages.metadata.start_date, TemporalSettings.timezone),
+                DATETIME_SHORT
+              ),
+              end_date: formatZonedDateTime(
+                parseISO(data.messages.metadata.end_date, TemporalSettings.timezone),
+                DATETIME_SHORT
+              )
             } 
             ));
             setRedirectUrl('/home'); 
