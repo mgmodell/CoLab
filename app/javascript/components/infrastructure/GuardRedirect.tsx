@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { Skeleton } from "primereact/skeleton";
-import parse from 'html-react-parser';
+import WorkingIndicator from "./WorkingIndicator";
 
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +41,10 @@ export default function GuardRedirect(props: Props) {
   return (
     <Panel>
       {RedirectState.DECIDING === props.redirectState ? (
-        <Skeleton className="mb-2" height={"20rem"} />
+        <>
+          <WorkingIndicator />
+          <Skeleton className="mb-2" height={"20rem"} />
+        </>
       ) : RedirectState.REDIRECT === props.redirectState ? (
         <>
           <h2>{props.messageHeading}</h2>
