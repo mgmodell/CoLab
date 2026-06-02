@@ -211,12 +211,14 @@ After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
   Warden.test_reset!
   travel_back
+  page.quit if page.driver.browser.respond_to? :quit
 end
 
 After( 'not @javascript' ) do | _scenario |
   DatabaseCleaner.clean
   Warden.test_reset!
   travel_back
+  page.reset! if page.respond_to? :reset!
 end
 
 scenario_times = {}
