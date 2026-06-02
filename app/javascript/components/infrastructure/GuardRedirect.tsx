@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { Skeleton } from "primereact/skeleton";
+import { useDispatch } from "react-redux";
+import { endTask, startTask } from "./StatusSlice";
 import WorkingIndicator from "./WorkingIndicator";
 
 import { useTranslation } from "react-i18next";
@@ -27,13 +29,21 @@ const SECONDS = 1000;
 export default function GuardRedirect(props: Props) {
   const [t] = useTranslation('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(startTask());
+  }, []);
 
   useEffect(() => {
     if( RedirectState.REDIRECT === props.redirectState && props.redirectUrl !== undefined ) {
       const timer = setTimeout(() => {
-        navigate(props.redirectUrl);
+        dispatch(endTask());
+        navigate(props.redirectUrl || '/home');
       }, (props.secondsUntilRedirect || 5) * SECONDS);
       return () => clearTimeout(timer);
+    } else if ( RedirectState.STAY === props.redirectState ) {
+      dispatch(endTask());
     }
   }, [props.redirectUrl, props.redirectState, navigate]);
 

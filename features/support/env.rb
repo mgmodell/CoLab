@@ -14,8 +14,9 @@ World( Warden::Test::Helpers )
 Warden.test_mode!
 
 def wait_for_render
-  # 30 seconds should be more than enough for any page to render, even on CI
-  page.has_no_xpath?( "//*[@id='waiting']", wait: 5 )
+  seconds_waited = 0
+  # 10 seconds should be more than enough for any page to render, even on CI
+  seconds_waited += 1 while page.has_no_xpath?( "//*[@id='waiting']", wait: 1 ) && seconds_waited < 10
 end
 
 def ack_messages
