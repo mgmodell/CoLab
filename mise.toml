@@ -1,9 +1,9 @@
 [tools]
-node = "26.2.0"
+node = "26.3"
 overmind = "latest"
 podman = "5.8.2"
 python = "3.13.7"
 ruby = "4.0.5"
-rust = "1.95"
-usage = "3.3.0"
-yarn = "4.15.0"
+rust = "1.96"
+usage = "3.4"
+yarn = "4.16"
