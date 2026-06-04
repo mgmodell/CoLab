@@ -31,6 +31,8 @@ development:
     client:
       # Should we show a full-screen overlay in the browser when there are compiler errors or warnings?
       overlay: true
+      # Avoid repeated console noise when the optional HMR websocket is unavailable.
+      reconnect: false
       # WebSocket URL for HMR.  hostname is intentionally omitted so the browser
       # auto-detects it from the current page location — this lets the VNC browser
       # container reach the dev server via `app:3035` while plain localhost access
