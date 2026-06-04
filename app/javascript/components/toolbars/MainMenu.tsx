@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { signOut } from "../infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
-import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 import Logo from "../Logo";
 
@@ -222,16 +221,17 @@ export default function MainMenu(props: Props) {
 
   return (
     <React.Fragment>
-      <Button
+      <button
         id="main-menu-button"
-        text
+        type="button"
+        aria-label="Main Menu"
         onClick={() => {
           setMenuOpen(!menuOpen);
         }}
-        className="p-mr-2"
+        className="p-button p-component p-button-text p-mr-2"
       >
         <Logo height={48} width={48} spinning={working} />
-      </Button>
+      </button>
       <Sidebar
         visible={menuOpen}
         onHide={() => setMenuOpen(false)}

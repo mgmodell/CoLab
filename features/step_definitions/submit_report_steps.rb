@@ -158,7 +158,7 @@ end
 
 Then( /^the user logs out$/ ) do
   wait_for_render
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'logout-menu-item' ).click
   wait_for_render
   page.quit

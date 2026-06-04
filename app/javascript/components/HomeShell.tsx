@@ -64,23 +64,25 @@ export default function HomeShell(props: Props) {
   }, [setTourSteps]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && undefined !== tasks) {
-      const newTasks = tasks;
-      newTasks.forEach((value, _index, _array) => {
-        if (value.next_date) {
-          value.next_date = parseISO(value.next_date, Settings.defaultZone);
-        }
-        if (value.start_date) {
-          value.start_date = parseISO(value.start_date, Settings.defaultZone);
-        }
-        if (value.end_date) {
-          value.end_date = parseISO(value.end_date, Settings.defaultZone);
-        }
-      });
-
-      setTasks(newTasks);
+    if (null === user.lastRetrieved || undefined === tasks) {
+      return;
     }
-  }, [user.lastRetrieved, Settings.defaultZone, tasks]);
+
+    setTasks(currentTasks =>
+      currentTasks?.map(value => ({
+        ...value,
+        next_date: value.next_date
+          ? parseISO(value.next_date, Settings.defaultZone)
+          : value.next_date,
+        start_date: value.start_date
+          ? parseISO(value.start_date, Settings.defaultZone)
+          : value.start_date,
+        end_date: value.end_date
+          ? parseISO(value.end_date, Settings.defaultZone)
+          : value.end_date
+      }))
+    );
+  }, [user.lastRetrieved]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();

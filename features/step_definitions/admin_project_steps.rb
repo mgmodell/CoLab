@@ -3,7 +3,7 @@
 require 'chronic'
 # frozen_string_literal: true
 Then( /^the user "([^"]*)" see an Admin button$/ ) do | admin |
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   if 'does' == admin
     page.should have_content( 'Administration' )
   else
@@ -19,7 +19,7 @@ Given( /^the user is an admin$/ ) do
 end
 
 Then( /^the user clicks the Admin button$/ ) do
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'administration-menu' ).hover
 end
 
@@ -92,39 +92,16 @@ Then( 'the user adds a group named {string}' ) do | group_name |
   find( :xpath, "//button[contains(.,'#{button}')]",
         match: :first,
         visible: :all ).click
-  elem = find_field( 'g_-1' )
+  elem = find( :xpath, "//input[starts-with(@id,'g_-')]", match: :first, wait: 10 )
   elem.set( group_name )
 end
 
 Then( /^the user switches to the "([^"]*)" tab$/ ) do | tab |
-  find( :xpath, "//ul[@role='tablist']/li/a/span[contains(.,'#{tab}')]" ).click
-  wait_for_render
+  click_named_tab( tab )
 end
 
 Then 'the user enables the {string} table view option' do | view_option |
-  ack_messages
-  retries = 0
-  found = false
-
-  option_xpath = "//ul[@role='listbox']/li[contains(.,'#{view_option}')]/div/div"
-
-  while retries < 4 && !found
-    find( :xpath, "//div[@data-pc-name='multiselect']" ).click
-    found = has_xpath?( option_xpath )
-    retries += 1
-  end
-  found.should be( true ), "No checkbox for #{view_option} found"
-
-  begin
-    retries ||= 0
-    checkbox = find( :xpath, option_xpath )
-    checkbox.click if 'false' == checkbox['data-p-highlight']
-    send_keys :escape
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
-    # A timing artifact, I think
-    puts e.inspect
-    retry if ( ( retries += 1 ) < 4 ) && has_xpath?( option_xpath )
-  end
+  enable_table_view_option( view_option )
 end
 
 Then( /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ ) do | field, value |
