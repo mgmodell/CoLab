@@ -353,7 +353,9 @@ export default function CandidatesReviewTable(props: Props) {
                 <Dropdown
                   value={candidate.candidate_feedback_id || 0}
                   onChange={event => {
-                    feedbackSet(candidate.id, event.target.value);
+                    const selectedFeedbackId =
+                      event.value ?? event.target?.value ?? 0;
+                    feedbackSet(candidate.id, Number(selectedFeedbackId));
                   }}
                   options={feedbackOptions}
                   optionLabel="name"
