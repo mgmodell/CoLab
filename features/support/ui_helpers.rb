@@ -7,6 +7,8 @@ module UiHelpers
     return %("#{value}") unless value.include?('"')
     return %('#{value}') unless value.include?("'")
 
+    # Build an XPath concat() literal so selectors stay valid when a string
+    # contains both single and double quotes.
     %(concat("#{value.split('"').join('", \'"\', "')}"))
   end
 

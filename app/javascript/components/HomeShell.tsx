@@ -90,7 +90,7 @@ export default function HomeShell(props: Props) {
           : value.end_date
       }))
     );
-  }, [defaultZone, tasks, user.lastRetrieved]);
+  }, [defaultZone, user.lastRetrieved]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();
