@@ -1,4 +1,5 @@
 module UiHelpers
+  MAX_TOGGLE_RETRIES = 4
   UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".freeze
   LOWERCASE = "abcdefghijklmnopqrstuvwxyz".freeze
 
@@ -49,7 +50,7 @@ module UiHelpers
     ].join(" | ")
     option_xpath = "//ul[@role='listbox']//li[#{xpath_ci_contains('.', option_name)}]"
 
-    4.times do
+    MAX_TOGGLE_RETRIES.times do
       find(:xpath, toggle_xpath, match: :first, wait: 10, visible: :all).click
       break if has_xpath?(option_xpath, wait: 2)
     end

@@ -39,6 +39,7 @@ export default function HomeShell(props: Props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const defaultZone = Settings.defaultZone;
 
   const [curTab, setCurTab] = useState(0);
 
@@ -72,17 +73,17 @@ export default function HomeShell(props: Props) {
       currentTasks?.map(value => ({
         ...value,
         next_date: value.next_date
-          ? parseISO(value.next_date, Settings.defaultZone)
+          ? parseISO(value.next_date, defaultZone)
           : value.next_date,
         start_date: value.start_date
-          ? parseISO(value.start_date, Settings.defaultZone)
+          ? parseISO(value.start_date, defaultZone)
           : value.start_date,
         end_date: value.end_date
-          ? parseISO(value.end_date, Settings.defaultZone)
+          ? parseISO(value.end_date, defaultZone)
           : value.end_date
       }))
     );
-  }, [user.lastRetrieved]);
+  }, [defaultZone, user.lastRetrieved]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();
