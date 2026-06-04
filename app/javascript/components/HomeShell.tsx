@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -46,6 +46,7 @@ export default function HomeShell(props: Props) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
   const [tasks, setTasks] = useState();
+  const parsedTaskZone = useRef<string | null>(null);
 
   const { setTourSteps } = useTour();
 
@@ -69,6 +70,12 @@ export default function HomeShell(props: Props) {
       return;
     }
 
+    if (parsedTaskZone.current === `${user.lastRetrieved}:${defaultZone}`) {
+      return;
+    }
+
+    parsedTaskZone.current = `${user.lastRetrieved}:${defaultZone}`;
+
     setTasks(currentTasks =>
       currentTasks?.map(value => ({
         ...value,
@@ -83,7 +90,7 @@ export default function HomeShell(props: Props) {
           : value.end_date
       }))
     );
-  }, [defaultZone, user.lastRetrieved]);
+  }, [defaultZone, tasks, user.lastRetrieved]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();
