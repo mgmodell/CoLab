@@ -110,6 +110,7 @@ export default function HomeShell(props: Props) {
         const data = resp.data;
 
         data["tasks"].forEach((value, index, array) => {
+          console.log( "Processing bingo game task", value);
           switch (value.type) {
             case "assessment":
               value.title = value.group_name + " for (" + value.name + ")";
@@ -144,7 +145,7 @@ export default function HomeShell(props: Props) {
           if (null !== value.start_date) {
             value.start_date = parseISO(value.start_date);
           }
-          if (null !== value.end_date) {
+          if (null !== value.end_date && undefined !== value.end_date) {
             value.end_date = parseISO(value.end_date);
             value.end = new Date(value.end_date.toInstant().epochMilliseconds);
           } else {
