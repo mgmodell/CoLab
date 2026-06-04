@@ -127,14 +127,14 @@ export default function HomeShell(props: Props) {
 
           value.link = value.url;
           // Set the dates for the calendar. Use next_date as start, end_date as end.
-          if (null !== value.next_date) {
+          if (null !== value.next_date && undefined !== value.next_date) {
             value.next_date = parseISO(value.next_date);
             value.start = new Date(value.next_date.toInstant().epochMilliseconds);
           }
-          if (null !== value.start_date) {
+          if (null !== value.start_date && undefined !== value.start_date) {
             value.start_date = parseISO(value.start_date);
           }
-          if (null !== value.end_date) {
+          if (null !== value.end_date && undefined !== value.end_date) {
             value.end_date = parseISO(value.end_date);
             value.end = new Date(value.end_date.toInstant().epochMilliseconds);
           } else {

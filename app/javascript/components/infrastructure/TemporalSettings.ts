@@ -29,11 +29,15 @@ const parseISO = (
   isoString: string | Temporal.ZonedDateTime,
   zone?: string
 ): Temporal.ZonedDateTime => {
-  if (isoString instanceof Temporal.ZonedDateTime) {
-    return zone ? isoString.withTimeZone(zone) : isoString;
+  if (undefined === isoString || null === isoString) {
+    return isoString;
+  } else {
+    if (isoString instanceof Temporal.ZonedDateTime) {
+      return zone ? isoString.withTimeZone(zone) : isoString;
+    }
+    const tz = zone || _defaultTimeZone;
+    return Temporal.Instant.from(isoString as string).toZonedDateTimeISO(tz);
   }
-  const tz = zone || _defaultTimeZone;
-  return Temporal.Instant.from(isoString as string).toZonedDateTimeISO(tz);
 };
 
 /**
