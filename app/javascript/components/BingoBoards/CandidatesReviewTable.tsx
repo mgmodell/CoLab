@@ -354,8 +354,8 @@ export default function CandidatesReviewTable(props: Props) {
                   value={candidate.candidate_feedback_id || 0}
                   onChange={event => {
                     const selectedFeedbackId =
-                      event.value ?? event.target?.value ?? 0;
-                    feedbackSet(candidate.id, Number(selectedFeedbackId));
+                      event.value ?? event.target?.value;
+                    feedbackSet(candidate.id, Number(selectedFeedbackId ?? 0));
                   }}
                   options={feedbackOptions}
                   optionLabel="name"
