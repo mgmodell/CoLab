@@ -110,7 +110,6 @@ export default function HomeShell(props: Props) {
         const data = resp.data;
 
         data["tasks"].forEach((value, index, array) => {
-          console.log( "Processing bingo game task", value);
           switch (value.type) {
             case "assessment":
               value.title = value.group_name + " for (" + value.name + ")";
