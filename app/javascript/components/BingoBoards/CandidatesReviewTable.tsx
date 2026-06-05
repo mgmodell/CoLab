@@ -28,6 +28,22 @@ import { Panel } from "primereact/panel";
 type Props = {
   rootPath?: string;
 };
+
+type CandidateRow = {
+  id: number;
+  concept?: {
+    name?: string;
+  };
+  concept_id?: number | null;
+  candidate_feedback_id?: number | null;
+  completed?: number;
+  number?: number;
+  user_id?: number;
+  candidate_list_id?: number;
+  term?: string;
+  definition?: string;
+};
+
 export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
@@ -45,7 +61,7 @@ export default function CandidatesReviewTable(props: Props) {
   const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
 
-  const [candidates, setCandidates] = useState<any[]>([]);
+  const [candidates, setCandidates] = useState<CandidateRow[]>([]);
   const [candidateLists, setCandidateLists] = useState([]);
   const [feedbackOptions] = useState(
     // Add a non-response for the UI
@@ -217,7 +233,7 @@ export default function CandidatesReviewTable(props: Props) {
         const nextCandidate = {
           ...candidate,
           concept: {
-            ...candidate.concept,
+            ...(candidate.concept || {}),
             name: value
           }
         };
