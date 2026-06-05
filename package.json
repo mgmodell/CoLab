@@ -12,7 +12,7 @@
     "@rspack/cli": "^2.0.6",
     "@rspack/core": "^2.0.6",
     "@rspack/dev-server": "^2.0.3",
-    "@rspack/plugin-react-refresh": "^1.6.2",
+    "@rspack/plugin-react-refresh": "^2.0.2",
     "@swc/core": "^1.15.40",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",

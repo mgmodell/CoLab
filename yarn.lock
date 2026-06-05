@@ -600,18 +600,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/plugin-react-refresh@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "@rspack/plugin-react-refresh@npm:1.6.2"
-  dependencies:
-    error-stack-parser: "npm:^2.1.4"
+"@rspack/plugin-react-refresh@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@rspack/plugin-react-refresh@npm:2.0.2"
   peerDependencies:
+    "@rspack/core": ^2.0.0
     react-refresh: ">=0.10.0 <1.0.0"
-    webpack-hot-middleware: 2.x
   peerDependenciesMeta:
-    webpack-hot-middleware:
+    "@rspack/core":
       optional: true
-  checksum: 10c0/a1e2eb42dc870ec8438c5a80fddf48c60b21084b694264ae8f94d15ed1d4ad8fff64f1e97c9f2f41303c9cb32bffab788c3f509aa8ee19d9f8834a04a95eb09b
+  checksum: 10c0/1291689c3fcdfc4bc62e9fd032786d0f72a24b8e3c844974367a54b9b640534836f1ac945b1f1342f877332a584440a71631761a3569dad3e76c30655f20b9bb
   languageName: node
   linkType: hard
 
@@ -1432,7 +1430,7 @@ __metadata:
     "@rspack/cli": "npm:^2.0.6"
     "@rspack/core": "npm:^2.0.6"
     "@rspack/dev-server": "npm:^2.0.3"
-    "@rspack/plugin-react-refresh": "npm:^1.6.2"
+    "@rspack/plugin-react-refresh": "npm:^2.0.2"
     "@swc/core": "npm:^1.15.40"
     "@types/react": "npm:^19.2.16"
     "@types/react-big-calendar": "npm:^1.16.3"
@@ -2037,15 +2035,6 @@ __metadata:
   version: 8.0.0
   resolution: "entities@npm:8.0.0"
   checksum: 10c0/938e631664c19451823344a351aeeafd74fae2d5fa51e4d5b6ff635afaefd4bacf0f609989888c04c42733f46ffdac15211608267ebb02488005891a4793e94d
-  languageName: node
-  linkType: hard
-
-"error-stack-parser@npm:^2.1.4":
-  version: 2.1.4
-  resolution: "error-stack-parser@npm:2.1.4"
-  dependencies:
-    stackframe: "npm:^1.3.4"
-  checksum: 10c0/7679b780043c98b01fc546725484e0cfd3071bf5c906bbe358722972f04abf4fc3f0a77988017665bab367f6ef3fc2d0185f7528f45966b83e7c99c02d5509b9
   languageName: node
   linkType: hard
 
@@ -3440,13 +3429,6 @@ __metadata:
   version: 1.2.1
   resolution: "source-map-js@npm:1.2.1"
   checksum: 10c0/7bda1fc4c197e3c6ff17de1b8b2c20e60af81b63a52cb32ec5a5d67a20a7d42651e2cb34ebe93833c5a2a084377e17455854fee3e21e7925c64a51b6a52b0faf
-  languageName: node
-  linkType: hard
-
-"stackframe@npm:^1.3.4":
-  version: 1.3.4
-  resolution: "stackframe@npm:1.3.4"
-  checksum: 10c0/18410f7a1e0c5d211a4effa83bdbf24adbe8faa8c34db52e1cd3e89837518c592be60b60d8b7270ac53eeeb8b807cd11b399a41667f6c9abb41059c3ccc8a989
   languageName: node
   linkType: hard
 
