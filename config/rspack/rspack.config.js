@@ -3,11 +3,14 @@ const { NormalModuleReplacementPlugin } = require("@rspack/core");
 const { generateRspackConfig } = require("shakapacker/rspack");
 
 const config = generateRspackConfig();
+const rspackDevServerClientContext = new RegExp(
+  `(?:^|[\\\\/])@rspack[\\\\/]dev-server[\\\\/]client$`,
+);
 
 config.plugins = config.plugins || [];
 config.plugins.push(
   new NormalModuleReplacementPlugin(/\.\/socket\.js$/, (resource) => {
-    if (!resource.context?.includes(`${path.sep}@rspack${path.sep}dev-server${path.sep}client`)) {
+    if (!rspackDevServerClientContext.test(path.normalize(resource.context || ""))) {
       return;
     }
 
