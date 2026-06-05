@@ -8,50 +8,49 @@ const Client =
       : __rspack_dev_server_client__
     : WebSocketClient;
 
-let retries = 0;
-let maxRetries = 10;
 let client = null;
-let timeout;
 
 function socket(url, handlers, reconnect) {
-  if (reconnect !== undefined) {
-    maxRetries = reconnect;
-  }
+  let retries = 0;
+  const maxRetries = reconnect ?? 10;
+  let reconnectTimeoutId;
 
-  client = new Client(url);
+  const connect = () => {
+    client = new Client(url);
 
-  client.onOpen(() => {
-    retries = 0;
+    client.onOpen(() => {
+      retries = 0;
 
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-  });
+      if (reconnectTimeoutId) {
+        clearTimeout(reconnectTimeoutId);
+      }
+    });
 
-  client.onClose(() => {
-    if (retries === 0) {
-      handlers.close();
-    }
+    client.onClose(() => {
+      if (retries === 0) {
+        handlers.close();
+      }
 
-    client = null;
+      client = null;
 
-    if (retries < maxRetries) {
-      const retryInMs = 1000 * 2 ** retries + 100 * Math.random();
-      retries += 1;
-      log.info("Trying to reconnect...");
-      timeout = setTimeout(() => {
-        socket(url, handlers, reconnect);
-      }, retryInMs);
-    }
-  });
+      if (retries < maxRetries) {
+        const retryInMs = 1000 * 2 ** retries + 100 * Math.random();
+        retries += 1;
+        log.info("Trying to reconnect...");
+        reconnectTimeoutId = setTimeout(connect, retryInMs);
+      }
+    });
 
-  client.onMessage((data) => {
-    const message = JSON.parse(data);
+    client.onMessage((data) => {
+      const message = JSON.parse(data);
 
-    if (handlers[message.type]) {
-      handlers[message.type](message.data, message.params);
-    }
-  });
+      if (handlers[message.type]) {
+        handlers[message.type](message.data, message.params);
+      }
+    });
+  };
+
+  connect();
 }
 
 export default socket;
