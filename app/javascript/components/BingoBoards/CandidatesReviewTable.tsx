@@ -45,7 +45,7 @@ export default function CandidatesReviewTable(props: Props) {
   const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
 
-  const [candidates, setCandidates] = useState([]);
+  const [candidates, setCandidates] = useState<any[]>([]);
   const [candidateLists, setCandidateLists] = useState([]);
   const [feedbackOptions] = useState(
     // Add a non-response for the UI
@@ -207,31 +207,44 @@ export default function CandidatesReviewTable(props: Props) {
       });
   };
 
-  const conceptSet = (id: number, value: number) => {
-    const candidateIndex = candidates.findIndex(c => c.id === id);
-    const candidate = Object.assign({}, candidates[candidateIndex]);
-    const candidates_temp = [...candidates];
+  const conceptSet = (id: number, value: string) => {
+    setCandidates(currentCandidates =>
+      currentCandidates.map(candidate => {
+        if (candidate.id !== id) {
+          return candidate;
+        }
 
-    candidate.concept = {
-      name: value
-    }
+        const nextCandidate = {
+          ...candidate,
+          concept: {
+            ...candidate.concept,
+            name: value
+          }
+        };
 
-    setCompleted(candidate);
-    candidates_temp[candidateIndex] = candidate;
-    setCandidates(candidates_temp);
+        setCompleted(nextCandidate);
+        return nextCandidate;
+      })
+    );
   };
 
   const feedbackSet = (id: number, value: number) => {
-    const candidateIndex = candidates.findIndex(c => c.id === id);
-    const candidate = Object.assign({}, candidates[candidateIndex]);
-    const candidates_temp = [...candidates];
+    setCandidates(currentCandidates =>
+      currentCandidates.map(candidate => {
+        if (candidate.id !== id) {
+          return candidate;
+        }
 
-    candidate.candidate_feedback_id = value;
-    
-    setCompleted(candidate);
-    candidates_temp[candidateIndex] = candidate;
-    setCandidates(candidates_temp);
-  }
+        const nextCandidate = {
+          ...candidate,
+          candidate_feedback_id: value
+        };
+
+        setCompleted(nextCandidate);
+        return nextCandidate;
+      })
+    );
+  };
 
   const optColumns: Array<IColumnMeta> = [
     { field: "number", header: "#", sortable: true, key: "number" },
