@@ -149,7 +149,7 @@ export default function TaskList(props: Props) {
           filter
           key={'name'}
           body={(params) => {
-            return parse(params.name);
+            return parse(params.title);
           }}
         />
         <Column

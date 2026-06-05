@@ -13,7 +13,7 @@ end
 
 Then( /^user opens their profile$/ ) do
   wait_for_render
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'profile-menu-item' ).click
   page.should have_content( 'Edit your profile' )
   text = "Tell us about yourself, #{@user.first_name} (optional)"

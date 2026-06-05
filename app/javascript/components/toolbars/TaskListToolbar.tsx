@@ -30,6 +30,8 @@ export default function TaskListToolbar(props: Props) {
   const columnToggle =
     undefined !== props.columnToggle ? (
       <MultiSelect
+        aria-label="View Columns"
+        inputId="task-view-columns"
         value={props.columnToggle.visibleColumns}
         options={props.columnToggle.optColumns}
         placeholder={t("toggle_columns_plc")}

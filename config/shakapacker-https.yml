@@ -23,11 +23,8 @@ development:
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
-    # Default to plain HTTP/WS so normal `dev_serv.sh -s` development does not
-    # require trusting a separate dev-server certificate. Procfile.dev-https
-    # switches to config/shakapacker-https.yml when the Rails page is served
-    # over TLS.
-    server: http
+    # Use secure HTTPS/WSS when the Rails page itself is served over TLS.
+    server: https
     host: 0.0.0.0
     port: 3035
     # Hot Module Replacement updates modules while the application is running without a full reload
@@ -44,7 +41,7 @@ development:
       webSocketURL:
         pathname: "/ws"
         port: 3035
-        protocol: ws
+        protocol: wss
     compress: true
     # 'all' is appropriate in the containerised dev environment: the dev server is
     # only reachable inside the Docker network so DNS-rebinding risk is minimal.

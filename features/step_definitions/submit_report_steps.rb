@@ -158,7 +158,7 @@ end
 
 Then( /^the user logs out$/ ) do
   wait_for_render
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'logout-menu-item' ).click
   wait_for_render
   page.quit
@@ -298,7 +298,7 @@ end
 
 Then('the user should see the {string} reporting page') do | activity_type |
   wait_for_render
-  is_instructor = @project.course.rosters.faculty.include? @user
+  is_instructor = @course.rosters.faculty.where( user:  @user ).exists?
   case activity_type.downcase
   when 'bingo'
     if is_instructor

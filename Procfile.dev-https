@@ -5,8 +5,8 @@
 #
 # Start via:  dev_serv.sh -t
 # Or:         overmind start -f Procfile.dev-https
-rails: COLAB_HTTPS=true PORT=3443 RAILS_LOG_TO_STDOUT=enabled bundle exec puma -C config/puma.rb
+rails: SHAKAPACKER_CONFIG=config/shakapacker-https.yml COLAB_HTTPS=true PORT=3443 RAILS_LOG_TO_STDOUT=enabled bundle exec puma -C config/puma.rb
 # Port and SSL binding are fully controlled by config/puma.rb when COLAB_HTTPS=true.
 # puma.rb generates a self-signed cert in tmp/ssl/ and calls ssl_bind on port 3443.
-wp-client: SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 bin/shakapacker-dev-server
-wp-server: SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 SERVER_BUNDLE_ONLY=yes bin/shakapacker --watch
+wp-client: SHAKAPACKER_CONFIG=config/shakapacker-https.yml SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 bin/shakapacker-dev-server
+wp-server: SHAKAPACKER_CONFIG=config/shakapacker-https.yml SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 SERVER_BUNDLE_ONLY=yes bin/shakapacker --watch
