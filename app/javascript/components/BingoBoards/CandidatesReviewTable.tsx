@@ -56,7 +56,10 @@ export default function CandidatesReviewTable(props: Props) {
         id: 0,
         name: t("review.not_set_opt")
       },
-      ...useTypedSelector(state => state.context.lookups["candidate_feedbacks"])
+      ...Object.values(
+        useTypedSelector(state => state.context.lookups["candidate_feedbacks"]) ||
+          {}
+      )
     ]
   );
   const [bingoGame, setBingoGame] = useState();
@@ -75,14 +78,7 @@ export default function CandidatesReviewTable(props: Props) {
 
   useEffect(() => {
     setDirty(true);
-    updateProgress();
   }, [reviewComplete, candidates]);
-
-  const getById = (list, id) => {
-    return list.filter(item => {
-      return id === item.id;
-    })[0];
-  };
 
   useEffect(() => {
     if (endpointStatus) {
@@ -90,12 +86,11 @@ export default function CandidatesReviewTable(props: Props) {
     }
   }, [endpointStatus]);
 
-  const setCompleted = (item, options) => {
-    //This use feedbackOpts from state
+  const setCompleted = (item) => {
     const fb_id = item.candidate_feedback_id;
     if (fb_id != null) {
       item.completed = 100;
-      const fb = getById(options, fb_id);
+      const fb = feedbackOptions.find(fb => fb.id === fb_id);
 
       if ("term_problem" != fb.critique && item.concept.name.length < 1) {
         item.completed = 50;
@@ -105,8 +100,11 @@ export default function CandidatesReviewTable(props: Props) {
     }
   };
 
+  useEffect(() => {
+    updateProgress();
+  }, [candidates]);
+
   const updateProgress = () => {
-    //We're using feedbackOpts and candidatesMap from state
     const completed = candidates.reduce((acc, item) => {
       if (100 == item.completed) {
         acc = acc + 1;
@@ -127,7 +125,7 @@ export default function CandidatesReviewTable(props: Props) {
         x =>
           "" != x.concept.name &&
           "acceptable" ==
-            getById(feedbackOptions, x.candidate_feedback_id).critique
+            feedbackOptions.find(fb => fb.id === x.candidate_feedback_id)?.critique
       )
       .map(x => x.concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
@@ -164,7 +162,7 @@ export default function CandidatesReviewTable(props: Props) {
               name: ""
             };
           }
-          setCompleted(item, feedbackOptions);
+          setCompleted(item);
         });
 
         setCandidates(data.candidates);
@@ -172,13 +170,11 @@ export default function CandidatesReviewTable(props: Props) {
         setReviewStatus(t("review.data_loaded_msg"));
         setDirty(false);
         dispatch(endTask());
-        updateProgress();
       })
       .catch(error => {
         console.log("error", error);
       });
   };
-  // conceptStats() {}
   const saveFeedback = () => {
     setDirty(false);
     dispatch(startTask("saving"));
@@ -211,24 +207,31 @@ export default function CandidatesReviewTable(props: Props) {
       });
   };
 
-  const conceptSet = (id, value) => {
+  const conceptSet = (id: number, value: number) => {
+    const candidateIndex = candidates.findIndex(c => c.id === id);
+    const candidate = Object.assign({}, candidates[candidateIndex]);
     const candidates_temp = [...candidates];
-    const candidate = getById(candidates_temp, id);
-    candidate.concept.name = value;
 
-    setCompleted(candidate, feedbackOptions);
+    candidate.concept = {
+      name: value
+    }
+
+    setCompleted(candidate);
+    candidates_temp[candidateIndex] = candidate;
     setCandidates(candidates_temp);
   };
 
-  const feedbackSet = (id, value) => {
+  const feedbackSet = (id: number, value: number) => {
+    const candidateIndex = candidates.findIndex(c => c.id === id);
+    const candidate = Object.assign({}, candidates[candidateIndex]);
     const candidates_temp = [...candidates];
-    const candidate = getById(candidates_temp, id);
-    const fb = getById(feedbackOptions, value);
+
     candidate.candidate_feedback_id = value;
-
-    setCompleted(candidate, feedbackOptions);
+    
+    setCompleted(candidate);
+    candidates_temp[candidateIndex] = candidate;
     setCandidates(candidates_temp);
-  };
+  }
 
   const optColumns: Array<IColumnMeta> = [
     { field: "number", header: "#", sortable: true, key: "number" },
@@ -249,8 +252,8 @@ export default function CandidatesReviewTable(props: Props) {
       filterable: true,
 
       body: candidate => {
-        const user = getById(users, candidate.user_id);
-        const cl = getById(candidateLists, candidate.candidate_list_id);
+        const user = users.find(u => u.id === candidate.user_id);
+        const cl = candidateLists.find(cl => cl.id === candidate.candidate_list_id);
         if (undefined === user) {
           return null;
         } else {
@@ -265,7 +268,7 @@ export default function CandidatesReviewTable(props: Props) {
             output.push(
               <em>
                 {"\n"}
-                (on behalf of {getById(groups, cl.group_id).name})
+                (on behalf of {groups.find(g => g.id === cl.group_id)?.name})
               </em>
             );
           }
@@ -370,11 +373,8 @@ export default function CandidatesReviewTable(props: Props) {
           header={t("review.concept_col")}
           body={candidate => {
             let output = <div>{t("review.none_msg")}</div>;
-            //const candidate = getById(candidates, params.row.id);
-            const feedback = getById(
-              feedbackOptions,
-              candidate.candidate_feedback_id || 0
-            );
+            const candidateFeedbackId = candidate.candidate_feedback_id || 0;
+            const feedback = feedbackOptions.find(fb => fb.id === candidateFeedbackId);
 
             if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
               output = (
