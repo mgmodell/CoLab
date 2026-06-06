@@ -9,14 +9,14 @@ test:
 
 stage:
   service: S3
-  access_key_id: <%= Rails.application.credentials.aws.access_key_id %>
-  secret_access_key: <%= Rails.application.credentials.aws.secret_access_key %>
-  region: <%= Rails.application.credentials.aws.region %>
-  bucket: <%= Rails.application.credentials.aws.s3_bucket_name %>
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: <%= Rails.application.credentials.dig(:aws, :region) %>
+  bucket: <%= Rails.application.credentials.dig(:aws, :s3_bucket_name) %>
 
 prod:
-  service: S3
-  access_key_id: <%= Rails.application.credentials.aws.access_key_id %>
-  secret_access_key: <%= Rails.application.credentials.aws.secret_access_key %>
-  region: <%= Rails.application.credentials.aws.region %>
-  bucket: <%= Rails.application.credentials.aws.s3_bucket_name %>
+  # In the security sandbox there is no S3; use local Disk storage (as dev/test
+  # do) so the production target boots and file storage actually works. For a
+  # real S3-backed deployment, restore the S3 block with proper credentials.
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage/prod") %>

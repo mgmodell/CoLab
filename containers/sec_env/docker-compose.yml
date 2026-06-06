@@ -1,0 +1,135 @@
+# CoLab security (penetration-testing) environment.
+# ----------------------------------------------------------------------------
+# A self-contained, isolated stack for the authorized FERPA compliance test:
+#
+#   pentest  ── Kali toolbox (operator box; you exec into this)
+#      │
+#   app      ── CoLab in PRODUCTION mode (heroku-26 + Ruby + jemalloc + Node)
+#      │            the system under test
+#   db       ── MariaDB holding the (production-shaped) student data
+#   redis    ── supporting cache/queue
+#
+# Isolation: this is a separate compose project ("sec_env"), so its network is
+# distinct from the dev stack's ("dev_env"). Only the target's web port is
+# published to the host (for the operator's browser); db and redis stay internal
+# to the engagement network. Drive everything with ../../sec_serv.sh.
+# ----------------------------------------------------------------------------
+services:
+  # CoLab — production target (system under test).
+  app:
+    image: colab_prod_server
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/colab_prod/Dockerfile
+    hostname: colab-prod
+    # Survive Podman/host restarts; keep retrying if a transient boot error hits.
+    restart: unless-stopped
+    # Wait until the DB is *actually* ready (init scripts done) — not just its TCP
+    # port — so first-boot migrations never race a half-initialised database.
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      # Point Rails at the sandbox prod DB (overrides config/database.yml).
+      - DATABASE_URL=mysql2://prod:prod@db:3306/colab_prod
+      - COLAB_DATABASE_PASSWORD=prod
+      - RAILS_ENV=production
+      - RACK_ENV=production
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+      - REDIS_URL=redis://redis:6379/1
+      - PORT=3000
+      # jemalloc (gaffneyc buildpack) — enabled with the recommended Rails tuning.
+      - JEMALLOC_ENABLED=true
+      - MALLOC_CONF=dirty_decay_ms:1000,narenas:2,background_thread:true
+      # Apply migrations automatically on boot so the target is ready to test.
+      - RUN_DB_MIGRATE_ON_BOOT=true
+      # Secrets: supply real values from your shell/.env for full fidelity; if
+      # both are empty the entrypoint generates an ephemeral SECRET_KEY_BASE.
+      # NEVER hardcode these in the repo.
+      - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-}
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY:-}
+    ports:
+      # Operator browser access only; container-to-container uses app:3000.
+      - 13000:3000
+    networks:
+      - engagement_net
+
+  # MariaDB — student-data store. Reuses the dev DB image (root pw + base privs)
+  # and layers the sec-specific prod DB/user via an extra init script.
+  db:
+    image: colab_db
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/db/Dockerfile
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=colab_prod
+    volumes:
+      - secdata:/var/lib/mysql
+      # Runs after the image's /docker-entrypoint-initdb.d/init-privs.sql
+      # (alphabetical order) to add the colab_prod DB + 'prod' user.
+      - ../sec_initDBs.sql:/docker-entrypoint-initdb.d/zz-sec-initDBs.sql:ro
+    # Readiness gate: passes only once the init scripts have created the
+    # colab_prod DB and the 'prod' user, so dependents never see a half-init DB.
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -uprod -pprod colab_prod -e 'SELECT 1' >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 20s
+    # Intentionally NOT published to the host: the DB is reachable only from
+    # inside the engagement network (i.e. via the app or the pentest box).
+    networks:
+      - engagement_net
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    networks:
+      - engagement_net
+
+  # Kali pentesting toolbox — the operator box.
+  pentest:
+    image: colab_pentest
+    build:
+      context: ../..
+      dockerfile: containers/agnostic/pentest/Dockerfile
+    hostname: pentest
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_started
+      db:
+        condition: service_healthy
+    # nmap raw-socket scans, ping, and tcpdump/tshark capture need these caps.
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    environment:
+      - TARGET_URL=http://app:3000
+      - TARGET_HOST=app
+      - TARGET_DB_HOST=db
+      - TARGET_DB_PORT=3306
+    volumes:
+      # Persist engagement notes/evidence across container restarts.
+      - engagement_data:/root/engagement
+      # White-box assist: the app source, read-only, for secret scanning
+      # (gitleaks) and source-informed testing. Remove for strict black-box.
+      - ../../:/opt/colab-src:ro
+    networks:
+      - engagement_net
+    command: ["sleep", "infinity"]
+
+networks:
+  # Dedicated bridge for the engagement. Being a separate compose project, this
+  # is already isolated from the dev stack; naming it makes the boundary explicit.
+  engagement_net:
+    driver: bridge
+
+volumes:
+  secdata:
+  engagement_data:

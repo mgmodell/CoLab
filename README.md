@@ -325,6 +325,26 @@ Moodle, Canvas, Blackboard, Brightspace, and other compliant LMS platforms.
 See [doc/LTI_INTEGRATION.md](doc/LTI_INTEGRATION.md) for step-by-step connection
 instructions.
 
+## Security (penetration-testing) environment
+
+An isolated container stack for **authorized** security testing pairs a faithful
+**production** build of CoLab (heroku-26 stack + Ruby + jemalloc + Node) with a
+Kali **pentesting toolbox** (nmap, sqlmap, nuclei, ZAP/Burp, ffuf, testssl.sh,
+jwt_tool, and more). It is driven by `sec_serv.sh` and is kept on its own network,
+isolated from the dev stack.
+
+```bash
+./sec_serv.sh -b      # build the images
+./sec_serv.sh -u      # bring the stack up  (target -> http://localhost:13000)
+./sec_serv.sh -i      # (re-)initialise the target DB from db/dev_db.sql
+./sec_serv.sh -p      # open a shell in the pentest toolbox
+./sec_serv.sh -h      # full help
+```
+
+See [doc/PENTEST_ENV.md](doc/PENTEST_ENV.md) for the full environment setup, the
+per-tool catalog (purpose, usage, engagement-relevant flags), and the licensing /
+external-feed activation steps (Nessus, OpenVAS/GVM, nuclei templates, …).
+
 ### Who do I talk to? ###
 
 * @micah_gideon
