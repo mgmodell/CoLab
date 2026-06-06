@@ -30,6 +30,11 @@
 	// Stop the whole stack when you close the window.
 	"shutdownAction": "stopCompose",
 
+	// On first creation, fetch the latest nuclei templates so the first scan is
+	// ready and current. Non-fatal: an offline/first-open hiccup won't block the
+	// container (nuclei also auto-updates on its first run).
+	"postCreateCommand": "nuclei -ut || true",
+
 	"customizations": {
 		"vscode": {
 			"settings": {
