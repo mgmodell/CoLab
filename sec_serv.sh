@@ -181,8 +181,8 @@ fi
 
 # Open a shell in the pentest toolbox (login shell -> prints the briefing)
 if [ "$SHELL_PENTEST" = true ]; then
-  echo "Opening a shell in the pentest toolbox..."
-  compose exec pentest bash -l
+  echo "Opening a shell in the pentest toolbox (zsh + oh-my-zsh)..."
+  compose exec pentest zsh -l
 fi
 
 # Open a production rails console on the target

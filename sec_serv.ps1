@@ -146,8 +146,8 @@ if ($Init) {
 }
 
 if ($Pentest) {
-    Write-Host "Opening a shell in the pentest toolbox..."
-    Invoke-Compose exec pentest bash -l
+    Write-Host "Opening a shell in the pentest toolbox (zsh + oh-my-zsh)..."
+    Invoke-Compose exec pentest zsh -l
 }
 
 if ($Console) {
