@@ -330,20 +330,14 @@ instructions.
 An isolated container stack for **authorized** security testing pairs a faithful
 **production** build of CoLab (heroku-26 stack + Ruby + jemalloc + Node) with a
 Kali **pentesting toolbox** (nmap, sqlmap, nuclei, ZAP/Burp, ffuf, testssl.sh,
-jwt_tool, and more), on its own network, isolated from the dev stack.
-
-**In VS Code (recommended):** *Dev Containers: Reopen in Container* →
-**CoLab Security (Pentest)**. VS Code brings up the whole stack and drops you
-into the Kali toolbox (zsh + oh-my-zsh) with every tool ready; the target is at
-`http://app:3000` (and `http://localhost:13000` from your host browser).
-
-**From a host shell** (`sec_serv.sh`, or `sec_serv.ps1` on Windows):
+jwt_tool, and more). It is driven by `sec_serv.sh` and is kept on its own network,
+isolated from the dev stack.
 
 ```bash
 ./sec_serv.sh -b      # build the images
 ./sec_serv.sh -u      # bring the stack up  (target -> http://localhost:13000)
 ./sec_serv.sh -i      # (re-)initialise the target DB from db/dev_db.sql
-./sec_serv.sh -p      # open a shell in the pentest toolbox (zsh)
+./sec_serv.sh -p      # open a shell in the pentest toolbox
 ./sec_serv.sh -h      # full help
 ```
 
