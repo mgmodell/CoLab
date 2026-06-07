@@ -30,7 +30,13 @@ Then( /^an email will be sent to each member of the group but one$/ ) do
 end
 
 Then( /^(\d+) emails will be tracked$/ ) do | email_count |
-  Ahoy::Message.count.should eq email_count.to_i
+  expected_count = email_count.to_i
+  retries = 0
+  while Ahoy::Message.count != expected_count && retries < 15
+    sleep( 0.2 )
+    retries += 1
+  end
+  Ahoy::Message.count.should eq expected_count
 end
 
 Then( /^(\d+) emails will be sent$/ ) do | email_count |

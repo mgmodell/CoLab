@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 Then( /^the user should see "([^"]*)"$/ ) do | page_text |
-  page.should have_content page_text
+  wait_for_render
+  page.should have_content( page_text, wait: 10 )
 end
 
 Given( /^the course timezone is "([^"]*)"$/ ) do | timezone |

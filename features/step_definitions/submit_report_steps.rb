@@ -303,17 +303,17 @@ Then('the user should see the {string} reporting page') do | activity_type |
   when 'bingo'
     if is_instructor
       page.should have_field with: @bingo.topic
-      all(:xpath, "//span[text()='Response data']")[0].click
+      find( :xpath, "//span[text()='Response data']", match: :first ).click
       page.should have_content 'Results'
     else
       page.should have_content @bingo.topic
-      all(:xpath, "//span[text()='Your performance']")[0].click
+      find( :xpath, "//span[text()='Your performance']", match: :first ).click
     end
   when 'project'
-    all(:xpath, "//span[text()='Reporting']")[0].click
+    find( :xpath, "//span[text()='Reporting']", match: :first ).click
     page.should have_content "Data for #{@project.name}"
   when 'experience'
-    all(:xpath, "//span[text()='Results']")[0].click
+    find( :xpath, "//span[text()='Results']", match: :first ).click
     page.should have_content 'Responses'
   else
     pending
