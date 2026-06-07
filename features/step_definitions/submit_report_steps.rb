@@ -2,6 +2,8 @@
 
 require 'faker'
 
+REPORTING_TAB_WAIT = 10
+
 Given( /^the project measures (\d+) factors$/ ) do | num_factors |
   Faker::Job.unique.clear
   bp = FactorPack.new(
@@ -302,19 +304,19 @@ Then('the user should see the {string} reporting page') do | activity_type |
   case activity_type.downcase
   when 'bingo'
     if is_instructor
-      page.should have_field with: @bingo.topic, wait: 10
-      find( :xpath, "//span[text()='Response data']", match: :first, visible: :visible, wait: 10 ).click
-      page.should have_content 'Results', wait: 10
+      page.should have_field with: @bingo.topic, wait: REPORTING_TAB_WAIT
+      find( :xpath, "//span[text()='Response data']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
+      page.should have_content 'Results', wait: REPORTING_TAB_WAIT
     else
-      page.should have_content @bingo.topic, wait: 10
-      find( :xpath, "//span[text()='Your performance']", match: :first, visible: :visible, wait: 10 ).click
+      page.should have_content @bingo.topic, wait: REPORTING_TAB_WAIT
+      find( :xpath, "//span[text()='Your performance']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
     end
   when 'project'
-    find( :xpath, "//span[text()='Reporting']", match: :first, visible: :visible, wait: 10 ).click
-    page.should have_content "Data for #{@project.name}", wait: 10
+    find( :xpath, "//span[text()='Reporting']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
+    page.should have_content "Data for #{@project.name}", wait: REPORTING_TAB_WAIT
   when 'experience'
-    find( :xpath, "//span[text()='Results']", match: :first, visible: :visible, wait: 10 ).click
-    page.should have_content 'Responses', wait: 10
+    find( :xpath, "//span[text()='Results']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
+    page.should have_content 'Responses', wait: REPORTING_TAB_WAIT
   else
     pending
   end
