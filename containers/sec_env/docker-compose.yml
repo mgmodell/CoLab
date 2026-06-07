@@ -7,12 +7,16 @@
 #   app      ── CoLab in PRODUCTION mode (heroku-26 + Ruby + jemalloc + Node)
 #      │            the system under test
 #   db       ── MariaDB holding the (production-shaped) student data
-#   redis    ── supporting cache/queue
+#
+# No redis service: CoLab's Action Cable is configured for adapter: redis in
+# production, but the `redis` gem is not in the bundle, so the target cannot
+# actually use redis. Dropping it saves memory. (The dev stack keeps redis for
+# Moodle, which is not part of this engagement.)
 #
 # Isolation: this is a separate compose project ("sec_env"), so its network is
 # distinct from the dev stack's ("dev_env"). Only the target's web port is
-# published to the host (for the operator's browser); db and redis stay internal
-# to the engagement network. Drive everything with ../../sec_serv.sh.
+# published to the host (for the operator's browser); the db stays internal to
+# the engagement network. Drive everything with ../../sec_serv.sh.
 # ----------------------------------------------------------------------------
 services:
   # CoLab — production target (system under test).
@@ -29,8 +33,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
     environment:
       # Point Rails at the sandbox prod DB (overrides config/database.yml).
       - DATABASE_URL=mysql2://prod:prod@db:3306/colab_prod
@@ -39,7 +41,6 @@ services:
       - RACK_ENV=production
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
-      - REDIS_URL=redis://redis:6379/1
       - PORT=3000
       # jemalloc (gaffneyc buildpack) — enabled with the recommended Rails tuning.
       - JEMALLOC_ENABLED=true
@@ -83,12 +84,6 @@ services:
       start_period: 20s
     # Intentionally NOT published to the host: the DB is reachable only from
     # inside the engagement network (i.e. via the app or the pentest box).
-    networks:
-      - engagement_net
-
-  redis:
-    image: redis:7.4-alpine
-    restart: unless-stopped
     networks:
       - engagement_net
 
