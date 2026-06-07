@@ -2,6 +2,8 @@
 
 require 'faker'
 
+MAX_EMAIL_TRACKING_RETRIES = 15
+
 Given( /^the email queue is empty$/ ) do
   ActionMailer::Base.deliveries = []
   ActionMailer::Base.deliveries.count.should eq 0
@@ -32,7 +34,7 @@ end
 Then( /^(\d+) emails will be tracked$/ ) do | email_count |
   expected_count = email_count.to_i
   retries = 0
-  while Ahoy::Message.count != expected_count && retries < 15
+  while Ahoy::Message.count != expected_count && retries < MAX_EMAIL_TRACKING_RETRIES
     sleep( 0.2 )
     retries += 1
   end
