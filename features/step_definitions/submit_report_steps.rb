@@ -326,7 +326,7 @@ Then('the user is not enrolled in the course') do
     last_name: Faker::Name.last_name,
     password: 'password',
     password_confirmation: 'password',
-    email: Faker::Internet.email,
+    email: Faker::Internet.unique.email,
     timezone: 'UTC',
     school: School.find( 1 ),
     welcomed: true

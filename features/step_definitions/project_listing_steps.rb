@@ -51,7 +51,7 @@ Given( /^the project has a group with (\d+) confirmed users$/ ) do | user_count 
       last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Faker::Internet.email,
+      email: Faker::Internet.unique.email,
       timezone: 'UTC',
       school: School.find( 1 ),
       welcomed: true

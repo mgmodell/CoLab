@@ -29,7 +29,7 @@ Given( /^a user has signed up$/ ) do
     last_name: Faker::Name.last_name,
     password: 'password',
     password_confirmation: 'password',
-    email: Faker::Internet.email,
+    email: Faker::Internet.unique.email,
     timezone: 'UTC',
     language: Language.find_by( code: 'en' ),
     school: School.find( 1 )
@@ -90,7 +90,7 @@ end
 
 When( /^the new user registers$/ ) do
   find( :xpath, "//ul[@role='tablist']/li/a[contains(.,'Sign up')]" ).click
-  email = Faker::Internet.email
+  email = Faker::Internet.unique.email
 
   fill_in 'email', with: email
   fill_in 'first_name', with: Faker::Name.first_name

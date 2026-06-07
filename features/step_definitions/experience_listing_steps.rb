@@ -40,7 +40,7 @@ Given( /^the course has (\d+) confirmed users$/ ) do | user_count |
       last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Faker::Internet.email,
+      email: Faker::Internet.unique.email,
       timezone: 'UTC',
       school: School.find( 1 ),
       welcomed: true
@@ -127,7 +127,7 @@ Given( /^the user is in a group on the project$/ ) do
       last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Faker::Internet.email,
+      email: Faker::Internet.unique.email,
       timezone: 'UTC',
       school: School.find( 1 )
     )
