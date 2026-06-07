@@ -5,6 +5,14 @@ require 'faker'
 MAX_EMAIL_TRACKING_RETRIES = 15
 EMAIL_COUNT_RETRY_INTERVAL = 0.2
 
+def wait_for_expected_count( expected_count )
+  retries = 0
+  while yield != expected_count && retries < MAX_EMAIL_TRACKING_RETRIES
+    sleep( EMAIL_COUNT_RETRY_INTERVAL )
+    retries += 1
+  end
+end
+
 Given( /^the email queue is empty$/ ) do
   ActionMailer::Base.deliveries = []
   ActionMailer::Base.deliveries.count.should eq 0
@@ -22,11 +30,7 @@ Then( /^an email will be sent to each member of the group$/ ) do
   wt = @user.waiting_student_tasks
   g = wt[0].group_for_user( @user )
   group_count = g.users.count
-  retries = 0
-  while ActionMailer::Base.deliveries.count != group_count && retries < MAX_EMAIL_TRACKING_RETRIES
-    sleep( EMAIL_COUNT_RETRY_INTERVAL )
-    retries += 1
-  end
+  wait_for_expected_count( group_count ) { ActionMailer::Base.deliveries.count }
   ActionMailer::Base.deliveries.count.should eq group_count
 end
 
@@ -34,31 +38,19 @@ Then( /^an email will be sent to each member of the group but one$/ ) do
   ows = @user.waiting_student_tasks
   g = ows[0].group_for_user( @user )
   group_count_minus_one = g.users.count - 1
-  retries = 0
-  while ActionMailer::Base.deliveries.count != group_count_minus_one && retries < MAX_EMAIL_TRACKING_RETRIES
-    sleep( EMAIL_COUNT_RETRY_INTERVAL )
-    retries += 1
-  end
+  wait_for_expected_count( group_count_minus_one ) { ActionMailer::Base.deliveries.count }
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end
 
 Then( /^(\d+) emails will be tracked$/ ) do | email_count |
   expected_count = email_count.to_i
-  retries = 0
-  while Ahoy::Message.count != expected_count && retries < MAX_EMAIL_TRACKING_RETRIES
-    sleep( EMAIL_COUNT_RETRY_INTERVAL )
-    retries += 1
-  end
+  wait_for_expected_count( expected_count ) { Ahoy::Message.count }
   Ahoy::Message.count.should eq expected_count
 end
 
 Then( /^(\d+) emails will be sent$/ ) do | email_count |
   expected_count = email_count.to_i
-  retries = 0
-  while ActionMailer::Base.deliveries.count != expected_count && retries < MAX_EMAIL_TRACKING_RETRIES
-    sleep( EMAIL_COUNT_RETRY_INTERVAL )
-    retries += 1
-  end
+  wait_for_expected_count( expected_count ) { ActionMailer::Base.deliveries.count }
   ActionMailer::Base.deliveries.count.should eq expected_count
 end
 
