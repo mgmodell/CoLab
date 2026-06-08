@@ -98,6 +98,7 @@ When( /^the new user registers$/ ) do
 
   click_button 'Sign me up!'
   wait_for_render
+  page.should have_content( 'You have signed up successfully and your account is reserved.', wait: 10 )
   email = Email.where( email: )
   expect( email.size ).to eq( 1 )
   @user = email[0].user
