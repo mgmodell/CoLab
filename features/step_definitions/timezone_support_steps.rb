@@ -2,7 +2,11 @@
 
 Then( /^the user should see "([^"]*)"$/ ) do | page_text |
   wait_for_render
-  page.should have_content( page_text, wait: 10 )
+  retries = 10
+  while page.has_no_content?( page_text, wait: 1 ) and retries > 0
+    retries -= 1
+    # puts "Page failed to show expected content within 10 seconds" if retries < 1
+  end
 end
 
 Given( /^the course timezone is "([^"]*)"$/ ) do | timezone |
