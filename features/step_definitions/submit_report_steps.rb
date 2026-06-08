@@ -3,6 +3,39 @@
 require 'faker'
 
 REPORTING_TAB_WAIT = 10
+INSTALLMENT_SAVE_WAIT = 10
+INSTALLMENT_SAVE_RETRY_INTERVAL = 0.2
+
+def current_project_installment
+  return nil unless defined?( @user ) && defined?( @project ) &&
+                    @user.present? && @project.present?
+
+  group = @project.group_for_user( @user )
+  Installment.joins( :assessment )
+             .where( user: @user, group:,
+                     assessments: { project_id: @project.id } )
+             .order( :id )
+             .last
+end
+
+def wait_for_current_project_installment
+  return unless defined?( @user ) && defined?( @project ) &&
+                @user.present? && @project.present?
+
+  expected_value_count = @project.group_for_user( @user ).users.count *
+                         @project.factors.count
+  deadline = Process.clock_gettime( Process::CLOCK_MONOTONIC ) + INSTALLMENT_SAVE_WAIT
+  installment = current_project_installment
+
+  while ( installment.nil? || installment.values.count != expected_value_count ) &&
+        Process.clock_gettime( Process::CLOCK_MONOTONIC ) < deadline
+    sleep( INSTALLMENT_SAVE_RETRY_INTERVAL )
+    installment = current_project_installment
+  end
+
+  installment.should_not be_nil
+  installment.values.count.should eq expected_value_count
+end
 
 Given( /^the project measures (\d+) factors$/ ) do | num_factors |
   Faker::Job.unique.clear
@@ -155,6 +188,7 @@ Then( /^the user logs in and submits an installment$/ ) do
   step 'the installment form should request factor x user values'
   step 'the user should enter values summing to 6000, "evenly" across each column'
   step 'the user submits the installment'
+  step 'the installment will successfully save'
   step 'there should be no error'
 end
 
@@ -267,15 +301,8 @@ Then( /^the anonymous comment "([^"]*)"$/ ) do | comment_status |
 end
 
 Then 'the installment will successfully save' do
-  # Using aria-labl instead of title because of some strange JavaScript
-  # error.
-  waits = 0
-  unless !all( :xpath, "//div[contains(.,'success')]" ).empty? || waits > 3
-
-    sleep( 0.3 )
-    waits += 1
-    waits.should be < 3
-  end
+  page.should have_content( I18n.t( 'installments.success' ), wait: INSTALLMENT_SAVE_WAIT )
+  wait_for_current_project_installment
 end
 
 Then( /^user will be presented with the installment form$/ ) do

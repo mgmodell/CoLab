@@ -18,6 +18,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const category = "devise";
 const t = i18n.getFixedT(null, category);
 const cookiesEnabled = navigator.cookieEnabled;
+const RealDate = Date;
 
 const CONFIG = {
   SAVED_CREDS_KEY: "colab_authHeaders",
@@ -118,8 +119,11 @@ const CONFIG = {
     let data = JSON.stringify(val);
 
     if (cookiesEnabled) {
+      const expires = new RealDate(
+        RealDate.now() + CONFIG.cookieExpiry * 24 * 60 * 60 * 1000
+      );
       Cookies.set(key, data, {
-        expires: CONFIG.cookieExpiry,
+        expires,
         path: CONFIG.cookiePath
       });
     } else {
