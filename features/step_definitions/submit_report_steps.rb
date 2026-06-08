@@ -43,10 +43,10 @@ Given( /^the project measures (\d+) factors$/ ) do | num_factors |
     name: "#{Faker::Company.industry}-#{Faker::Color.color_name} Factor Pack",
     description: Faker::Company.bs
   )
-  num_factors.to_i.times do
+  num_factors.to_i.times do |index|
     factor = bp.factors.new(
-      name: "#{Faker::Job.unique.key_skill} Factor",
-      description: Faker::Company.catch_phrase
+      name: "#{Faker::Job.unique.key_skill} Factor: #{index}",
+      description: Faker::Company.unique.catch_phrase
     )
     factor.save
     log factor.errors.full_messages if factor.errors.present?
