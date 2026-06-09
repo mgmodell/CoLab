@@ -47,10 +47,15 @@ services:
       - MALLOC_CONF=dirty_decay_ms:1000,narenas:2,background_thread:true
       # Apply migrations automatically on boot so the target is ready to test.
       - RUN_DB_MIGRATE_ON_BOOT=true
-      # Secrets: supply real values from your shell/.env for full fidelity; if
-      # both are empty the entrypoint generates an ephemeral SECRET_KEY_BASE.
-      # NEVER hardcode these in the repo.
-      - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-}
+      # secret_key_base is REQUIRED in production. This is a FIXED, known SANDBOX
+      # value — same philosophy as the prod/prod DB creds and the intentionally
+      # weak seeded passwords. Having it in the container env (not just generated
+      # inside the web process) is what lets EVERY production process work:
+      # the Puma server AND `rails db:seed` / console / runner / rake tasks run
+      # via `exec`. It only signs cookies for a throwaway target holding synthetic
+      # data, so it is not sensitive. Override with your own COLAB_SECRET_KEY_BASE
+      # (or RAILS_MASTER_KEY) for full production fidelity.
+      - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-b61117c631a312ace765c4929ae7ad0613d15f240e600e796e3f50ce485b08baa7d30e0e42fc10b58794bc450bf2734aeb2d6a9da1e2dc97ac50d5ffdcb485d7}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY:-}
     ports:
       # Operator browser access only; container-to-container uses app:3000.
