@@ -10,6 +10,14 @@ en:
       credit: Credit
       average_score: Average score
     create_bingo_btn: Create Bingo Game
+    no_available_bingo_heading: No such activity available
+    no_available_bingo_msg: >
+      There is no bingo game available for you using that id that is available
+      for you to play at this time.
+    not_available_yet_heading: Terms cannot be entered yet
+    not_available_yet_msg: >
+      This bingo game is not yet open for term entry. It will open on {{start_date}}. Please check back then!
+    determining_status: Please be patient while we direct your call...
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game
@@ -20,6 +28,7 @@ en:
     end_date_lbl: End date
     date_to_lbl: until
     lead_time: Days for instructor review
+    student_deadline_msg: "Students must have this done by {{date}}."
     review_candidates:
       title: Candidate Terms for Review
       submitted_by: Submitted by
@@ -37,6 +46,7 @@ en:
       title: New Bingo! Game
     create_success: Bingo! Game created successfully!
     destroy_success: Bingo! Game destroyed successfully!
+    soft_delete_success: Bingo! Game has been deactivated and marked as deleted.
     update_success: Bingo! Game updated successfully!
     review_success: Review data successfully saved
     review_problems: There were problems with the review and it could not be saved
@@ -65,6 +75,7 @@ en:
     topic: Topic
     description: Description
     score: Score
+    submit_scores: Submit Scores
     file_select: Score Sheet Image
     definition: Definition
     feedback: Feedback
@@ -108,4 +119,17 @@ en:
       (%{end_date} > %{course_end_date})
     scored_success: >
       The score was successfully saved.
-
+    lti:
+      panel_title: LTI Grade Passback
+      line_item_url_lbl: LMS Line Item URL
+      line_item_url_placeholder: "e.g. https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS Access Token URL
+      ags_token_url_placeholder: "e.g. https://lms.example.com/login/oauth2/token"
+      client_id_lbl: Client ID
+      deployment_id_lbl: Deployment ID
+      iss_lbl: Issuer (iss)
+      save_btn: Save LTI Connection
+      push_btn: Push Grades to LMS
+      not_configured: Not configured
+      configured: Connected
+      push_confirm: Push all grades to the LMS now?

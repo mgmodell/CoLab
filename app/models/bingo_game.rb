@@ -11,6 +11,7 @@ class BingoGame < ApplicationRecord
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games, optional: true
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   has_many :candidates, through: :candidate_lists
   has_many :users, through: :course
@@ -122,9 +123,11 @@ class BingoGame < ApplicationRecord
   # Let's create a true activity interface later
   # TODO this is really more of a student activity end date
   def get_link
-    # helpers = Rails.application.routes.url_helpers
-    # helpers.bingo_game_path self
     'bingo_game'
+  end
+
+  def has_student_data?
+    bingo_boards.any?
   end
 
   def type
@@ -234,6 +237,11 @@ class BingoGame < ApplicationRecord
                                              instructor,
                                              completion_hash ).deliver_later
         count += 1
+        NotificationsChannel.broadcast_to_user(
+          user_id: instructor.id,
+          message: I18n.t( 'notifications.terms_list_review_available', terms_list_name: bingo.get_name( false ) ),
+          priority: AdministrativeMailer::PRIORITY[:INFO]
+        )
       end
       bingo.instructor_notified = true
       bingo.save
@@ -289,6 +297,6 @@ class BingoGame < ApplicationRecord
 
   def anonymize
     trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-    self.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
+    self.anon_topic ||= "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
   end
 end

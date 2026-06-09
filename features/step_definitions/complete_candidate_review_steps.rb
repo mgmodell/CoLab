@@ -105,12 +105,7 @@ end
 Then( /^the user waits while seeing "([^"]*)"$/ ) do | wait_msg |
   wait_for_render
 
-  counter = 0
-  while page.has_text? wait_msg
-    sleep 1
-    counter += 1
-    break if counter > 60
-  end
+  expect( page ).not_to have_text( wait_msg, wait: 10 )
 end
 
 Given( /^the user lowercases "([^"]*)" concepts$/ ) do | which_concepts |
@@ -230,6 +225,7 @@ Given( /^the saved reviews match the list$/ ) do
 end
 
 Given( 'the user checks the review completed checkbox' ) do
+  wait_for_render
   inpt = find( :xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all )
 
   find( :xpath, "//div[@id='review_complete']" ).click if 'true' != inpt[:checked]
@@ -263,6 +259,6 @@ Then( /^there will be (\d+) concepts$/ ) do | concept_count |
 end
 
 Then( 'the user navigates home' ) do
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :xpath, '//*[@id="home-menu-item"]' ).click
 end

@@ -239,6 +239,7 @@ CREATE TABLE `assignments` (
   `file_sub` tinyint(1) NOT NULL DEFAULT 0,
   `link_sub` tinyint(1) NOT NULL DEFAULT 0,
   `text_sub` tinyint(1) NOT NULL DEFAULT 1,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_assignments_on_rubric_id` (`rubric_id`),
   KEY `index_assignments_on_course_id` (`course_id`),
@@ -408,6 +409,7 @@ CREATE TABLE `bingo_games` (
   `students_notified` tinyint(1) NOT NULL DEFAULT 0,
   `anon_topic` varchar(255) DEFAULT NULL,
   `size` int(11) DEFAULT 5,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_bingo_games_on_course_id` (`course_id`),
   KEY `index_bingo_games_on_project_id` (`project_id`),
@@ -969,6 +971,7 @@ CREATE TABLE `experiences` (
   `anon_name` varchar(255) DEFAULT NULL,
   `lead_time` int(11) NOT NULL DEFAULT 3,
   `student_end_date` datetime DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_experiences_on_course_id` (`course_id`),
   CONSTRAINT `fk_rails_23ce752422` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
@@ -4559,6 +4562,110 @@ COMMIT;
 SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
+-- Table structure for table `lti_connections`
+--
+
+DROP TABLE IF EXISTS `lti_connections`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lti_connections` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `connectable_type` varchar(255) NOT NULL,
+  `connectable_id` int(11) NOT NULL,
+  `line_item_url` varchar(255) DEFAULT NULL,
+  `ags_access_token_url` varchar(255) DEFAULT NULL,
+  `client_id` varchar(255) DEFAULT NULL,
+  `deployment_id` varchar(255) DEFAULT NULL,
+  `iss` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_lti_connections_on_connectable` (`connectable_type`,`connectable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lti_connections`
+--
+
+LOCK TABLES `lti_connections` WRITE;
+/*!40000 ALTER TABLE `lti_connections` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lti_connections` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lti_deployments`
+--
+
+DROP TABLE IF EXISTS `lti_deployments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lti_deployments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `issuer` varchar(255) NOT NULL,
+  `client_id` varchar(255) NOT NULL,
+  `auth_login_url` varchar(255) NOT NULL,
+  `auth_token_url` varchar(255) NOT NULL,
+  `key_set_url` varchar(255) NOT NULL,
+  `deployment_id` varchar(255) DEFAULT NULL,
+  `tool_url` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_lti_deployments_on_issuer_and_client_id` (`issuer`,`client_id`),
+  KEY `index_lti_deployments_on_deployment_id` (`deployment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lti_deployments`
+--
+
+LOCK TABLES `lti_deployments` WRITE;
+/*!40000 ALTER TABLE `lti_deployments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lti_deployments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lti_resource_links`
+--
+
+DROP TABLE IF EXISTS `lti_resource_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lti_resource_links` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `lti_deployment_id` bigint(20) NOT NULL,
+  `resource_link_id` varchar(255) NOT NULL,
+  `context_id` varchar(255) DEFAULT NULL,
+  `context_title` varchar(255) DEFAULT NULL,
+  `course_id` int(11) DEFAULT NULL,
+  `assignment_id` bigint(20) DEFAULT NULL,
+  `line_item_url` varchar(255) DEFAULT NULL,
+  `names_roles_url` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_lti_resource_links_on_deployment_and_link` (`lti_deployment_id`,`resource_link_id`),
+  KEY `index_lti_resource_links_on_lti_deployment_id` (`lti_deployment_id`),
+  KEY `index_lti_resource_links_on_course_id` (`course_id`),
+  KEY `index_lti_resource_links_on_assignment_id` (`assignment_id`),
+  CONSTRAINT `fk_rails_lti_rl_deployment` FOREIGN KEY (`lti_deployment_id`) REFERENCES `lti_deployments` (`id`),
+  CONSTRAINT `fk_rails_lti_rl_course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+  CONSTRAINT `fk_rails_lti_rl_assignment` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lti_resource_links`
+--
+
+LOCK TABLES `lti_resource_links` WRITE;
+/*!40000 ALTER TABLE `lti_resource_links` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lti_resource_links` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `narratives`
 --
 
@@ -4625,6 +4732,7 @@ CREATE TABLE `projects` (
   `factor_pack_id` int(11) DEFAULT NULL,
   `style_id` int(11) DEFAULT NULL,
   `anon_name` varchar(255) DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_projects_on_course_id` (`course_id`),
   KEY `index_projects_on_factor_pack_id` (`factor_pack_id`),
@@ -5147,7 +5255,12 @@ INSERT INTO `schema_migrations` VALUES
 ('20250130032658'),
 ('20250317224044'),
 ('20250326133734'),
-('20251023160856');
+('20251023160856'),
+('20260411000000'),
+('20260411000001'),
+('20260411000002'),
+('20260411000003'),
+('20260411220000');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5669,4 +5782,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-03-17  9:22:03
+-- Dump completed on 2026-04-10 23:19:21

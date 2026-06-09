@@ -5,34 +5,41 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"dockerComposeFile": "../containers/dev_env/docker-compose.yml",
 	"service": "app",
-    "runServices": [
-        "db",
-        "redis",
+	"runServices": [
+		"db",
+		"redis",
 		"browser",
 		"moodle",
 		"selenium"
 	],
 	"workspaceFolder": "/home/colab/src/app",
+	"remoteUser": "colab",
+	// Do not let VS Code remap the container user's UID at runtime.
+	// The correct UID is baked into the image at build time via the
+	// docker-compose.macos.yml / docker-compose.rootless.yml overrides.
+	"updateRemoteUserUID": false,
+	"shutdownAction": "stopCompose",
 
-    "shutdownAction": "stopCompose"
-	/*
-	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
-	"features": {
-		"ghcr.io/jungaretti/features/vim:1": {},
-		"ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {},
-		"ghcr.io/devcontainers-extra/features/curl-apt-get:1": {},
-	}
-		*/
+	// Forward the Rails server, Shakapacker dev server, Selenium, VNC browser, and Moodle ports.
+	"forwardPorts": [3000, 3035, 4444, 6080, 8080],
+
+	// Install toolchain versions and gems after the container is first created.
+	"postCreateCommand": "bash /home/colab/src/entrypoint.sh",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	// Recommended VS Code extensions for Ruby on Rails development.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"shopify.ruby-lsp",
+				"misogi.ruby-rubocop",
+				"eamodio.gitlens",
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint",
+				"ms-vscode.vscode-typescript-next"
+			]
+		}
+	}
 }

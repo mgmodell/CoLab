@@ -1,0 +1,12 @@
+en:
+  notifications:
+    experience_report_available: >
+      Experience for %{experience_name} just closed. Reporting available
+    assessment_report_available: >
+      Check-in for %{assessment_name} just closed. Reporting available
+    bingo_activity_available: >
+      %{activity_name} Bingo! is available to play
+    pending_activities: >
+      You have pending activities to complete.
+    terms_list_review_available: >
+      Terms Lists for %{terms_list_name} just closed. Reviewing available

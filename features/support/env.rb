@@ -9,28 +9,25 @@
 require 'cucumber/rails'
 require 'selenium/webdriver'
 # require 'webdrivers'
+require 'simplecov'
 
+SimpleCov.start 'rails'
 
-# Webdrivers.cache_time = 86_400
-
+World( Warden::Test::Helpers )
+Warden.test_mode!
 
 def wait_for_render
-  times = 3000
-
-  while !all( :xpath, "//*[@id='waiting']" ).empty? && times.positive?
-    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
-    sleep( 0.01 )
-    times -= 1
-  end
+  # 30 seconds should be more than enough for any page to render, even on CI
+  page.has_no_xpath?( "//*[@id='waiting']", wait: 5 )
 end
 
 def ack_messages
   find_all( :xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']" ).each do | element |
     element.click
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
-    true.should( be_false, e.inspect )
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    true.should( be_false, e.inspect )
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    # Notification already auto-dismissed — that's the desired state, not a failure
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    # Notification already auto-dismissed — that's the desired state, not a failure
   end
 end
 
@@ -128,12 +125,17 @@ Capybara.javascript_driver = case ENV['DRIVER']
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
+$cached_sql_statements = nil
+
 def loadData
-  sql = File.read( 'db/test_db.sql' )
-  statements = sql.split( /;$/ )
-  statements.pop # remote empty line
+  $cached_sql_statements ||= begin
+    sql = File.read( 'db/test_db.sql' )
+    statements = sql.split( /;$/ )
+    statements.pop # remove empty line
+    statements
+  end
   ActiveRecord::Base.transaction do
-    statements.each do | statement |
+    $cached_sql_statements.each do | statement |
       ActiveRecord::Base.connection.execute( statement )
     end
   end
@@ -164,7 +166,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.strategy = :transaction
 rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
@@ -189,12 +191,14 @@ Before '@javascript' do
   DatabaseCleaner.strategy = :truncation
 end
 
+Before 'not @javascript' do
+  DatabaseCleaner.strategy = :transaction
+end
+
 # Possible values are :truncation and :transaction
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
-
-# loadData
 
 Before do
   EmailAddress::Config.setting( :host_validation, :syntax )
@@ -207,12 +211,13 @@ end
 
 After( '@javascript' ) do | _scenario |
   DatabaseCleaner.clean
-  loadData
+  Warden.test_reset!
   travel_back
 end
 
 After( 'not @javascript' ) do | _scenario |
   DatabaseCleaner.clean
+  Warden.test_reset!
   travel_back
 end
 
@@ -227,13 +232,24 @@ Around() do | scenario, block |
   scenario_times["#{scenario.location}::#{scenario.name}"] = Time.zone.now - start
 end
 
+def time_disp time
+  hours = ( time / 3600 ).floor
+  minutes = ( time % 3600 / 60 ).floor
+  seconds = ( time % 60 ).ceil
+  if hours > 0
+    "#{hours}hrs, #{minutes}m #{seconds}s"
+  else
+    "#{minutes}m #{seconds}s"
+  end
+end
+
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject( 0 ) { | sum, x | sum + x }
-  puts "Aggregate Testing Time: #{total_time}"
+  puts "Aggregate Testing Time: #{time_disp(total_time)}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { | a, b | b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do | key, value |
-    puts "#{value.round( 2 )}  #{key}"
+    puts "#{time_disp(value)}  #{key}"
   end
 end

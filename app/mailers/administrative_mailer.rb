@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class AdministrativeMailer < ApplicationMailer
+  PRIORITY = {
+    INFO: 'info',
+    WARNING: 'warning',
+    ERROR: 'error'
+  }.freeze
+
   default from: 'support@CoLab.online'
   has_history
 
@@ -43,6 +49,12 @@ class AdministrativeMailer < ApplicationMailer
     headers 'X-SMTPAPI' => {
       category: ['availability']
     }.to_json
+
+    NotificationsChannel.broadcast_to_user(
+      user_id: user.id,
+      message: I18n.t( 'notifications.bingo_activity_available', activity_name: activity ),
+      priority: PRIORITY[:INFO]
+    )
 
     mail( to: "#{user.first_name} #{user.last_name} <#{user.email}>",
           subject: "CoLab: #{activity} is available" )
@@ -98,6 +110,12 @@ class AdministrativeMailer < ApplicationMailer
         next if !u.last_emailed.nil? && u.last_emailed.today?
 
         AdministrativeMailer.remind( u ).deliver_later
+
+        NotificationsChannel.broadcast_to_user(
+          user_id: u.id,
+          message: I18n.t( 'notifications.pending_activities' ),
+          priority: PRIORITY[:INFO]
+        )
 
         u.last_emailed = curr_date
         u.save

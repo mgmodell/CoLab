@@ -1,8 +1,9 @@
 [tools]
-node = "25.6.1"
-podman = { version = "5.8.1", matching = "podman-remote" }
+node = "26.3"
+overmind = "latest"
+podman = "5.8.2"
 python = "3.13.7"
-ruby = "3.4.8"
-rust = "1.92"
-usage = "3.1.0"
-yarn = "4.12.0"
+ruby = "4.0.5"
+rust = "1.96"
+usage = "3.4"
+yarn = "4.16"

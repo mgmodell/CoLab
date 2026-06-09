@@ -5,13 +5,10 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "module": "esnext",
     "lib": ["es6", "dom"],
     "module": "es2022",
-    "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5",
     "jsx": "react",
     "noEmit": true
   },

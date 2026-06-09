@@ -49,7 +49,7 @@ class ConsentLogsController < ApplicationController
             presented: @consent_log.presented,
             updatedAt: @consent_log.updated_at,
             formText: @consent_form.form_text,
-            pdfLink: url_for( @consent_form.pdf )
+            pdfLink: @consent_form.pdf.attached? ? url_for( @consent_form.pdf ) : nil
           }
         }
       end

@@ -1,0 +1,51 @@
+# docker-compose.macos.yml
+#
+# Override for macOS with rootless Podman.
+#
+# On macOS, Podman shares the host filesystem into its Linux VM via virtiofs.
+# Without userns_mode: keep-id, the bind-mounted files appear as uid:0 / nogroup
+# inside the container and are not writable.
+#
+# Two settings are required:
+#
+#   userns_mode: keep-id  — maps the Podman Machine user UID (501) into the
+#                           container unchanged, so bind-mounted source files
+#                           owned by UID 501 on macOS appear as UID 501 (colab)
+#                           inside the container and are writable.
+#
+#   USER_UID: "501"       — rebuilds the dev-server image so that the 'colab'
+#                           container user has UID 501, matching the macOS user
+#                           UID so file ownership is shown as 'colab' (not as a
+#                           numeric UID or 'nobody').
+#
+# Note: bind-mounted files may still show the group as 'nogroup' or 'dialout'
+# in `ls -l` because the macOS 'staff' GID (20) does not have a corresponding
+# group in the Ubuntu container.  This is cosmetic — write access works
+# correctly because the colab user is the file OWNER (UID 501 matches).
+#
+# Usage — add this file to your .devcontainer/devcontainer.json:
+#
+#   "dockerComposeFile": [
+#     "../containers/dev_env/docker-compose.yml",
+#     "../containers/dev_env/docker-compose.macos.yml"
+#   ]
+#
+# After adding the override, run "Dev Containers: Rebuild and Reopen in Container"
+# (Command Palette: Cmd+Shift+P) so the image is rebuilt with the correct UID.
+#
+# If you previously ran the container without this override you must also delete
+# and recreate the named volumes (e.g. 'devmise') so they are initialised with
+# the correct ownership:
+#
+#   podman volume rm dev_env_devmise
+#
+# Do NOT use on Linux or Windows — userns_mode: keep-id on Windows/WSL2 triggers
+# an "unsupported UNC path" error (WSLg Wayland socket); Linux users should use
+# docker-compose.rootless.yml instead.
+
+services:
+  app:
+    userns_mode: keep-id
+    build:
+      args:
+        USER_UID: "501"

@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.4.8'
+ruby '4.0.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.1.3'
+gem 'rails', '~> 8.1.2'
 
-gem 'puma', '~> 7.2.0'
+gem 'puma', '~> 8.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2'
-gem "foreman"
 
 # Use Uglifier as compressor for JavaScript assets
 # gem 'uglifier', '>= 1.3.0'
@@ -18,7 +17,7 @@ gem "foreman"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '9.7.0'
+gem 'shakapacker', '10.1.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -36,31 +35,32 @@ gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'chronic'
 gem 'city-state'
-gem 'connection_pool'
+gem 'connection_pool', '< 3'
 gem 'csv'
+# gem 'country_select'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise'
 gem 'devise-multi_email'
 gem 'devise_token_auth_multi_email'
+# gem 'devise_token_auth', path: '/Users/micah/dev/devise_token_auth_multi_email'
 gem 'email_address'
 gem 'faker'
-gem 'image_processing', '~> 1.0'
+gem 'image_processing', '~> 2.0'
 gem 'keypairs'
 gem 'listen'
 gem 'lockbox'
 gem 'matrix'
 gem 'net-smtp'
-gem 'omniauth'
-#This one is currently preventing oauth2 up update
-gem 'omniauth-google-oauth2'
 gem 'oj'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
 gem 'prawn'
-gem 'prawn-table'
 gem 'prawn-qrcode'
+gem 'prawn-table'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '16.5.0'
+gem 'react_on_rails', '16.6.0'
+gem 'ruby-vips', '~> 2.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -93,21 +93,26 @@ group :development, :test do
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.86', require: false
+  gem 'rubocop', '~> 1.82', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-capybara'
-  # gem 'solargraph'
+  gem 'ruby-lsp'
+  gem 'ruby-lsp-rails'
   gem 'traceroute'
 end
 
 group :test do
+  gem 'simplecov', require: false
+  # gem 'webdrivers', '~> 5.3.1', require: false
   gem 'selenium-webdriver'
   gem 'cucumber-rails',require: false
   gem 'capybara'
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
+  gem 'machinist', '~> 2.0'
+  gem 'webmock'
 end
 
 group :development do
@@ -117,3 +122,4 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
+

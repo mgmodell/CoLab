@@ -1,0 +1,131 @@
+en:
+  lti:
+    register:
+      title: "CoLab – LTI Dynamic Registration"
+      heading: "CoLab – LTI Dynamic Registration"
+      error_heading: "Registration error:"
+      error_detail: >
+        Check that the CoLab server is reachable by the LMS and that the LMS
+        can POST to CoLab's registration URL over the network.
+      success_heading: "Registration complete."
+      success_body: "CoLab has been registered as an LTI 1.3 tool."
+      platform_label: "Platform:"
+      client_id_label: "Client ID:"
+      close_tab: "You can close this tab and return to your LMS."
+      config_only_heading: "Tool configuration returned."
+      config_only_no_platform: >
+        No openid_configuration URL was provided, so no server-to-server
+        registration was performed. This is expected when fetching the
+        configuration document directly.
+      config_only_no_endpoint: >
+        The platform did not supply a registration_endpoint; the tool
+        configuration was not automatically saved. Use your LMS's manual
+        external-tool configuration screen to add a deployment, entering
+        the platform details from CoLab's LTI Deployments admin page.
+      generic_instructions_heading: "How to register CoLab with your LMS"
+      generic_instructions_html: >
+        <ol>
+          <li>In your LMS, find the section for managing external (LTI) tools.
+              In <strong>Moodle</strong> this is
+              <em>Site administration → Plugins → Activity modules →
+              External tool → Manage tools</em>; other systems have similar
+              menus.</li>
+          <li>Choose <strong>Add tool</strong> (or equivalent) and enter
+              CoLab's Dynamic Registration URL in the tool URL field:
+              <code>https://&lt;your-colab-host&gt;/lti/lti_connect</code></li>
+          <li>If your LMS supports <strong>Automatic Registration</strong>
+              (LTI Advantage / Dynamic Registration), simply paste the URL
+              and click the register/save button — the LMS will contact CoLab
+              and complete the handshake automatically.</li>
+          <li>If your LMS only supports <strong>Manual Registration</strong>,
+              fetch CoLab's tool configuration document from the URL above,
+              then copy the <em>client ID</em>, <em>JWKS URI</em>,
+              <em>login URL</em>, and <em>redirect URI</em> into the LMS's
+              external tool form.</li>
+          <li>Once the tool is registered, add it as an activity in a course
+              and click the link to test the LTI launch.</li>
+        </ol>
+    select_content:
+      title: "CoLab – Select Content to Link"
+      heading: "Select CoLab Content to Link"
+      instructions: >
+        Choose a course or individual activity below. Linking a course creates a single
+        LMS link for the entire CoLab course (students are taken to your CoLab
+        dashboard when they click it). Linking an individual activity creates a direct
+        LMS link with a gradebook column where applicable.
+      no_courses: >
+        No courses are available. Make sure you are an instructor in at least one
+        CoLab course.
+      type_col: "Type"
+      action_col: "Action"
+      select_btn: "Select"
+      select_btn_aria: "Select %{name}"
+      no_activities: "No activities in this course yet."
+      course:
+        link_btn: "Link Course"
+        link_btn_aria: "Link course %{name}"
+        type: "Course"
+      bingo:
+        name_col: "Terms List (Bingo! Game)"
+        type: "Bingo! / Terms List"
+      project:
+        name_col: "Project"
+        type: "Project"
+      experience:
+        name_col: "Experience"
+        type: "Experience"
+    link_resource:
+      title: "CoLab – Link This Activity"
+      heading: "Link This LMS Activity to a CoLab Activity"
+      instructions: >
+        This LMS link has not been connected to a CoLab activity yet. Select a course
+        or activity below to link it. Students will be taken directly to your selection
+        each time they click this link. This step only appears for instructors — students
+        will go straight to the linked content once a selection has been made.
+      create_gradebook_item: "Create an LMS gradebook item for this activity (if supported)"
+      no_pending: "No pending resource link found. Your session may have expired."
+      no_pending_action: "Please return to your LMS and click the activity link again to start the linking flow."
+    deep_link_response:
+      title: "Returning to your LMS\u2026"
+      body: "Sending your selection back to your LMS. Please wait\u2026"
+      continue_btn: "Continue to LMS"
+    no_deep_link_session:
+      title: "No Active Deep-Linking Session"
+      heading: "No Active Deep-Linking Session"
+      explanation: >
+        This page is only accessible when launched from your LMS as a
+        Content Selection (Deep Linking) activity. A deep-linking session is created
+        automatically by your LMS when an instructor uses the CoLab tool
+        in Content Selection mode — it is not something you open directly in a browser.
+      how_to_heading: "How to start a deep-linking session"
+      steps_html: >
+        <ol>
+          <li>Make sure CoLab has been registered as an LTI Advantage (1.3) tool in
+              your LMS. Use <strong>CoLab's LTI Dynamic Registration URL</strong>
+              if your LMS supports automatic registration, or add the tool manually.</li>
+          <li>Open your LMS course and enable editing.</li>
+          <li>Add a new external tool activity and select the <strong>CoLab</strong>
+              tool. In <strong>Moodle</strong>, click
+              <em>Add an activity or resource</em> and choose External tool.</li>
+          <li>In the activity settings, ensure <strong>Content-item message</strong>
+              (deep linking) is enabled. In Moodle, set the
+              <strong>Launch container</strong> to <em>New window</em> and make
+              sure <em>Content-item message</em> is checked. Save the activity.</li>
+          <li>Click the newly created CoLab link in your course. Your LMS
+              initiates a Content Selection (Deep Linking) flow and redirects you
+              here so you can choose a CoLab course or individual activity to link.</li>
+          <li>Select a <strong>course</strong> to create a single LMS link that
+              takes students to that CoLab course, or select an individual
+              <strong>activity</strong> to create a direct link with an optional
+              gradebook column.</li>
+        </ol>
+    invalid_deep_link_session:
+      title: "Invalid Deep-Linking Session"
+      heading: "Invalid Deep-Linking Session"
+      explanation: >
+        The deep-linking session is missing required information (return
+        URL or deployment details). This can happen if the session
+        expired or if the page was accessed out of order.
+      guidance: >
+        Please return to your LMS and click the CoLab activity link again
+        to restart the Content Selection flow.

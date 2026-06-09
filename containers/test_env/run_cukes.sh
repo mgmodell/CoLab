@@ -3,7 +3,7 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
-PATH=$HOME/.local/share/mise/shims:$PATH
+export PATH=$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$PATH
 # eval "$(~/.local/bin/mise activate bash)"
 
 
@@ -89,10 +89,6 @@ while getopts "eocrhsnb:f:d:tl" opt; do
       echo "Removing Rerun File" >&2
       CLEAR_RERUN=true
       ;;
-    r)
-      echo "Rerun recent failures" >&2
-      # NOOP
-      ;;
     t)
       /bin/bash -i
       exit 0;
@@ -126,23 +122,31 @@ fi
 # Set up run context
 RAILS_ENV=test
 COLAB_DB=db
-#RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
 
 echo "Installing platforms"
 mise self-update -y
 mise install
 echo "Installing gems"
 bundle install --quiet
-echo "Installing yarn packages"
-yarn install --silent
+echo "Installing packages using yarn"
+yarn install
 
 if [ "$DB_RESET" = true ]; then
-  # Reset database
+  # Drop and re-create the database so -c always starts from a clean state
   RUN_TESTS=false
   echo "Setting up database" >&2
-  rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
-  echo "Database initialised "
+  rails db:drop RAILS_ENV=$RAILS_ENV COLAB_DB=db 2>/dev/null; true
+  if ! rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database creation failed" >&2
+    exit 1
+  fi
+  if ! rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db; then
+    echo "ERROR: Database initialisation failed" >&2
+    exit 1
+  fi
+  echo "Database initialised successfully"
   exit 0;
 fi
 
@@ -151,6 +155,9 @@ if [ "$SHOW_FAILS" = true ]; then
   printf '%s\n' "$(cat rerun.txt)"
 fi
 
+# Ensure reports directory exists and is writable for cucumber HTML formatter
+mkdir -p reports
+
 #Run the tests according to the request
 # Clear old log files
 if [ "$RUN_TESTS" = false ]; then
@@ -158,13 +165,9 @@ if [ "$RUN_TESTS" = false ]; then
 elif [ "$SPEC_FEATURE" = true ]; then
   # Run the specialised tests
   echo "Begin the specified test executions: $FEATURE" >&2
-  rm -rf public/packs-test ssr-generated tmp/shakapacker
-  RAILS_ENV=test bin/shakapacker
   rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER FEATURE=$FEATURE COLAB_DB=db
 else
   # Run the tests
   echo "Begin the remaining test executions" >&2
-  rm -rf public/packs-test ssr-generated tmp/shakapacker
-  RAILS_ENV=test bin/shakapacker
   rails cucumber:rerun RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER COLAB_DB=db
 fi

@@ -30,12 +30,21 @@ yarn-debug.log*
 .yarn-integrity
 .yarn/install-state.gz
 test_results.html
+test_results.json
+reports/
 coverage
 cucumber
 .rake_tasks
 
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
 
 /config/master.key
+
+
 /config/credentials/production.key
 
 rails_best_practices_output.html
@@ -49,13 +58,12 @@ reek.html
 !.yarn/versions
 
 shakapacker-config-exports/
-# Generated React on Rails packs
-**/generated/**
-ssr-generated
+.overmind.sock
 
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
+# Ignore key files for decrypting credentials and more.
+/config/credentials/*.key
+
+# Local environment variable overrides (e.g. CUCUMBER_PUBLISH_TOKEN).
+# Copy .env.example to .env and fill in your values.
+.env
+

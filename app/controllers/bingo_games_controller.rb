@@ -4,6 +4,7 @@ require 'faker'
 
 class BingoGamesController < ApplicationController
   include PermissionsCheck
+  include LtiGradable
 
   layout 'admin', except: %i[review_candidates update_review_candidates
                              review_candidates_demo game_results ]
@@ -19,6 +20,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates ]
 
   before_action :check_viewer, only: %i[show index]
+  before_action :check_editor, only: %i[show_lti_connection update_lti_connection push_lti_grades]
 
   include Demoable
 
@@ -29,6 +31,63 @@ class BingoGamesController < ApplicationController
         render json: resp
       end
     end
+  end
+
+  def actvity_director
+    bingo_game = BingoGame.joins( course: :rosters )
+                          .where( id: params[:bingo_game_id],
+                                  active: true,
+                                  course: { rosters: { user: current_user } } ).first
+    messages = {
+      target: :no_available_bingo,
+      metadata: {},
+      status: t( 'bingo_games.no_available_bingo' ),
+    }
+    unless bingo_game.nil?
+      roster = bingo_game.course.rosters.find_by( user: current_user )
+      if roster.enrolled_student?
+        if bingo_game.is_open?
+          # go to candidate entry
+          messages[:target] = :candidate_entry
+          messages[:status] = t( 'bingo_games.candidate_entry_heading' )
+
+        elsif bingo_game.reviewed?
+          # go to results
+          messages[:target] = :results_review
+          messages[:status] = t( 'bingo_games.results_review_heading' )
+        elsif bingo_game.awaiting_review?
+          # go to be patient
+          messages[:target] = :review_in_progress
+          messages[:status] = t( 'bingo_games.review_in_progress_heading' )
+          messages[:metadata] = {
+            start_date: bingo_game.term_list_date,
+            end_date: bingo_game.next_deadline
+          }
+        else
+          # not available yet
+          messages[:target] = :not_available_yet
+          messages[:status] = t( 'bingo_games.not_available_yet_heading' )
+          messages[:metadata] = {
+            start_date: bingo_game.term_list_date
+          }
+        end
+      elsif roster.instructor? || roster.assistant?
+        if bingo_game.is_open? || bingo_game.reviewed?
+          # go to admin
+          messages[:target] = :admin
+          messages[:status] = t( 'bingo_games.admin_review_heading' )
+          messages[:metadata] = {
+            course_id: bingo_game.course_id,
+            bingo_game_id: bingo_game.id
+          }
+        else
+          # go candidate review
+          messages[:target] = :review_candidates
+          messages[:status] = t( 'bingo_games.review_candidates_heading' )
+        end
+      end
+    end
+    render json: { messages: }
   end
 
   def demo_my_results
@@ -44,7 +103,6 @@ class BingoGamesController < ApplicationController
         feedback_id: c.candidate_feedback_id,
         credit: c.candidate_feedback.credit }
     end
-
     words = candidate_list.candidates.collect do | c |
       c.definition.split( ' ' )
     end
@@ -460,8 +518,8 @@ class BingoGamesController < ApplicationController
     else
       @bingo_game = BingoGame.find( bingo_id )
       # Security check to support demos
-      redirect_to root_path unless current_user.present? &&
-                                   @bingo_game.course.instructors.include?( current_user )
+      return redirect_to root_path unless current_user.present? &&
+                                         @bingo_game.course.instructors.include?( current_user )
 
       candidates = params[:candidates]
       entered_concepts = []
@@ -469,7 +527,7 @@ class BingoGamesController < ApplicationController
         next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
-        entered_concepts << Concept.standardize_name( name: concept_name )
+        entered_concepts << Concept.standardize_concept( name: concept_name )
       end
 
       concept_map = {}
@@ -507,7 +565,7 @@ class BingoGamesController < ApplicationController
                    if 'term_problem' != candidate.candidate_feedback_critique
                      entered_candidate[:concept][:name].present?
                      concept_name = entered_candidate[:concept][:name]
-                     concept_name = Concept.standardize_name name: concept_name
+                     concept_name = Concept.standardize_concept name: concept_name
 
                      concept = concept_map[concept_name]
                      if concept_name.present? && concept.nil?
@@ -550,8 +608,17 @@ class BingoGamesController < ApplicationController
   def destroy
     @course = @bingo_game.course
     check_bingo_editor bingo_game: @bingo_game
-    @bingo_game.destroy
-    redirect_to @course, notice: ( t 'bingo_games.destroy_success' )
+    if @bingo_game.has_student_data?
+      @bingo_game.update( active: false, deleted: true )
+      msg = t( 'bingo_games.soft_delete_success' )
+    else
+      @bingo_game.destroy
+      msg = t( 'bingo_games.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   def activate
@@ -638,5 +705,18 @@ class BingoGamesController < ApplicationController
                                           :active, :group_option, :individual_count,
                                           :group_discount, :lead_time, :project_id,
                                           :start_date, :end_date )
+  end
+
+  def lti_resource
+    BingoGame.find( params[:id] )
+  end
+
+  def grade_scores_for( bingo_game )
+    bingo_game.candidate_lists.includes( :group, candidates: :candidate_feedback )
+              .flat_map do | cl |
+      users = cl.is_group && cl.group.present? ? cl.group.users : [cl.user].compact
+      score = cl.performance.to_f
+      users.map { | u | { user_id: u.id.to_s, score_given: score, score_maximum: 100 } }
+    end
   end
 end

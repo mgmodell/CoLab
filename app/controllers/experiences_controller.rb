@@ -2,10 +2,11 @@
 
 class ExperiencesController < ApplicationController
   include PermissionsCheck
+  include LtiGradable
 
   before_action :set_experience, only: %i[show get_reactions update destroy]
   before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[get_reactions update destroy]
+  before_action :check_editor, only: %i[get_reactions update destroy show_lti_connection update_lti_connection push_lti_grades]
 
   def show
     respond_to do | format |
@@ -138,50 +139,82 @@ class ExperiencesController < ApplicationController
 
   def destroy
     @course = @experience.course
-    @experience.destroy
-    redirect_to @course, notice: t( 'experiences.destroy_success' )
+    if @experience.has_student_data?
+      @experience.update( active: false, deleted: true )
+      msg = t( 'experiences.soft_delete_success' )
+    else
+      @experience.destroy
+      msg = t( 'experiences.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   # Maybe build in JSON API support
   def next
     experience_id = params[:experience_id]
-
-    experience = Experience.joins( course: { rosters: :user } )
-                           .find_by( id: experience_id, users: { id: current_user } )
-
     response = {
-      messages: {}
+      messages: {
+        error: true,
+        error_type: :no_available_experience,
+        error_data: {},
+        status: t( 'experiences.no_available_experience' ),
+      }
     }
 
-    if experience.nil? && !experience.is_open
-      response[:messages][ :main ] = t( 'experiences.wrong_course' )
+    experience = Experience.joins( course: { rosters: :user } )
+                           .find_by( id: experience_id,
+                                     active: true,
+                                     users: { id: current_user } )
+    if !experience.nil?
+      roster = experience.course.rosters.find_by( user: current_user )
+      if roster.instructor? || roster.assistant?
+        # An instructor cannot enter info.
+        response[:messages][:error_type] = :experience_instructor_redirect
+        response[:messages][:status] = t( 'experiences.instructor_redirect_msg' )
+        response[:messages][:error_data] = {
+          course_id: experience.course_id,
+          experience_id: experience.id
+        }
+      elsif ! experience.is_open? || !experience.active
+        # If the experience is not open, they need to know that they cannot access it... yet.
+        response[:messages][:error_type] = :experience_not_open
+        response[:messages][:status] = t( 'experiences.not_open_msg' )
+        response[:messages][:error_data] = {
+          start_date: experience.start_date,
+          end_date: experience.end_date
+        }
+      else
+        response[:messages][:error] = false
 
-    else
-      reaction = experience.get_user_reaction( current_user )
-      week = reaction.next_week
+        reaction = experience.get_user_reaction( current_user )
+        week = reaction.next_week
 
-      response = response.merge( {
-                                  reaction_id: reaction.id,
-                                  instructed: reaction.instructed
-                                } )
-
-      if !reaction.instructed
-        reaction.instructed = true
-        reaction.save
-
-        logger.debug reaction.errors.full_messages unless reaction.errors.empty?
-      elsif !week.nil?
         response = response.merge( {
-                                    week_id: week.id,
-                                    week_num: week.week_num,
-                                    week_text: week.text
+                                    reaction_id: reaction.id,
+                                    instructed: reaction.instructed
                                   } )
-      end
 
-      respond_to do | format |
-        format.json { render json: response.as_json }
-      end
+        if !reaction.instructed
+          reaction.instructed = true
+          reaction.save
 
+          logger.debug reaction.errors.full_messages unless reaction.errors.empty?
+        elsif !week.nil?
+          response = response.merge( {
+                                      week_id: week.id,
+                                      week_num: week.week_num,
+                                      week_text: week.text
+                                    } )
+        end
+
+      end
+    end
+
+    respond_to do | format |
+      format.json { render json: response }
     end
   end
 
@@ -294,5 +327,17 @@ class ExperiencesController < ApplicationController
   def reaction_params
     params.require( :reaction ).permit( :behavior_id, :improvements, :narrative_id,
                                         :other_name )
+  end
+
+  def lti_resource
+    Experience.find( params[:id] )
+  end
+
+  def grade_scores_for( experience )
+    experience.reactions.includes( :user ).map do | reaction |
+      # Status 0 = not started, positive integer = completed steps
+      score = reaction.status.is_a?( Integer ) && reaction.status.positive? ? 100 : 0
+      { user_id: reaction.user_id.to_s, score_given: score, score_maximum: 100 }
+    end
   end
 end

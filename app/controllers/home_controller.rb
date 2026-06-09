@@ -54,8 +54,11 @@ class HomeController < ApplicationController
       }
     }
     ep_hash[:installment] = {
-      baseUrl: edit_installment_path( assessment_id: '' ),
+      baseUrl: edit_installment_path( project_id: '' ),
       saveInstallmentUrl: installments_path
+    }
+    ep_hash[:bingo_game] = {
+      activityDirectorUrl: bingo_director_path( bingo_game_id: '' )
     }
     ep_hash[:candidate_list] = {
       baseUrl: get_candidate_list_path( bingo_game_id: '' )
@@ -137,14 +140,21 @@ class HomeController < ApplicationController
         }
         ep_hash[:bingo_game] = {
           baseUrl: bingo_games_path,
+          activityDirectorUrl: bingo_director_path( bingo_game_id: '' ),
           gameResultsUrl: game_results_path( id: '' ),
           worksheetResultsUrl: ws_results_path( id: '' ),
-          worksheetScoreUrl: ws_score_path( id: '' )
+          worksheetScoreUrl: ws_score_path( id: '' ),
+          ltiConnectionUrl: bingo_game_lti_connection_path( id: '' ),
+          ltiGradePushUrl: push_bingo_game_lti_grades_path( id: '' )
         }
         ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
-          baseUrl: experiences_path
+          baseUrl: experiences_path,
+          ltiConnectionUrl: experience_lti_connection_path( id: '' ),
+          ltiGradePushUrl: push_experience_lti_grades_path( id: '' )
         }
+        ep_hash[:project][:ltiConnectionUrl] = project_lti_connection_path( id: '' )
+        ep_hash[:project][:ltiGradePushUrl] = push_project_lti_grades_path( id: '' )
         ep_hash[:concept] = {
           baseUrl: concepts_path
         }

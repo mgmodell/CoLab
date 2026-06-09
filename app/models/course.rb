@@ -36,10 +36,10 @@ class Course < ApplicationRecord
   end
 
   def get_activities
-    activities = projects.to_a
-    activities.concat bingo_games
-    activities.concat experiences
-    activities.concat assignments
+    activities = projects.where( deleted: false ).to_a
+    activities.concat bingo_games.where( deleted: false )
+    activities.concat experiences.where( deleted: false )
+    activities.concat assignments.where( deleted: false )
 
     activities.sort_by( &:end_date )
   end
@@ -95,6 +95,7 @@ class Course < ApplicationRecord
     # new_start = course_tz.utc_to_local(new_start).beginning_of_day
     # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
     # date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    safe_timezone = timezone.presence || school&.timezone.presence || 'UTC'
     date_difference = ( new_start - start_date.beginning_of_day ) / 86_400
     new_course = nil
 
@@ -105,7 +106,7 @@ class Course < ApplicationRecord
         name: "Copy of #{name}",
         number: "Copy of #{number}",
         description:,
-        timezone:,
+        timezone: safe_timezone,
         start_date: start_date.advance( days: date_difference ),
         end_date: end_date.advance( days: date_difference )
       )
@@ -121,7 +122,7 @@ class Course < ApplicationRecord
 
       # copy the projects
       proj_hash = {}
-      course_tz = ActiveSupport::TimeZone.new( timezone )
+      course_tz = ActiveSupport::TimeZone.new( safe_timezone )
       offset = course_tz.utc_offset
 
       projects.each do | project |
@@ -351,12 +352,12 @@ class Course < ApplicationRecord
 
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
-    self.anon_name = "#{levels.sample} #{Faker::Company.industry}"
+    self.anon_name ||= "#{levels.sample} #{Faker::Company.industry}"
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
-    self.anon_number = "#{dpts.sample}-#{rand( 100..700 )}"
+    self.anon_number ||= "#{dpts.sample}-#{rand( 100..700 )}"
     # Data offset in days
-    self.anon_offset = - Random.rand( 1000 ).days.to_i + 35
+    self.anon_offset ||= - Random.rand( 1000 ).days.to_i + 35
   end
 
   def timezone_adjust_comprehensive

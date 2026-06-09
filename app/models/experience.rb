@@ -9,6 +9,7 @@ class Experience < ApplicationRecord
   delegate :timezone, :name, to: :course, prefix: true
 
   has_many :reactions, inverse_of: :experience, dependent: :destroy
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   # validations
   validates :name, :end_date, :start_date, presence: true
@@ -30,6 +31,10 @@ class Experience < ApplicationRecord
 
   def get_link
     'experience'
+  end
+
+  def has_student_data?
+    reactions.any?
   end
 
   def next_deadline
@@ -216,7 +221,12 @@ class Experience < ApplicationRecord
                                                instructor,
                                                completion_hash ).deliver_later
           count += 1
-        end
+          NotificationsChannel.broadcast_to_user(
+              user_id: instructor.id,
+              message: I18n.t( 'notifications.experience_report_available', experience_name: experience.name ),
+              priority: AdministrativeMailer::PRIORITY[:INFO]
+            )
+          end
         experience.instructor_updated = true
         experience.save
         logger.debug experience.errors.full_messages unless experience.errors.empty?
@@ -238,6 +248,6 @@ class Experience < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}"
+    self.anon_name ||= "#{Faker::Company.industry} #{Faker::Company.suffix}"
   end
 end

@@ -2,6 +2,7 @@
 
 class ProjectsController < ApplicationController
   include PermissionsCheck
+  include LtiGradable
 
   before_action :set_project, only: %i[show edit update destroy activate
                                        rescore_group rescore_groups]
@@ -118,8 +119,17 @@ class ProjectsController < ApplicationController
 
   def destroy
     @course = @project.course
-    @project.destroy
-    redirect_to @course, notice: t( 'projects.destroy_success' )
+    if @project.has_student_data?
+      @project.update( active: false, deleted: true )
+      msg = t( 'projects.soft_delete_success' )
+    else
+      @project.destroy
+      msg = t( 'projects.destroy_success' )
+    end
+    respond_to do | format |
+      format.html { redirect_to @course, notice: msg }
+      format.json { render json: { message: msg } }
+    end
   end
 
   def set_groups
@@ -152,6 +162,7 @@ class ProjectsController < ApplicationController
       # Post back a JSON error
       get_groups_helper project:, message: t( 'projects.group_save_failure' )
     else
+      project.groups.reset
       get_groups_helper project:, message: t( 'projects.group_save_success' )
     end
   end
@@ -281,5 +292,18 @@ class ProjectsController < ApplicationController
     params.require( :project ).permit( :course_id, :name, :description, :start_date,
                                        :end_date, :start_dow, :end_dow, :active, :factor_pack_id,
                                        :style_id, groups: [:name] )
+  end
+
+  def lti_resource
+    Project.find( params[:id] )
+  end
+
+  def grade_scores_for( project )
+    project.groups.includes( :users ).flat_map do | group |
+      group.users.map do | user |
+        score = project.get_performance( user ).to_f
+        { user_id: user.id.to_s, score_given: score, score_maximum: 100 }
+      end
+    end
   end
 end

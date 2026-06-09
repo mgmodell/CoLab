@@ -44,10 +44,5 @@ end
 Then( /^the user waits to see "([^"]*)"$/ ) do | wait_msg |
   wait_for_render
 
-  counter = 0
-  until page.has_text? wait_msg
-    sleep 1
-    counter += 1
-    break if counter > 60
-  end
+  expect( page ).to have_text( wait_msg, wait: 10 )
 end

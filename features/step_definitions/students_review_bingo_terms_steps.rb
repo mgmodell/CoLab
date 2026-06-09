@@ -11,23 +11,17 @@ Then( /^the user clicks the link to the concept list$/ ) do
   find( :xpath, "//tbody/tr/td[@role='cell' and contains(.,'#{@bingo.get_name( @anon )}')]" ).click
 
   wait_for_render
-  # current_path = page.current_path
 
-  # page.should have_content 'Terms list for review'
-  # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
-
-  # props_string = x['data-react-props']
   page.find( :xpath, "//ul[@role='tablist']/li[contains(.,'Bingo game builder')]" ).click
-
-  # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
-
-  # url = "#{bingo_concepts_path(@bingo.id)}.json"
-  # visit url
 
   chips = all( :xpath, "//div[contains(@id,'concept_')]" )
   @concepts = chips.collect { | chip | { id: chip[:id], name: chip.text } }
 
   # visit current_path
+end
+
+Given('the user is an instructor for the course') do
+  @course.set_user_role @user, Roster.roles[:instructor]
 end
 
 Then( /^the concept list should match the list$/ ) do

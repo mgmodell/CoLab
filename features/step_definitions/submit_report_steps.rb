@@ -117,9 +117,12 @@ Then( /^the installment form should request factor x user values$/ ) do
 
   expected_count = group.users.count * factors.count
   actual_count = 0
-  page.all( :xpath, "//div[@id='installments']//a[@role='button']" ).each do | tab |
+  tabs = page.all( :xpath, "//div[@id='installments']//a[@role='button']" )
+
+  tabs.each do | tab |
     tab.click unless 1 == tab.all( :xpath, 'ancestor::div[contains(@class,"p-accordion-tab-active")]' ).size
-    wait_for_render
+    sleep( 0.4 ) # unfortunately, react takes a moment to render the sliders after the tab is clicked, so we have to wait a bit here.
+    # If we check too early, we might get a false negative on the slider count.
     tab_count = tab.all( :xpath,
                          'ancestor::div[contains(@class,"p-accordion-tab-active")]//div[@data-pc-name="slider"]' ).size
     actual_count += tab_count
@@ -155,7 +158,7 @@ end
 
 Then( /^the user logs out$/ ) do
   wait_for_render
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'logout-menu-item' ).click
   wait_for_render
   page.quit
@@ -277,4 +280,58 @@ Then( /^user will be presented with the installment form$/ ) do
   wait_for_render
   page.should have_content 'Your weekly check-in'
   page.should have_content @project.name
+end
+
+Then('the user accesses the {string} page') do | activity_type |
+  case activity_type.downcase
+  when 'check-in'
+    visit "/home/project/checkin/#{@project.id}"
+  when 'experience'
+    visit "/home/experience/#{@experience.id}"
+  when 'bingo'
+    visit "/home/bingo/#{@bingo.id}"
+  else
+    pending
+  end
+  wait_for_render
+end
+
+Then('the user should see the {string} reporting page') do | activity_type |
+  wait_for_render
+  is_instructor = @course.rosters.faculty.where( user:  @user ).exists?
+  case activity_type.downcase
+  when 'bingo'
+    if is_instructor
+      page.should have_field with: @bingo.topic
+      all(:xpath, "//span[text()='Response data']")[0].click
+      page.should have_content 'Results'
+    else
+      page.should have_content @bingo.topic
+      all(:xpath, "//span[text()='Your performance']")[0].click
+    end
+  when 'project'
+    all(:xpath, "//span[text()='Reporting']")[0].click
+    page.should have_content "Data for #{@project.name}"
+  when 'experience'
+    all(:xpath, "//span[text()='Results']")[0].click
+    page.should have_content 'Responses'
+  else
+    pending
+  end
+end
+
+Then('the user is not enrolled in the course') do 
+  @user = User.new(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Faker::Internet.email,
+    timezone: 'UTC',
+    school: School.find( 1 ),
+    welcomed: true
+  )
+  @user.skip_confirmation!
+  @user.save
+  log @user.errors.full_messages if @user.errors.present?
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id", null: false
     t.datetime "created_at", null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", null: false
     t.boolean "file_sub", default: false, null: false
@@ -132,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_topic"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", precision: nil
     t.integer "group_discount"
@@ -327,6 +329,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.datetime "end_date", precision: nil
     t.boolean "instructor_updated", default: false, null: false
     t.integer "lead_time", default: 3, null: false
@@ -449,6 +452,62 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.index ["name_en"], name: "index_languages_on_name_en", unique: true
   end
 
+  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "ags_access_token_url"
+    t.string "client_id"
+    t.integer "connectable_id", null: false
+    t.string "connectable_type", null: false
+    t.datetime "created_at", null: false
+    t.string "deployment_id"
+    t.string "iss"
+    t.string "line_item_url"
+    t.datetime "updated_at", null: false
+    t.index ["connectable_type", "connectable_id"], name: "index_lti_connections_on_connectable", unique: true
+  end
+
+  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "auth_login_url", null: false
+    t.string "auth_token_url", null: false
+    t.string "client_id", null: false
+    t.datetime "created_at", null: false
+    t.string "deployment_id"
+    t.string "issuer", null: false
+    t.string "key_set_url", null: false
+    t.string "tool_url"
+    t.datetime "updated_at", null: false
+    t.index ["deployment_id"], name: "index_lti_deployments_on_deployment_id"
+    t.index ["issuer", "client_id"], name: "index_lti_deployments_on_issuer_and_client_id", unique: true
+  end
+
+  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "nonce", null: false
+    t.string "state", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_lti_nonces_on_expires_at"
+    t.index ["state"], name: "index_lti_nonces_on_state", unique: true
+  end
+
+  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.integer "activity_id"
+    t.string "activity_type"
+    t.bigint "assignment_id"
+    t.string "context_id"
+    t.string "context_title"
+    t.bigint "course_id"
+    t.datetime "created_at", null: false
+    t.string "line_item_url"
+    t.bigint "lti_deployment_id", null: false
+    t.string "names_roles_url"
+    t.string "resource_link_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignment_id"], name: "index_lti_resource_links_on_assignment_id"
+    t.index ["course_id"], name: "index_lti_resource_links_on_course_id"
+    t.index ["lti_deployment_id", "resource_link_id"], name: "index_lti_resource_links_on_deployment_and_link", unique: true
+    t.index ["lti_deployment_id"], name: "index_lti_resource_links_on_lti_deployment_id"
+  end
+
   create_table "narratives", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "member_en"
@@ -463,6 +522,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
     t.string "anon_name"
     t.integer "course_id"
     t.datetime "created_at", precision: nil, null: false
+    t.boolean "deleted", default: false, null: false
     t.text "description"
     t.datetime "end_date", precision: nil
     t.integer "end_dow"
@@ -733,6 +793,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_23_160856) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "lti_resource_links", "lti_deployments"
   add_foreign_key "narratives", "scenarios"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"

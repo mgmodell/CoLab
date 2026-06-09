@@ -4,7 +4,17 @@ en:
     subtitle: Your weekly check-in
     submit: Submit Weekly Check-In
     success: Your response was successfully saved
+    peer_submitted: "{{name}} has submitted their peer assessment."
     err_unknown: Your response could not be recorded
+    not_open_heading: Check-in not open
+    not_open_message: >
+      The {{project_name}} project's check-in period is not currently open.
+      The last period closed {{close_date}} and it will open again on {{next_date}}.
+    not_enrolled_heading: Not enrolled
+    not_enrolled_message: >
+      You are not enrolled in this course and therefore are not permitted to 
+      submit this check-in. You will be redirected to the home screen in 
+      a few moments.
     err_normalize_sums: >
         Unable to reconcile check-in values. Please contact an administrator.
     demo_success: >

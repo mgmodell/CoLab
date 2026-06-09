@@ -1,0 +1,12 @@
+# Procfile for development with HTTPS (required for LTI Dynamic Registration,
+# Deep Linking, and Grade Push testing).
+# Puma generates a self-signed certificate on first start and caches it in
+# tmp/ssl/.  Add a browser security exception for https://localhost:3443 once.
+#
+# Start via:  dev_serv.sh -t
+# Or:         overmind start -f Procfile.dev-https
+rails: SHAKAPACKER_CONFIG=config/shakapacker-https.yml COLAB_HTTPS=true PORT=3443 RAILS_LOG_TO_STDOUT=enabled bundle exec puma -C config/puma.rb
+# Port and SSL binding are fully controlled by config/puma.rb when COLAB_HTTPS=true.
+# puma.rb generates a self-signed cert in tmp/ssl/ and calls ssl_bind on port 3443.
+wp-client: SHAKAPACKER_CONFIG=config/shakapacker-https.yml SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 bin/shakapacker-dev-server
+wp-server: SHAKAPACKER_CONFIG=config/shakapacker-https.yml SHAKAPACKER_DEV_SERVER_HOST=0.0.0.0 SERVER_BUNDLE_ONLY=yes bin/shakapacker --watch

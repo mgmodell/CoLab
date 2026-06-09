@@ -10,9 +10,6 @@ Feature: Submitting Reports
     Given the project has a group with 4 confirmed users
     Given reset time clock to now
     Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
-
-  @javascript
-  Scenario: User should be able to complete an open weekly installment
     Given the project measures 3 factors
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
@@ -21,6 +18,23 @@ Feature: Submitting Reports
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
+
+  @javascript
+  Scenario: A student who is not enrolled should not see the check-in
+    Given the user is not enrolled in the course
+    When the user logs in
+     Then the user accesses the "check-in" page
+     And the user should see "You are not enrolled in this course"
+
+  @javascript
+  Scenario: Instructor user should be directed to the project page for reporting
+    Given the user is the instructor for the course
+    When the user logs in
+     Then the user accesses the "check-in" page
+     Then the user should see the "project" reporting page
+
+  @javascript
+  Scenario: User should be able to complete an open weekly installment
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -40,14 +54,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: User should be able to complete an open weekly installment with a comment
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -70,10 +76,6 @@ Feature: Submitting Reports
   @javascript
   Scenario: User should not be able to edit a completed weekly installment
     Given the project measures 4 factors
-    Given the project has a group with 4 confirmed users
-    Given the course has a consent form
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
     Given the project has been activated
     Then the user logs in and submits an installment
     When the user navigates home
@@ -84,14 +86,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: An installment's factor values can all be set to 0
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -108,14 +102,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: An installment's factor values can be randomly assigned
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -132,14 +118,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: A installment's factor column need not sum to 600 or be distributed evenly
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -156,14 +134,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: A installment's factor column need not sum to 6000
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -180,14 +150,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: User should not be able to submit an installment after the assessment has closed
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     Given today is "tomorrow 23:57"
     When the user logs in
     Then the user should see a successful login message
@@ -202,17 +164,12 @@ Feature: Submitting Reports
     Given today is "in 10 minutes"
     When the user submits the installment
     Then the user should see an error indicating that the installment request expired
+    Then the user accesses the "check-in" page
+     And the user should see "project's check-in period is not currently open."
+     And the user should see "it will open again on"
 
   @javascript
   Scenario: Comments with PII should be anonymized when the assessment period closes
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab
@@ -240,14 +197,6 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: Comments without PII should not be anonymized when the assessment period closes
-    Given the project measures 3 factors
-    Given the course has a consent form
-    Given the consent form started "1 month ago" and ends "1 month from now"
-    Given the consent form "is" active
-    Given the user is the "last" user in the group
-    Given the consent form "has" been presented to the user
-    Given the project has been activated
-    Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
     Then the user switches to the "Task View" tab

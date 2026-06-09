@@ -1,8 +1,19 @@
 # frozen_string_literal: true
 
+Then( 'the user completes the profile walkthrough' ) do
+  find( '.driver-popover', wait: 10 )
+  max_steps = 20
+  steps_taken = 0
+  while page.has_css?( '.driver-popover', wait: 2 ) && steps_taken < max_steps
+    find( '.driver-popover-next-btn' ).click
+    wait_for_render
+    steps_taken += 1
+  end
+end
+
 Then( /^user opens their profile$/ ) do
   wait_for_render
-  find( :id, 'main-menu-button' ).click
+  open_main_menu
   find( :id, 'profile-menu-item' ).click
   page.should have_content( 'Edit your profile' )
   text = "Tell us about yourself, #{@user.first_name} (optional)"
@@ -41,7 +52,6 @@ end
 When( /^the user logs in$/ ) do
   visit '/login'
   wait_for_render
-
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 
@@ -50,12 +60,11 @@ When( /^the user logs in$/ ) do
 
   wait_for_render
   page.should have_content 'signed in successfully'
-
   # Blow away the cookies accept
   click_link_or_button 'I understand' if has_content? 'I understand'
 
   # Set custom time if warranted
-  if :rack_test != Capybara.current_driver && !@dest_date.nil?
+  if !@dest_date.nil? && :rack_test != Capybara.current_driver && has_xpath?( "//input[@id='newTimeVal']" )
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end

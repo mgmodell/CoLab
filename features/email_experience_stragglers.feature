@@ -9,10 +9,10 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "in two months"
     Given the experience "has" been activated
 
-@javascript
   Scenario: Four students have experiences waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
     When the system emails stragglers
+      And the system emails instructor reports
     Then 4 emails will be sent
     Then 4 emails will be tracked
 
@@ -21,17 +21,28 @@ Feature: Email experience stragglers
     Given the email queue is empty
     Given the user is "a random" user
     Then the user is dropped from the course
+      And the user logs in
     When the system emails stragglers
+     And the user will not see "have pending activities to complete"
+     And the user will not see "Reporting available"
     Then 3 emails will be sent
     Then 3 emails will be tracked
 
-  Scenario: Four students have incomplete experiences that ended yesterday - no emails are sent
+  @javascript
+  Scenario: Four students have incomplete experiences that ended yesterday - only the instructor is contacted
     Given the experience started "last month" and ends "yesterday"
     Given the experience "has" been activated
+      And the course has 4 confirmed users
+      And the user is "a random" user
+      And the user is an instructor for the course
+      Then retrieve the instructor user
+      And the user logs in
     Given the email queue is empty
     When the system emails stragglers
-    Then 0 emails will be sent
-    Then 0 emails will be tracked
+     And the system emails instructor reports
+    Then 1 emails will be sent
+    Then 1 emails will be tracked
+     And the user will see "Reporting available"
 
   Scenario: 4 Ss incomplete; experience ends in 2 days, 2 days lead time - no emails are sent
     Given the experience started "last month" and ends "two days hence"

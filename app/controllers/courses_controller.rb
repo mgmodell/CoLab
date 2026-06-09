@@ -49,7 +49,8 @@ class CoursesController < ApplicationController
                 type: activity.type,
                 start_date: anon ? activity.start_date + @course.anon_offset : activity.start_date,
                 end_date: anon ? activity.end_date + @course.anon_offset : activity.end_date,
-                link: activity.get_link
+                link: activity.get_link,
+                delete_link: polymorphic_path( activity )
               }
             end
             response[:course][:activities] = activities
@@ -128,7 +129,14 @@ class CoursesController < ApplicationController
   end
 
   def self_reg_confirm
+    path = course_path( @course )
     roster = Roster.find_by( user: current_user, course: @course )
+    response = {
+      course: @course.as_json(
+        only: %i[id name number description]
+      )
+    }
+
     if roster.nil?
       roster = @course.rosters.create( role: Roster.roles[:requesting_student], user: current_user )
     elsif !(  roster.enrolled_student? || roster.invited_student? ||
@@ -138,9 +146,25 @@ class CoursesController < ApplicationController
       roster.enrolled_student!
     end
     roster.save
-    logger.debug roster.errors.full_messages unless roster.errors.empty?
+    if roster.errors.empty?
+      response[:messages] = {
+        main: 'Enrollment successfully requested'
+      }
+    else
+      response[:messages] = {
+        main: 'There was a problem requesting enrollment in the course'
+      }
+      response[:messages][:details] = roster.errors.full_messages
+      logger.debug roster.errors.full_messages 
+    end
 
-    redirect_to controller: 'home', action: 'index'
+    respond_to do | format |
+      format.json do
+        render json: response
+      end
+    end
+
+    # redirect_to controller: 'home', action: 'index'
   end
 
   def self_reg_init
@@ -227,7 +251,7 @@ class CoursesController < ApplicationController
         terms_lists = []
         worksheets = []
         bingo_games.each do | bingo_game |
-          list = bingo_game.candidate_lists.find_by user_id: user.id
+          list = bingo_game.candidate_list_for_user user
           terms_lists << if list.nil?
                            0
                          else
@@ -260,7 +284,7 @@ class CoursesController < ApplicationController
 
   def reg_requests
     # Pull any requesting students for review
-    courses = current_user.rosters.faculty.collect( &:course )
+    courses = current_user.rosters.includes( :course ).faculty.collect( &:course )
     waiting_student_requests = Roster.requesting_student
                                      .where( course: courses )
     respond_to do | format |
@@ -305,9 +329,9 @@ class CoursesController < ApplicationController
   def index
     @courses = []
     if current_user.admin?
-      @courses = Course.includes( :school ).all
+      @courses = Course.includes( :school, :rosters, :projects, :experiences, :bingo_games ).all
     else
-      rosters = current_user.rosters.instructor.includes( course: :school )
+      rosters = current_user.rosters.instructor.includes( course: [ :school, :rosters, :projects, :experiences, :bingo_games ] )
       rosters.each do | roster |
         @courses << roster.course
       end
@@ -518,8 +542,11 @@ class CoursesController < ApplicationController
         message = t( 'courses.permission_fail' )
       else
         r.role = Roster.roles[:dropped_student]
-        r.save
-        course_path( r.course ) if instructor_action
+        if r.save
+          course_path( r.course )
+        else
+          message = r.errors.full_messages.join( ', ' )
+        end
       end
     end
     respond_to do | format |

@@ -26,8 +26,7 @@ class Assessment < ApplicationRecord
 
   def task_data( current_user: )
     helpers = Rails.application.routes.url_helpers
-    # link = helpers.edit_installment_path(assessment_id: id)
-    link = "project/checkin/#{id}"
+    link = "project/checkin/#{project.id}"
     group = group_for_user( current_user )
     instructor_task = false
 
@@ -111,6 +110,11 @@ class Assessment < ApplicationRecord
                                                        instructor,
                                                        completion_hash ).deliver_later
                   count += 1
+                  NotificationsChannel.broadcast_to_user(
+                    user_id: instructor.id,
+                    message: I18n.t( 'notifications.assessment_report_available', assessment_name: assessment.project.get_name( false ) ),
+                    priority: AdministrativeMailer::PRIORITY[:INFO]
+                  )
                 end
 
                 assessment.instructor_updated = true

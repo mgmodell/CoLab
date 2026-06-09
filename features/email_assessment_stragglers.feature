@@ -7,14 +7,18 @@ Feature: Email assessment stragglers
     Given the project has a group with 4 confirmed users
     Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
 
+  @javascript
   Scenario: Four students have assessments waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
     Given the project has been activated
+     And the user is the "last" user in the group
+     And the user logs in
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
+     And the user will see "have pending activities to complete"
 
   Scenario: 4 students have assessments waiting. 1 drops the course. Email the stragglers - 3 emails are sent
     Given the email queue is empty
@@ -39,6 +43,7 @@ Feature: Email assessment stragglers
     Then the user logs in and submits an installment
     When the system emails stragglers
     Then an email will be sent to each member of the group but one
+     And the user will not see "have pending activities to complete"
 
   Scenario: Four students have been mailed about their assessments waiting when we email the stragglers - no emails are sent
     Given the email queue is empty
@@ -73,10 +78,6 @@ Feature: Email assessment stragglers
     Then the members of "the last" group go to other groups
 
     Given the email queue is empty
-    When the system emails stragglers
-    Then 0 emails will be sent
-    Then 0 emails will be tracked
-    Given the project has been activated
     When the system emails stragglers
     Then 10 emails will be sent
     Then 10 emails will be tracked
@@ -149,7 +150,7 @@ Feature: Email assessment stragglers
     Then 10 emails will be sent
     Then 20 emails will be tracked
 
-  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands in second week - 10 emails sent
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 added - 12 emails sent
     Given the project has a group with 4 confirmed users
     Given the project has a group with 2 confirmed users
     Given the factor pack is set to "Original"
@@ -164,11 +165,6 @@ Feature: Email assessment stragglers
     #Let's add a new group mid-stream
     Given the project has a group with 2 confirmed users
     Then 10 emails will be sent
-    When the system emails stragglers
-    Then 10 emails will be sent
-    Then 10 emails will be tracked
-
-    Given the project has been activated
     When the system emails stragglers
     Then 12 emails will be sent
     Then 12 emails will be tracked

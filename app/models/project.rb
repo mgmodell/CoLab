@@ -14,6 +14,7 @@ class Project < ApplicationRecord
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments, dependent: :destroy
+  has_one :lti_connection, as: :connectable, dependent: :destroy
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -64,6 +65,10 @@ class Project < ApplicationRecord
     # helpers = Rails.application.routes.url_helpers
     # helpers.project_path self
     'project'
+  end
+
+  def has_student_data?
+    groups.joins( :users ).any?
   end
 
   def get_user_appearance_counts
@@ -228,6 +233,6 @@ class Project < ApplicationRecord
       Faker::Movies::HowToTrainYourDragon,
       Faker::Fantasy::Tolkien
     ]
-    self.anon_name = "#{locations.sample.location} #{Faker::Job.field}"
+    self.anon_name ||= "#{locations.sample.location} #{Faker::Job.field}"
   end
 end
