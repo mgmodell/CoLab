@@ -19,7 +19,7 @@ import { range } from "d3-array";
 import { hsl } from "d3-color";
 import { schemeCategory10 as factorColors } from "d3-scale-chromatic";
 import { timeParse } from "d3-time-format";
-import Logo from "../Logo";
+import Logo from "../svgs/Logo";
 
 export const unit_codes = {
   group: 2,

@@ -9,7 +9,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { signOut } from "../infrastructure/ContextSlice";
 import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
-import Logo from "../Logo";
+import Logo from "../svgs/Logo";
 
 type Props = {
   diversityScoreFor: string;
