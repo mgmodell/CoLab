@@ -192,16 +192,6 @@ ensure_rspack_binding() {
 
 # Start the server (HTTP)
 if [ "$STARTUP" = true ]; then
-  if command -v overmind &> /dev/null; then
-    overmind start -f Procfile.dev
-  elif command -v foreman &> /dev/null; then
-    foreman start -f Procfile.dev
-  else
-    echo "ERROR: Neither 'overmind' nor 'foreman' is installed." >&2
-    echo "  Install overmind: https://github.com/DarthSim/overmind" >&2
-    echo "  Install foreman:  gem install foreman" >&2
-    exit 1
-  fi
   ensure_rspack_binding || exit 1
   if ! skip_overmind && command -v overmind &> /dev/null; then
     overmind start -f Procfile.dev

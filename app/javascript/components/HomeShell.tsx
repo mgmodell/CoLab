@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -39,12 +39,14 @@ export default function HomeShell(props: Props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const defaultZone = Settings.defaultZone;
 
   const [curTab, setCurTab] = useState(0);
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
   const [tasks, setTasks] = useState();
+  const parsedTaskZone = useRef<string | null>(null);
 
   const { setTourSteps } = useTour();
 
@@ -64,23 +66,31 @@ export default function HomeShell(props: Props) {
   }, [setTourSteps]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && undefined !== tasks) {
-      const newTasks = tasks;
-      newTasks.forEach((value, _index, _array) => {
-        if (value.next_date) {
-          value.next_date = parseISO(value.next_date, Settings.defaultZone);
-        }
-        if (value.start_date) {
-          value.start_date = parseISO(value.start_date, Settings.defaultZone);
-        }
-        if (value.end_date) {
-          value.end_date = parseISO(value.end_date, Settings.defaultZone);
-        }
-      });
-
-      setTasks(newTasks);
+    if (null === user.lastRetrieved || undefined === tasks) {
+      return;
     }
-  }, [user.lastRetrieved, Settings.defaultZone, tasks]);
+
+    if (parsedTaskZone.current === `${user.lastRetrieved}:${defaultZone}`) {
+      return;
+    }
+
+    parsedTaskZone.current = `${user.lastRetrieved}:${defaultZone}`;
+
+    setTasks(currentTasks =>
+      currentTasks?.map(value => ({
+        ...value,
+        next_date: value.next_date
+          ? parseISO(value.next_date, defaultZone)
+          : value.next_date,
+        start_date: value.start_date
+          ? parseISO(value.start_date, defaultZone)
+          : value.start_date,
+        end_date: value.end_date
+          ? parseISO(value.end_date, defaultZone)
+          : value.end_date
+      }))
+    );
+  }, [defaultZone, user.lastRetrieved]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();
@@ -134,7 +144,7 @@ export default function HomeShell(props: Props) {
           if (null !== value.start_date) {
             value.start_date = parseISO(value.start_date);
           }
-          if (null !== value.end_date) {
+          if (null !== value.end_date && undefined !== value.end_date) {
             value.end_date = parseISO(value.end_date);
             value.end = new Date(value.end_date.toInstant().epochMilliseconds);
           } else {

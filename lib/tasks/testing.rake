@@ -249,7 +249,7 @@ namespace :testing do
 
       puts 'running'
       if Rails.env.development?
-        user = User.find_by( email: args[:email] )
+        user = User.find_by_email args[:email]
         if user.nil?
           user = User.new(
             email: args[:email],
