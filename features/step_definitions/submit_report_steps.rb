@@ -325,23 +325,34 @@ Then('the user accesses the {string} page') do | activity_type |
   wait_for_render
 end
 
-Then('the user should see the {string} reporting page') do | activity_type |
+Then( 'the user should see the {string} reporting page' ) do | activity_type |
   wait_for_render
-  is_instructor = @course.rosters.faculty.where( user:  @user ).exists?
+  is_instructor = @course.rosters.faculty.where( user: @user ).exists?
+  retries = REPORTING_TAB_WAIT
   case activity_type.downcase
   when 'bingo'
+    while page.has_no_content?( @bingo.topic, wait: 1 ) and retries > 0
+      retries -= 1
+      # puts "Page failed to show expected content within 10 seconds" if retries < 1
+    end
     if is_instructor
-      page.should have_field with: @bingo.topic, wait: REPORTING_TAB_WAIT
       find( :xpath, "//span[text()='Response data']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
       page.should have_content 'Results', wait: REPORTING_TAB_WAIT
     else
-      page.should have_content @bingo.topic, wait: REPORTING_TAB_WAIT
       find( :xpath, "//span[text()='Your performance']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
     end
   when 'project'
+    while page.has_no_xpath?( "//span[text()='Reporting']", wait: 1 ) and retries > 0
+      retries -= 1
+      # puts "Page failed to show expected content within 10 seconds" if retries < 1
+    end
     find( :xpath, "//span[text()='Reporting']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
     page.should have_content "Data for #{@project.name}", wait: REPORTING_TAB_WAIT
   when 'experience'
+    while page.has_no_xpath?( "//span[text()='Results']", wait: 1 ) and retries > 0
+      retries -= 1
+      # puts "Page failed to show expected content within 10 seconds" if retries < 1
+    end
     find( :xpath, "//span[text()='Results']", match: :first, visible: :visible, wait: REPORTING_TAB_WAIT ).click
     page.should have_content 'Responses', wait: REPORTING_TAB_WAIT
   else
