@@ -1,0 +1,20 @@
+# TLS-terminating reverse proxy for the security sandbox.
+#
+# CoLab is designed to run behind an SSL-terminating reverse proxy
+# (config/environments/production.rb: config.assume_ssl = true), and its session
+# cookie is "Secure; SameSite=None" (config/initializers/session_store.rb, for
+# LTI 1.3). Over plain HTTP a browser drops that cookie, so login can't persist.
+# This proxy serves HTTPS (self-signed via Caddy's internal CA) and forwards to
+# the app, mirroring the real CoLab.online deployment so sessions/login work.
+#
+# Access the target at:  https://localhost:13443  (accept the self-signed cert).
+{
+	auto_https disable_redirects
+}
+
+# Named site so Caddy issues an internal-CA cert for the SNI ("localhost").
+# Accessed via https://localhost:13443 (host port 13443 -> container 443).
+localhost {
+	tls internal
+	reverse_proxy app:3000
+}

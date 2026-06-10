@@ -58,8 +58,28 @@ services:
       - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-b61117c631a312ace765c4929ae7ad0613d15f240e600e796e3f50ce485b08baa7d30e0e42fc10b58794bc450bf2734aeb2d6a9da1e2dc97ac50d5ffdcb485d7}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY:-}
     ports:
-      # Operator browser access only; container-to-container uses app:3000.
+      # Direct HTTP access (recon/tools, and in-network app:3000). NOTE: login
+      # won't persist over plain HTTP because the session cookie is Secure +
+      # SameSite=None — use the HTTPS proxy below (https://localhost:13443).
       - 13000:3000
+    networks:
+      - engagement_net
+
+  # TLS-terminating reverse proxy (Caddy) — mirrors the real CoLab.online setup
+  # (app runs behind an SSL proxy; config.assume_ssl = true). Serves HTTPS so the
+  # Secure/SameSite=None session cookie works and LOGIN persists.
+  # Browse the functional target at: https://localhost:13443 (self-signed cert).
+  proxy:
+    image: docker.io/library/caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_started
+    ports:
+      - 13443:443
+    volumes:
+      - ../sec_env/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
     networks:
       - engagement_net
 
@@ -133,3 +153,4 @@ networks:
 volumes:
   secdata:
   engagement_data:
+  caddydata:
