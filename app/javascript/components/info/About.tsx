@@ -1,5 +1,6 @@
 import React from "react";
 import { useSprings, animated, config } from "@react-spring/web";
+import { useTranslation } from "react-i18next";
 
 import MGM from "../svgs/MGM";
 import BingoBoards from "../svgs/BingoBoards";
@@ -34,6 +35,9 @@ type Props = {
 const viewBox = [0, 0, 494, 255].join(" ");
 
 export default function About(props: Props) {
+  const category = "intro";
+  const { t } = useTranslation(category);
+
   const [marcher, marcherApi] = useSprings(
     contributors.length ,
     (index) => {
@@ -69,7 +73,7 @@ export default function About(props: Props) {
           <g
      id="main">
     <title
-       id="title1">About CoLab</title>
+       id="title1">{t("about.title")}</title>
     <defs>
       <filter id='name-shadow' x="-20%" y="-20%" width="140%" height="140%">
         <feDropShadow dx="3" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
@@ -87,7 +91,7 @@ export default function About(props: Props) {
        x="86.5"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">He couldn't let it go, so it became part of his research agenda.</text>
+       fill="#000000">{t("about.became_research")}</text>
        <animated.svg
        x="10"
        y="50"
@@ -104,7 +108,7 @@ export default function About(props: Props) {
        x="30"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">His students got involved and now it's available for you to use, too!</text>
+       fill="#000000">{t("about.student_involvement")}</text>
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -114,7 +118,7 @@ export default function About(props: Props) {
        x="25.5"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">Micah Gideon Modell built CoLab to give his student teams a voice.</text>
+       fill="#000000">{t("about.giving_voice")}</text>
     <text
        stroke="#000"
        textAnchor="start"
@@ -124,7 +128,7 @@ export default function About(props: Props) {
        y="114.5"
        x="80.5"
        strokeWidth="0"
-       fill="#000000">He experimented with visualizations and gamification.</text>
+       fill="#000000">{t("about.experimented")}</text>
     <g
       id="contributors"
       >
@@ -165,7 +169,7 @@ export default function About(props: Props) {
        strokeWidth="0"
        stroke="#000"
        filter="url(#link-blur)"
-       fill={logocolors[2]}>Terms of Service</text>
+       fill={logocolors[2]}>{t("about.tos_link")}</text>
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -176,7 +180,7 @@ export default function About(props: Props) {
        strokeWidth="0"
        stroke="#000"
        filter="url(#link-blur)"
-       fill={logocolors[2]}>Privacy Policy</text>
+       fill={logocolors[2]}>{t("about.policy_link")}</text>
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -186,7 +190,7 @@ export default function About(props: Props) {
        x="24"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">Please review our Privacy Policy and our Terms of Service.</text>
+       fill="#000000">{t("about.policy_tos")}</text>
     <rect
        id="rect1"
        height="15"
@@ -220,7 +224,7 @@ export default function About(props: Props) {
        x="122"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">And we're not done yet!</text>
+       fill="#000000">{t("about.not_done")}</text>
   </g>
        <animated.svg
        x="410"

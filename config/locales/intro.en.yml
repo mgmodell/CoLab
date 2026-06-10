@@ -13,6 +13,30 @@ en:
         research: The research behind CoLab
         student: CoLab features for students
         instructor: CoLab features for instructors
+    research:
+        title: The research behind CoLab
+        intro: This page lists publications related to this work.
+        links_too: Most are links to papers or materials used in public presentations.
+        my_pubs: Our Pubs
+        composition: Composition
+        gamification: Gamification
+        diversity: Diversity
+    about:
+        title: About CoLab
+        giving_voice: >
+            Micah Gideon Modell built CoLab to give his student teams a voice.
+        became_research: >
+            He couldn't let it go, so it became part of his research agenda.
+        experimented: >
+            He experimented with visualizations and gamification.
+        student_involvement: >
+            His students got involved and now it's available for you to use, too!
+        not_done: And we're not done yet!
+        policy_link: Privacy Policy
+        tos_link: Terms of Service
+        policy_tos: >
+            Please review our Privacy Policy and our Terms of Service.
+
     why_slides:
         captions:
             one_one: >

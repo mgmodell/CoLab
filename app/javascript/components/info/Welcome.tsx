@@ -368,12 +368,7 @@ export default function Welcome(props: Props) {
             : null
          }
          {'research' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
-               <Research />
-            </EmbeddedHTMLInSVG>
+            <Research height={295} width={494} />
             : null
          }
          {'instructor' === (params['*'] || '') ?
