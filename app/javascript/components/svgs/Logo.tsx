@@ -5,6 +5,13 @@ type Props = {
   width?: number;
   spinning?: boolean;
 };
+const logocolors = [
+  "#00FF00",
+  "#FF2A2A",
+  "#FFFF00",
+  "#FF6600",
+  "#FF00FF"
+];
 
 export default function Logo(props: Props) {
   const height = props.height || 72;
@@ -144,3 +151,4 @@ export default function Logo(props: Props) {
     </svg>
   );
 }
+export { logocolors };

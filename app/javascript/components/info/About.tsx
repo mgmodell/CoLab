@@ -1,8 +1,10 @@
 import React from "react";
-import { useSpring, animated, config } from "@react-spring/web";
+import { useSprings, animated, config } from "@react-spring/web";
 
 import MGM from "../svgs/MGM";
 import BingoBoards from "../svgs/BingoBoards";
+import { logocolors } from "../svgs/Logo";
+import { useNavigate } from "react-router";
 
 type Props = {};
 
@@ -21,6 +23,7 @@ const contributors = [
   'Yomaris',
   'Emi',
   'Brillyd',
+  'Ricardo',
   'Justin'
 ]
 
@@ -31,6 +34,31 @@ type Props = {
 const viewBox = [0, 0, 494, 255].join(" ");
 
 export default function About(props: Props) {
+  const [marcher, marcherApi] = useSprings(
+    contributors.length ,
+    (index) => {
+      const randomRotation = (Math.random() * 50 ) -25;
+      const yPos = Math.random() * 40 + 170;
+
+      return {
+        from: {
+          x: 550,
+          y: yPos,
+          rotate: randomRotation,
+          fill: logocolors[index % logocolors.length],
+        },
+        to: {x: -100 },
+        config: {
+          ...config.molasses,
+          duration: 3000 + Math.random() * 3000
+        },
+        loop: true,
+        delay: index * 200
+      };
+    }
+  )
+  const navigate = useNavigate();
+  
   return (
     <svg
       height={props.height}
@@ -42,6 +70,14 @@ export default function About(props: Props) {
      id="main">
     <title
        id="title1">About CoLab</title>
+    <defs>
+      <filter id='name-shadow' x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="3" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+      </filter>
+      <filter id='link-blur' x="0" y="0" xmlns="http://www.w3.org/2000/svg">
+        <feGaussianBlur in='SourceGraphic' stdDeviation=".5" />
+      </filter>
+    </defs>
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -89,84 +125,58 @@ export default function About(props: Props) {
        x="80.5"
        strokeWidth="0"
        fill="#000000">He experimented with visualizations and gamification.</text>
-    <animated.g
+    <g
       id="contributors"
       >
+        {
+          marcher.map((props, index) => {
+            const yPos = Math.random() * 90 +150;
+            return (
+            <animated.text
+              key={`text-${index}`}
+              style={{
+                ...props,
+                transformOrigin: 'left center'
+              }}
+              textAnchor="start"
+              fontFamily="Noto Sans JP"
+              fontSize="14"
+              id={`svg_${14 + index}`}
+              strokeWidth="0"
+              stroke="#000"
+              fill="#000000"
+              filter="url(#name-shadow)"
+              >
+                {contributors[index]}
+            </animated.text>
+            );
+          })
+        }
 
-      <text
-         transform="rotate(-18 47.6641 193.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_14"
-         y="198"
-         x="29"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Maron</text>
-      <text
-         transform="rotate(-3 128.617 205.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_15"
-         y="210"
-         x="108"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Allison</text>
-      <text
-         transform="rotate(15 213.832 186.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_16"
-         y="191"
-         x="194"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Dennis</text>
-      <text
-         transform="rotate(-21 299.285 193.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_17"
-         y="198"
-         x="281"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Soojin</text>
-      <text
-         transform="rotate(-15 389.223 205.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_18"
-         y="210"
-         x="376"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Julia</text>
-      <text
-         transform="rotate(13 446.332 186.5)"
-         textAnchor="start"
-         fontFamily="Noto Sans JP"
-         fontSize="14"
-         id="svg_20"
-         y="191"
-         x="430"
-         strokeWidth="0"
-         stroke="#000"
-         fill="#000000">Issiah</text>
-      </animated.g>
-       <animated.svg
-       x="90"
-       y="10"
-       >
-          <BingoBoards height={100} width={100} />
-       </animated.svg>
+      </g>
 
+    <text
+       textAnchor="start"
+       fontFamily="Noto Sans JP"
+       fontSize="14"
+       id="svg_22"
+       y="270.5"
+       x="255"
+       strokeWidth="0"
+       stroke="#000"
+       filter="url(#link-blur)"
+       fill={logocolors[2]}>Terms of Service</text>
+    <text
+       textAnchor="start"
+       fontFamily="Noto Sans JP"
+       fontSize="14"
+       id="svg_22"
+       y="270.5"
+       x="126"
+       strokeWidth="0"
+       stroke="#000"
+       filter="url(#link-blur)"
+       fill={logocolors[2]}>Privacy Policy</text>
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -176,7 +186,31 @@ export default function About(props: Props) {
        x="24"
        strokeWidth="0"
        stroke="#000"
-       fill="#000000">Please review our Privacy policy and our Terms of Service.</text>
+       fill="#000000">Please review our Privacy Policy and our Terms of Service.</text>
+    <rect
+       id="rect1"
+       height="15"
+       width="85"
+       y="260"
+       x="125"
+       cursor="pointer"
+       onClick={
+        ()=> navigate( '/privacy')
+       }
+       opacity="0"
+       />
+    <rect
+       id="rect1"
+       height="15"
+       width="97"
+       y="260"
+       x="257"
+       cursor="pointer"
+       onClick={
+        ()=> navigate( '/tos')
+       }
+       opacity="0"
+       />
     <text
        textAnchor="start"
        fontFamily="Noto Sans JP"
@@ -188,6 +222,12 @@ export default function About(props: Props) {
        stroke="#000"
        fill="#000000">And we're not done yet!</text>
   </g>
+       <animated.svg
+       x="410"
+       y="170"
+       >
+          <BingoBoards height={150} width={110} count={5}/>
+       </animated.svg>
 
     </svg>
   );
