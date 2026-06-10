@@ -90,6 +90,20 @@ function Test-PodmanUp {
     }
 }
 
+# Ensure the stack is running before exec'ing into a container. It can stop after
+# the host sleeps/reboots (Podman's restart policy doesn't always survive a
+# machine restart), making `exec` fail with "container is not running". No-op
+# when the toolbox is already up.
+function Ensure-Up {
+    $cid = (& podman @Compose ps -q pentest 2>$null | Select-Object -First 1)
+    $running = $false
+    if ($cid) { $running = ((& podman inspect -f '{{.State.Running}}' $cid 2>$null) -eq 'true') }
+    if (-not $running) {
+        Write-Host "Environment isn't running - starting it (this also waits for the DB)..."
+        Invoke-Compose up -d
+    }
+}
+
 # Poll the target health endpoint until it serves (first boot runs migrations).
 function Wait-Target {
     param([int]$Tries = 90)
@@ -156,16 +170,19 @@ if ($Seed) {
 }
 
 if ($Pentest) {
+    Ensure-Up
     Write-Host "Opening a shell in the pentest toolbox..."
     Invoke-Compose exec pentest bash -l
 }
 
 if ($Console) {
+    Ensure-Up
     Write-Host "Opening a production rails console on the target..."
     & podman @Compose exec app sh -lc 'cd /app && exec bin/colab_prod_entrypoint.sh console'
 }
 
 if ($Mysql) {
+    Ensure-Up
     Write-Host "Opening a mysql session on colab_prod..."
     Invoke-Compose exec db mariadb colab_prod -uprod -pprod
 }

@@ -123,6 +123,18 @@ ensure_podman_up() {
   fi
 }
 
+# Ensure the stack is running before exec'ing into a container. It can stop after
+# the host sleeps/reboots (Podman's restart policy doesn't always survive a
+# machine restart), which makes `exec` fail with "container is not running".
+# No-op when the toolbox is already up.
+ensure_up() {
+  local cid; cid="$(compose ps -q pentest 2>/dev/null)"
+  if [ -z "${cid}" ] || [ "$(podman inspect -f '{{.State.Running}}' "${cid}" 2>/dev/null)" != "true" ]; then
+    echo "Environment isn't running — starting it (this also waits for the DB)..."
+    compose up -d
+  fi
+}
+
 # Poll the target's health endpoint until it serves (first boot runs migrations).
 wait_for_target() {
   local url="http://localhost:13000/up" tries="${1:-90}" code
@@ -194,18 +206,21 @@ fi
 
 # Open a shell in the pentest toolbox (login shell -> prints the briefing)
 if [ "$SHELL_PENTEST" = true ]; then
+  ensure_up
   echo "Opening a shell in the pentest toolbox..."
   compose exec pentest bash -l
 fi
 
 # Open a production rails console on the target
 if [ "$CONSOLE" = true ]; then
+  ensure_up
   echo "Opening a production rails console on the target..."
   compose exec app sh -lc 'cd /app && exec bin/colab_prod_entrypoint.sh console'
 fi
 
 # Open a mysql session on the target DB
 if [ "$MYSQL" = true ]; then
+  ensure_up
   echo "Opening a mysql session on colab_prod..."
   compose exec db mariadb colab_prod -u prod -pprod
 fi
