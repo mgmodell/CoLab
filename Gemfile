@@ -75,6 +75,11 @@ gem 'tzinfo-data'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Needed by db/seeds.rb (builds the language list). Kept in the default group so
+# it is present in the production bundle and `db:seed` can run against the
+# production target (the security sandbox seeds in production).
+gem 'i18n_data'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
@@ -84,7 +89,6 @@ group :development, :test do
   # gem 'debase'
   gem 'htmlbeautifier'
   gem 'htmlentities'
-  gem 'i18n_data'
   # gem 'paperclip'
   gem 'parallel_tests'
   gem 'railroady'
