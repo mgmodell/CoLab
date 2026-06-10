@@ -25,6 +25,8 @@ print_help ( ) {
   echo " -q             Open a mysql session on the target DB (colab_prod)"
   echo " -i             (re-)Initialise the target DB from db/dev_db.sql,"
   echo "                then run production migrations"
+  echo " -e             sEed the target: rails db:seed (reference data +"
+  echo "                ~185 languages) and the sandbox test users"
   echo ""
   echo " -W             Add the Windows compose override (Podman Desktop)"
   echo " -h             Show this help and terminate"
@@ -75,9 +77,10 @@ SHELL_PENTEST=false
 CONSOLE=false
 MYSQL=false
 INIT_DB=false
+SEED=false
 USE_WIN=false
 
-while getopts "ubkrxXslpcqiWh" opt; do
+while getopts "ubkrxXslpcqieWh" opt; do
   case $opt in
     u) UP=true ;;
     b) BUILD=true ;;
@@ -91,6 +94,7 @@ while getopts "ubkrxXslpcqiWh" opt; do
     c) CONSOLE=true ;;
     q) MYSQL=true ;;
     i) INIT_DB=true ;;
+    e) SEED=true ;;
     W) USE_WIN=true ;;
     h|\?) SHOW_HELP=true ;;
   esac
@@ -177,6 +181,15 @@ if [ "$INIT_DB" = true ]; then
   echo "Running production migrations on the target..."
   compose exec -T app sh -lc 'cd /app && exec bin/colab_prod_entrypoint.sh migrate'
   echo "Database initialised."
+fi
+
+# Seed the target: foundational reference data (rails db:seed) + sandbox users.
+if [ "$SEED" = true ]; then
+  echo "Seeding the production target — foundational data (rails db:seed)..."
+  compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails db:seed'
+  echo "Seeding sandbox test users (db/seed_pentest_users.rb)..."
+  compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails runner db/seed_pentest_users.rb'
+  echo "Seeding complete. Sandbox accounts (see db/seed_pentest_users.rb) can log in at http://localhost:13000."
 fi
 
 # Open a shell in the pentest toolbox (login shell -> prints the briefing)

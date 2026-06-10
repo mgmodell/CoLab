@@ -28,6 +28,7 @@ param(
     [switch]$Console,
     [switch]$Mysql,
     [switch]$Init,
+    [switch]$Seed,
     [switch]$Win,
     [switch]$Help
 )
@@ -47,13 +48,14 @@ function Show-Help {
     Write-Host "  -Console      Open a production rails console on the target"
     Write-Host "  -Mysql        Open a mysql session on the target DB (colab_prod)"
     Write-Host "  -Init         (re-)Initialise the target DB from db/dev_db.sql, then migrate"
+    Write-Host "  -Seed         Seed the target: rails db:seed + sandbox test users"
     Write-Host "  -Win          Add the Windows compose override (Podman Desktop)"
     Write-Host "  -Help         Show this help and terminate"
     exit 0
 }
 
 if ($Help -or -not ($Up -or $Build -or $Stop -or $Restart -or $Down -or $DownVolumes `
-        -or $Status -or $Logs -or $Pentest -or $Console -or $Mysql -or $Init)) {
+        -or $Status -or $Logs -or $Pentest -or $Console -or $Mysql -or $Init -or $Seed)) {
     Show-Help
 }
 
@@ -143,6 +145,14 @@ if ($Init) {
     Write-Host "Running production migrations on the target..."
     & podman @Compose exec -T app sh -lc 'cd /app && exec bin/colab_prod_entrypoint.sh migrate'
     Write-Host "Database initialised."
+}
+
+if ($Seed) {
+    Write-Host "Seeding the production target - foundational data (rails db:seed)..."
+    & podman @Compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails db:seed'
+    Write-Host "Seeding sandbox test users (db/seed_pentest_users.rb)..."
+    & podman @Compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails runner db/seed_pentest_users.rb'
+    Write-Host "Seeding complete. Sandbox accounts can log in at http://localhost:13000."
 }
 
 if ($Pentest) {
