@@ -131,14 +131,17 @@ if ($Up) {
     Invoke-Compose up -d
     Write-Host ""
     if (Wait-Target 90) {
-        Write-Host "  Target is UP : http://localhost:13000   (in-network: http://app:3000)" -ForegroundColor Green
+        Write-Host "  Target is UP" -ForegroundColor Green
+        Write-Host "     Browser / login : https://localhost:13443  (HTTPS - accept the self-signed cert)" -ForegroundColor Green
+        Write-Host "     Direct HTTP     : http://localhost:13000   (recon/tools; login needs the HTTPS URL)"
+        Write-Host "     In-network      : http://app:3000"
     } else {
         Write-Host "  Target is not answering yet on http://localhost:13000." -ForegroundColor Yellow
         Write-Host "  The DB's first-time init can be slow; wait a minute, then reload the URL."
         Write-Host "  Inspect with:  .\sec_serv.ps1 -Logs    (or  .\sec_serv.ps1 -Status )"
     }
     Write-Host "  Pentest toolbox     : .\sec_serv.ps1 -Pentest"
-    Write-Host "  (Re-)initialise DB  : .\sec_serv.ps1 -Init"
+    Write-Host "  (Re-)initialise DB  : .\sec_serv.ps1 -Init   |   Seed data: .\sec_serv.ps1 -Seed"
 }
 
 if ($Restart) {
@@ -166,7 +169,7 @@ if ($Seed) {
     & podman @Compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails db:seed'
     Write-Host "Seeding sandbox test users (db/seed_pentest_users.rb)..."
     & podman @Compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails runner db/seed_pentest_users.rb'
-    Write-Host "Seeding complete. Sandbox accounts can log in at http://localhost:13000."
+    Write-Host "Seeding complete. Sandbox accounts can log in at https://localhost:13443."
 }
 
 if ($Pentest) {

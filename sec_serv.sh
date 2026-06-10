@@ -163,14 +163,17 @@ if [ "$UP" = true ]; then
   compose up -d
   echo ""
   if wait_for_target 90; then
-    echo "  ✅ Target is UP : http://localhost:13000   (in-network: http://app:3000)"
+    echo "  ✅ Target is UP"
+    echo "     Browser / login : https://localhost:13443  (HTTPS — accept the self-signed cert)"
+    echo "     Direct HTTP     : http://localhost:13000   (recon/tools; login needs the HTTPS URL)"
+    echo "     In-network      : http://app:3000"
   else
     echo "  ⚠️  Target is not answering yet on http://localhost:13000."
     echo "     The DB's first-time init can be slow; wait a minute, then reload the URL."
     echo "     Inspect progress with:  ./sec_serv.sh -l    (or  ./sec_serv.sh -s )"
   fi
   echo "  Pentest toolbox     : ./sec_serv.sh -p"
-  echo "  (Re-)initialise DB  : ./sec_serv.sh -i"
+  echo "  (Re-)initialise DB  : ./sec_serv.sh -i      |   Seed data: ./sec_serv.sh -e"
 fi
 
 # Restart
@@ -201,7 +204,7 @@ if [ "$SEED" = true ]; then
   compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails db:seed'
   echo "Seeding sandbox test users (db/seed_pentest_users.rb)..."
   compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails runner db/seed_pentest_users.rb'
-  echo "Seeding complete. Sandbox accounts (see db/seed_pentest_users.rb) can log in at http://localhost:13000."
+  echo "Seeding complete. Sandbox accounts (see db/seed_pentest_users.rb) can log in at https://localhost:13443."
 fi
 
 # Open a shell in the pentest toolbox (login shell -> prints the briefing)
