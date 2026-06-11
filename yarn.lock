@@ -1482,7 +1482,7 @@ __metadata:
     react-virtualized: "npm:^9.22.6"
     react_ujs: "npm:^3.3.1"
     resize-observer-hook: "npm:^1.0.5"
-    rspack-manifest-plugin: "npm:^5.2.1"
+    rspack-manifest-plugin: "npm:^5.2.2"
     selfsigned: "npm:^5.5.0"
     shakapacker: "npm:10.1.0"
     stopword: "npm:^3.1.5"
@@ -3215,17 +3215,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rspack-manifest-plugin@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "rspack-manifest-plugin@npm:5.2.1"
+"rspack-manifest-plugin@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "rspack-manifest-plugin@npm:5.2.2"
   dependencies:
     "@rspack/lite-tapable": "npm:^1.0.1"
   peerDependencies:
-    "@rspack/core": ^1.0.0 || ^2.0.0-0
+    "@rspack/core": ^1.0.0 || ^2.0.0
   peerDependenciesMeta:
     "@rspack/core":
       optional: true
-  checksum: 10c0/74a7882a7f23bb3c0123b32076657d8a0ba1fcc83fb83f7f73b5ae0b924ccaffdb32ab1b97684520b959e23a9ae7c4add4e1cd420a3572434ab2bd7940fde997
+  checksum: 10c0/d585f56334f1f5783eadbc0ea3388cd31cc51026f1fe8918087ccfda47c0b0c57140df6ad7f213a61b7ee59bd79df7bc95b91fbb95342b381045899d462abd93
   languageName: node
   linkType: hard
 
