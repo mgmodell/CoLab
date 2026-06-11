@@ -6,7 +6,7 @@
     "@rails/actioncable": "8.1.300",
     "@react-oauth/google": "^0.13.5",
     "@react-spring/parallax": "10.1.0",
-    "@react-spring/types": "10.1.0",
+    "@react-spring/types": "10.1.1",
     "@react-spring/web": "10.1.0",
     "@reduxjs/toolkit": "^2.12.0",
     "@rspack/cli": "^2.0.6",
