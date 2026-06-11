@@ -46,7 +46,7 @@ export default function About(props: Props) {
 
       return {
         from: {
-          x: 550,
+          x: 570,
           y: yPos,
           rotate: randomRotation,
           fill: logocolors[index % logocolors.length],

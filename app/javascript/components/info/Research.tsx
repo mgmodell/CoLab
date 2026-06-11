@@ -312,6 +312,7 @@ export default function Research(props: Props) {
                       strokeWidth="0"
                       stroke="#000"
                       fill="#000000"
+                      cursor={pub.link ? "pointer" : "default"}
                       onClick={() => {
                         if (pub.link) {
                           window.open(pub.link, "_blank");
