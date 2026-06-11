@@ -14,7 +14,7 @@
     "@rspack/dev-server": "^2.0.3",
     "@rspack/plugin-react-refresh": "^1.6.2",
     "@swc/core": "^1.15.40",
-    "@types/react": "^19.2.16",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/react-redux": "^7.1.34",
     "@types/stopword": "^2.0.3",
