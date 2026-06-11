@@ -256,6 +256,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-spring/animated@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/animated@npm:10.1.1"
+  dependencies:
+    "@react-spring/shared": "npm:~10.1.1"
+    "@react-spring/types": "npm:~10.1.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/8cdad804109ab76e800949ecf7b01bc6378d5e60149f794b172f22e6c4d4ae67b3db345033c88be2bdb12c7485160812e10545b68aad4059c73092ff5cc6ddee
+  languageName: node
+  linkType: hard
+
 "@react-spring/core@npm:~10.1.0":
   version: 10.1.0
   resolution: "@react-spring/core@npm:10.1.0"
@@ -266,6 +278,19 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/cc4aa383dc5e30f9969505b502df74447a8d270397ccc3c7cb5d69eb104f133c5ae7b7aa78619b45bb40eaefb6f04e8fcd0d84ee746aa7bc501e37a7ef2cda26
+  languageName: node
+  linkType: hard
+
+"@react-spring/core@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/core@npm:10.1.1"
+  dependencies:
+    "@react-spring/animated": "npm:~10.1.1"
+    "@react-spring/shared": "npm:~10.1.1"
+    "@react-spring/types": "npm:~10.1.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/908b9ef1d2d3ac2172dac91151a278a7fa8ca84b049c13402fee9f5727309926711d455879ecbf5c3fd325692050d566a0945ffa63adbb3be9c9e7f58da75ade
   languageName: node
   linkType: hard
 
@@ -300,16 +325,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/parallax@npm:10.1.0":
-  version: 10.1.0
-  resolution: "@react-spring/parallax@npm:10.1.0"
+"@react-spring/parallax@npm:10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/parallax@npm:10.1.1"
   dependencies:
-    "@react-spring/shared": "npm:~10.1.0"
-    "@react-spring/web": "npm:~10.1.0"
+    "@react-spring/shared": "npm:~10.1.1"
+    "@react-spring/web": "npm:~10.1.1"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/b63ff49c92cc0c36c5841fce469803da63b6f72ec1d2bfebcc466e882759150c5f6a04c2f48a0114e45d32b446852b0b58a2e43eb226476ce399a66091a2acdd
+  checksum: 10c0/8ef20b91b2309fe92c10c2c4189001b7e80554b23914739a0eb7ec4c3149ff64ba532208feb5d246addde9ac01c1aa7ec1fe57265b1a6367a5f2570a256087d1
   languageName: node
   linkType: hard
 
@@ -317,6 +342,13 @@ __metadata:
   version: 10.1.0
   resolution: "@react-spring/rafz@npm:10.1.0"
   checksum: 10c0/5e8323e6203e5deb65efd272e0c5284d15f480edb4aea7a2959c07a0642e9fd3a000bd0abdcf47ae6c6fe7497d3c645466bf990fcd123fc595befcc258fb486e
+  languageName: node
+  linkType: hard
+
+"@react-spring/rafz@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/rafz@npm:10.1.1"
+  checksum: 10c0/517c6e923a4e54943719865806ea831383ebb47c2c452290a7082ce868cf23042a766bf54bc753437c5e6826aedd19628ceaade5016ebb72ef2f890005cf1793
   languageName: node
   linkType: hard
 
@@ -329,6 +361,18 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/506ca4b651055942c47fddbd0c42df169722340b032a9c0958c2db8c8eb8b8c76255265ac81c48d2398de2ce55c93096a6a16e09604925375422cbd432ee586e
+  languageName: node
+  linkType: hard
+
+"@react-spring/shared@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/shared@npm:10.1.1"
+  dependencies:
+    "@react-spring/rafz": "npm:~10.1.1"
+    "@react-spring/types": "npm:~10.1.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/1021cf0618a9cf4691bae914f03e1a387ce834d4265438a87c9c1adf4180348b07d22d06aedd4deaaddd12921f48a17dff717f9f0d495119e442631fd17420f7
   languageName: node
   linkType: hard
 
@@ -355,6 +399,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-spring/types@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/types@npm:10.1.1"
+  checksum: 10c0/dd490cbcb7b5ef6c74e97691c1f0c9881bcd6672c39a6622ccb85402298c78d13a478874dbc268346672bee1b697578fb35c45bef863a2419536217afa4565bf
+  languageName: node
+  linkType: hard
+
 "@react-spring/web@npm:10.1.0, @react-spring/web@npm:~10.1.0":
   version: 10.1.0
   resolution: "@react-spring/web@npm:10.1.0"
@@ -368,6 +419,22 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/c74a4d61d9b81eaad6c335267277ba294937e7b1ee0a7072d280b056187c01844bd8af43b7198481fd0d848750660958b50fb290306dc6cfcdc3dc31c2d8aac3
+  languageName: node
+  linkType: hard
+
+"@react-spring/web@npm:~10.1.1":
+  version: 10.1.1
+  resolution: "@react-spring/web@npm:10.1.1"
+  dependencies:
+    "@react-spring/animated": "npm:~10.1.1"
+    "@react-spring/core": "npm:~10.1.1"
+    "@react-spring/shared": "npm:~10.1.1"
+    "@react-spring/types": "npm:~10.1.1"
+    csstype: "npm:^3.2.3"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/86bd8f47f88ade34bb9790b30d80256da25dd58370582d7c5f44472db00b62ad267796e43c661d89fc4c8c4cc8775a8cae21e36e85b973972cd381c0cf5a6320
   languageName: node
   linkType: hard
 
@@ -1425,7 +1492,7 @@ __metadata:
   dependencies:
     "@rails/actioncable": "npm:8.1.300"
     "@react-oauth/google": "npm:^0.13.5"
-    "@react-spring/parallax": "npm:10.1.0"
+    "@react-spring/parallax": "npm:10.1.1"
     "@react-spring/types": "npm:10.1.0"
     "@react-spring/web": "npm:10.1.0"
     "@reduxjs/toolkit": "npm:^2.12.0"
