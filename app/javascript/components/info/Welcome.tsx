@@ -376,12 +376,7 @@ export default function Welcome(props: Props) {
             : null
          }
          {'student' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
                <ForStudents />
-            </EmbeddedHTMLInSVG>
             : null
          }
          <text

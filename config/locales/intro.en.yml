@@ -21,6 +21,45 @@ en:
         composition: Composition
         gamification: Gamification
         diversity: Perspectives
+    students:
+        title: CoLab features for students
+        intro: >
+            CoLab has a variety of features to help you succeed as a student and
+            as part of a team.
+        gamification:
+            title: Gamification
+            line_one: >
+                Games are fun, right?
+            line_two: >
+                Too bad not everything's a game, right?
+            line_three: >
+                Gamification takes what we know about games to make everyday activities
+                more game-like.
+            line_four: >
+                That makes it more fun!
+        feedback:
+            title: Feedback
+            line_one: >
+                Good feedback helps know if you're on the right track or if you've 
+                veered off course.
+            line_two: >
+                Too bad it's not always easy to give or receive, right?
+            line_three: >
+                Our activities package up what we learn to get it to those who can
+                keep you on track.
+            line_four: >
+                That makes it more useful!
+        voice:
+            title: Be noticed
+            line_one: >
+                Do you ever feel like no one sees what you do for your team?
+            line_two: >
+                Our check-ins give your instructor vital insight into your experience.
+            line_three: >
+                And they can be completed in just a few minutes on any smart device.
+            line_four: >
+                Our instructors want to hear your voice and we're making it easy for them to listen!
+
     instructors:
         title: CoLab features for instructors
         intro: CoLab has a variety of features to help you support your student teams.
