@@ -287,7 +287,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.19.8)
+    json (2.19.9)
     jwt (3.2.0)
       base64
     keypairs (2.0.1)
@@ -442,7 +442,7 @@ GEM
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-    rails-erd (2.0.1)
+    rails-erd (2.0.2)
       activerecord (>= 7.0)
       activesupport (>= 7.0)
       choice (~> 0.2.0)
