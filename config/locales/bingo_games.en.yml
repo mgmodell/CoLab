@@ -17,6 +17,10 @@ en:
     not_available_yet_heading: Terms cannot be entered yet
     not_available_yet_msg: >
       This bingo game is not yet open for term entry. It will open on {{start_date}}. Please check back then!
+    terms_review_in_progress_heading: Terms are being reviewed
+    terms_review_in_progress_msg: >
+      Terms are being reviewed. This list was due {{start_date}} and you'll be notified
+      once they've been reviewed. The game complets on {{end_date}}.
     determining_status: Please be patient while we direct your call...
     game_details_pnl: Game details
     response_pnl: Response data
