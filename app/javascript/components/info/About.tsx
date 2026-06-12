@@ -6,6 +6,7 @@ import MGM from "../svgs/MGM";
 import BingoBoards from "../svgs/BingoBoards";
 import { logocolors } from "../svgs/Logo";
 import { useNavigate } from "react-router";
+import TeamworkContracts from "../svgs/TeamworkContracts";
 
 type Props = {};
 
@@ -19,6 +20,7 @@ const contributors = [
   'Stephanie',
   'Michael',
   'Julia',
+  'Sonya',
   'Allison',
   'Melissa',
   'Yomaris',

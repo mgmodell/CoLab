@@ -123,3 +123,5 @@ export default function BingoBoards(props: Props) {
     </svg>
   );
 }
+
+export {terms as bingoTerms};

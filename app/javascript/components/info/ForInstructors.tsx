@@ -1,143 +1,186 @@
-import React, { useState } from "react";
-import { animated, useSpring } from "@react-spring/web";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { logocolors } from "../svgs/Logo";
+import { useNavigate } from "react-router";
+import TeamworkContracts from "../svgs/TeamworkContracts";
+import {animated} from "@react-spring/web";
+import SlideTemplate from "../svgs/SlideTemplate";
+import Calculation from "../svgs/Calculation";
+import Visualization from "../svgs/Visualization";
 
-type Props = {};
+type Props = {
+  height: number;
+  width: number;
+};
 
-const supportSections = {
-  experiences: {
-    title: "Group Work",
-    subtitle: "Facilitate authentic in-class collaboration",
-    points: [
-      "Use simulated authentic group work experiences to anchor in-class discussion.",
-      "Coach teams with scenarios that surface common collaboration challenges.",
-      "Build shared expectations for productive team process."
-    ]
+const activities = {
+  viz: {
+    image: <Visualization height={150} width={110} />
   },
-  reading: {
-    title: "Reading",
-    subtitle: "Encourage collaboration around assigned texts",
-    points: [
-      "Use gamified reading supports to increase preparation and participation.",
-      "Prompt students to engage with ideas before class activities begin.",
-      "Reinforce discussion habits that transfer to team project work."
-    ]
+  perspective: {
+    link: "https://docs.google.com/spreadsheets/d/1kiy8euf6zXmv1TkPKyQUqb7ZrFZ2KmFp6GVE0yGctOM/edit?usp=sharing",
+    image: <Calculation height={150} width={110} />
   },
-  perspectives: {
-    title: "Perspectives",
-    subtitle: "Develop appreciation for different viewpoints",
-    points: [
-      "Calculate diversity points to foreground perspective-taking in team formation.",
-      "Use diversity-point information as a support for reflective team dialogue.",
-      "Connect perspective awareness to equitable collaboration practices."
-    ]
+  contracts: {
+    link: "https://docs.google.com/document/d/1yM86ptoqw2_wnHYJv3P1U3YZYQlYurLDCvQ9hvksD7M/edit?usp=sharing",
+    image: <TeamworkContracts height={150} width={110} />
+  },
+  simulation: {
+    link: "https://docs.google.com/presentation/d/16s5fnFM41dtmX45sZprbNk4qxKSsry3Lw67NcCiYrYw/edit?usp=sharing",
+    image: <SlideTemplate height={150} width={110} />
   }
-} as const;
-
-type SupportSection = keyof typeof supportSections;
+};
 
 export default function ForInstructors(props: Props) {
-  const [activeSection, setActiveSection] = useState<SupportSection>("reading");
+  const viewBox = [0, 0, 494, 255].join(" ");
+  const category = "intro";
+  const catPrefix = "instructors";
+  const { t } = useTranslation(category);
 
-  const section = supportSections[activeSection];
-  const handleSelect = (sectionKey: SupportSection) => {
-    setActiveSection(sectionKey);
-  };
-
-  const handleKeyDown = (
-    event: React.KeyboardEvent<SVGCircleElement>,
-    sectionKey: SupportSection
-  ) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      handleSelect(sectionKey);
-    }
-  };
-
-  const panelStyles = useSpring({
-    opacity: 1,
-    transform: "translate3d(0px, 0px, 0px)",
-    from: {
-      opacity: 0,
-      transform: "translate3d(18px, 0px, 0px)"
-    },
-    reset: true
-  });
+  const navigate = useNavigate();
+  const [currentTab, setCurrentTab] = React.useState(Object.keys(activities)[0]);
 
   return (
-    <div className={"intro"}>
-      <p>
-        CoLab.online extends self- and peer-assessment (SAPA) with practical
-        instructor supports for group work experiences, collaborative reading,
-        and perspective-focused team development.
-      </p>
-      <svg
-        viewBox="0 0 390 72"
-        preserveAspectRatio="xMidYMid meet"
-        style={{ width: "100%", maxWidth: "390px", height: "auto" }}
-        role="img"
-        aria-label="Instructor support views"
-      >
-        <title>Instructor support areas: group work, reading, and perspectives</title>
-        {(
-          [
-            { key: "experiences", x: 65, color: "#53b0ff", label: "Group Work" },
-            { key: "reading", x: 195, color: "#7ad35a", label: "Reading" },
-            { key: "perspectives", x: 325, color: "#ff9f5a", label: "Perspectives" }
-          ] as const
-        ).map((item) => {
-          const isActive = activeSection === item.key;
-          return (
-            <g key={item.key}>
-              <rect
-                x={item.x - 43}
-                y={44}
-                width={86}
-                height={19}
-                rx={9}
-                fill="rgba(255, 255, 255, 0.88)"
-              />
+    <svg
+      height={props.height}
+      width={props.width}
+      viewBox={viewBox}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+    <defs>
+      <filter id='glow-blur' x="0" y="0" xmlns="http://www.w3.org/2000/svg">
+        <feGaussianBlur in='SourceGraphic' stdDeviation="1.5" />
+      </filter>
+    </defs>
+    <g id="main">
+
+      <title>{t(`${catPrefix}.title`)}</title>
+      <text
+         textAnchor="start"
+         fontFamily="Noto Sans JP"
+         fontSize="12"
+         id="svg_1"
+         y="28.5"
+         x="30.5"
+         strokeWidth="0"
+         stroke="#000"
+         fill="#000000">{t(`${catPrefix}.intro`)}</text>
+         <g id="tabs">
+          {Object.keys(activities).map((key, index) => (
+            <g key={key}
+              cursor="pointer"
+              onClick={() => setCurrentTab(key)}
+              id={"tab_" + key}>
+                {currentTab === key ? (
               <circle
-                cx={item.x}
-                cy={24}
-                r={isActive ? 19 : 16}
-                fill={item.color}
-                stroke={isActive ? "midnightblue" : "#1f1f1f"}
-                strokeWidth={isActive ? 3 : 1.5}
-                className="intro_nav"
-                onClick={() => handleSelect(item.key)}
-                onKeyDown={(event) => handleKeyDown(event, item.key)}
-                tabIndex={0}
-                role="button"
-                aria-label={`${item.label} support details`}
-                aria-pressed={isActive}
-              />
+                cx={140 + (index * 90)} cy="65" r="23"
+                filter="url(#glow-blur)"
+                fill={logocolors[index % logocolors.length]} />
+                ) : null}
+              <circle
+                cx={140 + (index * 90)} cy="65" r="17"
+                stroke="#000" strokeWidth="1"
+                fill={logocolors[index % logocolors.length]} />
               <text
-                x={item.x}
-                y={56}
                 textAnchor="middle"
-                style={{
-                  fill: "#10243f",
-                  fontFamily: "sans-serif",
-                  fontSize: "13px",
-                  fontWeight: isActive ? "bold" : "normal"
-                }}
-              >
-                {item.label}
-              </text>
+                fontFamily="Noto Sans JP"
+                fontSize="10"
+                id={"tab_text_" + key}
+                y="66.5"
+                x={140 + (index * 90)}
+                strokeWidth="1"
+                fill="#000">{t(`${catPrefix}.${key}.title`)}</text>
+              <g 
+                cursor='default'
+                id="activities">
+                {currentTab === key ? (
+                  <>
+                    <text
+                     textAnchor="start"
+                     fontFamily="Noto Sans JP"
+                     fontSize="10"
+                     id={"activities_" + key}
+                     y="99"
+                     x="30.5"
+                     strokeWidth="0"
+                     stroke="#000"
+                     fill="#000000">{t(`${catPrefix}.${key}.line_one`)}</text>
+                    <text
+                     textAnchor="start"
+                     fontFamily="Noto Sans JP"
+                     fontSize="10"
+                     id={"activities_" + key}
+                     y="123"
+                     x="55.5"
+                     strokeWidth="0"
+                     stroke="#000"
+                     fill="#000000">{t(`${catPrefix}.${key}.line_two`)}</text>
+                    <text
+                     textAnchor="start"
+                     fontFamily="Noto Sans JP"
+                     fontSize="10"
+                     id={"activities_" + key}
+                     y="145"
+                     x="45.5"
+                     strokeWidth="0"
+                     stroke="#000"
+                     fill="#000000">{t(`${catPrefix}.${key}.line_three`)}</text>
+                    <text
+                     textAnchor="start"
+                     fontFamily="Noto Sans JP"
+                     fontSize="10"
+                     id={"activities_" + key}
+                     y="173"
+                     x="68"
+                     strokeWidth="0"
+                     stroke="#000"
+                     fill="#000000">{t(`${catPrefix}.${key}.line_four`)}</text>
+                    <text
+                     textAnchor="start"
+                     fontFamily="Noto Sans JP"
+                     fontSize="10"
+                     id={"activities_" + key}
+                     y="198"
+                     x="88"
+                     strokeWidth="0"
+                     stroke="#000"
+                     fill="#000000">{t(`${catPrefix}.${key}.line_five`)}</text>
+                    <animated.svg
+                    x="390"
+                    y="110"
+                    >
+                      <g id='link'
+                        cursor={activities[key].link ? "pointer" : "default"}
+                        onClick={() => {
+                          if (activities[key].link) {
+                            window.open(activities[key].link, "_blank");
+                          }
+                        }}
+                      >
+
+                       {activities[key].image}
+                       { activities[key].link ? (
+                       <text
+                         textAnchor="start"
+                         fontFamily="Noto Sans JP"
+                         fontSize="10"
+                         id={"activities_" + key}
+                         y="140"
+                         x="30.5"
+                         strokeWidth="0"
+                         stroke="#000"
+                         fill="#000000">{t(`${catPrefix}.click`)}</text>
+                       ) : null }
+                      </g>
+                    </animated.svg>
+                  </>
+                ) : null}
+              </g>
             </g>
-          );
-        })}
-      </svg>
-      <animated.div style={panelStyles}>
-        <p>
-          <strong>{section.title}:</strong> {section.subtitle}
-        </p>
-        <ul>
-          {section.points.map((point, index) => (
-            <li key={index}>{point}</li>
           ))}
-        </ul>
-      </animated.div>
-    </div>
+        </g>
+      </g>
+
+    </svg>
   );
 }

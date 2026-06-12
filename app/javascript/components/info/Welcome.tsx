@@ -372,12 +372,7 @@ export default function Welcome(props: Props) {
             : null
          }
          {'instructor' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
-               <ForInstructors />
-            </EmbeddedHTMLInSVG>
+            <ForInstructors />
             : null
          }
          {'student' === (params['*'] || '') ?

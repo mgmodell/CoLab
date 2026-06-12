@@ -231,6 +231,7 @@ const publications = {
 export default function Research(props: Props) {
   const viewBox = [0, 0, 494, 255].join(" ");
   const category = "intro";
+  const catPrefix = "research";
   const { t } = useTranslation(category);
 
   const navigate = useNavigate();
@@ -250,7 +251,7 @@ export default function Research(props: Props) {
     </defs>
     <g id="main">
 
-      <title>{t("research.title")}</title>
+      <title>{t(`${catPrefix}.title`)}</title>
       <text
          textAnchor="start"
          fontFamily="Noto Sans JP"
@@ -260,7 +261,7 @@ export default function Research(props: Props) {
          x="30.5"
          strokeWidth="0"
          stroke="#000"
-         fill="#000000">{t("research.intro")}</text>
+         fill="#000000">{t(`${catPrefix}.intro`)}</text>
       <text
          textAnchor="start"
          fontFamily="Noto Sans JP"
@@ -270,7 +271,7 @@ export default function Research(props: Props) {
          x="47"
          strokeWidth="0"
          stroke="#000"
-         fill="#000000">{t("research.links_too")}</text>
+         fill="#000000">{t(`${catPrefix}.links_too`)}</text>
          <g id="tabs">
           {Object.keys(publications).map((key, index) => (
             <g key={key}
@@ -295,7 +296,7 @@ export default function Research(props: Props) {
                 y="66.5"
                 x={140 + (index * 90)}
                 strokeWidth="1"
-                fill="#000">{t("research." + key)}</text>
+                fill="#000">{t(`${catPrefix}.${key}`)}</text>
               <g id="publications">
                 {currentTab === key ? (
                   publications[key as keyof typeof publications]

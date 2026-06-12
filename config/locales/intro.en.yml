@@ -20,7 +20,69 @@ en:
         my_pubs: Our Pubs
         composition: Composition
         gamification: Gamification
-        diversity: Diversity
+        diversity: Perspectives
+    instructors:
+        title: CoLab features for instructors
+        intro: CoLab has a variety of features to help you support your student teams.
+        click: Click Me!
+        contracts:
+            title: Team Contracts
+            line_one: >
+                Teamwork contracts are highly effective if students actively participate
+                in authoring them.
+            line_two: >
+                Instructors can easily kickstart this process by utilizing our
+                template contract.
+            line_three: >
+                But both teachers and students must carefully review the agreement
+                before signing.
+            line_four: >
+                Skipping review provides a valuable, real-world lesson in commitment.
+            line_five: >
+                We encourage you to reinforce this with videos of team meetings.
+        simulation: 
+            title: Team Simulations
+            line_one: >
+                Transform how students understand teams with immersive group
+                work simulations.
+            line_two: >
+                Students read weekly journal entries from fictional team members.
+            line_three: >
+                They actively evaluate the complex group dynamics as they unfold.
+            line_four: >
+                We offer multiple journals from different members of the team
+                for perspective.
+            line_five: >
+                Use our slide template to easily kickstart insightful classroom discussion.
+        perspective:
+            title: Perspective Points
+            line_one: >
+                Drive classroom innovation by building perspective-rich, high-performing
+                student groups.
+            line_two: >
+                Teams formed around diverse perspectives unlock creative problem-solving
+                and empathy.
+            line_three: >
+                Instructors can incentivize this by establishing a Perspective Points
+                target for teams.
+            line_four: >
+                The platform calculates Perspective Points based on student backgrounds
+                and experiences.
+            line_five: >
+                Intentional, data-driven team formation encourages your students to value
+                perspective.
+        viz:
+            title: Visualizations
+            line_one: >
+                Our activities run on the data your students generate.
+            line_two: >
+                It is far too much to make meaning by poring over it on our own.
+            line_three: >
+                CoLab's visualizations make it easy to understand this data so you can act on it.
+            line_four: >
+                For example, Check-Ins get turned into charts of the student experience.
+            line_five: >
+                Monitoring these charts lets you intervene to help when they need it most.
     about:
         title: About CoLab
         giving_voice: >
