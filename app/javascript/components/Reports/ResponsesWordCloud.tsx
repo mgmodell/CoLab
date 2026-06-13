@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-import WordCloud from "@visx/wordcloud/lib/Wordcloud";
+import { Wordcloud } from "@visx/wordcloud";
 import { scaleLog } from "@visx/scale";
 import { Text } from "@visx/text";
 import { Button } from "primereact/button";
@@ -88,7 +88,7 @@ export default function ResponsesWordCloud(props: WordCloudProps) {
       <Button label={`Mix it up`} onClick={toggleSpiral} />
 
     <svg id="wordcloud" width={width} height={height}>
-      <WordCloud
+      <Wordcloud
         height={400}
         width={400}
         words={foundWords}
@@ -118,7 +118,7 @@ export default function ResponsesWordCloud(props: WordCloudProps) {
             </Text>
           ))
         }
-      </WordCloud>
+      </Wordcloud>
     </svg>
     </Fragment>
   );

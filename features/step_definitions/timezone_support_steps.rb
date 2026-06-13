@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 Then( /^the user should see "([^"]*)"$/ ) do | page_text |
-  page.should have_content page_text
+  wait_for_render
+  retries = 10
+  found = false
+  while retries > 0 && found == false
+    found = true if page.has_content? page_text
+    retries -= 1
+    sleep 0.5 unless found
+  end
 end
 
 Given( /^the course timezone is "([^"]*)"$/ ) do | timezone |

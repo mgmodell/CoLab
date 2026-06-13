@@ -364,39 +364,19 @@ export default function Welcome(props: Props) {
             : null
          }
          {'about' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
-               <About />
-            </EmbeddedHTMLInSVG>
+            <About height={295} width={494} />
             : null
          }
          {'research' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
-               <Research />
-            </EmbeddedHTMLInSVG>
+            <Research height={295} width={494} />
             : null
          }
          {'instructor' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
-               <ForInstructors />
-            </EmbeddedHTMLInSVG>
+            <ForInstructors />
             : null
          }
          {'student' === (params['*'] || '') ?
-            <EmbeddedHTMLInSVG
-               height={250}
-               width={444}
-            >
                <ForStudents />
-            </EmbeddedHTMLInSVG>
             : null
          }
          <text

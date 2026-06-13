@@ -10,7 +10,7 @@ import { Temporal, formatZonedDateTime, DATETIME_MED } from "./infrastructure/Te
 import { iconForType } from "./ActivityLib";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import Logo from "./Logo";
+import Logo from "./svgs/Logo";
 import { useTranslation } from "react-i18next";
 import TaskListToolbar from "./toolbars/TaskListToolbar";
 import { Column } from "primereact/column";
