@@ -134,14 +134,28 @@ services:
       - TARGET_HOST=app
       - TARGET_DB_HOST=db
       - TARGET_DB_PORT=3306
+      # Engagement mode selected at boot (boot_mode.sh -> containers/sec_env/.env).
+      # Check inside the toolbox with: echo $PENTEST_MODE
+      - PENTEST_MODE=${PENTEST_MODE:-unset}
+      - PENTEST_TESTER=${PENTEST_TESTER:-}
+      - PENTEST_SESSION=${PENTEST_SESSION:-}
     volumes:
       # Persist engagement notes/evidence across container restarts.
       - engagement_data:/root/engagement
+      # OpenVAS/GVM is set up on demand (`gvm-prepare`). Persist its state so the
+      # multi-GB feed sync survives restarts/rebuilds and only ever runs once.
+      # (Metasploit's PostgreSQL DB is baked into the image instead, so it is
+      # intentionally NOT volume-mounted here — a volume would shadow the schema.)
+      - gvm_lib:/var/lib/gvm
+      - openvas_lib:/var/lib/openvas
+      - notus_lib:/var/lib/notus
       # White-box assist: the app source, read-only, for secret scanning
       # (gitleaks) and source-informed testing. Remove for strict black-box.
       - ../../:/opt/colab-src:ro
     networks:
       - engagement_net
+    # Passed as args to the image ENTRYPOINT (pentest-entrypoint), which starts
+    # PostgreSQL (+ GVM if prepared) and then exec's this to keep the box alive.
     command: ["sleep", "infinity"]
 
 networks:
@@ -154,3 +168,8 @@ volumes:
   secdata:
   engagement_data:
   caddydata:
+  # OpenVAS/GVM on-demand state (feeds, certs, prepared marker). Survives
+  # restarts/rebuilds so `gvm-prepare`'s heavy feed sync runs only once.
+  gvm_lib:
+  openvas_lib:
+  notus_lib:

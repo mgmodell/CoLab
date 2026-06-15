@@ -62,6 +62,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="${SCRIPT_DIR}/containers/sec_env/docker-compose.yml"
 WIN_FILE="${SCRIPT_DIR}/containers/sec_env/docker-compose.windows.yml"
 DB_SNAPSHOT="${SCRIPT_DIR}/db/dev_db.sql"
+BOOT_MODE="${SCRIPT_DIR}/boot_mode.sh"
+MODE_ENV="${SCRIPT_DIR}/containers/sec_env/.env"
+
+# Load the selected engagement mode (PENTEST_MODE/TESTER/SESSION) so every
+# `compose` call passes it into the toolbox container. boot_mode.sh writes this
+# file on `-u`; here we just export whatever the last selection was (if any).
+load_mode_env() {
+  if [ -f "${MODE_ENV}" ]; then
+    set -a; . "${MODE_ENV}"; set +a
+  fi
+}
+load_mode_env
 
 # Action flags
 SHOW_HELP=false
@@ -159,6 +171,16 @@ fi
 
 # Bring the stack up (compose builds any missing images automatically)
 if [ "$UP" = true ]; then
+  # Engagement kickoff: run the interactive mode selector BEFORE any containers
+  # spin up. It writes containers/sec_env/.env (PENTEST_MODE/TESTER/SESSION),
+  # a timestamped sessions/ record, and refreshes the Quick Start. Re-running
+  # `-u` re-prompts (idempotent). Skip only if the selector is missing.
+  if [ -f "${BOOT_MODE}" ]; then
+    bash "${BOOT_MODE}"
+    load_mode_env   # re-read the freshly selected mode so compose passes it in
+  else
+    echo "NOTE: ${BOOT_MODE} not found — starting without mode selection." >&2
+  fi
   echo "Starting the security environment (detached)..."
   compose up -d
   echo ""
