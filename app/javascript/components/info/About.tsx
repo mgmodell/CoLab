@@ -8,27 +8,28 @@ import { logocolors } from "../svgs/Logo";
 import { useNavigate } from "react-router";
 import TeamworkContracts from "../svgs/TeamworkContracts";
 
-type Props = {};
-
 const contributors = [
-  'Maron',
-  'Dennis',
-  'Esteban',
-  'Issiah',
-  'Josiah',
-  'Soojin',
-  'Stephanie',
-  'Michael',
-  'Julia',
-  'Sonya',
-  'Allison',
-  'Melissa',
-  'Yomaris',
-  'Emi',
-  'Brillyd',
-  'Ricardo',
-  'Justin'
+  {name: "Maron" },
+  {name: "Dennis" },
+  {name: "Misun", github: "misunrina"},
+  {name: "Esteban", github: "eseban9108" },
+  {name: "Issiah", github: "AnotherHotSpot" },
+  {name: "Josiah", github: "MadSiah-glitchy" },
+  {name: "Soojin" },
+  {name: "Stephanie", github: "stxphaniem" },
+  {name: "Michael" },
+  {name: "Julia" },
+  {name: "Ricardo" },
+  {name: "Emi", github: "emmyAlta" },
+  {name: "Sonya" },
+  {name: "Allison", github: "https://github.com/aesp6765" },
+  {name: "Melissa" },
+  {name: "Yomaris" },
+  {name: "Brillyd", github: "https://github.com/blop5277" },
+  {name: "Justin" }
 ]
+
+const githubBaseUrl = "https://github.com/";
 
 type Props = {
   height: number;
@@ -45,6 +46,7 @@ export default function About(props: Props) {
     (index) => {
       const randomRotation = (Math.random() * 50 ) -25;
       const yPos = Math.random() * 40 + 170;
+      const duration = (contributors[index].github ? 9000 : 5000) + Math.random() * 5000;
 
       return {
         from: {
@@ -56,7 +58,7 @@ export default function About(props: Props) {
         to: {x: -100 },
         config: {
           ...config.molasses,
-          duration: 3000 + Math.random() * 3000
+          duration: duration
         },
         loop: true,
         delay: index * 200
@@ -148,12 +150,16 @@ export default function About(props: Props) {
               fontFamily="Noto Sans JP"
               fontSize="14"
               id={`svg_${14 + index}`}
+              cursor={contributors[index].github ? "pointer" : "default"}
+              onClick={
+                contributors[index].github ? () => window.open(`${githubBaseUrl}${contributors[index].github}`, "_blank") : undefined
+              }
               strokeWidth="0"
               stroke="#000"
               fill="#000000"
               filter="url(#name-shadow)"
               >
-                {contributors[index]}
+                {contributors[index].name}
             </animated.text>
             );
           })
