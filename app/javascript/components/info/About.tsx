@@ -80,7 +80,7 @@ export default function About(props: Props) {
        id="title1">{t("about.title")}</title>
     <defs>
       <filter id='name-shadow' x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="3" dy="3" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+        <feDropShadow dx="3" dy="3" stdDeviation="2" floodColor="#000000" floodOpacity="0.6"/>
       </filter>
       <filter id='link-blur' x="0" y="0" xmlns="http://www.w3.org/2000/svg">
         <feGaussianBlur in='SourceGraphic' stdDeviation=".5" />

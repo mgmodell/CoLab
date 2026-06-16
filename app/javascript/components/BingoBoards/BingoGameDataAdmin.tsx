@@ -9,9 +9,6 @@ import { Button } from "primereact/button";
 
 import { useTranslation } from "react-i18next";
 
-import ConceptChips from "./ConceptChips";
-import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
-
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
@@ -24,9 +21,9 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Container, Row, Col } from "react-grid-system";
-import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
+import BingoResponseData from "./BingoResponseData";
 
 export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
@@ -61,6 +58,7 @@ export default function BingoGameDataAdmin(props) {
   const [gameSource, setGameSource] = useState("");
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
+  const [reviewed, setReviewed] = useState(false);
 
   const now = new Date();
   const [gameStartDate, setGameStartDate] = useState(now);
@@ -154,6 +152,7 @@ export default function BingoGameDataAdmin(props) {
         setGameStartDate(receivedDate);
         receivedDate = new Date(Date.parse(bingo_game.end_date));
         setGameEndDate(receivedDate);
+        setReviewed(bingo_game.reviewed || false);
 
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
@@ -224,6 +223,7 @@ export default function BingoGameDataAdmin(props) {
         setGameDescriptionEditor(bingo_game.description || "");
         setGameSource(bingo_game.source || "");
         setGameActive(bingo_game.active || false);
+        setReviewed(bingo_game.reviewed || false);
 
         var receivedDate = new Date(Date.parse(bingo_game.start_date));
         setGameStartDate(receivedDate);
@@ -340,7 +340,7 @@ export default function BingoGameDataAdmin(props) {
                     value={gameDescriptionEditor}
                     headerTemplate={<EditorToolbar />}
                     onTextChange={event => {
-                      setGameDescriptionEditor(event.htmlValue);
+                      setGameDescriptionEditor(null === event.htmlValue ? "" : event.htmlValue);
                     }}
                   />
                 </Col>
@@ -454,24 +454,12 @@ export default function BingoGameDataAdmin(props) {
             </Container>
           </TabPanel>
           <TabPanel header={t("response_pnl")}>
-            <Container>
-              <Row>
-                <Col xs={5}>
-                  <ConceptChips concepts={concepts} />
-                </Col>
-                <Col xs={7}>
-                  <h5>{t("scored_game.average_score")}:&nbsp;{Math.round(averageScore * 100) / 100}</h5>
-                  <BingoGameDataAdminTable results_raw={resultData} />
-                  <br />
-                  <ResponsesWordCloud
-                    width={400}
-                    height={400}
-                    words={foundWords}
-                    colors={colors}
-                  />
-                </Col>
-              </Row>
-            </Container>
+            <BingoResponseData
+              concepts={concepts}
+              resultData={resultData || []}
+              foundWords={foundWords}
+              reviewed={reviewed}
+            />
           </TabPanel>
           {bingoGameId && endpoints?.ltiConnectionUrl ? (
             <TabPanel header={t("lti.panel_title")}>
