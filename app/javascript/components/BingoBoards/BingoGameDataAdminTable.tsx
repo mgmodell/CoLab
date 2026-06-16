@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from "react";
+import React, {useEffect} from "react";
 
 import { useTranslation } from "react-i18next";
 import { DataTable } from "primereact/datatable";
@@ -12,6 +12,7 @@ import BingoGameResults from "./BingoGameResults";
 
 type Props = {
   results_raw: Array<any>;
+  reviewed: boolean;
 };
 
 enum OPT_COLS {
@@ -40,7 +41,6 @@ export default function BingoGameDataAdminTable(props: Props) {
   const optColumns = [
     OPT_COLS.GROUP,
     OPT_COLS.EXPECTED,
-    OPT_COLS.ENTERED,
     OPT_COLS.CREDITED,
     OPT_COLS.TERM_PROBLEMS
   ];
@@ -57,6 +57,14 @@ export default function BingoGameDataAdminTable(props: Props) {
     setDialogOpen(true);
   };
 
+  useEffect(() => {
+    if (!props.reviewed) {
+      const tempCols = [...visibleColumns, OPT_COLS.EXPECTED];
+      setVisibleColumns([... new Set(tempCols)] );
+    }
+  }, [props.reviewed]);
+
+  console.log( props.reviewed );
   return (
     <Panel>
       <DataTable
@@ -92,27 +100,31 @@ export default function BingoGameDataAdminTable(props: Props) {
         }
       >
         <Column
-          header={OPT_COLS.PERFORMANCE}
-          field={"performance"}
-          sortable
-          filter
-          key={"performance"}
-        />
-
-        <Column
-          header={OPT_COLS.SCORE}
-          field={"score"}
-          sortable
-          filter
-          key={"score"}
-        />
-        <Column
           header={OPT_COLS.STUDENT}
           field={"student"}
           sortable
           filter
           key={"student"}
         />
+        { props.reviewed ? (
+          <Column
+            header={OPT_COLS.PERFORMANCE}
+            field={"performance"}
+            sortable
+            filter
+            key={"performance"}
+          />
+        ) : null }
+        { props.reviewed ? (
+
+          <Column
+            header={OPT_COLS.SCORE}
+            field={"score"}
+            sortable
+            filter
+            key={"score"}
+          />
+          ) : (null)}
         {visibleColumns.includes(OPT_COLS.GROUP) ? (
           <Column
             header={OPT_COLS.GROUP}
@@ -131,7 +143,6 @@ export default function BingoGameDataAdminTable(props: Props) {
             key={"concepts_expected"}
           />
         ) : null}
-        {visibleColumns.includes(OPT_COLS.ENTERED) ? (
           <Column
             header={OPT_COLS.ENTERED}
             field={"concepts_entered"}
@@ -139,7 +150,6 @@ export default function BingoGameDataAdminTable(props: Props) {
             filter
             key={"concepts_entered"}
           />
-        ) : null}
         {visibleColumns.includes(OPT_COLS.CREDITED) ? (
           <Column
             header={OPT_COLS.CREDITED}
