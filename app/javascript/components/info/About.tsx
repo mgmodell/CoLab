@@ -26,7 +26,7 @@ const contributors = [
   {name: "Melissa" },
   {name: "Yomaris" },
   {name: "Brillyd", github: "https://github.com/blop5277" },
-  {name: "Justin" }
+  {name: "Justin" },
   {name: "Maverick", github: 'mavrukis'},
   {name: "Manhattan" }
 ]
