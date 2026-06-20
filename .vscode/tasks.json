@@ -1,12 +1,81 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
+    //
+    // The "Sec:" tasks drive the security (pentest) environment via sec_serv.ps1.
+    // They talk to Podman on the HOST, so run them from a LOCAL VS Code window
+    // (a normal window opened on this folder) — NOT from a window attached to the
+    // dev container, which has no podman. Run with: Terminal > Run Task...  (or
+    // Ctrl+Shift+P > "Tasks: Run Task").
     "version": "2.0.0",
     "tasks": [
         {
             "type": "npm",
             "script": "install",
             "problemMatcher": []
+        },
+        {
+            "label": "Sec: Start (up)",
+            "detail": "Bring the security environment up and wait until the target is ready",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Up"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+        },
+        {
+            "label": "Sec: Status",
+            "detail": "Show the security environment container status",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Status"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+        },
+        {
+            "label": "Sec: Toolbox (Kali shell)",
+            "detail": "Open an interactive shell in the Kali pentest toolbox",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Pentest"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+        },
+        {
+            "label": "Sec: Init DB",
+            "detail": "(Re-)initialise the target DB from db/dev_db.sql, then migrate",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Init"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+        },
+        {
+            "label": "Sec: Logs",
+            "detail": "Follow logs for the whole security stack",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Logs"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated" }
+        },
+        {
+            "label": "Sec: Stop (keep data)",
+            "detail": "Stop the security environment containers (volumes kept)",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Stop"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+        },
+        {
+            "label": "Sec: Down (remove containers)",
+            "detail": "Tear down the security environment (volumes kept)",
+            "type": "shell",
+            "command": "powershell",
+            "args": ["-NoProfile", "-File", "${workspaceFolder}/sec_serv.ps1", "-Down"],
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
         }
     ]
 }

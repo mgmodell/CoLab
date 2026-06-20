@@ -1,0 +1,28 @@
+# Build-context excludes.
+#
+# The production target image (containers/agnostic/colab_prod/Dockerfile) is the
+# only image that COPYs the whole repository, so keep host-specific and
+# regenerated artifacts out of the context: they bloat the build, and host
+# node_modules contains wrong-architecture native binaries (the production image
+# rebuilds Linux-native deps with yarn/bundle).
+#
+# The existing dev/test/db/browser/moodle images only COPY specific files
+# (their entrypoints, initDBs.sql, mise.toml), so these excludes do not affect
+# them.
+.git
+.git/**
+node_modules
+**/node_modules
+log
+log/**
+tmp
+tmp/**
+coverage
+coverage/**
+reports
+reports/**
+cucumber/**/reports
+core.*
+*.core
+.yarn/install-state.gz
+.byebug_history

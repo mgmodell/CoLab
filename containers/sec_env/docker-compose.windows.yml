@@ -1,0 +1,26 @@
+# docker-compose.windows.yml  (security environment)
+#
+# Override for Windows + Podman Desktop, mirroring the dev stack's convention.
+#
+# On Windows the host filesystem is shared into the Podman Linux VM via
+# virtio-9p (v9fs). The sec stack's only host bind mount is the *read-only*
+# source mount used for white-box secret scanning:
+#     ../../:/opt/colab-src:ro
+# Read-only v9fs mounts are reliable, so no special handling is needed there,
+# and the production target image copies its source in at build time (it does
+# not bind-mount the tree), so the node_modules native-binary problem that
+# affects the dev container does not apply here.
+#
+# Usage — pass both files to compose (sec_serv.sh -W does this for you):
+#   podman compose \
+#     -f containers/sec_env/docker-compose.yml \
+#     -f containers/sec_env/docker-compose.windows.yml up -d
+#
+# Order matters: always list the base docker-compose.yml first so overrides
+# merge on top of it.
+#
+# This file is currently a documentation placeholder (no overrides are required
+# on Windows at this time) and a hook for future Windows-specific tweaks.
+services:
+  app: {}
+  pentest: {}

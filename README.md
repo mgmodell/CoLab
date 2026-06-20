@@ -325,6 +325,55 @@ Moodle, Canvas, Blackboard, Brightspace, and other compliant LMS platforms.
 See [doc/LTI_INTEGRATION.md](doc/LTI_INTEGRATION.md) for step-by-step connection
 instructions.
 
+## Security (penetration-testing) environment
+
+An isolated container stack for **authorized** security testing pairs a faithful
+**production** build of CoLab (heroku-26 stack + Ruby + jemalloc + Node) with a
+Kali **pentesting toolbox** (nmap, sqlmap, nuclei, ZAP/Burp, ffuf, testssl.sh,
+jwt_tool, and more). It is driven by `sec_serv.sh` and is kept on its own network,
+isolated from the dev stack.
+
+```bash
+./sec_serv.sh -b      # build the images
+./sec_serv.sh -u      # bring the stack up  (target -> http://localhost:13000)
+./sec_serv.sh -i      # (re-)initialise the target DB from db/dev_db.sql
+./sec_serv.sh -p      # open a shell in the pentest toolbox
+./sec_serv.sh -h      # full help
+```
+
+See [doc/PENTEST_ENV.md](doc/PENTEST_ENV.md) for the full environment setup, the
+per-tool catalog (purpose, usage, engagement-relevant flags), and the licensing /
+external-feed activation steps (Nessus, OpenVAS/GVM, nuclei templates, …).
+
+### Engagement boot mode (mode selector)
+
+`./sec_serv.sh -u` first runs an interactive **engagement-mode selector**
+([`boot_mode.sh`](boot_mode.sh)) before the containers spin up — a real
+engagement kickoff. Pick a scenario and the lab tailors itself to it:
+
+| Mode | Scenario | What's in scope to reference | AI-assist posture |
+|------|----------|------------------------------|-------------------|
+| **[1] Black Box** | External attacker, no prior knowledge | Only what recon reveals — **no** stack, schema, source, or creds | Recon-only guidance; the stack stays hidden until you *earn* it |
+| **[2] White Box** | Full internal access | Full stack (heroku-26 / Ruby / jemalloc / Node.js / MariaDB), DB schema, mounted source, sandbox creds | Source-assisted: schema-targeted SQLi, FERPA endpoint mapping |
+| **[3] Gray Box** | Role-authenticated (a student account) | Authenticated student surface only — no source/admin/schema | Auth/authz focused: IDOR/BOLA, privesc, session/JWT |
+
+On each boot the selector:
+
+- **Exports `PENTEST_MODE`** (`blackbox` \| `whitebox` \| `graybox`) into the
+  toolbox container via `containers/sec_env/.env`. Confirm it inside the toolbox
+  (`./sec_serv.sh -p`) with `echo $PENTEST_MODE`.
+- **Logs a timestamped record** to `sessions/SESSION_CONTEXT_<timestamp>.md` —
+  selected mode, start time, tester name, the ROE scope reminder, a
+  mode-specific recon checklist + tool order, and a ready-to-paste **Claude
+  AI-assist prompt header**. Paste that header as the first message in a new
+  Claude session to lock the AI pair-operator into the right mode (e.g.
+  recon-only for Black Box). Commit these to branch `Sec` for the audit trail.
+- **Refreshes** the plain-text `CoLab Pentest Lab - Quick Start.txt` in the repo
+  root (full setup guide + mode-selector reference) so it stays in sync.
+
+Re-running `-u` re-prompts (it's idempotent). To regenerate just the Quick Start
+without booting: `./boot_mode.sh --quickstart`.
+
 ### Who do I talk to? ###
 
 * @micah_gideon
