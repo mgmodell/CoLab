@@ -25,6 +25,8 @@ print_help ( ) {
   echo " -q             Open a mysql session on the target DB (colab_prod)"
   echo " -i             (re-)Initialise the target DB from db/dev_db.sql,"
   echo "                then run production migrations"
+  echo " -e             sEed the target: rails db:seed (reference data +"
+  echo "                ~185 languages) and the sandbox test users"
   echo ""
   echo " -W             Add the Windows compose override (Podman Desktop)"
   echo " -h             Show this help and terminate"
@@ -60,6 +62,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="${SCRIPT_DIR}/containers/sec_env/docker-compose.yml"
 WIN_FILE="${SCRIPT_DIR}/containers/sec_env/docker-compose.windows.yml"
 DB_SNAPSHOT="${SCRIPT_DIR}/db/dev_db.sql"
+BOOT_MODE="${SCRIPT_DIR}/boot_mode.sh"
+MODE_ENV="${SCRIPT_DIR}/containers/sec_env/.env"
+
+# Load the selected engagement mode (PENTEST_MODE/TESTER/SESSION) so every
+# `compose` call passes it into the toolbox container. boot_mode.sh writes this
+# file on `-u`; here we just export whatever the last selection was (if any).
+load_mode_env() {
+  if [ -f "${MODE_ENV}" ]; then
+    set -a; . "${MODE_ENV}"; set +a
+  fi
+}
+load_mode_env
 
 # Action flags
 SHOW_HELP=false
@@ -75,9 +89,10 @@ SHELL_PENTEST=false
 CONSOLE=false
 MYSQL=false
 INIT_DB=false
+SEED=false
 USE_WIN=false
 
-while getopts "ubkrxXslpcqiWh" opt; do
+while getopts "ubkrxXslpcqieWh" opt; do
   case $opt in
     u) UP=true ;;
     b) BUILD=true ;;
@@ -91,6 +106,7 @@ while getopts "ubkrxXslpcqiWh" opt; do
     c) CONSOLE=true ;;
     q) MYSQL=true ;;
     i) INIT_DB=true ;;
+    e) SEED=true ;;
     W) USE_WIN=true ;;
     h|\?) SHOW_HELP=true ;;
   esac
@@ -119,6 +135,18 @@ ensure_podman_up() {
   fi
 }
 
+# Ensure the stack is running before exec'ing into a container. It can stop after
+# the host sleeps/reboots (Podman's restart policy doesn't always survive a
+# machine restart), which makes `exec` fail with "container is not running".
+# No-op when the toolbox is already up.
+ensure_up() {
+  local cid; cid="$(compose ps -q pentest 2>/dev/null)"
+  if [ -z "${cid}" ] || [ "$(podman inspect -f '{{.State.Running}}' "${cid}" 2>/dev/null)" != "true" ]; then
+    echo "Environment isn't running — starting it (this also waits for the DB)..."
+    compose up -d
+  fi
+}
+
 # Poll the target's health endpoint until it serves (first boot runs migrations).
 wait_for_target() {
   local url="http://localhost:13000/up" tries="${1:-90}" code
@@ -143,18 +171,31 @@ fi
 
 # Bring the stack up (compose builds any missing images automatically)
 if [ "$UP" = true ]; then
+  # Engagement kickoff: run the interactive mode selector BEFORE any containers
+  # spin up. It writes containers/sec_env/.env (PENTEST_MODE/TESTER/SESSION),
+  # a timestamped sessions/ record, and refreshes the Quick Start. Re-running
+  # `-u` re-prompts (idempotent). Skip only if the selector is missing.
+  if [ -f "${BOOT_MODE}" ]; then
+    bash "${BOOT_MODE}"
+    load_mode_env   # re-read the freshly selected mode so compose passes it in
+  else
+    echo "NOTE: ${BOOT_MODE} not found — starting without mode selection." >&2
+  fi
   echo "Starting the security environment (detached)..."
   compose up -d
   echo ""
   if wait_for_target 90; then
-    echo "  ✅ Target is UP : http://localhost:13000   (in-network: http://app:3000)"
+    echo "  ✅ Target is UP"
+    echo "     Browser / login : https://localhost:13443  (HTTPS — accept the self-signed cert)"
+    echo "     Direct HTTP     : http://localhost:13000   (recon/tools; login needs the HTTPS URL)"
+    echo "     In-network      : http://app:3000"
   else
     echo "  ⚠️  Target is not answering yet on http://localhost:13000."
     echo "     The DB's first-time init can be slow; wait a minute, then reload the URL."
     echo "     Inspect progress with:  ./sec_serv.sh -l    (or  ./sec_serv.sh -s )"
   fi
   echo "  Pentest toolbox     : ./sec_serv.sh -p"
-  echo "  (Re-)initialise DB  : ./sec_serv.sh -i"
+  echo "  (Re-)initialise DB  : ./sec_serv.sh -i      |   Seed data: ./sec_serv.sh -e"
 fi
 
 # Restart
@@ -179,20 +220,32 @@ if [ "$INIT_DB" = true ]; then
   echo "Database initialised."
 fi
 
+# Seed the target: foundational reference data (rails db:seed) + sandbox users.
+if [ "$SEED" = true ]; then
+  echo "Seeding the production target — foundational data (rails db:seed)..."
+  compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails db:seed'
+  echo "Seeding sandbox test users (db/seed_pentest_users.rb)..."
+  compose exec -T app sh -lc 'cd /app && RAILS_ENV=production mise exec -- bundle exec rails runner db/seed_pentest_users.rb'
+  echo "Seeding complete. Sandbox accounts (see db/seed_pentest_users.rb) can log in at https://localhost:13443."
+fi
+
 # Open a shell in the pentest toolbox (login shell -> prints the briefing)
 if [ "$SHELL_PENTEST" = true ]; then
+  ensure_up
   echo "Opening a shell in the pentest toolbox..."
   compose exec pentest bash -l
 fi
 
 # Open a production rails console on the target
 if [ "$CONSOLE" = true ]; then
+  ensure_up
   echo "Opening a production rails console on the target..."
   compose exec app sh -lc 'cd /app && exec bin/colab_prod_entrypoint.sh console'
 fi
 
 # Open a mysql session on the target DB
 if [ "$MYSQL" = true ]; then
+  ensure_up
   echo "Opening a mysql session on colab_prod..."
   compose exec db mariadb colab_prod -u prod -pprod
 fi

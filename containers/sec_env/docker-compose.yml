@@ -47,14 +47,39 @@ services:
       - MALLOC_CONF=dirty_decay_ms:1000,narenas:2,background_thread:true
       # Apply migrations automatically on boot so the target is ready to test.
       - RUN_DB_MIGRATE_ON_BOOT=true
-      # Secrets: supply real values from your shell/.env for full fidelity; if
-      # both are empty the entrypoint generates an ephemeral SECRET_KEY_BASE.
-      # NEVER hardcode these in the repo.
-      - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-}
+      # secret_key_base is REQUIRED in production. This is a FIXED, known SANDBOX
+      # value — same philosophy as the prod/prod DB creds and the intentionally
+      # weak seeded passwords. Having it in the container env (not just generated
+      # inside the web process) is what lets EVERY production process work:
+      # the Puma server AND `rails db:seed` / console / runner / rake tasks run
+      # via `exec`. It only signs cookies for a throwaway target holding synthetic
+      # data, so it is not sensitive. Override with your own COLAB_SECRET_KEY_BASE
+      # (or RAILS_MASTER_KEY) for full production fidelity.
+      - SECRET_KEY_BASE=${COLAB_SECRET_KEY_BASE:-b61117c631a312ace765c4929ae7ad0613d15f240e600e796e3f50ce485b08baa7d30e0e42fc10b58794bc450bf2734aeb2d6a9da1e2dc97ac50d5ffdcb485d7}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY:-}
     ports:
-      # Operator browser access only; container-to-container uses app:3000.
+      # Direct HTTP access (recon/tools, and in-network app:3000). NOTE: login
+      # won't persist over plain HTTP because the session cookie is Secure +
+      # SameSite=None — use the HTTPS proxy below (https://localhost:13443).
       - 13000:3000
+    networks:
+      - engagement_net
+
+  # TLS-terminating reverse proxy (Caddy) — mirrors the real CoLab.online setup
+  # (app runs behind an SSL proxy; config.assume_ssl = true). Serves HTTPS so the
+  # Secure/SameSite=None session cookie works and LOGIN persists.
+  # Browse the functional target at: https://localhost:13443 (self-signed cert).
+  proxy:
+    image: docker.io/library/caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_started
+    ports:
+      - 13443:443
+    volumes:
+      - ../sec_env/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
     networks:
       - engagement_net
 
@@ -109,14 +134,28 @@ services:
       - TARGET_HOST=app
       - TARGET_DB_HOST=db
       - TARGET_DB_PORT=3306
+      # Engagement mode selected at boot (boot_mode.sh -> containers/sec_env/.env).
+      # Check inside the toolbox with: echo $PENTEST_MODE
+      - PENTEST_MODE=${PENTEST_MODE:-unset}
+      - PENTEST_TESTER=${PENTEST_TESTER:-}
+      - PENTEST_SESSION=${PENTEST_SESSION:-}
     volumes:
       # Persist engagement notes/evidence across container restarts.
       - engagement_data:/root/engagement
+      # OpenVAS/GVM is set up on demand (`gvm-prepare`). Persist its state so the
+      # multi-GB feed sync survives restarts/rebuilds and only ever runs once.
+      # (Metasploit's PostgreSQL DB is baked into the image instead, so it is
+      # intentionally NOT volume-mounted here — a volume would shadow the schema.)
+      - gvm_lib:/var/lib/gvm
+      - openvas_lib:/var/lib/openvas
+      - notus_lib:/var/lib/notus
       # White-box assist: the app source, read-only, for secret scanning
       # (gitleaks) and source-informed testing. Remove for strict black-box.
       - ../../:/opt/colab-src:ro
     networks:
       - engagement_net
+    # Passed as args to the image ENTRYPOINT (pentest-entrypoint), which starts
+    # PostgreSQL (+ GVM if prepared) and then exec's this to keep the box alive.
     command: ["sleep", "infinity"]
 
 networks:
@@ -128,3 +167,9 @@ networks:
 volumes:
   secdata:
   engagement_data:
+  caddydata:
+  # OpenVAS/GVM on-demand state (feeds, certs, prepared marker). Survives
+  # restarts/rebuilds so `gvm-prepare`'s heavy feed sync runs only once.
+  gvm_lib:
+  openvas_lib:
+  notus_lib:
