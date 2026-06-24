@@ -327,52 +327,65 @@ instructions.
 
 ## Security (penetration-testing) environment
 
-An isolated container stack for **authorized** security testing pairs a faithful
-**production** build of CoLab (heroku-26 stack + Ruby + jemalloc + Node) with a
-Kali **pentesting toolbox** (nmap, sqlmap, nuclei, ZAP/Burp, ffuf, testssl.sh,
-jwt_tool, and more). It is driven by `sec_serv.sh` and is kept on its own network,
-isolated from the dev stack.
+> ⚠️ **Authorized use only** — a throwaway sandbox against a *replica* of CoLab.
+> Never load real student data into it.
+
+An isolated container stack that pairs a faithful **production** build of CoLab
+with a Kali **pentesting toolbox**, driven by `sec_serv.sh` (bash) or
+`sec_serv.ps1` (PowerShell). It runs four containers:
+
+| Container | Role |
+|-----------|------|
+| `app`     | CoLab in production mode — the target |
+| `db`      | MariaDB — the data store |
+| `proxy`   | Caddy TLS reverse proxy — serves HTTPS |
+| `pentest` | Kali Linux toolbox — where you run the tools |
+
+### Start the environment
+
+Run from a **host** shell (not the VS Code dev-container terminal) in the project
+root. Each step shows bash then PowerShell:
 
 ```bash
-./sec_serv.sh -b      # build the images
-./sec_serv.sh -u      # bring the stack up  (target -> http://localhost:13000)
-./sec_serv.sh -i      # (re-)initialise the target DB from db/dev_db.sql
-./sec_serv.sh -p      # open a shell in the pentest toolbox
-./sec_serv.sh -h      # full help
+podman machine start                          # start Podman (after every reboot)
+
+./sec_serv.sh -b   |  .\sec_serv.ps1 -Build   # build images (first time only)
+./sec_serv.sh -u   |  .\sec_serv.ps1 -Up      # pick a mode, then bring the stack up
+./sec_serv.sh -e   |  .\sec_serv.ps1 -Seed    # seed reference data + test users (first run)
+./sec_serv.sh -p   |  .\sec_serv.ps1 -Pentest # open a shell in the Kali toolbox
 ```
 
-See [doc/PENTEST_ENV.md](doc/PENTEST_ENV.md) for the full environment setup, the
-per-tool catalog (purpose, usage, engagement-relevant flags), and the licensing /
-external-feed activation steps (Nessus, OpenVAS/GVM, nuclei templates, …).
+`-u` first runs an interactive **engagement-mode selector** (Black / White / Gray
+box), then waits until the target answers (`✅ Target is UP`; first boot runs
+migrations, ~1 min). Then open the target:
 
-### Engagement boot mode (mode selector)
+- **`https://localhost:13443`** — login / full functionality (accept the self-signed cert)
+- **`http://localhost:13000`** — direct HTTP for recon tools
+- **`http://app:3000`** — the target from inside the toolbox
 
-`./sec_serv.sh -u` first runs an interactive **engagement-mode selector**
-([`boot_mode.sh`](boot_mode.sh)) before the containers spin up — a real
-engagement kickoff. Pick a scenario and the lab tailors itself to it:
+Run `./sec_serv.sh -h` (or `.\sec_serv.ps1 -Help`) for all commands.
 
-| Mode | Scenario | What's in scope to reference | AI-assist posture |
-|------|----------|------------------------------|-------------------|
-| **[1] Black Box** | External attacker, no prior knowledge | Only what recon reveals — **no** stack, schema, source, or creds | Recon-only guidance; the stack stays hidden until you *earn* it |
-| **[2] White Box** | Full internal access | Full stack (heroku-26 / Ruby / jemalloc / Node.js / MariaDB), DB schema, mounted source, sandbox creds | Source-assisted: schema-targeted SQLi, FERPA endpoint mapping |
-| **[3] Gray Box** | Role-authenticated (a student account) | Authenticated student surface only — no source/admin/schema | Auth/authz focused: IDOR/BOLA, privesc, session/JWT |
+### Tools
 
-On each boot the selector:
+The `pentest` container bundles a standard offensive-security toolkit:
 
-- **Exports `PENTEST_MODE`** (`blackbox` \| `whitebox` \| `graybox`) into the
-  toolbox container via `containers/sec_env/.env`. Confirm it inside the toolbox
-  (`./sec_serv.sh -p`) with `echo $PENTEST_MODE`.
-- **Logs a timestamped record** to `sessions/SESSION_CONTEXT_<timestamp>.md` —
-  selected mode, start time, tester name, the ROE scope reminder, a
-  mode-specific recon checklist + tool order, and a ready-to-paste **Claude
-  AI-assist prompt header**. Paste that header as the first message in a new
-  Claude session to lock the AI pair-operator into the right mode (e.g.
-  recon-only for Black Box). Commit these to branch `Sec` for the audit trail.
-- **Refreshes** the plain-text `CoLab Pentest Lab - Quick Start.txt` in the repo
-  root (full setup guide + mode-selector reference) so it stays in sync.
+| Tool | Purpose |
+|------|---------|
+| **nmap** | Host discovery and service/version scanning |
+| **whatweb** | Web-stack fingerprinting |
+| **ffuf** | Content/endpoint fuzzing and directory discovery |
+| **nuclei** | Template-based vulnerability/misconfiguration scanning |
+| **sqlmap** | SQL-injection detection and exploitation |
+| **Burp Suite / OWASP ZAP** | Intercepting proxies — capture, inspect, replay HTTP(S) |
+| **jwt_tool** | Inspect and attack JSON Web Tokens |
+| **testssl.sh** | TLS/SSL configuration auditing |
+| **gitleaks** | Secret-scans the read-only app source at `/opt/colab-src` |
+| **theHarvester** | OSINT / recon |
+| **Metasploit** | Exploitation framework (DB auto-starts) |
+| **OpenVAS / GVM** | Full vulnerability scanner (run `gvm-prepare` once) |
 
-Re-running `-u` re-prompts (it's idempotent). To regenerate just the Quick Start
-without booting: `./boot_mode.sh --quickstart`.
+See [doc/PENTEST_ENV.md](doc/PENTEST_ENV.md) for the full per-tool catalog and the
+licensing / external-feed activation steps.
 
 ### Who do I talk to? ###
 

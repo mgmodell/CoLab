@@ -47,6 +47,10 @@ services:
       - MALLOC_CONF=dirty_decay_ms:1000,narenas:2,background_thread:true
       # Apply migrations automatically on boot so the target is ready to test.
       - RUN_DB_MIGRATE_ON_BOOT=true
+      # Marks THIS as a security-testing run. config/storage.yml reads it to fall
+      # back to local Disk storage (no S3 in the sandbox). Real production leaves
+      # this unset and uses the S3 config unchanged.
+      - COLAB_SECURITY_SANDBOX=true
       # secret_key_base is REQUIRED in production. This is a FIXED, known SANDBOX
       # value — same philosophy as the prod/prod DB creds and the intentionally
       # weak seeded passwords. Having it in the container env (not just generated

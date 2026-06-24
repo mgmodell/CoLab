@@ -15,8 +15,19 @@ stage:
   bucket: <%= Rails.application.credentials.dig(:aws, :s3_bucket_name) %>
 
 prod:
-  # In the security sandbox there is no S3; use local Disk storage (as dev/test
-  # do) so the production target boots and file storage actually works. For a
-  # real S3-backed deployment, restore the S3 block with proper credentials.
+  # Production uses S3 (unchanged). The security sandbox has no S3 and no master
+  # key to read its credentials, so ONLY when a security-testing run is detected
+  # — via COLAB_SECURITY_SANDBOX, set on the app service in
+  # containers/sec_env/docker-compose.yml — do we fall back to local Disk so the
+  # target boots and file storage works. Real deployments leave the flag unset
+  # and get the S3 config below, exactly as before.
+<% if %w[1 true yes on].include?(ENV["COLAB_SECURITY_SANDBOX"].to_s.strip.downcase) %>
   service: Disk
   root: <%= Rails.root.join("tmp/storage/prod") %>
+<% else %>
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: <%= Rails.application.credentials.dig(:aws, :region) %>
+  bucket: <%= Rails.application.credentials.dig(:aws, :s3_bucket_name) %>
+<% end %>
