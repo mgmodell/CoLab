@@ -1,0 +1,5 @@
+ko:
+  rubric_row_feedbacks:
+    error:
+      feedback_required: >
+        완벽한 점수 미만의 경우 피드백이 필요합니다.

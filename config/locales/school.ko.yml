@@ -1,0 +1,26 @@
+ko:
+  schools:
+    index:
+      title: 학교 목록
+      name_lbl: 이름
+      description_lbl: 설명
+      courses_lbl: 수업
+      students_lbl: 학생 수
+      instructor_lbl: 강사 수
+      project_lbl: 프로젝트 수
+      experience_lbl: 경험 수
+      terms_list_lbl: 용어 목록
+    edit:
+      title: 학교 편집
+    show:
+      title: 학교 세부 사항
+      edit_string: 학교 세부 사항 편집
+    new:
+      title: 새 학교
+    create_success: 학교가 성공적으로 만들어졌습니다!
+    destroy_success: 학교가 성공적으로 삭제되었습니다!
+    update_success: 학교가 성공적으로 업데이트되었습니다!
+    courses: 학교 수업
+    no_courses: 수업 없음.
+    back: 학교 목록으로 돌아가기
+    time_zone: 시간대
