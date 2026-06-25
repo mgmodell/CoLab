@@ -633,30 +633,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/dev-middleware@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@rspack/dev-middleware@npm:2.0.1"
+"@rspack/dev-middleware@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@rspack/dev-middleware@npm:2.0.3"
   peerDependencies:
-    "@rspack/core": ^2.0.0-0
+    "@rspack/core": ^2.0.0
   peerDependenciesMeta:
     "@rspack/core":
       optional: true
-  checksum: 10c0/2181d5d508e83f1a04ba1c26d9c5854227775576d7da8fb4fcecffafd406cdda8f7b023fd8d3548ec1ad4c12fd4289b862acffe0d62e40384e7a35452268d66d
+  checksum: 10c0/603d51113a793235a04cc344c4cc7d82c411f651b067e88024ce16870e61c09cfed59c9b7142506dde43f2168448460a2eb03eb519c15d6e408785e3db0ed41b
   languageName: node
   linkType: hard
 
-"@rspack/dev-server@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "@rspack/dev-server@npm:2.0.3"
+"@rspack/dev-server@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@rspack/dev-server@npm:2.1.0"
   dependencies:
-    "@rspack/dev-middleware": "npm:^2.0.1"
+    "@rspack/dev-middleware": "npm:^2.0.3"
   peerDependencies:
-    "@rspack/core": ^2.0.0-0
+    "@rspack/core": ^2.0.0
     selfsigned: ^5.0.0
   peerDependenciesMeta:
     selfsigned:
       optional: true
-  checksum: 10c0/a059cd979958b54726b16646d6809930372c50a439d937325058ab548d0a98a55ec02d77cdc94855636c83c26b40beedc60a52cb01ed25d60b29ca94b78fd25b
+  checksum: 10c0/54d25adb8944da00dc01437108dfaa8af238074ce6b99f854d691c5fb7e982a98f5105d8664c921b167843a133a2d0327597dbcba4eb5c11d9310c80e517fb96
   languageName: node
   linkType: hard
 
@@ -1506,7 +1506,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.12.0"
     "@rspack/cli": "npm:^2.0.8"
     "@rspack/core": "npm:^2.0.8"
-    "@rspack/dev-server": "npm:^2.0.3"
+    "@rspack/dev-server": "npm:^2.1.0"
     "@rspack/plugin-react-refresh": "npm:^2.0.2"
     "@swc/core": "npm:^1.15.41"
     "@types/react": "npm:^19.2.17"
