@@ -20,10 +20,7 @@ Feature: Course Administration
   @javascript
   Scenario: Instructor downloads self-registration image
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user sees self-registration image
@@ -53,10 +50,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin creates a new course
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     And the user clicks the "New course" button
     And the user sets the "Name" field to "Off"
@@ -79,10 +73,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin cannot creates an incomplete new course
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     And the user clicks the "New course" button
     #no name
@@ -117,20 +108,14 @@ Feature: Course Administration
   @javascript
   Scenario: Instructor cannot create a new course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user does not see a "New Course" link
 
   @javascript
   Scenario: Admin edits an existing course
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     #Then the user clicks "Edit Course Details"
@@ -156,10 +141,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds an existing student to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Given 1 users
@@ -170,10 +152,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds a new student to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
@@ -183,10 +162,7 @@ Feature: Course Administration
   Scenario: Admin adds a the same student multiple times with different
     capitalization student to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
@@ -200,10 +176,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds a new student, then drops and re-adds them
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
@@ -216,10 +189,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds existing students to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -230,10 +200,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds existing students, then drops and re-adds them
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -250,10 +217,7 @@ Feature: Course Administration
   Scenario: Admin drops a student who is in an active project group from a course
     Given the user is the instructor for the course
     Given the project has been activated
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Given a student from the project group
@@ -264,10 +228,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds new students to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com, you@mailinator.com, myself@mailinator.com'
@@ -277,10 +238,7 @@ Feature: Course Administration
   @javascript
   Scenario: Malformed email address returns an error
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'instructor' users 'me@mailinator.com<'
@@ -305,10 +263,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds an instructor to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'instructor' users 'me@mailinator.com'
@@ -317,10 +272,7 @@ Feature: Course Administration
   @javascript
   Scenario: Admin adds 5 existing instructors to a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -354,10 +306,7 @@ Feature: Course Administration
     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the user is the instructor for the course
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then close all messages
     Then the user clicks the course 'Make a copy' button
@@ -402,10 +351,7 @@ Feature: Course Administration
   Scenario: Instructor deletes a Bingo! game from a course
     Given the course has a Bingo! game
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -419,10 +365,7 @@ Feature: Course Administration
   Scenario: Instructor deletes an experience from a course
     Given the course has an experience
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -435,10 +378,7 @@ Feature: Course Administration
   @javascript
   Scenario: Instructor soft-deletes a project with student data from a course
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -469,10 +409,7 @@ Feature: Course Administration
     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the user is the instructor for the course
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then close all messages
     Then the user clicks the course 'Make a copy' button

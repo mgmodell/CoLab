@@ -63,9 +63,7 @@ Feature: Concept Administration
     When create a concept named "Conceptually speaking"
     Then a concept will exist named "Conceptually speaking"
     Then the user is an admin
-    Then the user logs in
-    Then the user clicks the Admin button
-    Then the user selects the 'Concepts' menu item
+    Then the user logs in and accesses the "Concepts" admin page
     Then the user updates the "Conceptually Speaking" concept to "good-bye  Conceptually   speaking (CS)"
     Then the user waits to see "successfully"
     Then close all messages

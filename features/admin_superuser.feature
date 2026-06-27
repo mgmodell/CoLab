@@ -15,20 +15,14 @@ Feature: Administration: user
   Scenario: Admin instructor users do see the Admin button 
     Given the user is the instructor for the course
     Given there is a course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
      And the user waits to see "Courses"
     Then the user sees 2 course
 
 @javascript
   Scenario: Regular admin users do see the Admin button 
     Given there is a course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
      And the user waits to see "Courses"
     Then the user sees 2 course
 
@@ -36,29 +30,20 @@ Feature: Administration: user
   Scenario: Admins see future course
     Given the course started "4 months ago" and ended "2 months from now"
     Given the course has an assessed project
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
      And the user waits to see "Courses"
     Then the user sees 1 course
 
 @javascript
   Scenario: Admins see courses with an experience
     Given the course has an experience
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the "Courses" menu item
+    Then the user logs in and accesses the "Courses" admin page
      And the user waits to see "Courses"
     Then the user sees 1 course
 
 @javascript
   Scenario: Admins see courses with a game
     Given the course has a Bingo! game
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the "Courses" menu item
+    Then the user logs in and accesses the "Courses" admin page
      And the user waits to see "Courses"
     Then the user sees 1 course

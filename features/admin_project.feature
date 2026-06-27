@@ -16,10 +16,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor creates a new project
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -51,10 +48,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor creates a new project but leaves the dates untouched
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -83,10 +77,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor edits an existing project
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing project
@@ -118,10 +109,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor creates a project and doesn't set the dates then edits it
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -173,10 +161,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor creates a project then edits it
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -234,10 +219,7 @@ Feature: Project Administration
   @javascript
   Scenario: Instructor creates a project then edits it, but doesn't edit the dates
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -292,10 +274,7 @@ Feature: Project Administration
     Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
     Given the course started "last month" and ended "next month"
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
 

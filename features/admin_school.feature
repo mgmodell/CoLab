@@ -10,10 +10,7 @@ Feature: School Administration
 @javascript
   Scenario: Admin creates a new school
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Schools' menu item
+    Then the user logs in and accesses the "Schools" admin page
      And the user clicks the "New school" button
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
@@ -29,10 +26,7 @@ Feature: School Administration
 @javascript
   Scenario: Admin cannot creates an incomplete new school
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Schools' menu item
+    Then the user logs in and accesses the "Schools" admin page
      And the user clicks the "New school" button
      #no name
      And the user sets the "Name" field to ""
@@ -64,10 +58,7 @@ Feature: School Administration
 @javascript
   Scenario: Admin edits an existing school
     Given the user is an admin
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Schools' menu item
+    Then the user logs in and accesses the "Schools" admin page
     Then the user sees 2 school
     Then the user opens the school
     # Then the user clicks "Edit school details"
@@ -80,4 +71,3 @@ Feature: School Administration
     Then retrieve the latest school from the db
      And the school "Name" field is "Off"
      And the school "Description" field is "blue is the best"
-

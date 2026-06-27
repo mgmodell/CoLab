@@ -49,6 +49,26 @@ Then( /^user sees the assignment in the history$/ ) do
   page.should have_content( @assignment.get_name( false ) )
 end
 
+Then ( 'the user logs in and accesses the {string} admin page' ) do | admin_page |
+  visit '/login'
+  wait_for_render
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
+
+  ack_messages
+  click_link_or_button 'Log in!'
+
+  wait_for_render
+  # Blow away the cookies accept
+  click_link_or_button 'I understand' if has_content? 'I understand'
+  open_main_menu
+  find( :id, 'administration-menu' ).click
+
+  find( :xpath, "//a[contains(.,'#{admin_page}')]" ).click
+  wait_for_render
+
+end
+
 When( /^the user logs in$/ ) do
   visit '/login'
   wait_for_render
