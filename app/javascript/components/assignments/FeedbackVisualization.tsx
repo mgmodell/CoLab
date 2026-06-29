@@ -34,8 +34,8 @@ const enum CHART_TYPES {
 }
 
 export default function FeedbackVisualization(props: Props) {
-  const endpointSet = "assignment";
-  const [t, i18n] = useTranslation(`${endpointSet}s`);
+  const category = "assignment";
+  const [t, i18n] = useTranslation(`${category}s`);
   const [progressData, setProgressData] = useState([]);
   const [chartType, setChartType] = useState(CHART_TYPES.STACKED_AREA);
 

@@ -568,7 +568,7 @@ GEM
     ruby-vips (2.3.0)
       ffi (~> 1.12)
       logger
-    rubyzip (3.4.0)
+    rubyzip (3.4.1)
     safely_block (1.0.0)
     sdoc (2.6.5)
       rdoc (>= 5.0)

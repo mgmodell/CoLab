@@ -420,12 +420,15 @@ class User < ApplicationRecord
         # Ahoy email message tracking
         Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
 
+        prey_u.active = false
+
         pred_u.save!
         prey_u.save!
         # prey_u.destroy!
       end
     else
-      logger.debug 'One or more user were not found. No work done.'
+      logger.debug I18n.t( 'one_or_more_users_not_found' )
+      I18n.t( 'one_or_more_users_not_found' )
     end
   end
 

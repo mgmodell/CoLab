@@ -12,20 +12,26 @@ Feature: Admins can find and review users and update their roles.
 
     Given there is a course with an assessed project
     Given the course has a Bingo! game
-    Given the project has a group with 4 confirmed users
+    Given the Bingo! game individual count is 6
+    Given the Bingo! started "last month" and ends "3 days from now"
+    Given the Bingo! is group-enabled with the project and a 50 percent group discount
+    Given the Bingo! "has" been activated
+    Given the project has a group with 2 confirmed users
     Given the users "finish" prep "as a group"
-    Given the project has a group with 4 confirmed users
-    Given the users "incomplete" prep "as a group"
+    Given the project has a group with 2 confirmed users
+    Given the users "incomplete" prep "solo"
 
     Given there is a course
     Given the course has 11 confirmed users
     # User is instructor only for the first course
 
-    Given there is a course
+    Given there is a course with an assessed project
     Given the course is in "Test School" school
-    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
     Given the course has a Bingo! game
-    Given the users "finish" prep "as a group"
+    Given the Bingo! started "last month" and ends "3 days from now"
+    Given the Bingo! "has" been activated
+    Given the users "finish" prep "solo"
     Given the course has an assignment
       And the init assignment 'does' accept 'links'
     Given the assignment "is" initialised as group-capable
@@ -36,7 +42,7 @@ Feature: Admins can find and review users and update their roles.
   @javascript
   Scenario: An instructor can find students in their school and content is limited
     Then the user logs in and accesses the "Users" admin page
-    Then the user sees 28 students visible
+    Then the user sees 24 students visible
     Then the user "does not" see a merge button
     Then the user searches for a user by "complete" "family name" from "their course"
      And the user "is" found
@@ -63,7 +69,7 @@ Feature: Admins can find and review users and update their roles.
   Scenario: A researcher can find all users school anonymized with no roles
     Then there is a user who is a researcher
     Then the user logs in and accesses the "Users" admin page
-    Then the user sees 36 students visible
+    Then the user sees 26 students visible
     Then the user "does not" see a merge button
     Then the user searches for a user by "complete" "anonymized family name" from "their school"
      And the user "is" found
@@ -75,13 +81,13 @@ Feature: Admins can find and review users and update their roles.
     Then the user closes the user view
     Then the user searches for a user by "complete" "anonymized email" from "another school"
      And the user "is not" found
-    Then the user sees 36 students visible
+    Then the user sees 25 students visible
 
   @javascript
   Scenario: An admin can view any user by family name and school
-    Then the user an admin
+    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
-    Then the user sees 36 students visible
+    Then the user sees 26 students visible
     Then the user searches for a user by "complete" "family name" from "their course"
      And the user "is" found
     Then the user views the user
@@ -110,19 +116,19 @@ Feature: Admins can find and review users and update their roles.
 
   @javascript
   Scenario: An admin can delete and restore any user by email
-    Then the user an admin
+    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
-    Then the user sees 36 students visible
+    Then the user sees 26 students visible
     Then the user searches for a user by "complete" "email" from "any school"
     Then the user clicks the delete button on the user
-    Then the user sees 35 students visible
+    Then the user sees 25 students visible
     Then the user searches for a user by "complete" "email" from "any school"
     Then the user clicks the delete button on the user
-    Then the user sees 34 students visible
+    Then the user sees 24 students visible
     Then the user clcks the "Restore user" button
      And the user enters the email address for deleted user 1
      And the user clicks the "Restore" button
-    Then the user sees 35 students visible
+    Then the user sees 25 students visible
     Then the user searches for a user by "complete" "email" from "user 1"
      And the user "is" found
     Then the user searches for a user by "complete" "email" from "user 2"
@@ -130,7 +136,7 @@ Feature: Admins can find and review users and update their roles.
 
   @javascript
   Scenario: An admin can set any user as researcher by email
-    Then the user an admin
+    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
@@ -143,7 +149,7 @@ Feature: Admins can find and review users and update their roles.
 
   @javascript
   Scenario: An admin can set any user as researcher by email
-    Then the user an admin
+    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
@@ -158,7 +164,7 @@ Feature: Admins can find and review users and update their roles.
   Scenario: An admin can merge 2 users useing email addresses
    Given select user 1 from "the users" "course"
    Given select user 2 from "Test School" "school"
-    Then the user an admin
+    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user "does not" see a merge button
     Then switch to user 1

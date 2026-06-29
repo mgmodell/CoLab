@@ -96,47 +96,58 @@ export default function MainMenu(props: Props) {
             navTo("/perspective");
           },
         });
-      if (user.is_instructor || user.is_admin) {
+      if (user.is_instructor || user.is_admin || user.researcher) {
         let adminItems = [
           {
-            label: t("courses_edit"),
-            icon: "pi pi-fw pi-book",
-            id: "courses-menu-item",
+            label: t("users_edit"),
+            icon: "pi pi-fw pi-users",
+            id: "users-menu-item",
             visible: adminOpen,
-            command: () => navTo("/admin/courses")
-          },
-          {
-            label: t("rubrics_edit"),
-            icon: "pi pi-fw pi-table",
-            id: "rubrics-menu-item",
-            visible: adminOpen,
-            command: () => navTo("/admin/rubrics")
+            command: () => navTo("/admin/users")
           }
         ];
-        if (user.is_admin) {
+        if (user.is_instructor || user.is_admin ) {
           adminItems.push(
             {
-              label: t("concepts_edit"),
-              icon: "pi pi-fw pi-tags",
-              id: "concepts-menu-item",
+              label: t("courses_edit"),
+              icon: "pi pi-fw pi-book",
+              id: "courses-menu-item",
               visible: adminOpen,
-              command: () => navTo("/admin/concepts")
+              command: () => navTo("/admin/courses")
             },
             {
-              label: t("schools_edit"),
-              icon: "pi pi-fw pi-users",
-              id: "schools-menu-item",
+              label: t("rubrics_edit"),
+              icon: "pi pi-fw pi-table",
+              id: "rubrics-menu-item",
               visible: adminOpen,
-              command: () => navTo("/admin/schools")
+              command: () => navTo("/admin/rubrics")
             },
-            {
-              label: t("consent_forms_edit"),
-              icon: "pi pi-fw pi-file",
-              id: "consent-forms-menu-item",
-              visible: adminOpen,
-              command: () => navTo("/admin/consent_forms")
-            }
           );
+          if (user.is_admin) {
+            adminItems.push(
+              {
+                label: t("concepts_edit"),
+                icon: "pi pi-fw pi-tags",
+                id: "concepts-menu-item",
+                visible: adminOpen,
+                command: () => navTo("/admin/concepts")
+              },
+              {
+                label: t("schools_edit"),
+                icon: "pi pi-fw pi-building-columns",
+                id: "schools-menu-item",
+                visible: adminOpen,
+                command: () => navTo("/admin/schools")
+              },
+              {
+                label: t("consent_forms_edit"),
+                icon: "pi pi-fw pi-file",
+                id: "consent-forms-menu-item",
+                visible: adminOpen,
+                command: () => navTo("/admin/consent_forms")
+              }
+            );
+          }
         }
         builtMenu.push(
           {

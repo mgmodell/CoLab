@@ -117,6 +117,18 @@ class HomeController < ApplicationController
         submissionUrl: submission_path( id: '' ),
         submissionWithdrawalUrl: submission_withdraw_path( id: '' )
       }
+      if current_user.is_instructor? || current_user.researcher?
+        ep_hash[ :user] = {
+          directorySearchUrl: directory_search_path
+        }
+      elsif current_user.is_admin?
+        ep_hash[ :user] = {
+          directorySearchUrl: directory_search_path,
+          deleteUserUrl: delete_user_path,
+          setRoleUrl: set_role_path,
+          mergeUsersUrl: merge_users_path
+        }
+      end
 
       if current_user.is_admin? || current_user.is_instructor?
         ep_hash[ :project] = {
@@ -244,7 +256,8 @@ class HomeController < ApplicationController
         {
           id: school.id,
           name: school.name,
-          timezone: school.timezone
+          timezone: school.timezone,
+          user_count: school.users.where(active: true).distinct.count
         }
       end
     }

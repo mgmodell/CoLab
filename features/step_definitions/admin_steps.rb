@@ -24,23 +24,59 @@ Then( /^the user sets the project to the course's project$/ ) do
 end
 
 Given('the course is in {string} school') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+  school = School.find_by(name: string)
+  school = school.nil? ? School.create(name: string) : school
+  @course.school = school
+  @course.save
 end
 
-Then('the user sees {int} students visible') do |int|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sees {int} students visible') do |user_count|
+  has_text?( "#{user_count} active users" ).should be true
 end
 
-Then('the user {string} see a merge button') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then( 'the user {string} see a merge button' ) do |does_or_does_not|
+  merge_buttons = all(:link_or_button, "Merge users" )
+  if 'does' == does_or_does_not
+    merge_buttons.first.should_not be_disabled
+  else
+    merge_buttons.first.should be_disabled unless merge_buttons.empty?
+  end
 end
 
-Then('the user searches for a user by {string} {string} from {string}') do |string, string2, string3|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user searches for a user by {string} {string} from {string}') do |search_type, search_field, user_type|
+  ack_messages
+  @search_user = nil
+  case user_type
+  when 'student'
+    @search_user = Roster.students.sample.user
+  when 'their course'
+    @search_user = @user.courses.sample.rosters.sample.user
+  else
+    pending
+  end
+
+  search_term = ''
+  case search_field
+  when 'given name'
+    search_term = @search_user.first_name
+  when 'family name'
+    search_term = @search_user.last_name
+  when 'email'
+    search_term = @search_user.email
+  else
+    pending
+  end
+  search_term = search_term[1..-1] unless 'complete' == search_type
+  fill_in 'Name and/or email', with: search_term
+  click_link_or_button 'Search'
 end
 
 Then('the user {string} found') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+  row = find( :xpath, "//td[text()='#{@search_user.first_name}']" )
+            .sibling( :xpath, "td[text()='#{@search_user.last_name}']" )
+            .sibling( :xpath, "td[text()='#{@search_user.email}']")
+
+  row.should_not be_nil
 end
 
 Then('the user views the user') do
@@ -60,14 +96,22 @@ Then('the user closes the user view') do
 end
 
 Then('there is a user who is a researcher') do
-  pending # Write code here that turns the phrase above into concrete actions
+  @user = User.new(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Faker::Internet.email,
+    researcher: true,
+    welcomed: true,
+    timezone: 'UTC'
+  )
+  @user.skip_confirmation!
+  @user.save
+  log @user.errors.full_messages if @user.errors.present?
 end
 
 Then('the user sees anonymized data with no roles') do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then('the user an admin') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 

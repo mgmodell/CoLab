@@ -70,7 +70,7 @@ export default function ConceptsTable() {
     dispatch(startTask("load"));
     //statusActions.startTask("load");
     axios
-      .get(endpoints.baseUrl + ".json", {})
+      .get(`${endpoints.baseUrl}.json`, {})
       .then(response => {
         const data = response.data;
         setConcepts(data);

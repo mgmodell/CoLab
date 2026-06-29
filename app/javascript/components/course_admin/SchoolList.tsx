@@ -20,7 +20,8 @@ enum OPT_COLS {
   BINGO = "bingo!"
 }
 
-export default function SchoolList(props) {
+//interface Props { }
+export default function SchoolList( /*props : Props */ ) {
   const category = "school";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -30,8 +31,6 @@ export default function SchoolList(props) {
   );
   const { t } = useTranslation(`${category}s`);
 
-  const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -66,11 +65,6 @@ export default function SchoolList(props) {
       dispatch(endTask("loading"));
     }
   }, [endpointStatus]);
-
-  const postNewMessage = msgs => {
-    setMessages(msgs);
-    setShowErrors(true);
-  };
 
   const schoolTable = (
     <DataTable

@@ -1,0 +1,14 @@
+en:
+  users:
+    search_text_inpt: Name and/or email
+    search_btn: Search
+    no_selected_school: All schools
+    users_search: Who are you looking for?
+    user_stats_msg: The selection has {{user_count}} active users.
+    init_merge_users_btn: Merge users
+    table:
+      first_name: Name
+      last_name: Last Name
+      email: Email
+      school: School
+      status: Status

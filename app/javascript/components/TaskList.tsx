@@ -56,8 +56,6 @@ type Props = {
 
 export default function TaskList(props: Props) {
   const category = "home";
-  //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const { t } = useTranslation(category);
   const user = useTypedSelector(state => state.profile.user);
 
