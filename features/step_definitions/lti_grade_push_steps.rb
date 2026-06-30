@@ -88,18 +88,18 @@ end
 Then( 'the user clicks {string} and confirms the grade push dialog' ) do | link_or_button |
   wait_for_render
 
-  if has_xpath?( "//button[contains(.,'#{link_or_button}')]",
+  if has_xpath?( %Q{//button[contains(.,'#{link_or_button}')]},
                  visible: :all )
-    btn = find( :xpath, "//button[contains(.,'#{link_or_button}')]",
+    btn = find( :xpath, %Q{//button[contains(.,'#{link_or_button}')]},
                 match: :first,
                 visible: :all )
-  elsif has_xpath?( "//a[contains(.,'#{link_or_button}')]",
+  elsif has_xpath?( %Q{//a[contains(.,'#{link_or_button}')]},
                     visible: :all )
-    btn = find( :xpath, "//a[contains(.,'#{link_or_button}')]",
+    btn = find( :xpath, %Q{//a[contains(.,'#{link_or_button}')]},
                 visible: :all )
-  elsif has_xpath?( "//input[@value='#{link_or_button}']",
+  elsif has_xpath?( %Q{//input[@value='#{link_or_button}']},
                     visible: :all )
-    btn = find( :xpath, "//input[@value='#{link_or_button}']",
+    btn = find( :xpath, %Q{//input[@value='#{link_or_button}']},
                 visible: :all )
   else
     puts "nothing found yet for '#{link_or_button}"
@@ -127,7 +127,7 @@ end
 
 Then( 'the {string} button is disabled' ) do | button_label |
   wait_for_render
-  btn = find( :xpath, "//button[contains(.,'#{button_label}')]", visible: :all )
+  btn = find( :xpath, %Q{//button[contains(.,'#{button_label}')]}, visible: :all )
   btn['disabled'].should_not be_nil
 end
 

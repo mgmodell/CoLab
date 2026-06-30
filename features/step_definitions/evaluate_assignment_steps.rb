@@ -53,8 +53,8 @@ Then( 'the user hides all but the {string} tab' ) do | tabname |
 end
 
 Then( 'the contents match the submission contents' ) do
-  find_all( :xpath, "//p[@id='sub_link']/a[@href='#{@submission.sub_link}']" ).size.should be 1
-  find_all( :xpath, "//p[@id='sub_text' and contains(.,'#{@submission.sub_text.nil? ? 'No text entered' : @submission.sub_text}')]" ).size.should be 1
+  find_all( :xpath, %Q{//p[@id='sub_link']/a[@href='#{@submission.sub_link}']} ).size.should be 1
+  find_all( :xpath, %Q{//p[@id='sub_text' and contains(.,'#{@submission.sub_text.nil? ? 'No text entered' : @submission.sub_text}')]} ).size.should be 1
 end
 
 Then( 'the user enters overall feedback' ) do

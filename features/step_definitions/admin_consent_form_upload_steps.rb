@@ -45,7 +45,7 @@ end
 
 Then( 'the user opens the consent form for editing' ) do
   wait_for_render
-  find( :xpath, "//tbody/tr/td[@role='cell' and contains(.,'#{@consent_form.name}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[@role='cell' and contains(.,'#{@consent_form.name}')]} ).click
   wait_for_render
 end
 

@@ -5,12 +5,12 @@ require 'faker'
 Then( /^the user clicks the link to the experience$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@experience.name}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[contains(.,'#{@experience.name}')]} ).click
 end
 
 Then 'the {string} button will be disabled' do | button_name |
   wait_for_render
-  elem = find( :xpath, "//button[contains(.,'#{button_name}')]" )
+  elem = find( :xpath, %Q{//button[contains(.,'#{button_name}')]} )
   elem[:disabled].should eq 'true'
 end
 

@@ -319,7 +319,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
       find( :xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']" ).click
       find_all( :xpath, "//ul[@role='listbox']/li" ).last.click
 
-      xpression = "//tr/td/a[contains(.,'#{_address.email}')]/../../td/button[@aria-label='drop student']"
+      xpression = %Q{//tr/td/a[contains(.,'#{_address.email}')]/../../td/button[@aria-label='drop student']}
       elem = find( :xpath, xpression )
       elem.click
       find( :xpath,
@@ -332,7 +332,7 @@ Then 'the user drops the {string} users {string}' do | _type, addresses |
     find( :xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']" ).click
     find_all( :xpath, "//ul[@role='listbox']/li" ).last.click
 
-    drop_button_xpath = "//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='drop student']"
+    drop_button_xpath = %Q{//tr/td/a[contains(.,'#{addresses}')]/../../td/button[@aria-label='drop student']}
 
     elem = find( :xpath, drop_button_xpath )
 
@@ -473,7 +473,7 @@ Then( 'close all messages' ) do
 end
 
 Then( 'the user selects the {string} activity' ) do | activity_name |
-  find( :xpath, "//tbody/tr/td[contains(.,'#{activity_name}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[contains(.,'#{activity_name}')]} ).click
   wait_for_render
 end
 
@@ -484,22 +484,22 @@ end
 
 Then( 'the user deletes the bingo game' ) do
   activity_name = @bingo.get_topic( false )
-  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
-  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  row = find( :xpath, %Q{//tbody/tr[td[contains(.,'#{activity_name}')]]} )
+  row.find( :xpath, %Q{.//button[@aria-label='Delete']} ).click
   wait_for_render
 end
 
 Then( 'the user deletes the experience' ) do
   activity_name = @experience.get_name( false )
-  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
-  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  row = find( :xpath, %Q{//tbody/tr[td[contains(.,'#{activity_name}')]]} )
+  row.find( :xpath, %Q{.//button[@aria-label='Delete']} ).click
   wait_for_render
 end
 
 Then( 'the user deletes the project' ) do
   activity_name = @project.get_name( false )
-  row = find( :xpath, "//tbody/tr[td[contains(.,'#{activity_name}')]]" )
-  row.find( :xpath, ".//button[@aria-label='Delete']" ).click
+  row = find( :xpath, %Q{//tbody/tr[td[contains(.,'#{activity_name}')]]} )
+  row.find( :xpath, %Q{.//button[@aria-label='Delete']} ).click
   wait_for_render
 end
 
@@ -509,7 +509,7 @@ Then( 'the project is marked as deleted' ) do
 end
 
 Then( 'the activity {string} shows status {string}' ) do | activity_name, expected_status |
-  page.should have_xpath( "//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]" )
+  page.should have_xpath( %Q{//tbody/tr[td[contains(.,'#{activity_name}')]]/td[contains(.,'#{expected_status}')]} )
 end
 
 Given( 'a student from the project group' ) do

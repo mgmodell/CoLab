@@ -17,7 +17,7 @@ Then( /^user opens their profile$/ ) do
   find( :id, 'profile-menu-item' ).click
   page.should have_content( 'Edit your profile' )
   text = "Tell us about yourself, #{@user.first_name} (optional)"
-  all( :xpath, "//div[contains(.,'#{text}')]" ).size.should be > 3
+  all( :xpath, %Q{//div[contains(.,'#{text}')]} ).size.should be > 3
   # page.should have_content('Tell us about yourself, ' + @user.first_name)
   el = find( :xpath, "//div[@data-pc-name='accordion']/div/div/a[contains(.,'Email settings')]" )
   el.click if el['aria-expanded'] == 'false'

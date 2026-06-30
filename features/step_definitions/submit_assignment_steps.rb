@@ -86,19 +86,19 @@ end
 Then( 'the user opens the assignment task' ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@assignment.name}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[contains(.,'#{@assignment.name}')]} ).click
   wait_for_render
 end
 
 Then( 'the user does not see the assignment task' ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find_all( :xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]" ).size.should be 0
+  find_all( :xpath, %Q{//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]} ).size.should be 0
 end
 
 Then( 'the user opens the assignment history item' ) do
   wait_for_render
-  find( :xpath, "//tbody/tr/td[text()='#{@assignment.name}']" ).click
+  find( :xpath, %Q{//tbody/tr/td[text()='#{@assignment.name}']} ).click
 
   wait_for_render
 end
@@ -107,10 +107,10 @@ Then( 'the user opens the {string} submissions tab' ) do | tab_name |
   wait_for_render
   case tab_name
   when 'Submissions'
-    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
+    tab = find( :xpath, %Q{//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]} )
     tab.click
   when 'Grading'
-    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
+    tab = find( :xpath, %Q{//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]} )
     tab.click
   else
     true.should be false
@@ -138,9 +138,9 @@ end
 Then( 'the {string} tab {string} enabled' ) do | tab_name, enabled |
   case tab_name.downcase
   when 'submissions'
-    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]" )
+    tab = find( :xpath, %Q{//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Responses')]} )
   when 'grading'
-    tab = find( :xpath, "//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]" )
+    tab = find( :xpath, %Q{//div[@data-pc-section='navcontainer']//ul/li[contains(.,'Progress')]} )
   else
     true.should be false
   end
@@ -148,7 +148,7 @@ Then( 'the {string} tab {string} enabled' ) do | tab_name, enabled |
 end
 
 Then( 'the user creates a new submission' ) do
-  find( :xpath, "//button[contains(.,'New response')]" )
+  find( :xpath, %Q{//button[contains(.,'New response')]} )
   @submission = Submission.new(
     sub_text: '',
     sub_link: '',
@@ -162,7 +162,7 @@ end
 Then( 'the user enters a {string} submission' ) do | submission_type |
   case submission_type.downcase
   when 'text'
-    find( :xpath, "//div[@id='description']/div[@data-pc-section='content']" ).click
+    find( :xpath, %Q{//div[@id='description']/div[@data-pc-section='content']} ).click
 
     sub_text_web = ''
     sub_text_db = ''

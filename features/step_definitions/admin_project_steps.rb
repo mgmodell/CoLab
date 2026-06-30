@@ -267,7 +267,7 @@ Then( 'the user clicks the {string} button' ) do | button_name |
 end
 
 Then( 'the user clicks the course {string} button' ) do | button_name |
-  xquery = "//div[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']"
+  xquery = %Q{//div[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']}
   elem = find( :xpath, xquery )
   elem.click
 end

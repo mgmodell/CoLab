@@ -26,19 +26,19 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  row = find( :xpath, "//tbody/tr/td[contains(.,'#{@school.name}')]" )
+  row = find( :xpath, %Q{//tbody/tr/td[contains(.,'#{@school.name}')]} )
   row.click
 end
 
 Then 'the user selects {string} as the {string}' do | value, field |
-  lbl = find( :xpath, "//label[contains(.,'#{field}')]" )[:for]
-  find( :xpath, "//*[@id='#{lbl}']" ).click
-  find( :xpath, "//li[contains(.,'#{value}')]" ).click
+  lbl = find( :xpath, %Q{//label[contains(.,'#{field}')]} )[:for]
+  find( :xpath, %Q{//input[@id='#{lbl}']} ).click
+  find( :xpath, %Q{//li[contains(.,'#{value}')]} ).click
 end
 
 Then 'the user will dismiss the error {string}' do | error_message |
   page.should have_content error_message
-  find_all( :xpath, "//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']" ).each( &:click )
+  find_all( :xpath, %Q{//div[@data-pc-name='toast']//button[@data-pc-section='closebutton']} ).each( &:click )
 end
 
 Then( /^the user waits to see "([^"]*)"$/ ) do | wait_msg |

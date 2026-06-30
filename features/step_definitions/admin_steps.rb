@@ -72,15 +72,19 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
 end
 
 Then('the user {string} found') do |string|
-  row = find( :xpath, "//td[text()='#{@search_user.first_name}']" )
-            .sibling( :xpath, "td[text()='#{@search_user.last_name}']" )
-            .sibling( :xpath, "td[text()='#{@search_user.email}']")
+  wait_for_render
+  row = find( :xpath, %{//td[text()='#{@search_user.first_name}']} )
+            .sibling( :xpath, %{//td[text()='#{@search_user.last_name}']} )
+            .sibling( :xpath, %{//td[text()='#{@search_user.email}']} )
 
   row.should_not be_nil
 end
 
 Then('the user views the user') do
-  pending # Write code here that turns the phrase above into concrete actions
+  row = find( :xpath, %{//td[text()='#{@search_user.first_name}']} )
+            .sibling( :xpath, %{//td[text()='#{@search_user.last_name}']} )
+            .sibling( :xpath, %{//td[text()='#{@search_user.email}']} )
+  row.click
 end
 
 Then('the user sees {int} course listed as {string}') do |int, string|
