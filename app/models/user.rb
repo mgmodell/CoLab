@@ -135,6 +135,10 @@ class User < ApplicationRecord
     instructor
   end
 
+  def is_researcher?
+    researcher
+  end
+
   def update_instructor
     self.instructor = if admin || rosters.instructor.count.positive?
                         true

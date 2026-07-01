@@ -10,7 +10,7 @@ class UserController < ApplicationController
     search_terms = params[:search_term].split
     emails, non_emails = search_terms.partition { |str| str.match?(/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i) }
 
-    search_query = school_id > 0 ? 'school_id = ? AND (' : '('
+    search_query = school_id > 0 && !current_user.is_researcher? ? 'school_id = ? AND (' : '('
     if !non_emails.empty? 
       search_query += non_emails.map{ 'LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?' }.join(' OR ' )
     end
@@ -33,7 +33,11 @@ class UserController < ApplicationController
                                                 last_name: u.last_name,
                                                 email: u.email,
                                                 school_id: u.school_id,
-                                                status: u.active
+                                                status: u.active,
+                                                researcher: u.is_researcher?,
+                                                is_instructor: u.is_instructor?,
+                                                has_classes: u.rosters.instructor.any?,
+                                                is_admin: u.admin
                                                 } } }
 
     respond_to do | format |
@@ -83,7 +87,7 @@ class UserController < ApplicationController
         resp_hash[:success] = user.errors.empty?
         resp_hash[:errors] = user.errors.full_messages unless user.errors.empty?
       when 'instructor'
-        user.is_instructor = params[:set] == 'true'
+        user.instructor = params[:set] == 'true'
         user.save
         resp_hash[:success] = user.errors.empty?
         resp_hash[:errors] = user.errors.full_messages unless user.errors.empty?
@@ -104,7 +108,7 @@ class UserController < ApplicationController
 
   private
   def check_auth
-    unless current_user.is_admin? || current_user.is_instructor? || current_user.researcher
+    unless current_user.is_admin? || current_user.is_instructor? || current_user.is_researcher?
       render json: { error: I18n.t( 'not_authorized') }, status: :unauthorized
     end
   end

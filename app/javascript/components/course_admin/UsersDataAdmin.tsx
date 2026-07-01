@@ -36,6 +36,8 @@ export default function UsersDataAdmin(props : Props ) {
 
     const [selectedSchool, setSelectedSchool] = React.useState<number>(-1);
     const [searchText, setSearchText] = React.useState<string>('');
+    const [predatorEmail, setPredatorEmail] = React.useState<string>('');
+    const [preyEmail, setPreyEmail] = React.useState<string>('');
     const user = useTypedSelector(state => state.profile.user);
     const [foundUsers, setFoundUsers] = React.useState<Array< {
             id: number,
@@ -47,6 +49,7 @@ export default function UsersDataAdmin(props : Props ) {
         }>>([]);
 
     const [showMergeDialog, setShowMergeDialog] = React.useState<boolean>(false);
+    const [showUserViewDialog, setShowUserViewDialog] = React.useState<[boolean, string]>([false, ''] );
 
     const userCount = useMemo(() => {
         let user_count_returned = 0;
@@ -104,10 +107,25 @@ export default function UsersDataAdmin(props : Props ) {
         });
     }
     
-    const roleChangeAction = (email: string, newRole: string) => {
-        // Implement the role change logic here, possibly making an API call to change the user's role based on email and newRole
-        console.log(`Changing role for user with email: ${email}, new role: ${newRole}`);
-        // Example: update the foundUsers state after role change
+    const roleChangeAction = (email: string, newRole: string, set: boolean) => {
+        dispatch( startTask("setting_role") );
+        axios.post(`${endpoints.setRoleUrl}.json`,
+            {
+                email: email,
+                role: newRole,
+                set: set
+            }
+        )
+        .then(response => {
+            const data = response.data;
+            setFoundUsers(data.users);
+        })
+        .catch(error => {
+            console.error("Error searching users:", error);
+        })
+        .finally(() => {
+            dispatch( endTask("setting_role") );
+        });
     }
 
     const mergeUsersAction = (predatorEmail: string, preyEmail: string) => {
@@ -197,6 +215,12 @@ export default function UsersDataAdmin(props : Props ) {
             rowsPerPageOptions={[5, 10, 20, foundUsers.length]}
             sortField="last_name"
             sortOrder={1}
+            onRowSelect={(e) => {
+                console.log("Row selected:", e.data.email);
+                setShowUserViewDialog([true, e.data.email]);
+            }}
+            selectionMode="single"
+            selection={showUserViewDialog[0] ? foundUsers.find(u => u.email === showUserViewDialog[1]) : null}
             paginatorDropdownAppendTo={'self'}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
@@ -215,7 +239,58 @@ export default function UsersDataAdmin(props : Props ) {
                         return school ? school.name : t("no_selected_school");
                     }}
             />
-            <Column header={t("table.status")} field="status" sortable filter key="status" />
+            <Column
+                header={t("table.status")}
+                field="status"
+                sortable
+                filter
+                body={(rowData) => {
+                    return rowData.status ? t('table.active_user') : t('table.inactive_user');
+                }}
+                key="status" />
+            <Column
+                header={t("table.actions")}
+                body={(rowData) => {
+
+                    return (
+                        <div>
+                            <Button
+                                label={rowData.status ? t('deactivate_user_btn') : t('activate_user_btn')}
+                                className="p-button-danger p-mr-2"
+                                size='small'
+                                onClick={() => {
+                                    deletionAction(rowData.email, !rowData.status)
+                                }}
+                            />
+                            <Button
+                                label={rowData.is_admin ? t("revoke_admin_btn") : t("grant_admin_btn")}
+                                className="p-button-info p-mr-2"
+                                size='small'
+                                onClick={() => {
+                                    roleChangeAction(rowData.email, "admin", !rowData.is_admin);}
+                                }
+                            />
+                            <Button
+                                label={rowData.is_admin ? t("revoke_instructor_btn") : t("grant_instructor_btn")}
+                                className="p-button-info p-mr-2"
+                                size='small'
+                                onClick={() => {
+                                    roleChangeAction(rowData.email, "instructor", !rowData.is_instructor);}
+                                }
+                            />
+                            <Button
+                                label={rowData.is_admin ? t("revoke_researcher_btn") : t("grant_researcher_btn")}
+                                className="p-button-info p-mr-2"
+                                size='small'
+                                onClick={() => {
+                                    roleChangeAction(rowData.email, "researcher", !rowData.is_researcher);}
+                                }
+                            />
+
+                        </div>
+                    );
+                }}
+                />
         </DataTable>
         <Dialog
             header={t("merge_users_dialog_header")}
@@ -224,6 +299,58 @@ export default function UsersDataAdmin(props : Props ) {
             style={{ width: '50%' }}
         >
             <p>{t("merge_users_dialog_content")}</p>
+          <FloatLabel>
+            <InputText
+              id="predator_email"
+              itemID="predator_email"
+              name="predator_email"
+              style={{ width: "100%" }}
+              value={predatorEmail}
+              onChange={event => {
+                setPredatorEmail(event.target.value);
+              }}
+            />
+            <label htmlFor="predator_email">{t("predator_email_inpt")}</label>
+
+          </FloatLabel>
+          <FloatLabel>
+            <InputText
+              id="prey_email"
+              itemID="prey_email"
+              name="prey_email"
+              style={{ width: "100%" }}
+              value={preyEmail}
+              onChange={event => {
+                setPreyEmail(event.target.value);
+              }}
+            />
+            <label htmlFor="prey_email">{t("prey_email_inpt")}</label>
+
+
+          </FloatLabel>
+          <Button
+            label={t("merge_users_btn")}
+            disabled={ predatorEmail.length === 0 || preyEmail.length === 0}
+            onClick={() => {
+              mergeUsers();
+              setShowMergeDialog(false);
+            }}
+          />
+          <Button
+            label={t("cancel_btn")}
+            className="p-button-secondary p-ml-2"
+            onClick={() => {
+              setShowMergeDialog(false);
+            }}
+          />
+        </Dialog>
+        <Dialog
+            header={t("user_view_dialog_header")}
+            visible={showUserViewDialog[0]}
+            onHide={() => setShowUserViewDialog([false, ''])}
+            style={{ width: '50%' }}
+        >
+            <p>{t("user_view_dialog_content", { email: showUserViewDialog[1] })}</p>
         </Dialog>
         </Panel>
     )

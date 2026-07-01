@@ -31,6 +31,7 @@ Given('the course is in {string} school') do |string|
 end
 
 Then('the user sees {int} students visible') do |user_count|
+  # byebug unless has_text?( "#{user_count} active users" )
   has_text?( "#{user_count} active users" ).should be true
 end
 
@@ -51,7 +52,9 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
     @search_user = Roster.students.sample.user
   when 'their course'
     @search_user = @user.courses.sample.rosters.sample.user
-  else
+  when 'any school'
+    @search_user = User.all.sample
+  else 
     pending
   end
 
@@ -131,8 +134,17 @@ Then('the user enters the email address for deleted user {int}') do |int|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user is a {string}') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user is a {string}') do |role|
+  case role
+  when 'researcher'
+    @search_user.researcher.should be true
+  when 'instructor'
+    @search_user.instructor.should be true
+  when 'admin'
+    @search_user.admin.should be true
+  else
+    pending # Write code here that turns the phrase above into concrete actions
+  end
 end
 
 Given('select user {int} from {string} {string}') do |int, string, string2|

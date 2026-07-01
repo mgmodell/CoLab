@@ -6,9 +6,35 @@ en:
     users_search: Who are you looking for?
     user_stats_msg: The selection has {{user_count}} active users.
     init_merge_users_btn: Merge users
+    merge_users_btn: Merge now
+    activate_user_btn: Activate
+    deactivate_user_btn: Deactivate
+    make_admin_btn: Make Admin
+    remove_admin_btn: Remove Admin
+    make_researcher_btn: Make Researcher
+    remove_researcher_btn: Remove Researcher
+    make_instructor_btn: Make Instructor
+    remove_instructor_btn: Remove Instructor
+    classes_assigned_txt: Instructor with classes assigned
+    revoke_instructor_btn: Revoke Instructor
+    grant_instructor_btn: Grant Instructor
+    revoke_researcher_btn: Revoke Researcher
+    grant_researcher_btn: Grant Researcher
+    revoke_admin_btn: Revoke Admin
+    grant_admin_btn: Grant Admin
+    merge_users_dialog_header: Merge users
+    merge_users_dialog_content: >
+      Select the users to merge. The user with predator email will be kept,
+      and the user with prey email will be absorbed into it and then deleted.
+      All data from the prey user will be transferred to the predator user.
+    predator_email_inpt: Predator email
+    prey_email_inpt: Prey email
     table:
       first_name: Name
       last_name: Last Name
       email: Email
       school: School
       status: Status
+      actions: Actions
+      active_user: Active
+      inactive_user: Inactive
