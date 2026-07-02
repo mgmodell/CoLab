@@ -74,6 +74,34 @@ class User < ApplicationRecord
     end
   end
 
+  def get_first_name( anonymous )
+    if anonymous
+      anon_first_name
+    elsif first_name.nil?
+      '[No First Name Given]'
+    else
+      first_name
+    end
+  end
+
+  def get_last_name( anonymous )
+    if anonymous
+      anon_last_name
+    elsif last_name.nil?
+      '[No Last Name Given]'
+    else
+      last_name
+    end
+  end
+
+  def get_school_name( anonymous )
+    if anonymous
+      school.anon_name || '[No School Given]'
+    else
+      school.name || '[No School Given]'
+    end
+  end
+
   def informal_name( anonymous )
     if anonymous
       "#{anon_first_name} #{anon_last_name}"

@@ -38,3 +38,14 @@ en:
       actions: Actions
       active_user: Active
       inactive_user: Inactive
+    user_view_dialog_header: User details for {{user_email}}
+    user_view_name_lbl: >
+      Name: {{user_first_name}} {{user_last_name}}
+    user_view_school_lbl: >
+      School: {{user_school}}
+    user_view_status_lbl: Active?
+    user_view_admin_lbl: Admin?
+    user_view_instructor_lbl: Instructor?
+    user_view_researcher_lbl: Researcher?
+    user_view_courses_lbl: "Courses ({{course_count}}):"
+    no_courses_msg: "No courses assigned."

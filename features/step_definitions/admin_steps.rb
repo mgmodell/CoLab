@@ -134,7 +134,7 @@ Then('the user enters the email address for deleted user {int}') do |int|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user is a {string}') do |role|
+Then('the found user is a {string}') do |role|
   case role
   when 'researcher'
     @search_user.researcher.should be true

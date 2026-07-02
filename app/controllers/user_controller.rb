@@ -12,9 +12,13 @@ class UserController < ApplicationController
 
     search_query = school_id > 0 && !current_user.is_researcher? ? 'school_id = ? AND (' : '('
     if !non_emails.empty? 
-      search_query += non_emails.map{ 'LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?' }.join(' OR ' )
+      if current_user.is_researcher?
+        search_query += non_emails.map{ 'LOWER(anon_first_name) LIKE ? OR LOWER(anon_last_name) LIKE ?' }.join(' OR ' )
+      else
+        search_query += non_emails.map{ 'LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?' }.join(' OR ' )
+      end
     end
-    if !emails.empty?
+    if !emails.empty? && !current_user.is_researcher?
       search_query += ' OR ' unless non_emails.empty?
       search_query += emails.map{ 'LOWER(emails.email) = ?' }.join(' OR ' )
     end
@@ -103,7 +107,37 @@ class UserController < ApplicationController
     end
 
     render json: resp_hash
+  end
 
+  def get_user_details
+    resp_hash = {}
+    anonymized = current_user.is_researcher?
+    user = User.find_by_email( params[:email] )
+    if user.nil?
+      resp_hash[:success] = false
+      resp_hash[:errors] = ["User not found"]
+    else  
+      resp_hash[:success] = true
+      resp_hash[:user] = {
+        first_name: user.get_first_name( anonymized ),
+        last_name: user.get_last_name( anonymized ),
+        email: anonymized ? '*******' : user.email,
+        school: user.get_school_name( anonymized ),
+        status: user.active,
+        roles: {
+          instructor: user.is_instructor?,
+          researcher: user.is_researcher?,
+          admin: user.admin,
+        },
+        courses: user.rosters.map{ | r |
+          {
+            course_name: r.course.name,
+            course_number: r.course.number,
+          }
+        }
+      }
+    end
+    render json: resp_hash
   end
 
   private

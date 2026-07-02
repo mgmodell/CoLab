@@ -12,6 +12,8 @@ Rails.application.routes.draw do
           constraints: ->(req) { req.format == :json }
     post "users/merge_users" => "user#merge_users", as: :merge_users,
           constraints: ->(req) { req.format == :json }
+    post "users/user_details" => "user#get_user_details", as: :user_details,
+          constraints: ->(req) { req.format == :json }
 
     post 'courses/copy/:id' => 'courses#new_from_template',
         as: :copy_course,

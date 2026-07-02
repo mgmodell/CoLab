@@ -141,11 +141,11 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Researcher" button
-    Then the user is a "researcher"
+    Then the found user is a "researcher"
     Then the user searches for a user by "complete" "email" from "researcher"
      And the user "is" found
      And the user clicks the "Revoke Researcher" button
-    Then the user is a "student"
+    Then the found user is a "student"
 
   @javascript
   Scenario: An admin can set any user as researcher by email
@@ -154,18 +154,17 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Admin" button
-    Then the user is a "researcher"
-    Then the user searches for a user by "complete" "email" from "admin"
+    Then the found user is a "researcher"
+    Then the found user searches for a user by "complete" "email" from "admin"
      And the user "is" found
      And the user clicks the "Revoke Admin" button
-    Then the user is a "student"
+    Then the found user is a "student"
 
   @javascript
   Scenario: An admin can merge 2 users useing email addresses
     Then the user is an admin
    Given select user 1 from "the users" "course"
    Given select user 2 from "Test School" "school"
-    Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user "does not" see a merge button
     Then switch to user 1
