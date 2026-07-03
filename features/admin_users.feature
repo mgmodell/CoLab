@@ -28,6 +28,7 @@ Feature: Admins can find and review users and update their roles.
     Given there is a course with an assessed project
     Given the course is in "Test School" school
     Given the project has a group with 2 confirmed users
+      And the course participants are in the same school as the course
     Given the course has a Bingo! game
     Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! "has" been activated
@@ -43,20 +44,22 @@ Feature: Admins can find and review users and update their roles.
   Scenario: An instructor can find students in their school and content is limited
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 24 students visible
-    Then the user "does not" see a merge button
+     And the user "does not" see an active "Merge users" button
     Then the user searches for a user by "complete" "family name" from "their course"
      And the user "is" found
     Then the user views the user
-    Then the user sees 1 course listed as "enrolled"
-     And the user "does not" see a "role edit" button
-     And the user "does not" see a "delete" button
+    Then the user sees 1 course listed
+     And the user "does not" see an active "Grant Researcher" button
+     And the user "does not" see an active "Grant Admin" button
+     And the user "does not" see an active "Grant Instructor" button
+     And the user "does not" see an active "Deactivate" button
     Then the user closes the user view
     Then the user searches for a user by "partial" "given name" from "their school"
      And the user "is" found
     Then the user views the user
-    Then the user sees 1 course listed as "enrolled"
-     And the user "does not" see a "role edit" button
-     And the user "does not" see a "delete" button
+    Then the user sees 1 course listed
+     And the user "does not" see an active "role edit" button
+     And the user "does not" see an active "Deactivate" button
     Then the user closes the user view
     Then the user searches for a user by "partial" "email" from "their course"
      And the user "is not" found
@@ -70,37 +73,43 @@ Feature: Admins can find and review users and update their roles.
     Then there is a user who is a researcher
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 26 students visible
-    Then the user "does not" see a merge button
+     And the user "does not" see an active "Merge users" button
     Then the user searches for a user by "complete" "anonymized family name" from "their school"
      And the user "is" found
     Then the user views the user
      And the user sees anonymized data with no roles
-    Then the user sees 1 course listed as "enrolled"
-     And the user "does not" see a "role edit" button
-     And the user "does not" see a "delete" button
+    Then the user sees 1 course listed
+     And the user "does not" see an active "Grant Researcher" button
+     And the user "does not" see an active "Grant Admin" button
+     And the user "does not" see an active "Grant Instructor" button
+     And the user "does not" see an active "Deactivate" button
     Then the user closes the user view
     Then the user searches for a user by "complete" "anonymized email" from "another school"
      And the user "is not" found
     Then the user sees 25 students visible
 
   @javascript
-  Scenario: An admin can view any user by family name and school
+  Scenario: An admin can viewe any user by family name and school
     Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 26 students visible
     Then the user searches for a user by "complete" "family name" from "their course"
      And the user "is" found
     Then the user views the user
-    Then the user sees 1 course listed as "enrolled"
-     And the user "does" see a "role edit" button
-     And the user "does" see a "delete" button
+    Then the user sees 1 course listed
+     And the user "does" see an active "Grant Researcher" button
+     And the user "does" see an active "Grant Admin" button
+     And the user "does" see an active "Grant Instructor" button
+     And the user "does" see an active "Deactivate" button
     Then the user closes the user view
     Then the user searches for a user by "partial" "given name" from "their school"
      And the user "is" found
     Then the user views the user
-    Then the user sees 1 course listed as "enrolled"
-     And the user "does" see a "role edit" button
-     And the user "does" see a "delete" button
+    Then the user sees 1 course listed
+     And the user "does" see an active "Grant Researcher" button
+     And the user "does" see an active "Grant Admin" button
+     And the user "does" see an active "Grant Instructor" button
+     And the user "does" see an active "Deactivate" button
     Then the user closes the user view
     Then the user searches for a user by "partial" "email" from "their course"
      And the user "is not" found
@@ -109,8 +118,10 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "another school"
      And the user "is" found
     Then the user views the user
-     And the user "does" see a "role edit" button
-     And the user "does" see a "delete" button
+     And the user "does" see an active "Grant Researcher" button
+     And the user "does" see an active "Grant Admin" button
+     And the user "does" see an active "Grant Instructor" button
+     And the user "does" see an active "Deactivate" button
     Then the user searches for a user by "complete" "email" from "self"
      And the user "is not" found
 
@@ -120,14 +131,14 @@ Feature: Admins can find and review users and update their roles.
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 26 students visible
     Then the user searches for a user by "complete" "email" from "any school"
-    Then the user clicks the delete button on the user
+    Then the user clicks the "Deactivate" button on the user
     Then the user sees 25 students visible
     Then the user searches for a user by "complete" "email" from "any school"
-    Then the user clicks the delete button on the user
+    Then the user clicks the "Deactivate" button on the user
     Then the user sees 24 students visible
-    Then the user clcks the "Restore user" button
-     And the user enters the email address for deleted user 1
-     And the user clicks the "Restore" button
+    Then the user clcks the "Reactivate" button on the user
+     And the user searches for deleted user
+     And the user clicks the "Reactivate" button on the user
     Then the user sees 25 students visible
     Then the user searches for a user by "complete" "email" from "user 1"
      And the user "is" found
@@ -155,7 +166,7 @@ Feature: Admins can find and review users and update their roles.
      And the user "is" found
      And the user clicks the "Grant Admin" button
     Then the found user is a "researcher"
-    Then the found user searches for a user by "complete" "email" from "admin"
+    Then the user searches for a user by "complete" "email" from "admin"
      And the user "is" found
      And the user clicks the "Revoke Admin" button
     Then the found user is a "student"
@@ -163,22 +174,22 @@ Feature: Admins can find and review users and update their roles.
   @javascript
   Scenario: An admin can merge 2 users useing email addresses
     Then the user is an admin
-   Given select user 1 from "the users" "course"
-   Given select user 2 from "Test School" "school"
+   Given select user 1 from "user course"
+   Given select user 2 from "other school"
     Then the user logs in and accesses the "Users" admin page
-    Then the user "does not" see a merge button
+     And the user "does not" see an active "Merge users" button
     Then switch to user 1
     Then the user successfully completes an experience
     Then the user logs in and submits an installment
     Then the user clicks the "Merge two users" button
     Then the user enters the email address for user 1 and user 2
-    Then the user clicks the "Merge" button
+    Then the user clicks the "Merge users" button
     Then the user sees a success message
     Then the user searches for user 1 by email
      And the user "is not" found
     Then the user searches for user 2 by email
      And the user "is" found
     Then the user views the user
-    Then the user sees 2 course listed as "enrolled"
+    Then the user sees 2 course listed
      And the user sees 1 "experience"
      And the user sees 2 "bingo"

@@ -2,8 +2,8 @@
 
 class UserController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_auth, only: %i[directory_search]
-  before_action :check_admin, except: %i[directory_search]
+  before_action :check_auth, only: %i[directory_search get_user_details]
+  before_action :check_admin, except: %i[directory_search get_user_details]
 
   def directory_search
     school_id = current_user.admin ? params[:school_id] : current_user.school_id
@@ -23,11 +23,12 @@ class UserController < ApplicationController
       search_query += emails.map{ 'LOWER(emails.email) = ?' }.join(' OR ' )
     end
 
-    search_query += ')' 
+    search_query += ') AND users.id != ?'
 
     search_terms = school_id > 0 ? [school_id] : []
     search_terms += non_emails.flat_map{ |term| ["%#{term.downcase}%", "%#{term.downcase}%"] }
     search_terms.concat( emails.flat_map{ |term| [term.downcase] } )
+    search_terms << current_user.id
 
     found_users = User.joins(:school, :emails)
                       .where(search_query, *search_terms).distinct
@@ -72,6 +73,8 @@ class UserController < ApplicationController
     predator = User.find_by( email: params[:predator_email] )
     prey = User.find_by( email: params[:prey_email] )
     result = User.merge_users( predator: predator, prey: prey )
+    resp_hash[:success] = result.empty?
+    resp_hash[:errors] = result unless result.empty?  
 
     render json: resp_hash
 

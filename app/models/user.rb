@@ -457,6 +457,11 @@ class User < ApplicationRecord
         pred_u.save!
         prey_u.save!
         # prey_u.destroy!
+        errors = []
+        errors << pred_u.errors.full_messages unless pred_u.errors.empty?
+        errors << prey_u.errors.full_messages unless prey_u.errors.empty?
+        errors.flatten!
+        errors
       end
     else
       logger.debug I18n.t( 'one_or_more_users_not_found' )

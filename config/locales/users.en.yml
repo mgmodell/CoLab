@@ -7,7 +7,7 @@ en:
     user_stats_msg: The selection has {{user_count}} active users.
     init_merge_users_btn: Merge users
     merge_users_btn: Merge now
-    activate_user_btn: Activate
+    activate_user_btn: Reactivate
     deactivate_user_btn: Deactivate
     make_admin_btn: Make Admin
     remove_admin_btn: Remove Admin

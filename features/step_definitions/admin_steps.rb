@@ -35,12 +35,19 @@ Then('the user sees {int} students visible') do |user_count|
   has_text?( "#{user_count} active users" ).should be true
 end
 
-Then( 'the user {string} see a merge button' ) do |does_or_does_not|
-  merge_buttons = all(:link_or_button, "Merge users" )
+Then('the user {string} see an active {string} button') do |does_or_does_not, button_name|
+  merge_buttons = all(:link_or_button, button_name, visible: :all)
   if 'does' == does_or_does_not
     merge_buttons.first.should_not be_disabled
   else
     merge_buttons.first.should be_disabled unless merge_buttons.empty?
+  end
+end
+
+Then ('the course participants are in the same school as the course') do
+  @course.users.each do |u|
+    u.school = @course.school
+    u.save
   end
 end
 
@@ -52,11 +59,19 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
     @search_user = Roster.students.sample.user
   when 'their course'
     @search_user = @user.courses.sample.rosters.sample.user
+  when 'their school'
+    @search_user = @user.school.users.sample
   when 'any school'
     @search_user = User.all.sample
+  when 'another school'
+    @search_user = User.where.not(school: @user.school).sample
+  when 'self'
+    @search_user = @user
   else 
     pending
   end
+
+  @search_user.should_not be_nil
 
   search_term = ''
   case search_field
@@ -74,13 +89,10 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
   click_link_or_button 'Search'
 end
 
-Then('the user {string} found') do |string|
+Then('the user {string} found') do |is_or_is_not|
   wait_for_render
-  row = find( :xpath, %{//td[text()='#{@search_user.first_name}']} )
-            .sibling( :xpath, %{//td[text()='#{@search_user.last_name}']} )
-            .sibling( :xpath, %{//td[text()='#{@search_user.email}']} )
-
-  row.should_not be_nil
+  search_xpath = %{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']/following-sibling::td[text()='#{@search_user.email}']}
+  has_xpath?( search_xpath ).should be true if 'is' == is_or_is_not
 end
 
 Then('the user views the user') do
@@ -90,16 +102,13 @@ Then('the user views the user') do
   row.click
 end
 
-Then('the user sees {int} course listed as {string}') do |int, string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then('the user {string} see a {string} button') do |string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sees {int} course listed') do |int|
+  wait_for_render
+  has_text?( "Courses (#{int}):" ).should be true
 end
 
 Then('the user closes the user view') do
-  pending # Write code here that turns the phrase above into concrete actions
+  find( :xpath, "//div[@role='dialog']//button[@data-pc-section='closebutton']" ).click
 end
 
 Then('there is a user who is a researcher') do
@@ -122,15 +131,11 @@ Then('the user sees anonymized data with no roles') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user clicks the delete button on the user') do
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user clicks the {string} button on the user') do |button_name|
+  click_button( button_name, match: :first )
 end
 
-Then('the user clcks the {string} button') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then('the user enters the email address for deleted user {int}') do |int|
+Then('the user searches for deleted user') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
@@ -147,9 +152,18 @@ Then('the found user is a {string}') do |role|
   end
 end
 
-Given('select user {int} from {string} {string}') do |int, string, string2|
-# Given('select user {float} from {string} {string}') do |float, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Given( 'select user {int} from {string}' ) do |index, population|
+  @selected_users ||= {}
+  case population
+  when 'user course'
+    @selected_users[ index ] = @user.courses.sample.rosters.map{ |r| r.user }.sample
+  when 'otherschool'
+    school = School.where.not( id: @user.school.id ).sample
+    @selected_users[ index ] = school.users.sample
+  else
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+
 end
 
 Then('switch to user {int}') do |int|

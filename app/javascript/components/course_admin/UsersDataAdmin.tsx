@@ -161,9 +161,23 @@ export default function UsersDataAdmin(props: Props) {
     }
 
     const mergeUsersAction = (predatorEmail: string, preyEmail: string) => {
-        // Implement the merge logic here, possibly making an API call to merge users based on predatorEmail and preyEmail
-        console.log(`Merging users: predator email: ${predatorEmail}, prey email: ${preyEmail}`);
-        // Example: update the foundUsers state after merging
+        dispatch(startTask("merging_users"));
+        axios.post(`${endpoints.mergeUsersUrl}.json`,
+            {
+                predator_email: predatorEmail,
+                prey_email: preyEmail
+            }
+        )
+            .then(response => {
+                const data = response.data;
+                setFoundUsers(data.users);
+            })
+            .catch(error => {
+                console.error("Error merging users:", error);
+            })
+            .finally(() => {
+                dispatch(endTask("merging_users"));
+            });
     }
 
 
@@ -403,14 +417,17 @@ export default function UsersDataAdmin(props: Props) {
                             />
                         </Col>
                         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-                            <Button
-                                label={user.status ? t('deactivate_user_btn') : t('activate_user_btn')}
-                                className="p-button-danger p-mr-2"
-                                size='small'
-                                onClick={() => {
-                                    deletionAction(user.email, !user.status)
-                                }}
-                            />
+                            {
+                                null !== userDetails && user.is_admin && (
+                                    <Button
+                                        label={user.status ? t('deactivate_user_btn') : t('activate_user_btn')}
+                                        className="p-button-danger p-mr-2"
+                                        size='small'
+                                        onClick={() => {
+                                            deletionAction(user.email, !user.status)
+                                        }}
+                                    />
+                                )}
 
                         </Col>
                     </Row>
