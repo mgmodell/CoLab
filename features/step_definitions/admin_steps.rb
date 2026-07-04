@@ -79,6 +79,8 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
     search_term = @search_user.first_name
   when 'family name'
     search_term = @search_user.last_name
+  when 'anonymized family name'
+    search_term = @search_user.anon_last_name
   when 'email'
     search_term = @search_user.email
   else
@@ -120,6 +122,7 @@ Then('there is a user who is a researcher') do
     email: Faker::Internet.email,
     researcher: true,
     welcomed: true,
+    school: School.first,
     timezone: 'UTC'
   )
   @user.skip_confirmation!

@@ -9,6 +9,7 @@ Feature: Admins can find and review users and update their roles.
     Given the course has an experience
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
+    # 1 course with 8 users
 
     Given there is a course with an assessed project
     Given the course has a Bingo! game
@@ -20,10 +21,12 @@ Feature: Admins can find and review users and update their roles.
     Given the users "finish" prep "as a group"
     Given the project has a group with 2 confirmed users
     Given the users "incomplete" prep "solo"
+    # 1 course with 4 users
 
     Given there is a course
     Given the course has 11 confirmed users
     # User is instructor only for the first course
+    # 1 course with 11 users
 
     Given there is a course with an assessed project
     Given the course is in "Test School" school
@@ -39,6 +42,7 @@ Feature: Admins can find and review users and update their roles.
     Given the assignment opening is "one month ago" and close is "one month from now"
     Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
+    # 1 course with 2 users
 
   @javascript
   Scenario: An instructor can find students in their school and content is limited
@@ -136,7 +140,7 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "any school"
     Then the user clicks the "Deactivate" button on the user
     Then the user sees 24 students visible
-    Then the user clcks the "Reactivate" button on the user
+    Then the user clicks the "Reactivate" button on the user
      And the user searches for deleted user
      And the user clicks the "Reactivate" button on the user
     Then the user sees 25 students visible

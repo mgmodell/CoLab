@@ -21,6 +21,14 @@ export default function Admin( /*props: AdminProps */) {
 
   return (
     <Routes>
+      {user.is_instructor || user.is_admin || user.researcher ? (
+          <Route
+            path={`users`}
+            element={<UsersDataAdmin />}
+          />
+      ) : (
+        <Route path={`/*`} element={<Navigate to="/" replace />} />
+      )}
       {user.is_instructor || user.is_admin ? (
         <Route
           element={
@@ -39,10 +47,6 @@ export default function Admin( /*props: AdminProps */) {
             element={<RubricDataAdmin />}
           />
           <Route path={`schools`} element={<SchoolList />} />
-          <Route
-            path={`users`}
-            element={<UsersDataAdmin />}
-          />
           <Route
             path={`schools/:schoolIdParam`}
             element={<SchoolDataAdmin />}

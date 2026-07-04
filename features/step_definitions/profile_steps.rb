@@ -61,6 +61,7 @@ Then ( 'the user logs in and accesses the {string} admin page' ) do | admin_page
   wait_for_render
   # Blow away the cookies accept
   click_link_or_button 'I understand' if has_content? 'I understand'
+
   open_main_menu
   find( :id, 'administration-menu' ).click
 

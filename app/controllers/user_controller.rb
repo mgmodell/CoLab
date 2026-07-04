@@ -27,7 +27,7 @@ class UserController < ApplicationController
 
     search_terms = school_id > 0 ? [school_id] : []
     search_terms += non_emails.flat_map{ |term| ["%#{term.downcase}%", "%#{term.downcase}%"] }
-    search_terms.concat( emails.flat_map{ |term| [term.downcase] } )
+    search_terms.concat( emails.flat_map{ |term| [term.downcase] } ) unless current_user.is_researcher?
     search_terms << current_user.id
 
     found_users = User.joins(:school, :emails)
