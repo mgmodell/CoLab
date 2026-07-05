@@ -33,8 +33,10 @@ RUN apt-get autoremove && \
 
 ARG USER_UID=1000
 ARG USER_GID=1000
-RUN groupadd -g ${USER_GID} colab && \
-  useradd -u ${USER_UID} --no-log-init -m -d /home/colab -s /bin/zsh -g colab colab
+RUN userdel -r ubuntu 2>/dev/null || true && \
+    groupdel ubuntu 2>/dev/null || true && \
+    groupadd -g ${USER_GID} colab && \
+    useradd -u ${USER_UID} --no-log-init -m -d /home/colab -s /bin/zsh -g colab colab
 
 USER colab
 
