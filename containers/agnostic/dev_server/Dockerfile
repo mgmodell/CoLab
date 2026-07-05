@@ -34,22 +34,12 @@ RUN apt-get autoremove && \
 ARG USER_UID=1000
 ARG USER_GID=1000
 # Ubuntu 24.04 base image ships an `ubuntu` user/group at UID/GID 1000.
-# Rename and repurpose it as `colab` rather than deleting and recreating,
-# which avoids "GID/UID already exists" errors on fresh and cached builds.
-# zsh is installed above, so `-s /bin/zsh` is always available here.
-# Falls back to groupadd/useradd if the `ubuntu` account is absent in a
-# future base image, skipping creation if `colab` already exists (idempotent).
-RUN if getent group ubuntu >/dev/null 2>&1; then \
-      groupmod -n colab ubuntu; \
-    elif ! getent group colab >/dev/null 2>&1; then \
-      groupadd -g ${USER_GID} colab; \
-    fi && \
-    if getent passwd ubuntu >/dev/null 2>&1; then \
-      usermod -l colab -s /bin/zsh ubuntu && \
-      usermod -g colab colab && \
-      usermod -d /home/colab colab && \
-      ( [ -d /home/ubuntu ] && mv /home/ubuntu /home/colab 2>/dev/null || true ); \
-    elif ! getent passwd colab >/dev/null 2>&1; then \
+# Remove it unconditionally to free that UID/GID, then create `colab`
+# only if it does not already exist (idempotent across cached builds).
+RUN userdel -r ubuntu 2>/dev/null || true && \
+    groupdel ubuntu 2>/dev/null || true && \
+    if ! getent passwd colab >/dev/null 2>&1; then \
+      groupadd -g ${USER_GID} colab && \
       useradd -u ${USER_UID} --no-log-init -m -d /home/colab -s /bin/zsh -g colab colab; \
     fi
 
