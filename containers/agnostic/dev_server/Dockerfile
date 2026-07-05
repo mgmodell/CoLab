@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:22.04
+FROM docker.io/ubuntu:24.04
 
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get upgrade -y && \
   libdb-dev \
   libffi-dev \
   libgdbm-dev \
-  libvips \
+  libvips42t64 \
   libncurses-dev \
   libssl-dev \
   libreadline-dev \
@@ -34,7 +34,7 @@ RUN apt-get autoremove && \
 ARG USER_UID=1000
 ARG USER_GID=1000
 RUN groupadd -g ${USER_GID} colab && \
-  useradd -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+  useradd -u ${USER_UID} --no-log-init -m -d /home/colab -s /bin/zsh -g colab colab
 
 USER colab
 
