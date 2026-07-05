@@ -31,7 +31,6 @@ Given('the course is in {string} school') do |string|
 end
 
 Then('the user sees {int} students visible') do |user_count|
-  # byebug unless has_text?( "#{user_count} active users" )
   has_text?( "#{user_count} active users" ).should be true
 end
 
@@ -93,14 +92,16 @@ end
 
 Then('the user {string} found') do |is_or_is_not|
   wait_for_render
-  search_xpath = %{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']/following-sibling::td[text()='#{@search_user.email}']}
-  has_xpath?( search_xpath ).should be true if 'is' == is_or_is_not
+  search_xpath = %Q{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']}
+  search_xpath += %Q{/following-sibling::td[text()='#{@search_user.email}']} if @user.is_instructor? || @user.is_admin?
+  has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 
 Then('the user views the user') do
-  row = find( :xpath, %{//td[text()='#{@search_user.first_name}']} )
-            .sibling( :xpath, %{//td[text()='#{@search_user.last_name}']} )
-            .sibling( :xpath, %{//td[text()='#{@search_user.email}']} )
+  search_xpath = %Q{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']}
+  search_xpath += %Q{/following-sibling::td[text()='#{@search_user.email}']} if @user.is_instructor? || @user.is_admin?
+
+  row = find( :xpath, search_xpath )
   row.click
 end
 
@@ -131,15 +132,30 @@ Then('there is a user who is a researcher') do
 end
 
 Then('the user sees anonymized data with no roles') do
-  pending # Write code here that turns the phrase above into concrete actions
+  wait_for_render
+  has_text?( @search_user.anon_first_name ).should be true
+  has_text?( @search_user.anon_last_name ).should be true
+  has_text?( @search_user.email ).should be false
+  has_text?( 'Instructor' ).should be false
+  has_text?( 'Researcher' ).should be false
+  has_text?( 'Admin' ).should be false
+
+  has_text?( %Q{Courses (#{@search_user.courses.size}):} ).should be true
 end
 
 Then('the user clicks the {string} button on the user') do |button_name|
   click_button( button_name, match: :first )
+  # byebug unless has_text?( 'User updated' )
+
 end
 
 Then('the user searches for deleted user') do
-  pending # Write code here that turns the phrase above into concrete actions
+  ack_messages
+  @search_user = User.where( active: false ).sample
+  search_term = @search_user.email
+
+  fill_in 'Name and/or email', with: search_term
+  click_link_or_button 'Search'
 end
 
 Then('the found user is a {string}') do |role|
@@ -160,7 +176,7 @@ Given( 'select user {int} from {string}' ) do |index, population|
   case population
   when 'user course'
     @selected_users[ index ] = @user.courses.sample.rosters.map{ |r| r.user }.sample
-  when 'otherschool'
+  when 'other school'
     school = School.where.not( id: @user.school.id ).sample
     @selected_users[ index ] = school.users.sample
   else

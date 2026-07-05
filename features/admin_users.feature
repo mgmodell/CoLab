@@ -88,12 +88,11 @@ Feature: Admins can find and review users and update their roles.
      And the user "does not" see an active "Grant Instructor" button
      And the user "does not" see an active "Deactivate" button
     Then the user closes the user view
-    Then the user searches for a user by "complete" "anonymized email" from "another school"
+    Then the user searches for a user by "complete" "email" from "another school"
      And the user "is not" found
-    Then the user sees 25 students visible
 
   @javascript
-  Scenario: An admin can viewe any user by family name and school
+  Scenario: An admin can view any user by family name and school
     Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 26 students visible
@@ -126,6 +125,7 @@ Feature: Admins can find and review users and update their roles.
      And the user "does" see an active "Grant Admin" button
      And the user "does" see an active "Grant Instructor" button
      And the user "does" see an active "Deactivate" button
+    Then the user closes the user view
     Then the user searches for a user by "complete" "email" from "self"
      And the user "is not" found
 

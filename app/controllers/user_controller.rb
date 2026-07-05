@@ -8,42 +8,48 @@ class UserController < ApplicationController
   def directory_search
     school_id = current_user.admin ? params[:school_id] : current_user.school_id
     search_terms = params[:search_term].split
-    emails, non_emails = search_terms.partition { |str| str.match?(/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i) }
+    emails, non_emails = search_terms.partition { | str | str.match?( /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i ) }
 
-    search_query = school_id > 0 && !current_user.is_researcher? ? 'school_id = ? AND (' : '('
-    if !non_emails.empty? 
-      if current_user.is_researcher?
-        search_query += non_emails.map{ 'LOWER(anon_first_name) LIKE ? OR LOWER(anon_last_name) LIKE ?' }.join(' OR ' )
-      else
-        search_query += non_emails.map{ 'LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?' }.join(' OR ' )
+    if current_user.is_admin? || current_user.is_instructor? || !non_emails.empty?
+      search_query = school_id > 0 && ( current_user.is_instructor? || current_user.admin ) ? 'school_id = ? AND (' : '('
+      unless non_emails.empty?
+        search_query += if current_user.is_researcher?
+                          non_emails.map do
+                            'LOWER(anon_first_name) LIKE ? OR LOWER(anon_last_name) LIKE ?'
+                          end.join( ' OR ' )
+                        else
+                          non_emails.map { 'LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?' }.join( ' OR ' )
+                        end
       end
+      if !emails.empty? && (current_user.is_admin? || current_user.is_instructor?)
+        search_query += ' OR ' unless non_emails.empty?
+        search_query += emails.map { 'LOWER(emails.email) = ?' }.join( ' OR ' )
+      end
+
+      search_query += ') AND users.id != ?'
+
+      search_terms = school_id > 0 && ( current_user.is_instructor? || current_user.admin ) ? [school_id] : []
+      search_terms += non_emails.flat_map { | term | ["%#{term.downcase}%", "%#{term.downcase}%"] }
+      search_terms.concat( emails.flat_map { | term | [term.downcase] } ) unless current_user.is_researcher?
+      search_terms << current_user.id
+
+      found_users = User.joins( :school, :emails )
+                        .where( search_query, *search_terms ).distinct
+
+      resp_hash = { users: found_users.map do | u |
+        {
+          first_name: u.first_name,
+          last_name: u.last_name,
+          email: current_user.is_researcher? ? u.emails.sample.id : u.email,
+          school_id: u.school_id,
+          status: u.active,
+          researcher: u.is_researcher?,
+          is_instructor: u.is_instructor?,
+          has_classes: u.rosters.instructor.any?,
+          is_admin: u.admin
+        }
+      end }
     end
-    if !emails.empty? && !current_user.is_researcher?
-      search_query += ' OR ' unless non_emails.empty?
-      search_query += emails.map{ 'LOWER(emails.email) = ?' }.join(' OR ' )
-    end
-
-    search_query += ') AND users.id != ?'
-
-    search_terms = school_id > 0 ? [school_id] : []
-    search_terms += non_emails.flat_map{ |term| ["%#{term.downcase}%", "%#{term.downcase}%"] }
-    search_terms.concat( emails.flat_map{ |term| [term.downcase] } ) unless current_user.is_researcher?
-    search_terms << current_user.id
-
-    found_users = User.joins(:school, :emails)
-                      .where(search_query, *search_terms).distinct
-
-    resp_hash = { users: found_users.map{ |u| {
-                                                first_name: u.first_name,
-                                                last_name: u.last_name,
-                                                email: u.email,
-                                                school_id: u.school_id,
-                                                status: u.active,
-                                                researcher: u.is_researcher?,
-                                                is_instructor: u.is_instructor?,
-                                                has_classes: u.rosters.instructor.any?,
-                                                is_admin: u.admin
-                                                } } }
 
     respond_to do | format |
       format.json { render json: resp_hash }
@@ -55,8 +61,8 @@ class UserController < ApplicationController
     user = User.find_by( email: params[:email] )
     if user.nil?
       resp_hash[:success] = false
-      resp_hash[:errors] = ["User not found"]
-    else  
+      resp_hash[:errors] = ['User not found']
+    else
       user.active = params[:delete] != 'true'
       user.save
 
@@ -65,7 +71,6 @@ class UserController < ApplicationController
     end
 
     render json: resp_hash
-
   end
 
   def merge_users
@@ -74,10 +79,9 @@ class UserController < ApplicationController
     prey = User.find_by( email: params[:prey_email] )
     result = User.merge_users( predator: predator, prey: prey )
     resp_hash[:success] = result.empty?
-    resp_hash[:errors] = result unless result.empty?  
+    resp_hash[:errors] = result unless result.empty?
 
     render json: resp_hash
-
   end
 
   def set_role
@@ -85,9 +89,9 @@ class UserController < ApplicationController
     user = User.find_by( email: params[:email] )
     if user.nil?
       resp_hash[:success] = false
-      resp_hash[:errors] = ["User not found"]
-    else  
-      case params[:role] 
+      resp_hash[:errors] = ['User not found']
+    else
+      case params[:role]
       when 'admin'
         user.admin = params[:set] == 'true'
         user.save
@@ -115,11 +119,16 @@ class UserController < ApplicationController
   def get_user_details
     resp_hash = {}
     anonymized = current_user.is_researcher?
-    user = User.find_by_email( params[:email] )
+    user = if current_user.is_instructor? || current_user.is_admin?
+             User.find_by_email( params[:email] )
+           else
+             Email.find_by_id( params[:email] ).user
+           end
+
     if user.nil?
       resp_hash[:success] = false
-      resp_hash[:errors] = ["User not found"]
-    else  
+      resp_hash[:errors] = ['User not found']
+    else
       resp_hash[:success] = true
       resp_hash[:user] = {
         first_name: user.get_first_name( anonymized ),
@@ -130,29 +139,30 @@ class UserController < ApplicationController
         roles: {
           instructor: user.is_instructor?,
           researcher: user.is_researcher?,
-          admin: user.admin,
+          admin: user.admin
         },
-        courses: user.rosters.map{ | r |
+        courses: user.rosters.map do | r |
           {
-            course_name: r.course.name,
-            course_number: r.course.number,
+            course_name: user.is_admin? || user.is_instructor? ? r.course.name : r.course.get_name( anonymized ),
+            course_number: user.is_admin? || user.is_instructor? ? r.course.number : r.course.get_number( anonymized )
           }
-        }
+        end
       }
     end
     render json: resp_hash
   end
 
   private
+
   def check_auth
-    unless current_user.is_admin? || current_user.is_instructor? || current_user.is_researcher?
-      render json: { error: I18n.t( 'not_authorized') }, status: :unauthorized
-    end
+    return if current_user.is_admin? || current_user.is_instructor? || current_user.is_researcher?
+
+    render json: { error: I18n.t( 'not_authorized' ) }, status: :unauthorized
   end
 
   def check_admin
-    unless current_user.is_admin?
-      render json: { error: I18n.t( 'not_authorized') }, status: :unauthorized
-    end
+    return if current_user.is_admin?
+
+    render json: { error: I18n.t( 'not_authorized' ) }, status: :unauthorized
   end
 end

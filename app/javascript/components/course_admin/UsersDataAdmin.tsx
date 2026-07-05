@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 
 import { Dropdown } from "primereact/dropdown";
 import { Skeleton } from "primereact/skeleton";
@@ -121,6 +121,12 @@ export default function UsersDataAdmin(props: Props) {
 
     const deletionAction = (email: string, deleteUser: boolean) => {
         dispatch(startTask("deleting_user"));
+        console.log(`POST to ${endpoints.deleteUserUrl}.json with payload:` );
+        console.log({
+            email: email,
+            delete: deleteUser
+        });
+
         axios.post(`${endpoints.deleteUserUrl}.json`,
             {
                 email: email,
@@ -128,11 +134,15 @@ export default function UsersDataAdmin(props: Props) {
             }
         )
             .then(response => {
+                console.log("Response from deletionAction:", response);
+
                 const data = response.data;
                 setFoundUsers(data.users);
+                dispatch(addMessage(t(data.message), new Date(), Priorities.INFO));
             })
             .catch(error => {
                 console.error("Error searching users:", error);
+                dispatch(addMessage(t(error.response.data.message), new Date(), Priorities.ERROR));
             })
             .finally(() => {
                 dispatch(endTask("deleting_user"));
@@ -154,6 +164,7 @@ export default function UsersDataAdmin(props: Props) {
             })
             .catch(error => {
                 console.error("Error searching users:", error);
+                dispatch(addMessage(t(error.response.data.message), new Date(), Priorities.ERROR));
             })
             .finally(() => {
                 dispatch(endTask("setting_role"));
@@ -274,7 +285,11 @@ export default function UsersDataAdmin(props: Props) {
             >
                 <Column header={t("table.first_name")} field="first_name" sortable filter key="first_name" />
                 <Column header={t("table.last_name")} field="last_name" sortable filter key="last_name" />
-                <Column header={t("table.email")} field="email" sortable filter key="email" />
+                {
+                    !user.researcher && (
+                        <Column header={t("table.email")} field="email" sortable filter key="email" />
+                    )
+                }
                 <Column header={t("table.school")}
                     field="school_id"
                     sortable
@@ -406,6 +421,7 @@ export default function UsersDataAdmin(props: Props) {
                 <p>{t("user_view_name_lbl", { user_first_name: userDetails?.first_name, user_last_name: userDetails?.last_name })}</p>
                 <p>{t("user_view_school_lbl", { user_school: userDetails?.school })}</p>
 
+                {user.is_admin || user.is_instructor && (
                 <Container fluid>
                     <Row>
                         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
@@ -506,6 +522,7 @@ export default function UsersDataAdmin(props: Props) {
                         </Col>
                     </Row>
                 </Container>
+                    ) }
                 <h5>{t("user_view_courses_lbl", { course_count: userDetails?.courses?.length || 0 })}</h5>
                 {
                     userDetails?.courses && userDetails.courses.length > 0 ? (
