@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:22.04
+FROM docker.io/ubuntu:24.04
 
 RUN apt-get update && apt-get upgrade -y && \
   apt-get -y install --fix-missing \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get upgrade -y && \
   libdb-dev \
   libffi-dev \
   libgdbm-dev \
-  libvips \
+  libvips42t64 \
   libncurses-dev \
   libssl-dev \
   libreadline-dev \
@@ -33,8 +33,15 @@ RUN apt-get autoremove && \
 
 ARG USER_UID=1000
 ARG USER_GID=1000
-RUN groupadd -g ${USER_GID} colab && \
-  useradd -u ${USER_UID} --no-log-init -rm -d /home/colab -s /bin/zsh -g colab colab
+# Ubuntu 24.04 base image ships an `ubuntu` user/group at UID/GID 1000.
+# Remove it unconditionally to free that UID/GID, then create `colab`
+# only if it does not already exist (idempotent across cached builds).
+RUN userdel -r ubuntu 2>/dev/null || true && \
+    groupdel ubuntu 2>/dev/null || true && \
+    if ! getent passwd colab >/dev/null 2>&1; then \
+      groupadd -g ${USER_GID} colab && \
+      useradd -u ${USER_UID} --no-log-init -m -d /home/colab -s /bin/zsh -g colab colab; \
+    fi
 
 USER colab
 
