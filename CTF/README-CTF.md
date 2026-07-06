@@ -37,6 +37,60 @@ falls back to host mode. You can also run the menu directly with `bash CTF/ctf.s
 
 ---
 
+## Booting the toolkit & the site
+
+Two separate things you can start. **For the CTF you only need the toolkit** — the
+challenge targets are offline mocks, so the CoLab *site* does **not** need to run.
+Booting the real site is optional (for the Sec engagement, or to poke at the real
+app). The CTF and the Sec engagement are independent — `ctf_serv.sh` never boots
+or touches the site.
+
+### 1) The toolkit (Kali toolbox) — needed for the CTF
+
+One command boots the toolkit in **podman** and drops you into the CTF:
+
+```bash
+# Git Bash
+cd /c/Users/issia/CoLab/CTF && ./ctf_serv.sh
+# PowerShell
+cd C:\Users\issia\CoLab\CTF ;  .\ctf_serv.ps1
+```
+
+- First time only: make sure Podman Desktop is installed and build the image once
+  with `./ctf_serv.sh -b` (or reuse the Sec lab's `./sec_serv.sh -b`). `ctf_serv`
+  auto-starts the podman machine if it's stopped.
+- Want just the Kali shell (tools, no menu)? `./ctf_serv.sh -p`
+  (`.\ctf_serv.ps1 -Shell`). The CTF is at `/opt/ctf`; run `./ctf.sh` to play.
+- Check readiness: `./ctf_serv.sh -s` (`.\ctf_serv.ps1 -Status`).
+
+### 2) The site (the real CoLab target) — optional, via the Sec lab
+
+The CTF does not use the site. If you also want the real CoLab app running, boot it
+with the **Sec** driver from the repo root (`C:\Users\issia\CoLab`):
+
+```bash
+podman machine start                 # if the engine is stopped
+cd /c/Users/issia/CoLab
+./sec_serv.sh -u                     # PowerShell: .\sec_serv.ps1 -Up
+#   -> runs the Black/White/Gray mode selector, then brings app/db/proxy up
+./sec_serv.sh -e                     # first run: seed data + sandbox test users
+./sec_serv.sh -p                     # open the Sec Kali toolbox against the site
+```
+
+Site URLs once it's up:
+
+| URL | Use |
+|-----|-----|
+| `https://localhost:13443` | login / full app (HTTPS — accept the self-signed cert) |
+| `http://localhost:13000`  | direct HTTP (recon/tools; login won't persist here) |
+| `http://app:3000`         | in-network address (from inside the toolbox) |
+
+**Which do I want?**
+- Play the vulns as a game → **toolkit only** (`./ctf_serv.sh`). No site needed.
+- Test the real app → **Sec lab** (`./sec_serv.sh -u` for the site, `-p` for the toolbox).
+
+---
+
 ## Challenge roster (10)
 
 | # | Room | OWASP | Pts | Report ref |
