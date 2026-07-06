@@ -23,30 +23,35 @@ What this is:
 SECTION 1  -  LAUNCH IT
 ==============================================================================
 
-Run from a HOST shell (Git Bash recommended, so ./ctf_serv.sh works):
+ONE COMMAND. From a HOST shell (NOT the VS Code dev-container terminal):
 
-   cd /c/Users/issia/CoLab/CTF
-   ./ctf_serv.sh
+   Git Bash:     cd /c/Users/issia/CoLab/CTF   &&  ./ctf_serv.sh
+   PowerShell:   cd C:\Users\issia\CoLab\CTF   ;   .\ctf_serv.ps1
 
-That launches the range INSIDE the Kali toolbox (the same colab_pentest image
-the Sec engagement uses), so the full toolkit is right there next to the
-challenges. Pick a room number and go.
+That BOOTS THE CTF IN PODMAN — inside the same colab_pentest Kali toolbox the
+Sec engagement uses — so the full toolkit is right there next to the challenges.
+It auto-starts the podman machine if it's stopped. Pick a room number and go.
+When you exit, the container is removed but your progress is saved on the host.
 
-   COMMAND                       WHAT IT DOES
-   ---------------------------   -----------------------------------------------
-   ./ctf_serv.sh                 Launch the CTF inside the Kali toolbox (default)
-   ./ctf_serv.sh -p  (--shell)   Drop into the Kali toolbox shell; CTF at /opt/ctf
-   ./ctf_serv.sh -H  (--host)    Run the CTF directly on the host (no container)
-   ./ctf_serv.sh -x  (--down)    Remove the CTF container + internal network
-   ./ctf_serv.sh -b  (--build)   Build the toolbox image (reuses the Sec Dockerfile)
-   ./ctf_serv.sh -h  (--help)    Help
+   Git Bash             PowerShell            WHAT IT DOES
+   ------------------   -------------------   ----------------------------------
+   ./ctf_serv.sh        .\ctf_serv.ps1        Boot the CTF in podman & play (default)
+   ./ctf_serv.sh -p     .\ctf_serv.ps1 -Shell Open the Kali toolbox shell (/opt/ctf)
+   ./ctf_serv.sh -s     .\ctf_serv.ps1 -Status Show engine/image status
+   ./ctf_serv.sh -b     .\ctf_serv.ps1 -Build Build the toolbox image (one-time)
+   ./ctf_serv.sh -x     .\ctf_serv.ps1 -Down  Remove the CTF container + network
+   ./ctf_serv.sh -H     .\ctf_serv.ps1 -OnHost Run on the bare host (fallback only)
+   ./ctf_serv.sh -h     .\ctf_serv.ps1 -Help  Help
 
-PREREQUISITES for the toolbox path
-   - Podman running:   podman machine start
-   - The Sec toolbox image present:  colab_pentest:latest
-        (build once with:  ./ctf_serv.sh -b   or the Sec lab's ./sec_serv.sh -b)
-   If podman or the image is missing, ctf_serv.sh automatically falls back to
-   HOST mode so the range still runs (needs bash + sha256sum/shasum/openssl).
+PREREQUISITES (one-time)
+   - Podman Desktop installed and the machine started (ctf_serv starts it for you
+     if it's stopped; if podman is unreachable it tells you: podman machine start).
+   - The Kali toolbox image:  colab_pentest:latest
+        Most students already have it from the Sec lab. If not, build it once:
+           ./ctf_serv.sh -b        (or  ./sec_serv.sh -b )
+   The launcher will NOT silently run on your host — if podman or the image is
+   missing it stops and tells you exactly what to do. (Use -H / -OnHost only if
+   you deliberately want to run on the bare host.)
 
 THE TOOLKIT (same as /Sec)
    Inside the toolbox you have the engagement toolkit, e.g.:

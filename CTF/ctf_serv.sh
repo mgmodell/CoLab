@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
 # ============================================================================
-# ctf_serv.sh — CoLab CTF launcher.
+# ctf_serv.sh — CoLab CTF launcher (Git Bash / Linux).
 #
-# COMPLETELY SEPARATE from the Sec engagement boot (sec_serv.sh / boot_mode.sh):
-# it never selects a pentest mode, never writes containers/sec_env/.env, and
-# never brings up the app/db/proxy target stack. It runs the self-contained
-# CoLab CTF training range.
+# Boots the CoLab CTF training range IN PODMAN — inside the same Kali toolbox
+# image the engagement uses (colab_pentest), so students get the full toolkit
+# (curl, sqlmap, jwt_tool, ffuf, gitleaks, nuclei, python3, jq …) right next to
+# the challenges. Runs on its own isolated internal network with this CTF/
+# folder bind-mounted writable at /opt/ctf. Progress is saved on the host.
 #
-# It reuses the SEC TOOLKIT: by default the range runs INSIDE the same Kali
-# toolbox image the engagement uses (colab_pentest), on its own isolated
-# internal network, with this CTF/ folder bind-mounted writable at /opt/ctf.
-# So you get curl, sqlmap, jwt_tool, ffuf, gitleaks, nuclei, python3, jq, etc.
-# right alongside the challenges. A --host fallback runs it on the bare host.
+# COMPLETELY SEPARATE from the Sec engagement boot: it never runs boot_mode.sh,
+# never writes containers/sec_env/.env, and never starts the app/db/proxy stack.
 #
-# Usage:
-#   ./ctf_serv.sh              launch the CTF inside the Kali toolbox (default)
-#   ./ctf_serv.sh -p|--shell   drop into the Kali toolbox shell (CTF at /opt/ctf)
-#   ./ctf_serv.sh -H|--host    run the CTF directly on the host (no container)
-#   ./ctf_serv.sh -b|--build   build the toolbox image (reuses the Sec Dockerfile)
-#   ./ctf_serv.sh -x|--down    remove the CTF container + internal network
-#   ./ctf_serv.sh -h|--help    this help
+# Usage (run from a HOST shell — Git Bash):
+#   ./ctf_serv.sh              Boot the CTF in podman and play  (default)
+#   ./ctf_serv.sh -p|--shell   Open the Kali toolbox shell (CTF at /opt/ctf)
+#   ./ctf_serv.sh -s|--status  Show engine/image status
+#   ./ctf_serv.sh -b|--build   Build the toolbox image (one-time, reuses Sec Dockerfile)
+#   ./ctf_serv.sh -x|--down     Remove the CTF container + internal network
+#   ./ctf_serv.sh -H|--host     Run on the bare host instead of podman (fallback)
+#   ./ctf_serv.sh -h|--help     This help
+#
+# PowerShell users: run  .\ctf_serv.ps1  instead (same behaviour, native TTY).
 # ============================================================================
 set -uo pipefail
 
@@ -36,37 +37,49 @@ if [ -t 1 ]; then
 else
   C_RESET=''; C_BOLD=''; C_DIM=''; C_CYAN=''; C_RED=''; C_GREEN=''; C_YELLOW=''
 fi
-say()  { printf "%b\n" "$*"; }
-err()  { printf "%b\n" "  ${C_RED}$*${C_RESET}" >&2; }
-
-usage() { sed -n '2,23p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
-
-# Host path in the form podman expects (native Windows path on Git Bash).
-host_path() {
-  if command -v cygpath >/dev/null 2>&1; then cygpath -w "$1"; else printf '%s' "$1"; fi
-}
+say() { printf "%b\n" "$*"; }
+err() { printf "%b\n" "  ${C_RED}$*${C_RESET}" >&2; }
+usage() { sed -n '2,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
 
 have_podman() { command -v podman >/dev/null 2>&1; }
+image_present() { podman image exists "$IMAGE" 2>/dev/null; }
 
-engine_ready() {
-  have_podman || return 1
-  podman info >/dev/null 2>&1
+host_path() { # podman wants a native Windows path under Git Bash
+  if command -v cygpath >/dev/null 2>&1; then cygpath -w "$1"; else printf '%s' "$1"; fi
+}
+tty_prefix() { # winpty gives podman -it a usable TTY under Git Bash
+  if command -v winpty >/dev/null 2>&1 && [ -t 0 ]; then printf 'winpty'; fi
 }
 
-image_present() { podman image exists "$IMAGE" 2>/dev/null; }
+# Make sure the Podman engine is reachable. On Windows/macOS the machine is
+# usually just stopped after a reboot — try to start it, then bail clearly.
+ensure_engine() {
+  have_podman || { err "'podman' was not found on PATH. Install Podman Desktop, then retry."; return 1; }
+  podman info >/dev/null 2>&1 && return 0
+  if podman machine list --format '{{.Name}}' 2>/dev/null | grep -q .; then
+    say "  ${C_DIM}Podman engine not ready — starting the podman machine (one moment)…${C_RESET}"
+    podman machine start >/dev/null 2>&1 || true
+  fi
+  podman info >/dev/null 2>&1 && return 0
+  err "cannot reach the Podman engine."
+  say "  Start it and re-run:   ${C_BOLD}podman machine start${C_RESET}"
+  return 1
+}
+
+ensure_image() {
+  image_present && return 0
+  err "toolbox image '${IMAGE}' isn't built yet (one-time build, ~8 GB)."
+  say "  Build it:   ${C_BOLD}./ctf_serv.sh -b${C_RESET}   (or reuse the Sec lab:  ./sec_serv.sh -b )"
+  return 1
+}
 
 ensure_net() {
   podman network exists "$NET" 2>/dev/null || \
     podman network create --internal "$NET" >/dev/null 2>&1 || true
 }
 
-# Interactive prefix: winpty gives a usable TTY for podman -it under Git Bash.
-tty_prefix() {
-  if command -v winpty >/dev/null 2>&1 && [ -t 0 ]; then printf 'winpty'; fi
-}
-
-# Common `podman run` args for an ephemeral CTF toolbox container.
-run_toolbox() { # trailing args = command for /bin/bash
+# podman run for an ephemeral CTF toolbox container. Args = command for bash.
+run_toolbox() {
   ensure_net
   local mnt; mnt="$(host_path "$CTF_DIR")"
   # shellcheck disable=SC2046
@@ -81,22 +94,43 @@ run_toolbox() { # trailing args = command for /bin/bash
     "$IMAGE" "$@"
 }
 
-launch_ctf_toolbox() {
-  say "  ${C_CYAN}${C_BOLD}CoLab CTF${C_RESET} — launching inside the Kali toolbox (${IMAGE})"
-  say "  ${C_DIM}isolated internal net '${NET}' · CTF mounted at /opt/ctf · full Sec toolkit${C_RESET}\n"
+boot_ctf() {
+  ensure_engine || exit 1
+  ensure_image  || exit 1
+  say "  ${C_CYAN}${C_BOLD}CoLab CTF${C_RESET} — booting in Podman (${IMAGE})"
+  say "  ${C_DIM}isolated internal net '${NET}' · CTF at /opt/ctf · full Sec toolkit · progress saved on host${C_RESET}\n"
   run_toolbox /opt/ctf/ctf.sh
+  say "\n  ${C_DIM}CTF container stopped — your progress is saved.${C_RESET}"
 }
 
-launch_shell() {
-  say "  ${C_CYAN}Kali toolbox shell${C_RESET} — CTF is at ${C_BOLD}/opt/ctf${C_RESET} (run ./ctf.sh)"
+open_shell() {
+  ensure_engine || exit 1
+  ensure_image  || exit 1
+  say "  ${C_CYAN}Kali toolbox shell${C_RESET} — CTF is at ${C_BOLD}/opt/ctf${C_RESET}  (run ./ctf.sh)"
   say "  ${C_DIM}tools: curl sqlmap jwt_tool ffuf gitleaks nuclei nmap python3 jq …${C_RESET}\n"
   run_toolbox -l
 }
 
-launch_host() {
-  say "  ${C_CYAN}${C_BOLD}CoLab CTF${C_RESET} — running on the host (no container)"
+run_host() {
+  say "  ${C_YELLOW}Running the CTF on the bare host (not podman).${C_RESET}"
   say "  ${C_DIM}(uses whatever tools are on your host PATH)${C_RESET}\n"
   exec bash "${CTF_DIR}/ctf.sh"
+}
+
+status() {
+  say "  ${C_BOLD}CoLab CTF — status${C_RESET}"
+  if have_podman && podman info >/dev/null 2>&1; then
+    say "    engine : ${C_GREEN}podman ready${C_RESET}"
+  else
+    say "    engine : ${C_RED}not ready${C_RESET}  (run: podman machine start)"
+  fi
+  if image_present; then say "    image  : ${C_GREEN}${IMAGE} present${C_RESET}"
+  else say "    image  : ${C_RED}${IMAGE} missing${C_RESET}  (run: ./ctf_serv.sh -b)"; fi
+  if podman ps --format '{{.Names}}' 2>/dev/null | grep -qx "$CONTAINER"; then
+    say "    running: ${C_GREEN}${CONTAINER}${C_RESET}"
+  else
+    say "    running: ${C_DIM}(no CTF container up)${C_RESET}"
+  fi
 }
 
 teardown() {
@@ -107,36 +141,18 @@ teardown() {
 }
 
 build_image() {
-  have_podman || { err "podman not found."; return 1; }
+  ensure_engine || return 1
   say "  building ${IMAGE} from the Sec pentest Dockerfile (large, one-time)…"
   ( cd "$REPO_ROOT" && podman build -t "$IMAGE" -f containers/agnostic/pentest/Dockerfile . )
 }
 
-MODE="up"
 case "${1:-}" in
-  ""|-u|--up)      MODE="up" ;;
-  -p|--shell)      MODE="shell" ;;
-  -H|--host)       MODE="host" ;;
-  -b|--build)      MODE="build" ;;
-  -x|--down|--teardown) MODE="down" ;;
-  -h|--help)       usage; exit 0 ;;
+  ""|-u|--up)            boot_ctf ;;
+  -p|--shell)           open_shell ;;
+  -s|--status)          status ;;
+  -b|--build)           build_image ;;
+  -x|--down|--teardown) teardown ;;
+  -H|--host)            run_host ;;
+  -h|--help)            usage ;;
   *) err "unknown option: $1"; usage; exit 2 ;;
-esac
-
-case "$MODE" in
-  build) build_image; exit $? ;;
-  down)  teardown;    exit $? ;;
-  host)  launch_host ;;
-  shell|up)
-    if engine_ready && image_present; then
-      [ "$MODE" = "shell" ] && launch_shell || launch_ctf_toolbox
-    else
-      if ! engine_ready; then
-        err "podman engine not ready (is the podman machine started?  'podman machine start')."
-      elif ! image_present; then
-        err "toolbox image '${IMAGE}' not found — build it with:  ./ctf_serv.sh --build"
-      fi
-      say "  ${C_YELLOW}falling back to host mode…${C_RESET}\n"
-      launch_host
-    fi ;;
 esac
