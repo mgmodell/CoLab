@@ -52,20 +52,21 @@ end
 
 Then('the user searches for a user by {string} {string} from {string}') do |search_type, search_field, user_type|
   ack_messages
-  @search_user = nil
   case user_type
   when 'student'
-    @search_user = Roster.students.sample.user
+    @search_user = Roster.students.where( active: true ).sample.user
   when 'their course'
     @search_user = @user.courses.sample.rosters.sample.user
   when 'their school'
-    @search_user = @user.school.users.sample
+    @search_user = @user.school.users.where( active: true ).sample
   when 'any school'
-    @search_user = User.all.sample
+    @search_user = User.where( active: true ).sample
   when 'another school'
-    @search_user = User.where.not(school: @user.school).sample
+    @search_user = User.where.not(school: @user.school).where( active: true ).sample
   when 'self'
     @search_user = @user
+  when 'previous search'
+    # No Operation, just use the previous search user
   else 
     pending
   end
@@ -88,18 +89,20 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
   search_term = search_term[1..-1] unless 'complete' == search_type
   fill_in 'Name and/or email', with: search_term
   click_link_or_button 'Search'
+  wait_for_render
 end
 
 Then('the user {string} found') do |is_or_is_not|
   wait_for_render
-  search_xpath = %Q{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']}
-  search_xpath += %Q{/following-sibling::td[text()='#{@search_user.email}']} if @user.is_instructor? || @user.is_admin?
+  search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
+  search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
+  # byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
   has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 
 Then('the user views the user') do
-  search_xpath = %Q{//td[text()='#{@search_user.first_name}']/following-sibling::td[text()='#{@search_user.last_name}']}
-  search_xpath += %Q{/following-sibling::td[text()='#{@search_user.email}']} if @user.is_instructor? || @user.is_admin?
+  search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
+  search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
 
   row = find( :xpath, search_xpath )
   row.click
@@ -144,9 +147,14 @@ Then('the user sees anonymized data with no roles') do
 end
 
 Then('the user clicks the {string} button on the user') do |button_name|
+  wait_for_render
   click_button( button_name, match: :first )
-  # byebug unless has_text?( 'User updated' )
 
+end
+
+Then('there are {int} deleted users') do |deleted_user_count|
+  wait_for_render
+  User.where( active: false ).count.should be deleted_user_count
 end
 
 Then('the user searches for deleted user') do

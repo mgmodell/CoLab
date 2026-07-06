@@ -188,7 +188,7 @@ export const fetchProfile = createAsyncThunk(
     const getState = thunkAPI.getState;
 
     const url = getState().context.endpoints["profile"]["baseUrl"] + ".json";
-    dispatch(startTask("init"));
+    dispatch(startTask("loading"));
 
     axios
       .get(url, {})
@@ -198,11 +198,13 @@ export const fetchProfile = createAsyncThunk(
 
         const tz_hash = getState().context.lookups["timezone_lookup"];
         Settings.defaultZone = tz_hash[user.timezone];
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("loading"));
+      }) ;
   }
 );
 

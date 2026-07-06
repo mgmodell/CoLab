@@ -134,20 +134,24 @@ Feature: Admins can find and review users and update their roles.
     Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user sees 26 students visible
+    Then there are 0 deleted users
     Then the user searches for a user by "complete" "email" from "any school"
     Then the user clicks the "Deactivate" button on the user
     Then the user sees 25 students visible
+    Then there are 1 deleted users
     Then the user searches for a user by "complete" "email" from "any school"
     Then the user clicks the "Deactivate" button on the user
     Then the user sees 24 students visible
+    Then there are 2 deleted users
+    Then the user clicks the "Search" button on the user
     Then the user clicks the "Reactivate" button on the user
      And the user searches for deleted user
+    Then there are 1 deleted users
      And the user clicks the "Reactivate" button on the user
     Then the user sees 25 students visible
-    Then the user searches for a user by "complete" "email" from "user 1"
+    Then there are 0 deleted users
+    Then the user searches for a user by "complete" "email" from "previous search"
      And the user "is" found
-    Then the user searches for a user by "complete" "email" from "user 2"
-     And the user "is not" found
 
   @javascript
   Scenario: An admin can set any user as researcher by email

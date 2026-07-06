@@ -58,12 +58,12 @@ class UserController < ApplicationController
 
   def delete_user
     resp_hash = {}
-    user = User.find_by( email: params[:email] )
+    user = User.find_by_email( params[:email] )
     if user.nil?
       resp_hash[:success] = false
       resp_hash[:errors] = ['User not found']
     else
-      user.active = params[:delete] != 'true'
+      user.active = ! params[:delete] 
       user.save
 
       resp_hash[:success] = user.errors.empty?

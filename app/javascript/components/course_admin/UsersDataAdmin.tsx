@@ -17,6 +17,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Checkbox } from 'primereact/checkbox';
+import { refreshSchools } from '../infrastructure/ContextSlice';
 
 interface Props {
 }
@@ -64,6 +65,7 @@ export default function UsersDataAdmin(props: Props) {
     const [showUserViewDialog, setShowUserViewDialog] = React.useState<[boolean, string]>([false, '']);
 
     const userCount = useMemo(() => {
+        console.log( 'triggered userCount useMemo' );
         let user_count_returned = 0;
         if (user.is_admin) {
             user_count_returned = selectedSchool !== -1 ?
@@ -77,7 +79,7 @@ export default function UsersDataAdmin(props: Props) {
         }
         return user_count_returned;
     },
-        [selectedSchool, schools, user]);
+    [selectedSchool, schools, user]);
 
     const searchUsers = () => {
         dispatch(startTask("searching_users"));
@@ -121,11 +123,6 @@ export default function UsersDataAdmin(props: Props) {
 
     const deletionAction = (email: string, deleteUser: boolean) => {
         dispatch(startTask("deleting_user"));
-        console.log(`POST to ${endpoints.deleteUserUrl}.json with payload:` );
-        console.log({
-            email: email,
-            delete: deleteUser
-        });
 
         axios.post(`${endpoints.deleteUserUrl}.json`,
             {
@@ -147,6 +144,10 @@ export default function UsersDataAdmin(props: Props) {
             .finally(() => {
                 dispatch(endTask("deleting_user"));
             });
+        setFoundUsers([]);
+        setShowUserViewDialog([false, '']);
+        setShowMergeDialog(false);
+        dispatch( refreshSchools() );
     }
 
     const roleChangeAction = (email: string, newRole: string, set: boolean) => {
@@ -269,7 +270,7 @@ export default function UsersDataAdmin(props: Props) {
                 reorderableColumns
                 paginator
                 rows={5}
-                rowsPerPageOptions={[5, 10, 20, foundUsers.length]}
+                rowsPerPageOptions={[5, 10, 20]}
                 sortField="last_name"
                 sortOrder={1}
                 onRowSelect={(e) => {
@@ -311,8 +312,8 @@ export default function UsersDataAdmin(props: Props) {
                     key="status" />
                 {user.is_admin && (
                     <Column
-                        key={`actions-${user.email}`}
                         header={t("table.actions")}
+                        field="school_id"
                         body={(rowData) => {
 
                             return (
@@ -322,7 +323,7 @@ export default function UsersDataAdmin(props: Props) {
                                         className="p-button-danger p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            deletionAction(rowData.email, !rowData.status)
+                                            deletionAction(rowData.email, rowData.status)
                                         }}
                                     />
                                     <Button

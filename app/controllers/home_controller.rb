@@ -117,18 +117,18 @@ class HomeController < ApplicationController
         submissionUrl: submission_path( id: '' ),
         submissionWithdrawalUrl: submission_withdraw_path( id: '' )
       }
-      if current_user.is_instructor? || current_user.researcher?
-        ep_hash[ :user] = {
-          directorySearchUrl: directory_search_path,
-          viewUserUrl: user_details_path
-        }
-      elsif current_user.is_admin?
+      if current_user.is_admin?
         ep_hash[ :user] = {
           directorySearchUrl: directory_search_path,
           viewUserUrl: user_details_path,
           deleteUserUrl: delete_user_path,
           setRoleUrl: set_role_path,
           mergeUsersUrl: merge_users_path
+        }
+      elsif current_user.is_instructor? || current_user.researcher?
+        ep_hash[ :user] = {
+          directorySearchUrl: directory_search_path,
+          viewUserUrl: user_details_path
         }
       end
 
