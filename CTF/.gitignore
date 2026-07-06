@@ -1,0 +1,7 @@
+# CoLab CTF runtime — never commit plaintext flags, targets, or progress
+state/*
+!state/.gitkeep
+state/flags.plain
+flags/*.plain
+._e2e.sh
+*.swp

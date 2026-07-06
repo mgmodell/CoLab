@@ -1,0 +1,155 @@
+==============================================================================
+  CoLab CTF  -  QUICK START
+  Gamified training range built from our authorized CoLab.online pentest.
+==============================================================================
+
+What this is:
+  A self-contained, TryHackMe-style capture-the-flag range. Ten "rooms" (3 Easy,
+  3 Medium, 3 Hard, 1 Critical), each with a briefing, a deliberately-vulnerable
+  target, a hidden flag you retrieve by exploiting the bug, and a submit step
+  that confirms the capture. Points, hints, and progress are tracked.
+
+  COMPLETELY SEPARATE from the Sec engagement:
+     - It does NOT run boot_mode.sh, does NOT pick Black/White/Gray box, does NOT
+       write containers/sec_env/.env, and does NOT boot the app/db/proxy stack.
+     - It has its own launcher (ctf_serv.sh) and lives entirely under CTF/.
+     - Your engagement work on branch 'Sec' is untouched; the CTF lives on the
+       'CTF' branch / CTF/ folder.
+
+  Project folder:  C:\Users\issia\CoLab\CTF        (git branch: CTF)
+
+
+==============================================================================
+SECTION 1  -  LAUNCH IT
+==============================================================================
+
+Run from a HOST shell (Git Bash recommended, so ./ctf_serv.sh works):
+
+   cd /c/Users/issia/CoLab/CTF
+   ./ctf_serv.sh
+
+That launches the range INSIDE the Kali toolbox (the same colab_pentest image
+the Sec engagement uses), so the full toolkit is right there next to the
+challenges. Pick a room number and go.
+
+   COMMAND                       WHAT IT DOES
+   ---------------------------   -----------------------------------------------
+   ./ctf_serv.sh                 Launch the CTF inside the Kali toolbox (default)
+   ./ctf_serv.sh -p  (--shell)   Drop into the Kali toolbox shell; CTF at /opt/ctf
+   ./ctf_serv.sh -H  (--host)    Run the CTF directly on the host (no container)
+   ./ctf_serv.sh -x  (--down)    Remove the CTF container + internal network
+   ./ctf_serv.sh -b  (--build)   Build the toolbox image (reuses the Sec Dockerfile)
+   ./ctf_serv.sh -h  (--help)    Help
+
+PREREQUISITES for the toolbox path
+   - Podman running:   podman machine start
+   - The Sec toolbox image present:  colab_pentest:latest
+        (build once with:  ./ctf_serv.sh -b   or the Sec lab's ./sec_serv.sh -b)
+   If podman or the image is missing, ctf_serv.sh automatically falls back to
+   HOST mode so the range still runs (needs bash + sha256sum/shasum/openssl).
+
+THE TOOLKIT (same as /Sec)
+   Inside the toolbox you have the engagement toolkit, e.g.:
+        curl  sqlmap  jwt_tool  ffuf  gitleaks  nuclei  nmap  python3  jq  base64
+   Each room also stages a working dir with a ./colab-http client (a curl-ish
+   tool for the room's isolated target) plus room-specific helpers
+   (jwt-forge.sh, forge-cookie.sh, ssrf-fetch.sh, sqli-cheatsheet, CSRF PoC, …).
+
+
+==============================================================================
+SECTION 2  -  THE CHALLENGES
+==============================================================================
+
+   EASY (100 pts)
+     [1]  IDOR: Grade Record Access
+     [2]  Stored XSS: Course Comments
+     [3]  Sensitive Data Exposure: Verbose API Errors
+   MEDIUM (250 pts)
+     [4]  SQL Injection: Search Endpoint
+     [5]  Broken Access Control: Instructor Panel   (real: mass-assign, CVSS 7.1)
+     [6]  CSRF: Account Email Change
+   HARD (500 pts)
+     [7]  Server-Side Template Injection: Report Generator
+     [8]  Insecure Deserialization: Session Cookie
+     [9]  Bearer Token Forgery: Auth Bypass
+   CRITICAL (1000 pts)
+     [10] SSRF: Internal Service Pivot   (REAL finding: /lti/tool_connect, CVSS 9.3)
+
+   Total on the board: 3550 points.
+
+   The Critical is the real engagement SSRF: an unauthenticated POST to
+   /lti/tool_connect makes the server fetch a URL you control. The flag sits on
+   an internal-only cloud-metadata service reachable ONLY by pivoting the SSRF
+   inward (169.254.169.254 -> role credentials) - mirroring the report's Chain A.
+   Rooms [5] and [6] map to real findings; [2][4][7][8][9] are teaching rooms for
+   classes that were tested and HARDENED in the real engagement.
+
+
+==============================================================================
+SECTION 3  -  PLAYING A ROOM
+==============================================================================
+
+Selecting a room:
+   1. Shows a briefing (scenario, vuln class, objective, OWASP, CVSS, points).
+   2. Provisions a clean isolated target and plants that room's flag where only
+      the exploit reaches.
+   3. Stages a working dir (OBJECTIVE.txt, HINTS.txt, ./colab-http, helpers).
+
+Room menu:
+   [s] submit flag   [h] hint   [r] reset room   [w] writeup   [i] briefing   [b] back
+
+Example (IDOR room), from inside the toolbox:
+   cd /opt/ctf/state/work/easy-idor
+   ./colab-http GET /api/grades/1337        # read a record that isn't yours
+
+FLAGS
+   - Format:  CoLab{lowercase_snake_case}
+   - Submit with [s] in the room menu; paste the flag.
+   - No plaintext flags are stored in the repo. flags/flag-hashes.txt holds
+     SHA-256 hashes only; plaintext is generated on first launch into
+     state/flags.plain (gitignored). Submissions are verified by hashing.
+
+SCORING / HINTS / PROGRESS
+   - Easy 100 / Medium 250 / Hard 500 / Critical 1000. Running score in the
+     menu header, TryHackMe-style.
+   - Each room has 2-3 progressive hints; revealing one lowers that room's award
+     (Easy -15 / Medium -35 / Hard -70 / Critical -140), floored at 40% of base.
+   - Progress persists to state/progress.tsv (+ readable progress.json): captured
+     flags, points, hints used, and capture time. The menu shows [checkmark]s.
+   - After a capture you can journal the solve in a WRITEUP.md template.
+
+REPLAY / TEARDOWN
+   - Per-room [r] re-provisions a fresh target and clears that room's progress.
+   - Menu [a] resets all progress; [t] tears down all targets + the network.
+   - ./ctf_serv.sh -x removes the whole CTF container + internal network.
+
+
+==============================================================================
+SECTION 4  -  ISOLATION
+==============================================================================
+
+   - The CTF runs on its own isolated --internal podman network with NO host
+     port publishing; challenge targets are never reachable from the host or
+     outside world, and never touch real CoLab infrastructure.
+   - The range is a deliberately-vulnerable TRAINING target, distinct from the
+     hardened production stack the Sec engagement tests.
+   - Inside the toolbox the challenge targets are offline mocks (reached through
+     ./colab-http), so nothing is exposed on a socket at all.
+
+
+==============================================================================
+SECTION 5  -  ADD YOUR OWN ROOM (modular)
+==============================================================================
+
+   Drop a new file in CTF/challenges/ (numeric prefix sets menu order) that:
+     1. defines its *_provision, optional *_toolkit, and *_handle functions, and
+     2. calls register_challenge with key=value metadata (id, title, diff,
+        points, penalty, owasp, cvss, slug, tools, scenario, objective, endpoint,
+        remediation, finding, hints, provision, toolkit, handler).
+   ctf.sh auto-discovers challenges/*.sh; the menu, flag seed, scoring, and
+   progress all pick it up. No other file needs editing.
+
+------------------------------------------------------------------------------
+  This file describes the CTF range only. For the pentest LAB itself
+  (Black/White/Gray box engagement), see  ..\CoLab Pentest Lab - Quick Start.txt
+==============================================================================
