@@ -12,6 +12,7 @@ Feature: Admins can find and review users and update their roles.
     # 1 course with 8 users
 
     Given there is a course with an assessed project
+    Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 6
     Given the Bingo! started "last month" and ends "3 days from now"
@@ -31,6 +32,7 @@ Feature: Admins can find and review users and update their roles.
     Given there is a course with an assessed project
     Given the course is in "Test School" school
     Given the project has a group with 2 confirmed users
+    Given the project has been activated
       And the course participants are in the same school as the course
     Given the course has a Bingo! game
     Given the Bingo! started "last month" and ends "3 days from now"
@@ -192,6 +194,7 @@ Feature: Admins can find and review users and update their roles.
      And the user "does" see an active "Merge users" button
      And the user logs out
     Then switch to user 1
+    Then activate user projects
     Then the user logs in and submits an installment
      Then the user navigates home
     Then the user successfully completes an experience
@@ -199,7 +202,7 @@ Feature: Admins can find and review users and update their roles.
      And the user logs out
     Then the user logs in and accesses the "Users" admin page
      And the user "does" see an active "Merge users" button
-    Then the user clicks the "Merge two users" button
+    Then the user clicks the "Merge users" button
     Then the user enters the email address for user 1 and user 2
     Then the user clicks the "Merge users" button
     Then the user sees a success message

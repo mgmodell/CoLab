@@ -192,8 +192,8 @@ Given( 'select user {int} from {string}' ) do |index, population|
   when 'user course'
     @selected_users[ index ] = @user.courses.sample.rosters.map{ |r| r.user }.sample
   when 'other school'
-    school = School.where.not( id: @user.school.id ).sample
-    @selected_users[ index ] = school.users.sample
+    user = Project.joins(:course).where.not(course: {school_id: @user.school.id} ).first.users.sample
+    @selected_users[ index ] = user
   else
     pending # Write code here that turns the phrase above into concrete actions
   end
@@ -205,12 +205,23 @@ Then('switch to user {int}') do |int|
   @user = @selected_users[ int ]
 end
 
+Then('activate user projects') do
+  @user.projects.each do |project|
+    project.active = true
+    project.save
+    @project = project
+    puts project.errors.full_messages unless project.errors.empty?
+    true.should_be false unless project.errors.empty?
+  end
+end
+
 Then('the user reverts') do
   @user = @selected_users[0]
 end
 
 Then('the user enters the email address for user {int} and user {int}') do |int, int2|
-  pending # Write code here that turns the phrase above into concrete actions
+  fill_in 'Predator email', with: @selected_users[1].email
+  fill_in 'Prey email', with: @selected_users[2].email
 end
 
 Then('the user searches for user {int} by email') do |int|
