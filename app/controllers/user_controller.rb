@@ -86,7 +86,7 @@ class UserController < ApplicationController
 
   def set_role
     resp_hash = {}
-    user = User.find_by( email: params[:email] )
+    user = User.find_by_email( params[:email] )
     if user.nil?
       resp_hash[:success] = false
       resp_hash[:errors] = ['User not found']

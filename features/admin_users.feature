@@ -160,35 +160,41 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Researcher" button
-    Then the found user is a "researcher"
+    Then the found user "is" a "researcher"
     Then the user searches for a user by "complete" "email" from "researcher"
      And the user "is" found
      And the user clicks the "Revoke Researcher" button
-    Then the found user is a "student"
+    Then the found user "is not" a "researcher"
 
   @javascript
-  Scenario: An admin can set any user as researcher by email
+  Scenario: An admin can set any user as admin by email
     Then the user is an admin
     Then the user logs in and accesses the "Users" admin page
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Admin" button
-    Then the found user is a "researcher"
+    Then the found user "is" a "admin"
     Then the user searches for a user by "complete" "email" from "admin"
      And the user "is" found
      And the user clicks the "Revoke Admin" button
-    Then the found user is a "student"
+    Then the found user "is not" a "admin"
 
   @javascript
-  Scenario: An admin can merge 2 users useing email addresses
+  Scenario: An admin can merge 2 users using email addresses
     Then the user is an admin
    Given select user 1 from "user course"
    Given select user 2 from "other school"
     Then the user logs in and accesses the "Users" admin page
-     And the user "does not" see an active "Merge users" button
+     And the user "does" see an active "Merge users" button
+     And the user logs out
     Then switch to user 1
-    Then the user successfully completes an experience
     Then the user logs in and submits an installment
+     Then the user navigates home
+    Then the user successfully completes an experience
+    Then the user reverts
+     And the user logs out
+    Then the user logs in and accesses the "Users" admin page
+     And the user "does" see an active "Merge users" button
     Then the user clicks the "Merge two users" button
     Then the user enters the email address for user 1 and user 2
     Then the user clicks the "Merge users" button

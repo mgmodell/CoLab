@@ -54,7 +54,7 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
   ack_messages
   case user_type
   when 'student'
-    @search_user = Roster.students.where( active: true ).sample.user
+    @search_user = Roster.joins(:user).students.where( users: { active: true } ).sample.user
   when 'their course'
     @search_user = @user.courses.sample.rosters.sample.user
   when 'their school'
@@ -166,14 +166,15 @@ Then('the user searches for deleted user') do
   click_link_or_button 'Search'
 end
 
-Then('the found user is a {string}') do |role|
-  case role
+Then('the found user {string} a {string}') do |is_or_is_not,role|
+  @search_user.reload
+  case role.downcase
   when 'researcher'
-    @search_user.researcher.should be true
+    @search_user.researcher.should be 'is' == is_or_is_not
   when 'instructor'
-    @search_user.instructor.should be true
+    @search_user.instructor.should be 'is' == is_or_is_not
   when 'admin'
-    @search_user.admin.should be true
+    @search_user.admin.should be 'is' == is_or_is_not
   else
     pending # Write code here that turns the phrase above into concrete actions
   end
@@ -194,8 +195,12 @@ Given( 'select user {int} from {string}' ) do |index, population|
 end
 
 Then('switch to user {int}') do |int|
-# Then('switch to user {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+  @selected_users[0] = @user
+  @user = @selected_users[ int ]
+end
+
+Then('the user reverts') do
+  @user = @selected_users[0]
 end
 
 Then('the user enters the email address for user {int} and user {int}') do |int, int2|
