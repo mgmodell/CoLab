@@ -31,15 +31,17 @@ Given('the course is in {string} school') do |string|
 end
 
 Then('the user sees {int} students visible') do |user_count|
+  wait_for_render
   has_text?( "#{user_count} active users" ).should be true
 end
 
 Then('the user {string} see an active {string} button') do |does_or_does_not, button_name|
-  merge_buttons = all(:link_or_button, button_name, visible: :all)
+  wait_for_render
+  search_buttons = all(:link_or_button, button_name, visible: :all)
   if 'does' == does_or_does_not
-    merge_buttons.first.should_not be_disabled
+    search_buttons.first.should_not be_disabled
   else
-    merge_buttons.first.should be_disabled unless merge_buttons.empty?
+    search_buttons.first.should be_disabled unless search_buttons.empty?
   end
 end
 
@@ -52,6 +54,7 @@ end
 
 Then('the user searches for a user by {string} {string} from {string}') do |search_type, search_field, user_type|
   ack_messages
+  click_link_or_button 'Clear'
   case user_type
   when 'student'
     @search_user = Roster.joins(:user).students.where( users: { active: true } ).sample.user
@@ -65,6 +68,10 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
     @search_user = User.where.not(school: @user.school).where( active: true ).sample
   when 'self'
     @search_user = @user
+  when 'admin'
+    @search_user = User.where( admin: true ).sample
+  when 'researcher'
+    @search_user = User.where( researcher: true ).sample
   when 'previous search'
     # No Operation, just use the previous search user
   else 
@@ -96,7 +103,6 @@ Then('the user {string} found') do |is_or_is_not|
   wait_for_render
   search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
   search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
-  # byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
   has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 

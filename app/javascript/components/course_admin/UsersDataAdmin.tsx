@@ -11,6 +11,7 @@ import { Skeleton } from "primereact/skeleton";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { Button } from 'primereact/button';
+import { ButtonGroup } from 'primereact/buttongroup';
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from 'react-grid-system';
 import { DataTable } from 'primereact/datatable';
@@ -56,22 +57,21 @@ export default function UsersDataAdmin(props: Props) {
         school_id: number,
         status: string,
         roles: {
-            admin: boolean;
-            instructor: boolean;
-            researcher: boolean;
+            is_admin: boolean;
+            is_instructor: boolean;
+            is_researcher: boolean;
         }
     } | null>(null);
     const [showMergeDialog, setShowMergeDialog] = React.useState<boolean>(false);
     const [showUserViewDialog, setShowUserViewDialog] = React.useState<[boolean, string]>([false, '']);
 
     const userCount = useMemo(() => {
-        console.log( 'triggered userCount useMemo' );
         let user_count_returned = 0;
         if (user.is_admin) {
             user_count_returned = selectedSchool !== -1 ?
                 schools.find(s => s.id === selectedSchool)?.user_count || 0 :
                 schools.reduce((accum, next) => accum + next.user_count, 0);
-        } else if (user.researcher) {
+        } else if (user.is_researcher) {
             user_count_returned = schools.reduce((accum, next) => accum + next.user_count, 0);
         } else if (user.is_instructor) {
             setSelectedSchool(Number(user.school_id));
@@ -91,6 +91,7 @@ export default function UsersDataAdmin(props: Props) {
         )
             .then(response => {
                 const data = response.data;
+                console.log("Response from searchUsers:", data);
                 setFoundUsers(data.users);
             })
             .catch(error => {
@@ -110,15 +111,18 @@ export default function UsersDataAdmin(props: Props) {
         )
             .then(response => {
                 const data = response.data;
-                console.log("User details:", data.user);
                 setUserDetails(data.user);
             })
             .catch(error => {
                 console.error("Error viewing user:", error);
+                dispatch(addMessage(t(error.response.data.message), new Date(), Priorities.ERROR));
             })
             .finally(() => {
                 dispatch(endTask("user_details"));
             });
+        setFoundUsers([]);
+        setShowUserViewDialog([false, '']);
+        setShowMergeDialog(false);
     }
 
     const deletionAction = (email: string, deleteUser: boolean) => {
@@ -157,11 +161,10 @@ export default function UsersDataAdmin(props: Props) {
                 email: email,
                 role: newRole,
                 set: set
-            }
-        )
+            })
             .then(response => {
                 const data = response.data;
-                setFoundUsers(data.users);
+                dispatch(addMessage( t(`${newRole}_${set ? 'true' : 'false'}_result_msg`), new Date(), Priorities.INFO ));
             })
             .catch(error => {
                 console.error("Error searching users:", error);
@@ -235,6 +238,7 @@ export default function UsersDataAdmin(props: Props) {
                         </FloatLabel>
                     </Col>
                     <Col xs={12} sm={12} md={2} lg={2} xl={2}>
+                        <ButtonGroup>
                         <Button
                             label={t("search_btn")}
                             icon="pi pi-search"
@@ -243,6 +247,16 @@ export default function UsersDataAdmin(props: Props) {
                                 searchUsers();
                             }}
                         />
+                        <Button
+                            label={t("clear_btn")}
+                            icon="pi pi-times-circle"
+                            className="p-button-secondary p-ml-2"
+                            onClick={() => {
+                                setSearchText('');
+                                setFoundUsers([]);
+                            }}
+                        />
+                        </ButtonGroup>
                     </Col>
 
                 </Row>
@@ -287,7 +301,7 @@ export default function UsersDataAdmin(props: Props) {
                 <Column header={t("table.first_name")} field="first_name" sortable filter key="first_name" />
                 <Column header={t("table.last_name")} field="last_name" sortable filter key="last_name" />
                 {
-                    !user.researcher && (
+                    !user.is_researcher && (
                         <Column header={t("table.email")} field="email" sortable filter key="email" />
                     )
                 }
@@ -336,7 +350,7 @@ export default function UsersDataAdmin(props: Props) {
                                         }
                                     />
                                     <Button
-                                        label={rowData.is_admin ? t("revoke_instructor_btn") : t("grant_instructor_btn")}
+                                        label={rowData.is_instructor ? t("revoke_instructor_btn") : t("grant_instructor_btn")}
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
@@ -345,7 +359,7 @@ export default function UsersDataAdmin(props: Props) {
                                         }
                                     />
                                     <Button
-                                        label={rowData.is_admin ? t("revoke_researcher_btn") : t("grant_researcher_btn")}
+                                        label={rowData.is_researcher ? t("revoke_researcher_btn") : t("grant_researcher_btn")}
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
@@ -422,7 +436,7 @@ export default function UsersDataAdmin(props: Props) {
                 <p>{t("user_view_name_lbl", { user_first_name: userDetails?.first_name, user_last_name: userDetails?.last_name })}</p>
                 <p>{t("user_view_school_lbl", { user_school: userDetails?.school })}</p>
 
-                {user.is_admin || user.is_instructor && (
+                {(user.is_admin || user.is_instructor) && (
                 <Container fluid>
                     <Row>
                         <Col xs={12} sm={12} md={6} lg={6} xl={6}>
@@ -437,11 +451,11 @@ export default function UsersDataAdmin(props: Props) {
                             {
                                 null !== userDetails && user.is_admin && (
                                     <Button
-                                        label={user.status ? t('deactivate_user_btn') : t('activate_user_btn')}
+                                        label={userDetails.status ? t('deactivate_user_btn') : t('activate_user_btn')}
                                         className="p-button-danger p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            deletionAction(user.email, !user.status)
+                                            deletionAction(userDetails.email, !userDetails.status)
                                         }}
                                     />
                                 )}
@@ -453,7 +467,7 @@ export default function UsersDataAdmin(props: Props) {
                             <label htmlFor="is_admin">{t("user_view_admin_lbl")}</label>
                             <Checkbox
                                 inputId="is_admin"
-                                checked={userDetails?.roles.admin || false}
+                                checked={userDetails?.roles.is_admin || false}
                                 disabled
                             />
                         </Col>
@@ -461,11 +475,11 @@ export default function UsersDataAdmin(props: Props) {
                             {
                                 null !== userDetails && user.is_admin && (
                                     <Button
-                                        label={user.is_admin ? t("revoke_admin_btn") : t("grant_admin_btn")}
+                                        label={userDetails.is_admin ? t("revoke_admin_btn") : t("grant_admin_btn")}
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            roleChangeAction(user.email, "admin", !user.is_admin);
+                                            roleChangeAction(userDetails.email, "admin", !userDetails.is_admin);
                                         }
                                         }
                                     />
@@ -478,7 +492,7 @@ export default function UsersDataAdmin(props: Props) {
                             <label htmlFor="is_instructor">{t("user_view_instructor_lbl")}</label>
                             <Checkbox
                                 inputId="is_instructor"
-                                checked={userDetails?.roles.instructor || false}
+                                checked={userDetails?.roles.is_instructor || false}
                                 disabled
                             />
                         </Col>
@@ -486,11 +500,11 @@ export default function UsersDataAdmin(props: Props) {
                             {
                                 null !== userDetails && user.is_admin && (
                                     <Button
-                                        label={user.is_instructor ? t("revoke_instructor_btn") : t("grant_instructor_btn")}
+                                        label={userDetails.is_instructor ? t("revoke_instructor_btn") : t("grant_instructor_btn")}
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            roleChangeAction(user.email, "instructor", !user.is_instructor);
+                                            roleChangeAction(userDetails.email, "instructor", !userDetails.is_instructor);
                                         }
                                         }
                                     />
@@ -503,7 +517,7 @@ export default function UsersDataAdmin(props: Props) {
                             <label htmlFor="is_researcher">{t("user_view_researcher_lbl")}</label>
                             <Checkbox
                                 inputId="is_researcher"
-                                checked={userDetails?.roles.researcher || false}
+                                checked={userDetails?.roles.is_researcher || false}
                                 disabled
                             />
                         </Col>
@@ -511,11 +525,11 @@ export default function UsersDataAdmin(props: Props) {
                             {
                                 null !== userDetails && user.is_admin && (
                                     <Button
-                                        label={user.is_researcher ? t("revoke_researcher_btn") : t("grant_researcher_btn")}
+                                        label={userDetails.is_researcher ? t("revoke_researcher_btn") : t("grant_researcher_btn")}
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            roleChangeAction(user.email, "researcher", !user.is_researcher);
+                                            roleChangeAction(userDetails.email, "researcher", !user.is_researcher);
                                         }
                                         }
                                     />

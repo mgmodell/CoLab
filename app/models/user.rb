@@ -156,15 +156,15 @@ class User < ApplicationRecord
   end
 
   def is_admin?
-    admin
+    admin.nil? ? false : admin
   end
 
   def is_instructor?
-    instructor
+    instructor.nil? ? false : instructor
   end
 
   def is_researcher?
-    researcher
+    researcher.nil? ? false : researcher
   end
 
   def update_instructor

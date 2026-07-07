@@ -6,12 +6,12 @@ class UserController < ApplicationController
   before_action :check_admin, except: %i[directory_search get_user_details]
 
   def directory_search
-    school_id = current_user.admin ? params[:school_id] : current_user.school_id
+    school_id = current_user.is_admin? ? params[:school_id] : current_user.school_id
     search_terms = params[:search_term].split
     emails, non_emails = search_terms.partition { | str | str.match?( /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i ) }
 
     if current_user.is_admin? || current_user.is_instructor? || !non_emails.empty?
-      search_query = school_id > 0 && ( current_user.is_instructor? || current_user.admin ) ? 'school_id = ? AND (' : '('
+      search_query = school_id > 0 && ( current_user.is_instructor? || current_user.is_admin? ) ? 'school_id = ? AND (' : '('
       unless non_emails.empty?
         search_query += if current_user.is_researcher?
                           non_emails.map do
@@ -28,7 +28,7 @@ class UserController < ApplicationController
 
       search_query += ') AND users.id != ?'
 
-      search_terms = school_id > 0 && ( current_user.is_instructor? || current_user.admin ) ? [school_id] : []
+      search_terms = school_id > 0 && ( current_user.is_instructor? || current_user.is_admin? ) ? [school_id] : []
       search_terms += non_emails.flat_map { | term | ["%#{term.downcase}%", "%#{term.downcase}%"] }
       search_terms.concat( emails.flat_map { | term | [term.downcase] } ) unless current_user.is_researcher?
       search_terms << current_user.id
@@ -43,10 +43,10 @@ class UserController < ApplicationController
           email: current_user.is_researcher? ? u.emails.sample.id : u.email,
           school_id: u.school_id,
           status: u.active,
-          researcher: u.is_researcher?,
+          is_researcher: u.is_researcher?,
           is_instructor: u.is_instructor?,
           has_classes: u.rosters.instructor.any?,
-          is_admin: u.admin
+          is_admin: u.is_admin?
         }
       end }
     end
@@ -93,20 +93,21 @@ class UserController < ApplicationController
     else
       case params[:role]
       when 'admin'
-        user.admin = params[:set] == 'true'
+        user.admin = params[:set]
         user.save
         resp_hash[:success] = user.errors.empty?
         resp_hash[:errors] = user.errors.full_messages unless user.errors.empty?
       when 'instructor'
-        user.instructor = params[:set] == 'true'
+        user.instructor = params[:set]
         user.save
         resp_hash[:success] = user.errors.empty?
         resp_hash[:errors] = user.errors.full_messages unless user.errors.empty?
       when 'researcher'
-        user.researcher = params[:set] == 'true'
+        user.researcher = params[:set]
         user.save
         resp_hash[:success] = user.errors.empty?
         resp_hash[:errors] = user.errors.full_messages unless user.errors.empty?
+        user.reload
       else
         resp_hash[:success] = false
         resp_hash[:errors] = I18n.t( 'invalid_role' )
@@ -137,9 +138,9 @@ class UserController < ApplicationController
         school: user.get_school_name( anonymized ),
         status: user.active,
         roles: {
-          instructor: user.is_instructor?,
-          researcher: user.is_researcher?,
-          admin: user.admin
+          is_instructor: user.is_instructor?,
+          is_researcher: user.is_researcher?,
+          is_admin: user.is_admin?
         },
         courses: user.rosters.map do | r |
           {

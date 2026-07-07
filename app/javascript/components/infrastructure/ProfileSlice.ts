@@ -20,6 +20,7 @@ interface IUser {
   welcomed: boolean;
   is_instructor: boolean;
   is_admin: boolean;
+  is_researcher: boolean;
   country: string;
   timezone: string;
   language_id: number;
@@ -67,6 +68,7 @@ const initialState = {
     welcomed: false,
     is_instructor: false,
     is_admin: false,
+    is_researcher: false,
     country: "",
     timezone: "UTC",
     language_id: 40,

@@ -148,7 +148,7 @@ Feature: Admins can find and review users and update their roles.
      And the user searches for deleted user
     Then there are 1 deleted users
      And the user clicks the "Reactivate" button on the user
-    Then the user sees 25 students visible
+    Then the user sees 26 students visible
     Then there are 0 deleted users
     Then the user searches for a user by "complete" "email" from "previous search"
      And the user "is" found
@@ -160,10 +160,12 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Researcher" button
+     And the user will see "Researcher granted"
     Then the found user "is" a "researcher"
     Then the user searches for a user by "complete" "email" from "researcher"
      And the user "is" found
      And the user clicks the "Revoke Researcher" button
+     And the user will see "Researcher revoked"
     Then the found user "is not" a "researcher"
 
   @javascript
@@ -173,10 +175,12 @@ Feature: Admins can find and review users and update their roles.
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
      And the user clicks the "Grant Admin" button
+     And the user will see "Admin granted"
     Then the found user "is" a "admin"
     Then the user searches for a user by "complete" "email" from "admin"
      And the user "is" found
      And the user clicks the "Revoke Admin" button
+     And the user will see "Admin revoked"
     Then the found user "is not" a "admin"
 
   @javascript

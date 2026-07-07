@@ -2,6 +2,7 @@ en:
   users:
     search_text_inpt: Name and/or email
     search_btn: Search
+    clear_btn: Clear
     no_selected_school: All schools
     users_search: Who are you looking for?
     user_stats_msg: The selection has {{user_count}} active users.
@@ -10,11 +11,17 @@ en:
     activate_user_btn: Reactivate
     deactivate_user_btn: Deactivate
     make_admin_btn: Make Admin
+    admin_true_result_msg: Admin granted
     remove_admin_btn: Remove Admin
+    admin_false_result_msg: Admin revoked
     make_researcher_btn: Make Researcher
+    researcher_true_result_msg: Researcher granted
     remove_researcher_btn: Remove Researcher
+    researcher_false_result_msg: Researcher revoked
     make_instructor_btn: Make Instructor
+    instructor_true_result_msg: Instructor granted
     remove_instructor_btn: Remove Instructor
+    instructor_false_result_msg: Instructor revoked
     classes_assigned_txt: Instructor with classes assigned
     revoke_instructor_btn: Revoke Instructor
     grant_instructor_btn: Grant Instructor
