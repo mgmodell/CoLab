@@ -80,6 +80,7 @@ function Invoke-Toolbox {
         --network $Net `
         --hostname colab-ctf `
         -e COLORTERM=truecolor -e TERM=xterm-256color `
+        -e "CTF_USER=$env:CTF_USER" `
         --entrypoint /bin/bash `
         -v $mount `
         -w /opt/ctf `

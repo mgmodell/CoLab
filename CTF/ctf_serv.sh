@@ -88,6 +88,7 @@ run_toolbox() {
     --network "$NET" \
     --hostname colab-ctf \
     -e COLORTERM=truecolor -e TERM="${TERM:-xterm-256color}" \
+    -e "CTF_USER=${CTF_USER:-}" \
     --entrypoint /bin/bash \
     -v "${mnt}:/opt/ctf" \
     -w /opt/ctf \

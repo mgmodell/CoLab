@@ -185,9 +185,17 @@ nmap -sV -p8000 10.88.0.3                                         # it's a real 
 - **Hints:** 2–3 progressive hints per room, revealed on request; each reveal
   reduces that room's award (Easy −15 · Medium −35 · Hard −70 · Critical −140),
   floored at 40% of base.
-- **Progress:** persisted to `CTF/state/progress.tsv` (+ a readable
-  `progress.json` snapshot) — captured flags, points, hints used, and capture
-  time per room. The menu shows `[✓]` markers and the running score.
+- **Saved per user, across sessions:** on launch you're asked *"Who's playing?"*
+  Each name gets its own saved profile at
+  `CTF/state/profiles/<name>/progress.tsv` (+ a readable `progress.json`) —
+  captured flags, points, hints used, and capture time per room. `state/` is
+  bind-mounted to the host, so **your progress survives quitting and relaunching**
+  — you're greeted with *"welcome back … resuming N pts across X/10 rooms"* and
+  the menu shows `[✓]` markers, your running score, and your name as `PLAYER`.
+  Press Enter at the prompt to continue as the last player; set `CTF_USER=<name>`
+  (env, forwarded by `ctf_serv`) to skip the prompt. Different names keep
+  independent progress on the same machine; a pre-existing single-file progress
+  is migrated into the default `player` profile automatically.
 - **Writeups:** after a capture you're offered a scratch `WRITEUP.md`
   (vuln / steps / payload / remediation) to journal the solve.
 

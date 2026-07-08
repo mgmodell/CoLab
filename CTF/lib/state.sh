@@ -1,18 +1,48 @@
 #!/usr/bin/env bash
 # =============================================================================
-#  CoLab CTF — progress & scoring state
-#  Source of truth: ctf/state/progress.tsv (gitignored).
-#   columns: id <TAB> captured(0/1) <TAB> points_awarded <TAB> hints_used <TAB> captured_at
-#  A readable progress.json snapshot is exported alongside on every change.
+#  CoLab CTF — progress & scoring state (PER USER)
+#  Each player gets their own saved progress under:
+#     ctf/state/profiles/<user>/progress.tsv   (+ progress.json)
+#  columns: id <TAB> captured(0/1) <TAB> points_awarded <TAB> hints_used <TAB> captured_at
+#  state/ is bind-mounted to the host, so a user's progress survives across
+#  sessions (container restarts). Flags are shared; only progress is per-user.
 #  Scoring: base points per difficulty; each revealed hint reduces that
 #  challenge's award, floored at 40% of base.
 # =============================================================================
 
-state_file() { printf '%s/state/progress.tsv' "$CTF_HOME"; }
-state_json()  { printf '%s/state/progress.json' "$CTF_HOME"; }
+CTF_PROFILE="${CTF_PROFILE:-player}"
+
+# Sanitize a display name into a filesystem-safe profile slug.
+state_slug() {
+  local s; s="$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_-' '_' \
+        | sed -E 's/_+/_/g; s/^[_-]+//; s/[_-]+$//')"
+  printf '%s' "${s:-player}"
+}
+
+state_profile_dir() { printf '%s/state/profiles/%s' "$CTF_HOME" "$CTF_PROFILE"; }
+state_file() { printf '%s/progress.tsv' "$(state_profile_dir)"; }
+state_json() { printf '%s/progress.json' "$(state_profile_dir)"; }
+
+# Switch to a user's profile (creating it). Migrates a pre-profiles progress
+# file into the default 'player' profile so existing progress is never lost.
+state_set_profile() {
+  CTF_PROFILE="$(state_slug "${1:-}")"
+  mkdir -p "$(state_profile_dir)"
+  if [[ "$CTF_PROFILE" == "player" && -f "$CTF_HOME/state/progress.tsv" && ! -f "$(state_file)" ]]; then
+    mv "$CTF_HOME/state/progress.tsv" "$(state_file)" 2>/dev/null || true
+    [[ -f "$CTF_HOME/state/progress.json" ]] && mv "$CTF_HOME/state/progress.json" "$(state_json)" 2>/dev/null || true
+  fi
+}
+
+# List existing profiles (one per line).
+state_list_profiles() {
+  local d="$CTF_HOME/state/profiles"
+  [[ -d "$d" ]] || return 0
+  ( cd "$d" && ls -1 2>/dev/null )
+}
 
 state_init() {
-  local f id; f="$(state_file)"; mkdir -p "$CTF_HOME/state"
+  local f id; f="$(state_file)"; mkdir -p "$(state_profile_dir)"
   [[ -f "$f" ]] || : > "$f"
   # Ensure a row exists for every registered challenge (supports dropping in
   # new challenge definitions later without wiping existing progress).

@@ -132,13 +132,18 @@ SCORING / HINTS / PROGRESS
      menu header, TryHackMe-style.
    - Each room has 2-3 progressive hints; revealing one lowers that room's award
      (Easy -15 / Medium -35 / Hard -70 / Critical -140), floored at 40% of base.
-   - Progress persists to state/progress.tsv (+ readable progress.json): captured
-     flags, points, hints used, and capture time. The menu shows [checkmark]s.
+   - SAVED PER USER, ACROSS SESSIONS: on launch it asks "Who's playing?". Each
+     name gets its own saved profile (state/profiles/<name>/progress.tsv). Because
+     state/ is on the host, quitting and relaunching RESUMES you ("welcome back...
+     resuming N pts across X/10"); the menu shows your name as PLAYER. Press Enter
+     to continue as the last player, or set CTF_USER=<name> to skip the prompt.
+     Different names keep separate progress on the same machine.
    - After a capture you can journal the solve in a WRITEUP.md template.
 
 REPLAY / TEARDOWN
    - Per-room [r] re-provisions a fresh target and clears that room's progress.
-   - Menu [a] resets all progress; [t] tears down all targets + the network.
+   - Menu [a] resets all progress (current player); [x] tears down all targets +
+     network. ([t] is the toolkit menu.)
    - ./ctf_serv.sh -x removes the whole CTF container + internal network.
 
 

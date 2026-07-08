@@ -82,9 +82,10 @@ ctf_header() {
   local total avail cap n
   total="$(state_total_points)"; avail="$(state_total_available)"
   cap="$(state_captured_count)"; n="${#CHALLENGE_ORDER[@]}"
-  printf '  %sSCORE%s %s%s%s / %s     %sROOMS%s %s%s/%s%s cleared     %sflag:%s CoLab{...}\n' \
+  printf '  %sSCORE%s %s%s%s / %s     %sROOMS%s %s%s/%s%s cleared     %sPLAYER%s %s%s%s\n' \
     "$T_BOLD$T_CYAN" "$T_RESET" "$T_BOLD$T_YELLOW" "$total" "$T_RESET" "$avail" \
-    "$T_BOLD$T_CYAN" "$T_RESET" "$T_GREEN" "$cap" "$n" "$T_RESET" "$T_DIM" "$T_RESET"
+    "$T_BOLD$T_CYAN" "$T_RESET" "$T_GREEN" "$cap" "$n" "$T_RESET" \
+    "$T_BOLD$T_CYAN" "$T_RESET" "$T_BOLD$T_WHITE" "${CTF_PROFILE:-player}" "$T_RESET"
   provision_engine_line
   if [[ -n "$CTF_TARGET_PID" ]]; then
     printf '  %sTARGET%s %s%s%s  %s(serves the room you open · also http://127.0.0.1:%s)%s\n' \
@@ -179,10 +180,40 @@ ctf_toolkit_menu() {
   done
 }
 
+# Ask who's playing so progress is saved to (and resumed from) their own profile.
+ctf_select_user() {
+  local name last="" def
+  [[ -f "$CTF_HOME/state/.last_user" ]] && last="$(cat "$CTF_HOME/state/.last_user" 2>/dev/null)"
+  if [[ -n "${CTF_USER:-}" ]]; then
+    name="$CTF_USER"                       # non-interactive (env / launcher)
+  else
+    def="${last:-player}"
+    printf '\n  %sWho'\''s playing?%s  a name saves your progress across sessions  %s[%s]%s\n' \
+      "$T_BOLD$T_SKY" "$T_RESET" "$T_DIM" "$def" "$T_RESET"
+    printf '  %sname%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
+    read -r name || name=""
+    [[ -z "$name" ]] && name="$def"
+  fi
+  state_set_profile "$name"
+  printf '%s' "$CTF_PROFILE" > "$CTF_HOME/state/.last_user" 2>/dev/null || true
+}
+
 ctf_main() {
   flags_seed          # generate plaintext (gitignored) + hash store if needed
-  state_init
+  ui_clear
+  banner_wordmark
+  ctf_select_user     # pick/create the player profile
+  state_init          # load (or create) that profile's progress
   ctf_target_start    # bring up the live HTTP target (optional; needs python3)
+  local cap; cap="$(state_captured_count)"
+  if (( cap > 0 )); then
+    printf '\n  %s✓ welcome back, %s — resuming %s pts across %s/%s rooms.%s\n' \
+      "$T_GREEN" "$CTF_PROFILE" "$(state_total_points)" "$cap" "${#CHALLENGE_ORDER[@]}" "$T_RESET"
+    sleep 1.3
+  else
+    printf '\n  %snew profile "%s" — good luck!%s\n' "$T_SLATE" "$CTF_PROFILE" "$T_RESET"
+    sleep 0.8
+  fi
   local sel n="${#CHALLENGE_ORDER[@]}"
   while true; do
     ui_clear
