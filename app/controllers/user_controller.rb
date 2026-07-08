@@ -88,8 +88,8 @@ class UserController < ApplicationController
 
   def merge_users
     resp_hash = {}
-    predator = User.find_by( email: params[:predator_email] )
-    prey = User.find_by( email: params[:prey_email] )
+    predator = User.find_by_email( params[:predator_email] )
+    prey = User.find_by_email( params[:prey_email] )
     result = User.merge_users( predator: predator, prey: prey )
     resp_hash[:success] = result.empty?
     resp_hash[:errors] = result unless result.empty?

@@ -414,7 +414,7 @@ export default function UsersDataAdmin(props: Props) {
                     label={t("merge_users_btn")}
                     disabled={predatorEmail.length === 0 || preyEmail.length === 0}
                     onClick={() => {
-                        mergeUsers();
+                        mergeUsersAction();
                         setShowMergeDialog(false);
                     }}
                 />
