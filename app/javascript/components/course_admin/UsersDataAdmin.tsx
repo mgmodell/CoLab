@@ -529,7 +529,7 @@ export default function UsersDataAdmin(props: Props) {
                                         className="p-button-info p-mr-2"
                                         size='small'
                                         onClick={() => {
-                                            roleChangeAction(userDetails.email, "researcher", !user.is_researcher);
+                                            roleChangeAction(userDetails.email, "researcher", !userDetails.is_researcher);
                                         }
                                         }
                                     />

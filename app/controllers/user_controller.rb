@@ -8,10 +8,17 @@ class UserController < ApplicationController
   def directory_search
     school_id = current_user.is_admin? ? params[:school_id] : current_user.school_id
     search_terms = params[:search_term].split
+    joins_fields = []
     emails, non_emails = search_terms.partition { | str | str.match?( /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i ) }
 
     if current_user.is_admin? || current_user.is_instructor? || !non_emails.empty?
-      search_query = school_id > 0 && ( current_user.is_instructor? || current_user.is_admin? ) ? 'school_id = ? AND (' : '('
+      if school_id > 0 && ( current_user.is_instructor? || current_user.is_admin? )
+        joins_fields << :school
+        search_query = 'school_id = ? AND ('
+      else
+        search_query = '('
+      end
+
       unless non_emails.empty?
         search_query += if current_user.is_researcher?
                           non_emails.map do
@@ -24,6 +31,7 @@ class UserController < ApplicationController
       if !emails.empty? && (current_user.is_admin? || current_user.is_instructor?)
         search_query += ' OR ' unless non_emails.empty?
         search_query += emails.map { 'LOWER(emails.email) = ?' }.join( ' OR ' )
+        joins_fields << :emails
       end
 
       search_query += ') AND users.id != ?'
@@ -33,8 +41,13 @@ class UserController < ApplicationController
       search_terms.concat( emails.flat_map { | term | [term.downcase] } ) unless current_user.is_researcher?
       search_terms << current_user.id
 
-      found_users = User.joins( :school, :emails )
+      # joins_fields = [:school, :emails]
+      found_users = if joins_fields.size > 0
+                      User.joins( *joins_fields )
                         .where( search_query, *search_terms ).distinct
+                    else
+                      User.where( search_query, *search_terms ).distinct
+                    end
 
       resp_hash = { users: found_users.map do | u |
         {

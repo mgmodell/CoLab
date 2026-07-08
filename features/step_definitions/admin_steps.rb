@@ -52,7 +52,7 @@ Then ('the course participants are in the same school as the course') do
   end
 end
 
-Then('the user searches for a user by {string} {string} from {string}') do |search_type, search_field, user_type|
+Then( 'the user searches for a user by {string} {string} from {string}' ) do |search_type, search_field, user_type|
   ack_messages
   click_link_or_button 'Clear'
   case user_type
@@ -69,12 +69,12 @@ Then('the user searches for a user by {string} {string} from {string}') do |sear
   when 'self'
     @search_user = @user
   when 'admin'
-    @search_user = User.where( admin: true ).sample
+    @search_user = User.where( admin: true ).where.not( id: @user.id ).sample
   when 'researcher'
-    @search_user = User.where( researcher: true ).sample
+    @search_user = User.where( researcher: true ).where.not(id: @user.id ).sample
   when 'previous search'
     # No Operation, just use the previous search user
-  else 
+  else
     pending
   end
 
@@ -103,6 +103,7 @@ Then('the user {string} found') do |is_or_is_not|
   wait_for_render
   search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
   search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
+  byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
   has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 
@@ -225,9 +226,22 @@ Then('the user enters the email address for user {int} and user {int}') do |int,
 end
 
 Then('the user searches for user {int} by email') do |int|
-  pending # Write code here that turns the phrase above into concrete actions
+  ack_messages
+  click_link_or_button 'Clear'
+  search_term = @selected_users[1].email
+  fill_in 'Name and/or email', with: search_term
+  click_link_or_button 'Search'
+  wait_for_render
 end
 
-Then('the user sees {int} {string}') do |int, string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user has {int} {string}') do |count, activity_type|
+  @search_user.reload
+  case activity_type.downcase
+  when 'experience'
+    @search_user.experiences.size.should be count
+  when 'bingo'
+    @search_user.bingo_games.size.should be count
+  else
+    pending
+  end
 end

@@ -5,6 +5,7 @@ Feature: Admins can find and review users and update their roles.
     Given a user has signed up
     Given the user "has" had demographics requested
     Given there is a course with an assessed project
+    Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
       And the user is the instructor for the course
     Given the course has an experience
     Given the project has a group with 4 confirmed users
@@ -31,6 +32,7 @@ Feature: Admins can find and review users and update their roles.
 
     Given there is a course with an assessed project
     Given the course is in "Test School" school
+    Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has a group with 2 confirmed users
     Given the project has been activated
       And the course participants are in the same school as the course
@@ -204,7 +206,7 @@ Feature: Admins can find and review users and update their roles.
      And the user "does" see an active "Merge users" button
     Then the user clicks the "Merge users" button
     Then the user enters the email address for user 1 and user 2
-    Then the user clicks the "Merge users" button
+    Then the user clicks the "Merge now" button
     Then the user sees a success message
     Then the user searches for user 1 by email
      And the user "is not" found
@@ -212,5 +214,5 @@ Feature: Admins can find and review users and update their roles.
      And the user "is" found
     Then the user views the user
     Then the user sees 2 course listed
-     And the user sees 1 "experience"
-     And the user sees 2 "bingo"
+     And the user has 1 "experience"
+     And the user has 2 "bingo"
