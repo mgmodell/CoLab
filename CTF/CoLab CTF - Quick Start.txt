@@ -103,9 +103,22 @@ Selecting a room:
 Room menu:
    [s] submit flag   [h] hint   [r] reset room   [w] writeup   [i] briefing   [b] back
 
+TOOLKIT MENU & ATTACK TARGET
+   The main menu shows a TARGET line (e.g. TARGET http://10.88.0.3:8000) and a
+   [t] toolkit entry. The target is a REAL HTTP service that serves whichever
+   room you have open, so you can attack it with real tools (TryHackMe-style):
+        curl http://<target>:8000/api/grades/1337
+        sqlmap -u "http://<target>:8000/api/search?q=1" --batch
+        nmap -sV -p8000 <target>
+   [t] toolkit lists the tools (curl, sqlmap, jwt_tool, ffuf, gitleaks, nuclei,
+   nmap, jq, base64) with example commands and [s] to drop into a Kali shell.
+   (127.0.0.1:8000 also works from inside the toolbox. ./colab-http still works
+   offline if you prefer it, or if python3 isn't available.)
+
 Example (IDOR room), from inside the toolbox:
-   cd /opt/ctf/state/work/easy-idor
-   ./colab-http GET /api/grades/1337        # read a record that isn't yours
+   curl http://127.0.0.1:8000/api/grades/1337     # read a record that isn't yours
+   # or, offline:
+   cd /opt/ctf/state/work/easy-idor && ./colab-http GET /api/grades/1337
 
 FLAGS
    - Format:  CoLab{lowercase_snake_case}

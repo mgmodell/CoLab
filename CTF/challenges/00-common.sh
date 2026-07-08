@@ -75,6 +75,11 @@ challenge_briefing() {
   ui_kv "Endpoint"      "${CH_ENDPOINT[$id]:-—}" "$T_CYAN"
   ui_kv "CVSS"          "${CH_CVSS[$id]:-—}"
   ui_kv "Reward"        "${CH_POINTS[$id]} pts" "$(ui_difficulty_color "${CH_DIFF[$id]}")"
+  if [[ -n "${CTF_TARGET_PID:-}" ]]; then
+    ui_kv "Attack target" "${TARGET_URL:-http://127.0.0.1:8000}  (curl · sqlmap · ffuf …)" "$T_RED"
+  else
+    ui_kv "Attack target" "./colab-http  (offline mock in the room work dir)" "$T_RED"
+  fi
   echo
 }
 
@@ -86,13 +91,19 @@ challenge_open() {
   provision_net
   provision_reset "$id"
   "${CH_PROVISION[$id]}" "$id"       # enable ONLY this vuln + plant the flag
+  ctf_target_active "$id"            # point the live HTTP target at this room
   toolkit_prepare "$id"              # stage working dir, tools, hints, objective
   printf '  %s✓%s target up · flag planted · toolkit staged\n' "$T_GREEN" "$T_RESET"
   provision_engine_line
   echo
   toolkit_summary "$id"
-  printf '\n  %sTip:%s cd into the working dir and use %s./colab-http%s to hit the target.\n' \
-    "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
+  if [[ -n "${CTF_TARGET_PID:-}" ]]; then
+    printf '\n  %sHit it:%s %scurl %s%s%s  ·  or ./colab-http in the work dir  ·  point sqlmap/ffuf here too\n' \
+      "$T_DIM" "$T_RESET" "$T_CYAN" "${TARGET_URL:-}" "$T_RESET" "$T_DIM"
+  else
+    printf '\n  %sTip:%s cd into the working dir and use %s./colab-http%s to hit the target.\n' \
+      "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
+  fi
   challenge_menu "$id"
 }
 

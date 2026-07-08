@@ -141,6 +141,29 @@ cd CTF/state/work/easy-idor
 ./colab-http GET /api/grades/1337
 ```
 
+### Toolkit menu & the live attack target
+
+The main menu has a **`[t] toolkit`** entry and shows a **`TARGET`** line, e.g.
+`TARGET http://10.88.0.3:8000`. That's a **real HTTP service** (started
+automatically inside the toolbox) that serves whichever room you currently have
+open — so the Sec tools work against a genuine `IP:port`, TryHackMe-style:
+
+```bash
+curl http://10.88.0.3:8000/api/grades/1337                       # IDOR (room 1)
+curl "http://10.88.0.3:8000/api/search?q=x' UNION SELECT flag FROM secrets-- "  # SQLi (room 4)
+sqlmap -u "http://10.88.0.3:8000/api/search?q=1" --batch          # room 4, automated
+nmap -sV -p8000 10.88.0.3                                         # it's a real port
+```
+
+- The `[t] toolkit` screen lists the available tools (curl, sqlmap, jwt_tool,
+  ffuf, gitleaks, nuclei, nmap, jq, base64) with ✓/○ availability, an example
+  command against the current target, and `[s]` to drop into a Kali shell.
+- The target IP is the toolbox container's address on the isolated internal
+  network (plus `http://127.0.0.1:8000` from inside). It serves the **open**
+  room; at the main menu it shows a landing page.
+- `./colab-http` still works too (offline, no IP needed). If `python3` isn't
+  available the live target is skipped and you use `./colab-http` only.
+
 ---
 
 ## Flags & verification

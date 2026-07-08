@@ -5,3 +5,8 @@ state/flags.plain
 flags/*.plain
 ._e2e.sh
 *.swp
+state/active_challenge
+state/target_server.log
+._httptest.sh
+__pycache__/
+*.pyc

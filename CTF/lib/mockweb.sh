@@ -83,9 +83,16 @@ mw_b64d() {
 }
 mw_b64e() { printf '%s' "$1" | base64 2>/dev/null | tr -d '\n'; }
 
-# Emit an HTTP-ish response: status line + optional headers (dim) + body.
+# Emit a response. Two modes:
+#   • interactive (default): pretty "< HTTP/1.1 …" lines for ./colab-http.
+#   • CTF_RAW=1: machine-readable for the real HTTP target server — first line is
+#     the numeric status, a blank line, then the raw body (no colors/prefixes).
 mw_resp() { # status  body  [header-line...]
   local status="$1" body="$2"; shift 2 || true
+  if [ "${CTF_RAW:-0}" = "1" ]; then
+    printf '%s\n\n%s' "${status%% *}" "$body"
+    return
+  fi
   printf '%s< HTTP/1.1 %s%s\n' "${T_DIM:-}" "$status" "${T_RESET:-}"
   local h; for h in "$@"; do printf '%s< %s%s\n' "${T_DIM:-}" "$h" "${T_RESET:-}"; done
   printf '%s<%s\n%s\n' "${T_DIM:-}" "${T_RESET:-}" "$body"
