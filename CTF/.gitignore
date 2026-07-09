@@ -10,3 +10,4 @@ state/target_server.log
 ._httptest.sh
 __pycache__/
 *.pyc
+._*
