@@ -1,0 +1,133 @@
+ko:
+  experience_admins:
+    name: 경험 이름
+    lead_time_lbl: 강사 준비 일수
+    student_deadline_msg: "학생들은 {{date}}까지 완료해야 합니다."
+    active: 활성화됨
+    timezone_warning: "모든 날짜는 {{timezone}} 시간대입니다."
+    date_range: 경험 날짜
+    start_date_lbl: 경험 시작 날짜
+    date_to_lbl: 까지
+    end_date_lbl: 경험 종료 날짜
+    create: 경험 만들기
+    save: 경험 저장
+    errors:
+      must_be created: >
+        학생이 반응하기 전에 경험을 먼저 만들어야 합니다.
+    tabs:
+      details: 세부 사항
+      results: 결과
+      response_word_cloud: 응답 워드 클라우드
+    lti:
+      panel_title: LTI 성적 전달
+      line_item_url_lbl: LMS 라인 항목 URL
+      line_item_url_placeholder: "예: https://lms.example.com/api/lti/courses/1/line_items/1"
+      ags_token_url_lbl: AGS 액세스 토큰 URL
+      ags_token_url_placeholder: "예: https://lms.example.com/login/oauth2/token"
+      client_id_lbl: 클라이언트 ID
+      deployment_id_lbl: 배포 ID
+      iss_lbl: 발급자 (iss)
+      save_btn: LTI 연결 저장
+      push_btn: LMS에 성적 전송
+      not_configured: 구성되지 않음
+      configured: 연결됨
+      push_confirm: 지금 모든 성적을 LMS에 전송할까요?
+  experiences:
+    simulation: 협업 경험 시뮬레이션
+    available: "시뮬레이션: %{task}"
+    completed: "완료된 시뮬레이션: %{task}"
+    instructions_lbl: 지침
+    glossary_lbl: 용어집
+    scenario_lbl: 시나리오
+    narrative_lbl: 내러티브
+    behavior_lbl: 행동
+    overall_diagnosis: 전체 진단
+    reaction_diagnosis: 반응 진단
+    reaction_suggestions: 반응 제안
+    start_date_lbl: 경험 시작 날짜
+    date_to_lbl: 까지
+    end_date_lbl: 경험 종료 날짜
+    close_pnl: 패널 닫기
+    create_success: 경험이 성공적으로 만들어졌습니다.
+    update_success: 경험이 성공적으로 업데이트되었습니다.
+    destroy_success: 경험이 성공적으로 삭제되었습니다.
+    soft_delete_success: 경험이 비활성화되어 삭제 표시되었습니다.
+    wrong_course: 해당 경험은 다른 수업의 일부입니다.
+    instr_title: 경험 지침
+    not_started: 시작 안 됨
+    not_completed: 완료되지 않음
+    improvements: 개선 사항
+    reactions:
+      student_lbl: 학생
+      email_lbl: 이메일
+      completion_lbl: 완료
+      narrative_lbl: 내러티브
+      scenario_lbl: 시나리오
+      response_lbl: 응답
+      improvements_lbl: 개선 사항
+      suggestions_lbl: 제안
+      none_yet: 아직 반응이 없습니다.
+    tz_warn: "이 경험은 %{time_zone} 시간대에서 진행되며 모든 날짜는 이를 반영합니다."
+    react_title: 경험 반응
+    editing: 경험 편집 중
+    react_success: 경험에 대한 반응이 기록되었습니다
+    react_fail: 반응 기록 중 문제가 발생했습니다. 다시 시도하세요.
+    no_experiences: 경험 없음
+    performance_explained: >
+      이 값은 CoLab 내에서 배정된 시뮬레이션된 그룹 작업 경험의 평균 완료율을 반영합니다.
+    inst_p1: >
+      이 경험에서 학생은 한 학기 동안 진행된 협업 그룹 프로젝트에 대해 작성된 주간 일지를
+      읽게 됩니다. 항목들은 프로젝트의 14주를 기록합니다. 학생은 가상의 인물이므로 개인
+      정보 보호는 중요하지 않습니다. 각 내러티브를 읽으면서 <em>나열된 행동 중 그 주의
+      그룹 역학을 <strong>가장 잘</strong> 특징짓는 <strong>하나</strong>의 행동을 결정하세요.</em>
+    inst_p2: >
+      내러티브의 14주에 대한 위의 작업을 수행한 후, 동일한 행동 목록을 사용하여 전체 학기에
+      걸친 그룹의 행동에 대한 전반적인 평가를 요청받게 됩니다.
+    inst_p3: >
+      경험 중에 브라우저의 <em><strong>뒤로</strong> 버튼을 사용하지 마세요</em>. 어떤
+      이유로든 중단해야 하는 경우 돌아왔을 때 멈춘 곳에서 계속할 수 있습니다.
+    scenario_p1: >
+      이 수업의 학생들은 이전에 함께 작업한 적이 없는 다른 세 학생과 함께 네 명으로 구성된
+      그룹에서 연구 논문을 작성하고 있습니다. 논문을 완성하는 데 14주가 주어집니다.
+    scenario_p2: >
+      5주차에 제출해야 하는 첫 번째 과제는 그룹의 선택된 논문 주제와 요약이 포함된 예비
+      참고 문헌 목록을 제출하는 것입니다. 9주차에는 초고를 제출합니다. 13주차에는 각 그룹이
+      전체 수업에 공식적인 프레젠테이션을 하고 최종 논문은 14주차 말까지 강사에게 제출됩니다.
+    scenario_p3: >
+      각 그룹은 수업 외 시간에 만나 이 프로젝트를 진행해야 하며 정기적인 회의를 예약하는
+      것이 권장됩니다. 마지막으로, 각 학생은 강사가 그룹이 어떻게 협력하는지 이해할 수 있도록
+      모든 구성원의 기여를 자세히 기록하는 주간 반성 일지를 작성해야 합니다.
+    index:
+      title: 경험 목록
+    show:
+      title: 경험 세부 사항
+    edit:
+      title: 경험 편집
+    new:
+      title: 새 경험
+    next:
+      journal: "일지 항목: {{week_num}}주차"
+      prompt: 지금 이 그룹을 가장 잘 특징짓는 행동은 무엇인가요?
+      other: 어떤 행동을 보셨나요?
+      comments: 의견
+      click_for_comment: >
+        이 내러티브에 대해 추가 의견이 있으면 여기를 클릭하세요.
+      save_and_continue: 저장 및 계속
+    reaction:
+      title: 전체 그룹 행동
+      instructions: >
+        방금 다 읽은 전체 내러티브를 되돌아보고 다음 행동 중 전체 학기 동안 그룹을
+        가장 잘 특징짓는 행동을 알려주세요.
+      dom_behavior: 내러티브에서 지배적인 행동은 무엇이었나요?
+      improve: 내러티브를 어떻게 개선할 수 있나요?
+      suggest: '제안 사항:'
+      submit: 제출
+    instructions:
+      title: 이 경험을 완료하기 위한 지침
+      scenario_lbl: 학생 프로젝트 시나리오
+      behaviors_lbl: 행동
+      behaviors_lbl_sub: 이 레이블과 설명은 이후 각 페이지에 제공됩니다
+      next: 다음
+      reminder: >
+        언제든지 페이지 오른쪽 상단 모서리의 <i>지침</i> 버튼을 사용하여 이 지침이나
+        프로젝트 설명에 접근할 수 있습니다.
