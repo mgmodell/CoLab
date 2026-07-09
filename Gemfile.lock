@@ -289,7 +289,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.19.9)
+    json (2.20.0)
     jwt (3.2.0)
       base64
     keypairs (2.0.1)
@@ -297,7 +297,7 @@ GEM
       activerecord (>= 7.1, < 9)
       jwt (>= 2.5, < 4)
       lockbox (>= 1.3, < 3.0)
-    language_server-protocol (3.17.0.5)
+    language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     listen (3.10.0)
       logger
@@ -529,7 +529,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
-    rubocop (1.88.0)
+    rubocop (1.88.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -540,7 +540,7 @@ GEM
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.49.1)
+    rubocop-ast (1.50.0)
       parser (>= 3.3.7.2)
       prism (~> 1.7)
     rubocop-capybara (2.23.0)
@@ -706,7 +706,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.82)
+  rubocop (~> 1.88)
   rubocop-capybara
   rubocop-performance
   rubocop-rails
