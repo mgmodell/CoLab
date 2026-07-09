@@ -140,6 +140,11 @@ challenge_submit() {
       award="$(state_capture "$id")"
       challenge_celebrate "$id" "$award"
       challenge_offer_writeup "$id"
+      # Easter egg: all rooms captured → show the completion trophy.
+      if declare -F ctf_victory >/dev/null 2>&1 && \
+         (( $(state_captured_count) == ${#CHALLENGE_ORDER[@]} )); then
+        ctf_victory
+      fi
     fi
   else
     printf '  %s✗ incorrect flag.%s keep going — attempts are unlimited.\n' "$T_RED" "$T_RESET"

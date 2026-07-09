@@ -180,6 +180,63 @@ ctf_toolkit_menu() {
   done
 }
 
+# ---- completion easter egg: shown when all rooms are captured ---------------
+_ctf_rstrip() { local s="$1"; printf '%s' "${s%"${s##*[![:space:]]}"}"; }
+_ctf_center() { # width colorvar text
+  local w="$1" col="$2" text="$3" pad; pad=$(( (w - ${#text}) / 2 )); (( pad < 0 )) && pad=0
+  printf '%*s%s%s%s\n' "$pad" "" "$col" "$text" "$T_RESET"
+}
+_ctf_trophy_art() {
+cat <<'ART'
+        .:=+*#%%%%#*=:.
+          .:+%@@@@@@@@@@@@@@%+..
+        .:*@@@@@@@@@@@@@@@@@@@@+..
+       .-@@@@@@@@@@@@@@@@@@@@@@@%:
+       :@@@@@@@@@@@@@@@@@@@@@@@@@%-.
+       %@@@@@@@@@@@@@@@@@@@@@@@@@@@:.
+     .:@@@@@@@@*##%%%%%%###**++==-*#.
+     .-@@@@@@@@...               .:%-
+     .:@@@@@@@@%..               ..%=
+     ..%@@@@@@@@*.            ...::%+
+       +@@@@@+:............   -++::%=
+     ..-@@@@@-..:==+==+++:. .:=+*+-*#..
+     .*%:..+@-...-==+@@@+-. .#.:+-.-@:.
+     .%+. .:%:............. .*-... .%=.
+     .:@=...*:.       ........*... .#*.
+     ..:%=. -..       ..=::...:+:. .#*.
+       .:#*....       ..:=#%+-%#:. .%+.
+        ..=%@-.      .*@@@@@@@@%@=.:@-.
+            -%-.     #@@@*::::##==.*#
+            .:@=..   .#-.:++++*+#@@#.
+              .##... .:@+:.*@@%%@@*.
+               .=%*-...#@@@@@@@@@#:.
+                 .=#@%#%@@@@@@@@%-..
+                   ..-=*#%%%%%*=..
+ART
+}
+
+# The victory screen. Blue vertical gradient (light cyan → deep navy), centered.
+ctf_victory() {
+  local -a art; mapfile -t art < <(_ctf_trophy_art)
+  local n=${#art[@]} i s maxw=0
+  for ((i=0;i<n;i++)); do s="$(_ctf_rstrip "${art[i]}")"; (( ${#s} > maxw )) && maxw=${#s}; done
+  local target=70
+  local pad=$(( (target - maxw) / 2 )); (( pad < 0 )) && pad=0
+  local tr=125 tg=211 tb=252 br=30 bg=64 bb=175 denom=$(( n>1 ? n-1 : 1 )) r g b
+  ui_clear; printf '\n'
+  for ((i=0;i<n;i++)); do
+    r=$(( tr + (br-tr)*i/denom )); g=$(( tg + (bg-tg)*i/denom )); b=$(( tb + (bb-tb)*i/denom ))
+    printf '%*s%s%s%s\n' "$pad" "" "$(ui_fg "$r" "$g" "$b")" "$(_ctf_rstrip "${art[i]}")" "$(ui_reset)"
+  done
+  printf '\n'
+  _ctf_center "$target" "$T_BOLD$T_CYAN"  "A L L   F L A G S   C A P T U R E D"
+  _ctf_center "$target" "$T_BOLD$T_YELLOW" "$(state_total_points) / $(state_total_available) points   ·   ${#CHALLENGE_ORDER[@]}/${#CHALLENGE_ORDER[@]} rooms cleared"
+  _ctf_center "$target" "$T_SLATE"        "player: ${CTF_PROFILE:-player}  —  you cleared the entire CoLab CTF range."
+  printf '\n'
+  _ctf_center "$target" "$T_DIM"          "[enter] return"
+  read -r _ || true
+}
+
 # Ask who's playing so progress is saved to (and resumed from) their own profile.
 ctf_select_user() {
   local name last="" def
@@ -233,6 +290,10 @@ ctf_main() {
       t|toolkit)   ctf_toolkit_menu ;;
       a|reset)     ctf_reset_all ;;
       x|teardown|down) ctf_teardown ;;
+      v|victory|trophy)   # hidden: re-view the completion screen once unlocked
+        if (( $(state_captured_count) == n )); then ctf_victory
+        else printf '  %s%s/%s rooms cleared — finish them all to unlock it.%s\n' \
+               "$T_SLATE" "$(state_captured_count)" "$n" "$T_RESET"; sleep 1.2; fi ;;
       "")          : ;;
       *[!0-9]*)    printf '  %sinvalid selection.%s\n' "$T_RED" "$T_RESET"; sleep 1 ;;
       *)
