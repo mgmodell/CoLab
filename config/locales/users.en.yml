@@ -8,6 +8,7 @@ en:
     user_stats_msg: The selection has {{user_count}} active users.
     init_merge_users_btn: Merge users
     merge_users_btn: Merge now
+    merge_users_cancel_btn: Cancel
     activate_user_btn: Reactivate
     deactivate_user_btn: Deactivate
     make_admin_btn: Make Admin
@@ -56,3 +57,7 @@ en:
     user_view_researcher_lbl: Researcher?
     user_view_courses_lbl: "Courses ({{course_count}}):"
     no_courses_msg: "No courses assigned."
+    merge_users_success_msg: "Users merged successfully."
+    merge_users_error_generic_msg: "Error merging users."
+    merge_users_error_not_possible_msg: "Error merging users: merge not possible."
+    one_or_more_users_not_found_msg: "One or more users not found."

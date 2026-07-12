@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19-12.2.2-MariaDB, for osx10.21 (arm64)
+-- MariaDB dump 10.19-12.3.2-MariaDB, for debian-linux-gnu (aarch64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	12.2.2-MariaDB-ubu2404
+-- Server version	12.3.2-MariaDB-ubu2404
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -4588,10 +4588,13 @@ CREATE TABLE `lti_connections` (
 -- Dumping data for table `lti_connections`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `lti_connections` WRITE;
 /*!40000 ALTER TABLE `lti_connections` DISABLE KEYS */;
 /*!40000 ALTER TABLE `lti_connections` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `lti_deployments`
@@ -4621,10 +4624,45 @@ CREATE TABLE `lti_deployments` (
 -- Dumping data for table `lti_deployments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `lti_deployments` WRITE;
 /*!40000 ALTER TABLE `lti_deployments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `lti_deployments` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
+
+--
+-- Table structure for table `lti_nonces`
+--
+
+DROP TABLE IF EXISTS `lti_nonces`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lti_nonces` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(6) NOT NULL,
+  `expires_at` datetime(6) NOT NULL,
+  `nonce` varchar(255) NOT NULL,
+  `state` varchar(255) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_lti_nonces_on_state` (`state`),
+  KEY `index_lti_nonces_on_expires_at` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lti_nonces`
+--
+
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
+LOCK TABLES `lti_nonces` WRITE;
+/*!40000 ALTER TABLE `lti_nonces` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lti_nonces` ENABLE KEYS */;
+UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `lti_resource_links`
@@ -4645,14 +4683,16 @@ CREATE TABLE `lti_resource_links` (
   `names_roles_url` varchar(255) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
+  `activity_type` varchar(255) DEFAULT NULL,
+  `activity_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_lti_resource_links_on_deployment_and_link` (`lti_deployment_id`,`resource_link_id`),
   KEY `index_lti_resource_links_on_lti_deployment_id` (`lti_deployment_id`),
   KEY `index_lti_resource_links_on_course_id` (`course_id`),
   KEY `index_lti_resource_links_on_assignment_id` (`assignment_id`),
-  CONSTRAINT `fk_rails_lti_rl_deployment` FOREIGN KEY (`lti_deployment_id`) REFERENCES `lti_deployments` (`id`),
+  CONSTRAINT `fk_rails_lti_rl_assignment` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`),
   CONSTRAINT `fk_rails_lti_rl_course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
-  CONSTRAINT `fk_rails_lti_rl_assignment` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`)
+  CONSTRAINT `fk_rails_lti_rl_deployment` FOREIGN KEY (`lti_deployment_id`) REFERENCES `lti_deployments` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4660,10 +4700,13 @@ CREATE TABLE `lti_resource_links` (
 -- Dumping data for table `lti_resource_links`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `lti_resource_links` WRITE;
 /*!40000 ALTER TABLE `lti_resource_links` DISABLE KEYS */;
 /*!40000 ALTER TABLE `lti_resource_links` ENABLE KEYS */;
 UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `narratives`
@@ -5260,7 +5303,10 @@ INSERT INTO `schema_migrations` VALUES
 ('20260411000001'),
 ('20260411000002'),
 ('20260411000003'),
-('20260411220000');
+('20260411220000'),
+('20260506120000'),
+('20260508140000'),
+('20260710125207');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5476,13 +5522,13 @@ CREATE TABLE `users` (
   `gender_id` int(11) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `timezone` varchar(255) DEFAULT 'UTC',
-  `admin` tinyint(1) DEFAULT NULL,
+  `admin` tinyint(1) NOT NULL DEFAULT 0,
   `welcomed` tinyint(1) DEFAULT NULL,
   `last_emailed` datetime DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL,
   `anon_first_name` varchar(255) DEFAULT NULL,
   `anon_last_name` varchar(255) DEFAULT NULL,
-  `researcher` tinyint(1) DEFAULT NULL,
+  `researcher` tinyint(1) NOT NULL DEFAULT 0,
   `language_id` int(11) NOT NULL DEFAULT 40,
   `date_of_birth` date DEFAULT NULL,
   `home_state_id` int(11) DEFAULT NULL,
@@ -5527,7 +5573,7 @@ SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'$2a$04$CaDetLlxhfe65uYCvlL91O7wEhBwXc5ucNtVlholavm2KpDmAmbzG',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2019-09-23 11:40:17','2020-08-11 03:13:58','Micah','Modell',NULL,NULL,'UTC',1,NULL,NULL,NULL,'Ashley','Welch',NULL,40,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'email','micah.modell@gmail.com',NULL,0,1,'007bff');
+(1,'$2a$04$CaDetLlxhfe65uYCvlL91O7wEhBwXc5ucNtVlholavm2KpDmAmbzG',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2019-09-23 11:40:17','2020-08-11 03:13:58','Micah','Modell',NULL,NULL,'UTC',1,NULL,NULL,NULL,'Ashley','Welch',0,40,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'email','micah.modell@gmail.com',NULL,0,1,'007bff');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5782,4 +5828,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-04-10 23:19:21
+-- Dump completed on 2026-07-10 17:20:06

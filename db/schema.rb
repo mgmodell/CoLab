@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_10_125207) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -671,7 +671,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
 
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.boolean "active", default: true, null: false
-    t.boolean "admin"
+    t.boolean "admin", default: false, null: false
     t.string "anon_first_name"
     t.string "anon_last_name"
     t.integer "cip_code_id"
@@ -703,7 +703,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.integer "primary_language_id"
     t.string "provider", default: "email", null: false
     t.datetime "remember_created_at", precision: nil
-    t.boolean "researcher"
+    t.boolean "researcher", default: false, null: false
     t.datetime "reset_password_sent_at", precision: nil
     t.string "reset_password_token"
     t.integer "school_id"

@@ -103,7 +103,7 @@ Then('the user {string} found') do |is_or_is_not|
   wait_for_render
   search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
   search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
-  byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
+  # byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
   has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 
@@ -187,17 +187,38 @@ Then('the found user {string} a {string}') do |is_or_is_not,role|
   end
 end
 
-Given( 'select user {int} from {string}' ) do |index, population|
+Given( 'select {int} users with {string} shared courses' ) do |count, shared_or_not|
   @selected_users ||= {}
-  case population
-  when 'user course'
-    @selected_users[ index ] = @user.courses.sample.rosters.map{ |r| r.user }.sample
-  when 'other school'
-    user = Project.joins(:course).where.not(course: {school_id: @user.school.id} ).first.users.sample
-    @selected_users[ index ] = user
+  case shared_or_not
+  when 'no'
+    user1 = Group.joins( :users ).group( 'user_id' )
+                .having( 'count(groups.id) = 1')
+                .where( users: {admin: false, instructor: false, researcher: false} )
+                .sample.users.sample
+
+    user2 = Roster.where.not( course: user1.courses ).sample.course.users.sample
+    @selected_users[ 1 ] = user1
+    @selected_users[ 2 ] = user2
+  when 'some'
+    user1 = User.joins(:courses).where( admin: false, instructor: false, researcher: false )
+      .having('count(courses.id) > ?',1).sample
+    user2 = user1.courses.sample.rosters.students.sample.user
+    @selected_users[ 1 ] = user1
+    @selected_users[ 2 ] = user2
   else
     pending # Write code here that turns the phrase above into concrete actions
   end
+  @selected_users_stats = {
+    courses: @selected_users[1].courses.size +
+           @selected_users[2].courses.size,
+    installments: @selected_users[1].installments.size +
+           @selected_users[2].installments.size,
+    experiences: @selected_users[1].experiences.size +
+           @selected_users[2].experiences.size,
+    bingo: @selected_users[1].bingo_games.size +
+           @selected_users[2].bingo_games.size
+  }
+  puts @selected_users_stats.inspect
 
 end
 
@@ -225,16 +246,17 @@ Then('the user enters the email address for user {int} and user {int}') do |int,
   fill_in 'Prey email', with: @selected_users[2].email
 end
 
-Then('the user searches for user {int} by email') do |int|
+Then( 'the user searches for user {int} by email' ) do | index |
   ack_messages
   click_link_or_button 'Clear'
-  search_term = @selected_users[1].email
+  search_term = @selected_users[index].email
   fill_in 'Name and/or email', with: search_term
   click_link_or_button 'Search'
   wait_for_render
+  @search_user = @selected_users[index]
 end
 
-Then('the user has {int} {string}') do |count, activity_type|
+Then( 'the user has {int} {string}' ) do | count, activity_type |
   @search_user.reload
   case activity_type.downcase
   when 'experience'
@@ -245,3 +267,23 @@ Then('the user has {int} {string}') do |count, activity_type|
     pending
   end
 end
+
+Then('user {int} {string} viable') do |index, is_or_is_not|
+  user = @selected_users[ index ]
+  if 'is' == is_or_is_not
+    user.active.should be true
+    user.emails.size.should be 0
+  else
+    user.active.should be false
+    user.emails.size.should_not be 0
+  end
+end
+
+And('the merged user shows the combined stats') do
+  @search_user.reload
+  # byebug
+  @selected_users_stats[ :courses ].should eq @search_user.courses.size
+  @selected_users_stats[ :installments ].should eq @search_user.installments.size
+  @selected_users_stats[ :bingo_games ].should eq @search_user.bingo_games.size
+  @selected_users_stats[ :experiences ].should eq @search_user.experiences.size
+end 

@@ -190,8 +190,7 @@ Feature: Admins can find and review users and update their roles.
   @javascript
   Scenario: An admin can merge 2 users using email addresses
     Then the user is an admin
-   Given select user 1 from "user course"
-   Given select user 2 from "other school"
+    Then select 2 users with "no" shared courses
     Then the user logs in and accesses the "Users" admin page
      And the user "does" see an active "Merge users" button
      And the user logs out
@@ -208,11 +207,34 @@ Feature: Admins can find and review users and update their roles.
     Then the user enters the email address for user 1 and user 2
     Then the user clicks the "Merge now" button
     Then the user sees a success message
-    Then the user searches for user 1 by email
-     And the user "is not" found
     Then the user searches for user 2 by email
      And the user "is" found
     Then the user views the user
-    Then the user sees 2 course listed
-     And the user has 1 "experience"
-     And the user has 2 "bingo"
+    Then the user closes the user view
+    Then the user searches for user 1 by email
+     And the user "is" found
+    Then the user views the user
+     And the merged user shows the combined stats
+     And user 2 "is not" viable
+
+  @javascript
+  Scenario: An admin cannot merge 2 users with shared activities
+    Then the user is an admin
+    Then select 2 users with "some" shared courses
+    Then the user logs in and accesses the "Users" admin page
+     And the user "does" see an active "Merge users" button
+     And the user logs out
+    Then switch to user 1
+    Then activate user projects
+    Then the user logs in and submits an installment
+     Then the user navigates home
+    Then the user successfully completes an experience
+    Then the user reverts
+     And the user logs out
+    Then the user logs in and accesses the "Users" admin page
+     And the user "does" see an active "Merge users" button
+    Then the user clicks the "Merge users" button
+    Then the user enters the email address for user 1 and user 2
+    Then the user clicks the "Merge now" button
+    Then the user sees "Error merging users"
+    Then the user sees "merge not possible"

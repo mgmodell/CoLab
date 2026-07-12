@@ -175,20 +175,31 @@ export default function UsersDataAdmin(props: Props) {
             });
     }
 
-    const mergeUsersAction = (predatorEmail: string, preyEmail: string) => {
+    const mergeUsersAction = (localPredatorEmail: string, localPreyEmail: string) => {
         dispatch(startTask("merging_users"));
+        console.log( `Predator: ${localPredatorEmail}, Prey: ${localPreyEmail}`)
         axios.post(`${endpoints.mergeUsersUrl}.json`,
             {
-                predator_email: predatorEmail,
-                prey_email: preyEmail
+                predator_email: localPredatorEmail,
+                prey_email: localPreyEmail
             }
         )
             .then(response => {
                 const data = response.data;
-                setFoundUsers(data.users);
+                console.log("Response from mergeUsersAction:", data);
+                if (data.success) {
+                    dispatch(addMessage(t(data.message), new Date(), Priorities.INFO));
+                } else {
+                    data.errors.map(msg => {
+                        dispatch(addMessage(t(msg), new Date(), Priorities.ERROR));
+                    });
+                };
+
             })
             .catch(error => {
-                console.error("Error merging users:", error);
+                error.messages.map( msg => {
+                    dispatch(addMessage(t(msg), new Date(), Priorities.ERROR));
+                });
             })
             .finally(() => {
                 dispatch(endTask("merging_users"));
@@ -414,14 +425,18 @@ export default function UsersDataAdmin(props: Props) {
                     label={t("merge_users_btn")}
                     disabled={predatorEmail.length === 0 || preyEmail.length === 0}
                     onClick={() => {
-                        mergeUsersAction();
+                        mergeUsersAction( predatorEmail, preyEmail);
+                        setPredatorEmail('');
+                        setPreyEmail('');
                         setShowMergeDialog(false);
                     }}
                 />
                 <Button
-                    label={t("cancel_btn")}
+                    label={t("merge_users_cancel_btn")}
                     className="p-button-secondary p-ml-2"
                     onClick={() => {
+                        setPredatorEmail('');
+                        setPreyEmail('');
                         setShowMergeDialog(false);
                     }}
                 />

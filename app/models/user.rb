@@ -17,12 +17,17 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :groups
   has_many :consent_logs, inverse_of: :user, dependent: :destroy
+
+  has_many :rosters, inverse_of: :user, dependent: :destroy, autosave: true
   has_many :candidate_lists, inverse_of: :user, dependent: :destroy
-  has_many :concepts, inverse_of: :user, dependent: :destroy
-  has_many :projects, through: :groups
-  has_many :bingo_games, through: :courses
   has_many :bingo_boards, inverse_of: :user, dependent: :destroy
   has_many :candidates, inverse_of: :user, dependent: :nullify
+
+  has_many :courses, through: :rosters
+
+  has_many :bingo_games, through: :courses
+  has_many :projects, through: :groups
+
   has_many :concepts, through: :candidates
 
   belongs_to :gender, inverse_of: :users, optional: true
@@ -44,8 +49,6 @@ class User < ApplicationRecord
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
-  has_many :rosters, inverse_of: :user, dependent: :destroy, autosave: true
-  has_many :courses, through: :rosters
 
   has_many :reactions, inverse_of: :user, dependent: :destroy
   has_many :experiences, through: :reactions
@@ -128,16 +131,16 @@ class User < ApplicationRecord
     consent_logs.joins( :consent_form )
                 .where( consent_forms: { active: true } )
                 .find_each do | consent_log |
-                  logs[consent_log.consent_form_id] = consent_log
+      logs[consent_log.consent_form_id] = consent_log
     end
 
     courses.includes( consent_form: :consent_logs )
            .where( 'courses.consent_form_id IS NOT NULL' )
            .find_each do | course |
-             if course.consent_form_active && logs[course.consent_form_id].nil?
-               log = course.get_consent_log user: self
-               logs[log.consent_form_id] = log unless log.nil?
-             end
+      if course.consent_form_active && logs[course.consent_form_id].nil?
+        log = course.get_consent_log user: self
+        logs[log.consent_form_id] = log unless log.nil?
+      end
     end
 
     now = Time.zone.today
@@ -175,10 +178,6 @@ class User < ApplicationRecord
                       end
   end
 
-  def is_researcher?
-    researcher
-  end
-
   def waiting_instructor_tasks
     waiting_tasks = []
 
@@ -187,7 +186,7 @@ class User < ApplicationRecord
              .where( 'rosters.user_id': id )
              .and( Roster.faculty )
              .find_each do | game |
-               waiting_tasks << game if game.awaiting_review?
+      waiting_tasks << game if game.awaiting_review?
     end
 
     cur_date = DateTime.current
@@ -200,7 +199,7 @@ class User < ApplicationRecord
               # .and(Submission.where('recorded_score < 0'))
               .and( Roster.faculty )
               .find_each do | submission |
-                waiting_tasks << submission
+      waiting_tasks << submission
     end
 
     waiting_tasks.sort_by( &:end_date )
@@ -389,84 +388,110 @@ class User < ApplicationRecord
   end
 
   def self.merge_users( predator:, prey: )
-    pred_u = Email.find_by( email: predator ).user
-    prey_u = Email.find_by( email: prey ).user
+    pred_u = User.find_by_email( predator )
+    prey_u = User.find_by_email( prey )
+    byebug unless pred_u.present? && prey_u.present?
+    resp_hash = {}
+    resp_hash[:success] = false
 
     if pred_u.present? && prey_u.present?
-      # copy the demographic data
-      User.transaction do
-        pred_u.first_name = pred_u.first_name || prey_u.first_name
-        pred_u.last_name = pred_u.last_name || prey_u.last_name
-        pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
-        pred_u.country = pred_u.country || prey_u.country
-        pred_u.timezone = pred_u.timezone || prey_u.timezone
-        pred_u.theme = pred_u.theme || prey_u.theme
-        pred_u.school_id = pred_u.school_id || prey_u.school_id
-        pred_u.language_id = pred_u.language_id || prey_u.language_id
-        pred_u.date_of_birth = pred_u.date_of_birth || prey_u.date_of_birth
-        pred_u.home_state_id = pred_u.home_state_id || prey_u.home_state_id
-        pred_u.cip_code_id = pred_u.cip_code_id || prey_u.cip_code_id
-        pred_u.primary_language_id = pred_u.primary_language_id || prey_u.primary_language_id
-        pred_u.started_school = pred_u.started_school || prey_u.started_school
-        pred_u.impairment_visual = pred_u.impairment_visual || prey_u.impairment_visual
-        pred_u.impairment_auditory = pred_u.impairment_auditory || prey_u.impairment_auditory
-        pred_u.impairment_motor = pred_u.impairment_motor || prey_u.impairment_motor
-        pred_u.impairment_cognitive = pred_u.impairment_cognitive || prey_u.impairment_cognitive
-        pred_u.impairment_other = pred_u.impairment_other || prey_u.impairment_other
-        # Capabilities/permissions setting
-        pred_u.admin = pred_u.admin || prey_u.admin
-        pred_u.researcher = pred_u.researcher || prey_u.researcher
-        pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
-        pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
+      courses_count = pred_u.courses.size + prey_u.courses.size
+      experiences_count = pred_u.experiences.size + prey_u.experiences.size
+      bingo_count = pred_u.bingo_games.size + prey_u.bingo_games.size
+      installments_count = pred_u.installments.size + prey_u.installments.size
+      if courses_count != Project.joins( course: :rosters ).where( 'rosters.user_id': [pred_u.id,
+                                                                                       prey_u.id] ).distinct.count ||
+         experiences_count != Reaction.where( user_id: [pred_u.id, prey_u.id] ).count ||
+         bingo_count != BingoGame.joins( course: :rosters ).where( 'rosters.user_id': [pred_u.id,
+                                                                                       prey_u.id] ).distinct.count ||
+         installments_count != Installment.where( user_id: [pred_u.id, prey_u.id] ).count
 
-        prey_u.emails.each do | e |
-          e.user_id = pred_u.id
-          e.save!
-        end
-        # Remap all user_ids
-        prey_u.groups.each do | _g |
-          groups.users.delete prey_u
-          groups.users << pred_u
-        end
-        prey_u.bingo_boards.update_all user_id: pred_u.id
-        prey_u.candidate_lists.update_all user_id: pred_u.id
-        prey_u.candidates.update_all user_id: pred_u.id
-        ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
-        prey_u.consent_logs.update_all user_id: pred_u.id
-        prey_u.installments.update_all user_id: pred_u.id
-        prey_u.reactions.update_all user_id: pred_u.id
+        resp_hash[:errors] = ['merge_users_error_not_possible_msg']
+      else
+        # copy the demographic data
+        User.transaction do
+          pred_u.first_name = pred_u.first_name || prey_u.first_name
+          pred_u.last_name = pred_u.last_name || prey_u.last_name
+          pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
+          pred_u.country = pred_u.country || prey_u.country
+          pred_u.timezone = pred_u.timezone || prey_u.timezone
+          pred_u.theme = pred_u.theme || prey_u.theme
+          pred_u.school_id = pred_u.school_id || prey_u.school_id
+          pred_u.language_id = pred_u.language_id || prey_u.language_id
+          pred_u.date_of_birth = pred_u.date_of_birth || prey_u.date_of_birth
+          pred_u.home_state_id = pred_u.home_state_id || prey_u.home_state_id
+          pred_u.cip_code_id = pred_u.cip_code_id || prey_u.cip_code_id
+          pred_u.primary_language_id = pred_u.primary_language_id || prey_u.primary_language_id
+          pred_u.started_school = pred_u.started_school || prey_u.started_school
+          pred_u.impairment_visual = pred_u.impairment_visual || prey_u.impairment_visual
+          pred_u.impairment_auditory = pred_u.impairment_auditory || prey_u.impairment_auditory
+          pred_u.impairment_motor = pred_u.impairment_motor || prey_u.impairment_motor
+          pred_u.impairment_cognitive = pred_u.impairment_cognitive || prey_u.impairment_cognitive
+          pred_u.impairment_other = pred_u.impairment_other || prey_u.impairment_other
+          # Capabilities/permissions setting
+          pred_u.admin = pred_u.admin || prey_u.admin
+          pred_u.researcher = pred_u.researcher || prey_u.researcher
+          pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
+          pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
 
-        prey_u.rosters.each do | r |
-          if r.course.rosters.where( user_id: pred_u.id ).exists?
-            r.destroy!
-          else
-            r.user_id = pred_u.id
-            r.save!
+          prey_u.emails.each do | e |
+            e.user_id = pred_u.id
+            e.save!
           end
+          # Remap all user_ids
+          prey_u.groups.each do | _g |
+            groups.users.delete prey_u
+            groups.users << pred_u
+          end
+          prey_u.bingo_boards.update_all user_id: pred_u.id
+          prey_u.candidate_lists.update_all user_id: pred_u.id
+          prey_u.candidates.update_all user_id: pred_u.id
+          ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+          prey_u.consent_logs.update_all user_id: pred_u.id
+          prey_u.installments.update_all user_id: pred_u.id
+          prey_u.reactions.update_all user_id: pred_u.id
+
+          prey_u.rosters.each do | r |
+            if r.course.rosters.where( user_id: pred_u.id ).exists?
+              r.destroy!
+            else
+              r.user_id = pred_u.id
+              r.save!
+            end
+          end
+
+          prey_u.rubrics.update_all user_id: pred_u.id
+          prey_u.submissions.update_all user_id: pred_u.id
+          Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+
+          # Ahoy email message tracking
+          Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
+
+          prey_u.active = false
+
+          pred_u.save!
+          prey_u.save!
+          # prey_u.destroy!
+          errors = []
+          if pred_u.errors.any? || prey_u.errors.any?
+            resp_hash[:success] = false
+            resp_hash[:errors] = []
+
+            errors << pred_u.errors.full_messages unless pred_u.errors.empty?
+            errors << prey_u.errors.full_messages unless prey_u.errors.empty?
+
+          else
+            resp_hash[:success] = true
+            resp_hash[:errors] = []
+          end
+          errors
         end
-
-        prey_u.rubrics.update_all user_id: pred_u.id
-        prey_u.submissions.update_all user_id: pred_u.id
-        Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
-
-        # Ahoy email message tracking
-        Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
-
-        prey_u.active = false
-
-        pred_u.save!
-        prey_u.save!
-        # prey_u.destroy!
-        errors = []
-        errors << pred_u.errors.full_messages unless pred_u.errors.empty?
-        errors << prey_u.errors.full_messages unless prey_u.errors.empty?
-        errors.flatten!
-        errors
       end
     else
-      logger.debug I18n.t( 'one_or_more_users_not_found' )
-      I18n.t( 'one_or_more_users_not_found' )
+      logger.debug I18n.t( 'one_or_more_users_not_found_msg' )
+      resp_hash[:errors] = ['one_or_more_users_not_found_msg']
     end
+    resp_hash
   end
 
   private
@@ -478,9 +503,9 @@ class User < ApplicationRecord
                                Faker::Name.male_first_name
                              when 'f'
                                Faker::Name.female_first_name
-                              else
-                                Faker::Name.first_name
-                              end
+                             else
+                               Faker::Name.first_name
+                             end
       self.anon_last_name = Faker::Name.last_name
     end
     self.anon_first_name ||= Faker::Name.first_name
