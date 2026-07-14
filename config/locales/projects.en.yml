@@ -19,6 +19,8 @@ en:
     end_date_placeholder: Click to select the close date
     end_date_lbl: Close Date
     date_to_lbl: until
+    task_list_fmt: >
+      Check-in on {{group_name}} (for {{project_name}})
     name_lbl: Project Name
     description_lbl: Project Description
     group_create_success: Group successfully created.

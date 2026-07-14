@@ -15,6 +15,7 @@ Feature: Admins can find and review users and update their roles.
     Given there is a course with an assessed project
     Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the course has a Bingo! game
+    Given the course has an experience
     Given the Bingo! game individual count is 6
     Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 50 percent group discount
@@ -26,6 +27,7 @@ Feature: Admins can find and review users and update their roles.
     # 1 course with 4 users
 
     Given there is a course
+    Given the course has an experience
     Given the course has 11 confirmed users
     # User is instructor only for the first course
     # 1 course with 11 users
@@ -42,6 +44,7 @@ Feature: Admins can find and review users and update their roles.
     Given the users "finish" prep "solo"
     Given the course has an assignment
       And the init assignment 'does' accept 'links'
+    Given the course has an experience
     Given the assignment "is" initialised as group-capable
     Given the assignment opening is "one month ago" and close is "one month from now"
     Given there exists a rubric published by another user
@@ -140,18 +143,18 @@ Feature: Admins can find and review users and update their roles.
     Then the user sees 26 students visible
     Then there are 0 deleted users
     Then the user searches for a user by "complete" "email" from "any school"
-    Then the user clicks the "Deactivate" button on the user
+    Then the user clicks "Deactivate"
     Then the user sees 25 students visible
     Then there are 1 deleted users
     Then the user searches for a user by "complete" "email" from "any school"
-    Then the user clicks the "Deactivate" button on the user
+    Then the user clicks "Deactivate"
     Then the user sees 24 students visible
     Then there are 2 deleted users
-    Then the user clicks the "Search" button on the user
-    Then the user clicks the "Reactivate" button on the user
+    Then the user clicks "Search"
+    Then the user clicks "Reactivate"
      And the user searches for deleted user
     Then there are 1 deleted users
-     And the user clicks the "Reactivate" button on the user
+     And the user clicks "Reactivate"
     Then the user sees 26 students visible
     Then there are 0 deleted users
     Then the user searches for a user by "complete" "email" from "previous search"
@@ -163,12 +166,12 @@ Feature: Admins can find and review users and update their roles.
     Then the user logs in and accesses the "Users" admin page
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
-     And the user clicks the "Grant Researcher" button
+     And the user clicks "Grant Researcher"
      And the user will see "Researcher granted"
     Then the found user "is" a "researcher"
     Then the user searches for a user by "complete" "email" from "researcher"
      And the user "is" found
-     And the user clicks the "Revoke Researcher" button
+     And the user clicks "Revoke Researcher"
      And the user will see "Researcher revoked"
     Then the found user "is not" a "researcher"
 
@@ -178,12 +181,12 @@ Feature: Admins can find and review users and update their roles.
     Then the user logs in and accesses the "Users" admin page
     Then the user searches for a user by "complete" "email" from "student"
      And the user "is" found
-     And the user clicks the "Grant Admin" button
+     And the user clicks "Grant Admin"
      And the user will see "Admin granted"
     Then the found user "is" a "admin"
     Then the user searches for a user by "complete" "email" from "admin"
      And the user "is" found
-     And the user clicks the "Revoke Admin" button
+     And the user clicks "Revoke Admin"
      And the user will see "Admin revoked"
     Then the found user "is not" a "admin"
 
@@ -197,15 +200,17 @@ Feature: Admins can find and review users and update their roles.
     Then switch to user 1
     Then activate user projects
     Then the user logs in and submits an installment
+     And the current experience is from the user
      Then the user navigates home
     Then the user successfully completes an experience
     Then the user reverts
      And the user logs out
     Then the user logs in and accesses the "Users" admin page
      And the user "does" see an active "Merge users" button
-    Then the user clicks the "Merge users" button
+     And the selected users stats are saved
+    Then the user clicks "Merge users"
     Then the user enters the email address for user 1 and user 2
-    Then the user clicks the "Merge now" button
+    Then the user clicks "Merge now"
     Then the user sees a success message
     Then the user searches for user 2 by email
      And the user "is" found
@@ -227,14 +232,15 @@ Feature: Admins can find and review users and update their roles.
     Then switch to user 1
     Then activate user projects
     Then the user logs in and submits an installment
+     And the current experience is from the user
      Then the user navigates home
     Then the user successfully completes an experience
     Then the user reverts
      And the user logs out
     Then the user logs in and accesses the "Users" admin page
      And the user "does" see an active "Merge users" button
-    Then the user clicks the "Merge users" button
+    Then the user clicks "Merge users"
     Then the user enters the email address for user 1 and user 2
-    Then the user clicks the "Merge now" button
+    Then the user clicks "Merge now"
     Then the user sees "Error merging users"
     Then the user sees "merge not possible"

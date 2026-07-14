@@ -112,7 +112,7 @@ export default function HomeShell(props: Props) {
         data["tasks"].forEach((value, index, array) => {
           switch (value.type) {
             case "assessment":
-              value.title = value.group_name + " for (" + value.name + ")";
+              value.title = t('projects.task_list_fmt', { group_name: value.group_name, project_name: value.name });
               break;
             case "bingo_game":
               if (value.instructor_task === true) {

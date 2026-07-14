@@ -440,8 +440,8 @@ class User < ApplicationRecord
           end
           # Remap all user_ids
           prey_u.groups.each do | _g |
-            groups.users.delete prey_u
-            groups.users << pred_u
+            _g.users.delete prey_u
+            _g.users << pred_u
           end
           prey_u.bingo_boards.update_all user_id: pred_u.id
           prey_u.candidate_lists.update_all user_id: pred_u.id

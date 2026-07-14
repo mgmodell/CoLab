@@ -103,7 +103,6 @@ Then('the user {string} found') do |is_or_is_not|
   wait_for_render
   search_xpath = %Q{//td[text()="#{@search_user.first_name}"]/following-sibling::td[text()="#{@search_user.last_name}"]}
   search_xpath += %Q{/following-sibling::td[text()="#{@search_user.email}"]} if @user.is_instructor? || @user.is_admin?
-  # byebug unless has_xpath?( search_xpath ) == ('is' == is_or_is_not)
   has_xpath?( search_xpath ).should be 'is' == is_or_is_not
 end
 
@@ -151,12 +150,6 @@ Then('the user sees anonymized data with no roles') do
   has_text?( 'Admin' ).should be false
 
   has_text?( %Q{Courses (#{@search_user.courses.size}):} ).should be true
-end
-
-Then('the user clicks the {string} button on the user') do |button_name|
-  wait_for_render
-  click_button( button_name, match: :first )
-
 end
 
 Then('there are {int} deleted users') do |deleted_user_count|
@@ -208,13 +201,21 @@ Given( 'select {int} users with {string} shared courses' ) do |count, shared_or_
   else
     pending # Write code here that turns the phrase above into concrete actions
   end
+end
+And('the selected users stats are saved') do
+  @selected_users[1].should_not be_nil
+  @selected_users[2].should_not be_nil
   @selected_users_stats = {
+    submissions: @selected_users[1].submissions.size +
+           @selected_users[2].submissions.size,
     courses: @selected_users[1].courses.size +
            @selected_users[2].courses.size,
     installments: @selected_users[1].installments.size +
            @selected_users[2].installments.size,
     experiences: @selected_users[1].experiences.size +
            @selected_users[2].experiences.size,
+    consent_forms: @selected_users[1].consent_logs.size +
+           @selected_users[2].consent_logs.size,
     bingo: @selected_users[1].bingo_games.size +
            @selected_users[2].bingo_games.size
   }
@@ -281,9 +282,14 @@ end
 
 And('the merged user shows the combined stats') do
   @search_user.reload
-  # byebug
   @selected_users_stats[ :courses ].should eq @search_user.courses.size
   @selected_users_stats[ :installments ].should eq @search_user.installments.size
   @selected_users_stats[ :bingo_games ].should eq @search_user.bingo_games.size
   @selected_users_stats[ :experiences ].should eq @search_user.experiences.size
 end 
+
+And('the current experience is from the user') do
+  @experience = Experience.joins( course: :rosters ).where( rosters: {user: @user} ).sample
+  byebug unless @experience.present?
+  @experience.should_not be_nil
+end

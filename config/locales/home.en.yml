@@ -191,7 +191,7 @@ en:
     title: Home
     your_tasks: Your Tasks
     invited: You've been invited!
-    greeting: Hello {{name}}
+    greeting: Hello #{name}
     greeting_unknown: Hello!
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
