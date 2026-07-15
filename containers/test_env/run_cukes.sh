@@ -130,6 +130,7 @@ echo "Installing platforms"
 mise self-update -y
 export RUBY_BUILD_VENDOR_OPENSSL=1
 mise install
+eval "$(mise env --shell bash)"
 echo "Installing gems"
 bundle install --quiet
 echo "Installing packages using yarn"
