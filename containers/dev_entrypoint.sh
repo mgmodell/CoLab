@@ -92,8 +92,13 @@ if ! mise self-update -y; then
 fi
 # Ruby 4.0.x on modern distros can fail against system OpenSSL; let ruby-build
 # vendor a compatible OpenSSL while keeping Node/Yarn installs on mise.
-export 
-RUBY_BUILD_VENDOR_OPENSSL=1 mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
+export RUBY_BUILD_VENDOR_OPENSSL=1
+mise install "ruby@${ruby_version}" "node@${node_version}" "yarn@${yarn_version}"
+
+# Activate all mise-managed tools in this bash process.
+# `mise env --shell bash` emits plain `export` statements (no PROMPT_COMMAND hooks),
+# so it works reliably in non-interactive scripts unlike `mise activate bash`.
+eval "$(mise env --shell bash)"
 
 echo "Installing gems"
 # Ensure the exact bundler version required by Gemfile.lock is installed.
@@ -106,11 +111,11 @@ if [[ ! "${bundler_version}" =~ ${semver_pattern} ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
-mise exec -- gem install bundler -v "${bundler_version}" --no-document
-mise exec -- bundle install --quiet
+gem install bundler -v "${bundler_version}" --no-document
+bundle install --quiet
 
 echo "Installing packages using yarn"
-mise exec -- yarn install
+yarn install
 
 if [ "$#" -gt 0 ]; then
   "$@"
