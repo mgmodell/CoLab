@@ -3,6 +3,7 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
+mise trust "$HOME/src/app/mise.toml"
 export PATH=$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$PATH
 # eval "$(~/.local/bin/mise activate bash)"
 

@@ -55,6 +55,8 @@ extract_bundler_version() {
 echo "Setting the current working directory"
 cd "${dir}"
 
+mise trust "${dir}/mise.toml"
+
 # Add mise shims and bin to PATH so managed tools (bundle, yarn, etc.) are
 # accessible in this non-interactive bash script. `mise activate bash` relies
 # on PROMPT_COMMAND, which is never fired in non-interactive scripts, so we
