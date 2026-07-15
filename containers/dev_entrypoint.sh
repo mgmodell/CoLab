@@ -106,11 +106,11 @@ if [[ ! "${bundler_version}" =~ ${semver_pattern} ]]; then
   echo "ERROR: Could not parse a valid bundler version from Gemfile.lock (got '${bundler_version}')."
   exit 1
 fi
-mise exec -- gem install bundler -v "${bundler_version}" --no-document
-mise exec -- bundle install --quiet
+mise exec "ruby@${ruby_version}" -- gem install bundler -v "${bundler_version}" --no-document
+mise exec "ruby@${ruby_version}" -- bundle install --quiet
 
 echo "Installing packages using yarn"
-mise exec -- yarn install
+mise exec "yarn@${yarn_version}" -- yarn install
 
 if [ "$#" -gt 0 ]; then
   "$@"

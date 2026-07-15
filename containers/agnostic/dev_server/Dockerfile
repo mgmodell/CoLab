@@ -69,6 +69,11 @@ COPY --chown=colab:colab containers/dev_entrypoint.sh /home/colab/src/entrypoint
 WORKDIR /home/colab/src/app
 RUN mise settings add idiomatic_version_file_enable_tools ruby
 
+# Trust all mise configs so managed tools are activated in every context
+# (non-interactive postCreateCommand, interactive shells, and mise exec subprocesses)
+# without requiring an explicit `mise trust` call to succeed first.
+ENV MISE_TRUST_ALL=1
+
 ENV DRIVER=docker
 ENV COLAB_DB=db
 ENV COLAB_DB_PORT=3306
