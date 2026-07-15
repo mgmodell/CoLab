@@ -128,6 +128,7 @@ export LC_ALL=C.UTF-8
 
 echo "Installing platforms"
 mise self-update -y
+export RUBY_BUILD_VENDOR_OPENSSL=1
 mise install
 echo "Installing gems"
 bundle install --quiet
