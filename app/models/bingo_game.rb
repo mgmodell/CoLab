@@ -28,7 +28,10 @@ class BingoGame < ApplicationRecord
       greater_than_or_equal_to: 0,
       less_than_or_equal_to: 100,
       allow_nil: true }
-  validates :individual_count, numericality: { only_integer: true }
+  validates :individual_count, numericality: {
+    only_integer: true,
+    greater_than_or_equal_to: 1,
+  }
   validate :review_completed
 
   validate :group_components
