@@ -1568,7 +1568,7 @@ __metadata:
     react-cookie-consent: "npm:^10.0.1"
     react-dom: "npm:^19.2.7"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.0.10"
+    react-i18next: "npm:^17.0.9"
     react-on-rails: "npm:16.6.0"
     react-redux: "npm:^9.3.0"
     react-refresh: "npm:^0.18.0"
@@ -2996,9 +2996,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.0.10":
-  version: 17.0.10
-  resolution: "react-i18next@npm:17.0.10"
+"react-i18next@npm:^17.0.9":
+  version: 17.0.9
+  resolution: "react-i18next@npm:17.0.9"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
     html-parse-stringify: "npm:^3.0.1"
@@ -3014,7 +3014,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/0ec5dea59e4b136c026136334bf0d1eccc445db173b07d4ccefd2ce842db95bd64ae7e90809041c9022e31060fdb8eb3f6529b8ddd394bed84e5edaeb9d4ab52
+  checksum: 10c0/cd7ca7c03daaa22b72341b67c66f00cdc8b694c5d84d6e1fe5ffb2e87d7b6d8941cdcf52e407d7fe7ee7b8a77192e517732d815756fec44eb258e3c8d3956329
   languageName: node
   linkType: hard
 

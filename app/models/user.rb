@@ -390,26 +390,30 @@ class User < ApplicationRecord
   def self.merge_users( predator:, prey: )
     pred_u = User.find_by_email( predator )
     prey_u = User.find_by_email( prey )
-    byebug unless pred_u.present? && prey_u.present?
+
     resp_hash = {}
     resp_hash[:success] = false
 
     if pred_u.present? && prey_u.present?
+      rosters_count = pred_u.rosters.size + prey_u.rosters.size
       courses_count = pred_u.courses.size + prey_u.courses.size
       experiences_count = pred_u.experiences.size + prey_u.experiences.size
       bingo_count = pred_u.bingo_games.size + prey_u.bingo_games.size
       installments_count = pred_u.installments.size + prey_u.installments.size
-      if courses_count != Project.joins( course: :rosters ).where( 'rosters.user_id': [pred_u.id,
-                                                                                       prey_u.id] ).distinct.count ||
-         experiences_count != Reaction.where( user_id: [pred_u.id, prey_u.id] ).count ||
+      if courses_count != Course.joins( :rosters ).where( 'rosters.user_id': [pred_u.id,
+                                                                              prey_u.id] ).distinct.count ||
+         rosters_count != Roster.where( user_id: [pred_u.id, prey_u.id] ).distinct.count ||
+         experiences_count != Reaction.where( user_id: [pred_u.id, prey_u.id] ).distinct.count ||
          bingo_count != BingoGame.joins( course: :rosters ).where( 'rosters.user_id': [pred_u.id,
                                                                                        prey_u.id] ).distinct.count ||
-         installments_count != Installment.where( user_id: [pred_u.id, prey_u.id] ).count
-
+         installments_count != Installment.where( user_id: [pred_u.id, prey_u.id] ).distinct.count
         resp_hash[:errors] = ['merge_users_error_not_possible_msg']
       else
         # copy the demographic data
         User.transaction do
+          prey_u.active = false
+          prey_u.save!
+          # Demographic data
           pred_u.first_name = pred_u.first_name || prey_u.first_name
           pred_u.last_name = pred_u.last_name || prey_u.last_name
           pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
@@ -431,47 +435,41 @@ class User < ApplicationRecord
           # Capabilities/permissions setting
           pred_u.admin = pred_u.admin || prey_u.admin
           pred_u.researcher = pred_u.researcher || prey_u.researcher
+          pred_u.instructor = pred_u.instructor || prey_u.instructor
           pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
           pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
 
-          prey_u.emails.each do | e |
-            e.user_id = pred_u.id
-            e.save!
-          end
-          # Remap all user_ids
-          prey_u.groups.each do | _g |
-            _g.users.delete prey_u
-            _g.users << pred_u
+          prey_u.groups.each do | g |
+            g.users.delete prey_u
+            g.users << pred_u
           end
           prey_u.bingo_boards.update_all user_id: pred_u.id
           prey_u.candidate_lists.update_all user_id: pred_u.id
           prey_u.candidates.update_all user_id: pred_u.id
-          ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+          ConsentForm.where( user: prey_u ).update_all user_id: pred_u.id
           prey_u.consent_logs.update_all user_id: pred_u.id
           prey_u.installments.update_all user_id: pred_u.id
           prey_u.reactions.update_all user_id: pred_u.id
+          prey_u.rubrics.update_all user_id: pred_u.id
+          prey_u.submissions.update_all user_id: pred_u.id
 
-          prey_u.rosters.each do | r |
-            if r.course.rosters.where( user_id: pred_u.id ).exists?
-              r.destroy!
-            else
-              r.user_id = pred_u.id
-              r.save!
-            end
-          end
+          prey_u.rosters.update_all user_id: pred_u.id
 
           prey_u.rubrics.update_all user_id: pred_u.id
           prey_u.submissions.update_all user_id: pred_u.id
-          Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+          Value.where( user: prey_u ).update_all user_id: pred_u.id
 
           # Ahoy email message tracking
-          Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
+          Ahoy::Message.where( user: prey_u ).update_all user_id: pred_u.id
 
-          prey_u.active = false
+          # Remap all user_ids
+          # prey_u.emails.update_all user_id: pred_u.id
+          prey_u.emails.each do | email |
+            pred_u.emails << email
+          end
 
           pred_u.save!
-          prey_u.save!
-          # prey_u.destroy!
+          prey_u.destroy!
           errors = []
           if pred_u.errors.any? || prey_u.errors.any?
             resp_hash[:success] = false
@@ -479,12 +477,13 @@ class User < ApplicationRecord
 
             errors << pred_u.errors.full_messages unless pred_u.errors.empty?
             errors << prey_u.errors.full_messages unless prey_u.errors.empty?
+            resp_hash[:errors] = errors.flatten
 
           else
             resp_hash[:success] = true
             resp_hash[:errors] = []
+            resp_hash[:message] = 'merge_users_success_msg'
           end
-          errors
         end
       end
     else

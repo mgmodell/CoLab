@@ -213,9 +213,7 @@ Feature: Admins can find and review users and update their roles.
     Then the user clicks "Merge now"
     Then the user sees a success message
     Then the user searches for user 2 by email
-     And the user "is" found
-    Then the user views the user
-    Then the user closes the user view
+     And the user "is not" found
     Then the user searches for user 1 by email
      And the user "is" found
     Then the user views the user

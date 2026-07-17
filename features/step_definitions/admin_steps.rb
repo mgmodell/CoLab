@@ -181,23 +181,40 @@ Then('the found user {string} a {string}') do |is_or_is_not,role|
 end
 
 Given( 'select {int} users with {string} shared courses' ) do |count, shared_or_not|
+  count.should be > 1
   @selected_users ||= {}
   case shared_or_not
   when 'no'
-    user1 = Group.joins( :users ).group( 'user_id' )
-                .having( 'count(groups.id) = 1')
+    prime_user = User.joins( :groups ).group( 'groups.id' ).having( 'count(groups.id) > 0' )
                 .where( users: {admin: false, instructor: false, researcher: false} )
-                .sample.users.sample
+                .sample
+    @selected_users[ 1 ] = prime_user
+    user_list = []
+    user = User.joins( :rosters ).where( admin: false, instructor: false, researcher: false )
+                .where.not( rosters: { course: prime_user.courses } ).sample
 
-    user2 = Roster.where.not( course: user1.courses ).sample.course.users.sample
-    @selected_users[ 1 ] = user1
-    @selected_users[ 2 ] = user2
+    (count - 1).times do |i|
+      user.should_not be_nil
+      user_list << user
+      @selected_users[ i + 2 ] = user
+      user = User.joins( :rosters ).where( admin: false, instructor: false, researcher: false )
+                  .where.not( rosters: { course: prime_user.courses } )
+                  .where.not( id: user_list ).sample
+    end
+
   when 'some'
-    user1 = User.joins(:courses).where( admin: false, instructor: false, researcher: false )
+    prime_user = User.joins(:courses).where( admin: false, instructor: false, researcher: false )
       .having('count(courses.id) > ?',1).sample
-    user2 = user1.courses.sample.rosters.students.sample.user
-    @selected_users[ 1 ] = user1
-    @selected_users[ 2 ] = user2
+    @selected_users[ 1 ] = prime_user
+    user_list = []
+    user = prime_user.courses.sample.rosters.students.sample.user
+
+    (count - 1).times do |i|
+      user.should_not be_nil
+      user_list << user
+      @selected_users[ i + 2 ] = user
+      user = prime_user.courses.sample.rosters.students.where.not( user: user_list).sample.user
+    end
   else
     pending # Write code here that turns the phrase above into concrete actions
   end
@@ -206,6 +223,8 @@ And('the selected users stats are saved') do
   @selected_users[1].should_not be_nil
   @selected_users[2].should_not be_nil
   @selected_users_stats = {
+    rosters: @selected_users[1].rosters.size +
+           @selected_users[2].rosters.size,
     submissions: @selected_users[1].submissions.size +
            @selected_users[2].submissions.size,
     courses: @selected_users[1].courses.size +
@@ -216,10 +235,9 @@ And('the selected users stats are saved') do
            @selected_users[2].experiences.size,
     consent_forms: @selected_users[1].consent_logs.size +
            @selected_users[2].consent_logs.size,
-    bingo: @selected_users[1].bingo_games.size +
+    bingo_games: @selected_users[1].bingo_games.size +
            @selected_users[2].bingo_games.size
   }
-  puts @selected_users_stats.inspect
 
 end
 
@@ -271,18 +289,23 @@ end
 
 Then('user {int} {string} viable') do |index, is_or_is_not|
   user = @selected_users[ index ]
+  user = User.where( id: user.id )
+
   if 'is' == is_or_is_not
-    user.active.should be true
-    user.emails.size.should be 0
+    user.size.should be 1
+    local_user = user.first
+    local_user.active.should be true
+    local_user.emails.size.should be 0
   else
-    user.active.should be false
-    user.emails.size.should_not be 0
+    user.size.should be 0
   end
 end
 
 And('the merged user shows the combined stats') do
   @search_user.reload
+  @selected_users_stats[ :rosters ].should eq @search_user.rosters.size
   @selected_users_stats[ :courses ].should eq @search_user.courses.size
+  @selected_users_stats[ :submissions ].should eq @search_user.submissions.size
   @selected_users_stats[ :installments ].should eq @search_user.installments.size
   @selected_users_stats[ :bingo_games ].should eq @search_user.bingo_games.size
   @selected_users_stats[ :experiences ].should eq @search_user.experiences.size
@@ -290,6 +313,5 @@ end
 
 And('the current experience is from the user') do
   @experience = Experience.joins( course: :rosters ).where( rosters: {user: @user} ).sample
-  byebug unless @experience.present?
   @experience.should_not be_nil
 end
