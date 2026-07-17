@@ -18,7 +18,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import CourseUsersList from "./CourseUsersList";
 
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
@@ -33,7 +33,7 @@ import { FloatLabel } from "primereact/floatlabel";
 import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
-import { Temporal, parseISO } from "../infrastructure/TemporalSettings";
+import { Temporal } from "../infrastructure/TemporalSettings";
 import { Col, Container, Row } from "react-grid-system";
 
 interface IActivityLink {

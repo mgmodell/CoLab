@@ -28,7 +28,6 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
-import parse from 'html-react-parser';
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
