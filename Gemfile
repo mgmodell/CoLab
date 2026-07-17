@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '4.0.5'
+ruby '4.0.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.2'
@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '10.1.0'
+gem 'shakapacker', '10.3.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -109,8 +109,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'simplecov', require: false
-  # gem 'webdrivers', '~> 5.3.1', require: false
   gem 'selenium-webdriver'
   gem 'cucumber-rails',require: false
   gem 'capybara'

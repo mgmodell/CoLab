@@ -26,9 +26,9 @@ import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
 import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
 
 export default function Experience(props) {
-  const endpointSet = "experience";
+  const category = "experience";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -36,7 +36,7 @@ export default function Experience(props) {
   const { experienceId } = useParams();
 
   const dispatch = useDispatch();
-  const [t] = useTranslation("experiences");
+  const [t] = useTranslation(`${category}s`);
   const navigate = useNavigate();
   const { setTourSteps } = useTour();
   const [redirectState, setRedirectState] = useState( RedirectState.DECIDING );

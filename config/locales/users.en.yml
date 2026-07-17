@@ -1,0 +1,63 @@
+en:
+  users:
+    search_text_inpt: Name and/or email
+    search_btn: Search
+    clear_btn: Clear
+    no_selected_school: All schools
+    users_search: Who are you looking for?
+    user_stats_msg: The selection has {{user_count}} active users.
+    init_merge_users_btn: Merge users
+    merge_users_btn: Merge now
+    merge_users_cancel_btn: Cancel
+    activate_user_btn: Reactivate
+    deactivate_user_btn: Deactivate
+    make_admin_btn: Make Admin
+    admin_true_result_msg: Admin granted
+    remove_admin_btn: Remove Admin
+    admin_false_result_msg: Admin revoked
+    make_researcher_btn: Make Researcher
+    researcher_true_result_msg: Researcher granted
+    remove_researcher_btn: Remove Researcher
+    researcher_false_result_msg: Researcher revoked
+    make_instructor_btn: Make Instructor
+    instructor_true_result_msg: Instructor granted
+    remove_instructor_btn: Remove Instructor
+    instructor_false_result_msg: Instructor revoked
+    classes_assigned_txt: Instructor with classes assigned
+    revoke_instructor_btn: Revoke Instructor
+    grant_instructor_btn: Grant Instructor
+    revoke_researcher_btn: Revoke Researcher
+    grant_researcher_btn: Grant Researcher
+    revoke_admin_btn: Revoke Admin
+    grant_admin_btn: Grant Admin
+    merge_users_dialog_header: Merge users
+    merge_users_dialog_content: >
+      Select the users to merge. The user with predator email will be kept,
+      and the user with prey email will be absorbed into it and then deleted.
+      All data from the prey user will be transferred to the predator user.
+    predator_email_inpt: Predator email
+    prey_email_inpt: Prey email
+    table:
+      first_name: Name
+      last_name: Last Name
+      email: Email
+      school: School
+      status: Status
+      actions: Actions
+      active_user: Active
+      inactive_user: Inactive
+    user_view_dialog_header: User details for {{user_email}}
+    user_view_name_lbl: >
+      Name: {{user_first_name}} {{user_last_name}}
+    user_view_school_lbl: >
+      School: {{user_school}}
+    user_view_status_lbl: Active?
+    user_view_admin_lbl: Admin?
+    user_view_instructor_lbl: Instructor?
+    user_view_researcher_lbl: Researcher?
+    user_view_courses_lbl: "Courses ({{course_count}}):"
+    no_courses_msg: "No courses assigned."
+    merge_users_success_msg: "Users merged successfully."
+    merge_users_error_generic_msg: "Error merging users."
+    merge_users_error_not_possible_msg: "Error merging users: merge not possible."
+    one_or_more_users_not_found_msg: "One or more users not found."

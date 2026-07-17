@@ -46,7 +46,10 @@ end
 
 When( /^user clicks the link to the project$/ ) do
   step 'the user enables the "Group Name" table view option'
-  find( :xpath, "//tbody/tr/td[text()='#{@project.group_for_user( @user ).name}']" ).click
+  search_xpath =  %Q{//tbody/tr/td[contains(.,'Check-in')]/following-sibling::td[text()='#{@project.group_for_user( @user ).name}']}
+  links = all( :xpath, search_xpath )
+
+  links.first.click
 
   wait_for_render
 end

@@ -19,12 +19,9 @@ type Props = {
 
 };
 export default function BingoResponseData( props: Props) {
-  const endpointSet = "bingo_game";
-  const endpointStatus = useTypedSelector(
-    state => state.context.status.endpointsLoaded
-  );
 
-  const { t } = useTranslation("bingo_games");
+  const category = "bingo_game";
+  const { t } = useTranslation(`${category}s`);
 
 
   const colors = ["#477efd", "#74d6fd", "#3d5ef9", "#2b378b", "#1f2255"];

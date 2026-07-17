@@ -13,14 +13,14 @@ import { Panel } from "primereact/panel";
 type Props = {};
 
 export default function DiversityCheck(props: Props) {
-  const endpointSet = "home";
+  const category = "home";
   const [emails, setEmails] = useState("");
   const [diversityScore, setDiversityScore] = useState(null);
   const [foundUsers, setFoundUsers] = useState([]);
 
-  const { t } = useTranslation(/* endpointSet */);
+  const { t } = useTranslation(/* category */);
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
 
   function calcDiversity() {

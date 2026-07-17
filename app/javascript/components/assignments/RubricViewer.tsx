@@ -40,14 +40,14 @@ const CLEAN_RUBRIC: IRubricData = {
 };
 
 export default function RubricViewer(props: Props) {
-  const endpointSet = "assignment";
+  const category = "assignment";
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
 
   const { assignmentId } = useParams();
 
-  const [t, i18n] = useTranslation(`${endpointSet}s`);
+  const [t, i18n] = useTranslation(`${category}s`);
 
   const evaluation =
     props.rubric !== undefined ? (

@@ -52,7 +52,7 @@ end
 Then( 'the user updates the {string} concept to {string}' ) do | concept_old, concept_new |
   wait_for_render
   fill_in 'concept-search', with: concept_old[0..4]
-  find( :xpath, "//tr/td[text()='#{concept_old}']" ).click
+  find( :xpath, %Q{//tr/td[text()='#{concept_old}']} ).click
   fill_in 'conceptName', with: concept_new
   click_button 'update_concept'
 end
@@ -60,7 +60,7 @@ end
 Then( 'the concept {string} will be in the list' ) do | new_concept_name |
   wait_for_render
   fill_in 'concept-search', with: new_concept_name[0..4]
-  find_all( :xpath, "//tr/td[text()='#{new_concept_name}']" ).size.should be 1
+  find_all( :xpath, %Q{//tr/td[text()='#{new_concept_name}']} ).size.should be 1
 end
 
 Then( 'a concept will not exist named {string}' ) do | old_concept_name |

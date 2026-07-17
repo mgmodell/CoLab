@@ -51,9 +51,12 @@ Then( /^the user creates a new "([^"]*)"$/ ) do | link_or_button |
 end
 
 Then( 'the user clicks {string}' ) do | link_or_button |
+  ack_messages
   wait_for_render
 
-  if has_xpath?( "//button[contains(.,'#{link_or_button}')]",
+  if has_button?( link_or_button, visible: :all )
+    btn = find_button( link_or_button, match: :first, visible: :all )
+  elsif has_xpath?( "//button[contains(.,'#{link_or_button}')]",
                  visible: :all )
     btn = find( :xpath, "//button[contains(.,'#{link_or_button}')]",
                 match: :first,
@@ -267,7 +270,7 @@ Then( 'the user clicks the {string} button' ) do | button_name |
 end
 
 Then( 'the user clicks the course {string} button' ) do | button_name |
-  xquery = "//div[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']"
+  xquery = %Q{//div[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']}
   elem = find( :xpath, xquery )
   elem.click
 end

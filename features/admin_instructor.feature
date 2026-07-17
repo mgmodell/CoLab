@@ -33,7 +33,7 @@ Feature: Administration: instructor
     Then the user sees 1 course
 
 @javascript
-  Scenario: Regular users do not see the Admin button
+  Scenario: Instructors see admin buttons with a Bingo! game
     Given the course has a Bingo! game
     Given the user logs in
     Then the user "does" see an Admin button

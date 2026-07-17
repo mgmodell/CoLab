@@ -22,7 +22,7 @@ end
 
 Then( 'the user clicks on the existing bingo game' ) do
   find( :xpath, "//a[contains(.,'Activities')]" ).click
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]} ).click
   wait_for_render
 end
 
@@ -102,7 +102,7 @@ Then( /^the bingo "([^"]*)" date is "([^"]*)"$/ ) do | date_field_prefix, date_v
 end
 
 Then( 'the {string} label is disabled' ) do | label |
-  control = page.all( :xpath, "//label[contains(., '#{label}')][not(@disabled)]" )
+  control = page.all( :xpath, %Q{//label[contains(., '#{label}')][not(@disabled)]"} )
   control.size.should be > 0
 end
 

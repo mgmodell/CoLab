@@ -17,7 +17,7 @@ Then( /^user opens their profile$/ ) do
   find( :id, 'profile-menu-item' ).click
   page.should have_content( 'Edit your profile' )
   text = "Tell us about yourself, #{@user.first_name} (optional)"
-  all( :xpath, "//div[contains(.,'#{text}')]" ).size.should be > 3
+  all( :xpath, %Q{//div[contains(.,'#{text}')]} ).size.should be > 3
   # page.should have_content('Tell us about yourself, ' + @user.first_name)
   el = find( :xpath, "//div[@data-pc-name='accordion']/div/div/a[contains(.,'Email settings')]" )
   el.click if el['aria-expanded'] == 'false'
@@ -47,6 +47,27 @@ Then( /^user sees the assignment in the history$/ ) do
   find( :xpath, "//div[@data-pc-name='tabview']/div/div/ul/li/a[contains(.,'History')]" ).click
   wait_for_render
   page.should have_content( @assignment.get_name( false ) )
+end
+
+Then ( 'the user logs in and accesses the {string} admin page' ) do | admin_page |
+  visit '/login'
+  wait_for_render
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
+
+  ack_messages
+  click_link_or_button 'Log in!'
+
+  wait_for_render
+  # Blow away the cookies accept
+  click_link_or_button 'I understand' if has_content? 'I understand'
+
+  open_main_menu
+  find( :id, 'administration-menu' ).click
+
+  find( :xpath, "//a[contains(.,'#{admin_page}')]" ).click
+  wait_for_render
+
 end
 
 When( /^the user logs in$/ ) do

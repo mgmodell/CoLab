@@ -15,10 +15,7 @@ Feature: Assignment administration
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
     Given the assignment opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the "Courses" menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
 
   @javascript

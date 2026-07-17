@@ -78,9 +78,9 @@ interface Props {
 }
 
 export default function AssignmentViewer(props) {
-  const endpointSet = "assignment";
+  const category = "assignment";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -89,7 +89,7 @@ export default function AssignmentViewer(props) {
   const { assignmentId } = useParams();
 
   const dispatch = useDispatch();
-  const [t, i18n] = useTranslation(`${endpointSet}s`);
+  const [t, i18n] = useTranslation(`${category}s`);
 
   const [curTab, setCurTab] = useState(0);
   const [progressData, setProgressData] = useState([]);

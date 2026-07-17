@@ -20,11 +20,11 @@ interface Props {
 }
 
 export default function ConsentLog(props: Props) {
-  const { t } = useTranslation("consent_logs");
-  const endpointSet = "consent_log";
+  const category = "consent_log";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
+  const { t } = useTranslation(`${category}s`);
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );

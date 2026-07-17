@@ -10,10 +10,7 @@ Feature: Admin uploads a PDF for a Consent Form
 
   @javascript
   Scenario: Admin creates a new consent form with a PDF upload
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'consent-forms' menu item
+    Then the user logs in and accesses the "Consent Forms" admin page
     Then the user clicks the "New consent_form" button
     Then the user sees the consent form editing page
     When the user sets the "Name of the Study" field to "Research Study 2026"
@@ -26,10 +23,7 @@ Feature: Admin uploads a PDF for a Consent Form
   @javascript
   Scenario: Admin updates an existing consent form with a new PDF upload
     Given there is a consent form without a PDF
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'consent-forms' menu item
+    Then the user logs in and accesses the "Consent Forms" admin page
     Then the user opens the consent form for editing
     Then the user sees the consent form editing page
     When the admin uploads a PDF for the consent form
@@ -41,10 +35,7 @@ Feature: Admin uploads a PDF for a Consent Form
   @javascript
   Scenario: Admin replaces the PDF on an existing consent form that already has one
     Given there is a consent form with an existing PDF
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'consent-forms' menu item
+    Then the user logs in and accesses the "Consent Forms" admin page
     Then the user opens the consent form for editing
     Then the user sees the consent form editing page
     Then the admin sees the PDF link on the consent form page

@@ -53,17 +53,17 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
     ]
 
     demographics.each do | demo_data |
-      label = find( :xpath, "//label[contains(.,'#{demo_data[:label]}')]" )[:for]
+      label = find( :xpath, %Q{//label[contains(.,'#{demo_data[:label]}')]} )[:for]
 
-      if has_xpath?( "//div[@id='#{label}']" )
-        find( :xpath, "//div[@id='#{label}']" ).click
-      elsif has_xpath?( "//span[@id='#{label}']/button" )
-        find( :xpath, "//span[@id='#{label}']/button" ).click
+      if has_xpath?( %Q{//div[@id='#{label}']} )
+        find( :xpath, %Q{//div[@id='#{label}']} ).click
+      elsif has_xpath?( %Q{//span[@id='#{label}']/button} )
+        find( :xpath, %Q{//span[@id='#{label}']/button} ).click
       else
         true.should be( false ), "No element found for #{label}"
       end
-      if has_xpath?( "//li[contains(.,'#{demo_data[:value]}')]" )
-        find( :xpath, "//li[contains(.,'#{demo_data[:value]}')]" ).click
+      if has_xpath?( %Q{//li[contains(.,'#{demo_data[:value]}')]} )
+        find( :xpath, %Q{//li[contains(.,'#{demo_data[:value]}')]} ).click
       else
         true.should be( false ), "No element found for #{demo_data[:value]}"
       end
@@ -75,8 +75,8 @@ When( /^the user "(.*?)" fill in demographics data$/ ) do | does_or_does_not |
     ]
 
     demographics.each do | demo_data |
-      label = find( :xpath, "//label[contains(.,'#{demo_data[:label]}')]" )[:for]
-      find( :xpath, "//input[@id='#{label}']" ).set( demo_data[:value].strftime( '%m/%d/%Y' ) )
+      label = find( :xpath, %Q{//label[contains(.,'#{demo_data[:label]}')]} )[:for]
+      find( :xpath, %Q{//input[@id='#{label}']} ).set( demo_data[:value].strftime( '%m/%d/%Y' ) )
     end
 
     # new_date = Date.parse('10-05-1976')

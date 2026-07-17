@@ -24,7 +24,7 @@ When( /^the user requests collaboration$/ ) do
   wait_for_render
   link_text = "Invite your teammates in #{@group.get_name( false )} to help?"
   expect( page ).to have_content link_text
-  link = find( :xpath, "//a[contains(.,'#{link_text}')]" )
+  link = find( :xpath, %Q{//a[contains(.,'#{link_text}')]} )
   link.click
 end
 
@@ -100,7 +100,6 @@ When( 'the user populates {int} additional {string} entries' ) do | count, field
                                                      end
       balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']" )
       @entries_list[existing_count + index][balance_field] = balance_field_elem.value
-      # field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
       field_elem.click
       field_elem.send_keys [:command, 'a'], :backspace
       field_elem.send_keys [:control, 'a'], :backspace
@@ -163,7 +162,7 @@ When( 'the user changes a random {int} {string} entries' ) do | count, field |
           entry['term'] = existing_term
           found = true
         end
-        to_fill_elem = find( :xpath, "//*[@id='#{field}_#{rand_ind}']" )
+        to_fill_elem = find( :xpath, %Q{//input[@id='#{field}_#{rand_ind}']} )
         to_fill_elem.click
         send_keys [:command, 'a'], :backspace
         send_keys [:control, 'a'], :backspace

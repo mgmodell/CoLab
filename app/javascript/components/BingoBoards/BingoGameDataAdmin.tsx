@@ -26,9 +26,9 @@ import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 import BingoResponseData from "./BingoResponseData";
 
 export default function BingoGameDataAdmin(props) {
-  const endpointSet = "bingo_game";
+  const category = "bingo_game";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -39,7 +39,7 @@ export default function BingoGameDataAdmin(props) {
 
   const navigate = useNavigate();
 
-  const { t, i18n } = useTranslation("bingo_games");
+  const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
   const [curTab, setCurTab] = useState(0);

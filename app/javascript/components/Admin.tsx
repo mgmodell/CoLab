@@ -6,6 +6,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import CourseAdmin from "./course_admin/CourseAdmin";
 import SchoolList from "./course_admin/SchoolList";
+import UsersDataAdmin from "./course_admin/UsersDataAdmin";
 import SchoolDataAdmin from "./course_admin/SchoolDataAdmin";
 import RubricList from "./assignments/RubricList";
 import RubricDataAdmin from "./assignments/RubricDataAdmin";
@@ -13,13 +14,21 @@ import ConsentFormList from "./Consent/ConsentFormList";
 import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 import ConceptsTable from "./ConceptsTable";
 
-interface AdminProps {}
+//interface AdminProps {}
 
-export default function Admin(props: AdminProps) {
+export default function Admin( /*props: AdminProps */) {
   const user = useTypedSelector(state => state.profile.user);
 
   return (
     <Routes>
+      {user.is_instructor || user.is_admin || user.researcher ? (
+          <Route
+            path={`users`}
+            element={<UsersDataAdmin />}
+          />
+      ) : (
+        <Route path={`/*`} element={<Navigate to="/" replace />} />
+      )}
       {user.is_instructor || user.is_admin ? (
         <Route
           element={

@@ -3,6 +3,7 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
+mise trust "$HOME/src/app/mise.toml"
 export PATH=$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$PATH
 # eval "$(~/.local/bin/mise activate bash)"
 
@@ -127,7 +128,9 @@ export LC_ALL=C.UTF-8
 
 echo "Installing platforms"
 mise self-update -y
+export RUBY_BUILD_VENDOR_OPENSSL=1
 mise install
+eval "$(mise env --shell bash)"
 echo "Installing gems"
 bundle install --quiet
 echo "Installing packages using yarn"

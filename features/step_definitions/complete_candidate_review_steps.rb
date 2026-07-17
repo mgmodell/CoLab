@@ -168,7 +168,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
     end
 
     begin
-      xpth_search = "//li[contains(.,\"#{feedback.name}\")]"
+      xpth_search = %Q{//li[contains(.,\"#{feedback.name}\")]}
       page.find( :xpath, xpth_search ).click
       begin
         if has_xpath?( xpth_search )
@@ -201,7 +201,7 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
       log e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find( :xpath,
-                        "//li[contains(.,\"#{feedback.name}\")]" )
+                        %Q{//li[contains(.,\"#{feedback.name}\")]} )
       elem.scroll_to( elem )
       elem.click
 
@@ -243,7 +243,7 @@ end
 When( /^the user clicks the link to the candidate review$/ ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, "//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]" ).click
+  find( :xpath, %Q{//tbody/tr/td[contains(.,'#{@bingo.get_name( @anon )}')]} ).click
 
   wait_for_render
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_10_125207) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -452,7 +452,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.index ["name_en"], name: "index_languages_on_name_en", unique: true
   end
 
-  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "ags_access_token_url"
     t.string "client_id"
     t.integer "connectable_id", null: false
@@ -462,10 +462,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.string "iss"
     t.string "line_item_url"
     t.datetime "updated_at", null: false
-    t.index ["connectable_type", "connectable_id"], name: "index_lti_connections_on_connectable", unique: true
+    t.index ["connectable_type", "connectable_id"], name: "index_lti_connections_on_connectable"
   end
 
-  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "auth_login_url", null: false
     t.string "auth_token_url", null: false
     t.string "client_id", null: false
@@ -479,7 +479,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.index ["issuer", "client_id"], name: "index_lti_deployments_on_issuer_and_client_id", unique: true
   end
 
-  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "lti_nonces", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "expires_at", null: false
     t.string "nonce", null: false
@@ -489,13 +489,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.index ["state"], name: "index_lti_nonces_on_state", unique: true
   end
 
-  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "activity_id"
     t.string "activity_type"
     t.bigint "assignment_id"
     t.string "context_id"
     t.string "context_title"
-    t.bigint "course_id"
+    t.integer "course_id"
     t.datetime "created_at", null: false
     t.string "line_item_url"
     t.bigint "lti_deployment_id", null: false
@@ -671,7 +671,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
 
   create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.boolean "active", default: true, null: false
-    t.boolean "admin"
+    t.boolean "admin", default: false, null: false
     t.string "anon_first_name"
     t.string "anon_last_name"
     t.integer "cip_code_id"
@@ -703,7 +703,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
     t.integer "primary_language_id"
     t.string "provider", default: "email", null: false
     t.datetime "remember_created_at", precision: nil
-    t.boolean "researcher"
+    t.boolean "researcher", default: false, null: false
     t.datetime "reset_password_sent_at", precision: nil
     t.string "reset_password_token"
     t.integer "school_id"
@@ -793,6 +793,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_140000) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "lti_resource_links", "assignments"
+  add_foreign_key "lti_resource_links", "courses"
   add_foreign_key "lti_resource_links", "lti_deployments"
   add_foreign_key "narratives", "scenarios"
   add_foreign_key "projects", "courses"

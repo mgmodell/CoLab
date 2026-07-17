@@ -20,6 +20,7 @@ interface IUser {
   welcomed: boolean;
   is_instructor: boolean;
   is_admin: boolean;
+  is_researcher: boolean;
   country: string;
   timezone: string;
   language_id: number;
@@ -67,6 +68,7 @@ const initialState = {
     welcomed: false,
     is_instructor: false,
     is_admin: false,
+    is_researcher: false,
     country: "",
     timezone: "UTC",
     language_id: 40,
@@ -188,7 +190,7 @@ export const fetchProfile = createAsyncThunk(
     const getState = thunkAPI.getState;
 
     const url = getState().context.endpoints["profile"]["baseUrl"] + ".json";
-    dispatch(startTask("init"));
+    dispatch(startTask("loading"));
 
     axios
       .get(url, {})
@@ -198,11 +200,13 @@ export const fetchProfile = createAsyncThunk(
 
         const tz_hash = getState().context.lookups["timezone_lookup"];
         Settings.defaultZone = tz_hash[user.timezone];
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("loading"));
+      }) ;
   }
 );
 

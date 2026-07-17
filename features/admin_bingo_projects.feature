@@ -18,10 +18,7 @@ Feature: Bingo Administration
   @javascript
   Scenario: Instructor creates a new Bingo! game
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -55,10 +52,7 @@ Feature: Bingo Administration
   @javascript
   Scenario: Instructor creates a new Bingo! game but leaves the dates untouched
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -90,10 +84,7 @@ Feature: Bingo Administration
   @javascript
   Scenario: Instructor edits an existing Bingo!
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user logs in and accesses the "Courses" admin page
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing bingo game

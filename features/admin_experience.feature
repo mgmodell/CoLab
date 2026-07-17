@@ -12,13 +12,10 @@ Feature: Experience Administration
     Given the course started "5/10/1976" and ended "tomorrow"
     Given the experience started "2/29/1980" and ends "7/10/2008"
     Given the user is the instructor for the course
-    Given the user logs in
+    Then the user logs in and accesses the "Courses" admin page
 
 @javascript
   Scenario: Instructor creates a new Experience
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -37,9 +34,6 @@ Feature: Experience Administration
 
 @javascript
   Scenario: Instructor creates a new Experience and accepts lead time default
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -59,9 +53,6 @@ Feature: Experience Administration
 
 @javascript
   Scenario: Instructor creates a new Experience and student can see it
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -81,9 +72,6 @@ Feature: Experience Administration
 
 @javascript
   Scenario: Instructor edits an existing Experience
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -104,9 +92,6 @@ Feature: Experience Administration
 
 @javascript
   Scenario: Instructor edits an existing Experience with lead time
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
