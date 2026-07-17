@@ -1549,7 +1549,7 @@ __metadata:
     dayjs: "npm:^1.11.21"
     driver.js: "npm:^1.7.0"
     email-validator: "npm:^2.0.4"
-    html-react-parser: "npm:^6.1.4"
+    html-react-parser: "npm:^6.1.5"
     i18next: "npm:^26.3.6"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^8.0.0"
@@ -1558,7 +1558,7 @@ __metadata:
     immutable: "npm:^5.1.9"
     mini-css-extract-plugin: "npm:^2.10.2"
     mockdate: "npm:^3.0.5"
-    primeicons: "npm:^7.0.0"
+    primeicons: "npm:^8.0.0"
     primereact: "npm:10.9.8"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
@@ -1568,8 +1568,8 @@ __metadata:
     react-cookie-consent: "npm:^10.0.1"
     react-dom: "npm:^19.2.7"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.0.9"
-    react-on-rails: "npm:16.6.0"
+    react-i18next: "npm:^17.0.10"
+    react-on-rails: "npm:17.0.0"
     react-redux: "npm:^9.3.0"
     react-refresh: "npm:^0.18.0"
     react-router: "npm:^8.2.0"
@@ -2351,21 +2351,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-react-parser@npm:^6.1.4":
-  version: 6.1.4
-  resolution: "html-react-parser@npm:6.1.4"
+"html-react-parser@npm:^6.1.5":
+  version: 6.1.5
+  resolution: "html-react-parser@npm:6.1.5"
   dependencies:
     domhandler: "npm:6.0.1"
     html-dom-parser: "npm:8.0.0"
     react-property: "npm:2.0.2"
-    style-to-js: "npm:2.0.1"
+    style-to-js: "npm:2.0.2"
   peerDependencies:
     "@types/react": 0.14 || 15 || 16 || 17 || 18 || 19
     react: 0.14 || 15 || 16 || 17 || 18 || 19
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/bac1d82c5de0b3cb822cc1dd4a033ca8cdac5088efb2622ff3412dc59f4ff1f0d0e2a7189be61afc28cfe96baf66d9117762e329c6d2118495baa391c75aa738
+  checksum: 10c0/2e3607ee7f82f29f16d7389bcc4694c669d5d215615fdc21ce8b224c74e138c189ddc6a6b11d0ba1281e0176161c76a230e3d3249c990962689a587ff8368ec5
   languageName: node
   linkType: hard
 
@@ -2456,10 +2456,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inline-style-parser@npm:0.2.7":
-  version: 0.2.7
-  resolution: "inline-style-parser@npm:0.2.7"
-  checksum: 10c0/d884d76f84959517430ae6c22f0bda59bb3f58f539f99aac75a8d786199ec594ed648c6ab4640531f9fc244b0ed5cd8c458078e592d016ef06de793beb1debff
+"inline-style-parser@npm:0.2.9":
+  version: 0.2.9
+  resolution: "inline-style-parser@npm:0.2.9"
+  checksum: 10c0/1ec6b096dec6b0da02c81082704c03c6c22b3361f98ab61656cce1f18b0eaaded5719011b8581fbc872a6773be4cba8b90b2a01f3f4f2eeec2402f5be6799c80
   languageName: node
   linkType: hard
 
@@ -2819,10 +2819,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primeicons@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "primeicons@npm:7.0.0"
-  checksum: 10c0/a7f6344d6db49e785d2040b35f8cae761d15bb8f8ee70ade8981d45438245414e913fe7235921122aade2b0a11a032c98b44dc527be2da11aa791ff145099c06
+"primeicons@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "primeicons@npm:8.0.0"
+  checksum: 10c0/24081ba8766ac14dbcfd5c24e04898a7c5b6163042ee62581fd63da70e0c663854cde0c6e4922c579e7f11b676c08a4eb5847c7bf5bceb640156b1aa92f6c367
   languageName: node
   linkType: hard
 
@@ -2996,9 +2996,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.0.9":
-  version: 17.0.9
-  resolution: "react-i18next@npm:17.0.9"
+"react-i18next@npm:^17.0.10":
+  version: 17.0.10
+  resolution: "react-i18next@npm:17.0.10"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
     html-parse-stringify: "npm:^3.0.1"
@@ -3014,7 +3014,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/cd7ca7c03daaa22b72341b67c66f00cdc8b694c5d84d6e1fe5ffb2e87d7b6d8941cdcf52e407d7fe7ee7b8a77192e517732d815756fec44eb258e3c8d3956329
+  checksum: 10c0/0ec5dea59e4b136c026136334bf0d1eccc445db173b07d4ccefd2ce842db95bd64ae7e90809041c9022e31060fdb8eb3f6529b8ddd394bed84e5edaeb9d4ab52
   languageName: node
   linkType: hard
 
@@ -3032,13 +3032,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-on-rails@npm:16.6.0":
-  version: 16.6.0
-  resolution: "react-on-rails@npm:16.6.0"
+"react-on-rails@npm:17.0.0":
+  version: 17.0.0
+  resolution: "react-on-rails@npm:17.0.0"
   peerDependencies:
     react: ">= 16"
     react-dom: ">= 16"
-  checksum: 10c0/1df524bc980850381f904f59965042dec2147d2f7eca320def0e7978ab695d45d827d074c535af162946e1c90aa6c86a4a6b02f61dd2ac463e387a5892fcb813
+  checksum: 10c0/f4cefe8fabede810c1fbd6b3a784acd04fd56eb033f1552b180d69fafa7b33217ec96c66570b0d9cbccc0809087be5e54582de7b7f0a107425c53f6a95ec9152
   languageName: node
   linkType: hard
 
@@ -3553,21 +3553,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"style-to-js@npm:2.0.1":
-  version: 2.0.1
-  resolution: "style-to-js@npm:2.0.1"
+"style-to-js@npm:2.0.2":
+  version: 2.0.2
+  resolution: "style-to-js@npm:2.0.2"
   dependencies:
-    style-to-object: "npm:2.0.0"
-  checksum: 10c0/77f247ae76b539a7b6f85cc58945b48748e2ce126d4495cc2d6764ce4d88c6fb49e37614fd51cac55ae5804e6a03c73ed04748f8ac1cd8bc6e0b82ef6b6e2cbb
+    style-to-object: "npm:2.0.2"
+  checksum: 10c0/4a25069f451c2a6fe3fb20daf46d4585547734280d0711c53df8d34e6c4f08e28c6fef099f24eb1d6435d39d1f8c74df2950f19cfea0ea073b8c000713f8b310
   languageName: node
   linkType: hard
 
-"style-to-object@npm:2.0.0":
-  version: 2.0.0
-  resolution: "style-to-object@npm:2.0.0"
+"style-to-object@npm:2.0.2":
+  version: 2.0.2
+  resolution: "style-to-object@npm:2.0.2"
   dependencies:
-    inline-style-parser: "npm:0.2.7"
-  checksum: 10c0/566950322ce1f87f6066830960de4f64ff3f89722537437fb165d3e25aee233f71d48fa3427717090071aabdb9d8b9a2be5d111f11e4f80a3c1ac464a4abc4ba
+    inline-style-parser: "npm:0.2.9"
+  checksum: 10c0/112362357d75d16f58985af36927a95f67214b6279ddbb43292a1d030dbda3f8774dee9aa70e9d422ebad07d23de9a8468c265ee915ed7bafc811722a6de2fec
   languageName: node
   linkType: hard
 

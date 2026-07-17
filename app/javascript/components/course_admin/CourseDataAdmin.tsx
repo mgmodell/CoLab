@@ -18,7 +18,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import CourseUsersList from "./CourseUsersList";
 
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
@@ -34,6 +34,7 @@ import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { Temporal, parseISO } from "../infrastructure/TemporalSettings";
+import { Col, Container, Row } from "react-grid-system";
 
 interface IActivityLink {
   name: string;
@@ -309,70 +310,89 @@ export default function CourseDataAdmin() {
       {Boolean(messages['course_description']) ? (
         <Message severity="error" text={messages['course_description']} />
       ) : null}
-      <br />
-      <label htmlFor="course_school" id="course_school_lbl">
-        {t('edit.school')}
-      </label>
-      {schools.length > 0 ? (
-        <Dropdown
-          id="course_school"
-          value={course.school_id}
-          options={schools}
-          onChange={event => {
-            const changeTo = Number(event.target.value);
-            setCourse(course => {
-              return {
-                ...course,
-                school_id: changeTo,
-                timezone: schoolTzHash[changeTo]
-              };
-            });
-          }}
-          optionLabel="name"
-          optionValue="id"
-          placeholder="Select a School"
-          showClear={false}
-        />
-      ) : (
-        <Skeleton className={"mb-2"} height={'2rem'} />
-      )}
+      <Container>
+        <Row>
+          <Col xs={12} sm={2}>
+            <label htmlFor="course_school" id="course_school_lbl">
+              {t('edit.school')}
+            </label>
+          </Col>
+          <Col xs={12} sm={10}>
+            {schools.length > 0 ? (
+              <Dropdown
+                id="course_school"
+                value={course.school_id}
+                options={schools}
+                onChange={event => {
+                  const changeTo = Number(event.target.value);
+                  setCourse(course => {
+                    return {
+                      ...course,
+                      school_id: changeTo,
+                      timezone: schoolTzHash[changeTo]
+                    };
+                  });
+                }}
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select a School"
+                showClear={false}
+              />
+            ) : (
+              <Skeleton className={"mb-2"} height={'2rem'} />
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={2}>
+            <label htmlFor="course_timezone" id="course_timezone_lbl">
+              {t('edit.time_zone')}
+            </label>
+          </Col>
+          <Col xs={12} sm={10}>
+            {timezones.length > 0 ? (
+              <Dropdown id="course_timezone"
+                value={course.timezone}
+                options={timezones}
+                onChange={event => {
+                  setCourseValue('timezone', event.target.value);
+                }}
+                optionLabel="name"
+                optionValue="name"
+                placeholder="Select a Time Zone"
+                showClear={false}
+              />
+            ) : (
+              <Skeleton className={"mb-2"} height={'2rem'} />
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={2}>
+            <label htmlFor="course_consent_form" id="course_consent_form_lbl">
+              {t('edit.consent')}
+            </label>
+          </Col>
+          <Col xs={12} sm={10}>
+            <Dropdown
+              id="course_consent_form"
+              value={course.consent_form_id}
+              options={consentForms}
+              onChange={event => {
+                setCourseValue('consent_form_id', event.target.value);
+              }}
+              optionValue="id"
+              optionLabel="name"
+              placeholder="Select a Consent Form"
+              showClear={true}
+            />
+          </Col>
 
-      <label htmlFor="course_timezone" id="course_timezone_lbl">
-        {t('edit.time_zone')}
-      </label>
-      {timezones.length > 0 ? (
-        <Dropdown id="course_timezone"
-          value={course.timezone}
-          options={timezones}
-          onChange={event => {
-            setCourseValue('timezone', event.target.value);
-          }}
-          optionLabel="name"
-          optionValue="name"
-          placeholder="Select a Time Zone"
-          showClear={false}
-        />
-      ) : (
-        <Skeleton className={"mb-2"} height={'2rem'} />
-      )}
+        </Row>
 
-      <label htmlFor="course_consent_form" id="course_consent_form_lbl">
-        {t('edit.consent')}
-      </label>
-      <Dropdown
-        id="course_consent_form"
-        value={course.consent_form_id}
-        options={consentForms}
-        onChange={event => {
-          setCourseValue('consent_form_id', event.target.value);
-        }}
-        optionValue="id"
-        optionLabel="name"
-        placeholder="Select a Consent Form"
-        showClear={true}
-      />
+      </Container>
 
-      <p>{t('edit.dates_tz', { time_zone: course.timezone })}</p>
+      <p>{t('edit.dates_tz', { time_zone: course.timezone }).replace(/&amp;/g, '&')}</p>
       <label htmlFor="course_dates" id="course_dates_lbl">
         {t('edit.dates')}
       </label>

@@ -59,7 +59,7 @@ gem 'prawn'
 gem 'prawn-qrcode'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '16.6.0'
+gem 'react_on_rails', '17.0.0'
 gem 'ruby-vips', '~> 2.0'
 
 gem 'stopwords-filter2', require: 'stopwords'

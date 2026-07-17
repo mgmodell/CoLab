@@ -254,7 +254,7 @@ export default function ExperienceDataAdmin(props) {
       />
       <label htmlFor="experience-active">{t('active')}</label><br />
 
-      <span>{t('timezone_warning', {timezone: parse( courseTimezone ) } )}</span>
+      <span>{t('timezone_warning', {timezone: parse( courseTimezone ) } ).replace(/&amp;/g, '&')}</span>
       <FloatLabel>
         <Calendar
           id="experience_start_date"

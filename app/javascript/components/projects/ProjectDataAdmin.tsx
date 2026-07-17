@@ -105,7 +105,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         const course = data.course;
         setCourseName(course.name);
         setCourseTimezone(course.timezone);
-        //Settings.defaultZone = course.timezone;
 
         setProjectName(project.name || "");
         setProjectDescription(project.description || "");
@@ -263,7 +262,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       />
       <label htmlFor="active">{t("active_switch")}</label>
 
-      <span>{t('timezone_warning', { timezone: courseTimezone } )}</span>
+      <span>{t('timezone_warning', { timezone: courseTimezone } ).replace(/&amp;/g, '&')}</span>
       <FloatLabel>
         <Calendar
           id="project_start_date"
