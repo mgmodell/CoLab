@@ -125,3 +125,5 @@ group :development do
   gem 'spring'
 end
 
+
+gem "solid_cable", "~> 4.0"
