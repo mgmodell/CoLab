@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import useResizeObserver from "resize-observer-hook";
+import React, { useState, useEffect, useRef } from "react";
 
 import { scaleOrdinal } from "@visx/scale";
 import { curveLinearClosed, curveMonotoneX } from "@visx/curve";
@@ -58,7 +57,23 @@ export default function SubjectChart(props: Props) {
   const [comments, setComments] = useState({});
 
   const chartHeight = 400;
-  const [ref, chartWidth, discard] = useResizeObserver();
+  const ref = useRef<HTMLDivElement>(null);
+  const [chartWidth, setChartWidth] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setChartWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(element);
+    return () => {
+      observer.unobserve(element);
+      observer.disconnect();
+    };
+  }, []);
 
   const margin = {
     top: 105,
@@ -161,10 +176,11 @@ export default function SubjectChart(props: Props) {
 
   return (
     <div ref={ref}>
-      {props.hidden || false ? null : (
+      {props.hidden || false || chartWidth < 1 ? null : (
         <React.Fragment>
           <XYChart
             height={chartHeight}
+            width={chartWidth}
             margin={margin}
             xScale={{ type: "time", domain: xDateDomain }}
             yScale={{ type: "linear", domain: [0, 6000] }}
