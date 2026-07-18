@@ -1576,7 +1576,6 @@ __metadata:
     react-spring: "npm:10.0.4"
     react-virtualized: "npm:^9.22.6"
     react_ujs: "npm:^3.3.1"
-    resize-observer-hook: "npm:^1.0.5"
     rspack-manifest-plugin: "npm:^5.2.2"
     selfsigned: "npm:^5.5.0"
     shakapacker: "npm:10.3.0"
@@ -3274,15 +3273,6 @@ __metadata:
   version: 5.2.0
   resolution: "reselect@npm:5.2.0"
   checksum: 10c0/d0a8497e404b25a769fe792eacae88b9b576c30870450cd243d76ec9427d91a59c4a2cc00d824d283448b444c4c698a8f961d771c8ae39c759313afb31950e2e
-  languageName: node
-  linkType: hard
-
-"resize-observer-hook@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "resize-observer-hook@npm:1.0.5"
-  peerDependencies:
-    react: ^16.0.0
-  checksum: 10c0/524d6b878f61396b6769cf8a0294fe57bf8a9134cf2e72a758c90df93ce1c8376d0add25c2422fe5f18b33d228e360b4804f9e5708b0f2fc7011c1b6722cf9ce
   languageName: node
   linkType: hard
 
