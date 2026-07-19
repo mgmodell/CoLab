@@ -63,7 +63,9 @@ Then ( 'the user logs in and accesses the {string} admin page' ) do | admin_page
   click_link_or_button 'I understand' if has_content? 'I understand'
 
   open_main_menu
+  wait_for_render
   find( :id, 'administration-menu', wait: 10 ).click
+  wait_for_render
 
   find( :xpath, "//a[contains(.,'#{admin_page}')]" ).click
   wait_for_render
