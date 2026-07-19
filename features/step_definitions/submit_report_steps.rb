@@ -47,9 +47,7 @@ end
 When( /^user clicks the link to the project$/ ) do
   step 'the user enables the "Group Name" table view option'
   search_xpath =  %Q{//tbody/tr/td[contains(.,'Check-in')]/following-sibling::td[text()='#{@project.group_for_user( @user ).name}']}
-  links = all( :xpath, search_xpath )
-
-  links.first.click
+  find( :xpath, search_xpath ).click
 
   wait_for_render
 end
@@ -268,15 +266,7 @@ Then( /^the anonymous comment "([^"]*)"$/ ) do | comment_status |
 end
 
 Then 'the installment will successfully save' do
-  # Using aria-labl instead of title because of some strange JavaScript
-  # error.
-  waits = 0
-  unless !all( :xpath, "//div[contains(.,'success')]" ).empty? || waits > 3
-
-    sleep( 0.3 )
-    waits += 1
-    waits.should be < 3
-  end
+  page.should have_xpath( "//div[contains(.,'success')]" )
 end
 
 Then( /^user will be presented with the installment form$/ ) do
@@ -306,17 +296,17 @@ Then('the user should see the {string} reporting page') do | activity_type |
   when 'bingo'
     if is_instructor
       page.should have_field with: @bingo.topic
-      all(:xpath, "//span[text()='Response data']")[0].click
+      find(:xpath, "//span[text()='Response data']").click
       page.should have_content 'Results'
     else
       page.should have_content @bingo.topic
-      all(:xpath, "//span[text()='Your performance']")[0].click
+      find(:xpath, "//span[text()='Your performance']").click
     end
   when 'project'
-    all(:xpath, "//span[text()='Reporting']")[0].click
+    find(:xpath, "//span[text()='Reporting']").click
     page.should have_content "Data for #{@project.name}"
   when 'experience'
-    all(:xpath, "//span[text()='Results']")[0].click
+    find(:xpath, "//span[text()='Results']").click
     page.should have_content 'Responses'
   else
     pending
