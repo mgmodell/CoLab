@@ -17,7 +17,7 @@ def wait_for_render
   # Wait briefly for React useEffects to fire and dispatch startTask (showing #waiting).
   # If #waiting never appears within 1s the page is already stable; if it does appear
   # we then wait up to 30s for it to go away before proceeding.
-  page.has_xpath?( "//*[@id='waiting']", wait: 1 )
+  page.has_xpath?( "//*[@id='waiting']", wait: 2 )
   page.has_no_xpath?( "//*[@id='waiting']", wait: 30 )
 end
 
