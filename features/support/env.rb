@@ -14,8 +14,11 @@ World( Warden::Test::Helpers )
 Warden.test_mode!
 
 def wait_for_render
-  # 30 seconds should be more than enough for any page to render, even on CI
-  page.has_no_xpath?( "//*[@id='waiting']", wait: 5 )
+  # Wait briefly for React useEffects to fire and dispatch startTask (showing #waiting).
+  # If #waiting never appears within 1s the page is already stable; if it does appear
+  # we then wait up to 30s for it to go away before proceeding.
+  page.has_xpath?( "//*[@id='waiting']", wait: 2 )
+  page.has_no_xpath?( "//*[@id='waiting']", wait: 30 )
 end
 
 def ack_messages
@@ -120,6 +123,7 @@ Capybara.javascript_driver = case ENV['DRIVER']
                                :selenium_chrome_headless
                              end
 Capybara.default_driver = :rack_test
+Capybara.default_max_wait_time = 10
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
 $cached_sql_statements = nil
