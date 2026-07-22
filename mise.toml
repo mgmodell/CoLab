@@ -4,6 +4,6 @@ overmind = "latest"
 podman = { version = "6.0.1", rename_exe = "podman" }
 python = "3.13.7"
 ruby = "4.0.6"
-rust = "1.97.0"
-usage = "3.5.5"
+rust = "1.97.1"
+usage = "3.5.6"
 yarn = "4.17"
