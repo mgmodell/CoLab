@@ -621,9 +621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/cli@npm:^2.1.4":
-  version: 2.1.4
-  resolution: "@rspack/cli@npm:2.1.4"
+"@rspack/cli@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@rspack/cli@npm:2.1.5"
   peerDependencies:
     "@rspack/core": ^2.0.0-0
     "@rspack/dev-server": ^2.0.0-0
@@ -632,7 +632,7 @@ __metadata:
       optional: true
   bin:
     rspack: ./bin/rspack.js
-  checksum: 10c0/9e2fec2d76c217a67428edb425323b8028bbee42bc614e40b76f5d25800328dd838cdba0f90dd92d706f8d81eda20e2e95486df3688cdd5a9916411d08ec9bfa
+  checksum: 10c0/3418944924abac18b08ebe808b0699105f84ac479f9ff68f51da97125c201e1f95664d3d2bad6c5719965761e96ec0a09d208d2543d134b0e28d75d17abb83ea
   languageName: node
   linkType: hard
 
@@ -1524,7 +1524,7 @@ __metadata:
     "@react-spring/types": "npm:10.1.2"
     "@react-spring/web": "npm:10.1.2"
     "@reduxjs/toolkit": "npm:^2.12.0"
-    "@rspack/cli": "npm:^2.1.4"
+    "@rspack/cli": "npm:^2.1.5"
     "@rspack/core": "npm:^2.1.4"
     "@rspack/dev-server": "npm:^2.1.0"
     "@rspack/plugin-react-refresh": "npm:^2.0.2"
