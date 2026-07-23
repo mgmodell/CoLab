@@ -1547,7 +1547,7 @@ __metadata:
     d3-color: "npm:^3.1.0"
     d3-scale-chromatic: "npm:^3.1.0"
     dayjs: "npm:^1.11.21"
-    driver.js: "npm:^1.7.0"
+    driver.js: "npm:^1.8.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.5"
     i18next: "npm:^26.3.6"
@@ -2079,10 +2079,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"driver.js@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "driver.js@npm:1.7.0"
-  checksum: 10c0/6d0a337246307ad2204b86a7d264e5ed42aebeacedbaf7be259ff4896478ef1c8908ee222670c0136125990ec61a3b6c989aedb594cbf6a9b7442ee28eac7f75
+"driver.js@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "driver.js@npm:1.8.0"
+  checksum: 10c0/a770d0bf2d93ddafa064237ce002f90d3a8d4278e60954ad9efedda45cac4e74aa5a8508f3fd8800c094d59fb9bc53a0c0634d434d0889622de5f60ecc5a1fd2
   languageName: node
   linkType: hard
 

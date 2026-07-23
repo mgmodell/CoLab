@@ -31,7 +31,7 @@
     "d3-color": "^3.1.0",
     "d3-scale-chromatic": "^3.1.0",
     "dayjs": "^1.11.21",
-    "driver.js": "^1.7.0",
+    "driver.js": "^1.8.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^6.1.5",
     "i18next": "^26.3.6",
