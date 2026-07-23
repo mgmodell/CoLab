@@ -5,7 +5,7 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.29.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.29.2, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.29.2
   resolution: "@babel/runtime@npm:7.29.2"
   checksum: 10c0/30b80a0140d16467792e1bbeb06f655b0dab70407da38dfac7fedae9c859f9ae9d846ef14ad77bd3814c064295fe9b1bc551f1541ea14646ae9f22b71a8bc17a
@@ -59,10 +59,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/ed25519@npm:2.3.0":
+  version: 2.3.0
+  resolution: "@noble/ed25519@npm:2.3.0"
+  checksum: 10c0/5ecbb66bdf4f1376002711e6ee4acb0db1d5dc62bd1543d45135b772e5296d72db0d03228d3b1da5c662240520369d5d8d4846e128a50bc789b316d0a228a6c1
+  languageName: node
+  linkType: hard
+
 "@noble/hashes@npm:1.4.0":
   version: 1.4.0
   resolution: "@noble/hashes@npm:1.4.0"
   checksum: 10c0/8c3f005ee72e7b8f9cff756dfae1241485187254e3f743873e22073d63906863df5d4f13d441b7530ea614b7a093f0d889309f28b59850f33b66cb26a779a4a5
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@noble/hashes@npm:2.2.0"
+  checksum: 10c0/cad8630c504d6b9271984f685cd0af9101b40988fc2dfbe17ccdf068a9941f95cc5c9957d89e9ca4b7ca94c15cb35f93510c5d53a09fbcc83ee503b93d0a1034
   languageName: node
   linkType: hard
 
@@ -224,6 +238,102 @@ __metadata:
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
   checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
+  languageName: node
+  linkType: hard
+
+"@primereact/core@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@primereact/core@npm:11.0.0"
+  dependencies:
+    "@primereact/hooks": "npm:11.0.0"
+    "@primereact/types": "npm:11.0.0"
+    "@primeui/license-manager": "npm:^1.0.0"
+    "@primeuix/locale": "npm:^0.1.0"
+    "@primeuix/motion": "npm:^1.0.0"
+    "@primeuix/styled": "npm:^1.0.0"
+    "@primeuix/utils": "npm:^0.8.0"
+  peerDependencies:
+    react: ">=19.0.0"
+  checksum: 10c0/7e4db9f4ec794be21c10922845c6f71e22d49b460fa956a505de5eecfcaaa57476c8d61de03de2bd57abaa77d37a3dbcbce708381da536698b3c28d8be79e66d
+  languageName: node
+  linkType: hard
+
+"@primereact/headless@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@primereact/headless@npm:11.0.0"
+  dependencies:
+    "@primereact/core": "npm:11.0.0"
+    "@primereact/hooks": "npm:11.0.0"
+    "@primeui/license-manager": "npm:^1.0.0"
+    "@primeuix/styled": "npm:^1.0.0"
+    "@primeuix/utils": "npm:^0.8.0"
+  checksum: 10c0/6ea57cc6635b20f2ed536f419e34a982db115e8fb8431f831a105c41c03b84dbf5c2fdca125234077b7f5ae298e684119981cff6e32450880c8c9760bd457193
+  languageName: node
+  linkType: hard
+
+"@primereact/hooks@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@primereact/hooks@npm:11.0.0"
+  dependencies:
+    "@primeuix/utils": "npm:^0.8.0"
+  peerDependencies:
+    react: ">=19.0.0"
+  checksum: 10c0/d5b4fd80967460e08fe33377995d927517ecf4eed7f0b45c46b1409d85f6b75a8dbed176203b71fa4ce0d8a92f975a6dae075c1d47ffeeb8bf56add359bbebb3
+  languageName: node
+  linkType: hard
+
+"@primereact/types@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@primereact/types@npm:11.0.0"
+  peerDependencies:
+    "@primeuix/motion": ^1.0.0
+    "@primeuix/styled": ^1.0.0
+  checksum: 10c0/9e53d2c96df198e6642f37ae67e73b134bb24c983e9771cef6d7d73e93d873832b8011f51dc315fbbfe6a5d89eabe8262b9fae645e257ebd9b32839f1fce9939
+  languageName: node
+  linkType: hard
+
+"@primeui/license-manager@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@primeui/license-manager@npm:1.0.0"
+  dependencies:
+    "@noble/ed25519": "npm:2.3.0"
+    "@noble/hashes": "npm:2.2.0"
+  checksum: 10c0/f3037b162e70950eefdb80774ecff58ea04e21633adca13dcfe83ab5d7443dba978cbf2669973be9e94bcc8912aaf1021e20d8624669aadae02f7b347203ae4b
+  languageName: node
+  linkType: hard
+
+"@primeuix/locale@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@primeuix/locale@npm:0.1.0"
+  dependencies:
+    "@primeuix/utils": "npm:^0.8.0"
+  checksum: 10c0/ffefb9c32b3e683e6b3b08f9af9ae559c1811943e1839ce987bd9de4ec1715e2919fc96fbee43faf83ca8ee750241e2a0921bb4e105876dedc51c903e61061c5
+  languageName: node
+  linkType: hard
+
+"@primeuix/motion@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@primeuix/motion@npm:1.0.0"
+  dependencies:
+    "@primeuix/utils": "npm:^0.8.0"
+  checksum: 10c0/83adcdb15ab469f0c376ff9ee26777c80d5bf6a045c05f998be9fbafa145f86c8a23df4da3df57444a2f437770436d2bd197a590c94fa4fab8fedb3bfe873fa1
+  languageName: node
+  linkType: hard
+
+"@primeuix/styled@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@primeuix/styled@npm:1.0.0"
+  dependencies:
+    "@primeui/license-manager": "npm:^1.0.0"
+    "@primeuix/utils": "npm:^0.8.0"
+  checksum: 10c0/26fe4d23206738ece2ff5473777d752f3a8d77010928e48d0f945b4ef0656015ab3207c1f8b246b701583de982380e92de8ab85473f3aa05a146df2961233a9b
+  languageName: node
+  linkType: hard
+
+"@primeuix/utils@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "@primeuix/utils@npm:0.8.0"
+  checksum: 10c0/2773277dd9854ed8ae8af36c2a59662f073144183bbc5bb16b8cbb6478ec547fd25bbfde8840459b11fe58687eb1d2f265b89f3b1258f6d581cfe59ae33cbae7
   languageName: node
   linkType: hard
 
@@ -1052,15 +1162,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.1":
-  version: 4.4.12
-  resolution: "@types/react-transition-group@npm:4.4.12"
-  peerDependencies:
-    "@types/react": "*"
-  checksum: 10c0/0441b8b47c69312c89ec0760ba477ba1a0808a10ceef8dc1c64b1013ed78517332c30f18681b0ec0b53542731f1ed015169fed1d127cc91222638ed955478ec7
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:*, @types/react@npm:>=16.9.11":
   version: 19.2.14
   resolution: "@types/react@npm:19.2.14"
@@ -1559,7 +1660,7 @@ __metadata:
     mini-css-extract-plugin: "npm:^2.10.2"
     mockdate: "npm:^3.0.5"
     primeicons: "npm:^8.0.0"
-    primereact: "npm:10.9.8"
+    primereact: "npm:11.0.0"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
     quill: "npm:^2.0.3"
@@ -2021,7 +2122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-helpers@npm:^5.0.1, dom-helpers@npm:^5.1.3, dom-helpers@npm:^5.2.0":
+"dom-helpers@npm:^5.1.3, dom-helpers@npm:^5.2.0":
   version: 5.2.1
   resolution: "dom-helpers@npm:5.2.1"
   dependencies:
@@ -2825,20 +2926,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primereact@npm:10.9.8":
-  version: 10.9.8
-  resolution: "primereact@npm:10.9.8"
+"primereact@npm:11.0.0":
+  version: 11.0.0
+  resolution: "primereact@npm:11.0.0"
   dependencies:
-    "@types/react-transition-group": "npm:^4.4.1"
-    react-transition-group: "npm:^4.4.1"
+    "@primereact/core": "npm:11.0.0"
+    "@primereact/headless": "npm:11.0.0"
   peerDependencies:
-    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/dcbff6a1db6a19f6e66403587b159e5e08bccba0eee4dd8daf1a17ee4a27d32c256f69a8f00f0f9573910a9ee27c227d7bab44732fc8f0482472753e782cf971
+    react: ">=19.0.0"
+    react-dom: ">=19.0.0"
+  checksum: 10c0/af8bc3ad7382207249dfa95d6770b42163b1c13eaac1819e6c99bc06af96f54a8a601a68fcebc05ee5935f0d7b54746ddc38dd216d224d56ff74787ac7af47f6
   languageName: node
   linkType: hard
 
@@ -2849,7 +2946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -3122,21 +3219,6 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/e1a8a5eeff4cb6f3487c1b5cffca86bf880158e8db6a51fbf737af4674c3b50c9ce7237c9fd9bf3f0661bf321848ff32f998dc0ee4a12524a59226529f4b12e6
-  languageName: node
-  linkType: hard
-
-"react-transition-group@npm:^4.4.1":
-  version: 4.4.5
-  resolution: "react-transition-group@npm:4.4.5"
-  dependencies:
-    "@babel/runtime": "npm:^7.5.5"
-    dom-helpers: "npm:^5.0.1"
-    loose-envify: "npm:^1.4.0"
-    prop-types: "npm:^15.6.2"
-  peerDependencies:
-    react: ">=16.6.0"
-    react-dom: ">=16.6.0"
-  checksum: 10c0/2ba754ba748faefa15f87c96dfa700d5525054a0141de8c75763aae6734af0740e77e11261a1e8f4ffc08fd9ab78510122e05c21c2d79066c38bb6861a886c82
   languageName: node
   linkType: hard
 
