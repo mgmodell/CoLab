@@ -1,0 +1,28 @@
+ko:
+  lti:
+    select_content:
+      title: "CoLab – 연결할 활동 선택"
+      heading: "Moodle에 연결할 CoLab 활동 선택"
+      instructions: >
+        아래에서 활동을 선택하세요. Moodle이 수업에서 직접 링크를 만들고
+        해당하는 경우 성적부 열이 추가됩니다.
+      no_courses: >
+        사용 가능한 수업이 없습니다. 적어도 하나의 CoLab 수업에서 강사인지 확인하세요.
+      type_col: "유형"
+      action_col: "실행"
+      select_btn: "선택"
+      select_btn_aria: "%{name} 선택"
+      no_activities: "이 수업에 아직 활동이 없습니다."
+      bingo:
+        name_col: "용어 목록 (빙고 게임)"
+        type: "빙고 / 용어 목록"
+      project:
+        name_col: "프로젝트"
+        type: "프로젝트"
+      experience:
+        name_col: "경험"
+        type: "경험"
+    deep_link_response:
+      title: "Moodle로 돌아가는 중\u2026"
+      body: "선택 항목을 Moodle로 전송 중입니다. 잠시 기다려 주세요\u2026"
+      continue_btn: "Moodle로 계속"

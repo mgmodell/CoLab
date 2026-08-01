@@ -1,0 +1,31 @@
+ko:
+  installments:
+    title: 그룹은 어떻게 함께 일했나요?
+    subtitle: 주간 체크인
+    submit: 주간 체크인 제출
+    success: 응답이 성공적으로 저장되었습니다
+    peer_submitted: "{{name}}님이 동료 평가를 제출했습니다."
+    err_unknown: 응답을 기록할 수 없습니다
+    err_normalize_sums: >
+      체크인 값을 조정할 수 없습니다. 관리자에게 문의하세요.
+    demo_success: >
+      응답이 성공적으로 저장되었을 것입니다. 데모가 완료되었습니다.
+    err_not_member: >
+      이 그룹의 구성원이 아니므로 이 체크인을 제출할 수 없습니다.
+    comment_prompt: 추가 의견을 작성하시겠습니까?
+    comment_input_prompt: 의견 입력
+    instructions: >
+      <em>{{group_name}}</em> 그룹의 이번 주 평가를 완료하세요 (<em>{{project_name}}</em>에서 함께 작업 중).
+      그룹의 {{member_count}}명 구성원이 {{factor_count}}개 요소에 대해 기여한 노력의 양을
+      표시하여 완료하세요. <em>이 보고서는 <u>지난 한 주만</u> 다루어야 하며 이전 기간은
+      포함하지 않아야 한다</em>는 점을 유념하세요.
+    slider:
+      instructions: >
+        슬라이더를 사용하여 각 구성원이 각 요소에 기울인 노력을 늘리거나 줄이세요.
+        한 슬라이더를 늘리면 다른 모든 슬라이더가 비례적으로 자동 감소하고
+        그 반대도 마찬가지입니다. 보고서를 제출하기 전에 각 요소 집합을 방문해 주세요.
+    basic:
+      instructions: >
+        아래 각 열의 합계는 %{total_val}이어야 하며 하단 행에 현재 합계가 표시됩니다.
+        또한 합계가 %{total_val}과 같을 때만 제출 버튼이 활성화됩니다.
+      totals: 합계<br>(%{total_val}과 같아야 함)
