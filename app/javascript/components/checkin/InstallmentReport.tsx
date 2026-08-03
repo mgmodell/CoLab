@@ -193,13 +193,12 @@ export default function InstallmentReport(props: Props) {
         data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
-        dispatch(endTask("saving"));
+        dispatch(endTask());
       });
   };
   //Store what we've got

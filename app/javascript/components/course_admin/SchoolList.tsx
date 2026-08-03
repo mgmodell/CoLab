@@ -55,6 +55,8 @@ export default function SchoolList( /*props : Props */ ) {
     axios.get(url, {}).then(response => {
       //Process the data
       setSchools(response.data);
+    })
+    .finally(() => {
       dispatch(endTask("loading"));
     });
   };

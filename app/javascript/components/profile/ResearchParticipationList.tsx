@@ -40,11 +40,13 @@ export default function ResearchParticipationList(props: Props) {
         const data = response.data;
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask());
+      })
   };
 
   useEffect(() => {

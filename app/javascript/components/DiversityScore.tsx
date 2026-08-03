@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { Button } from "primereact/button";
+import { endTask, startTask } from "./infrastructure/StatusSlice";
 
 type Props = {
   groupId: number;
@@ -19,6 +21,7 @@ export default function DiversityScore(props: Props) {
     props.rescoreGroup(event, props.groupId);
     setCalculated(null);
   }
+  const dispatch = useDispatch();
 
   function calcDiversity() {
     const url = props.scoreReviewUrl;
@@ -32,6 +35,7 @@ export default function DiversityScore(props: Props) {
     student_list.forEach((item, index) => {
       emails.push(item["email"]);
     });
+    dispatch(startTask("load"));
     axios
       .post(props.scoreReviewUrl + ".json", {
         emails: emails.join()
@@ -43,6 +47,9 @@ export default function DiversityScore(props: Props) {
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
+      })
+      .finally(() => {
+        dispatch(endTask("load"));
       });
   }
 

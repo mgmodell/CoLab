@@ -12,6 +12,8 @@ import { Panel } from "primereact/panel";
 import { FloatLabel } from "primereact/floatlabel";
 
 import ConfirmDialog from "./ConfirmDialog";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { useDispatch } from "react-redux";
 
 interface IProject {
   id: number;
@@ -41,6 +43,7 @@ export default function ChartContainer(props: Props) {
   const [selectedProject, setSelectedProject] = useState(-1);
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(-1);
+  const dispatch = useDispatch();
   const [anonymizeOpen, setAnonymizeOpen] = useState(false);
   const [forResearchOpen, setForResearchOpen] = useState(false);
   const [anonymize, setAnonymize] = useState(props.anonymize || false);
@@ -51,6 +54,7 @@ export default function ChartContainer(props: Props) {
   const getSubjectsForProject = projectId => {
     if (0 < selectedProject) {
       const url = endpoints.subjectsUrl + ".json";
+      dispatch(startTask("load subjects"));
       axios
         .post(url, {
           project_id: selectedProject,
@@ -63,12 +67,16 @@ export default function ChartContainer(props: Props) {
         })
         .catch(error => {
           console.log("subject retrieval error", error);
+        })
+        .finally(() => {
+          dispatch(endTask("load subjects"));
         });
     }
   };
 
   const getProjects = () => {
     const url = endpoints.projectsUrl + ".json";
+    dispatch(startTask("load projects"));
     axios
       .post(url, {
         for_research: forResearch,
@@ -79,6 +87,9 @@ export default function ChartContainer(props: Props) {
       })
       .catch(error => {
         console.log("project retrieval error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("load projects"));
       });
   };
 

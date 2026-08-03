@@ -69,11 +69,12 @@ export default function ReactionsList(props: Props) {
         const data = response.data;
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
-
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 

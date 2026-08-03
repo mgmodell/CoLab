@@ -146,7 +146,7 @@ export default function CourseDataAdmin() {
       .catch(error => {
         console.log("error:", error);
       }).finally(() => {
-        dispatch(endTask("loading"));
+        dispatch(endTask());
       })
   };
 
@@ -212,7 +212,6 @@ export default function CourseDataAdmin() {
       })
       .catch(error => {
         console.log("error:", error);
-        dispatch(endTask("saving"));
       }).finally(() => {
         dispatch(endTask("saving"));
       })

@@ -311,10 +311,11 @@ export default function ProfileDataAdmin(props: Props) {
             if (1 === foundSelectedStates.length) {
               setProfileHomeState(foundSelectedStates[0].id);
             }
-            dispatch(endTask("loading"));
           })
           .catch(error => {
             console.log("error", error);
+          })
+          .finally(() => {
             dispatch(endTask("loading"));
           });
       } else {

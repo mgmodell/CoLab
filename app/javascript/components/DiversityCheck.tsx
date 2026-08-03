@@ -9,6 +9,8 @@ import { InputText } from "primereact/inputtext";
 import { Container, Row, Col } from "react-grid-system";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { Panel } from "primereact/panel";
+import { endTask, startTask } from "./infrastructure/StatusSlice";
+import { useDispatch } from "react-redux";
 
 type Props = {};
 
@@ -23,8 +25,11 @@ export default function DiversityCheck(props: Props) {
     state => state.context.endpoints[category]
   );
 
+  const dispatch = useDispatch();
+
   function calcDiversity() {
     const url = endpoints.diversityScoreFor + ".json";
+    dispatch(startTask("load"));
     axios
       .post(url, {
         emails: emails
@@ -37,6 +42,9 @@ export default function DiversityCheck(props: Props) {
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
+      })
+      .finally(() => {
+        dispatch(endTask("load"));
       });
   }
   function handleClear() {

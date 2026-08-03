@@ -56,11 +56,11 @@ export default function ConsentLog(props: Props) {
         setFormAccepted(data.consent_log.accepted || false);
         setFormPresented(data.consent_log.presented);
         setLogLastUpdated(new Date(data.consent_log.updatedAt));
-
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("loading"));
       });
   };
@@ -84,11 +84,11 @@ export default function ConsentLog(props: Props) {
         } else {
           history.back();
         }
-
-        dispatch(endTask("saving"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("saving"));
       });
   };

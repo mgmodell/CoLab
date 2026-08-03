@@ -117,13 +117,13 @@ export default function ExperienceDataAdmin(props) {
 
         setResponseWords(data.response_words);
 
-        dispatch(endTask());
         dispatch(setClean(category));
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
+        dispatch(endTask());
         dispatch(setClean(category));
       });
   };
@@ -167,7 +167,6 @@ export default function ExperienceDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          dispatch(endTask("saving"));
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );

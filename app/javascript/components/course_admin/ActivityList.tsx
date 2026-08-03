@@ -182,8 +182,6 @@ export default function ActivityList(props: Props) {
                     dispatch(
                       addMessage(data.message, new Date(), Priorities.INFO)
                     );
-                    //setMessages(data.messages);
-                    dispatch(endTask("deleting"));
                   })
                   .catch(error => {
                     console.log("error:", error);

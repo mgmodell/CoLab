@@ -96,11 +96,13 @@ export default function ConsentFormDataAdmin(props) {
         setConsentFormFormTextKo(consentForm.form_text_ko || "");
         setConsentFormPdfUrl(consentForm.pdf_url || null);
 
-        dispatch(endTask());
         setDirty(false);
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   const saveConsentForm = () => {
@@ -157,16 +159,16 @@ export default function ConsentFormDataAdmin(props) {
           setConsentFormDoc(null);
           setDirty(false);
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-          dispatch(endTask("saving"));
         } else {
           dispatch(addMessage(data.messages.main, new Date(), Priorities.ERROR));
-          dispatch(endTask("saving"));
         }
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("saving"));
-      });
+      })
   };
 
   useEffect(() => {

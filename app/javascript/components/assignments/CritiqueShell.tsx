@@ -234,6 +234,9 @@ export default function CritiqueShell(props: Props) {
         setSubmissionsIndex(data.assignment.submissions);
 
       })
+      .finally(() => {
+        dispatch(endTask());
+      })
   }
 
   const panelDefs = [

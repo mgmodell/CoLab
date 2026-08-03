@@ -255,12 +255,14 @@ export const persistProfile = createAsyncThunk(
         const tz_hash = getState().context.lookups["timezone_lookup"];
         Settings.defaultZone = tz_hash[user.timezone];
         dispatch(setRetrievedProfile(user));
-        dispatch(endTask("loading"));
         dispatch(addMessage("Profile saved", new Date(), Priorities.INFO));
       })
       .catch(error => {
         console.log("error", error);
         dispatch(addMessage("Profile not saved", new Date(), Priorities.ERROR));
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   }
 );

@@ -115,7 +115,6 @@ export default function SchoolDataAdmin(props) {
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
           dispatch(refreshSchools());
-          dispatch(endTask("saving"));
         } else {
           dispatch(
             addMessage(data.messages.main, new Date(), Priorities.ERROR)

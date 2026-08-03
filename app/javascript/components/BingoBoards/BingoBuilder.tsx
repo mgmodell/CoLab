@@ -156,11 +156,13 @@ export default function BingoBuilder(props: Props) {
       .then(response => {
         const data = response.data;
         setConcepts(data);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error");
         return [{ id: -1, name: t("no_data_list_item") }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 
@@ -174,7 +176,6 @@ export default function BingoBuilder(props: Props) {
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         setFoundWords(data.found_words);
-        //}, this.randomizeTiles );
       })
       .catch(error => {
         console.log("error");
@@ -195,12 +196,13 @@ export default function BingoBuilder(props: Props) {
         data.initialised = data.id != null;
         data.iteration = 0;
         setBoard(data);
-        //}, this.randomizeTiles );
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error");
         return [{ id: -1, name: t("no_data_list_item") }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 
@@ -235,10 +237,12 @@ export default function BingoBuilder(props: Props) {
           setBoard(board);
           setBoard(board);
         }
-        dispatch(endTask("saving"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   };
   const getWorksheet = () => {
