@@ -246,7 +246,7 @@ GEM
     email_address (0.2.9)
       base64
       simpleidn
-    erb (6.0.6)
+    erb (6.0.7)
     erubi (1.13.1)
     erubis (2.7.0)
     execjs (2.10.1)
@@ -526,7 +526,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
-    rubocop (1.88.2)
+    rubocop (1.89.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -580,7 +580,7 @@ GEM
       websocket (~> 1.0)
     semantic_range (3.1.1)
     sexp_processor (4.17.5)
-    shakapacker (10.3.0)
+    shakapacker (10.3.1)
       activesupport (>= 5.2)
       package_json
       rack-proxy (>= 0.6.1)
@@ -711,7 +711,7 @@ DEPENDENCIES
   ruby-vips (~> 2.0)
   sdoc
   selenium-webdriver
-  shakapacker (= 10.3.0)
+  shakapacker (= 10.3.1)
   solid_cable (~> 4.0)
   spring
   stopwords-filter2
