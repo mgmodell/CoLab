@@ -179,6 +179,9 @@ export default function RubricDataAdmin(props) {
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask(action));
       });
   };
   const saveRubric = () => {

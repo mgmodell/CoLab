@@ -225,13 +225,14 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-
         setDirty(false);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 

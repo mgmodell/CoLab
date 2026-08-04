@@ -98,6 +98,8 @@ export default function UserEmailList(props: Props) {
                           const data = response.data;
                           props.emailListUpdateFunc(data.emails);
                           props.addMessagesFunc(data.messages);
+                        })
+                        .finally(() => {
                           dispatch(endTask("updating"));
                         })
                         .then(error => {
@@ -142,10 +144,12 @@ export default function UserEmailList(props: Props) {
                         const data = response.data;
                         props.emailListUpdateFunc(data.emails);
                         props.addMessagesFunc(data.messages);
-                        dispatch(endTask("removing"));
                       })
                       .catch(error => {
                         console.log("error", error);
+                      })
+                      .finally(() => {
+                        dispatch(endTask("removing"));
                       });
                   }}
                 />

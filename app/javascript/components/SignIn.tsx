@@ -2,7 +2,7 @@ import React, { Suspense, useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router";
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusSlice";
+import { Priorities, addMessage, endTask, startTask } from "./infrastructure/StatusSlice";
 import EmailValidator from "email-validator";
 
 
@@ -140,6 +140,7 @@ export default function SignIn(props) {
         onClick={() => {
           const url = profileEndpoints.passwordResetUrl + ".json";
 
+          dispatch(startTask("load"));
           axios
             .post(url, {
               email: email
@@ -152,6 +153,9 @@ export default function SignIn(props) {
             })
             .catch(error => {
               console.log("error", error);
+            })
+            .finally(() => {
+              dispatch(endTask("load"));
             });
         }}
       >

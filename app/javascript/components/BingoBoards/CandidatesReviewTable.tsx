@@ -185,10 +185,12 @@ export default function CandidatesReviewTable(props: Props) {
 
         setReviewStatus(t("review.data_loaded_msg"));
         setDirty(false);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   const saveFeedback = () => {

@@ -123,7 +123,7 @@ export default function RubricScorer(props: Props) {
 
       })
       .finally(()=>{
-        dispatch(endTask({}));
+        dispatch(endTask());
       })
 
 

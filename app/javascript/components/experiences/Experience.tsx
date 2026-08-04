@@ -159,11 +159,13 @@ export default function Experience(props) {
 
         resetFunc();
         dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(endTask("saving"));
         dispatch(setClean("diagnosis"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   };
 
@@ -185,12 +187,14 @@ export default function Experience(props) {
         //Process Experience
         resetFunc();
         dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(endTask("saving"));
         dispatch(setClean("reaction"));
         navigate("/home");
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("saving"));
       });
   };
 

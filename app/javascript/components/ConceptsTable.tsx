@@ -75,11 +75,13 @@ export default function ConceptsTable() {
         const data = response.data;
         setConcepts(data);
         setConceptsRaw(data);
-        dispatch(endTask("load"));
       })
       .catch(error => {
         console.log(error);
         return [{ id: -1, name: "no data" }];
+        dispatch(endTask("load"));
+      })
+      .finally(() => {
         dispatch(endTask("load"));
       });
   };
@@ -109,14 +111,16 @@ export default function ConceptsTable() {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        dispatch(endTask("load"));
         //statusActions.endTask("load");
         setEditing(false);
       })
       .catch(error => {
         console.log("error:", error);
         return [{ id: -1, name: "no data" }];
-      });
+      })
+      .finally(() => {
+        dispatch(endTask("load"));
+      })
   };
   return (
     <React.Fragment>

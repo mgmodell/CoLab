@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusSlice";
+import { Priorities, addMessage, endTask, startTask } from "./infrastructure/StatusSlice";
 
 import { Panel } from "primereact/panel";
 
@@ -56,6 +56,7 @@ export default function PasswordEdit(props) {
       onClick={() => {
         const url = profileEndpoints.passwordUpdateUrl + ".json";
 
+        dispatch(startTask("load"));
         axios
           .patch(url, {
             password: password,
@@ -70,6 +71,9 @@ export default function PasswordEdit(props) {
           })
           .catch(error => {
             console.log("error", error);
+          })
+          .finally(() => {
+            dispatch(endTask("load"));
           });
       }}
     >

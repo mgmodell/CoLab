@@ -64,11 +64,13 @@ export default function UserActivityList(props: Props) {
         const data = response.data;
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
-      });
+      })
+      .finally(() => {
+        dispatch(endTask());
+      })
   };
 
   useEffect(() => {

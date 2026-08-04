@@ -102,8 +102,9 @@ Then( /^the bingo "([^"]*)" date is "([^"]*)"$/ ) do | date_field_prefix, date_v
 end
 
 Then( 'the {string} label is disabled' ) do | label |
-  control = page.all( :xpath, %Q{//label[contains(., '#{label}')][not(@disabled)]"} )
-  control.size.should be > 0
+  label = find( :xpath, %Q{//label[contains(., '#{label}')]})
+  control = find( :xpath, %Q{//*[@name='#{label['for']}']}, visible: :all ) 
+  control.disabled?.should be true
 end
 
 Then( 'the bingo project is empty' ) do

@@ -73,7 +73,9 @@ Feature: Rubric administration
 
   @javascript
   Scenario: Admin searches for a colleague's unpublished rubric
+    Then the user logs out
      And the user is an admin
+    Then the user logs in and accesses the "Rubrics" admin page
     Then the user searches for "Never gonna' give you up 1"
     Then the user sees 1 rubrics
 
@@ -211,13 +213,17 @@ Feature: Rubric administration
 
   @javascript
   Scenario: Admin deletes an unpublished rubric
+    Then the user logs out
    Given the user is an admin
+    Then the user logs in and accesses the "Rubrics" admin page
     Then the user searches for "Never gonna' give you up"
     Then the user deletes the "Never gonna' give you up 3" rubric
 
   @javascript
   Scenario: Admin cannot delete a rubric that is published
+    Then the user logs out
    Given the user is an admin
+    Then the user logs in and accesses the "Rubrics" admin page
     Then the user searches for "Ruby 1"
     Then the user can not 'delete' the "Ruby 1" rubric
 

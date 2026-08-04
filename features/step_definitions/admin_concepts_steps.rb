@@ -60,7 +60,8 @@ end
 Then( 'the concept {string} will be in the list' ) do | new_concept_name |
   wait_for_render
   fill_in 'concept-search', with: new_concept_name[0..4]
-  find_all( :xpath, %Q{//tr/td[text()='#{new_concept_name}']} ).size.should be 1
+  concept_instances = find_all( :xpath, %Q{//tr/td[text()='#{new_concept_name}']} )
+  concept_instances.size.should be 1
 end
 
 Then( 'a concept will not exist named {string}' ) do | old_concept_name |

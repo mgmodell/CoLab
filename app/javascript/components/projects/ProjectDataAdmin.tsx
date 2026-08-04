@@ -173,7 +173,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
           const course = data.course;
           setCourseName(course.name);
-          dispatch(endTask("saving"));
           dispatch(setClean(category));
           setMessages(data.messages);
           dispatch(

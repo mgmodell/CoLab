@@ -47,10 +47,12 @@ export default function ConsentFormList(props) {
         const data = response.data;
         //Process the data
         setConsentForms(data);
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("loading"));
       });
   };
 

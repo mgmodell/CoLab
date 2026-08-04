@@ -188,11 +188,14 @@ export default function BingoGameDataAdmin(props) {
             return total + next.performance;
           }, 0) / data.length);
           setResultData(data);
-          dispatch(endTask());
         })
         .catch(error => {
           console.log("error", error);
+        })
+        .finally(() => {
+          dispatch(endTask());
         });
+
     }
   };
 
@@ -238,11 +241,13 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
         setDirty(false);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 

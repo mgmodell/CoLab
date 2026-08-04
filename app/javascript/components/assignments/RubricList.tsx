@@ -54,7 +54,6 @@ export default function RubricList(props: RubricListProps) {
       .then(response => {
         //Process the data
         setRubrics(response.data);
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log(error);

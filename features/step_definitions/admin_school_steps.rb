@@ -32,8 +32,10 @@ end
 
 Then 'the user selects {string} as the {string}' do | value, field |
   lbl = find( :xpath, %Q{//label[contains(.,'#{field}')]} )[:for]
-  find( :xpath, %Q{//input[@id='#{lbl}']} ).click
-  find( :xpath, %Q{//li[contains(.,'#{value}')]} ).click
+  inputs = all( :xpath, %Q{//input[@id='#{lbl}']/../..}, visible: :all )
+  inputs.first.click
+  list_items = all( :xpath, %Q{//li[contains(.,'#{value}')]} )
+  list_items.first.click
 end
 
 Then 'the user will dismiss the error {string}' do | error_message |

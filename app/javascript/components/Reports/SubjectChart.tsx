@@ -19,6 +19,8 @@ import { hsl } from "d3-color";
 import { schemeCategory10 as factorColors } from "d3-scale-chromatic";
 import { timeParse } from "d3-time-format";
 import Logo from "../svgs/Logo";
+import { startTask } from "../infrastructure/StatusSlice";
+import { useDispatch } from "react-redux";
 
 export const unit_codes = {
   group: 2,
@@ -46,6 +48,7 @@ export default function SubjectChart(props: Props) {
     state => state.context.status.endpointsLoaded
   );
   const { t, i18n } = useTranslation(category);
+  const dispatch = useDispatch();
 
   const [xDateDomain, setTimeRange] = useState([new Date(), new Date()]);
   const [factors, setFactors] = useState({});
@@ -100,6 +103,7 @@ export default function SubjectChart(props: Props) {
   const pullData = () => {
     const url = endpoints.dataUrl + ".json";
 
+    dispatch(startTask("load"));
     axios
       .post(url, {
         unit_of_analysis: unit_codes[props.unitOfAnalysis],
@@ -143,6 +147,9 @@ export default function SubjectChart(props: Props) {
       })
       .catch(error => {
         console.log("graphing data error", error);
+      })
+      .finally(() => {
+        dispatch(endTask("load"));
       });
   };
 

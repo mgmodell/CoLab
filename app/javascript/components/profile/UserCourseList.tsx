@@ -62,10 +62,12 @@ export default function UserCourseList(props: Props) {
         const data = response.data;
         //MetaData and Infrastructure
         props.coursesListUpdateFunc(data);
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
 

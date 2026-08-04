@@ -81,11 +81,13 @@ export default function CandidateListEntry(props: Props) {
         setHelpRequested(data.help_requested);
         setRequestCollaborationUrl(data.request_collaboration_url);
 
-        dispatch(endTask());
         setDirty(false);
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
+        dispatch(endTask());
       });
   };
   useEffect(() => {
@@ -158,7 +160,6 @@ export default function CandidateListEntry(props: Props) {
           setOthersRequestedHelp(data.others_requested_help);
 
           setDirty(false);
-          dispatch(endTask("saving"));
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
           data.messages.forEach(message => {
@@ -209,10 +210,11 @@ export default function CandidateListEntry(props: Props) {
         setHelpRequested(data.help_requested);
         setOthersRequestedHelp(data.others_requested_help);
         setDirty(false);
-        dispatch(endTask("updating"));
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(() => {
         dispatch(endTask("updating"));
       });
   };

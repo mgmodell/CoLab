@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs from "dayjs";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import axios from "axios";
+import { endTask, startTask } from "./infrastructure/StatusSlice";
+import { useDispatch } from "react-redux";
 
 interface IRawEvent {
   title?: string;
@@ -18,6 +21,9 @@ type Props = {
 export default function CourseCalendar(props: Props) {
   const [events, setEvents] = useState([]);
 
+  const dispatch = useDispatch();
+  
+  dispatch(startTask("load"));
   useEffect(() => {
     axios
       .get(props.dataUrl + ".json")
@@ -34,6 +40,9 @@ export default function CourseCalendar(props: Props) {
       })
       .catch(error => {
         console.error("CourseCalendar fetch error:", error);
+      })
+      .finally(() => {
+        dispatch(endTask("load"));
       });
   }, [props.dataUrl]);
 
