@@ -401,8 +401,8 @@ Then( 'the user moves criteria {int} {string}' ) do | criteria_num, up_or_down |
 end
 
 Then( 'the user deletes the {string} rubric' ) do | rubric_name |
-  row = find( :xpath, "//tr/td[contains(.,\"#{rubric_name}\")]/following-sibling::td/button[@id='delete_rubric']" )
-  row.click
+  rows = all( :xpath, "//tr/td[contains(.,\"#{rubric_name}\")]/following-sibling::td/button[@id='delete_rubric']" )
+  rows.first.click
 end
 
 Then( 'the user can not {string} the {string} rubric' ) do | action, rubric_name |
