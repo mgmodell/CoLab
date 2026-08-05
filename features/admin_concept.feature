@@ -64,9 +64,9 @@ Feature: Concept Administration
     Then a concept will exist named "Conceptually speaking"
     Then the user is an admin
     Then the user logs in and accesses the "Concepts" admin page
+    Then close all messages
     Then the user updates the "Conceptually Speaking" concept to "good-bye  Conceptually   speaking (CS)"
     Then the user waits to see "successfully"
-    Then close all messages
     Then the concept "Good-Bye Conceptually Speaking (CS)" will be in the list
     Then a concept will exist named "Good-Bye Conceptually Speaking (CS)"
     Then a concept will not exist named "Conceptually speaking"

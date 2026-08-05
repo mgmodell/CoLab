@@ -15,7 +15,7 @@ import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "./infrastructure/StatusSlice";
 import { InputText } from "primereact/inputtext";
 
 enum OPT_COLS {
@@ -79,7 +79,6 @@ export default function ConceptsTable() {
       .catch(error => {
         console.log(error);
         return [{ id: -1, name: "no data" }];
-        dispatch(endTask("load"));
       })
       .finally(() => {
         dispatch(endTask("load"));
@@ -113,9 +112,11 @@ export default function ConceptsTable() {
         setConceptsRaw(tmpConcepts);
         //statusActions.endTask("load");
         setEditing(false);
+        dispatch( addMessage(t("update_success"), new Date(), Priorities.INFO ) );
       })
       .catch(error => {
         console.log("error:", error);
+        dispatch( addMessage(error.errors, new Date(), Priorities.ERROR ));
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
