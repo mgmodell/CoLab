@@ -248,17 +248,14 @@ export default function InstallmentReport(props: Props) {
           );
         } else {
           dispatch(
-            addMessage(
-              t("success"),
-              new Date(),
-              Priorities.INFO
-            )
+            addMessage( t("success"), new Date(), Priorities.INFO)
           );
         }
         setDirty(false);
       })
       .catch(error => {
         console.log("error", error);
+        addMessage(t( 'err_unknown' ),  new Date(), Priorities.ERROR);
       })
       .finally(() => {
         dispatch(endTask("saving"));
