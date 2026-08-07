@@ -83,7 +83,19 @@ const CONFIG = {
       }
 
       if (!blankHeaders) {
-        CONFIG.persistData(CONFIG.SAVED_CREDS_KEY, newHeaders);
+        // Only persist if the credentials have changed.
+        // When change_headers_on_each_request is false the server echoes back
+        // the same token on every response. Re-persisting unchanged credentials
+        // resets the cookie expiry using the current Date (which may be mocked
+        // in tests via MockDate), causing the cookie to be set with a past-date
+        // expiry that the real browser clock immediately discards → 401s.
+        const storedHeaders = CONFIG.retrieveData(CONFIG.SAVED_CREDS_KEY) || {};
+        const headersChanged = Object.keys(CONFIG.tokenFormat).some(
+          key => storedHeaders[key] !== newHeaders[key]
+        );
+        if (headersChanged) {
+          CONFIG.persistData(CONFIG.SAVED_CREDS_KEY, newHeaders);
+        }
       }
     }
     return response;
