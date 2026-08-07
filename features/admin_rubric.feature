@@ -85,7 +85,7 @@ Feature: Rubric administration
     Then the user edits the "Trojan War Diorama" rubric
      And close all messages
      And the user clicks 'Publish Rubric'
-    Then the user will see "success"
+    Then the user sees a success message
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
@@ -115,7 +115,7 @@ Feature: Rubric administration
     Then the user searches for "Trojan"
     Then close all messages
     Then the user copies the "Trojan War Diorama" rubric
-    Then the user will see "success"
+    Then the user sees a success message
     #Check what was saved
     Then retrieve the "latest" rubric from the db
      And the rubric "Name" is "Trojan War Diorama (copy)"
@@ -130,7 +130,7 @@ Feature: Rubric administration
     Then the user searches for "Ruby 1"
     Then close all messages
     Then the user copies the "Ruby 1" rubric
-    Then the user will see "success"
+    Then the user sees a success message
     #Check what was saved
     Then retrieve the "latest" rubric from the db
      And the rubric "Name" is "Ruby 1 (copy)"
@@ -179,7 +179,7 @@ Feature: Rubric administration
      And the user deletes criteria 2
     Then close all messages
     Then the user clicks "Save Rubric"
-    Then the user will see "Success"
+    Then the user sees a success message
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -201,7 +201,7 @@ Feature: Rubric administration
      And the user copies criteria 4
     Then close all messages
     Then the user clicks "Save Rubric"
-    Then the user will see "Success"
+    Then the user sees a success message
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db

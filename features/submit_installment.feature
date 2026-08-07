@@ -46,7 +46,6 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6000, "evenly" across each column
     When the user submits the installment
-    Then the installment will successfully save
     Then the user sees a success message
     Then user opens their profile
     Then user sees the assessed project in the history
@@ -66,7 +65,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "with" personally identifiable information
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered
@@ -97,7 +96,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 0, "evenly" across each column
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then the installment values will match the submit ratio
 
   @javascript
@@ -113,7 +112,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6000, "randomly" across each column
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then the installment values will match the submit ratio
 
   @javascript
@@ -129,7 +128,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6549, "randomly" across each column
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then the installment values will match the submit ratio
 
   @javascript
@@ -145,7 +144,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 1200, "evenly" across each column
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then the installment values will match the submit ratio
 
   @javascript
@@ -182,7 +181,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "with" personally identifiable information
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered
@@ -209,7 +208,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "without" personally identifiable information
     When the user submits the installment
-    Then the installment will successfully save
+    Then the user sees a success message
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered

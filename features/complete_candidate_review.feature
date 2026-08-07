@@ -69,7 +69,7 @@ Feature: Review Candidate words for Bingo!
     Then close all messages
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user logs out
      Then the user logs in
      Then the user will see "100%"
@@ -89,7 +89,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -107,7 +107,7 @@ Feature: Review Candidate words for Bingo!
      Then the user waits while seeing "Saving feedback."
      Then the saved reviews match the list
      Then there will be 0 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -126,7 +126,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -146,7 +146,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -173,7 +173,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -200,7 +200,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -219,7 +219,7 @@ Feature: Review Candidate words for Bingo!
      Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task
 
@@ -256,6 +256,6 @@ Feature: Review Candidate words for Bingo!
      Then 28 emails will be sent
      Then the saved reviews match the list
      Then there will be 8 concepts
-     Then the user will see "success"
+     Then the user sees a success message
      Then the user navigates home
      Then user should see 0 open task

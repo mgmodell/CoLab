@@ -204,11 +204,11 @@ export default function InstallmentReport(props: Props) {
   //Store what we've got
   const saveContributions = () => {
     dispatch(startTask("saving"));
-    const url =
-      (props.rootPath === undefined ? "" : `/${props.rootPath}`) +
-      endpoints.saveInstallmentUrl +
-      (Boolean(installment.id) ? `/${installment.id}` : ``) +
-      ".json";
+    const isNew = !Boolean(installment.id);
+    const url = props.rootPath === undefined ?
+        `${endpoints.saveInstallmentUrl}${isNew ? '' : `/${installment.id}`}.json` :
+        `/${props.rootPath}${endpoints.saveInstallmentUrl}${installment.id}.json`;
+
     const method = Boolean(installment.id) ? "PATCH" : "POST";
 
     const body = {

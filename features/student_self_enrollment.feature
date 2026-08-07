@@ -28,7 +28,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
@@ -40,7 +40,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
@@ -54,7 +54,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 13 "enrolled student" users
 
 @javascript
@@ -73,7 +73,7 @@ Feature: Presenting Consent Forms
      Then the user opens the self-registration link for the course
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
 
 @javascript
@@ -95,7 +95,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
@@ -108,7 +108,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
@@ -123,7 +123,7 @@ Feature: Presenting Consent Forms
      Then the user submits credentials
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 13 "enrolled student" users
 
 @javascript
@@ -135,7 +135,7 @@ Feature: Presenting Consent Forms
      Then the user opens the self-registration link for the course
      Then the user sees "Enrollment confirmation"
      Then the user clicks "Enroll me!"
-     Then the user will see "success"
+     Then the user sees a success message
      Then the course has 1 "requesting student" users
 
 @javascript
