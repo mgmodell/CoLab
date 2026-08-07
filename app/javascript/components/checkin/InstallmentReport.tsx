@@ -185,12 +185,12 @@ export default function InstallmentReport(props: Props) {
           {}
         );
         delete data.installment.values;
+        data.installment.group_id = data.group.id;
         setInstallment(data.installment);
 
         setContributions(contributions);
         setDirty(false);
         setGroup(data.group);
-        data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
       })
@@ -255,7 +255,7 @@ export default function InstallmentReport(props: Props) {
       })
       .catch(error => {
         console.log("error", error);
-        addMessage(t( 'err_unknown' ),  new Date(), Priorities.ERROR);
+        dispatch(addMessage(t( 'err_unknown' ),  new Date(), Priorities.ERROR));
       })
       .finally(() => {
         dispatch(endTask("saving"));
