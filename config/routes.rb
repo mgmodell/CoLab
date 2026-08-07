@@ -228,9 +228,10 @@ Rails.application.routes.draw do
     # Consent log paths
     get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
     patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
-    get 'installments/edit/:project_id' => 'installments#submit_installment', as: :edit_installment
 
-    resources :installments, only: %i[update create]
+    resources :installments, only: %i[update create] do
+        get 'edit/:project_id', action: :submit_installment, on: :collection, as: :edit
+    end
   end
 
   scope 'infra' do

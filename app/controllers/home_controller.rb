@@ -54,7 +54,7 @@ class HomeController < ApplicationController
       }
     }
     ep_hash[:installment] = {
-      baseUrl: edit_installment_path( project_id: '' ),
+      baseUrl: edit_installments_path( project_id: '' ),
       saveInstallmentUrl: installments_path
     }
     ep_hash[:bingo_game] = {
