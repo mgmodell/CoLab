@@ -75,8 +75,7 @@ class AdministrativeMailer < ApplicationMailer
     curr_date = DateTime.current
 
     current_users = User.joins( :rosters, groups: { project: :assessments } )
-                        .left_outer_joins( groups: { project: { assessments: :installments } } )
-                        .where( installments: { id: nil } )
+                        .where.missing( :installments )
                         .where( 'assessments.start_date <= ? ' \
                               'AND assessments.end_date >= ? '\
                               'AND projects.active = TRUE ' \
@@ -84,7 +83,6 @@ class AdministrativeMailer < ApplicationMailer
                                 curr_date, curr_date,
                                 [Roster.roles[:invited_student],
                                  Roster.roles[:enrolled_student]] ).to_a
-
 
     Experience.active_at( curr_date ).each do | experience |
       next unless experience.is_open?
