@@ -155,6 +155,7 @@ Then( /^the user logs in and submits an installment$/ ) do
   step 'the installment form should request factor x user values'
   step 'the user should enter values summing to 6000, "evenly" across each column'
   step 'the user submits the installment'
+  step 'the user sees a success message'
   step 'there should be no error'
 end
 
@@ -264,10 +265,6 @@ Then( /^the anonymous comment "([^"]*)"$/ ) do | comment_status |
   else
     pending
   end
-end
-
-Then 'the installment will successfully save' do
-  page.should have_xpath( "//div[contains(.,'success')]" )
 end
 
 Then( /^user will be presented with the installment form$/ ) do

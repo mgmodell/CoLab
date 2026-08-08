@@ -30,7 +30,7 @@ Feature: Bingo Administration
     Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Bingo Game"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     Then the user sees the 'bingo_game' 'start date' is '02/29/1980'
     Then the user sees the 'bingo_game' 'end date' is '07/10/2008'

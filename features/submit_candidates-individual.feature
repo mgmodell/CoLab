@@ -90,7 +90,7 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 3 of the "definition" entries
     Then close all messages
     Then the user clicks "Save"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     Then retrieve the latest Bingo! game from the db
     Then the candidate list entries should match the list
@@ -98,7 +98,7 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 7 of the "definition" entries
     Then close all messages
     Then the user clicks "Save"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     Then the candidate list entries should match the list
     Then the user logs out
@@ -117,7 +117,7 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 7 of the "definition" entries
     Then close all messages
     Then the user clicks "Save"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     Then the candidate list entries should match the list
     Then the user logs out

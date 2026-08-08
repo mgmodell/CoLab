@@ -33,7 +33,7 @@ Feature: Bingo Administration
     Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Bingo Game"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then the user sees the 'bingo_game' 'start date' is '02/29/1980'
@@ -68,7 +68,7 @@ Feature: Bingo Administration
     Then the user sees the 'bingo_game' 'end date' is '11/01/2012'
     Then close all messages
     Then the user clicks "Create Bingo Game"
-    Then the user will see "success"
+    Then the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
@@ -98,7 +98,7 @@ Feature: Bingo Administration
     Then close all messages
     Then the user clicks "Update Bingo Game"
     Then the user waits while seeing "Saving game"
-    Then the user will see "success"
+    Then the user sees a success message
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "Topic" is "Privacy"

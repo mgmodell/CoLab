@@ -119,6 +119,7 @@ class InstallmentsController < ApplicationController
           installment: {
             id: installment.id,
             assessment_id: installment.assessment_id,
+            group_id: installment.group_id,
             inst_date: installment.inst_date,
             values: installment.values.as_json( only: %i[id factor_id user_id value] ),
             project: {
