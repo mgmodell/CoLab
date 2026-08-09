@@ -119,6 +119,7 @@ class Assessment < ApplicationRecord
 
                 assessment.instructor_updated = true
                 assessment.save
+                logger.debug assessment.errors.full_messages unless assessment.errors.empty?
     end
     logger.debug "\n\t********#{count} Assessment Reports sent to Instructors**"
   end
