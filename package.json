@@ -36,7 +36,7 @@
     "d3-color": "^3.1.0",
     "d3-scale-chromatic": "^3.1.0",
     "d3-time-format": "^4.1.0",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.23",
     "driver.js": "^1.8.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^6.1.5",
