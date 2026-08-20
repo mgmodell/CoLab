@@ -264,7 +264,6 @@ export default function BingoGameDataAdmin(props) {
         color="primary"
         //className={classes["button"]}
         onClick={() => {
-          console.log("save_btn");
           saveBingoGame();
         }}
         id="save_bingo_game"

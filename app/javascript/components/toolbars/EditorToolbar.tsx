@@ -17,25 +17,25 @@ export default function EditorToolbar(props: Props) {
         <option value="serif" />
         <option value="monospace" />
       </select>
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-bold" />
       <button className="ql-italic" />
       <button className="ql-underline" />
       <button className="ql-strike" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-script" value="sub" />
       <button className="ql-script" value="super" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-list" value="ordered" />
       <button className="ql-list" value="bullet" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <select className="ql-color" />
       <select className="ql-background" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <select className="ql-align">
         <option value="center" />
@@ -44,15 +44,15 @@ export default function EditorToolbar(props: Props) {
       </select>
       <button className="ql-indent" value="-1" />
       <button className="ql-indent" value="+1" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-link" />
       <button className="ql-code" />
       <button className="ql-blockquote" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-formula" />
-      <button className="ql-separator" />
+      <span className="toolbar-separator" />
 
       <button className="ql-clean" />
     </div>
