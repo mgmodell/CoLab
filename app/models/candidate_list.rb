@@ -25,7 +25,8 @@ class CandidateList < ApplicationRecord
   end
 
   def percent_completed
-    expected_count.zero? ? 0 : 100 * candidates.completed.count / expected_count
+    expected_count_local = expected_count
+    expected_count_local.zero? ? 0 : 100 * [candidates.completed.count,expected_count_local].min / expected_count_local
   end
 
   def performance
@@ -37,7 +38,8 @@ class CandidateList < ApplicationRecord
                   .each do | concept_max |
                     performance += concept_max[1]
         end
-        performance /= expected_count
+        expected_count_local = expected_count
+        performance = [performance, expected_count_local].min / expected_count_local
         self.cached_performance = performance
         save
       end
