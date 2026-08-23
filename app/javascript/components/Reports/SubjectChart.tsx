@@ -19,7 +19,7 @@ import { hsl } from "d3-color";
 import { schemeCategory10 as factorColors } from "d3-scale-chromatic";
 import { timeParse } from "d3-time-format";
 import Logo from "../svgs/Logo";
-import { startTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
 
 export const unit_codes = {
