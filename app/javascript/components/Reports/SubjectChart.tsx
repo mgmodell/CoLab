@@ -19,7 +19,7 @@ import { hsl } from "d3-color";
 import { schemeCategory10 as factorColors } from "d3-scale-chromatic";
 import { timeParse } from "d3-time-format";
 import Logo from "../svgs/Logo";
-import { startTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useDispatch } from "react-redux";
 
 export const unit_codes = {
@@ -289,8 +289,15 @@ export default function SubjectChart(props: Props) {
                     return null;
                   } else {
                     return (
-                      <div>
-                        <p>
+                      <div
+                        style={{
+                          maxWidth: "min(320px, 80vw)",
+                          overflowWrap: "anywhere",
+                          wordBreak: "break-word",
+                          whiteSpace: "normal"
+                        }}
+                      >
+                        <p style={{ margin: 0 }}>
                           <strong>Teammate:</strong> {comment.commentor}
                           <br />
                           {comment.comment}
