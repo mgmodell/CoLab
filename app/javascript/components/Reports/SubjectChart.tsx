@@ -289,8 +289,15 @@ export default function SubjectChart(props: Props) {
                     return null;
                   } else {
                     return (
-                      <div>
-                        <p>
+                      <div
+                        style={{
+                          maxWidth: "min(320px, 80vw)",
+                          overflowWrap: "anywhere",
+                          wordBreak: "break-word",
+                          whiteSpace: "normal"
+                        }}
+                      >
+                        <p style={{ margin: 0 }}>
                           <strong>Teammate:</strong> {comment.commentor}
                           <br />
                           {comment.comment}
