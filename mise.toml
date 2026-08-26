@@ -1,5 +1,5 @@
 [tools]
-node = "26.7.0"
+node = "26.8.0"
 overmind = "latest"
 podman = { version = "6.1.0", rename_exe = "podman" }
 python = "3.13.7"
