@@ -611,9 +611,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/dev-server@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@rspack/dev-server@npm:2.2.0"
+"@rspack/dev-server@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@rspack/dev-server@npm:2.2.1"
   dependencies:
     "@rspack/dev-middleware": "npm:^2.0.3"
   peerDependencies:
@@ -622,7 +622,7 @@ __metadata:
   peerDependenciesMeta:
     selfsigned:
       optional: true
-  checksum: 10c0/c98856c67d1b4d541fcaa02028d504464dda95d775953e979eadb4380ad580d49184b570f7c98af921d8808e31b8afcd50267c170543dc2b1067b6e62274c50d
+  checksum: 10c0/8ee9d29d0f23d23e6ac8261e36ca4045bfb68317d42a1a7b48b391c2f17bb05a2086460b0966db4522e6b34748c8a46e943f63d7efe143843bf82e2606e5907e
   languageName: node
   linkType: hard
 
@@ -1617,7 +1617,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.12.0"
     "@rspack/cli": "npm:^2.1.10"
     "@rspack/core": "npm:^2.1.10"
-    "@rspack/dev-server": "npm:^2.2.0"
+    "@rspack/dev-server": "npm:^2.2.1"
     "@rspack/plugin-react-refresh": "npm:^2.0.2"
     "@swc/core": "npm:^1.16.1"
     "@types/d3-array": "npm:^3.2.2"
