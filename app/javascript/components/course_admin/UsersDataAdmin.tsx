@@ -91,7 +91,6 @@ export default function UsersDataAdmin(props: Props) {
         )
             .then(response => {
                 const data = response.data;
-                console.log("Response from searchUsers:", data);
                 setFoundUsers(data.users);
             })
             .catch(error => {
