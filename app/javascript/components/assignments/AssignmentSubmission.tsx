@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router";
 import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastructure/TemporalSettings";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
 import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -39,6 +40,7 @@ export default function AssignmentSubmission(props: Props) {
   );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
   const [dirty, setDirty] = useState(false);
 
@@ -112,7 +114,7 @@ export default function AssignmentSubmission(props: Props) {
           value={submissionTextEditor}
           headerTemplate={<EditorToolbar />}
           onTextChange={e => {
-            setSubmissionTextEditor(e.htmlValue);
+            setSubmissionTextEditor(e.htmlValue || "");
           }}
         />
       </Col>
@@ -166,6 +168,12 @@ export default function AssignmentSubmission(props: Props) {
     })
       .then(response => {
         const data = response.data;
+        const successMessage = data?.messages?.main;
+
+        if (successMessage) {
+          dispatch(addMessage(successMessage, new Date(), Priorities.INFO));
+        }
+
         if (data.messages !== null && Object.keys(data.messages).length < 2) {
           setSubmissionId(data.submission.id);
           let receivedDate = parseISO(data.submission.updated_at, Settings.timezone);
@@ -179,7 +187,12 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor(data.submission.sub_text);
+          setSubmissionTextEditor(data.submission.sub_text || "");
+          setDirty(false);
+
+          if (submitIt) {
+            navigate("/home");
+          }
         }
       })
       .then(props.reloadCallback)
