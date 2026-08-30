@@ -25,6 +25,7 @@ import distributeChange from "./distributeChange";
 import { FloatLabel } from "primereact/floatlabel";
 import GuardRedirect, { RedirectState } from "../infrastructure/GuardRedirect";
 import { DATETIME_SHORT, formatZonedDateTime, parseISO, TemporalSettings } from "../infrastructure/TemporalSettings";
+import { useTour } from "../infrastructure/TourContext";
 
 interface IContribution {
   userId: number;
@@ -84,6 +85,22 @@ export default function InstallmentReport(props: Props) {
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
   const [redirectMessage, setRedirectMessage] = useState("");
   const [redirectMessageHeading, setRedirectMessageHeading] = useState("");
+  const { setTourSteps } = useTour();
+
+  useEffect(() => {
+    setTourSteps([
+      {
+        element: "body",
+        popover: {
+          title: "Check-ins",
+          description: "Submit your weekly check-in by rating team contributions and adding comments before you save.",
+          align: "center",
+          side: "left"
+        }
+      }
+    ]);
+    return () => setTourSteps([]);
+  }, [setTourSteps]);
 
   const updateSlice = (id, update) => {
     const lContributions = { ...contributions};
