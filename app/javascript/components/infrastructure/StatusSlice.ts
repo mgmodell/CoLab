@@ -92,12 +92,17 @@ export const {
 export function useDirtyStatus(flagKey: string, dirty: boolean) {
   const dispatch = useDispatch();
   const hasInitialized = useRef(false);
-  const previousDirty = useRef(false);
+  const previousDirty = useRef(dirty);
 
   useEffect(() => {
     if (!hasInitialized.current) {
       hasInitialized.current = true;
       previousDirty.current = dirty;
+      if (dirty) {
+        dispatch(setDirty(flagKey));
+      } else {
+        dispatch(setClean(flagKey));
+      }
       return;
     }
 
@@ -112,6 +117,12 @@ export function useDirtyStatus(flagKey: string, dirty: boolean) {
     }
     previousDirty.current = dirty;
   }, [dirty, flagKey, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setClean(flagKey));
+    };
+  }, [dispatch, flagKey]);
 }
 
 export default reducer;

@@ -47,7 +47,7 @@ export default function AppStatusBar() {
   return (
     <>
       <Toast ref={toast} />
-      <div style={{ display: "flex", justifyContent: "center", width: "100%", padding: "0.5rem 0 0.25rem" }}>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", padding: "0.5rem 0 0.25rem", position: "relative", zIndex: 1100 }}>
         <div
           aria-live="polite"
           role="status"
@@ -64,7 +64,9 @@ export default function AppStatusBar() {
             fontSize: "0.8rem",
             fontWeight: 600,
             lineHeight: 1.4,
-            width: "fit-content"
+            width: "fit-content",
+            position: "relative",
+            zIndex: 1101
           }}
         >
           <i className={`pi ${hasDirtyChanges ? "pi-exclamation-triangle" : "pi-check-circle"}`} />
