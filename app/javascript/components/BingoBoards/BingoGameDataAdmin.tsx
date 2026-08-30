@@ -208,9 +208,6 @@ export default function BingoGameDataAdmin(props) {
 
   const getBingoGameData = () => {
     suppressDirtyRef.current = true;
-    setTimeout(() => {
-      suppressDirtyRef.current = false;
-    }, 0);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {

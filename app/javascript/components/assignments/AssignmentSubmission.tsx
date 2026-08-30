@@ -71,9 +71,6 @@ export default function AssignmentSubmission(props: Props) {
 
   const loadSubmission = () => {
     suppressDirtyRef.current = true;
-    setTimeout(() => {
-      suppressDirtyRef.current = false;
-    }, 0);
     const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${submissionId}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;

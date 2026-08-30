@@ -60,9 +60,6 @@ export default function CandidateListEntry(props: Props) {
 
   const getCandidateList = () => {
     suppressDirtyRef.current = true;
-    setTimeout(() => {
-      suppressDirtyRef.current = false;
-    }, 0);
     dispatch(startTask());
     const url =
       props.rootPath === undefined

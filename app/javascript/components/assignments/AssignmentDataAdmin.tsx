@@ -219,9 +219,6 @@ export default function AssignmentDataAdmin(props) {
   };
   const getAssignmentData = () => {
     suppressDirtyRef.current = true;
-    setTimeout(() => {
-      suppressDirtyRef.current = false;
-    }, 0);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {

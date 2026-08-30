@@ -135,9 +135,6 @@ export default function InstallmentReport(props: Props) {
   //Retrieve the latest data
   const getContributions = () => {
     suppressDirtyRef.current = true;
-    setTimeout(() => {
-      suppressDirtyRef.current = false;
-    }, 0);
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`
