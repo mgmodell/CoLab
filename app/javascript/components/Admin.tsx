@@ -40,7 +40,10 @@ export default function Admin( /*props: AdminProps */) {
             </React.Fragment>
           }
         >
-          <Route path={`courses/*`} element={<CourseAdmin />} />
+          <Route
+            handle={{ crumb: "Courses" }}
+            path={`courses/*`}
+            element={<CourseAdmin />} />
           <Route path={`rubrics`} element={<RubricList />} />
           <Route
             path={`rubrics/:rubricIdParam`}

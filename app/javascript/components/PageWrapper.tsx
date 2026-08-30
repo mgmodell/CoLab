@@ -76,14 +76,18 @@ export default function PageWrapper(props: Readonly<Props>) {
             </div>
           }
         >
-          <Route index element={<Navigate to={"welcome"} replace={true} />} />
-          <Route path={"welcome/*"} element={<Welcome />} />
+          <Route
+            index
+            element={<Navigate to={"welcome"} replace={true} />} />
+          <Route path={"welcome/*"} element={<Welcome />} handle={{ crumb: "Welcome" }} />
           <Route
             path={"login"}
+            handle={{ crumb: "Login" }}
             element={<Navigate to={"/welcome/login"} replace={true} />}
           />
           <Route
             path="profile"
+            handle={{ crumb: "Profile" }}
             element={
               <Suspense fallback={<Skeleton className="mb-2" />}>
                 <RequireAuth>
@@ -94,6 +98,7 @@ export default function PageWrapper(props: Readonly<Props>) {
           />
           <Route
             path="admin/*"
+            handle={{ crumb: "Admin" }}
             element={
               <Suspense fallback={<Skeleton className={"mb-2"} />}>
                 <RequireAuth>
@@ -105,6 +110,7 @@ export default function PageWrapper(props: Readonly<Props>) {
           <Route path={"reporting"} element={<Suspense fallback={<Skeleton className={"mb-2"} />}><ReportingAdmin /></Suspense>} />
           <Route
             path={"home/*"}
+            handle={{ crumb: "Home" }}
             element={
               <Suspense fallback={<Skeleton className={"mb-2"} />}>
                 <RequireAuth>
