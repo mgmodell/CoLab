@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
@@ -40,6 +40,7 @@ export default function CandidateListEntry(props: Props) {
   const { bingoGameId } = useParams();
 
   const [dirty, setDirty] = useState(false);
+  const hasLoadedRef = useRef(false);
   const dispatch = useDispatch();
   useDirtyStatus(category, dirty);
 
@@ -59,7 +60,6 @@ export default function CandidateListEntry(props: Props) {
 
   const getCandidateList = () => {
     dispatch(startTask());
-    setDirty(true);
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
@@ -184,6 +184,10 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      return;
+    }
     setDirty(true);
   }, [candidates]);
 

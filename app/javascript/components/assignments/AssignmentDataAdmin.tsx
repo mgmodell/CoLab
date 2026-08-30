@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
@@ -44,6 +44,7 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useState(false);
+  const hasLoadedRef = useRef(false);
   useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
@@ -99,6 +100,10 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      return;
+    }
     setDirty(true);
   }, [
     assignmentName,
@@ -213,7 +218,6 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    setDirty(true);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {

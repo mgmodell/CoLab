@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -91,14 +91,29 @@ export const {
 
 export function useDirtyStatus(flagKey: string, dirty: boolean) {
   const dispatch = useDispatch();
+  const hasInitialized = useRef(false);
+  const previousDirty = useRef(false);
 
   useEffect(() => {
-    if (dirty) {
-      dispatch(setDirty(flagKey));
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      previousDirty.current = dirty;
+      if (dirty) {
+        dispatch(setClean(flagKey));
+      }
       return;
     }
 
-    dispatch(setClean(flagKey));
+    if (dirty === previousDirty.current) {
+      return;
+    }
+
+    if (dirty) {
+      dispatch(setDirty(flagKey));
+    } else {
+      dispatch(setClean(flagKey));
+    }
+    previousDirty.current = dirty;
   }, [dirty, flagKey, dispatch]);
 }
 

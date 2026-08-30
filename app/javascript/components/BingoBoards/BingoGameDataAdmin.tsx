@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, useMemo } from "react";
+import React, { Suspense, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -42,6 +42,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
+  const hasLoadedRef = useRef(false);
   useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
@@ -86,6 +87,10 @@ export default function BingoGameDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      return;
+    }
     setDirty(true);
   }, [
     gameTopic,
@@ -162,6 +167,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
+        setDirty(false);
 
         //getBingoGameData();
         //setDirty(false);
@@ -201,7 +207,6 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const getBingoGameData = () => {
-    setDirty(true);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {

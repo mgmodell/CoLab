@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router";
 import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastructure/TemporalSettings";
 
@@ -43,6 +43,7 @@ export default function AssignmentSubmission(props: Props) {
   const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
   const [dirty, setDirty] = useState(false);
+  const hasLoadedRef = useRef(false);
   useDirtyStatus(category, dirty);
 
   const [submissionId, setSubmissionId] = useState<string>();
@@ -61,9 +62,11 @@ export default function AssignmentSubmission(props: Props) {
   }, [endpointStatus, submissionId]);
 
   useEffect(() => {
-    if (endpointStatus) {
-      setDirty(true);
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      return;
     }
+    setDirty(true);
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
@@ -95,8 +98,6 @@ export default function AssignmentSubmission(props: Props) {
           data.submission.recorded_score || data.submission.calculated_score
         );
         setSubmissionTextEditor(data.submission.sub_text || "");
-      })
-      .then(response => {
         setDirty(false);
       })
       .finally(() => {
