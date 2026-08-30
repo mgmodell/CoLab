@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react";
-import { Route, Routes, Navigate, Outlet, useLocation } from "react-router";
+import { Route, Routes, Navigate, Outlet, useMatch } from "react-router";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { Skeleton } from "primereact/skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -17,29 +17,24 @@ import ConceptsTable from "./ConceptsTable";
 import { useTranslation } from "react-i18next";
 
 //interface AdminProps {}
+const SECTION_HELP_KEYS: Record<string, string> = {
+  courses: "home.admin_help_courses",
+  rubrics: "home.admin_help_rubrics",
+  concepts: "home.admin_help_concepts",
+  users: "home.admin_help_users",
+  schools: "home.admin_help_schools",
+  consent_forms: "home.admin_help_consent_forms"
+};
 
 export default function Admin( /*props: AdminProps */) {
   const user = useTypedSelector(state => state.profile.user);
   const { setTourSteps } = useTour();
-  const location = useLocation();
+  const adminMatch = useMatch("/admin/*");
   const [t] = useTranslation();
 
   useEffect(() => {
-    let description = t("home.admin_help");
-
-    if (location.pathname.includes("/admin/courses")) {
-      description = t("home.admin_help_courses");
-    } else if (location.pathname.includes("/admin/rubrics")) {
-      description = t("home.admin_help_rubrics");
-    } else if (location.pathname.includes("/admin/concepts")) {
-      description = t("home.admin_help_concepts");
-    } else if (location.pathname.includes("/admin/users")) {
-      description = t("home.admin_help_users");
-    } else if (location.pathname.includes("/admin/schools")) {
-      description = t("home.admin_help_schools");
-    } else if (location.pathname.includes("/admin/consent_forms")) {
-      description = t("home.admin_help_consent_forms");
-    }
+    const adminSection = (adminMatch?.params?.["*"] || "").split("/")[0];
+    const description = t(SECTION_HELP_KEYS[adminSection] || "home.admin_help");
 
     setTourSteps([
       {
@@ -54,7 +49,7 @@ export default function Admin( /*props: AdminProps */) {
     ]);
 
     return () => setTourSteps([]);
-  }, [location.pathname, setTourSteps, t]);
+  }, [adminMatch?.params?.["*"], setTourSteps, t]);
 
   return (
     <Routes>
