@@ -42,7 +42,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
-  const isLoadingRef = useRef(false);
+  const suppressDirtyRef = useRef(false);
   useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
@@ -87,8 +87,8 @@ export default function BingoGameDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (isLoadingRef.current) {
-      isLoadingRef.current = false;
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(true);
@@ -207,7 +207,10 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const getBingoGameData = () => {
-    isLoadingRef.current = true;
+    suppressDirtyRef.current = true;
+    setTimeout(() => {
+      suppressDirtyRef.current = false;
+    }, 0);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {

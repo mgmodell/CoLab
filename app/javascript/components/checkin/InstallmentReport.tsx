@@ -80,7 +80,7 @@ export default function InstallmentReport(props: Props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
   const [dirty, setDirty] = useState(false);
-  const isLoadingRef = useRef(false);
+  const suppressDirtyRef = useRef(false);
   useDirtyStatus(category, dirty);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
@@ -102,8 +102,8 @@ export default function InstallmentReport(props: Props) {
   };
 
   useEffect(() => {
-    if (isLoadingRef.current) {
-      isLoadingRef.current = false;
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(true);
@@ -134,7 +134,10 @@ export default function InstallmentReport(props: Props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    isLoadingRef.current = true;
+    suppressDirtyRef.current = true;
+    setTimeout(() => {
+      suppressDirtyRef.current = false;
+    }, 0);
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`

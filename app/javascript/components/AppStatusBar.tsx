@@ -47,28 +47,29 @@ export default function AppStatusBar() {
   return (
     <>
       <Toast ref={toast} />
-      <div
-        aria-live="polite"
-        role="status"
-        style={{
-          display: "inline-flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          gap: "0.5rem",
-          padding: "0.35rem 0.75rem",
-          margin: "0 auto 0.5rem auto",
-          borderRadius: "999px",
-          border: `1px solid ${hasDirtyChanges ? "#f59e0b" : "#16a34a"}`,
-          backgroundColor: hasDirtyChanges ? "#fff7ed" : "#f0fdf4",
-          color: hasDirtyChanges ? "#b45309" : "#166534",
-          fontSize: "0.8rem",
-          fontWeight: 600,
-          lineHeight: 1.4,
-          width: "fit-content"
-        }}
-      >
-        <i className={`pi ${hasDirtyChanges ? "pi-exclamation-triangle" : "pi-check-circle"}`} />
-        <span>{hasDirtyChanges ? "Unsaved changes" : "Saved"}</span>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", padding: "0.5rem 0 0.25rem" }}>
+        <div
+          aria-live="polite"
+          role="status"
+          style={{
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.35rem 0.75rem",
+            borderRadius: "999px",
+            border: `1px solid ${hasDirtyChanges ? "#f59e0b" : "#16a34a"}`,
+            backgroundColor: hasDirtyChanges ? "#fff7ed" : "#f0fdf4",
+            color: hasDirtyChanges ? "#b45309" : "#166534",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            lineHeight: 1.4,
+            width: "fit-content"
+          }}
+        >
+          <i className={`pi ${hasDirtyChanges ? "pi-exclamation-triangle" : "pi-check-circle"}`} />
+          <span>{hasDirtyChanges ? "Unsaved changes" : "Saved"}</span>
+        </div>
       </div>
     </>
   );

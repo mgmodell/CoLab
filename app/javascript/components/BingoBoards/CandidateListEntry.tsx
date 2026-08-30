@@ -40,7 +40,7 @@ export default function CandidateListEntry(props: Props) {
   const { bingoGameId } = useParams();
 
   const [dirty, setDirty] = useState(false);
-  const isLoadingRef = useRef(false);
+  const suppressDirtyRef = useRef(false);
   const dispatch = useDispatch();
   useDirtyStatus(category, dirty);
 
@@ -59,7 +59,10 @@ export default function CandidateListEntry(props: Props) {
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
 
   const getCandidateList = () => {
-    isLoadingRef.current = true;
+    suppressDirtyRef.current = true;
+    setTimeout(() => {
+      suppressDirtyRef.current = false;
+    }, 0);
     dispatch(startTask());
     const url =
       props.rootPath === undefined
@@ -185,8 +188,8 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (isLoadingRef.current) {
-      isLoadingRef.current = false;
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(true);

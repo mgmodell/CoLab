@@ -44,7 +44,7 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useState(false);
-  const isLoadingRef = useRef(false);
+  const suppressDirtyRef = useRef(false);
   useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
@@ -100,8 +100,8 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (isLoadingRef.current) {
-      isLoadingRef.current = false;
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(true);
@@ -218,7 +218,10 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    isLoadingRef.current = true;
+    suppressDirtyRef.current = true;
+    setTimeout(() => {
+      suppressDirtyRef.current = false;
+    }, 0);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {
