@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { createSlice } from "@reduxjs/toolkit";
 
 export enum Priorities {
@@ -86,4 +88,18 @@ export const {
   addMessage,
   acknowledgeMsg
 } = actions;
+
+export function useDirtyStatus(flagKey: string, dirty: boolean) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (dirty) {
+      dispatch(setDirty(flagKey));
+      return;
+    }
+
+    dispatch(setClean(flagKey));
+  }, [dirty, flagKey, dispatch]);
+}
+
 export default reducer;

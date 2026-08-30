@@ -4,7 +4,7 @@ import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastruct
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "../infrastructure/StatusSlice";
 import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -43,6 +43,7 @@ export default function AssignmentSubmission(props: Props) {
   const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
   const [dirty, setDirty] = useState(false);
+  useDirtyStatus(category, dirty);
 
   const [submissionId, setSubmissionId] = useState<string>();
   const [updatedDate, setUpdatedDate] = useState<Temporal.ZonedDateTime | null>(null);

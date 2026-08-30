@@ -10,7 +10,8 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus
 } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -79,6 +80,7 @@ export default function InstallmentReport(props: Props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
   const [dirty, setDirty] = useState(false);
+  useDirtyStatus(category, dirty);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);

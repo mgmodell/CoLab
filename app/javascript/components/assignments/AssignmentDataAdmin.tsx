@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { FloatLabel } from "primereact/floatlabel";
@@ -44,6 +44,7 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useState(false);
+  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }

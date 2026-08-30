@@ -10,7 +10,8 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -40,6 +41,7 @@ export default function CandidateListEntry(props: Props) {
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch();
+  useDirtyStatus(category, dirty);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");

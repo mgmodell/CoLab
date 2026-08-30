@@ -10,7 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
@@ -42,6 +42,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
+  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
