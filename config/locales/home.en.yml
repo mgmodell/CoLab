@@ -189,6 +189,14 @@ en:
     demonstration: Demonstration
   home:
     title: Home
+    admin_help_title: Admin Functions
+    admin_help: Use the admin area to manage courses, users, schools, rubrics, concepts, and consent forms.
+    admin_help_courses: Manage course settings, enrollments, and course activities in this section.
+    admin_help_rubrics: Create, publish, and maintain grading rubrics here.
+    admin_help_concepts: Review and maintain shared concept vocabulary used by Bingo! activities.
+    admin_help_users: Find users, review account details, and manage account roles in this section.
+    admin_help_schools: Create and edit school records, including labels and time zones.
+    admin_help_consent_forms: Create and update research consent forms, text, dates, and attached PDFs.
     your_tasks: Your Tasks
     invited: You've been invited!
     greeting: Hello #{name}

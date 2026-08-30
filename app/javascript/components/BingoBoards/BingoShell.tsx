@@ -23,8 +23,8 @@ export default function BingoShell(props: Props) {
       {
         element: "body",
         popover: {
-          title: "No Help Available",
-          description: "There is no help available for this topic",
+          title: "Bingo!",
+          description: "Complete your Bingo! activity here by entering terms, playing assigned games, and reviewing results when available.",
           align: "center",
           side: "left"
         }
