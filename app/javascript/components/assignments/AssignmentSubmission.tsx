@@ -43,7 +43,7 @@ export default function AssignmentSubmission(props: Props) {
   const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
   const [dirty, setDirty] = useState(false);
-  const hasLoadedRef = useRef(false);
+  const isLoadingRef = useRef(false);
   useDirtyStatus(category, dirty);
 
   const [submissionId, setSubmissionId] = useState<string>();
@@ -62,14 +62,15 @@ export default function AssignmentSubmission(props: Props) {
   }, [endpointStatus, submissionId]);
 
   useEffect(() => {
-    if (!hasLoadedRef.current) {
-      hasLoadedRef.current = true;
+    if (isLoadingRef.current) {
+      isLoadingRef.current = false;
       return;
     }
     setDirty(true);
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
+    isLoadingRef.current = true;
     const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${submissionId}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;

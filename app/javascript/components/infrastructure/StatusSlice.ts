@@ -98,9 +98,6 @@ export function useDirtyStatus(flagKey: string, dirty: boolean) {
     if (!hasInitialized.current) {
       hasInitialized.current = true;
       previousDirty.current = dirty;
-      if (dirty) {
-        dispatch(setClean(flagKey));
-      }
       return;
     }
 
