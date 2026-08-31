@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
+import { utcAdjustDate, utcAdjustEndDate, handleDownload } from "../infrastructure/Utilities";
 
 import ReactionsList from "./ReactionsList";
 
@@ -318,6 +318,27 @@ export default function ExperienceDataAdmin(props) {
         {reactionListing}
       </TabPanel>
       <TabPanel header={t("tabs.response_word_cloud")}>
+        Download the Data: 
+        <Button
+          label="PowerPoint"
+          onClick={e => {
+            handleDownload(
+              `${endpoints.responseDataUrl}${experienceId}.pptx`,
+              `${experienceName}.pptx`,
+              e
+            );
+          }}
+        /> | <Button
+          label="CSV"
+          onClick={e => {
+            handleDownload(
+              `${endpoints.responseDataUrl}${experienceId}.csv`,
+              `${experienceName}.csv`,
+              e
+            );
+          }}
+        />
+        <br />
         <ResponsesWordCloud
           width={400}
           height={400}

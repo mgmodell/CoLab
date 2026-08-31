@@ -9,9 +9,11 @@ import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
 
 import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 import CopyActivityButton from "./CopyActivityButton";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { handleDownload } from "../infrastructure/Utilities";
 import {
   startTask,
   endTask,
@@ -21,7 +23,6 @@ import {
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
-import { Column } from "primereact/column";
 
 export default function CourseList(props) {
   const category = "course";
@@ -235,8 +236,7 @@ export default function CourseList(props) {
                   }}
                   id={"csv-" + course.id}
                   onClick={event => {
-                    window.location.href = scoresUrl;
-                    event.preventDefault();
+                    handleDownload(scoresUrl, `${course.id}.csv`, event);
                   }}
                   aria-label="Download scores as CSV"
                   size="large"

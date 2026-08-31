@@ -4,9 +4,12 @@ class ExperiencesController < ApplicationController
   include PermissionsCheck
   include LtiGradable
 
-  before_action :set_experience, only: %i[show get_reactions update destroy]
-  before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[get_reactions update destroy show_lti_connection update_lti_connection push_lti_grades]
+  before_action :set_experience, only: %i[show get_reactions update destroy
+                                          response_data ]
+  before_action :check_viewer, only: %i[show index response_data]
+  before_action :check_editor, only: %i[get_reactions update destroy
+                                        show_lti_connection
+                                        update_lti_connection push_lti_grades ]
 
   def show
     respond_to do | format |
@@ -160,7 +163,7 @@ class ExperiencesController < ApplicationController
         error: true,
         error_type: :no_available_experience,
         error_data: {},
-        status: t( 'experiences.no_available_experience' ),
+        status: t( 'experiences.no_available_experience' )
       }
     }
 
@@ -168,7 +171,7 @@ class ExperiencesController < ApplicationController
                            .find_by( id: experience_id,
                                      active: true,
                                      users: { id: current_user } )
-    if !experience.nil?
+    unless experience.nil?
       roster = experience.course.rosters.find_by( user: current_user )
       if roster.instructor? || roster.assistant?
         # An instructor cannot enter info.
@@ -178,7 +181,7 @@ class ExperiencesController < ApplicationController
           course_id: experience.course_id,
           experience_id: experience.id
         }
-      elsif ! experience.is_open? || !experience.active
+      elsif !experience.is_open? || !experience.active
         # If the experience is not open, they need to know that they cannot access it... yet.
         response[:messages][:error_type] = :experience_not_open
         response[:messages][:status] = t( 'experiences.not_open_msg' )
@@ -288,6 +291,66 @@ class ExperiencesController < ApplicationController
     end
     @experience = experience
     render :show
+  end
+
+  def response_data
+    respond_to do | format |
+      format.pptx do
+        require 'powerpoint'
+        deck = Powerpoint::Presentation.new
+        deck.add_intro( @experience.name, @experience.course.name )
+        deck.add_textual_slide( @experience.name,
+                                ["In #{@experience.course.name}",
+                                 "Completed between #{@experience.start_date.strftime( '%Y-%m-%d' )} and " \
+                                                      "#{@experience.end_date.strftime( '%Y-%m-%d' )}"] )
+
+        counter = 0
+        @experience.reactions.each do | reaction |
+          counter += 1
+          next if reaction.improvements.blank?
+
+          deck.add_textual_slide(
+            "Response #{counter}:",
+            [reaction.improvements]
+          )
+        end
+        temp_file = Tempfile.new( ['presentation', '.pptx'] )
+        deck.save( temp_file.path )
+        send_data File.read( temp_file.path ),
+                  filename: "#{@experience.name.parameterize}.pptx",
+                  type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                  disposition: 'attachment'
+      end
+      format.csv do
+        headers = ['First Name', 'Last Name', 'Email', 'Behavior', 'Improvements', 'Scenario', 'Narrative']
+        headers << 14.times.collect { |i| "Week #{i + 1}" }
+        require 'csv'
+        doc = CSV.generate( headers: true ) do | csv |
+          csv << headers
+          @experience.reactions.each do | reaction |
+            row = [
+              reaction.user.first_name,
+              reaction.user.last_name,
+              reaction.user.email,
+              reaction.behavior.present? ? reaction.behavior.name : 'Incomplete',
+              reaction.improvements,
+              reaction.narrative.scenario.name,
+              reaction.narrative.member
+            ]
+            reaction.diagnoses.each do | diagnosis |
+              row << diagnosis.behavior.name
+            end
+            csv << row
+          end
+        end
+
+
+        send_data doc,
+                  filename: "#{@experience.name.parameterize}.csv",
+                  type: 'text/csv',
+                  disposition: 'attachment'
+      end
+    end
   end
 
   private

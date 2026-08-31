@@ -8,7 +8,6 @@ export default function AppBreadCrumb() {
     const endpointSet = "";
     const [t] = useTranslation( endpointSet);
     const location = useLocation();
-    console.log("AppBreadCrumb location", location);
 
     const crumbs = location.pathname.split('/')
         .filter((crumb) => crumb.length > 0)
@@ -26,7 +25,6 @@ export default function AppBreadCrumb() {
             };
         });
     
-    console.log("AppBreadCrumb crumbs", crumbs);
     const homeItem = 
         {
             icon: 'pi pi-home',

@@ -164,6 +164,9 @@ class HomeController < ApplicationController
         ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path,
+          diagnosisUrl: diagnose_path,
+          reactionUrl: react_path,
+          responseDataUrl: response_data_path( id: '' ),
           ltiConnectionUrl: experience_lti_connection_path( id: '' ),
           ltiGradePushUrl: push_experience_lti_grades_path( id: '' )
         }

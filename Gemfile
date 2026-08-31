@@ -17,7 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '10.3.1'
+gem 'shakapacker', '10.3.2'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -55,13 +55,14 @@ gem 'net-smtp'
 gem 'oj'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
+gem 'powerpoint'
 gem 'prawn'
 gem 'prawn-qrcode'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
 gem 'react_on_rails', '17.0.1'
 gem 'ruby-vips', '~> 2.0'
-
+gem "solid_cable", "~> 4.0"
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
 gem 'tzinfo-data'
@@ -126,4 +127,3 @@ group :development do
 end
 
 
-gem "solid_cable", "~> 4.0"
