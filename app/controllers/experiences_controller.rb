@@ -5,8 +5,8 @@ class ExperiencesController < ApplicationController
   include LtiGradable
 
   before_action :set_experience, only: %i[show get_reactions update destroy
-                                          response_presentation response_data ]
-  before_action :check_viewer, only: %i[show index response_presentation]
+                                          response_data ]
+  before_action :check_viewer, only: %i[show index response_data]
   before_action :check_editor, only: %i[get_reactions update destroy
                                         show_lti_connection
                                         update_lti_connection push_lti_grades ]
@@ -293,42 +293,64 @@ class ExperiencesController < ApplicationController
     render :show
   end
 
-  def response_presentation
-    require 'powerpoint'
-    deck = Powerpoint::Presentation.new
-    deck.add_intro( @experience.name, @experience.course.name )
-    deck.add_textual_slide(
-      'Responses',
-      ['hello', 'world'] 
-
-    )
-    temp_file = Tempfile.new(['presentation', '.pptx'])
-    deck.save( temp_file.path )
-
+  def response_data
     respond_to do | format |
       format.pptx do
+        require 'powerpoint'
+        deck = Powerpoint::Presentation.new
+        deck.add_intro( @experience.name, @experience.course.name )
+        deck.add_textual_slide( @experience.name,
+                                ["In #{@experience.course.name}",
+                                 "Completed between #{@experience.start_date.strftime( '%Y-%m-%d' )} and " \
+                                                      "#{@experience.end_date.strftime( '%Y-%m-%d' )}"] )
+
+        counter = 0
+        @experience.reactions.each do | reaction |
+          counter += 1
+          next if reaction.improvements.blank?
+
+          deck.add_textual_slide(
+            "Response #{counter}:",
+            [reaction.improvements]
+          )
+        end
+        temp_file = Tempfile.new( ['presentation', '.pptx'] )
+        deck.save( temp_file.path )
         send_data File.read( temp_file.path ),
                   filename: "#{@experience.name.parameterize}.pptx",
                   type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                   disposition: 'attachment'
       end
-    end
-  end
+      format.csv do
+        headers = ['First Name', 'Last Name', 'Email', 'Behavior', 'Improvements', 'Scenario', 'Narrative']
+        headers << 14.times.collect { |i| "Week #{i + 1}" }
+        require 'csv'
+        doc = CSV.generate( headers: true ) do | csv |
+          csv << headers
+          @experience.reactions.each do | reaction |
+            row = [
+              reaction.user.first_name,
+              reaction.user.last_name,
+              reaction.user.email,
+              reaction.behavior.present? ? reaction.behavior.name : 'Incomplete',
+              reaction.improvements,
+              reaction.narrative.scenario.name,
+              reaction.narrative.member
+            ]
+            reaction.diagnoses.each do | diagnosis |
+              row << diagnosis.behavior.name
+            end
+            csv << row
+          end
+        end
 
-  def response_data
-    deck = PowerPointPro::Presentation.new
-    deck.add_slide( :title ) do | slide |
-      slide.title = @experience.name
-      slide.subtitle = @experience.course.name
-    end
 
-    deck.add_slide( :content ) do | slide |
-      slide.title = 'Responses'
-      slide.content = @experience.reactions.collect do | reaction |
-        reaction.improvements.nil? ? [] : reaction.improvements.split( ' ' )
-      end.flatten.uniq.join( ' ' )
+        send_data doc,
+                  filename: "#{@experience.name.parameterize}.csv",
+                  type: 'text/csv',
+                  disposition: 'attachment'
+      end
     end
-
   end
 
   private

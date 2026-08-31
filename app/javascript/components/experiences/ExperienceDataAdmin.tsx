@@ -323,18 +323,22 @@ export default function ExperienceDataAdmin(props) {
           label="PowerPoint"
           onClick={e => {
             handleDownload(
-              `${endpoints.responsePresentationUrl}${experienceId}.pptx`,
+              `${endpoints.responseDataUrl}${experienceId}.pptx`,
               `${experienceName}.pptx`,
               e
             );
           }}
-        /> | 
-        <a
-          href={`${endpoints.responseDataUrl}/${experienceId}.csv`}
-          download
-          rel="noopener noreferrer">
-          CSV
-        </a><br />
+        /> | <Button
+          label="CSV"
+          onClick={e => {
+            handleDownload(
+              `${endpoints.responseDataUrl}${experienceId}.csv`,
+              `${experienceName}.csv`,
+              e
+            );
+          }}
+        />
+        <br />
         <ResponsesWordCloud
           width={400}
           height={400}

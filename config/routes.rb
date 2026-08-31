@@ -205,12 +205,9 @@ Rails.application.routes.draw do
     get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
     patch 'experiences/diagnose' => 'experiences#diagnose', as: :diagnose
     patch 'experiences/reaction' => 'experiences#react', as: :react
-    get 'experiences/response_presentation/:id' => 'experiences#response_presentation',
-        as: :response_presentation,
-        constraints: { format: :pptx }
     get 'experiences/response_data/:id' => 'experiences#response_data',
         as: :response_data,
-        constraints: ->(req) { req.format == :csv }
+        constraints: { format: /pptx|csv/ }
 
     get 'course/users/:id' => 'courses#get_users', as: :get_users,
         constraints: ->(req) { req.format == :json }
