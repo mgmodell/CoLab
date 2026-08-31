@@ -32,7 +32,7 @@ export function iconForType(type: string) {
     case "experience":
     case "experiences":
       iconData.className = "experience";
-      iconData.icon = <span className={`${iconData.className} pi pi-book`} />;
+      iconData.icon = <span className={`${iconData.className} pi pi-wave-pulse`} />;
       break;
     case "project":
     case "assessment":
@@ -69,7 +69,7 @@ export function iconForType(type: string) {
     case "user":
     case "users":
       iconData.className = "user";
-      iconData.icon = <span className={`${iconData.className} pi pi-users`} />;
+      iconData.icon = <span className={`${iconData.className} pi pi-address-book`} />;
       break;
     case "reporting":
       iconData.className = "reporting";

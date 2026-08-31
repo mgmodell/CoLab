@@ -18,7 +18,7 @@ en:
     tabs:
       details: Details
       results: Results
-      response_word_cloud: Response Word Cloud
+      response_word_cloud: Response Data
     lti:
       panel_title: LTI Grade Passback
       line_item_url_lbl: LMS Line Item URL

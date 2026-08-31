@@ -100,7 +100,7 @@ export default function MainMenu(props: Props) {
         let adminItems = [
           {
             label: t("users_edit"),
-            icon: "pi pi-fw pi-users",
+            icon: "pi pi-fw pi-address-book",
             id: "users-menu-item",
             visible: adminOpen,
             command: () => navTo("/admin/users")

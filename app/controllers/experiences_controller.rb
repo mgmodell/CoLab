@@ -4,9 +4,12 @@ class ExperiencesController < ApplicationController
   include PermissionsCheck
   include LtiGradable
 
-  before_action :set_experience, only: %i[show get_reactions update destroy]
-  before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[get_reactions update destroy show_lti_connection update_lti_connection push_lti_grades]
+  before_action :set_experience, only: %i[show get_reactions update destroy
+                                          response_presentation response_data ]
+  before_action :check_viewer, only: %i[show index response_presentation]
+  before_action :check_editor, only: %i[get_reactions update destroy
+                                        show_lti_connection
+                                        update_lti_connection push_lti_grades ]
 
   def show
     respond_to do | format |
@@ -160,7 +163,7 @@ class ExperiencesController < ApplicationController
         error: true,
         error_type: :no_available_experience,
         error_data: {},
-        status: t( 'experiences.no_available_experience' ),
+        status: t( 'experiences.no_available_experience' )
       }
     }
 
@@ -168,7 +171,7 @@ class ExperiencesController < ApplicationController
                            .find_by( id: experience_id,
                                      active: true,
                                      users: { id: current_user } )
-    if !experience.nil?
+    unless experience.nil?
       roster = experience.course.rosters.find_by( user: current_user )
       if roster.instructor? || roster.assistant?
         # An instructor cannot enter info.
@@ -178,7 +181,7 @@ class ExperiencesController < ApplicationController
           course_id: experience.course_id,
           experience_id: experience.id
         }
-      elsif ! experience.is_open? || !experience.active
+      elsif !experience.is_open? || !experience.active
         # If the experience is not open, they need to know that they cannot access it... yet.
         response[:messages][:error_type] = :experience_not_open
         response[:messages][:status] = t( 'experiences.not_open_msg' )
@@ -288,6 +291,44 @@ class ExperiencesController < ApplicationController
     end
     @experience = experience
     render :show
+  end
+
+  def response_presentation
+    require 'powerpoint'
+    deck = Powerpoint::Presentation.new
+    deck.add_intro( @experience.name, @experience.course.name )
+    deck.add_textual_slide(
+      'Responses',
+      ['hello', 'world'] 
+
+    )
+    temp_file = Tempfile.new(['presentation', '.pptx'])
+    deck.save( temp_file.path )
+
+    respond_to do | format |
+      format.pptx do
+        send_data File.read( temp_file.path ),
+                  filename: "#{@experience.name.parameterize}.pptx",
+                  type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                  disposition: 'attachment'
+      end
+    end
+  end
+
+  def response_data
+    deck = PowerPointPro::Presentation.new
+    deck.add_slide( :title ) do | slide |
+      slide.title = @experience.name
+      slide.subtitle = @experience.course.name
+    end
+
+    deck.add_slide( :content ) do | slide |
+      slide.title = 'Responses'
+      slide.content = @experience.reactions.collect do | reaction |
+        reaction.improvements.nil? ? [] : reaction.improvements.split( ' ' )
+      end.flatten.uniq.join( ' ' )
+    end
+
   end
 
   private
