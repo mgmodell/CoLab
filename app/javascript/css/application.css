@@ -168,3 +168,19 @@ a:active {
   text-decoration: none;
   color: var(--primary-color)
 }
+
+.p-breadcrumb {
+  border: none;
+  color: azure;
+  padding: 0;
+  background: inherit;
+}
+
+.p-breadcrumb .p-breadcrumb-chevron {
+  color: azure;
+}
+
+.p-breadcrumb a {
+  padding: 0;
+  color: var(--lighter-color);
+}

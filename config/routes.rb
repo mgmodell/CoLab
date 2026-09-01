@@ -203,8 +203,11 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :pdf }
     end
     get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
-    patch 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
-    patch 'exeriences/reaction' => 'experiences#react', as: :react
+    patch 'experiences/diagnose' => 'experiences#diagnose', as: :diagnose
+    patch 'experiences/reaction' => 'experiences#react', as: :react
+    get 'experiences/response_data/:id' => 'experiences#response_data',
+        as: :response_data,
+        constraints: { format: /pptx|csv/ }
 
     get 'course/users/:id' => 'courses#get_users', as: :get_users,
         constraints: ->(req) { req.format == :json }

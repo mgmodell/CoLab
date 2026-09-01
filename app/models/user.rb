@@ -98,11 +98,8 @@ class User < ApplicationRecord
   end
 
   def get_school_name( anonymous )
-    if anonymous
-      school.anon_name || '[No School Given]'
-    else
-      school.name || '[No School Given]'
-    end
+    return '[No School Given]' if school.nil?
+    anonymous ? school.anon_name : school.name
   end
 
   def informal_name( anonymous )

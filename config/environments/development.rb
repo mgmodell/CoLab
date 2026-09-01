@@ -45,6 +45,8 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.web_console.permissions = '10.89.0.0/16'
+
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 

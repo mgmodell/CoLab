@@ -84,8 +84,6 @@ export default function ResponsesWordCloud(props: WordCloudProps) {
 
   return (
     <Fragment>
-      <Button label="Download as PNG" onClick={downloadWordCloudPng} />
-      <Button label={`Mix it up`} onClick={toggleSpiral} />
 
     <svg id="wordcloud" width={width} height={height}>
       <Wordcloud
@@ -119,7 +117,9 @@ export default function ResponsesWordCloud(props: WordCloudProps) {
           ))
         }
       </Wordcloud>
-    </svg>
+    </svg><br />
+      <Button label="Download as PNG" onClick={downloadWordCloudPng} />
+      <Button label={`Mix it up`} onClick={toggleSpiral} />
     </Fragment>
   );
 }

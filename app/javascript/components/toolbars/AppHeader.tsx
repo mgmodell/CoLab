@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { Toolbar } from "primereact/toolbar";
 import { Skeleton } from "primereact/skeleton";
+import AppBreadCrumb from "./AppBreadcrumb";
 
 export default function AppHeader(props) {
   const endpointSet = "home";
@@ -52,9 +53,8 @@ export default function AppHeader(props) {
         center={(
           endpoints !== undefined ? (
             <>
-              {t("title")}
-              <br />
               <Quote url={endpoints.quotePath} />
+              <AppBreadCrumb />
             </>
 
           ) : (
