@@ -92,22 +92,27 @@ export default function ProjectGroups(props: Props) {
   }, []);
 
   const setGroupName = (event, group_id) => {
-    const groupsWS = Object.assign({}, groupsRaw);
-
-    groupsWS[group_id]["name"] = event.target.value;
+    const groupsWS = {...groupsRaw}
+    groupsWS[group_id] = {
+      ...groupsWS[group_id],
+      name: event.target.value
+    };
 
     setDirty(true);
-    setGroups(Object.values(groupsWS));
     setGroupsRaw(groupsWS);
+    setGroups(Object.values(groupsWS));
   };
 
   const setGroup = (student_id, group_id) => {
-    const studentsWS = Object.assign({}, studentsRaw);
-    studentsWS[student_id]["group_id"] = group_id;
+    const studentsWS = {...studentsRaw}
+    studentsWS[student_id] = {
+      ...studentsWS[student_id],
+      group_id: group_id
+    };
 
     setDirty(true);
-    setStudents(Object.values(studentsWS));
     setStudentsRaw(studentsWS);
+    setStudents(Object.values(studentsWS));
   };
 
   const getGroups = () => {
@@ -313,7 +318,7 @@ export default function ProjectGroups(props: Props) {
                     </span>
                     {group.id < 0 ? (
                       <Button
-                        onClick={() => removeGroup(event, group.id)}
+                        onClick={(event) => removeGroup(event, group.id)}
                         icon="pi pi-trash"
                         rounded
                         size="small"
