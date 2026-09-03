@@ -114,8 +114,7 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const setProfileImpairment = (imp: string[]) => {
-    const temp = {};
-    Object.assign(temp, user);
+    const temp = {...user};
 
     temp['impairment_visual'] = imp.includes("visual");
     temp['impairment_auditory'] = imp.includes("auditory");
@@ -799,11 +798,15 @@ export default function ProfileDataAdmin(props: Props) {
                   id="impairments"
                   name="impairments"
                   aria-label="impairments"
+                  optionValue='value'
                   value={getImpairments()}
                   options={impairmentOptions}
                   onChange={event => {
-                    setProfileImpairment(event.target.value)
-                    event.originalEvent.currentTarget.blur( )
+
+                    if( event.value ) {
+                      setProfileImpairment(event.value)
+                    }
+                    //event.originalEvent?.currentTarget.blur( )
                   }}
                   multiple
                 />
