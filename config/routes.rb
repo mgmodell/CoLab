@@ -38,8 +38,6 @@ Rails.application.routes.draw do
          as: :rescore_group
     post 'projects/rescore_groups/:id' => 'projects#rescore_groups',
          as: :rescore_groups
-    get 'experiences/activate/:experience_id' => 'experiences#activate',
-        as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate',
         as: :activate_bingo_game
 
@@ -52,16 +50,6 @@ Rails.application.routes.draw do
           constraints: ->(req) { req.format == :json }
     post 'bingo_games/push_grades/:id' => 'bingo_games#push_lti_grades',
          as: :push_bingo_game_lti_grades,
-         constraints: ->(req) { req.format == :json }
-
-    get 'experiences/lti/:id' => 'experiences#show_lti_connection',
-        as: :experience_lti_connection,
-        constraints: ->(req) { req.format == :json }
-    patch 'experiences/lti/:id' => 'experiences#update_lti_connection',
-          as: :update_experience_lti_connection,
-          constraints: ->(req) { req.format == :json }
-    post 'experiences/push_grades/:id' => 'experiences#push_lti_grades',
-         as: :push_experience_lti_grades,
          constraints: ->(req) { req.format == :json }
 
     get 'projects/lti/:id' => 'projects#show_lti_connection',
@@ -90,6 +78,27 @@ Rails.application.routes.draw do
 
     resources :assignments,
         except: %i[new create]
+
+    get 'experiences/lti/:id' => 'experiences#show_lti_connection',
+        as: :experience_lti_connection,
+        constraints: ->(req) { req.format == :json }
+    patch 'experiences/lti/:id' => 'experiences#update_lti_connection',
+          as: :update_experience_lti_connection,
+          constraints: ->(req) { req.format == :json }
+    post 'experiences/push_grades/:id' => 'experiences#push_lti_grades',
+         as: :push_experience_lti_grades,
+         constraints: ->(req) { req.format == :json }
+
+    get 'experiences/new/:course_id' => 'experiences#show', as: :new_experience
+    post 'experiences/:course_id' => 'experiences#create'
+    get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
+    patch 'experiences/diagnose' => 'experiences#diagnose', as: :diagnose
+    patch 'experiences/reaction' => 'experiences#react', as: :react
+    get 'experiences/response_data/:id' => 'experiences#response_data',
+        as: :response_data,
+        constraints: { format: /pptx|csv/ }
+    get 'experience/reactions/:id' => 'experiences#get_reactions', as: :get_reactions,
+        constraints: ->(req) { req.format == :json }
 
     resources :experiences, except: %i[new edit]
     resources :rubrics, :bingo_games,
@@ -145,9 +154,6 @@ Rails.application.routes.draw do
     post 'assignments/:course_id' => 'assignments#create'
     get 'assignment/:id' => 'assignments#status', as: :assignment_status
 
-    get 'experiences/new/:course_id' => 'experiences#show', as: :new_experience
-    post 'experiences/:course_id' => 'experiences#create'
-
     get 'projects/new/:course_id' => 'projects#show', as: :new_project
     post 'projects/:course_id' => 'projects#create'
 
@@ -202,16 +208,8 @@ Rails.application.routes.draw do
           as: :worksheet_for_bingo,
         constraints: ->(req) { req.format == :pdf }
     end
-    get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
-    patch 'experiences/diagnose' => 'experiences#diagnose', as: :diagnose
-    patch 'experiences/reaction' => 'experiences#react', as: :react
-    get 'experiences/response_data/:id' => 'experiences#response_data',
-        as: :response_data,
-        constraints: { format: /pptx|csv/ }
 
     get 'course/users/:id' => 'courses#get_users', as: :get_users,
-        constraints: ->(req) { req.format == :json }
-    get 'experience/reactions/:id' => 'experiences#get_reactions', as: :get_reactions,
         constraints: ->(req) { req.format == :json }
     get 'course/accept/:roster_id' => 'courses#accept_roster', as: :accept_roster
     get 'course/decline/:roster_id' => 'courses#decline_roster', as: :decline_roster

@@ -632,7 +632,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "solid_cable_messages", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+  create_table "solid_cable_messages", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.binary "channel", limit: 1024, null: false
     t.bigint "channel_hash", null: false
     t.datetime "created_at", null: false
