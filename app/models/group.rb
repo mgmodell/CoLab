@@ -179,11 +179,18 @@ class Group < ApplicationRecord
             impairment: impairments
           },
           numeric: {
-            age: user.date_of_birth? ? now.year - user.date_of_birth.year : nil,
-            university_years: user.started_school? ? now.year - user.started_school.year : nil
+            age: user.date_of_birth? ? faultline_elapsed_years_for( now, user.date_of_birth ) : nil,
+            university_years: user.started_school? ? faultline_elapsed_years_for( now, user.started_school ) : nil
           }
         }
       end
+    end
+
+    def faultline_elapsed_years_for( current_date, past_date )
+      years = current_date.year - past_date.year
+      anniversary_passed = current_date.month > past_date.month ||
+                           ( current_date.month == past_date.month && current_date.day >= past_date.day )
+      anniversary_passed ? years : years - 1
     end
 
     def faultline_distance_matrix_for( profiles )
