@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
@@ -10,7 +10,8 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -39,7 +40,9 @@ export default function CandidateListEntry(props: Props) {
   const { bingoGameId } = useParams();
 
   const [dirty, setDirty] = useState(false);
+  const suppressDirtyRef = useRef(false);
   const dispatch = useDispatch();
+  useDirtyStatus(category, dirty);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");
@@ -56,8 +59,8 @@ export default function CandidateListEntry(props: Props) {
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
 
   const getCandidateList = () => {
+    suppressDirtyRef.current = true;
     dispatch(startTask());
-    setDirty(true);
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
@@ -182,6 +185,10 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
     setDirty(true);
   }, [candidates]);
 

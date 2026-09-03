@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -10,7 +10,8 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus
 } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -79,6 +80,8 @@ export default function InstallmentReport(props: Props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
   const [dirty, setDirty] = useState(false);
+  const suppressDirtyRef = useRef(false);
+  useDirtyStatus(category, dirty);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
@@ -98,7 +101,13 @@ export default function InstallmentReport(props: Props) {
     setInstallment(inst);
   };
 
-  useEffect(() => setDirty(true), [contributions, installment]);
+  useEffect(() => {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
+    setDirty(true);
+  }, [contributions, installment]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -125,6 +134,7 @@ export default function InstallmentReport(props: Props) {
 
   //Retrieve the latest data
   const getContributions = () => {
+    suppressDirtyRef.current = true;
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`

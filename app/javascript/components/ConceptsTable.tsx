@@ -15,7 +15,7 @@ import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities } from "./infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "./infrastructure/StatusSlice";
 import { InputText } from "primereact/inputtext";
 
 enum OPT_COLS {
@@ -52,6 +52,7 @@ export default function ConceptsTable() {
 
   const [editing, setEditing] = useState(false);
   const [dirty, setDirty] = useState(false);
+  useDirtyStatus(category, dirty);
   const [conceptName, setConceptName] = useState("");
   const [conceptId, setConceptId] = useState(-1);
 
