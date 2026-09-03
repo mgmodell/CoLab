@@ -117,7 +117,13 @@ class Group < ApplicationRecord
   end
 
   def self.calc_faultline_strength_for_proposed_group( emails: )
-    users = User.joins( :emails ).where( emails: { email: emails.split( /\s*,\s*/ ) } )
+    normalized_emails = emails.split( /\s*,\s*/ ).filter_map do | email |
+      parsed = email.strip.downcase
+      parsed.presence
+    end.uniq
+    return 0.0 if normalized_emails.empty?
+
+    users = User.joins( :emails ).where( 'LOWER(emails.email) IN (?)', normalized_emails )
                 .distinct
                 .includes( :gender, :primary_language,
                            :cip_code,

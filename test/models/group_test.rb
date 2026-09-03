@@ -42,23 +42,31 @@ class GroupTest < ActiveSupport::TestCase
     User.stub :joins, relation do
       Group.stub :calc_faultline_strength_for_group, ->( users: ) { captured_users = users; 0.42 } do
         result = Group.calc_faultline_strength_for_proposed_group(
-          emails: 'a@example.com, a@example.com, b@example.com'
+          emails: ' A@example.com, a@example.com,  , B@example.com '
         )
 
         assert_equal 0.42, result
       end
     end
 
+    assert_equal 'LOWER(emails.email) IN (?)', relation.where_clause
+    assert_equal %w[a@example.com b@example.com], relation.where_emails
     assert relation.distinct_called
     assert_same relation, captured_users
+  end
+
+  test 'proposed-group faultline strength returns zero when no valid emails are provided' do
+    assert_equal 0.0, Group.calc_faultline_strength_for_proposed_group( emails: '  ,   , ' )
   end
 
   private
 
   class MockFaultlineUserRelation
-    attr_reader :distinct_called
+    attr_reader :distinct_called, :where_clause, :where_emails
 
-    def where( **_kwargs )
+    def where( clause, emails )
+      @where_clause = clause
+      @where_emails = emails
       self
     end
 
