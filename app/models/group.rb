@@ -41,7 +41,7 @@ class Group < ApplicationRecord
   def calc_faultline_strength
     Group.calc_faultline_strength_for_group(
       users: users.includes( :gender, :primary_language,
-                             :cip_code, :reactions,
+                             :cip_code,
                              home_state: [:home_country] )
     )
   end
@@ -118,15 +118,16 @@ class Group < ApplicationRecord
 
   def self.calc_faultline_strength_for_proposed_group( emails: )
     users = User.joins( :emails ).where( emails: { email: emails.split( /\s*,\s*/ ) } )
+                .distinct
                 .includes( :gender, :primary_language,
-                           :cip_code, :reactions,
+                           :cip_code,
                                       home_state: [:home_country] )
 
     Group.calc_faultline_strength_for_group users:
   end
 
   def self.calc_faultline_strength_for_group( users: )
-    profiles = faultline_profiles_for users.uniq
+    profiles = faultline_profiles_for users
     return 0.0 if profiles.count < 3
 
     distance_matrix = faultline_distance_matrix_for profiles
@@ -306,7 +307,7 @@ class Group < ApplicationRecord
     def faultline_average_silhouette_width_for( clusters, distance_matrix )
       cluster_map = {}
       clusters.each_with_index do | cluster, cluster_index |
-        cluster.each { | point| cluster_map[point] = cluster_index }
+        cluster.each { | point | cluster_map[point] = cluster_index }
       end
 
       silhouette_values = distance_matrix.each_index.map do | point_index |
@@ -322,8 +323,8 @@ class Group < ApplicationRecord
 
       within_cluster = current_cluster - [point_index]
       a_value = faultline_average_distance_for point_index, within_cluster, distance_matrix
-      b_value = clusters.reject { | cluster| cluster.equal?( current_cluster ) }
-                        .map { | cluster| faultline_average_distance_for point_index, cluster, distance_matrix }
+      b_value = clusters.reject { | cluster | cluster.equal?( current_cluster ) }
+                        .map { | cluster | faultline_average_distance_for point_index, cluster, distance_matrix }
                         .min
 
       denominator = [a_value, b_value].max
@@ -335,7 +336,7 @@ class Group < ApplicationRecord
     def faultline_average_distance_for( point_index, other_points, distance_matrix )
       return 0.0 if other_points.empty?
 
-      other_points.sum { | other_point| distance_matrix[point_index][other_point] }.to_f / other_points.count
+      other_points.sum { | other_point | distance_matrix[point_index][other_point] }.to_f / other_points.count
     end
   end
 

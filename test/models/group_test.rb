@@ -35,7 +35,42 @@ class GroupTest < ActiveSupport::TestCase
     assert_operator polarized_strength, :>=, 0.25
   end
 
+  test 'proposed-group faultline strength deduplicates users by email join' do
+    relation = MockFaultlineUserRelation.new
+    captured_users = nil
+
+    User.stub :joins, relation do
+      Group.stub :calc_faultline_strength_for_group, ->( users: ) { captured_users = users; 0.42 } do
+        result = Group.calc_faultline_strength_for_proposed_group(
+          emails: 'a@example.com, a@example.com, b@example.com'
+        )
+
+        assert_equal 0.42, result
+      end
+    end
+
+    assert relation.distinct_called
+    assert_same relation, captured_users
+  end
+
   private
+
+  class MockFaultlineUserRelation
+    attr_reader :distinct_called
+
+    def where( **_kwargs )
+      self
+    end
+
+    def distinct
+      @distinct_called = true
+      self
+    end
+
+    def includes( *_args )
+      self
+    end
+  end
 
   def faultline_user( group: )
     country_id = ( group == :a ? 1 : 2 )
