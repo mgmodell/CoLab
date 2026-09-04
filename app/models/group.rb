@@ -133,6 +133,13 @@ class Group < ApplicationRecord
   end
 
   def self.calc_faultline_strength_for_group( users: )
+    # Faultline strength implementation follows the ASW-based approach described in:
+    # Keivani et al., "Team Faultline Measures: A Computational Comparison and a New
+    # Approach to Multiple Subgroups" (Organizational Research Methods, 2013),
+    # https://journals.sagepub.com/doi/10.1177/1094428113484970
+    # and
+    # Keivani et al., "Team Faultline Measures: Rescaling the Weights of Diversity
+    # Attributes", https://scholarspace.manoa.hawaii.edu/server/api/core/bitstreams/9882f536-7820-4c22-9230-53d2c9f6dfb9/content
     profiles = faultline_profiles_for users
     return 0.0 if profiles.count < 3
 
@@ -221,6 +228,8 @@ class Group < ApplicationRecord
     def faultline_categorical_weights_for( profiles, keys )
       keys.to_h do | key |
         values = profiles.filter_map { | profile | profile[:categorical][key] }.uniq
+        # Rescaling categorical diversity-attribute contribution (1 / number of
+        # observed categories for the attribute), following Keivani et al.
         weight = values.count > 1 ? ( 1.0 / values.count ) : 0.0
         [key, weight]
       end
