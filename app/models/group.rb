@@ -369,7 +369,7 @@ class Group < ApplicationRecord
                 candidate_groups[left_index][left_member_index] = right_group[right_member_index]
                 candidate_groups[right_index][right_member_index] = left_group[left_member_index]
                 candidate_score = suggestion_score_for candidate_groups
-                next unless candidate_score < current_score
+                next unless -1 == ( candidate_score <=> current_score )
 
                 current_groups = candidate_groups
                 current_score = candidate_score
