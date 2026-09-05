@@ -72,6 +72,80 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal 0.0, Group.calc_faultline_strength_for_proposed_group( emails: '  ,   , ' )
   end
 
+  test 'suggest optimal groups assigns each user exactly once with balanced sizes' do
+    users = [
+      faultline_user( group: :a, id: 1 ),
+      faultline_user( group: :a, id: 2 ),
+      faultline_user( group: :a, id: 3 ),
+      faultline_user( group: :b, id: 4 ),
+      faultline_user( group: :b, id: 5 ),
+      faultline_user( group: :b, id: 6 ),
+      faultline_user( group: :b, id: 7 )
+    ]
+
+    suggestion = Group.suggest_optimal_groups( users:, target_group_size: 3 )
+
+    suggested_users = suggestion[:groups].flat_map { | group| group[:users] }
+    suggested_user_ids = suggested_users.map( &:id ).sort
+
+    assert_equal users.map( &:id ).sort, suggested_user_ids
+    assert_equal users.count, suggested_users.count
+    assert_equal [3, 4], suggestion[:group_sizes].sort
+    assert suggestion[:groups].all? { | group| group[:users].count >= 2 }
+    assert suggestion[:groups].all? { | group| group.key?( :diversity_score ) }
+    assert suggestion[:groups].all? { | group| group.key?( :faultline_strength ) }
+  end
+
+  test 'suggest optimal groups honors requested target group count when feasible' do
+    users = 9.times.map do | index |
+      faultline_user( group: index < 4 ? :a : :b, id: index + 1 )
+    end
+
+    suggestion = Group.suggest_optimal_groups( users:, target_group_count: 4 )
+
+    assert_equal 4, suggestion[:groups].count
+    assert_equal [2, 2, 2, 3], suggestion[:group_sizes].sort
+  end
+
+  test 'suggest optimal groups falls back to the nearest feasible group count' do
+    users = 5.times.map do | index |
+      faultline_user( group: index < 2 ? :a : :b, id: index + 1 )
+    end
+
+    suggestion = Group.suggest_optimal_groups( users:, target_group_count: 3 )
+
+    assert_equal 2, suggestion[:groups].count
+    assert_equal [2, 3], suggestion[:group_sizes].sort
+  end
+
+  test 'suggest optimal groups handles nil demographics without delegation errors' do
+    users = [
+      faultline_user_without_demographics( id: 1 ),
+      faultline_user_without_demographics( id: 2 ),
+      faultline_user_without_demographics( id: 3 ),
+      faultline_user_without_demographics( id: 4 )
+    ]
+
+    assert_nothing_raised do
+      suggestion = Group.suggest_optimal_groups( users:, target_group_count: 2 )
+      assert_equal [2, 2], suggestion[:group_sizes].sort
+    end
+  end
+
+  test 'suggest optimal groups handles states without countries' do
+    users = [
+      faultline_user_with_state_without_country( id: 1 ),
+      faultline_user_with_state_without_country( id: 2 ),
+      faultline_user_without_demographics( id: 3 ),
+      faultline_user_without_demographics( id: 4 )
+    ]
+
+    assert_nothing_raised do
+      suggestion = Group.suggest_optimal_groups( users:, target_group_count: 2 )
+      assert_equal [2, 2], suggestion[:group_sizes].sort
+    end
+  end
+
   private
 
   class MockFaultlineUserRelation
@@ -93,7 +167,7 @@ class GroupTest < ActiveSupport::TestCase
     end
   end
 
-  def faultline_user( group: )
+  def faultline_user( group:, id: nil )
     country_id = ( group == :a ? 1 : 2 )
     state_id = ( group == :a ? 11 : 22 )
     gender_id = ( group == :a ? 101 : 202 )
@@ -104,6 +178,7 @@ class GroupTest < ActiveSupport::TestCase
     birth_year = ( group == :a ? 2004 : 1997 )
 
     OpenStruct.new(
+      id:,
       home_state: OpenStruct.new(
         id: state_id,
         home_country: OpenStruct.new( id: country_id, no_response: false )
@@ -126,9 +201,29 @@ class GroupTest < ActiveSupport::TestCase
     )
   end
 
-  def faultline_user_without_demographics
+  def faultline_user_without_demographics( id: nil )
     OpenStruct.new(
+      id:,
       home_state: nil,
+      cip_code: nil,
+      gender: nil,
+      primary_language: nil,
+      impairment_visual: false,
+      impairment_auditory: false,
+      impairment_motor: false,
+      impairment_cognitive: false,
+      impairment_other: false,
+      date_of_birth: nil,
+      started_school: nil,
+      date_of_birth?: false,
+      started_school?: false
+    )
+  end
+
+  def faultline_user_with_state_without_country( id: nil )
+    OpenStruct.new(
+      id:,
+      home_state: OpenStruct.new( id: 99, no_response: false, home_country: nil ),
       cip_code: nil,
       gender: nil,
       primary_language: nil,

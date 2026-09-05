@@ -377,6 +377,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         <ProjectGroups
           projectId={projectId}
           groupsUrl={endpoints.groupsUrl}
+          suggestGroupsUrl={endpoints.suggestGroupsUrl}
           diversityCheckUrl={endpoints.diversityCheckUrl}
           diversityRescoreGroup={endpoints.diversityRescoreGroup}
           diversityRescoreGroups={endpoints.diversityRescoreGroups}
