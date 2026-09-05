@@ -325,8 +325,29 @@ Feature: Project Administration
     Then group "my group" has 2 revision
     Then group "your group" has 1 revision
 
+ @javascript
+ Scenario: Instructor generates and accepts recommended groups
+   Given the course started "5/10/1976" and ended "4 months hence"
+   Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+   Given the course started "last month" and ended "next month"
+   Given the user is the instructor for the course
+   Then the user logs in and accesses the "Courses" admin page
+   Then the user sees 1 course
+   Then the user opens the course
+   Then the user clicks on the existing project
+   Then the user switches to the "Groups" tab
+   Then the user requests recommended groups with target count 3
+   Then the user sees 3 recommended groups
+   Then each recommended group has at least 2 members
+   Then the user sees diversity and faultline metrics for the recommended groups
+   Then the user accepts the recommended groups
+   Then close all messages
+   Then retrieve the latest project from the db
+   Then the project has 3 groups
+   Then every enrolled student in the course is assigned to exactly 1 project group
+
 @javascript
-  Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
+ Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group

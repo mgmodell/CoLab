@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   include LtiGradable
 
   before_action :set_project, only: %i[show edit update destroy activate
-                                       rescore_group rescore_groups]
+                                       rescore_group rescore_groups suggest_groups]
   before_action :check_editor, except: %i[rescore_group rescore_groups
                                           show index get_groups
                                           set_groups]
@@ -137,26 +137,38 @@ class ProjectsController < ApplicationController
                      .find_by( id: params[:id] )
 
     group_hash = {}
+    saved_group_ids = []
     params[:groups].each_value do | g |
       group = nil
-      if g[:id].positive?
-        group = project.groups.find_by id: g[:id]
+      group_id = g[:id].to_i
+      if group_id.positive?
+        group = project.groups.find_by id: group_id
         group.name = g[:name]
+        saved_group_ids << group_id
       else
         group = project.groups.build( name: g[:name] )
       end
       group.users = []
-      group_hash[g[:id]] = group
+      group_hash[group_id] = group
     end
     params[:students].each_value do | s |
       student = project.rosters.find_by( user_id: s[:id] ).user
-      group = group_hash[s[:group_id]]
+      group = group_hash[s[:group_id].to_i]
       group.users << student unless group.nil?
     end
 
     begin
       ActiveRecord::Base.transaction do
-        group_hash.each_value( &:save! )
+        groups_to_remove = if saved_group_ids.empty?
+                             Group.where( project: )
+                           else
+                             Group.where( project: ).where.not( id: saved_group_ids )
+                           end
+        groups_to_remove.destroy_all
+        group_hash.each_value do | group |
+          group.calc_diversity_score
+          group.save!
+        end
       end
     rescue StandardError
       # Post back a JSON error
@@ -176,29 +188,36 @@ class ProjectsController < ApplicationController
     get_groups_helper project:
   end
 
-  def get_groups_helper( project:, message: nil )
-    students = {}
-    project.rosters.enrolled.each do | roster |
-      student = roster.user
-      students[ student.id ] = {
-        id: student.id,
-        first_name: student.first_name,
-        last_name: student.last_name,
-        email: student.email
-      }
-    end
+  def suggest_groups
+    students = @project.rosters.enrolled.includes(
+      user: [
+        :emails, :gender, :primary_language, :cip_code,
+        { home_state: :home_country }, { reactions: :narrative }
+      ]
+    ).map( &:user )
+    suggestion = Group.suggest_optimal_groups(
+      users: students,
+      target_group_size: params[:target_group_size],
+      target_group_count: params[:target_group_count]
+    )
+    students_payload = build_students_payload @project
+    groups_payload = build_suggested_groups_payload( suggestion, students_payload )
 
-    groups = {}
-    project.groups.each do | group |
-      groups[group.id] = {
-        id: group.id,
-        name: group.name,
-        diversity: group.diversity_score
+    render json: {
+      groups: groups_payload,
+      students: students_payload,
+      summary: {
+        diversity_score_standard_deviation: suggestion[:diversity_score_standard_deviation],
+        average_diversity_score: suggestion[:average_diversity_score],
+        average_faultline_strength: suggestion[:average_faultline_strength],
+        max_faultline_strength: suggestion[:max_faultline_strength]
       }
-      group.users.each do | user |
-        students[user.id][ :group_id ] = group.id
-      end
-    end
+    }
+  end
+
+  def get_groups_helper( project:, message: nil )
+    students = build_students_payload project
+    groups = build_groups_payload( project, students )
 
     respond_to do | format |
       format.json do
@@ -266,6 +285,55 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def build_students_payload( project )
+    students = {}
+    project.rosters.enrolled.each do | roster |
+      student = roster.user
+      students[ student.id ] = {
+        id: student.id,
+        first_name: student.first_name,
+        last_name: student.last_name,
+        email: student.email
+      }
+    end
+    students
+  end
+
+  def build_groups_payload( project, students )
+    groups = {}
+    project.groups.each do | group |
+      groups[group.id] = {
+        id: group.id,
+        name: group.name,
+        diversity: group.diversity_score,
+        faultline: group.calc_faultline_strength,
+        member_count: group.users.count
+      }
+      group.users.each do | user |
+        students[user.id][ :group_id ] = group.id
+      end
+    end
+    groups
+  end
+
+  def build_suggested_groups_payload( suggestion, students )
+    groups = {}
+    suggestion.fetch( :groups, [] ).each_with_index do | suggested_group, index |
+      group_id = -( index + 1 )
+      groups[group_id] = {
+        id: group_id,
+        name: suggested_group[:name],
+        diversity: suggested_group[:diversity_score],
+        faultline: suggested_group[:faultline_strength],
+        member_count: suggested_group[:users].count
+      }
+      suggested_group[:users].each do | user |
+        students[user.id][ :group_id ] = group_id
+      end
+    end
+    groups
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project

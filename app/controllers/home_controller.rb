@@ -138,6 +138,7 @@ class HomeController < ApplicationController
           activateProjectUrl: activate_project_path,
           diversityCheckUrl: check_diversity_score_path,
           groupsUrl: groups_path( id: '' ),
+          suggestGroupsUrl: suggest_groups_path( id: '' ),
           diversityRescoreGroup: rescore_group_path( id: '' ),
           diversityRescoreGroups: rescore_groups_path( id: '' )
         }

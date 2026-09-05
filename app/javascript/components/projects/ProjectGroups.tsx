@@ -19,6 +19,7 @@ import { Column } from "primereact/column";
 type Props = {
   projectId: number;
   groupsUrl: string;
+  suggestGroupsUrl: string;
   diversityCheckUrl: string;
   diversityRescoreGroup: string;
   diversityRescoreGroups: string;
@@ -29,14 +30,37 @@ export default function ProjectGroups(props: Props) {
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
   const [filterText, setFilterText] = useState("");
+  const [targetGroupCount, setTargetGroupCount] = useState("2");
   const [sortBy, setSortBy] = useState("last_name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
   const [groupsRaw, setGroupsRaw] = useState({});
   const [studentsRaw, setStudentsRaw] = useState({});
   const [groups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
+  const [suggestedGroupsRaw, setSuggestedGroupsRaw] = useState(null);
+  const [suggestedStudentsRaw, setSuggestedStudentsRaw] = useState(null);
+  const [suggestedGroups, setSuggestedGroups] = useState([]);
+  const [suggestionSummary, setSuggestionSummary] = useState(null);
 
   const dispatch = useDispatch();
+
+  const sortStudents = (field, direction, studentList) => {
+    const directionMultiplier =
+      direction == SortDirection.ASC ? 1 : -1;
+    studentList.sort((studentOne, studentTwo) => {
+      const valueOne = studentOne[field] || "";
+      const valueTwo = studentTwo[field] || "";
+      if (valueOne < valueTwo) {
+        return -1 * directionMultiplier;
+      }
+      if (valueOne > valueTwo) {
+        return 1 * directionMultiplier;
+      }
+      return 0;
+    });
+    setSortBy(field);
+    setSortDirection(direction);
+  };
 
   const addGroup = () => {
     const updatedGroups = Object.assign({}, groupsRaw);
@@ -124,6 +148,10 @@ export default function ProjectGroups(props: Props) {
       .then(response => {
         const data = response.data;
         setWorking(false);
+        setSuggestedGroupsRaw(null);
+        setSuggestedStudentsRaw(null);
+        setSuggestedGroups([]);
+        setSuggestionSummary(null);
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
         setGroups(Object.values(data.groups));
@@ -196,7 +224,7 @@ export default function ProjectGroups(props: Props) {
       });
   };
 
-  const saveGroups = () => {
+  const saveGroups = (nextGroups = groupsRaw, nextStudents = studentsRaw) => {
     setWorking(true);
     setMessage("Saving...");
 
@@ -204,13 +232,17 @@ export default function ProjectGroups(props: Props) {
     dispatch(startTask());
     axios
       .patch(url, {
-        groups: groupsRaw,
-        students: studentsRaw
+        groups: nextGroups,
+        students: nextStudents
       })
       .then(response => {
         const data = response.data;
         setWorking(false);
         setDirty(false);
+        setSuggestedGroupsRaw(null);
+        setSuggestedStudentsRaw(null);
+        setSuggestedGroups([]);
+        setSuggestionSummary(null);
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
         setGroups(Object.values(data.groups));
@@ -229,6 +261,60 @@ export default function ProjectGroups(props: Props) {
       });
   };
 
+  const suggestGroups = () => {
+    setWorking(true);
+    setMessage("Generating recommendations...");
+
+    const url = props.suggestGroupsUrl + props.projectId + ".json";
+    dispatch(startTask());
+    axios
+      .post(url, {
+        target_group_count: targetGroupCount
+      })
+      .then(response => {
+        const data = response.data;
+        setWorking(false);
+        setSuggestedGroupsRaw(data.groups);
+        setSuggestedStudentsRaw(data.students);
+        setSuggestedGroups(Object.values(data.groups));
+        setSuggestionSummary(data.summary);
+        setMessage("");
+      })
+      .catch(error => {
+        console.log("error", error);
+        setMessage("Unable to generate recommendations");
+      })
+      .finally(() => {
+        dispatch(endTask());
+      });
+  };
+
+  const rejectSuggestedGroups = () => {
+    setSuggestedGroupsRaw(null);
+    setSuggestedStudentsRaw(null);
+    setSuggestedGroups([]);
+    setSuggestionSummary(null);
+    setMessage("");
+  };
+
+  const acceptSuggestedGroups = () => {
+    if (null == suggestedGroupsRaw || null == suggestedStudentsRaw) {
+      return;
+    }
+
+    saveGroups(suggestedGroupsRaw, suggestedStudentsRaw);
+  };
+
+  const suggestedMembers = groupId => {
+    if (null == suggestedStudentsRaw) {
+      return [];
+    }
+
+    return Object.values(suggestedStudentsRaw).filter(student => {
+      return student.group_id == groupId;
+    });
+  };
+
   const direction = {
     [SortDirection.ASC]: "asc",
     [SortDirection.DESC]: "desc"
@@ -236,6 +322,62 @@ export default function ProjectGroups(props: Props) {
 
   return (
     <Panel>
+      {0 < suggestedGroups.length ? (
+        <Panel header="Recommended Groups" className="mb-3">
+          <div id="recommended-groups-summary">
+            <div>
+              Diversity score std. dev.:{" "}
+              {suggestionSummary?.diversity_score_standard_deviation ?? 0}
+            </div>
+            <div>
+              Average diversity score:{" "}
+              {suggestionSummary?.average_diversity_score ?? 0}
+            </div>
+            <div>
+              Average faultline strength:{" "}
+              {suggestionSummary?.average_faultline_strength ?? 0}
+            </div>
+            <div>
+              Max faultline strength:{" "}
+              {suggestionSummary?.max_faultline_strength ?? 0}
+            </div>
+          </div>
+          {suggestedGroups.map(group => {
+            return (
+              <Panel
+                key={`suggested-${group.id}`}
+                header={group.name}
+                className="mb-2 recommended-group-card"
+              >
+                <div>Members: {group.member_count}</div>
+                <div>Diversity score: {group.diversity}</div>
+                <div>Faultline strength: {group.faultline}</div>
+                <ul>
+                  {suggestedMembers(group.id).map(student => {
+                    return (
+                      <li key={`suggested-member-${group.id}-${student.id}`}>
+                        {student.first_name} {student.last_name}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Panel>
+            );
+          })}
+          <div className="flex gap-2">
+            <Button onClick={acceptSuggestedGroups} icon="pi pi-check">
+              Accept Suggested Groups
+            </Button>
+            <Button
+              onClick={rejectSuggestedGroups}
+              icon="pi pi-times"
+              severity="secondary"
+            >
+              Reject Suggested Groups
+            </Button>
+          </div>
+        </Panel>
+      ) : null}
       <DataTable
         value={students}
         resizableColumns
@@ -268,6 +410,18 @@ export default function ProjectGroups(props: Props) {
                   </Button>
                 ) : null}
                 <span>{message}</span>
+                <span className="p-input-icon-left">
+                  <i className="pi pi-users" />
+                  <InputText
+                    id="target_group_count"
+                    placeholder="Target Group Count"
+                    onChange={event => setTargetGroupCount(event.target.value)}
+                    value={targetGroupCount}
+                  />
+                </span>
+                <Button onClick={suggestGroups} icon="pi pi-sparkles">
+                  Recommend Groups
+                </Button>
                 <Button onClick={recalcDiversity} icon="pi pi-calculator">
                   Recalculate Diversity
                 </Button>
@@ -332,6 +486,7 @@ export default function ProjectGroups(props: Props) {
                       rescoreGroup={rescoreGroup}
                       students={studentsRaw}
                     />
+                    <div>Faultline: {groupsRaw[group.id].faultline || 0}</div>
                   </>
                 );
               }}
