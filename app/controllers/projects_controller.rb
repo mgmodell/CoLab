@@ -161,7 +161,7 @@ class ProjectsController < ApplicationController
           group.calc_diversity_score
           group.save!
         end
-        current_group_ids = group_hash.values.select( &:persisted? ).map( &:id )
+        current_group_ids = group_hash.values.map( &:id ).compact
         groups_to_remove = Group.where( project: ).where.not( id: current_group_ids )
         groups_to_remove.destroy_all
       end
@@ -196,11 +196,12 @@ class ProjectsController < ApplicationController
       target_group_count: params[:target_group_count]
     )
     students_payload = build_students_payload @project
-    groups_payload = build_suggested_groups_payload( suggestion, students_payload )
+    suggested_students_payload = students_payload.deep_dup
+    groups_payload = build_suggested_groups_payload( suggestion, suggested_students_payload )
 
     render json: {
       groups: groups_payload,
-      students: students_payload,
+      students: suggested_students_payload,
       summary: {
         diversity_score_standard_deviation: suggestion[:diversity_score_standard_deviation],
         average_diversity_score: suggestion[:average_diversity_score],
@@ -226,7 +227,7 @@ class ProjectsController < ApplicationController
   end
 
   def remove_group
-    group = Group.find( params[:group_id] )
+    group = Group.find_by( id: params[:group_id] )
     group&.delete
     redirect_to @project
   end

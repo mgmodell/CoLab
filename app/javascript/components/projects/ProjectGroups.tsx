@@ -47,7 +47,8 @@ export default function ProjectGroups(props: Props) {
   const sortStudents = (field, direction, studentList) => {
     const directionMultiplier =
       direction == SortDirection.ASC ? 1 : -1;
-    studentList.sort((studentOne, studentTwo) => {
+    const sortedStudents = [...studentList];
+    sortedStudents.sort((studentOne, studentTwo) => {
       const valueOne = studentOne[field] || "";
       const valueTwo = studentTwo[field] || "";
       if (valueOne < valueTwo) {
@@ -60,6 +61,8 @@ export default function ProjectGroups(props: Props) {
     });
     setSortBy(field);
     setSortDirection(direction);
+    setStudents(sortedStudents);
+    return sortedStudents;
   };
 
   const addGroup = () => {
@@ -92,11 +95,11 @@ export default function ProjectGroups(props: Props) {
         studentsUpdated[item.id].group_id = null;
       }
     });
-    sortStudents(sortBy, sortDirection, students);
+    const sortedStudents = sortStudents(sortBy, sortDirection, students);
     setGroupsRaw(groupsUpdated);
     setGroups(Object.values(groupsUpdated));
     setStudentsRaw(studentsUpdated);
-    setStudents(students);
+    setStudents(sortedStudents);
   };
 
   const filter = event => {
@@ -106,8 +109,8 @@ export default function ProjectGroups(props: Props) {
         .toUpperCase()
         .includes(filter_text.toUpperCase())
     );
-    sortStudents(sortBy, sortDirection, filtered);
-    setStudents(filtered);
+    const sortedStudents = sortStudents(sortBy, sortDirection, filtered);
+    setStudents(sortedStudents);
     setFilterText(event.target.value);
   };
 
@@ -262,6 +265,10 @@ export default function ProjectGroups(props: Props) {
   };
 
   const suggestGroups = () => {
+    if (working) {
+      return;
+    }
+
     setWorking(true);
     setMessage("Generating recommendations...");
 
@@ -291,6 +298,10 @@ export default function ProjectGroups(props: Props) {
   };
 
   const rejectSuggestedGroups = () => {
+    if (working) {
+      return;
+    }
+
     setSuggestedGroupsRaw(null);
     setSuggestedStudentsRaw(null);
     setSuggestedGroups([]);
@@ -299,7 +310,7 @@ export default function ProjectGroups(props: Props) {
   };
 
   const acceptSuggestedGroups = () => {
-    if (null == suggestedGroupsRaw || null == suggestedStudentsRaw) {
+    if (working || null == suggestedGroupsRaw || null == suggestedStudentsRaw) {
       return;
     }
 
@@ -358,13 +369,14 @@ export default function ProjectGroups(props: Props) {
             );
           })}
           <div className="flex gap-2">
-            <Button onClick={acceptSuggestedGroups} icon="pi pi-check">
+            <Button onClick={acceptSuggestedGroups} icon="pi pi-check" disabled={working}>
               Accept Suggested Groups
             </Button>
             <Button
               onClick={rejectSuggestedGroups}
               icon="pi pi-times"
               severity="secondary"
+              disabled={working}
             >
               Reject Suggested Groups
             </Button>
@@ -411,9 +423,10 @@ export default function ProjectGroups(props: Props) {
                     placeholder="Target Group Count"
                     onChange={event => setTargetGroupCount(event.target.value)}
                     value={targetGroupCount}
+                    disabled={working}
                   />
                 </span>
-                <Button onClick={suggestGroups} icon="pi pi-sparkles">
+                <Button onClick={suggestGroups} icon="pi pi-sparkles" disabled={working}>
                   Recommend Groups
                 </Button>
                 <Button onClick={recalcDiversity} icon="pi pi-calculator">
