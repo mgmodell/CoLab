@@ -14,12 +14,10 @@ end
 
 Then( /^the normalized proposed-group faultline score matches the group's users$/ ) do
   baseline = Group.calc_faultline_strength_for_group( users: @group.users )
-  messy_emails = [
-    @users.first.email.upcase,
-    @users.first.email,
-    ' ',
-    @users.last.email.upcase
-  ].join( ', ' )
+  messy_emails = @users.map { | user | " #{user.email.upcase} " }
+                       .push( @users.first.email )
+                       .push( ' ' )
+                       .join( ', ' )
 
   normalized_score = Group.calc_faultline_strength_for_proposed_group( emails: messy_emails )
   normalized_score.should be_within( 0.0001 ).of( baseline )
