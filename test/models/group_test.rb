@@ -118,6 +118,20 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal [2, 3], suggestion[:group_sizes].sort
   end
 
+  test 'suggest optimal groups handles nil demographics without delegation errors' do
+    users = [
+      faultline_user_without_demographics( id: 1 ),
+      faultline_user_without_demographics( id: 2 ),
+      faultline_user_without_demographics( id: 3 ),
+      faultline_user_without_demographics( id: 4 )
+    ]
+
+    assert_nothing_raised do
+      suggestion = Group.suggest_optimal_groups( users:, target_group_count: 2 )
+      assert_equal [2, 2], suggestion[:group_sizes].sort
+    end
+  end
+
   private
 
   class MockFaultlineUserRelation
@@ -173,8 +187,9 @@ class GroupTest < ActiveSupport::TestCase
     )
   end
 
-  def faultline_user_without_demographics
+  def faultline_user_without_demographics( id: nil )
     OpenStruct.new(
+      id:,
       home_state: nil,
       cip_code: nil,
       gender: nil,

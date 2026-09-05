@@ -285,13 +285,16 @@ class Group < ApplicationRecord
       state = nil if state&.no_response == true
       country = state&.home_country
       country = nil if country&.no_response == true
+      gender_code = user.gender&.code
+      primary_language_code = user.primary_language&.code
+      cip_gov_code = user.cip_code&.gov_code
 
       [
         country&.id || 0,
         state&.id || 0,
-        user.gender_code.to_s,
-        user.primary_language_code.to_s,
-        user.cip_code&.gov_code || 0,
+        gender_code.to_s,
+        primary_language_code.to_s,
+        cip_gov_code || 0,
         user.date_of_birth&.year || 0,
         user.started_school&.year || 0,
         user.object_id
