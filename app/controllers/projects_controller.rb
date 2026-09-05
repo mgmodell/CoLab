@@ -183,6 +183,12 @@ class ProjectsController < ApplicationController
     get_groups_helper project:
   end
 
+  # Builds a recommendation preview for the Groups tab without persisting it.
+  #
+  # This controller action is the bridge between the course roster and
+  # Group.suggest_optimal_groups. It returns the suggested groups, preview-only
+  # student assignments, and aggregate metrics that the React UI shows before
+  # the instructor accepts or rejects the proposal.
   def suggest_groups
     students = @project.rosters.enrolled.includes(
       user: [
@@ -282,6 +288,7 @@ class ProjectsController < ApplicationController
 
   private
 
+  # Serializes enrolled roster members for the groups-management JSON payloads.
   def build_students_payload( project )
     students = {}
     project.rosters.enrolled.each do | roster |
@@ -296,6 +303,8 @@ class ProjectsController < ApplicationController
     students
   end
 
+  # Serializes persisted project groups and annotates the passed-in students hash
+  # with each member's saved group assignment.
   def build_groups_payload( project, students )
     groups = {}
     project.groups.each do | group |
@@ -313,6 +322,11 @@ class ProjectsController < ApplicationController
     groups
   end
 
+  # Serializes a recommendation preview and annotates the passed-in students hash
+  # with preview-only suggested group assignments.
+  #
+  # The returned structure mirrors build_groups_payload so the UI can preview a
+  # recommendation and later submit it through the existing set_groups action.
   def build_suggested_groups_payload( suggestion, students )
     groups = {}
     suggestion.fetch( :groups, [] ).each_with_index do | suggested_group, index |

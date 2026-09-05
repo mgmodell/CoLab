@@ -156,6 +156,13 @@ class Group < ApplicationRecord
     [asw_scores.max || 0.0, 0.0].max.round( 4 )
   end
 
+  # Builds a recommended partition of +users+ for the project-groups UI.
+  #
+  # This is the model-side entry point used by ProjectsController#suggest_groups.
+  # It converts a course roster into balanced candidate groups, evaluates those
+  # candidates with the existing diversity and faultline metrics, and returns
+  # the best-scoring proposal in a shape that can be previewed or later saved by
+  # the existing group-management flow.
   def self.suggest_optimal_groups( users:, target_group_size: nil, target_group_count: nil )
     unique_users = users.compact.uniq do | user |
       user.respond_to?( :id ) && user.id.present? ? user.id : user.object_id
@@ -204,6 +211,10 @@ class Group < ApplicationRecord
   class << self
     private
 
+    # Chooses a feasible set of group sizes for the requested roster.
+    #
+    # This keeps every group at size >= 2 and picks the closest balanced layout
+    # to either the requested group count or the requested target group size.
     def suggested_group_sizes_for( user_count:, target_group_size:, target_group_count: )
       return [] if user_count < 2
 
@@ -234,6 +245,7 @@ class Group < ApplicationRecord
       suggestion_balanced_group_sizes_for user_count, group_count
     end
 
+    # Splits +user_count+ into as-even-as-possible sizes for +group_count+ groups.
     def suggestion_balanced_group_sizes_for( user_count, group_count )
       base_size = user_count / group_count
       remainder = user_count % group_count
@@ -243,6 +255,7 @@ class Group < ApplicationRecord
       end
     end
 
+    # Scores how close a proposed set of +group_sizes+ is to +target_group_size+.
     def suggestion_size_distance_for( group_sizes, target_group_size )
       [
         group_sizes.map { | size | ( size - target_group_size ).abs }.max,
@@ -251,6 +264,10 @@ class Group < ApplicationRecord
       ]
     end
 
+    # Produces deterministic and shuffled user orderings for the search pass.
+    #
+    # Each ordering is later partitioned into balanced groups so the search can
+    # compare several plausible starting points without changing persisted data.
     def suggestion_candidate_orders_for( users:, random: )
       sorted_users = users.sort_by do | user |
         suggestion_sort_key_for user
@@ -262,6 +279,7 @@ class Group < ApplicationRecord
       candidate_orders
     end
 
+    # Groups similar demographic profiles together for one candidate ordering.
     def suggestion_sort_key_for( user )
       state = user.home_state
       state = nil if state&.no_response == true
@@ -280,6 +298,7 @@ class Group < ApplicationRecord
       ]
     end
 
+    # Partitions one ordering of users into groups with the requested sizes.
     def suggestion_partition_for( ordered_users, group_sizes )
       groups = Array.new( group_sizes.count ) { [] }
       remaining_slots = group_sizes.dup
@@ -294,6 +313,7 @@ class Group < ApplicationRecord
       groups
     end
 
+    # Spreads assignments across groups in alternating passes to balance sizes.
     def suggestion_fill_sequence_for( group_sizes )
       remaining_slots = group_sizes.dup
       fill_sequence = []
@@ -318,6 +338,10 @@ class Group < ApplicationRecord
       fill_sequence
     end
 
+    # Improves a candidate grouping with pairwise swaps across groups.
+    #
+    # This keeps the chosen group sizes fixed while searching for a lower
+    # diversity-spread and faultline score than the initial partition.
     def suggestion_locally_improve( groups )
       current_groups = groups.map( &:dup )
       current_score = suggestion_score_for current_groups
@@ -356,6 +380,10 @@ class Group < ApplicationRecord
       current_groups
     end
 
+    # Orders candidate groupings using the recommendation objectives.
+    #
+    # Lower diversity-score spread and lower faultline values rank first; higher
+    # average diversity breaks ties in favor of stronger mixed groups.
     def suggestion_score_for( groups )
       metrics = suggestion_metrics_for groups
       [
@@ -366,6 +394,7 @@ class Group < ApplicationRecord
       ]
     end
 
+    # Computes the aggregate metrics returned with a recommendation preview.
     def suggestion_metrics_for( groups )
       diversity_scores = groups.map do | group_users |
         calc_diversity_score_for_group users: group_users
@@ -384,6 +413,7 @@ class Group < ApplicationRecord
       }
     end
 
+    # Computes a rounded population standard deviation for recommendation scores.
     def suggestion_standard_deviation_for( values )
       return 0.0 if values.count <= 1
 
