@@ -294,8 +294,8 @@ Then( 'the user rejects the recommended groups' ) do
   step 'the user clicks "Reject Suggested Groups"'
 end
 
-Then( 'the user does not see {string}' ) do | text |
-  page.should have_no_content text
+Then( 'the user no longer sees the recommended groups preview' ) do
+  page.should have_no_content 'Recommended Groups'
 end
 
 Then( 'the user sees a warning that existing groups will be replaced' ) do
@@ -309,10 +309,6 @@ Then( 'remember the recommended groups' ) do
       members: card.all( 'li' ).map { | item| item.text }
     }
   end
-end
-
-Then( 'the project has {int} groups' ) do | group_count |
-  @project.reload.groups.count.should eq group_count
 end
 
 Then( 'every enrolled student in the course is assigned to exactly {int} project group' ) do | group_count |

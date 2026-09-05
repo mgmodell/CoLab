@@ -360,7 +360,7 @@ Feature: Project Administration
    Then the user requests recommended groups with target count 3
    Then the user sees 3 recommended groups
    Then the user rejects the recommended groups
-   Then the user does not see "Recommended Groups"
+   Then the user no longer sees the recommended groups preview
    Then retrieve the latest project from the db
    Then the project has 0 groups
 
