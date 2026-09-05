@@ -290,6 +290,27 @@ Then( 'the user accepts the recommended groups' ) do
   step 'the user waits to see "success"'
 end
 
+Then( 'the user rejects the recommended groups' ) do
+  step 'the user clicks "Reject Suggested Groups"'
+end
+
+Then( 'the user does not see {string}' ) do | text |
+  page.should have_no_content text
+end
+
+Then( 'the user sees a warning that existing groups will be replaced' ) do
+  page.should have_content 'Accepting these suggested groups will remove and replace the existing project groups.'
+end
+
+Then( 'remember the recommended groups' ) do
+  @recommended_groups = page.all( '.recommended-group-card' ).map do | card |
+    {
+      name: card.find( '.p-panel-title' ).text,
+      members: card.all( 'li' ).map { | item| item.text }
+    }
+  end
+end
+
 Then( 'the project has {int} groups' ) do | group_count |
   @project.reload.groups.count.should eq group_count
 end
@@ -305,6 +326,28 @@ Then( 'every enrolled student in the course is assigned to exactly {int} project
   @course.rosters.enrolled.each do | roster |
     appearance_counts[roster.user_id].should eq group_count
   end
+end
+
+Then( 'the original project group no longer exists' ) do
+  Group.find_by( id: @group.id ).should be_nil
+end
+
+Then( 'the remembered recommended groups exist in the project' ) do
+  actual_groups = @project.reload.groups.includes( :users ).map do | group |
+    {
+      name: group.name,
+      members: group.users.map { | user| "#{user.first_name} #{user.last_name}" }.sort
+    }
+  end
+
+  expected_groups = @recommended_groups.map do | group |
+    {
+      name: group[:name],
+      members: group[:members].sort
+    }
+  end
+
+  actual_groups.sort_by { | group| group[:name] }.should eq expected_groups.sort_by { | group| group[:name] }
 end
 
 Then( 'the user selects the {string} menu item' ) do | menu_item |

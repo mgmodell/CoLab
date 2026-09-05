@@ -336,6 +336,11 @@ export default function ProjectGroups(props: Props) {
     <Panel>
       {0 < suggestedGroups.length ? (
         <Panel header="Recommended Groups" className="mb-3">
+          {0 < groups.length ? (
+            <p id="recommended-groups-warning">
+              Accepting these suggested groups will remove and replace the existing project groups.
+            </p>
+          ) : null}
           <dl id="recommended-groups-summary">
             <dt>Diversity score std. dev.</dt>
             <dd>{suggestionSummary?.diversity_score_standard_deviation ?? 0}</dd>
@@ -350,6 +355,7 @@ export default function ProjectGroups(props: Props) {
             return (
               <Panel
                 key={`suggested-${group.id}`}
+                id={`recommended-group-${group.id}`}
                 header={group.name}
                 className="mb-2 recommended-group-card"
               >
