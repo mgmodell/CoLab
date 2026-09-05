@@ -164,7 +164,8 @@ class Group < ApplicationRecord
     def faultline_profiles_for( users )
       now = Date.current
       users.map do | user |
-        state = user.home_state unless user.home_state_no_response == true
+        state = user.home_state
+        state = nil if state&.no_response == true
         country = state&.home_country
         country = nil if country&.no_response == true
 
@@ -181,8 +182,8 @@ class Group < ApplicationRecord
             state: state&.id,
             country: country&.id,
             cip_code: ( user.cip_code&.gov_code&.zero? ? nil : user.cip_code&.id ),
-            gender: ( user.gender_code == '__' ? nil : user.gender&.id ),
-            primary_language: ( user.primary_language_code == '__' ? nil : user.primary_language&.id ),
+            gender: ( user.gender.nil? || user.gender_code == '__' ? nil : user.gender.id ),
+            primary_language: ( user.primary_language.nil? || user.primary_language_code == '__' ? nil : user.primary_language.id ),
             impairment: impairments
           },
           numeric: {

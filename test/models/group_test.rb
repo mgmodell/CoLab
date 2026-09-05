@@ -35,6 +35,19 @@ class GroupTest < ActiveSupport::TestCase
     assert_operator polarized_strength, :>=, 0.25
   end
 
+  test 'faultline strength handles nil demographics without delegation errors' do
+    users = [
+      faultline_user_without_demographics,
+      faultline_user_without_demographics,
+      faultline_user_without_demographics,
+      faultline_user_without_demographics
+    ]
+
+    assert_nothing_raised do
+      assert_in_delta 0.0, Group.calc_faultline_strength_for_group( users: ), 0.0001
+    end
+  end
+
   test 'proposed-group faultline strength deduplicates users by email join' do
     relation = MockFaultlineUserRelation.new
     captured_users = nil
@@ -110,6 +123,24 @@ class GroupTest < ActiveSupport::TestCase
       started_school: Date.new( started_school_year, 1, 1 ),
       date_of_birth?: true,
       started_school?: true
+    )
+  end
+
+  def faultline_user_without_demographics
+    OpenStruct.new(
+      home_state: nil,
+      cip_code: nil,
+      gender: nil,
+      primary_language: nil,
+      impairment_visual: false,
+      impairment_auditory: false,
+      impairment_motor: false,
+      impairment_cognitive: false,
+      impairment_other: false,
+      date_of_birth: nil,
+      started_school: nil,
+      date_of_birth?: false,
+      started_school?: false
     )
   end
 end
