@@ -67,11 +67,14 @@ class Group < ApplicationRecord
       impairment_hash = Hash.new( 0 )
 
       users.uniq.each do | user |
-        if user.home_state.present?
-          state_hash[user.home_state] += 1 unless
-            true == user.home_state_no_response
-          country_hash[user.home_state.home_country] += 1 unless
-            true == user.home_state_home_country.no_response
+        state = user.home_state
+        state = nil if state&.no_response == true
+        country = state&.home_country
+        country = nil if country&.no_response == true
+
+        if state.present?
+          state_hash[state] += 1
+          country_hash[country] += 1 if country.present?
         end
         cip_hash[user.cip_code] += 1 unless
             user.cip_code.nil? || user.cip_code_gov_code.zero?

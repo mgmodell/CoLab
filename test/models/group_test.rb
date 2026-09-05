@@ -132,6 +132,20 @@ class GroupTest < ActiveSupport::TestCase
     end
   end
 
+  test 'suggest optimal groups handles states without countries' do
+    users = [
+      faultline_user_with_state_without_country( id: 1 ),
+      faultline_user_with_state_without_country( id: 2 ),
+      faultline_user_without_demographics( id: 3 ),
+      faultline_user_without_demographics( id: 4 )
+    ]
+
+    assert_nothing_raised do
+      suggestion = Group.suggest_optimal_groups( users:, target_group_count: 2 )
+      assert_equal [2, 2], suggestion[:group_sizes].sort
+    end
+  end
+
   private
 
   class MockFaultlineUserRelation
@@ -191,6 +205,25 @@ class GroupTest < ActiveSupport::TestCase
     OpenStruct.new(
       id:,
       home_state: nil,
+      cip_code: nil,
+      gender: nil,
+      primary_language: nil,
+      impairment_visual: false,
+      impairment_auditory: false,
+      impairment_motor: false,
+      impairment_cognitive: false,
+      impairment_other: false,
+      date_of_birth: nil,
+      started_school: nil,
+      date_of_birth?: false,
+      started_school?: false
+    )
+  end
+
+  def faultline_user_with_state_without_country( id: nil )
+    OpenStruct.new(
+      id:,
+      home_state: OpenStruct.new( id: 99, no_response: false, home_country: nil ),
       cip_code: nil,
       gender: nil,
       primary_language: nil,
