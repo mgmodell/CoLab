@@ -282,6 +282,7 @@ export default function ProjectGroups(props: Props) {
       })
       .catch(error => {
         console.log("error", error);
+        setWorking(false);
         setMessage("Unable to generate recommendations");
       })
       .finally(() => {
@@ -324,24 +325,16 @@ export default function ProjectGroups(props: Props) {
     <Panel>
       {0 < suggestedGroups.length ? (
         <Panel header="Recommended Groups" className="mb-3">
-          <div id="recommended-groups-summary">
-            <div>
-              Diversity score std. dev.:{" "}
-              {suggestionSummary?.diversity_score_standard_deviation ?? 0}
-            </div>
-            <div>
-              Average diversity score:{" "}
-              {suggestionSummary?.average_diversity_score ?? 0}
-            </div>
-            <div>
-              Average faultline strength:{" "}
-              {suggestionSummary?.average_faultline_strength ?? 0}
-            </div>
-            <div>
-              Max faultline strength:{" "}
-              {suggestionSummary?.max_faultline_strength ?? 0}
-            </div>
-          </div>
+          <dl id="recommended-groups-summary">
+            <dt>Diversity score std. dev.</dt>
+            <dd>{suggestionSummary?.diversity_score_standard_deviation ?? 0}</dd>
+            <dt>Average diversity score</dt>
+            <dd>{suggestionSummary?.average_diversity_score ?? 0}</dd>
+            <dt>Average faultline strength</dt>
+            <dd>{suggestionSummary?.average_faultline_strength ?? 0}</dd>
+            <dt>Max faultline strength</dt>
+            <dd>{suggestionSummary?.max_faultline_strength ?? 0}</dd>
+          </dl>
           {suggestedGroups.map(group => {
             return (
               <Panel
@@ -414,6 +407,7 @@ export default function ProjectGroups(props: Props) {
                   <i className="pi pi-users" />
                   <InputText
                     id="target_group_count"
+                    aria-label="Target Group Count"
                     placeholder="Target Group Count"
                     onChange={event => setTargetGroupCount(event.target.value)}
                     value={targetGroupCount}

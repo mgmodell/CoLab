@@ -157,7 +157,9 @@ class Group < ApplicationRecord
   end
 
   def self.suggest_optimal_groups( users:, target_group_size: nil, target_group_count: nil )
-    unique_users = users.compact.uniq
+    unique_users = users.compact.uniq do | user |
+      user.respond_to?( :id ) && user.id.present? ? user.id : user.object_id
+    end
     return { groups: [], group_sizes: [] } if unique_users.count < 2
 
     group_sizes = suggested_group_sizes_for(

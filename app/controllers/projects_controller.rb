@@ -137,14 +137,12 @@ class ProjectsController < ApplicationController
                      .find_by( id: params[:id] )
 
     group_hash = {}
-    saved_group_ids = []
     params[:groups].each_value do | g |
       group = nil
       group_id = g[:id].to_i
       if group_id.positive?
         group = project.groups.find_by id: group_id
         group.name = g[:name]
-        saved_group_ids << group_id
       else
         group = project.groups.build( name: g[:name] )
       end
@@ -159,16 +157,13 @@ class ProjectsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        groups_to_remove = if saved_group_ids.empty?
-                             Group.where( project: )
-                           else
-                             Group.where( project: ).where.not( id: saved_group_ids )
-                           end
-        groups_to_remove.destroy_all
         group_hash.each_value do | group |
           group.calc_diversity_score
           group.save!
         end
+        current_group_ids = group_hash.values.select( &:persisted? ).map( &:id )
+        groups_to_remove = Group.where( project: ).where.not( id: current_group_ids )
+        groups_to_remove.destroy_all
       end
     rescue StandardError
       # Post back a JSON error

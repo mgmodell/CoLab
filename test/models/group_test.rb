@@ -107,6 +107,17 @@ class GroupTest < ActiveSupport::TestCase
     assert_equal [2, 2, 2, 3], suggestion[:group_sizes].sort
   end
 
+  test 'suggest optimal groups falls back to the nearest feasible group count' do
+    users = 5.times.map do | index |
+      faultline_user( group: index < 2 ? :a : :b, id: index + 1 )
+    end
+
+    suggestion = Group.suggest_optimal_groups( users:, target_group_count: 3 )
+
+    assert_equal 2, suggestion[:groups].count
+    assert_equal [2, 3], suggestion[:group_sizes].sort
+  end
+
   private
 
   class MockFaultlineUserRelation
