@@ -416,7 +416,7 @@ export default function ProjectGroups(props: Props) {
                   {students.length + " of " + Object.values(studentsRaw).length}
                 </span>
                 {dirty ? (
-                  <Button onClick={saveGroups} icon="pi pi-save">
+                  <Button onClick={() => saveGroups()} icon="pi pi-save">
                     Save
                   </Button>
                 ) : null}
