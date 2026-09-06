@@ -30,7 +30,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then the user sees the 'project' 'start date' is '02/29/1980'
@@ -61,7 +61,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -90,7 +90,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '05/10/1976'
     Then the user sees the 'project' 'end date' is '02/29/1980'
@@ -122,7 +122,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -144,7 +144,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -175,7 +175,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '02/29/1980'
     Then the user sees the 'project' 'end date' is '07/10/2008'
@@ -200,7 +200,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '05/10/1976'
     Then the user sees the 'project' 'end date' is '02/29/1980'
@@ -233,7 +233,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -255,7 +255,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -284,7 +284,7 @@ Feature: Project Administration
     # Then the user sets the "g_-1" field to "my group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     Then the user sees a success message
     Then close all messages
     Then the user adds a group named 'your group'
     # Because the above was saved, this one is -1 again
@@ -294,14 +294,14 @@ Feature: Project Administration
     Then the user sets the "project" start date to "yesterday" and the end date to "tomorrow"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
 
     #Edit the groups
     Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
@@ -317,7 +317,7 @@ Feature: Project Administration
     Then set user 4 to group "your group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     Then group "my group" has 2 user

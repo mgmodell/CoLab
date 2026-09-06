@@ -287,7 +287,7 @@ end
 
 Then( 'the user accepts the recommended groups' ) do
   step 'the user clicks "Accept Suggested Groups"'
-  step 'the user waits to see "success"'
+  step 'the user sees a success message'
 end
 
 Then( 'the user rejects the recommended groups' ) do
