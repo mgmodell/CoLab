@@ -167,7 +167,6 @@ class Group < ApplicationRecord
   # the best-scoring proposal in a shape that can be previewed or later saved by
   # the existing group-management flow.
   def self.suggest_optimal_groups( users:, target_group_size: 4, target_group_count: nil )
-    puts "Suggesting optimal groups for #{users.count} users, target group size #{target_group_size}, target group count #{target_group_count}"
     unique_users = users.compact.uniq do | user |
       user.respond_to?( :id ) && user.id.present? ? user.id : user.object_id
     end
