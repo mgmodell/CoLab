@@ -4,6 +4,7 @@ import axios from "axios";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { IUser } from '../infrastructure/ProfileSlice';
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import DiversityScore from "../DiversityScore";
 
@@ -16,6 +17,7 @@ import { Panel } from "primereact/panel";
 import { Toolbar } from "primereact/toolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Tooltip } from "primereact/tooltip";
 
 type Props = {
   projectId: number;
@@ -27,11 +29,14 @@ type Props = {
 };
 
 export default function ProjectGroups(props: Props) {
+  const category = "projects";
+  const { t } = useTranslation(category);
+
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
   const [filterText, setFilterText] = useState("");
-  const [targetGroupCount, setTargetGroupCount] = useState("2");
+  const [targetGroupSize, setTargetGroupSize] = useState("4");
   const [sortBy, setSortBy] = useState("last_name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
   const [groupsRaw, setGroupsRaw] = useState({});
@@ -231,12 +236,12 @@ export default function ProjectGroups(props: Props) {
     if (working) return;
 
     setWorking(true);
-    setMessage("Generating recommendations...");
+    setMessage( t( 'groups.generating_recommendations') );
 
     const url = props.suggestGroupsUrl + props.projectId + ".json";
     dispatch(startTask());
     axios
-      .post(url, { target_group_count: targetGroupCount })
+      .post(url, { target_group_size: targetGroupSize })
       .then(response => {
         const data = response.data;
         setWorking(false);
@@ -278,20 +283,22 @@ export default function ProjectGroups(props: Props) {
   return (
     <Panel>
       {0 < suggestedGroups.length ? (
-        <Panel header="Recommended Groups" className="mb-3">
+        <Panel header={t( 'groups.recommended_groups' )} className="mb-3">
           {0 < groups.length ? (
             <p id="recommended-groups-warning">
-              Accepting these suggested groups will remove and replace the existing project groups.
+              {t( 'groups.replace_groups_warning' )}
             </p>
           ) : null}
           <dl id="recommended-groups-summary">
-            <dt>Diversity score std. dev.</dt>
+            <dt>{t( 'groups.number_of_groups' )}</dt>
+            <dd>{suggestedGroups.length ?? 0}</dd>
+            <dt>{t( 'groups.diversity_score_stdev' )}</dt>
             <dd>{suggestionSummary?.diversity_score_standard_deviation ?? 0}</dd>
-            <dt>Average diversity score</dt>
+            <dt>{t( 'groups.average_diversity_score' )}</dt>
             <dd>{suggestionSummary?.average_diversity_score ?? 0}</dd>
-            <dt>Average faultline strength</dt>
+            <dt>{t( 'groups.average_faultline_strength' )}</dt>
             <dd>{suggestionSummary?.average_faultline_strength ?? 0}</dd>
-            <dt>Max faultline strength</dt>
+            <dt>{t( 'groups.max_faultline_strength' )}</dt>
             <dd>{suggestionSummary?.max_faultline_strength ?? 0}</dd>
           </dl>
           {suggestedGroups.map(group => (
@@ -301,9 +308,9 @@ export default function ProjectGroups(props: Props) {
               header={group.name}
               className="mb-2 recommended-group-card"
             >
-              <div>Members: {group.member_count}</div>
-              <div>Diversity score: {group.diversity}</div>
-              <div>Faultline strength: {group.faultline}</div>
+              <div>{t( 'groups.proposed_members' )}: {group.member_count}</div>
+              <div>{t( 'groups.proposed_diversity_score' )}: {group.diversity}</div>
+              <div>{t( 'groups.proposed_faultline_strength' )}: {group.faultline}</div>
               <ul>
                 {suggestedMembers(group.id).map(student => (
                   <li key={`suggested-member-${group.id}-${student.id}`}>
@@ -315,7 +322,7 @@ export default function ProjectGroups(props: Props) {
           ))}
           <div className="flex gap-2">
             <Button onClick={acceptSuggestedGroups} icon="pi pi-check" disabled={working}>
-              Accept Suggested Groups
+              {t( 'accept_suggested_groups' )}
             </Button>
             <Button
               onClick={rejectSuggestedGroups}
@@ -323,7 +330,7 @@ export default function ProjectGroups(props: Props) {
               severity="secondary"
               disabled={working}
             >
-              Reject Suggested Groups
+              {t( 'groups.reject_suggested_groups' )}
             </Button>
           </div>
         </Panel>
@@ -343,17 +350,17 @@ export default function ProjectGroups(props: Props) {
                 <span className="p-input-icon-left">
                   <i className="pi pi-search" />
                   <InputText
-                    placeholder="Search Students"
+                    placeholder={t( 'groups.search_students' )}
                     onChange={e => setFilterText(e.target.value)}
                     value={filterText}
                   />
                 </span>
                 <span>
-                  Showing {students.length + " of " + Object.values(studentsRaw).length}
+                  {t( 'groups.students_shown', { count: students.length, total: Object.values(studentsRaw).length } )}
                 </span>
                 {dirty ? (
                   <Button onClick={() => saveGroups()} icon="pi pi-save">
-                    Save
+                    {t( 'groups.save_groups')}
                   </Button>
                 ) : null}
                 <span>{message}</span>
@@ -362,20 +369,20 @@ export default function ProjectGroups(props: Props) {
                   <InputText
                     id="target_group_count"
                     aria-label="Target Group Count"
-                    placeholder="Target Group Count"
-                    onChange={event => setTargetGroupCount(event.target.value)}
-                    value={targetGroupCount}
+                    placeholder={t( 'groups.target_group_count' )}
+                    onChange={event => setTargetGroupSize(event.target.value)}
+                    value={targetGroupSize}
                     disabled={working}
                   />
                 </span>
                 <Button onClick={suggestGroups} icon="pi pi-sparkles" disabled={working}>
-                  Recommend Groups
+                  {t( 'groups.recommend_groups')}
                 </Button>
                 <Button onClick={recalcDiversity} icon="pi pi-calculator">
-                  Recalculate Diversity
+                  {t( 'groups.recalculate_diversity')}
                 </Button>
                 <Button onClick={addGroup} icon="pi pi-users">
-                  Add Group
+                  {t( 'groups.add_group')}
                 </Button>
               </>
             }
@@ -420,7 +427,10 @@ export default function ProjectGroups(props: Props) {
                   rescoreGroup={rescoreGroup}
                   students={studentsRaw}
                 />
-                <div>Faultline: {groupsRaw[group.id]?.faultline || 0}</div>
+                <Tooltip target='faultline-strength' content={t( 'faultline_strength_explained' )} />
+                <div className="faultline-strength" id='faultline-strength'>
+                  {t( 'faultline_strength' )}: {groupsRaw[group.id]?.faultline || 0}
+                </div>
               </>
             )}
             field={"id"}
