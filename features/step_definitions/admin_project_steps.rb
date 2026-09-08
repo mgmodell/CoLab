@@ -277,7 +277,7 @@ end
 
 Then( 'each recommended group has at least {int} members' ) do | minimum_members |
   page.all( '.recommended-group-card' ).each do | card |
-    member_count = card.text.match( /Members:\s+(\d+)/ )[1].to_i
+    member_count = card.text.match( /Members of Proposed Group:\s+(\d+)/ )[1].to_i
     member_count.should be >= minimum_members
   end
 end
