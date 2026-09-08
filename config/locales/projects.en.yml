@@ -81,13 +81,13 @@ en:
       target_group_size_lbl: Size
       target_group_count_lbl: Count
       target_group_count_plchldr: Enter amount
-      diversity_score_stdev: Standard Deviation of Perspective Points Score
-      average_diversity_score: Average Perspective Points Score
+      diversity_score_stdev: Standard deviation of Perspective Points score
+      average_diversity_score: Average Perspective Points score
       average_faultline_strength: Average Faultline Strength
       max_faultline_strength: Max Faultline Strength
-      proposed_members: Members of Proposed Group
-      proposed_diversity_score: Perspective Points Score of Proposed Group
-      proposed_faultline_strength: Faultline Strength of Proposed Group
+      proposed_members: Members of proposed group
+      proposed_diversity_score: Perspective Points score of proposed group
+      proposed_faultline_strength: Faultline Strength of proposed group
       accept_suggested_groups: Accept Suggested Groups
       reject_suggested_groups: Reject Suggested Groups
       faultline_strength: Faultline Strength

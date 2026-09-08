@@ -277,19 +277,19 @@ end
 
 Then( 'each recommended group has at least {int} members' ) do | minimum_members |
   page.all( '.recommended-group-card' ).each do | card |
-    member_count = card.text.match( /Members of Proposed Group:\s+(\d+)/ )[1].to_i
+    member_count = card.text.match( /Members of proposed group:\s+(\d+)/ )[1].to_i
     member_count.should be >= minimum_members
   end
 end
 
 Then( 'the user sees diversity and faultline metrics for the recommended groups' ) do
-  page.should have_content 'Diversity score std. dev.'
-  page.should have_content 'Average diversity score'
-  page.should have_content 'Average faultline strength'
-  page.should have_content 'Max faultline strength'
+  page.should have_content 'Standard deviation of Perspective Points score'
+  page.should have_content 'Average Perspective Points score'
+  page.should have_content 'Average Faultline Strength'
+  page.should have_content 'Max Faultline Strength'
   page.all( '.recommended-group-card' ).each do | card |
-    card.text.should include 'Diversity score:'
-    card.text.should include 'Faultline strength:'
+    card.text.should include 'Perspective Points score of proposed group:'
+    card.text.should include 'Faultline Strength of proposed group:'
   end
 end
 
