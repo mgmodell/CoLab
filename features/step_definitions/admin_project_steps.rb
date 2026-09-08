@@ -257,6 +257,103 @@ Then( /^group "([^"]*)" has (\d+) revision$/ ) do | group_name, revision_count |
   Group.find_by( name: group_name ).group_revisions.count.should eq revision_count.to_i
 end
 
+Then( 'the user requests recommended groups with target {string} {int}' ) do | target_type, target_group_count |
+  step 'the user clicks "Recommend Groups"'
+  dropdown = find( :xpath, "//div[@id='target_group_type']" )
+  dropdown.click
+  item = find(:xpath, "//li[contains(.,'#{target_type.capitalize}')]" )
+  item.click
+
+  find(:xpath, "//span[@id='target_group_count']" ).double_click
+  send_keys target_group_count
+
+  step 'the user clicks "Generate"'
+  step 'the user waits to see "Recommended Groups"'
+end
+
+Then( 'the user sees {int} recommended groups' ) do | group_count |
+  page.all( '.recommended-group-card' ).count.should eq group_count
+end
+
+Then( 'each recommended group has at least {int} members' ) do | minimum_members |
+  page.all( '.recommended-group-card' ).each do | card |
+    member_count = card.text.match( /Members of proposed group:\s+(\d+)/ )[1].to_i
+    member_count.should be >= minimum_members
+  end
+end
+
+Then( 'the user sees diversity and faultline metrics for the recommended groups' ) do
+  page.should have_content 'Standard deviation of Perspective Points score'
+  page.should have_content 'Average Perspective Points score'
+  page.should have_content 'Average Faultline Strength'
+  page.should have_content 'Max Faultline Strength'
+  page.all( '.recommended-group-card' ).each do | card |
+    card.text.should include 'Perspective Points score of proposed group:'
+    card.text.should include 'Faultline Strength of proposed group:'
+  end
+end
+
+Then( 'the user accepts the recommended groups' ) do
+  step 'the user clicks "Accept Suggested Groups"'
+  step 'the user sees a success message'
+end
+
+Then( 'the user rejects the recommended groups' ) do
+  step 'the user clicks "Reject Suggested Groups"'
+end
+
+Then( 'the user no longer sees the recommended groups preview' ) do
+  page.should have_no_content 'Recommended Groups'
+end
+
+Then( 'the user sees a warning that existing groups will be replaced' ) do
+  page.should have_content 'Accepting these suggested groups will remove and replace the existing project groups.'
+end
+
+Then( 'remember the recommended groups' ) do
+  @recommended_groups = page.all( '.recommended-group-card' ).map do | card |
+    {
+      name: card.find( '.p-panel-title' ).text,
+      members: card.all( 'li' ).map { | item| item.text }
+    }
+  end
+end
+
+Then( 'every enrolled student in the course is assigned to exactly {int} project group' ) do | group_count |
+  appearance_counts = Hash.new( 0 )
+  @project.reload.groups.includes( :users ).each do | group |
+    group.users.each do | user |
+      appearance_counts[user.id] += 1
+    end
+  end
+
+  @course.rosters.enrolled.each do | roster |
+    appearance_counts[roster.user_id].should eq group_count
+  end
+end
+
+Then( 'the original project group no longer exists' ) do
+  Group.find_by( id: @group.id ).should be_nil
+end
+
+Then( 'the remembered recommended groups exist in the project' ) do
+  actual_groups = @project.reload.groups.includes( :users ).map do | group |
+    {
+      name: group.name,
+      members: group.users.map { | user| "#{user.first_name} #{user.last_name}" }.sort
+    }
+  end
+
+  expected_groups = @recommended_groups.map do | group |
+    {
+      name: group[:name],
+      members: group[:members].sort
+    }
+  end
+
+  actual_groups.sort_by { | group| group[:name] }.should eq expected_groups.sort_by { | group| group[:name] }
+end
+
 Then( 'the user selects the {string} menu item' ) do | menu_item |
   search_path = "//*[@id='#{menu_item.downcase}-menu-item']"
   find( :xpath, "//*[@id='administration-menu']" ).click unless has_xpath?( search_path )

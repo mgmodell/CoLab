@@ -16,7 +16,7 @@ Feature: School Administration
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
     Then close all messages
     Then the user clicks "Create School"
-     And the user waits to see "successfully"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest school from the db
      And the school "Name" field is "hard knocks"
@@ -39,7 +39,7 @@ Feature: School Administration
     Then close all messages
     Then the user clicks "Create School"
      #We should have success now
-     And the user waits to see "successfully"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest school from the db
      And the school "Name" field is "life"

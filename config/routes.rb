@@ -38,6 +38,9 @@ Rails.application.routes.draw do
          as: :rescore_group
     post 'projects/rescore_groups/:id' => 'projects#rescore_groups',
          as: :rescore_groups
+    post 'projects/suggest_groups/:id' => 'projects#suggest_groups',
+         as: :suggest_groups,
+         constraints: ->(req) { req.format == :json }
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate',
         as: :activate_bingo_game
 
