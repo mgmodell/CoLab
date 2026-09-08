@@ -18,6 +18,10 @@ import { Toolbar } from "primereact/toolbar";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
+import { Dialog } from "primereact/dialog";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { InputNumber } from "primereact/inputnumber";
+import { Dropdown } from "primereact/dropdown";
 
 type Props = {
   projectId: number;
@@ -36,7 +40,8 @@ export default function ProjectGroups(props: Props) {
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
   const [filterText, setFilterText] = useState("");
-  const [targetGroupSize, setTargetGroupSize] = useState("4");
+  const [targetGroupType, setTargetGroupType] = useState<'count' | 'size'>('size');
+  const [targetGroupTypeValue, setTargetGroupTypeValue] = useState(4);
   const [sortBy, setSortBy] = useState("last_name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
   const [groupsRaw, setGroupsRaw] = useState({});
@@ -45,6 +50,10 @@ export default function ProjectGroups(props: Props) {
   const [suggestedStudentsRaw, setSuggestedStudentsRaw] = useState(null);
   const [suggestedGroups, setSuggestedGroups] = useState([]);
   const [suggestionSummary, setSuggestionSummary] = useState(null);
+
+  // Modal Dialog UI States
+  const [showConfigDialog, setShowConfigDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -237,11 +246,14 @@ export default function ProjectGroups(props: Props) {
 
     setWorking(true);
     setMessage( t( 'groups.generating_recommendations') );
+    setShowConfigDialog(false); // Close setup dialog
 
     const url = props.suggestGroupsUrl + props.projectId + ".json";
     dispatch(startTask());
+    const payload = { };
+    payload[ targetGroupType === 'size' ? 'target_group_size' : 'target_group_count' ] = targetGroupTypeValue;
     axios
-      .post(url, { target_group_size: targetGroupSize })
+      .post(url, payload)
       .then(response => {
         const data = response.data;
         setWorking(false);
@@ -250,6 +262,7 @@ export default function ProjectGroups(props: Props) {
         setSuggestedGroups(Object.values(data.groups));
         setSuggestionSummary(data.summary);
         setMessage("");
+        setShowConfirmDialog(true); // Open scrollable preview dialog
       })
       .catch(error => {
         console.log("error", error);
@@ -262,16 +275,17 @@ export default function ProjectGroups(props: Props) {
   };
 
   const rejectSuggestedGroups = () => {
-    if (working) return;
     setSuggestedGroupsRaw(null);
     setSuggestedStudentsRaw(null);
     setSuggestedGroups([]);
     setSuggestionSummary(null);
     setMessage("");
+    setShowConfirmDialog(false);
   };
 
   const acceptSuggestedGroups = () => {
-    if (working || null == suggestedGroupsRaw || null == suggestedStudentsRaw) return;
+    if (null == suggestedGroupsRaw || null == suggestedStudentsRaw) return;
+    setShowConfirmDialog(false);
     saveGroups(suggestedGroupsRaw, suggestedStudentsRaw);
   };
 
@@ -280,61 +294,106 @@ export default function ProjectGroups(props: Props) {
     return Object.values(suggestedStudentsRaw).filter(student => student.group_id == groupId);
   };
 
+  // Config Dialog Footer Actions
+  const configDialogFooter = (
+    <div>
+      <Button label="Cancel" icon="pi pi-times" onClick={() => setShowConfigDialog(false)} className="p-button-text" />
+      <Button label="Generate" icon="pi pi-sparkles" onClick={suggestGroups} autoFocus />
+    </div>
+  );
+
+  // Recommendations preview content injection for ConfirmDialog
+  const recommendationsPreviewTemplate = () => (
+    <div style={{ maxHeight: "60vh", overflowY: "auto", paddingRight: "10px" }}>
+      {0 < groups.length ? (
+        <p id="recommended-groups-warning" className="p-error mb-3">
+          {t( 'groups.replace_groups_warning' )}
+        </p>
+      ) : null}
+      <dl id="recommended-groups-summary" className="mb-4" style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', gap: '0.5rem 1rem' }}>
+        <dt><strong>{t( 'groups.number_of_groups' )}</strong></dt>
+        <dd>{suggestedGroups.length ?? 0}</dd>
+        <dt><strong>{t( 'groups.diversity_score_stdev' )}</strong></dt>
+        <dd>{suggestionSummary?.diversity_score_standard_deviation ?? 0}</dd>
+        <dt><strong>{t( 'groups.average_diversity_score' )}</strong></dt>
+        <dd>{suggestionSummary?.average_diversity_score ?? 0}</dd>
+        <dt><strong>{t( 'groups.average_faultline_strength' )}</strong></dt>
+        <dd>{suggestionSummary?.average_faultline_strength ?? 0}</dd>
+        <dt><strong>{t( 'groups.max_faultline_strength' )}</strong></dt>
+        <dd>{suggestionSummary?.max_faultline_strength ?? 0}</dd>
+      </dl>
+      {suggestedGroups.map(group => (
+        <Panel
+          key={`suggested-${group.id}`}
+          id={`recommended-group-${group.id}`}
+          header={group.name}
+          className="mb-3 recommended-group-card"
+        >
+          <div>{t( 'groups.proposed_members' )}: {group.member_count}</div>
+          <div>{t( 'groups.proposed_diversity_score' )}: {group.diversity}</div>
+          <div>{t( 'groups.proposed_faultline_strength' )}: {group.faultline}</div>
+          <ul className="mt-2">
+            {suggestedMembers(group.id).map(student => (
+              <li key={`suggested-member-${group.id}-${student.id}`}>
+                {student.first_name} {student.last_name}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      ))}
+    </div>
+  );
+
   return (
     <Panel>
-      {0 < suggestedGroups.length ? (
-        <Panel header={t( 'groups.recommended_groups' )} className="mb-3">
-          {0 < groups.length ? (
-            <p id="recommended-groups-warning">
-              {t( 'groups.replace_groups_warning' )}
-            </p>
-          ) : null}
-          <dl id="recommended-groups-summary">
-            <dt>{t( 'groups.number_of_groups' )}</dt>
-            <dd>{suggestedGroups.length ?? 0}</dd>
-            <dt>{t( 'groups.diversity_score_stdev' )}</dt>
-            <dd>{suggestionSummary?.diversity_score_standard_deviation ?? 0}</dd>
-            <dt>{t( 'groups.average_diversity_score' )}</dt>
-            <dd>{suggestionSummary?.average_diversity_score ?? 0}</dd>
-            <dt>{t( 'groups.average_faultline_strength' )}</dt>
-            <dd>{suggestionSummary?.average_faultline_strength ?? 0}</dd>
-            <dt>{t( 'groups.max_faultline_strength' )}</dt>
-            <dd>{suggestionSummary?.max_faultline_strength ?? 0}</dd>
-          </dl>
-          {suggestedGroups.map(group => (
-            <Panel
-              key={`suggested-${group.id}`}
-              id={`recommended-group-${group.id}`}
-              header={group.name}
-              className="mb-2 recommended-group-card"
-            >
-              <div>{t( 'groups.proposed_members' )}: {group.member_count}</div>
-              <div>{t( 'groups.proposed_diversity_score' )}: {group.diversity}</div>
-              <div>{t( 'groups.proposed_faultline_strength' )}: {group.faultline}</div>
-              <ul>
-                {suggestedMembers(group.id).map(student => (
-                  <li key={`suggested-member-${group.id}-${student.id}`}>
-                    {student.first_name} {student.last_name}
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-          ))}
-          <div className="flex gap-2">
-            <Button onClick={acceptSuggestedGroups} icon="pi pi-check" disabled={working}>
-              {t( 'accept_suggested_groups' )}
-            </Button>
-            <Button
-              onClick={rejectSuggestedGroups}
-              icon="pi pi-times"
-              severity="secondary"
+      {/* 1. Configuration Dialog to ask for size/count */}
+      <Dialog 
+        header={t('groups.recommend_groups')} 
+        visible={showConfigDialog} 
+        style={{ width: '350px' }} 
+        footer={configDialogFooter} 
+        onHide={() => setShowConfigDialog(false)}
+      >
+        <div className="flex flex-column gap-2 mt-2">
+          <label htmlFor="target_group_type">{t('groups.target_type_lbl')}</label>
+          <Dropdown
+            id='target_group_type'
+            value={targetGroupType}
+            onChange={event => setTargetGroupType(event.value)}
+            options={[
+              { label: t('groups.target_group_size_lbl'), value: 'size' },
+              { label: t('groups.target_group_count_lbl'), value: 'count' },
+            ]}
+          />:
+          <span className="p-input-icon-left w-full">
+            <i className="pi pi-users" />
+            <InputNumber
+              id="target_group_count"
+              className="w-full"
+              placeholder={t('groups.target_group_count_plchldr')}
+              onChange={event => setTargetGroupTypeValue(event.value || 0)}
+              value={targetGroupTypeValue}
               disabled={working}
-            >
-              {t( 'groups.reject_suggested_groups' )}
-            </Button>
-          </div>
-        </Panel>
-      ) : null}
+            />
+          </span>
+        </div>
+      </Dialog>
+
+      {/* 2. Scrollable Preview ConfirmDialog */}
+      <ConfirmDialog
+        visible={showConfirmDialog}
+        onHide={() => rejectSuggestedGroups()}
+        message={recommendationsPreviewTemplate}
+        header={t('groups.recommended_groups')}
+        icon="pi pi-exclamation-triangle"
+        acceptLabel={t('groups.accept_suggested_groups')}
+        rejectLabel={t('groups.reject_suggested_groups')}
+        accept={acceptSuggestedGroups}
+        reject={rejectSuggestedGroups}
+        style={{ width: '50vw' }}
+        breakpoints={{ '960px': '75vw', '641px': '95vw' }}
+      />
+
       <DataTable
         value={students}
         resizableColumns
@@ -346,7 +405,7 @@ export default function ProjectGroups(props: Props) {
         header={
           <Toolbar
             end={
-              <>
+              <div className="flex align-items-center gap-3 flex-wrap">
                 <span className="p-input-icon-left">
                   <i className="pi pi-search" />
                   <InputText
@@ -364,18 +423,7 @@ export default function ProjectGroups(props: Props) {
                   </Button>
                 ) : null}
                 <span>{message}</span>
-                <span className="p-input-icon-left">
-                  <i className="pi pi-users" />
-                  <InputText
-                    id="target_group_count"
-                    aria-label="Target Group Count"
-                    placeholder={t( 'groups.target_group_count' )}
-                    onChange={event => setTargetGroupSize(event.target.value)}
-                    value={targetGroupSize}
-                    disabled={working}
-                  />
-                </span>
-                <Button onClick={suggestGroups} icon="pi pi-sparkles" disabled={working}>
+                <Button onClick={() => setShowConfigDialog(true)} icon="pi pi-sparkles" disabled={working}>
                   {t( 'groups.recommend_groups')}
                 </Button>
                 <Button onClick={recalcDiversity} icon="pi pi-calculator">
@@ -384,7 +432,7 @@ export default function ProjectGroups(props: Props) {
                 <Button onClick={addGroup} icon="pi pi-users">
                   {t( 'groups.add_group')}
                 </Button>
-              </>
+              </div>
             }
           />
         }

@@ -198,8 +198,8 @@ class ProjectsController < ApplicationController
     ).map( &:user )
     suggestion = Group.suggest_optimal_groups(
       users: students,
-      target_group_size: params[:target_group_size],
-      target_group_count: params[:target_group_count]
+      target_group_size: params[:target_group_size].to_i > 0 ? params[:target_group_size] : nil,
+      target_group_count: params[:target_group_count].to_i > 0 ? params[:target_group_count] : nil
     )
     students_payload = build_students_payload @project
     suggested_students_payload = students_payload.deep_dup

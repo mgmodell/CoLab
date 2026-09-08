@@ -257,9 +257,17 @@ Then( /^group "([^"]*)" has (\d+) revision$/ ) do | group_name, revision_count |
   Group.find_by( name: group_name ).group_revisions.count.should eq revision_count.to_i
 end
 
-Then( 'the user requests recommended groups with target count {int}' ) do | target_group_count |
-  fill_in 'target_group_count', with: target_group_count
+Then( 'the user requests recommended groups with target {string} {int}' ) do | target_type, target_group_count |
   step 'the user clicks "Recommend Groups"'
+  dropdown = find( :xpath, "//div[@id='target_group_type']" )
+  dropdown.click
+  item = find(:xpath, "//li[contains(.,'#{target_type.capitalize}')]" )
+  item.click
+
+  find(:xpath, "//span[@id='target_group_count']" ).double_click
+  send_keys target_group_count
+
+  step 'the user clicks "Generate"'
   step 'the user waits to see "Recommended Groups"'
 end
 

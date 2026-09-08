@@ -336,7 +336,7 @@ Feature: Project Administration
    Then the user opens the course
    Then the user clicks on the existing project
    Then the user switches to the "Groups" tab
-   Then the user requests recommended groups with target count 3
+   Then the user requests recommended groups with target "count" 3
    Then the user sees 3 recommended groups
    Then each recommended group has at least 2 members
    Then the user sees diversity and faultline metrics for the recommended groups
@@ -357,7 +357,7 @@ Feature: Project Administration
    Then the user opens the course
    Then the user clicks on the existing project
    Then the user switches to the "Groups" tab
-   Then the user requests recommended groups with target count 3
+   Then the user requests recommended groups with target "count" 3
    Then the user sees 3 recommended groups
    Then the user rejects the recommended groups
    Then the user no longer sees the recommended groups preview
@@ -376,7 +376,7 @@ Feature: Project Administration
    Then the user opens the course
    Then the user clicks on the existing project
    Then the user switches to the "Groups" tab
-   Then the user requests recommended groups with target count 3
+   Then the user requests recommended groups with target "size" 3
    Then the user sees a warning that existing groups will be replaced
    Then remember the recommended groups
    Then the user accepts the recommended groups

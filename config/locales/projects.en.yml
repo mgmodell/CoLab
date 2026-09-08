@@ -77,6 +77,10 @@ en:
       search_students: Search Students
       recommended_groups: Recommended Groups
       number_of_groups: Number of Groups
+      target_type_lbl: Target Group
+      target_group_size_lbl: Size
+      target_group_count_lbl: Count
+      target_group_count_plchldr: Enter amount
       diversity_score_stdev: Standard Deviation of Perspective Points Score
       average_diversity_score: Average Perspective Points Score
       average_faultline_strength: Average Faultline Strength
