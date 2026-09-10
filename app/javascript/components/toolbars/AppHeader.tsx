@@ -10,7 +10,11 @@ import { Toolbar } from "primereact/toolbar";
 import { Skeleton } from "primereact/skeleton";
 import AppBreadCrumb from "./AppBreadcrumb";
 
-export default function AppHeader(props) {
+type Props = {
+  identifier?: string;
+}
+
+export default function AppHeader(props: Props) {
   const endpointSet = "home";
   const [t] = useTranslation( endpointSet);
   const endpoints = useTypedSelector(
@@ -22,7 +26,7 @@ export default function AppHeader(props) {
 
   const working = useTypedSelector(state => {
     let accum = 0;
-    if (undefined === props.identifier) {
+    if (undefined !== props.identifier) {
       accum = state.status.tasks[props.identifier];
     } else {
       accum = Number(

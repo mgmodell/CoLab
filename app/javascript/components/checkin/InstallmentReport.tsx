@@ -202,6 +202,7 @@ export default function InstallmentReport(props: Props) {
         setDirty(false);
         setGroup(data.group);
 
+        suppressDirtyRef.current = true;
         setProject(data.installment.project);
       })
       .catch(error => {
@@ -249,6 +250,7 @@ export default function InstallmentReport(props: Props) {
             },
             {}
           );
+          suppressDirtyRef.current = true;
           setContributions(receivedContributions);
           navigate('/home');
         }

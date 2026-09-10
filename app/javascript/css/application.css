@@ -184,3 +184,18 @@ a:active {
   padding: 0;
   color: var(--lighter-color);
 }
+
+.help-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+}
+
+.help-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.help-info {
+  grid-row: span 2;
+}
