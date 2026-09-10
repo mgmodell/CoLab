@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { FloatLabel } from "primereact/floatlabel";
@@ -44,6 +44,8 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useState(false);
+  const suppressDirtyRef = useRef(false);
+  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -98,6 +100,10 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
     setDirty(true);
   }, [
     assignmentName,
@@ -212,7 +218,7 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    setDirty(true);
+    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {

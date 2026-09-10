@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router";
 
 // Icons
-import {driver } from "driver.js";
+import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { useTour } from "../infrastructure/TourContext";
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 import LangButton from "./LangButton";
+import DirtyIndicator from "../infrastructure/DirtyIndicator";
 
 type Props = {
   lookupUrl: string;
@@ -75,44 +76,54 @@ export default function HelpMenu(props: Props) {
 
   const pathComponents = location.pathname.split("/");
   return (
-    <React.Fragment>
-      <Sidebar
-        visible={showInfo}
-        position="right"
-        onHide={() => setShowInfo(false)}
-      >
-        {candidateFeedbackInfo()}
-      </Sidebar>
-      <LangButton />
-      <Button
-        id="help-menu-button"
-        color="secondary"
-        aria-controls="help-menu"
-        aria-haspopup="true"
-        onClick={event => {
-          const steps = tourSteps.length > 0 ? tourSteps : NO_HELP_STEP;
-          driverObj.setSteps(steps);
-          driverObj.drive();
-        }}
-        size="small"
-        rounded
-        text
-        outlined
-        icon="pi pi-question"
-      />
-      {pathComponents.includes("bingo") ? (
+    <div className="help-grid">
+      <div className="help-stacked">
+        <div>
+          <LangButton />
+        </div>
+        <div>
+          <DirtyIndicator />
+        </div>
+
+      </div>
+      <div className="help-info">
+        <Sidebar
+          visible={showInfo}
+          position="right"
+          onHide={() => setShowInfo(false)}
+        >
+          {candidateFeedbackInfo()}
+        </Sidebar>
         <Button
-          icon="pi pi-info"
+          id="help-menu-button"
+          color="secondary"
+          aria-controls="help-menu"
+          aria-haspopup="true"
+          onClick={event => {
+            const steps = tourSteps.length > 0 ? tourSteps : NO_HELP_STEP;
+            driverObj.setSteps(steps);
+            driverObj.drive();
+          }}
           size="small"
           rounded
           text
           outlined
-          onClick={event => {
-            setShowInfo(!showInfo);
-          }}
+          icon="pi pi-question"
         />
-      ) : null}
-    </React.Fragment>
+        {pathComponents.includes("bingo") ? (
+          <Button
+            icon="pi pi-info"
+            size="small"
+            rounded
+            text
+            outlined
+            onClick={event => {
+              setShowInfo(!showInfo);
+            }}
+          />
+        ) : null}
+      </div>
+    </div>
   );
 }
 

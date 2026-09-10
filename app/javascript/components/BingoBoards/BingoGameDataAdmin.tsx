@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, useMemo } from "react";
+import React, { Suspense, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -10,7 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
@@ -42,6 +42,8 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
+  const suppressDirtyRef = useRef(false);
+  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -85,6 +87,10 @@ export default function BingoGameDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
     setDirty(true);
   }, [
     gameTopic,
@@ -161,6 +167,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
+        setDirty(false);
 
         //getBingoGameData();
         //setDirty(false);
@@ -200,7 +207,7 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const getBingoGameData = () => {
-    setDirty(true);
+    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {

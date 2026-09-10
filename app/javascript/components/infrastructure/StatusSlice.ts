@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { createSlice } from "@reduxjs/toolkit";
 
 export enum Priorities {
@@ -86,4 +88,41 @@ export const {
   addMessage,
   acknowledgeMsg
 } = actions;
+
+export function useDirtyStatus(flagKey: string, dirty: boolean) {
+  const dispatch = useDispatch();
+  const hasInitialized = useRef(false);
+  const previousDirty = useRef(dirty);
+
+  useEffect(() => {
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      previousDirty.current = dirty;
+      if (dirty) {
+        dispatch(setDirty(flagKey));
+      } else {
+        dispatch(setClean(flagKey));
+      }
+      return;
+    }
+
+    if (dirty === previousDirty.current) {
+      return;
+    }
+
+    if (dirty) {
+      dispatch(setDirty(flagKey));
+    } else {
+      dispatch(setClean(flagKey));
+    }
+    previousDirty.current = dirty;
+  }, [dirty, flagKey, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setClean(flagKey));
+    };
+  }, [dispatch, flagKey]);
+}
+
 export default reducer;

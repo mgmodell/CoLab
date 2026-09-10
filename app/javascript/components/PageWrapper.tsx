@@ -62,7 +62,6 @@ export default function PageWrapper(props: Readonly<Props>) {
         element={
           <Suspense fallback={<Skeleton className="mb-2" height={"50rem"} />}>
             <AppHeader />
-            <WorkingIndicator />
             <br />
             <AppStatusBar />
             <Outlet />
@@ -72,6 +71,7 @@ export default function PageWrapper(props: Readonly<Props>) {
         <Route
           element={
             <div className="mainContent">
+              <WorkingIndicator />
               <Outlet />
             </div>
           }
