@@ -23,6 +23,21 @@ a {
   color: var(--lighter-color);
   background-color: var(--primary-color);
 }
+.p-selectbutton .p-button {
+  color: var(--primary-color);
+  background-color: var(--lighter-color);
+}
+.p-selectbutton .p-button::before {
+  content: "\2610";
+}
+
+.p-button.p-highlight {
+  color: var(--lighter-color);
+  background-color: var(--darker-color);
+}
+.p-button.p-highlight::before {
+  content: "\2611";
+}
 
 a:hover {
   color: var(--primary-color);

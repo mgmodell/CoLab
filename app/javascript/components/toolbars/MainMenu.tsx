@@ -106,8 +106,8 @@ export default function MainMenu(props: Props) {
             command: () => navTo("/admin/users")
           }
         ];
-        if (user.is_instructor || user.is_admin ) {
-          adminItems.push(
+        if (user.is_instructor || user.is_admin) {
+          adminItems.unshift(
             {
               label: t("courses_edit"),
               icon: "pi pi-fw pi-book",

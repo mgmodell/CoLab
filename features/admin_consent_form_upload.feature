@@ -16,7 +16,7 @@ Feature: Admin uploads a PDF for a Consent Form
     When the user sets the "Name of the Study" field to "Research Study 2026"
     When the admin uploads a PDF for the consent form
     When the user clicks "Create consent form"
-    Then the user waits to see "successfully"
+    Then the user sees a success message
     Then the new consent form has a PDF stored in Active Storage
     Then the admin sees the PDF link on the consent form page
 
@@ -28,7 +28,7 @@ Feature: Admin uploads a PDF for a Consent Form
     Then the user sees the consent form editing page
     When the admin uploads a PDF for the consent form
     When the user clicks "Save consent form"
-    Then the user waits to see "successfully"
+    Then the user sees a success message
     Then the existing consent form has a PDF stored in Active Storage
     Then the admin sees the PDF link on the consent form page
 
@@ -41,7 +41,7 @@ Feature: Admin uploads a PDF for a Consent Form
     Then the admin sees the PDF link on the consent form page
     When the admin uploads a replacement PDF for the consent form
     When the user clicks "Save consent form"
-    Then the user waits to see "successfully"
+    Then the user sees a success message
     Then the existing consent form has a PDF stored in Active Storage
     Then the replaced PDF is different from the original PDF
     Then the admin sees the PDF link on the consent form page

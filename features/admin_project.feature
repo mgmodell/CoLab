@@ -30,7 +30,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then the user sees the 'project' 'start date' is '02/29/1980'
@@ -61,7 +61,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -90,7 +90,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '05/10/1976'
     Then the user sees the 'project' 'end date' is '02/29/1980'
@@ -122,7 +122,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -144,7 +144,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -175,7 +175,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '02/29/1980'
     Then the user sees the 'project' 'end date' is '07/10/2008'
@@ -200,7 +200,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then the user sees the 'project' 'start date' is '05/10/1976'
     Then the user sees the 'project' 'end date' is '02/29/1980'
@@ -233,7 +233,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -255,7 +255,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -284,7 +284,7 @@ Feature: Project Administration
     # Then the user sets the "g_-1" field to "my group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     Then the user sees a success message
     Then close all messages
     Then the user adds a group named 'your group'
     # Because the above was saved, this one is -1 again
@@ -294,14 +294,14 @@ Feature: Project Administration
     Then the user sets the "project" start date to "yesterday" and the end date to "tomorrow"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
 
     #Edit the groups
     Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
@@ -317,7 +317,7 @@ Feature: Project Administration
     Then set user 4 to group "your group"
     Then close all messages
     Then the user clicks "Save"
-     And the user waits to see "success"
+     And the user sees a success message
     Then close all messages
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
@@ -325,8 +325,68 @@ Feature: Project Administration
     Then group "my group" has 2 revision
     Then group "your group" has 1 revision
 
+ @javascript
+ Scenario: Instructor generates and accepts recommended groups
+   Given the course started "5/10/1976" and ended "4 months hence"
+   Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+   Given the course started "last month" and ended "next month"
+   Given the user is the instructor for the course
+   Then the user logs in and accesses the "Courses" admin page
+   Then the user sees 1 course
+   Then the user opens the course
+   Then the user clicks on the existing project
+   Then the user switches to the "Groups" tab
+   Then the user requests recommended groups with target "count" 3
+   Then the user sees 3 recommended groups
+   Then each recommended group has at least 2 members
+   Then the user sees diversity and faultline metrics for the recommended groups
+   Then the user accepts the recommended groups
+   Then close all messages
+   Then retrieve the latest project from the db
+   Then the project has 3 groups
+   Then every enrolled student in the course is assigned to exactly 1 project group
+
+ @javascript
+ Scenario: Instructor rejects recommended groups
+   Given the course started "5/10/1976" and ended "4 months hence"
+   Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+   Given the course started "last month" and ended "next month"
+   Given the user is the instructor for the course
+   Then the user logs in and accesses the "Courses" admin page
+   Then the user sees 1 course
+   Then the user opens the course
+   Then the user clicks on the existing project
+   Then the user switches to the "Groups" tab
+   Then the user requests recommended groups with target "count" 3
+   Then the user sees 3 recommended groups
+   Then the user rejects the recommended groups
+   Then the user no longer sees the recommended groups preview
+   Then retrieve the latest project from the db
+   Then the project has 0 groups
+
+ @javascript
+ Scenario: Instructor is warned before replacing existing groups with recommended groups
+   Given the course started "5/10/1976" and ended "4 months hence"
+   Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+   Given the course started "last month" and ended "next month"
+   Given the user is the instructor for the course
+   Given the project has a group with 4 confirmed users
+   Then the user logs in and accesses the "Courses" admin page
+   Then the user sees 1 course
+   Then the user opens the course
+   Then the user clicks on the existing project
+   Then the user switches to the "Groups" tab
+   Then the user requests recommended groups with target "size" 3
+   Then the user sees a warning that existing groups will be replaced
+   Then remember the recommended groups
+   Then the user accepts the recommended groups
+   Then close all messages
+   Then retrieve the latest project from the db
+   Then the original project group no longer exists
+   Then the remembered recommended groups exist in the project
+
 @javascript
-  Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
+ Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group

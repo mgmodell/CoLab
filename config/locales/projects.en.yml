@@ -64,6 +64,39 @@ en:
       title: New Project
     projects: Projects
     diversity_scores: Perspective points
+    groups:
+      generating_recommendations: Generating recommendations...
+      add_group: Add Group
+      recalculate_diversity: Recalculate Perspectives
+      recommend_groups: Recommend Groups
+      save_groups: Save Groups
+      students_shown: Showing {{count}} of {{total}}
+      replace_groups_warning: >
+        Accepting these suggested groups will remove and replace the existing
+        project groups.
+      search_students: Search Students
+      recommended_groups: Recommended Groups
+      number_of_groups: Number of Groups
+      target_type_lbl: Target Group
+      target_group_size_lbl: Size
+      target_group_count_lbl: Count
+      target_group_count_plchldr: Enter amount
+      diversity_score_stdev: Standard deviation of Perspective Points score
+      average_diversity_score: Average Perspective Points score
+      average_faultline_strength: Average Faultline Strength
+      max_faultline_strength: Max Faultline Strength
+      proposed_members: Members of proposed group
+      proposed_diversity_score: Perspective Points score of proposed group
+      proposed_faultline_strength: Faultline Strength of proposed group
+      accept_suggested_groups: Accept Suggested Groups
+      reject_suggested_groups: Reject Suggested Groups
+      faultline_strength: Faultline Strength
+      faultline_strength_explained: >
+        Faultline strength is a measure of the potential for subgroups to form
+        within a group. A higher faultline strength indicates a greater likelihood
+        of subgroup formation, which can impact group dynamics and performance.
+
+
     lti:
       panel_title: LTI Grade Passback
       line_item_url_lbl: LMS Line Item URL
