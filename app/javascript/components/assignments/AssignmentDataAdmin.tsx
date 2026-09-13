@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { FloatLabel } from "primereact/floatlabel";
@@ -43,9 +43,8 @@ export default function AssignmentDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
   const navigate = useNavigate();
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useState();
   const suppressDirtyRef = useRef(false);
-  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -104,7 +103,7 @@ export default function AssignmentDataAdmin(props) {
       suppressDirtyRef.current = false;
       return;
     }
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     assignmentName,
     assignmentDescriptionEditor,
@@ -171,7 +170,7 @@ export default function AssignmentDataAdmin(props) {
         const data = response.data;
         setAssignmentData(data);
         setMessages( data.messages );
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
         navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
 
         //getAssignmentData();
@@ -231,7 +230,7 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

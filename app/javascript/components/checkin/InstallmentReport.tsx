@@ -11,7 +11,8 @@ import {
   endTask,
   addMessage,
   Priorities,
-  useDirtyStatus
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -79,9 +80,8 @@ export default function InstallmentReport(props: Props) {
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
   const suppressDirtyRef = useRef(false);
-  useDirtyStatus(category, dirty);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
@@ -106,7 +106,7 @@ export default function InstallmentReport(props: Props) {
       suppressDirtyRef.current = false;
       return;
     }
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [contributions, installment]);
 
   useEffect(() => {
@@ -199,7 +199,7 @@ export default function InstallmentReport(props: Props) {
         setInstallment(data.installment);
 
         setContributions(contributions);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
         setGroup(data.group);
 
         suppressDirtyRef.current = true;
@@ -263,7 +263,7 @@ export default function InstallmentReport(props: Props) {
             addMessage( t("success"), new Date(), Priorities.INFO)
           );
         }
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

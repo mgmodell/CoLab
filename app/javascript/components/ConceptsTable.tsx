@@ -15,7 +15,7 @@ import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "./infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "./infrastructure/StatusSlice";
 import { InputText } from "primereact/inputtext";
 
 enum OPT_COLS {
@@ -50,9 +50,15 @@ export default function ConceptsTable() {
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
 
+  const [dirty, setDirty] = useDirtyStatus();
   const [editing, setEditing] = useState(false);
-  const [dirty, setDirty] = useState(false);
-  useDirtyStatus(category, dirty);
+  const startEditing = () => {
+    setEditing(true);
+  }
+  const stopEditing = () => {
+    setEditing(false);
+    setDirty( DIRTY_STATUS.CLEAN );
+  }
   const [conceptName, setConceptName] = useState("");
   const [conceptId, setConceptId] = useState(-1);
 
@@ -64,7 +70,7 @@ export default function ConceptsTable() {
 
   const setName = newName => {
     setConceptName(newName);
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   };
 
   const getConcepts = () => {
@@ -89,8 +95,8 @@ export default function ConceptsTable() {
   const drillDown = event => {
     setConceptId(event.data.id);
     setConceptName(event.data.name);
-    setEditing(true);
-    setDirty(false);
+    startEditing();
+    setDirty(DIRTY_STATUS.CLEAN);
   };
   const updateConcept = (id, name) => {
     dispatch(startTask("load"));
@@ -112,7 +118,7 @@ export default function ConceptsTable() {
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
         //statusActions.endTask("load");
-        setEditing(false);
+        stopEditing();
         dispatch( addMessage(t("update_success"), new Date(), Priorities.INFO ) );
       })
       .catch(error => {
@@ -196,12 +202,12 @@ export default function ConceptsTable() {
       </DataTable>
       <Dialog
         visible={editing}
-        onHide={() => setEditing(false)}
+        onHide={() => stopEditing()}
         aria-labelledby="edit"
         header={t("edit.title")}
         footer={
           <>
-            <Button onClick={() => setEditing(false)}>{t("cancel")}</Button>
+            <Button onClick={() => stopEditing()}>{t("cancel")}</Button>
             <Button
               id="update_concept"
               onClick={() => updateConcept(conceptId, conceptName)}

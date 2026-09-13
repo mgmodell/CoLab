@@ -11,7 +11,8 @@ import {
   endTask,
   addMessage,
   Priorities,
-  useDirtyStatus
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -39,10 +40,9 @@ export default function CandidateListEntry(props: Props) {
 
   const { bingoGameId } = useParams();
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
   const suppressDirtyRef = useRef(false);
   const dispatch = useDispatch();
-  useDirtyStatus(category, dirty);
 
   const [candidateListId, setCandidateListId] = useState(0);
   const [topic, setTopic] = useState("");
@@ -84,7 +84,7 @@ export default function CandidateListEntry(props: Props) {
         setHelpRequested(data.help_requested);
         setRequestCollaborationUrl(data.request_collaboration_url);
 
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
@@ -162,7 +162,7 @@ export default function CandidateListEntry(props: Props) {
           setHelpRequested(data.help_requested);
           setOthersRequestedHelp(data.others_requested_help);
 
-          setDirty(false);
+          setDirty(DIRTY_STATUS.CLEAN);
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
           data.messages.forEach(message => {
@@ -189,7 +189,7 @@ export default function CandidateListEntry(props: Props) {
       suppressDirtyRef.current = false;
       return;
     }
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [candidates]);
 
   // TODO: Fix the check to see if the form is dirty
@@ -216,7 +216,7 @@ export default function CandidateListEntry(props: Props) {
         setCandidates(prepCandidates(data.candidates, data.expected_count));
         setHelpRequested(data.help_requested);
         setOthersRequestedHelp(data.others_requested_help);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

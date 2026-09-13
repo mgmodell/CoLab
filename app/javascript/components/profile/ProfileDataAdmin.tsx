@@ -11,7 +11,7 @@ import UserActivityList from "./UserActivityList";
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTour } from "../infrastructure/TourContext";
 import {
@@ -30,7 +30,7 @@ import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Panel } from "primereact/panel";
 import { Calendar } from "primereact/calendar";
-import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
@@ -40,6 +40,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { ColorPicker } from "primereact/colorpicker";
 import { FloatLabel } from "primereact/floatlabel";
 import { useBlocker, useNavigate } from "react-router";
+import { set } from "mockdate";
 
 type Props = {
   // profileId: number;
@@ -61,6 +62,8 @@ export default function ProfileDataAdmin(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const [dirty, setDirty] = useDirtyStatus();
+
   const { t } = useTranslation(`${category}s`);
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
@@ -114,7 +117,7 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const setProfileImpairment = (imp: string[]) => {
-    const temp = {...user};
+    const temp = { ...user };
 
     temp['impairment_visual'] = imp.includes("visual");
     temp['impairment_auditory'] = imp.includes("auditory");
@@ -126,21 +129,21 @@ export default function ProfileDataAdmin(props: Props) {
   };
 
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
-  const dirty = useTypedSelector(state => {
-    return state.profile.lastRetrieved !== state.profile.lastSet;
-  });
 
   const navigate = useNavigate();
 
-  const blocker = useBlocker( ( args )=>{
-    if( args.nextLocation.state === 'unblocked' || !dirty ){
+  console.log( dirty );
+
+  const blocker = useBlocker((args) => {
+    console.log(`ProfileDataAdmin: useBlocker: dirty=${dirty}, nextLocation=${args.nextLocation.pathname}, state=${args.nextLocation.state}`);
+    if (args.nextLocation.state === 'unblocked' || !dirty) {
       return false;
     } else {
-      confirmUnsavedChanges( args );
+      confirmUnsavedChanges(args);
       return true;
     }
   })
-  const confirmUnsavedChanges = ( args ) => {
+  const confirmUnsavedChanges = (args) => {
     confirmDialog({
       message: t("confirm_leave"),
       header: t("confirm_leave_hdr"),
@@ -148,11 +151,11 @@ export default function ProfileDataAdmin(props: Props) {
       modal: true,
       accept: () => {
         resetProfile();
-        navigate( args.nextLocation.pathname,
+        navigate(args.nextLocation.pathname,
           {
             state: 'unblocked'
           }
-         );
+        );
       },
       reject: () => {
         // Do nothing
@@ -310,6 +313,7 @@ export default function ProfileDataAdmin(props: Props) {
             if (1 === foundSelectedStates.length) {
               setProfileHomeState(foundSelectedStates[0].id);
             }
+            setDirty(DIRTY_STATUS.CLEAN);
           })
           .catch(error => {
             console.log("error", error);
@@ -349,7 +353,7 @@ export default function ProfileDataAdmin(props: Props) {
         showProgress: true,
         onDestroyed: () => {
           setTourCompleted(true);
-          const u = {...user, welcomed: true};
+          const u = { ...user, welcomed: true };
           setProfile(u);
         }
       });
@@ -402,7 +406,7 @@ export default function ProfileDataAdmin(props: Props) {
       ]);
       profileDriver.drive();
       setTourCompleted(true);
-      const u = {...user, welcomed: true};
+      const u = { ...user, welcomed: true };
       setProfile(u);
     }
   }, [existingProfile, user.welcomed, t]);
@@ -442,40 +446,40 @@ export default function ProfileDataAdmin(props: Props) {
   );
 
   const emailPanel = useMemo(() => {
-    return(
-          <Container>
-            <Col xs={12}>
-              {0 < user.emails.length ? (
-                <UserEmailList
-                  emailList={user.emails}
-                  emailListUpdateFunc={setProfileEmails}
-                  addMessagesFunc={setMessages}
-                  addEmailUrl={endpoints["addEmailUrl"]}
-                  removeEmailUrl={endpoints["removeEmailUrl"]}
-                  primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
-                />
-              ) : null}
-            </Col>
-            <Col xs={12}>
-              <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
-            </Col>
-          </Container>
+    return (
+      <Container>
+        <Col xs={12}>
+          {0 < user.emails.length ? (
+            <UserEmailList
+              emailList={user.emails}
+              emailListUpdateFunc={setProfileEmails}
+              addMessagesFunc={setMessages}
+              addEmailUrl={endpoints["addEmailUrl"]}
+              removeEmailUrl={endpoints["removeEmailUrl"]}
+              primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
+            />
+          ) : null}
+        </Col>
+        <Col xs={12}>
+          <a href={endpoints["passwordResetUrl"]}>{t("password_change")}</a>
+        </Col>
+      </Container>
     )
   }, [user.emails]);
 
   const detailsComponent = lookupStatus ? (
     <Panel>
       <Accordion multiple
-        onTabChange={event => setCurPanel([0,...(event.index.filter( i => i !== 0 ))])}
+        onTabChange={event => setCurPanel([0, ...(event.index.filter(i => i !== 0))])}
         activeIndex={[...curPanel]}
-        >
+      >
         <AccordionTab
           key='edit_profile'
           header={t("edit_profile")}
           aria-label={t("edit_profile")}
           className="fixedDrawer"
           pt={{ root: { id: 'profile-details-tab' } }}
-          >
+        >
           <Container>
             <Row>
               <Col sm={6} xs={12}>
@@ -521,13 +525,13 @@ export default function ProfileDataAdmin(props: Props) {
         >
           <Container>
             <Col md={6} xs={12}>
-                <label htmlFor="profile_theme">
-                  {t("display_settings.ui_theme")}
-                </label>
-                <ColorPicker
-                  id='profile_theme'
-                  value={user.theme}
-                  onChange={event => setProfileTheme(event.value)} />
+              <label htmlFor="profile_theme">
+                {t("display_settings.ui_theme")}
+              </label>
+              <ColorPicker
+                id='profile_theme'
+                value={user.theme}
+                onChange={event => setProfileTheme(event.value)} />
             </Col>
             <Col md={6} xs={12}>
               <FloatLabel>
@@ -537,7 +541,7 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_language"
                   name="profile_language"
                   value={localProfileLanguage}
-                  suggestions={Object.values( suggestedLocalProfileLanguages )}
+                  suggestions={Object.values(suggestedLocalProfileLanguages)}
                   field="name"
                   forceSelection={true}
                   dropdown
@@ -546,7 +550,7 @@ export default function ProfileDataAdmin(props: Props) {
                     const query = event.query.toLocaleLowerCase();
                     setSuggestedLocalProfileLanguages(
                       languages.filter(lang =>
-                        ['en','ko', 'es'].includes(lang.code) &&
+                        ['en', 'ko', 'es'].includes(lang.code) &&
                         lang.name.toLowerCase().includes(query)
                       )
                     );
@@ -585,7 +589,7 @@ export default function ProfileDataAdmin(props: Props) {
                   itemID="profile_timezone"
                   name="profile_timezone"
                   value={user.timezone || 0}
-                  options={Object.values( timezones )}
+                  options={Object.values(timezones)}
                   optionValue="name"
                   optionLabel="name"
                   onChange={event => setProfileTimezone(String(event.value))}
@@ -614,7 +618,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_school"
                     name="profile_school"
                     value={user.school_id || 0}
-                    options={Object.values( schools )}
+                    options={Object.values(schools)}
                     optionValue="id"
                     optionLabel="name"
                     onChange={event => setProfileSchool(Number(event.value))}
@@ -633,7 +637,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_cip_code"
                     name="profile_cip_code"
                     value={user.cip_code_id || 0}
-                    options={Object.values( cipCodes )}
+                    options={Object.values(cipCodes)}
                     optionValue="id"
                     optionLabel="name"
                     onChange={event => setProfileCipCode(Number(event.value))}
@@ -678,7 +682,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_country"
                     name="profile_country"
                     value={user.country || 0}
-                    options={ Object.values( countries )}
+                    options={Object.values(countries)}
                     optionValue="code"
                     optionLabel="name"
                     onChange={event => {
@@ -725,7 +729,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_home_language"
                     name="profile_home_language"
                     value={localHomeLanguage}
-                    suggestions={Object.values( suggestedLocalHomeLanguages )}
+                    suggestions={Object.values(suggestedLocalHomeLanguages)}
                     field="name"
                     forceSelection={true}
                     dropdown
@@ -761,7 +765,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_gender"
                     value={user.gender_id || 0}
                     onChange={event => setProfileGender(Number(event.value))}
-                    options={Object.values( genders )}
+                    options={Object.values(genders)}
                     optionLabel="name"
                     optionValue="id"
                     placeholder={t("demographics.gender")}
@@ -803,7 +807,7 @@ export default function ProfileDataAdmin(props: Props) {
                   options={impairmentOptions}
                   onChange={event => {
 
-                    if( event.value ) {
+                    if (event.value) {
                       setProfileImpairment(event.value)
                     }
                     //event.originalEvent?.currentTarget.blur( )
@@ -825,7 +829,7 @@ export default function ProfileDataAdmin(props: Props) {
 
   return (
     <Panel>
-      <ConfirmDialog 
+      <ConfirmDialog
       />
       <TabView
         activeIndex={curTab}

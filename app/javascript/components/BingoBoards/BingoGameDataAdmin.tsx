@@ -10,7 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, useDirtyStatus } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
@@ -41,9 +41,8 @@ export default function BingoGameDataAdmin(props) {
 
   const { t, i18n } = useTranslation(`${category}s`);
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
   const suppressDirtyRef = useRef(false);
-  useDirtyStatus(category, dirty);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -88,10 +87,10 @@ export default function BingoGameDataAdmin(props) {
 
   useEffect(() => {
     if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
+      //suppressDirtyRef.current = false;
       return;
     }
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     gameTopic,
     gameDescriptionEditor,
@@ -167,10 +166,8 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
 
-        //getBingoGameData();
-        //setDirty(false);
         navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, {
           replace: true
         });
@@ -247,13 +244,14 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
