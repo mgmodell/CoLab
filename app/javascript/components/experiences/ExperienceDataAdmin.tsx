@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -10,10 +10,10 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -57,14 +57,13 @@ export default function ExperienceDataAdmin(props) {
   const { experienceIdParam, courseIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
   const dispatch = useDispatch();
   const [messages, setMessages] = useState({});
   const [experienceId, setExperienceId] = useState(
     "new" === experienceIdParam ? null : experienceIdParam
   );
+  const [dirty, setDirty] = useDirtyStatus( null === experienceIdParam ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = useRef(false);
   const [experienceName, setExperienceName] = useState("");
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
@@ -87,7 +86,7 @@ export default function ExperienceDataAdmin(props) {
 
   const getExperience = () => {
     dispatch(startTask());
-    dispatch(setDirty(category));
+    suppressDirtyRef.current = true;
     var url = endpoints.baseUrl + "/";
     if (null == experienceId) {
       url = url + "new/" + courseIdParam + ".json";
@@ -117,19 +116,20 @@ export default function ExperienceDataAdmin(props) {
 
         setResponseWords(data.response_words);
 
-        dispatch(setClean(category));
+        setDirty( DIRTY_STATUS.CLEAN );
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
         dispatch(endTask());
-        dispatch(setClean(category));
+        suppressDirtyRef.current = false;
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
     dispatch(startTask("saving"));
+    suppressDirtyRef.current = true;
 
     const url =
       endpoints.baseUrl +
@@ -187,6 +187,7 @@ export default function ExperienceDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -197,7 +198,10 @@ export default function ExperienceDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current) {
+      return;
+    }
+    setDirty( DIRTY_STATUS.DIRTY );
   }, [
     experienceName,
     experienceLeadTime,

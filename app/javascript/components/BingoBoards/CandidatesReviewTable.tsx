@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { useState, useEffect, ReactNode, useRef } from "react";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
 import RemoteAutosuggest from "./RemoteAutosuggest";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import parse from "html-react-parser";
 
@@ -90,10 +90,14 @@ export default function CandidatesReviewTable(props: Props) {
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
   const dispatch = useDispatch();
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus( );
+  const suppressDirtyRef = useRef(false);
 
   useEffect(() => {
-    setDirty(true);
+    if( suppressDirtyRef.current ) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [reviewComplete, candidates]);
 
   useEffect(() => {
@@ -160,6 +164,7 @@ export default function CandidatesReviewTable(props: Props) {
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
+    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -184,17 +189,18 @@ export default function CandidatesReviewTable(props: Props) {
         setCandidates(data.candidates);
 
         setReviewStatus(t("review.data_loaded_msg"));
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   const saveFeedback = () => {
-    setDirty(false);
+    suppressDirtyRef.current = true;
     dispatch(startTask("saving"));
     setReviewStatus(t("review.saving_msg"));
 
@@ -210,8 +216,8 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .then(response => {
         const data = response.data;
-        setDirty(typeof data.success !== "undefined");
         setReviewStatus(data.notice);
+        setDirty( typeof data.success !== "undefined" ? DIRTY_STATUS.CLEAN : DIRTY_STATUS.DIRTY );
       })
       .catch(error => {
         const fail_data = new Object();
@@ -222,6 +228,7 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 

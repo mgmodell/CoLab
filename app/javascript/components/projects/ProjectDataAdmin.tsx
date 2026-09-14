@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
@@ -12,7 +12,9 @@ import {
   setDirty,
   setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
@@ -49,9 +51,8 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const { courseIdParam, projectIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
+  const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = useRef(false);
   const [messages, setMessages] = useState({});
   const dispatch = useDispatch();
 
@@ -86,7 +87,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
   const getProject = () => {
     dispatch(startTask());
-    dispatch(setDirty(category));
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + courseIdParam + ".json";
@@ -118,7 +118,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .finally(() => {
         dispatch(endTask());
@@ -134,6 +134,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       (null == projectId ? courseIdParam : projectId) +
       ".json";
 
+    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -178,6 +179,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
+          setDirty(DIRTY_STATUS.CLEAN);
           navigate(`../${courseIdParam}/project/${project.id}`, {
             replace: true
           });
@@ -193,6 +195,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
   useEffect(() => {
@@ -207,7 +210,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current || projectId == null) {
+      suppressDirtyRef.current = false;
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     projectName,
     projectDescription,
@@ -221,7 +228,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   ]);
 
   const saveButton = dirty ? (
-    <Button onClick={saveProject}>
+    <Button onClick={saveProject} disabled={dirty !== DIRTY_STATUS.DIRTY} className="p-button-success">
       {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
   ) : null;

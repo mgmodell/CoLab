@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 
@@ -7,9 +7,10 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 
 import { useTranslation } from "react-i18next";
@@ -34,6 +35,8 @@ export default function Experience(props) {
     state => state.context.status.endpointsLoaded
   );
   const { experienceId } = useParams();
+  const [dirty, setDirty] = useDirtyStatus();
+  const suppressDirtyRef = useRef(false);
 
   const dispatch = useDispatch();
   const [t] = useTranslation(`${category}s`);
@@ -91,6 +94,7 @@ export default function Experience(props) {
   const getNext = () => {
     const url = `${endpoints.baseUrl}${experienceId}.json`;
     dispatch(startTask());
+    suppressDirtyRef.current = true;
     axios(url, {})
       .then(response => {
         const data = response.data;
@@ -134,11 +138,13 @@ export default function Experience(props) {
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
     dispatch(startTask("saving"));
+    suppressDirtyRef.current = true;
     const url = endpoints.diagnosisUrl + ".json";
     axios
       .patch(url, {
@@ -159,19 +165,21 @@ export default function Experience(props) {
 
         resetFunc();
         dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(setClean("diagnosis"));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
     dispatch(startTask("saving"));
+    suppressDirtyRef.current = true;
     const url = endpoints.reactionUrl + ".json";
     axios
       .patch(url, {
@@ -187,7 +195,7 @@ export default function Experience(props) {
         //Process Experience
         resetFunc();
         dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(setClean("reaction"));
+        setDirty(DIRTY_STATUS.CLEAN);
         navigate("/home");
       })
       .catch(error => {
@@ -195,6 +203,7 @@ export default function Experience(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 

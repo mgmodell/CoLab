@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Outlet, Route, Routes, useNavigate, useParams } from "react-router";
 //Redux store stuff
@@ -6,10 +6,10 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 
 
@@ -68,9 +68,8 @@ export default function CourseDataAdmin() {
   );
 
   const [curTab, setCurTab] = useState(0);
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
+  const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = React.useRef(false);
   const [messages, setMessages] = useState({});
 
   let { courseIdParam } = useParams();
@@ -108,8 +107,8 @@ export default function CourseDataAdmin() {
 
   const getCourse = () => {
     dispatch(startTask());
-    dispatch(setDirty(category));
-
+    setDirty(DIRTY_STATUS.DIRTY);
+    suppressDirtyRef.current = true;
     const url = isNaN(courseId)
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
@@ -140,7 +139,8 @@ export default function CourseDataAdmin() {
         }
         setCourse(localCourse);
 
-        dispatch(setClean(category));
+        suppressDirtyRef.current = false;
+        setDirty(DIRTY_STATUS.CLEAN);
 
       })
       .catch(error => {
@@ -235,7 +235,10 @@ export default function CourseDataAdmin() {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (!suppressDirtyRef.current || courseId === null || courseId === undefined) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     course,
   ]);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -6,8 +6,8 @@ import {
   endTask,
   addMessage,
   Priorities,
-  setDirty,
-  setClean
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useNavigate, useParams } from "react-router";
 
@@ -97,6 +97,9 @@ export default function RubricDataAdmin(props) {
   const [rubricCreator, setRubricCreator] = useState("");
   const [rubricSchoolId, setRubricSchoolId] = useState(0);
 
+  const [dirty, setDirty] = useDirtyStatus( null == rubricId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN, category );
+  const suppressDirtyRef = useRef(false);
+
   const [rubricCriteria, setRubricCriteria] = useState([
     Object.assign(
       {
@@ -119,6 +122,7 @@ export default function RubricDataAdmin(props) {
     } else {
       url = url + rubricId + ".json";
     }
+    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -142,13 +146,15 @@ export default function RubricDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask());
-        dispatch(setClean(category));
+        suppressDirtyRef.current = false;
+        setDirty( DIRTY_STATUS.CLEAN );
       });
   };
   const publishOrActivateRubric = () => {
     const action = rubricPublished ? "activate" : "publish";
     const url = `${endpoints["baseUrl"]}/${action}/${rubricId}.json`;
     dispatch(startTask(action));
+    suppressDirtyRef.current = true;
 
     axios
       .get(url)
@@ -169,7 +175,7 @@ export default function RubricDataAdmin(props) {
           rubric.criteria = renumCriteria(rubric.criteria);
           setRubricCriteria(rubric.criteria || []);
 
-          dispatch(setClean(category));
+          setDirty( DIRTY_STATUS.CLEAN );
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           dispatch(endTask("saving"));
         } else {
@@ -181,6 +187,7 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask(action));
       });
   };
@@ -199,6 +206,7 @@ export default function RubricDataAdmin(props) {
       tmpCriteria.id = value.id < 1 ? null : value.id;
       return tmpCriteria;
     });
+    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -234,7 +242,7 @@ export default function RubricDataAdmin(props) {
             rubric.criteria = renumCriteria(rubric.criteria);
             setRubricCriteria(rubric.criteria || []);
 
-            dispatch(setClean(category));
+            setDirty( DIRTY_STATUS.CLEAN );
             dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           }
           navigate(`../rubrics/${rubricId}`, { replace: true });
@@ -246,6 +254,7 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask("saving"));
       });
   };
@@ -257,7 +266,10 @@ export default function RubricDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [rubricName, rubricDescription, rubricCriteria]);
 
   const saveButton = dirty ? (

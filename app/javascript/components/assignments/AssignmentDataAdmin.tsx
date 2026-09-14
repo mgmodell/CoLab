@@ -43,7 +43,7 @@ export default function AssignmentDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
   const navigate = useNavigate();
 
-  const [dirty, setDirty] = useState();
+  const [dirty, setDirty] = useDirtyStatus();
   const suppressDirtyRef = useRef(false);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
