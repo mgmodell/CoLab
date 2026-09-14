@@ -102,6 +102,8 @@ export default function InstallmentReport(props: Props) {
   };
 
   useEffect(() => {
+    console.log("InstallmentReport: dirty", dirty);
+    console.log("SuppressDirtyRef.current", suppressDirtyRef.current);
     if (suppressDirtyRef.current) {
       suppressDirtyRef.current = false;
       return;
@@ -126,8 +128,10 @@ export default function InstallmentReport(props: Props) {
     return retVal;
   };
 
+  console.log( 'dirty', dirty );
+  console.log( 'not new', installment.id, Boolean(installment.id))
   const saveButton = (
-    <Button disabled={!dirty} onClick={() => saveContributions()}>
+    <Button disabled={!dirty && Boolean(installment.id)} onClick={() => saveContributions()}>
         {t("submit")}
     </Button>
   );
@@ -202,7 +206,6 @@ export default function InstallmentReport(props: Props) {
         setDirty(DIRTY_STATUS.CLEAN);
         setGroup(data.group);
 
-        suppressDirtyRef.current = true;
         setProject(data.installment.project);
       })
       .catch(error => {
@@ -210,6 +213,7 @@ export default function InstallmentReport(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   //Store what we've got
