@@ -132,10 +132,7 @@ export default function ProfileDataAdmin(props: Props) {
 
   const navigate = useNavigate();
 
-  console.log( dirty );
-
   const blocker = useBlocker((args) => {
-    console.log(`ProfileDataAdmin: useBlocker: dirty=${dirty}, nextLocation=${args.nextLocation.pathname}, state=${args.nextLocation.state}`);
     if (args.nextLocation.state === 'unblocked' || !dirty) {
       return false;
     } else {
@@ -431,11 +428,14 @@ export default function ProfileDataAdmin(props: Props) {
   ] = useState(languages);
 
   const saveButton = useMemo(
-    () => (
-      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (user.welcomed || !tourCompleted)}>
+    () => {
+      console.log(`ProfileDataAdmin: saveButton: dirty=${dirty}, user.welcomed=${user.welcomed}, tourCompleted=${tourCompleted}`);
+      return (
+      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (!user.welcomed && tourCompleted)}>
         {null == user.id ? t('create_btn') : t('save_btn')}
       </Button>
-    ),
+    )
+  },
     [dirty, user.welcomed, tourCompleted]
   );
 

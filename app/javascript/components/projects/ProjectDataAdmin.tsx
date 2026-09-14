@@ -9,8 +9,6 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
   Priorities,
   useDirtyStatus,
@@ -51,8 +49,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const { courseIdParam, projectIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
-  const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = useRef(false);
   const [messages, setMessages] = useState({});
   const dispatch = useDispatch();
 
@@ -63,6 +59,9 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const [projectId, setProjectId] = useState(
     "new" === projectIdParam ? null : Number(projectIdParam)
   );
+  const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = useRef(false);
+
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const now = new Date();
@@ -93,6 +92,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
     } else {
       url = url + projectId + ".json";
     }
+    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -122,6 +122,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   const saveProject = () => {
@@ -174,7 +175,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
           const course = data.course;
           setCourseName(course.name);
-          dispatch(setClean(category));
           setMessages(data.messages);
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
@@ -211,7 +211,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
   useEffect(() => {
     if (suppressDirtyRef.current || projectId == null) {
-      suppressDirtyRef.current = false;
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);

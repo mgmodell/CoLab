@@ -40,10 +40,6 @@ export default function RubricDataAdmin(props) {
     return null != state.profile.lastRetrieved;
   });
 
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
-
   const dispatch = useDispatch();
   const freshCriteria = {
     description: "New Criteria",

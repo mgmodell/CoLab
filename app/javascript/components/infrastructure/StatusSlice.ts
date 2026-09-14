@@ -118,11 +118,6 @@ export function useDirtyStatus(
   const isDirty = useSelector((state: RootState) => {
     const status = state.status.dirtyStatus as Record<string, boolean>;
 
-    console.log(
-      `status for ${dataPanel || "default"}`,
-      status[dataPanel || ""],
-    );
-
     switch (status[dataPanel || ""]) {
       case null:
       case undefined:

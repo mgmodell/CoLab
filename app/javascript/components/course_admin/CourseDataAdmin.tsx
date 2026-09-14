@@ -68,8 +68,6 @@ export default function CourseDataAdmin() {
   );
 
   const [curTab, setCurTab] = useState(0);
-  const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = React.useRef(false);
   const [messages, setMessages] = useState({});
 
   let { courseIdParam } = useParams();
@@ -77,6 +75,8 @@ export default function CourseDataAdmin() {
   const [courseId, setCourseId] = useState(
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
+  const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = React.useRef(false);
 
   const [course, setCourse] = useState<ICourse>({
     id: courseId,
