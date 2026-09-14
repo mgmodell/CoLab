@@ -429,9 +429,8 @@ export default function ProfileDataAdmin(props: Props) {
 
   const saveButton = useMemo(
     () => {
-      console.log(`ProfileDataAdmin: saveButton: dirty=${dirty}, user.welcomed=${user.welcomed}, tourCompleted=${tourCompleted}`);
       return (
-      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && (!user.welcomed && tourCompleted)}>
+      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && !(!user.welcomed || !tourCompleted)}>
         {null == user.id ? t('create_btn') : t('save_btn')}
       </Button>
     )
