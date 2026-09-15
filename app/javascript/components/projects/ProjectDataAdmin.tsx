@@ -226,11 +226,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
     projectEndDOW
   ]);
 
-  const saveButton = dirty ? (
-    <Button onClick={saveProject} disabled={dirty !== DIRTY_STATUS.DIRTY} className="p-button-success">
+  const saveButton = (
+    <Button onClick={saveProject} disabled={dirty !== DIRTY_STATUS.DIRTY && projectId} className="p-button-success">
       {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
-  ) : null;
+  );
 
   //Later I want to call the activate/deactivate right here
   const toggleActive = () => {

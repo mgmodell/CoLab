@@ -87,7 +87,6 @@ export default function BingoGameDataAdmin(props) {
 
   useEffect(() => {
     if (suppressDirtyRef.current || null === bingoGameId ) {
-      //suppressDirtyRef.current = false;
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);
@@ -264,11 +263,11 @@ export default function BingoGameDataAdmin(props) {
     return deadline;
   }, [gameEndDate, gameLeadTime]);
 
-  const save_btn = dirty ? (
+  const save_btn = (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
         color="primary"
-        //className={classes["button"]}
+        disabled={dirty !== DIRTY_STATUS.DIRTY && bingoGameId}
         onClick={() => {
           saveBingoGame();
         }}
@@ -278,7 +277,7 @@ export default function BingoGameDataAdmin(props) {
         {null == bingoGameId ? t("create_bingo_btn") : t("update_bingo_btn")}
       </Button>
     </Suspense>
-  ) : null;
+  );
 
   const group_options = gameGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
