@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 import { useTypedSelector } from "./AppReducers";
 import { useTranslation } from "react-i18next";
-import { DIRTY_STATUS } from "./StatusSlice";
+import { DIRTY_STATUS, NON_PATH_TERMS } from "./StatusSlice";
 
 type Props = {
 };
@@ -15,7 +15,8 @@ export default function DirtyIndicator(props: Props) {
     const panelHasDirtyChanges = useTypedSelector(state => {
         const dirtyStatus = state.status.dirtyStatus as Record<string, boolean>;
         const panels = location.pathname.split('/') || [];
-        const dataPanel = Number(panels.at(-1)) > 0 ? panels.at(-2) : panels.at(-1);
+        const ultiPanel = panels.at(-1);
+        const dataPanel = NON_PATH_TERMS.includes(ultiPanel) || Number(panels.at(-1)) > 0 ? panels.at(-2) : panels.at(-1);
 
         switch (dirtyStatus[dataPanel || '']) {
             case null:

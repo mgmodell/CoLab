@@ -100,7 +100,6 @@ export default function AssignmentDataAdmin(props) {
 
   useEffect(() => {
     if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);
@@ -111,6 +110,10 @@ export default function AssignmentDataAdmin(props) {
     assignmentStartDate,
     assignmentEndDate,
     assignmentGroupOption,
+    assignmentFileSub,
+    assignmentLinkSub,
+    assignmentTextSub,
+    assignmentRubricId,
     assignmentGroupProjectId
   ]);
 
@@ -144,6 +147,7 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
+    suppressDirtyRef.current = true;
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -171,7 +175,7 @@ export default function AssignmentDataAdmin(props) {
         setAssignmentData(data);
         setMessages( data.messages );
         setDirty(DIRTY_STATUS.CLEAN);
-        navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
+        navigate(`../${courseIdParam}/assignment/${data.assignment.id}`, { replace: true });
 
         //getAssignmentData();
       })
@@ -180,6 +184,7 @@ export default function AssignmentDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -237,15 +242,16 @@ export default function AssignmentDataAdmin(props) {
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
 
-  const save_btn = dirty ? (
+  const saveBtn = (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
         color="primary"
-        //className={classes["button"]}
+        disabled={!dirty && Boolean(assignmentId)}
         onClick={saveAssignment}
         id="save_assignment"
         value="save_assignment"
@@ -255,7 +261,7 @@ export default function AssignmentDataAdmin(props) {
           : t("edit.update_assignment_btn")}
       </Button>
     </Suspense>
-  ) : null;
+  )
 
   const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
@@ -448,7 +454,7 @@ export default function AssignmentDataAdmin(props) {
                 </Col>
                 {group_options}
                 <Col xs={12}>
-                  {save_btn}
+                  {saveBtn}
                   <span>{saveStatus}</span>
                 </Col>
               </Row>

@@ -103,6 +103,8 @@ export const {
   acknowledgeMsg,
 } = actions;
 
+export const NON_PATH_TERMS = ["new", "null", "undefined"];
+
 export function useDirtyStatus(
   initialDirty: DIRTY_STATUS = DIRTY_STATUS.CLEAN,
   flagKey: string | null = null,
@@ -112,8 +114,9 @@ export function useDirtyStatus(
   const hasInitialized = useRef(false);
 
   const panels = location.pathname.split("/") || [];
+  const ultiPanel = panels.at(-1);
   const dataPanel =
-    flagKey || (Number(panels.at(-1)) > 0 ? panels.at(-2) : panels.at(-1));
+    flagKey || (NON_PATH_TERMS.includes(ultiPanel) || Number(ultiPanel) > 0 ? panels.at(-2) : ultiPanel);
 
   const isDirty = useSelector((state: RootState) => {
     const status = state.status.dirtyStatus as Record<string, boolean>;
