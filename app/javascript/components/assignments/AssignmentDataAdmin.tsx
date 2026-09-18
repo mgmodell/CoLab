@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import EditorToolbar from "../toolbars/EditorToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask, addMessage, Priorities } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { Col, Container, Row } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { FloatLabel } from "primereact/floatlabel";
@@ -43,7 +43,8 @@ export default function AssignmentDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
   const navigate = useNavigate();
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
+  const suppressDirtyRef = useRef(false);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -98,7 +99,10 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    setDirty(true);
+    if (suppressDirtyRef.current) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     assignmentName,
     assignmentDescriptionEditor,
@@ -106,6 +110,10 @@ export default function AssignmentDataAdmin(props) {
     assignmentStartDate,
     assignmentEndDate,
     assignmentGroupOption,
+    assignmentFileSub,
+    assignmentLinkSub,
+    assignmentTextSub,
+    assignmentRubricId,
     assignmentGroupProjectId
   ]);
 
@@ -139,6 +147,7 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
+    suppressDirtyRef.current = true;
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -165,8 +174,8 @@ export default function AssignmentDataAdmin(props) {
         const data = response.data;
         setAssignmentData(data);
         setMessages( data.messages );
-        setDirty(false);
-        navigate(`../${courseIdParam}/assignment/${assignmentId}`, { replace: true });
+        setDirty(DIRTY_STATUS.CLEAN);
+        navigate(`../${courseIdParam}/assignment/${data.assignment.id}`, { replace: true });
 
         //getAssignmentData();
       })
@@ -175,6 +184,7 @@ export default function AssignmentDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -212,7 +222,7 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    setDirty(true);
+    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {
@@ -225,22 +235,23 @@ export default function AssignmentDataAdmin(props) {
       .then(response => {
         const data = response.data;
         setAssignmentData(data);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
 
-  const save_btn = dirty ? (
+  const saveBtn = (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
         color="primary"
-        //className={classes["button"]}
+        disabled={!dirty && Boolean(assignmentId)}
         onClick={saveAssignment}
         id="save_assignment"
         value="save_assignment"
@@ -250,7 +261,7 @@ export default function AssignmentDataAdmin(props) {
           : t("edit.update_assignment_btn")}
       </Button>
     </Suspense>
-  ) : null;
+  )
 
   const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
@@ -443,7 +454,7 @@ export default function AssignmentDataAdmin(props) {
                 </Col>
                 {group_options}
                 <Col xs={12}>
-                  {save_btn}
+                  {saveBtn}
                   <span>{saveStatus}</span>
                 </Col>
               </Row>

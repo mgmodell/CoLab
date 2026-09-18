@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "target": "es2022",
-    "lib": ["es6", "dom", "es2017"],
+    "lib": ["es6", "dom", "es2022"],
     "module": "es2022",
     "sourceMap": true,
     "jsx": "react",

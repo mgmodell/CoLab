@@ -185,7 +185,7 @@ en:
   number: Number
   member: Team Member
   titles:
-    demonstration: Demonstration
+    demonstration: Instructor Demo
   home:
     title: Home
     your_tasks: Your Tasks
@@ -233,6 +233,7 @@ en:
       and you cannot enroll in your own course.
     self_enroll: Enroll me!
     self_enroll_cancel: Cancel and Return Home
+    unsaved_changes: Unsaved changes
     list:
       type: Type
       task_name: Task Name

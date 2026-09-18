@@ -6,26 +6,38 @@ import { acknowledgeMsg } from "./infrastructure/StatusSlice";
 
 import { Toast } from "primereact/toast";
 
-export default function AppStatusBar(props) {
-  const messages = useTypedSelector(state => {
-    return state.status.messages;
+type AppMessage = {
+  text: string;
+  priority: "error" | "info" | "warning";
+  dismissed: boolean;
+};
+
+export default function AppStatusBar() {
+  const messages = useTypedSelector((state): AppMessage[] => {
+    return state.status.messages ?? [];
   });
   const dispatch = useDispatch();
-  const toast = React.useRef(null);
+  const toast = React.useRef<any>(null);
 
   useEffect(() => {
-    messages.forEach((message, index) => {
+    messages.forEach((message: AppMessage, index: number) => {
       if (!message.dismissed) {
-        toast.current.show({
-          severity: message.priority,
-          summary: message.priority,
-          detail: message.text,
-          life: 30000
-        });
+        if (toast.current) {
+          toast.current.show({
+            severity: message.priority,
+            summary: message.priority,
+            detail: message.text,
+            life: 30000
+          });
+        }
         dispatch(acknowledgeMsg(index));
       }
     });
-  }, [messages]);
+  }, [dispatch, messages]);
 
-  return <Toast ref={toast} />;
+  return (
+    <>
+      <Toast ref={toast} />
+    </>
+  );
 }

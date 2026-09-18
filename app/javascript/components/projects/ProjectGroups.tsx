@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { IUser } from '../infrastructure/ProfileSlice';
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ export default function ProjectGroups(props: Props) {
   const category = "projects";
   const { t } = useTranslation(category);
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
   const [filterText, setFilterText] = useState("");
@@ -87,7 +87,7 @@ export default function ProjectGroups(props: Props) {
   }, []);
 
   const setGroup = (student_id: number, group_id: number) => {
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
     setStudentsRaw(prev => ({
       ...prev,
       [student_id]: {
@@ -99,7 +99,7 @@ export default function ProjectGroups(props: Props) {
 
   const setGroupName = (event: React.ChangeEvent<HTMLInputElement>, group_id: number) => {
     const newName = event.target.value;
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
     setGroupsRaw(prev => ({
       ...prev,
       [group_id]: {
@@ -124,11 +124,11 @@ export default function ProjectGroups(props: Props) {
         }
       };
     });
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
   };
 
   const removeGroup = (event, group_id: number) => {
-    setDirty(true);
+    setDirty(DIRTY_STATUS.DIRTY);
     setStudentsRaw(prev => {
       const updated = { ...prev };
       Object.values(updated).forEach(student => {
@@ -224,7 +224,6 @@ export default function ProjectGroups(props: Props) {
       .then(response => {
         const data = response.data;
         setWorking(false);
-        setDirty(false);
         setSuggestedGroupsRaw(null);
         setSuggestedStudentsRaw(null);
         setSuggestedGroups([]);
@@ -232,6 +231,7 @@ export default function ProjectGroups(props: Props) {
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
         setMessage(data.message == null ? "" : data.message);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

@@ -4,6 +4,8 @@ en:
     btn_tooltip_title: Create a copy based on this course
     copy_btn_aria: Make a copy
     copy_btn_txt: Make a Copy
+    create_btn: Create Course
+    save_btn: Save Course
     size_btn: large
     date_picker_label: New course start date?
     toggle_columns_plc: Show hidden columns
@@ -52,6 +54,9 @@ en:
       school: School
       time_zone: Time Zone
       consent: Consent Form
+      select_consent_form_plchldr: Select a Consent Form
+      selct_school_plchldr: Select a School
+      selct_timezone_plchldr: Select a Time Zone
       dates_tz: All dates shown in {{time_zone}} timezone.
       dates: Course Dates
       download_qr: Download self-registration code

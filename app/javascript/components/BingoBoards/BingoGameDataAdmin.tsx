@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, useMemo } from "react";
+import React, { Suspense, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -10,7 +10,7 @@ import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Editor } from "primereact/editor";
 import EditorToolbar from "../toolbars/EditorToolbar";
@@ -41,7 +41,8 @@ export default function BingoGameDataAdmin(props) {
 
   const { t, i18n } = useTranslation(`${category}s`);
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus( bingoGameIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = useRef(false);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -85,7 +86,10 @@ export default function BingoGameDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    setDirty(true);
+    if (suppressDirtyRef.current || null === bingoGameId ) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     gameTopic,
     gameDescriptionEditor,
@@ -161,9 +165,8 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
+        setDirty(DIRTY_STATUS.CLEAN);
 
-        //getBingoGameData();
-        //setDirty(false);
         navigate(`../${courseIdParam}/bingo_game/${bingoGameId}`, {
           replace: true
         });
@@ -173,6 +176,7 @@ export default function BingoGameDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -200,7 +204,7 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const getBingoGameData = () => {
-    setDirty(true);
+    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {
@@ -240,13 +244,14 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setFoundWords(data.found_words);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
@@ -258,11 +263,11 @@ export default function BingoGameDataAdmin(props) {
     return deadline;
   }, [gameEndDate, gameLeadTime]);
 
-  const save_btn = dirty ? (
+  const save_btn = (
     <Suspense fallback={<Skeleton className="mb-2" />}>
       <Button
         color="primary"
-        //className={classes["button"]}
+        disabled={dirty !== DIRTY_STATUS.DIRTY && bingoGameId}
         onClick={() => {
           saveBingoGame();
         }}
@@ -272,7 +277,7 @@ export default function BingoGameDataAdmin(props) {
         {null == bingoGameId ? t("create_bingo_btn") : t("update_bingo_btn")}
       </Button>
     </Suspense>
-  ) : null;
+  );
 
   const group_options = gameGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
