@@ -1,0 +1,6 @@
+ko:
+  diagnosis:
+    other_name_rqrd: >
+      이 내러티브에서 식별한 행동의 이름을 입력해 주세요.
+    duplicate_entry: >
+      '뒤로' 또는 '새로고침' 버튼을 사용하지 마세요. 올바른 주로 돌아갑니다.

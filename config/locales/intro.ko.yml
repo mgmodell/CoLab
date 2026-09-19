@@ -1,48 +1,44 @@
 ko:
   intro:
     tooltips:
-        welcome: Welcome
-        about: About
+        welcome: 환영합니다
+        about: 소개
         why: CoLab을 선택해야만 하는 이유
-        research: Research
-        student: Student?
-        instructor: Instructor?
+        research: 연구
+        student: 학생?
+        instructor: 강사?
     titles:
-        about: Who's behind CoLab?
-        why: How can CoLab help you?
-        research: The research behind CoLab
-        student: CoLab features for studentsWhy CoLab?
-        instructor: CoLab features for instructors
+        about: CoLab은 누가 만들었나요?
+        why: CoLab이 어떻게 도움이 될 수 있나요?
+        research: CoLab의 연구 기반
+        student: 학생을 위한 CoLab 기능
+        instructor: 강사를 위한 CoLab 기능
     why_slides:
         captions:
             one_one: >
-                Collaboration can look different for
-                everyone.
+                협업은 사람마다 다르게 보일 수 있습니다.
             one_two: >
-                But have you ever experienced any of these scenarios
-                in group projects?
+                그룹 프로젝트에서 이런 상황을 경험한 적이 있으신가요?
             two_one: >
-                Let's take a look at some examples of unequal group
-                work participation...
+                불균등한 그룹 작업 참여의 몇 가지 예를 살펴봅시다...
             two_two: >
-                Group Domination: One person takes over and
-                thinks everyone else's opinion is not good enough
-            three_one: Have you ever been a George?
+                그룹 지배: 한 사람이 주도하고 다른 사람의 의견은
+                충분하지 않다고 생각하는 경우
+            three_one: 조지가 된 적이 있으신가요?
             three_two: >
-                Leave it to George: One person does all the work and
-                everyone else watches
-            four_one: Or maybe this sounds familiar?
+                조지에게 맡겨두기: 한 사람이 모든 일을 하고
+                나머지는 지켜보는 경우
+            four_one: 이런 상황이 익숙하게 느껴지시나요?
             four_two: >
-                Social loafers or Free Riders: One or more students
-                slack off while everyone else does the work
-            five_one: What would you do in these situations?
+                소셜 무임승차자: 한 명 이상의 학생이 빈둥거리는 동안
+                나머지가 모든 일을 하는 경우
+            five_one: 이런 상황에서 어떻게 하시겠습니까?
             five_two: >
-                Do you have to wait until the end of the semester to get help
-                from your professor?
+                교수님의 도움을 받기 위해 학기 말까지 기다려야 하나요?
             six_one: >
-                What if there was a way for your professor to help
-                before things got out of hand?
-            six_two: Now there is!
+                일이 걷잡을 수 없게 되기 전에 교수님이 도움을
+                줄 수 있는 방법이 있다면 어떨까요?
+            six_two: 이제 있습니다!
             seven_one:
                 title: 당신에게 CoLab.online이 필요한 이유입니다!
                 check-ins: 매주 자기평가 및 동료평가 진행
@@ -53,10 +49,10 @@ ko:
                 simulations: 시뮬레이션을 통한 협력 체험
                 iterative_assignments: 반복 실행 과제
             seven_two:
-                title: Are you a...
-                student: Student?
-                instructor: Instructor?
+                title: 당신은 누구입니까?
+                student: 학생?
+                instructor: 강사?
 
     images:
-        student_concern: Student talks to teacher
-        normally_functioning: A group of students where all are engaged
+        student_concern: 학생이 교사에게 이야기하는 모습
+        normally_functioning: 모든 학생이 참여하는 그룹

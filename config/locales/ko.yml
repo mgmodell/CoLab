@@ -1,0 +1,10 @@
+ko:
+  hello: "안녕 세상!"
+  lti:
+    connection_saved: "LTI 연결이 성공적으로 저장되었습니다."
+    connection_save_failed: "LTI 연결 저장에 실패했습니다."
+    not_configured: "LTI 연결이 구성되지 않았습니다. 라인 항목 URL, AGS 액세스 토큰 URL 및 클라이언트 ID를 입력하세요."
+    grades_pushed:
+      one: "1명의 학생에 대한 성적을 성공적으로 전송했습니다."
+      other: "%{count}명의 학생에 대한 성적을 성공적으로 전송했습니다."
+    grades_push_partial: "성적이 부분적으로 전송되었습니다: %{success}개 성공, %{failed}개 실패."
