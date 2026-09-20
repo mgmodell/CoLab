@@ -148,6 +148,9 @@ Feature: (Re)Submitting individual assignments
      Then the user clicks 'Submit revision for grading'
      Then the assignment has 1 'submitted' submission
      Then the assignment has 0 'draft' submission
+     Then the user opens the assignment task
+     Then the user opens the 'Submissions' submissions tab
+     Then the user opens the 'latest' submission
      Then the 'Save revision for further editing' button is 'disabled'
      Then the 'Submit revision for grading' button is 'disabled'
      Then the 'Make a copy of this revision' button is 'enabled'

@@ -4,7 +4,7 @@ import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastruct
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { startTask, endTask, addMessage, Priorities, useDirtyStatus } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -42,9 +42,8 @@ export default function AssignmentSubmission(props: Props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
-  const [dirty, setDirty] = useState(false);
   const suppressDirtyRef = useRef(false);
-  useDirtyStatus(category, dirty);
+  const [dirtyStatus, setDirtyStatus] = useDirtyStatus( );
 
   const [submissionId, setSubmissionId] = useState<string>();
   const [updatedDate, setUpdatedDate] = useState<Temporal.ZonedDateTime | null>(null);
@@ -63,10 +62,9 @@ export default function AssignmentSubmission(props: Props) {
 
   useEffect(() => {
     if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
       return;
     }
-    setDirty(true);
+    setDirtyStatus(true);
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
@@ -99,10 +97,11 @@ export default function AssignmentSubmission(props: Props) {
           data.submission.recorded_score || data.submission.calculated_score
         );
         setSubmissionTextEditor(data.submission.sub_text || "");
-        setDirty(false);
+        setDirtyStatus(false);
       })
       .finally(() => {
         dispatch(endTask("loading"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -156,6 +155,7 @@ export default function AssignmentSubmission(props: Props) {
 
     const method = null === submissionId ? "PUT" : "PATCH";
     dispatch(startTask("saving"));
+    suppressDirtyRef.current = true;
 
     axios({
       url: url,
@@ -191,7 +191,7 @@ export default function AssignmentSubmission(props: Props) {
           }
           setRecordedScore(data.submission.recorded_score);
           setSubmissionTextEditor(data.submission.sub_text || "");
-          setDirty(false);
+          setDirtyStatus(false);
 
           if (submitIt) {
             navigate("/home");
@@ -238,7 +238,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const draftSaveBtn = (
     <Button
-      disabled={!dirty || !notSubmitted}
+      disabled={!dirtyStatus || !notSubmitted}
       onClick={() => saveSubmission(false)}
     >
       {t("submissions.draft_revision_btn")}
@@ -246,14 +246,14 @@ export default function AssignmentSubmission(props: Props) {
   );
 
   const draftSubmitBtn = (
-    <Button disabled={!notSubmitted} onClick={() => saveSubmission(true)}>
+    <Button disabled={!notSubmitted } onClick={() => saveSubmission(true)}>
       {t("submissions.submit_revision_btn")}
     </Button>
   );
 
   const revCopyBtn = !notSubmitted ? (
     <Button
-      disabled={!dirty || notSubmitted}
+      disabled={!dirtyStatus || notSubmitted}
       onClick={() => saveSubmission(false)}
     >
       {t("submissions.copy_submission_btn")}
