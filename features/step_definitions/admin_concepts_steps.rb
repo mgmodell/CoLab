@@ -57,6 +57,10 @@ Then( 'the user updates the {string} concept to {string}' ) do | concept_old, co
   click_button 'update_concept'
 end
 
+Then( 'we clear the search box' ) do
+  fill_in 'concept-search', with: ''
+end
+
 Then( 'the concept {string} will be in the list' ) do | new_concept_name |
   wait_for_render
   fill_in 'concept-search', with: new_concept_name[0..4]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { Panel } from "primereact/panel";
@@ -10,7 +10,9 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -38,7 +40,8 @@ export default function CandidateListEntry(props: Props) {
 
   const { bingoGameId } = useParams();
 
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
+  const suppressDirtyRef = useRef(false);
   const dispatch = useDispatch();
 
   const [candidateListId, setCandidateListId] = useState(0);
@@ -56,8 +59,8 @@ export default function CandidateListEntry(props: Props) {
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
 
   const getCandidateList = () => {
+    suppressDirtyRef.current = true;
     dispatch(startTask());
-    setDirty(true);
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
@@ -81,7 +84,7 @@ export default function CandidateListEntry(props: Props) {
         setHelpRequested(data.help_requested);
         setRequestCollaborationUrl(data.request_collaboration_url);
 
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
@@ -159,7 +162,7 @@ export default function CandidateListEntry(props: Props) {
           setHelpRequested(data.help_requested);
           setOthersRequestedHelp(data.others_requested_help);
 
-          setDirty(false);
+          setDirty(DIRTY_STATUS.CLEAN);
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         } else {
           data.messages.forEach(message => {
@@ -182,7 +185,11 @@ export default function CandidateListEntry(props: Props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    setDirty(true);
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [candidates]);
 
   // TODO: Fix the check to see if the form is dirty
@@ -209,7 +216,7 @@ export default function CandidateListEntry(props: Props) {
         setCandidates(prepCandidates(data.candidates, data.expected_count));
         setHelpRequested(data.help_requested);
         setOthersRequestedHelp(data.others_requested_help);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

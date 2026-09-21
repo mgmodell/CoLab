@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -25,6 +25,8 @@ export default function ConsentLog(props: Props) {
     state => state.context.endpoints[category]
   );
   const { t } = useTranslation(`${category}s`);
+  const [dirty, setDirty] = useDirtyStatus();
+  const suppressDirtyRef = useRef(false);
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
@@ -39,10 +41,19 @@ export default function ConsentLog(props: Props) {
   const [formAccepted, setFormAccepted] = useState(false);
   const [logLastUpdated, setLogLastUpdated] = useState(new Date());
 
+  useEffect(() => {
+    if( suppressDirtyRef.current ) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
+  }, [formAccepted]);
+    
+
   const getLog = () => {
     var url =
       endpoints["baseUrl"] + (consentFormId || props.consentFormId) + ".json";
 
+    suppressDirtyRef.current = true;
     dispatch(startTask("loading"));
     axios
       .get(url, {})
@@ -61,6 +72,8 @@ export default function ConsentLog(props: Props) {
         console.log("error", error);
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
+        setDirty(DIRTY_STATUS.CLEAN);
         dispatch(endTask("loading"));
       });
   };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
@@ -9,10 +9,10 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
@@ -49,9 +49,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const { courseIdParam, projectIdParam } = useParams();
 
   const [curTab, setCurTab] = useState(0);
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
   const [messages, setMessages] = useState({});
   const dispatch = useDispatch();
 
@@ -62,6 +59,9 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const [projectId, setProjectId] = useState(
     "new" === projectIdParam ? null : Number(projectIdParam)
   );
+  const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = useRef(false);
+
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const now = new Date();
@@ -86,13 +86,13 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
   const getProject = () => {
     dispatch(startTask());
-    dispatch(setDirty(category));
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + projectId + ".json";
     }
+    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -118,10 +118,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   const saveProject = () => {
@@ -134,6 +135,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       (null == projectId ? courseIdParam : projectId) +
       ".json";
 
+    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -173,11 +175,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
           const course = data.course;
           setCourseName(course.name);
-          dispatch(setClean(category));
           setMessages(data.messages);
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
+          setDirty(DIRTY_STATUS.CLEAN);
           navigate(`../${courseIdParam}/project/${project.id}`, {
             replace: true
           });
@@ -193,6 +195,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
   useEffect(() => {
@@ -207,7 +210,10 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current || projectId == null) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     projectName,
     projectDescription,
@@ -220,11 +226,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
     projectEndDOW
   ]);
 
-  const saveButton = dirty ? (
-    <Button onClick={saveProject}>
+  const saveButton = (
+    <Button onClick={saveProject} disabled={dirty !== DIRTY_STATUS.DIRTY && projectId} className="p-button-success">
       {null == projectId ? t('create_btn') : t('save_btn')}
     </Button>
-  ) : null;
+  );
 
   //Later I want to call the activate/deactivate right here
   const toggleActive = () => {

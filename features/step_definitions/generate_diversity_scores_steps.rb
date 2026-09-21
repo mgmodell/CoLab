@@ -123,7 +123,10 @@ Given( /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ ) do | or
 
   u.home_state = HomeState.find_by( code: "#{state}:#{country}" )
   pending if state.nil?
+
   u.save
+  puts u.errors.full_messages.join( ', ' ) unless u.errors.empty?
+  u.errors.should be_empty, "User #{u.email} has errors: #{u.errors.full_messages.join( ', ' )}"
 end
 
 Then( /^we remove the "([^"]*)" user$/ ) do | ordinal |
@@ -152,15 +155,15 @@ Then( /^the "([^"]*)" "([^"]*)" user is added to the group$/ ) do | ordinal, _ty
   when 'first'
     @group.users << @users[0]
   when 'second'
-    @group.users <<  @users[1]
+    @group.users << @users[1]
   when 'third'
-    @group.users <<  @users[2]
+    @group.users << @users[2]
   when 'fourth'
-    @group.users <<  @users[3]
+    @group.users << @users[3]
   when 'last'
-    @group.users <<  @users[4]
+    @group.users << @users[4]
   when 'random'
-    @group.users <<  @users.sample
+    @group.users << @users.sample
   else
     log "There's no such thing as a '#{ordinal}' user"
     pending

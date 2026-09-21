@@ -173,12 +173,6 @@ export default function MainMenu(props: Props) {
         separator: true
       },
       {
-        label: t("titles.demonstration"),
-        icon: "pi pi-fw pi-play",
-        id: "demo-menu-item",
-        command: () => navTo("/demo")
-      },
-      {
         label: t("reporting"),
         icon: "pi pi-fw pi-chart-bar",
         id: "reporting-menu-item",
@@ -192,11 +186,15 @@ export default function MainMenu(props: Props) {
           window.location.href = `mailto:${props.supportAddress}`;
         }
       },
-      /*
       {
         separator: true
       },
-      */
+      {
+        label: t("titles.demonstration"),
+        icon: "pi pi-fw pi-play",
+        id: "demo-menu-item",
+        command: () => navTo("/demo")
+      },
       {
         label: t("about"),
         icon: "pi pi-fw pi-info-circle",

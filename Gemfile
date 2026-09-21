@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '4.0.6'
+ruby '4.0.7'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.3.1'
@@ -60,7 +60,7 @@ gem 'prawn'
 gem 'prawn-qrcode'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '17.0.1'
+gem 'react_on_rails', '17.1.0'
 gem 'ruby-vips', '~> 2.0'
 gem "solid_cable", "~> 4.0"
 gem 'stopwords-filter2', require: 'stopwords'
@@ -98,7 +98,7 @@ group :development, :test do
   gem 'report_builder'
   gem 'rspec'
   gem 'rails_best_practices'
-  gem 'rubocop', '~> 1.82', require: false
+  gem 'rubocop', '~> 1.91', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'

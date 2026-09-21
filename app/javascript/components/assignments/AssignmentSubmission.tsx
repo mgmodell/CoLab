@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router";
 import { Temporal, TemporalSettings as Settings, parseISO } from "../infrastructure/TemporalSettings";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "../infrastructure/StatusSlice";
 import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -39,8 +40,10 @@ export default function AssignmentSubmission(props: Props) {
   );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
-  const [dirty, setDirty] = useState(false);
+  const suppressDirtyRef = useRef(false);
+  const [dirtyStatus, setDirtyStatus] = useDirtyStatus( );
 
   const [submissionId, setSubmissionId] = useState<string>();
   const [updatedDate, setUpdatedDate] = useState<Temporal.ZonedDateTime | null>(null);
@@ -58,12 +61,14 @@ export default function AssignmentSubmission(props: Props) {
   }, [endpointStatus, submissionId]);
 
   useEffect(() => {
-    if (endpointStatus) {
-      setDirty(true);
+    if (suppressDirtyRef.current) {
+      return;
     }
+    setDirtyStatus(true);
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
+    suppressDirtyRef.current = true;
     const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${submissionId}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;
@@ -92,12 +97,11 @@ export default function AssignmentSubmission(props: Props) {
           data.submission.recorded_score || data.submission.calculated_score
         );
         setSubmissionTextEditor(data.submission.sub_text || "");
-      })
-      .then(response => {
-        setDirty(false);
+        setDirtyStatus(false);
       })
       .finally(() => {
         dispatch(endTask("loading"));
+        suppressDirtyRef.current = false;
       });
   };
 
@@ -112,7 +116,7 @@ export default function AssignmentSubmission(props: Props) {
           value={submissionTextEditor}
           headerTemplate={<EditorToolbar />}
           onTextChange={e => {
-            setSubmissionTextEditor(e.htmlValue);
+            setSubmissionTextEditor(e.htmlValue || "");
           }}
         />
       </Col>
@@ -151,6 +155,7 @@ export default function AssignmentSubmission(props: Props) {
 
     const method = null === submissionId ? "PUT" : "PATCH";
     dispatch(startTask("saving"));
+    suppressDirtyRef.current = true;
 
     axios({
       url: url,
@@ -166,6 +171,12 @@ export default function AssignmentSubmission(props: Props) {
     })
       .then(response => {
         const data = response.data;
+        const successMessage = data?.messages?.main;
+
+        if (successMessage) {
+          dispatch(addMessage(successMessage, new Date(), Priorities.INFO));
+        }
+
         if (data.messages !== null && Object.keys(data.messages).length < 2) {
           setSubmissionId(data.submission.id);
           let receivedDate = parseISO(data.submission.updated_at, Settings.timezone);
@@ -179,7 +190,12 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor(data.submission.sub_text);
+          setSubmissionTextEditor(data.submission.sub_text || "");
+          setDirtyStatus(false);
+
+          if (submitIt) {
+            navigate("/home");
+          }
         }
       })
       .then(props.reloadCallback)
@@ -222,7 +238,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const draftSaveBtn = (
     <Button
-      disabled={!dirty || !notSubmitted}
+      disabled={!dirtyStatus || !notSubmitted}
       onClick={() => saveSubmission(false)}
     >
       {t("submissions.draft_revision_btn")}
@@ -230,14 +246,14 @@ export default function AssignmentSubmission(props: Props) {
   );
 
   const draftSubmitBtn = (
-    <Button disabled={!notSubmitted} onClick={() => saveSubmission(true)}>
+    <Button disabled={!notSubmitted } onClick={() => saveSubmission(true)}>
       {t("submissions.submit_revision_btn")}
     </Button>
   );
 
   const revCopyBtn = !notSubmitted ? (
     <Button
-      disabled={!dirty || notSubmitted}
+      disabled={!dirtyStatus || notSubmitted}
       onClick={() => saveSubmission(false)}
     >
       {t("submissions.copy_submission_btn")}

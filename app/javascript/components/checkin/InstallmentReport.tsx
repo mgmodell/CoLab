@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -10,7 +10,9 @@ import {
   startTask,
   endTask,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -78,7 +80,8 @@ export default function InstallmentReport(props: Props) {
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
-  const [dirty, setDirty] = useState(false);
+  const [dirty, setDirty] = useDirtyStatus();
+  const suppressDirtyRef = useRef(false);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
@@ -98,7 +101,15 @@ export default function InstallmentReport(props: Props) {
     setInstallment(inst);
   };
 
-  useEffect(() => setDirty(true), [contributions, installment]);
+  useEffect(() => {
+    console.log("InstallmentReport: dirty", dirty);
+    console.log("SuppressDirtyRef.current", suppressDirtyRef.current);
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
+  }, [contributions, installment]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -117,14 +128,17 @@ export default function InstallmentReport(props: Props) {
     return retVal;
   };
 
+  console.log( 'dirty', dirty );
+  console.log( 'not new', installment.id, Boolean(installment.id))
   const saveButton = (
-    <Button disabled={!dirty} onClick={() => saveContributions()}>
+    <Button disabled={!dirty && Boolean(installment.id)} onClick={() => saveContributions()}>
         {t("submit")}
     </Button>
   );
 
   //Retrieve the latest data
   const getContributions = () => {
+    suppressDirtyRef.current = true;
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`
@@ -189,7 +203,7 @@ export default function InstallmentReport(props: Props) {
         setInstallment(data.installment);
 
         setContributions(contributions);
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
         setGroup(data.group);
 
         setProject(data.installment.project);
@@ -199,6 +213,7 @@ export default function InstallmentReport(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       });
   };
   //Store what we've got
@@ -239,6 +254,7 @@ export default function InstallmentReport(props: Props) {
             },
             {}
           );
+          suppressDirtyRef.current = true;
           setContributions(receivedContributions);
           navigate('/home');
         }
@@ -251,7 +267,7 @@ export default function InstallmentReport(props: Props) {
             addMessage( t("success"), new Date(), Priorities.INFO)
           );
         }
-        setDirty(false);
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);

@@ -4,7 +4,8 @@ import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-
+import {Temporal, TemporalSettings} from "../infrastructure/TemporalSettings";
+  
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import { DataTable } from "primereact/datatable";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
@@ -96,6 +97,23 @@ export default function SubmissionList(props: Props) {
               sortable
               filter
               key={OPT_COLS.SUBMITTED}
+              body={rowData => {
+
+                if (rowData.submitted) {
+                  const tDate = Temporal.Instant.from(rowData.submitted);
+                  return tDate.toZonedDateTimeISO(TemporalSettings.defaultZone)
+                  .toLocaleString('en-US', {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false
+                  }).toString();
+                } else {
+                  return t("submissions.not_submitted");
+                }
+              }}
             />
             <Column
               header={t("submissions.withdrawn")}

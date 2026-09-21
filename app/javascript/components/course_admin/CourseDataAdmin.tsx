@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Outlet, Route, Routes, useNavigate, useParams } from "react-router";
 //Redux store stuff
@@ -6,10 +6,10 @@ import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
-  Priorities
+  Priorities,
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 
 
@@ -68,9 +68,6 @@ export default function CourseDataAdmin() {
   );
 
   const [curTab, setCurTab] = useState(0);
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
   const [messages, setMessages] = useState({});
 
   let { courseIdParam } = useParams();
@@ -78,6 +75,8 @@ export default function CourseDataAdmin() {
   const [courseId, setCourseId] = useState(
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
+  const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
+  const suppressDirtyRef = React.useRef(false);
 
   const [course, setCourse] = useState<ICourse>({
     id: courseId,
@@ -108,8 +107,8 @@ export default function CourseDataAdmin() {
 
   const getCourse = () => {
     dispatch(startTask());
-    dispatch(setDirty(category));
-
+    setDirty(DIRTY_STATUS.DIRTY);
+    suppressDirtyRef.current = true;
     const url = isNaN(courseId)
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
@@ -140,13 +139,14 @@ export default function CourseDataAdmin() {
         }
         setCourse(localCourse);
 
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
 
       })
       .catch(error => {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask());
+        suppressDirtyRef.current = false;
       })
   };
 
@@ -158,6 +158,7 @@ export default function CourseDataAdmin() {
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
 
+    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -204,9 +205,6 @@ export default function CourseDataAdmin() {
           setCourse(localCourse);
           setCourseId(localCourse.id);
           navigate(`../${localCourse.id}`, { replace: true });
-
-
-          dispatch(setClean(category));
         }
         postNewMessage(data.messages);
       })
@@ -214,6 +212,7 @@ export default function CourseDataAdmin() {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       })
   };
 
@@ -235,9 +234,14 @@ export default function CourseDataAdmin() {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current ) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [
     course,
+    course.id, course.number, course.description, course.start_date, course.end_date,
+    course.school_id, course.consent_form_id, course.timezone
   ]);
 
   const postNewMessage = msgs => {
@@ -245,14 +249,14 @@ export default function CourseDataAdmin() {
     setMessages(msgs);
   };
 
-  const saveButton = dirty ? (
+  const saveButton = (
     <React.Fragment>
       <hr />
-      <Button onClick={saveCourse}>
-        {Boolean(courseId) ? "Save" : "Create"} Course
+      <Button onClick={saveCourse} disabled={!dirty && Boolean(courseId)} className="p-button-success">
+        {Boolean(courseId) ? t( 'save_btn' ) : t( 'create_btn' ) }
       </Button>
     </React.Fragment>
-  ) : null;
+  );
 
   const setCourseValue = (field, value) => {
     setCourse(course => {
@@ -266,7 +270,7 @@ export default function CourseDataAdmin() {
         {t('edit.number')}
       </label>
       <InputText
-        placeholder="Course Number"
+        placeholder={t('edit.number')}
         id="course-number"
         value={course.number}
         onChange={event => {
@@ -281,7 +285,7 @@ export default function CourseDataAdmin() {
         {t('edit.name')}
       </label>
       <InputText
-        placeholder="Course Name"
+        placeholder={t('edit.name')}
         id="course-name"
         value={course.name}
         onChange={event => {
@@ -296,7 +300,7 @@ export default function CourseDataAdmin() {
         {t('edit.description')}
       </label>
       <InputTextarea
-        placeholder="Course Description"
+        placeholder={t('edit.description')}
         id="course-description"
         value={course.description}
         onChange={event => {
@@ -334,7 +338,7 @@ export default function CourseDataAdmin() {
                 }}
                 optionLabel="name"
                 optionValue="id"
-                placeholder="Select a School"
+                placeholder={t('edit.select_school_plchldr')}
                 showClear={false}
               />
             ) : (
@@ -358,7 +362,7 @@ export default function CourseDataAdmin() {
                 }}
                 optionLabel="name"
                 optionValue="name"
-                placeholder="Select a Time Zone"
+                placeholder={t('edit.selct_timezone_plchldr')}
                 showClear={false}
               />
             ) : (
@@ -382,7 +386,7 @@ export default function CourseDataAdmin() {
               }}
               optionValue="id"
               optionLabel="name"
-              placeholder="Select a Consent Form"
+              placeholder={t('edit.select_consent_form_plchldr')}
               showClear={true}
             />
           </Col>
