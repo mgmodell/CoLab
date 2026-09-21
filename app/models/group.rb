@@ -68,14 +68,13 @@ class Group < ApplicationRecord
 
       users.uniq.each do | user |
         state = user.home_state
-        state = nil if state&.no_response == true
         country = state&.home_country
+        state = nil if state&.no_response == true
         country = nil if country&.no_response == true
 
-        if state.present?
-          state_hash[state] += 1
-          country_hash[country] += 1 if country.present?
-        end
+        state_hash[state] += 1 if state.present?
+        country_hash[country] += 1 if country.present?
+
         cip_hash[user.cip_code] += 1 unless
             user.cip_code.nil? || user.cip_code_gov_code.zero?
         primary_lang_hash[user.primary_language] += 1 unless
@@ -130,7 +129,7 @@ class Group < ApplicationRecord
                 .distinct
                 .includes( :gender, :primary_language,
                            :cip_code,
-                                      home_state: [:home_country] )
+                           home_state: [:home_country] )
 
     Group.calc_faultline_strength_for_group users:
   end
@@ -424,7 +423,7 @@ class Group < ApplicationRecord
       return 0.0 if values.count <= 1
 
       average = values.sum.to_f / values.count
-      variance = values.sum { | value| ( value - average )**2 } / values.count
+      variance = values.sum { | value | ( value - average )**2 } / values.count
       Math.sqrt( variance ).round( 4 )
     end
 
@@ -660,7 +659,7 @@ class Group < ApplicationRecord
       errors.add( :project,
                   'It is not possible to move a group from one project to another.' )
     end
-    return
+    nil
   end
 
   def set_dirty( _user )
@@ -668,7 +667,7 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    return unless anon_name.blank?
+    return if anon_name.present?
 
     nation_descriptor = Faker::Boolean.boolean ? Faker::Nation.language : Faker::Nation.nationality
     self.anon_name = "#{nation_descriptor} #{Faker::Company.name}s"
