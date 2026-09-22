@@ -4,6 +4,10 @@ require 'faker'
 
 Given( /^the project measures (\d+) factors$/ ) do | num_factors |
   Faker::Job.unique.clear
+  step "the project has a new factor pack with #{num_factors} factors"
+end
+
+Given( /^the project has a new factor pack with (\d+) factors$/ ) do | num_factors |
   bp = FactorPack.new(
     name: "#{Faker::Company.industry}-#{Faker::Color.color_name} Factor Pack",
     description: Faker::Company.bs

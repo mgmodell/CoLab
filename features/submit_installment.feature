@@ -74,7 +74,7 @@ Feature: Submitting Reports
 
   @javascript
   Scenario: User should not be able to edit a completed weekly installment
-    Given the project measures 4 factors
+    Given the project has a new factor pack with 4 factors
     Given the project has been activated
     Then the user logs in and submits an installment
     When the user navigates home
