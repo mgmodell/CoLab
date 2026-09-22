@@ -27,6 +27,30 @@ print_help ( ) {
 
 }
 
+# Define cleanup function for graceful termination
+cleanup() {
+  echo ""
+  echo "Caught interrupt signal. Cleaning up processes..."
+  
+  # Terminate overmind or foreman if running
+  if command -v overmind &>/dev/null; then
+    overmind quit 2>/dev/null
+  fi
+  
+  # Kill remaining Rails and Shakapacker processes started by Procfile
+  pkill -P $$ 2>/dev/null
+  pkill -f "rails s|shakapacker" 2>/dev/null
+  
+  # Remove stale Rails server PID file
+  rm -f tmp/pids/server.pid
+  
+  echo "Cleanup complete."
+  exit 0
+}
+
+# Trap SIGINT (Ctrl+C) and SIGTERM
+trap cleanup SIGINT SIGTERM
+
 if [ "$container" = 'podman' ]; then
   # We're in a Docker container, so we're good!
   echo "Arguments: '$@'"
