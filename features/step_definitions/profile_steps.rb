@@ -75,6 +75,9 @@ end
 When( /^the user logs in$/ ) do
   visit '/login'
   wait_for_render
+  # Blow away the cookies accept
+  click_link_or_button 'I understand' if has_content? 'I understand'
+
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 
@@ -83,8 +86,6 @@ When( /^the user logs in$/ ) do
 
   wait_for_render
   page.should have_content 'signed in successfully'
-  # Blow away the cookies accept
-  click_link_or_button 'I understand' if has_content? 'I understand'
 
   # Set custom time if warranted
   if !@dest_date.nil? && :rack_test != Capybara.current_driver && has_xpath?( "//input[@id='newTimeVal']" )
