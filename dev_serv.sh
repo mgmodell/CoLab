@@ -160,6 +160,7 @@ fi
 if [ "$MIGRATE" = true ]; then
   echo "Migrating the DB..."
   rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306
+  RAILS_ENV=test rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
 # Run a testing task

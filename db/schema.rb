@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -64,7 +64,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["project_id"], name: "index_assessments_on_project_id"
   end
 
-  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.string "anon_description"
     t.string "anon_name"
@@ -72,7 +72,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.datetime "created_at", null: false
     t.boolean "deleted", default: false, null: false
     t.text "description"
-    t.datetime "end_date", null: false
+    t.datetime "end_date", precision: nil, null: false
     t.boolean "file_sub", default: false, null: false
     t.boolean "group_enabled", default: false, null: false
     t.boolean "link_sub", default: false, null: false
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.integer "passing", default: 65
     t.integer "project_id"
     t.bigint "rubric_id"
-    t.datetime "start_date", null: false
+    t.datetime "start_date", precision: nil, null: false
     t.boolean "text_sub", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_assignments_on_course_id"
@@ -141,7 +141,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.integer "individual_count", default: 10
     t.boolean "instructor_notified", default: false, null: false
     t.integer "lead_time", default: 3
-    t.string "link"
     t.integer "project_id"
     t.boolean "reviewed"
     t.integer "size", default: 5
@@ -266,7 +265,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["school_id"], name: "index_courses_on_school_id"
   end
 
-  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "description"
     t.text "l1_description"
@@ -431,7 +430,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["user_id"], name: "index_installments_on_user_id"
   end
 
-  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "keypairs", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.text "_keypair_ciphertext", null: false
     t.datetime "created_at", null: false
     t.datetime "expires_at", null: false
@@ -452,7 +451,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["name_en"], name: "index_languages_on_name_en", unique: true
   end
 
-  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "lti_connections", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "ags_access_token_url"
     t.string "client_id"
     t.integer "connectable_id", null: false
@@ -462,10 +461,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.string "iss"
     t.string "line_item_url"
     t.datetime "updated_at", null: false
-    t.index ["connectable_type", "connectable_id"], name: "index_lti_connections_on_connectable"
+    t.index ["connectable_type", "connectable_id"], name: "index_lti_connections_on_connectable", unique: true
   end
 
-  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "lti_deployments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "auth_login_url", null: false
     t.string "auth_token_url", null: false
     t.string "client_id", null: false
@@ -489,7 +488,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["state"], name: "index_lti_nonces_on_state", unique: true
   end
 
-  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "lti_resource_links", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.integer "activity_id"
     t.string "activity_type"
     t.bigint "assignment_id"
@@ -573,7 +572,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
-  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "criterium_id", null: false
     t.text "feedback"
@@ -584,7 +583,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["submission_feedback_id"], name: "index_rubric_row_feedbacks_on_submission_feedback_id"
   end
 
-  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.boolean "active", default: false, null: false
     t.string "anon_description"
     t.string "anon_name"
@@ -632,7 +631,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "solid_cable_messages", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "solid_cable_messages", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.binary "channel", limit: 1024, null: false
     t.bigint "channel_hash", null: false
     t.datetime "created_at", null: false
@@ -651,7 +650,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["name_en"], name: "index_styles_on_name_en", unique: true
   end
 
-  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "feedback"
     t.bigint "submission_id", null: false
@@ -659,7 +658,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
     t.index ["submission_id"], name: "index_submission_feedbacks_on_submission_id"
   end
 
-  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "assignment_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
@@ -803,9 +802,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_031727) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
-  add_foreign_key "lti_resource_links", "assignments"
-  add_foreign_key "lti_resource_links", "courses"
-  add_foreign_key "lti_resource_links", "lti_deployments"
+  add_foreign_key "lti_resource_links", "assignments", name: "fk_rails_lti_rl_assignment"
+  add_foreign_key "lti_resource_links", "courses", name: "fk_rails_lti_rl_course"
+  add_foreign_key "lti_resource_links", "lti_deployments", name: "fk_rails_lti_rl_deployment"
   add_foreign_key "narratives", "scenarios"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"

@@ -391,10 +391,9 @@ CREATE TABLE `bingo_games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `link` varchar(255) DEFAULT NULL,
   `source` varchar(255) DEFAULT NULL,
   `group_option` tinyint(1) DEFAULT NULL,
-  `individual_count` int(11) DEFAULT NULL,
+  `individual_count` int(11) DEFAULT 10,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -5306,7 +5305,10 @@ INSERT INTO `schema_migrations` VALUES
 ('20260411220000'),
 ('20260506120000'),
 ('20260508140000'),
-('20260710125207');
+('20260710125207'),
+('20260717193649'),
+('20260718031727'),
+('20260923183019');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5374,6 +5376,38 @@ SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
+
+--
+-- Table structure for table `solid_cable_messages`
+--
+
+DROP TABLE IF EXISTS `solid_cable_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solid_cable_messages` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channel` varbinary(1024) NOT NULL,
+  `payload` longblob NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `channel_hash` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_solid_cable_messages_on_channel` (`channel`),
+  KEY `index_solid_cable_messages_on_channel_hash` (`channel_hash`),
+  KEY `index_solid_cable_messages_on_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solid_cable_messages`
+--
+
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
+LOCK TABLES `solid_cable_messages` WRITE;
+/*!40000 ALTER TABLE `solid_cable_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solid_cable_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
 SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
@@ -5828,4 +5862,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-07-18  3:18:42
+-- Dump completed on 2026-09-23 20:05:12
