@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -83,7 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.datetime "start_date", precision: nil, null: false
     t.boolean "text_sub", default: true, null: false
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_assignments_on_course_id"
+    t.index ["course_id", "deleted", "end_date"], name: "idx_assignments_timeline"
     t.index ["project_id"], name: "index_assignments_on_project_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
@@ -149,7 +149,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.boolean "students_notified", default: false, null: false
     t.string "topic"
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["course_id"], name: "index_bingo_games_on_course_id"
+    t.index ["course_id", "deleted", "end_date"], name: "idx_bingo_games_timeline"
+    t.index ["instructor_notified", "end_date"], name: "idx_bingo_cron_lookup"
     t.index ["project_id"], name: "index_bingo_games_on_project_id"
   end
 
@@ -178,7 +179,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.boolean "is_group"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
-    t.index ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id"
+    t.index ["bingo_game_id", "user_id", "archived"], name: "idx_candidate_lists_lookup"
     t.index ["current_candidate_list_id"], name: "fk_rails_de17bb0877"
     t.index ["group_id"], name: "index_candidate_lists_on_group_id"
     t.index ["user_id"], name: "index_candidate_lists_on_user_id"
@@ -336,7 +337,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.datetime "start_date", precision: nil
     t.datetime "student_end_date", precision: nil
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["course_id"], name: "index_experiences_on_course_id"
+    t.index ["active", "start_date", "end_date"], name: "idx_exp_active_lookup"
+    t.index ["course_id", "deleted", "end_date"], name: "idx_experiences_timeline"
+    t.index ["instructor_updated", "student_end_date"], name: "idx_exp_cron_lookup"
   end
 
   create_table "factor_packs", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -531,7 +534,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.integer "start_dow"
     t.integer "style_id"
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["course_id"], name: "index_projects_on_course_id"
+    t.index ["course_id", "deleted", "end_date"], name: "idx_projects_timeline"
     t.index ["factor_pack_id"], name: "index_projects_on_factor_pack_id"
     t.index ["style_id"], name: "index_projects_on_style_id"
   end
@@ -555,7 +558,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_23_183019) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["behavior_id"], name: "index_reactions_on_behavior_id"
-    t.index ["experience_id"], name: "index_reactions_on_experience_id"
+    t.index ["experience_id", "user_id"], name: "idx_reactions_lookup"
     t.index ["narrative_id"], name: "index_reactions_on_narrative_id"
     t.index ["user_id"], name: "index_reactions_on_user_id"
   end

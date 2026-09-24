@@ -242,8 +242,8 @@ CREATE TABLE `assignments` (
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_assignments_on_rubric_id` (`rubric_id`),
-  KEY `index_assignments_on_course_id` (`course_id`),
   KEY `index_assignments_on_project_id` (`project_id`),
+  KEY `idx_assignments_timeline` (`course_id`,`deleted`,`end_date`),
   CONSTRAINT `fk_rails_2194c084a6` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `fk_rails_4d3d2c839c` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
   CONSTRAINT `fk_rails_7efcd7af22` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`)
@@ -410,8 +410,9 @@ CREATE TABLE `bingo_games` (
   `size` int(11) DEFAULT 5,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `index_bingo_games_on_course_id` (`course_id`),
   KEY `index_bingo_games_on_project_id` (`project_id`),
+  KEY `idx_bingo_games_timeline` (`course_id`,`deleted`,`end_date`),
+  KEY `idx_bingo_cron_lookup` (`instructor_notified`,`end_date`),
   CONSTRAINT `fk_rails_9b5d9b6428` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
   CONSTRAINT `fk_rails_d94c8b95ab` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -500,10 +501,10 @@ CREATE TABLE `candidate_lists` (
   `current_candidate_list_id` int(11) DEFAULT NULL,
   `candidates_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `index_candidate_lists_on_bingo_game_id` (`bingo_game_id`),
   KEY `fk_rails_de17bb0877` (`current_candidate_list_id`),
   KEY `index_candidate_lists_on_group_id` (`group_id`),
   KEY `index_candidate_lists_on_user_id` (`user_id`),
+  KEY `idx_candidate_lists_lookup` (`bingo_game_id`,`user_id`,`archived`),
   CONSTRAINT `fk_rails_070208024f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_536301951c` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `fk_rails_de17bb0877` FOREIGN KEY (`current_candidate_list_id`) REFERENCES `candidate_lists` (`id`),
@@ -972,7 +973,9 @@ CREATE TABLE `experiences` (
   `student_end_date` datetime DEFAULT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `index_experiences_on_course_id` (`course_id`),
+  KEY `idx_experiences_timeline` (`course_id`,`deleted`,`end_date`),
+  KEY `idx_exp_active_lookup` (`active`,`start_date`,`end_date`),
+  KEY `idx_exp_cron_lookup` (`instructor_updated`,`student_end_date`),
   CONSTRAINT `fk_rails_23ce752422` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4776,9 +4779,9 @@ CREATE TABLE `projects` (
   `anon_name` varchar(255) DEFAULT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `index_projects_on_course_id` (`course_id`),
   KEY `index_projects_on_factor_pack_id` (`factor_pack_id`),
   KEY `index_projects_on_style_id` (`style_id`),
+  KEY `idx_projects_timeline` (`course_id`,`deleted`,`end_date`),
   CONSTRAINT `fk_rails_07e8a3d0a3` FOREIGN KEY (`style_id`) REFERENCES `styles` (`id`),
   CONSTRAINT `fk_rails_589498d3ea` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `fk_rails_c64048b0e4` FOREIGN KEY (`factor_pack_id`) REFERENCES `factor_packs` (`id`)
@@ -4906,9 +4909,9 @@ CREATE TABLE `reactions` (
   `diagnoses_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_reactions_on_behavior_id` (`behavior_id`),
-  KEY `index_reactions_on_experience_id` (`experience_id`),
   KEY `index_reactions_on_narrative_id` (`narrative_id`),
   KEY `index_reactions_on_user_id` (`user_id`),
+  KEY `idx_reactions_lookup` (`experience_id`,`user_id`),
   CONSTRAINT `fk_rails_7f421c2684` FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`id`),
   CONSTRAINT `fk_rails_9f02fc96a0` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_c7ec08af40` FOREIGN KEY (`behavior_id`) REFERENCES `behaviors` (`id`),
@@ -5308,7 +5311,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20260710125207'),
 ('20260717193649'),
 ('20260718031727'),
-('20260923183019');
+('20260923183019'),
+('20260924013802');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5862,4 +5866,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-09-23 20:05:12
+-- Dump completed on 2026-09-24  1:51:10
