@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_115106) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -181,6 +181,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.integer "user_id"
     t.index ["bingo_game_id", "user_id", "archived"], name: "idx_candidate_lists_lookup"
     t.index ["current_candidate_list_id"], name: "fk_rails_de17bb0877"
+    t.index ["current_candidate_list_id"], name: "index_candidate_lists_on_current_candidate_list_id"
     t.index ["group_id"], name: "index_candidate_lists_on_group_id"
     t.index ["user_id"], name: "index_candidate_lists_on_user_id"
   end
@@ -198,8 +199,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.index ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id"
     t.index ["candidate_list_id"], name: "index_candidates_on_candidate_list_id"
     t.index ["concept_id"], name: "index_candidates_on_concept_id"
-    t.index ["definition"], name: "index_candidates_on_definition", length: 2
-    t.index ["term"], name: "index_candidates_on_term", length: 2
+    t.index ["definition"], name: "index_candidates_on_definition", type: :fulltext
+    t.index ["term"], name: "index_candidates_on_term", type: :fulltext
     t.index ["user_id"], name: "index_candidates_on_user_id"
   end
 
@@ -339,6 +340,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["active", "start_date", "end_date"], name: "idx_exp_active_lookup"
     t.index ["course_id", "deleted", "end_date"], name: "idx_experiences_timeline"
+    t.index ["course_id"], name: "index_experiences_on_course_id"
     t.index ["instructor_updated", "student_end_date"], name: "idx_exp_cron_lookup"
   end
 
@@ -428,6 +430,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.datetime "inst_date", precision: nil
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
+    t.index ["assessment_id", "group_id", "user_id"], name: "idx_installments_graphing"
     t.index ["assessment_id"], name: "index_installments_on_assessment_id"
     t.index ["group_id"], name: "index_installments_on_group_id"
     t.index ["user_id"], name: "index_installments_on_user_id"
@@ -559,6 +562,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.integer "user_id"
     t.index ["behavior_id"], name: "index_reactions_on_behavior_id"
     t.index ["experience_id", "user_id"], name: "idx_reactions_lookup"
+    t.index ["experience_id", "user_id"], name: "index_reactions_on_experience_id_and_user_id"
+    t.index ["experience_id"], name: "index_reactions_on_experience_id"
     t.index ["narrative_id"], name: "index_reactions_on_narrative_id"
     t.index ["user_id"], name: "index_reactions_on_user_id"
   end
@@ -569,6 +574,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.integer "role", default: 4, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id", null: false
+    t.index ["course_id", "role", "user_id"], name: "idx_rosters_course_role_user"
     t.index ["course_id"], name: "index_rosters_on_course_id"
     t.index ["role"], name: "index_rosters_on_role"
     t.index ["user_id", "course_id"], name: "index_rosters_on_user_id_and_course_id", unique: true
@@ -749,6 +755,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_013802) do
     t.integer "user_id"
     t.integer "value"
     t.index ["factor_id"], name: "index_values_on_factor_id"
+    t.index ["installment_id", "factor_id", "user_id"], name: "idx_values_graphing"
     t.index ["installment_id"], name: "index_values_on_installment_id"
     t.index ["user_id"], name: "index_values_on_user_id"
   end
