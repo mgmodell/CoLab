@@ -31,7 +31,8 @@ class SchoolsController < ApplicationController
           {
             id: school.id,
             name: school.get_name( anon ),
-            courses: school.courses.size,
+            courses: school.courses_count,
+            rubrics: school.rubrics_count,
             students: school.enrolled_students.size,
             instructors: school.instructors.size,
             projects: school.projects.size,

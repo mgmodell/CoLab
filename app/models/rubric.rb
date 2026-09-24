@@ -9,7 +9,7 @@ class Rubric < ApplicationRecord
 
   before_create :anonymize
 
-  belongs_to :school
+  belongs_to :school, counter_cache: true
   belongs_to :user
 
   has_many :child_versions, class_name: 'Rubric', foreign_key: 'parent_id'

@@ -5319,7 +5319,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20260718031727'),
 ('20260923183019'),
 ('20260924013802'),
-('20260924115106');
+('20260924115106'),
+('20260924190251');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5341,6 +5342,7 @@ CREATE TABLE `schools` (
   `anon_name` varchar(255) DEFAULT NULL,
   `timezone` varchar(255) NOT NULL DEFAULT 'UTC',
   `courses_count` int(11) NOT NULL DEFAULT 0,
+  `rubrics_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5353,8 +5355,8 @@ SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `schools` WRITE;
 /*!40000 ALTER TABLE `schools` DISABLE KEYS */;
 INSERT INTO `schools` VALUES
-(1,'A large, Midwestern university','Indiana University','2019-09-23 11:40:16','2019-09-23 11:40:16','Eayo institute','UTC',0),
-(2,'The State University of New York, Korea','SUNY Korea','2019-09-23 11:40:16','2019-09-23 11:40:16','Quatz institute','Seoul',0);
+(1,'A large, Midwestern university','Indiana University','2019-09-23 11:40:16','2019-09-23 11:40:16','Eayo institute','UTC',0,0),
+(2,'The State University of New York, Korea','SUNY Korea','2019-09-23 11:40:16','2019-09-23 11:40:16','Quatz institute','Seoul',0,0);
 /*!40000 ALTER TABLE `schools` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5874,4 +5876,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-09-24 13:06:17
+-- Dump completed on 2026-09-24 21:26:28

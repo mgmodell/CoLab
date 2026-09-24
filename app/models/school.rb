@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faker'
+
 class School < ApplicationRecord
   has_many :courses, inverse_of: :school, dependent: :destroy
   has_many :bingo_games, through: :courses
@@ -13,12 +14,13 @@ class School < ApplicationRecord
   before_create :anonymize
   validates :name, :timezone, presence: true
 
+  # Optimized: Query users via roster scopes at the database level rather than loading objects into memory
   def instructors
-    rosters.instructor.collect( &:user ).uniq
+    users.merge( Roster.instructor ).distinct
   end
 
   def enrolled_students
-    rosters.enrolled_student.collect( &:user ).uniq
+    users.merge( Roster.enrolled_student ).distinct
   end
 
   def get_name( anonymous )
