@@ -3,6 +3,8 @@
 require 'faker'
 
 class User < ApplicationRecord
+  self.ignored_columnns += %w[country] # These are deprecated columns that we no longer use, but we need to keep them around for the time being to avoid breaking the schema
+
   include DeviseTokenAuth::Concerns::User
   include DeviseTokenAuth::Concerns::ResourceFinder
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
