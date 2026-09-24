@@ -330,12 +330,6 @@ Feature: Course Administration
     Then the Experience 'name' is 'cup'
     Then the 'Experience' dates are "6/30/1976" and "8/30/1976"
     And the 'Experience' is 'not' active
-    #check the project
-    Then retrieve the 1 course 'project'
-    Then the new project metadata is the same as the old
-    Then the 'project' dates are '5/22/1976' and '10/11/2012'
-    Then the project has 0 groups
-    And the 'project' is 'not' active
     #check the bingo
     Then retrieve the 1 course 'bingo'
     Then the new bingo metadata is the same as the old
@@ -346,6 +340,12 @@ Feature: Course Administration
     Then the new assignment metadata is the same as the old
     And the 'assignment' is 'not' active
     Then the 'assignment' dates are '2/21/1985' and '7/22/2003'
+    #check the project
+    Then retrieve the 1 course 'project'
+    Then the new project metadata is the same as the old
+    Then the 'project' dates are '5/22/1976' and '10/11/2012'
+    Then the project has 0 groups
+    And the 'project' is 'not' active
 
   @javascript
   Scenario: Instructor deletes a Bingo! game from a course

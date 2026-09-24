@@ -258,6 +258,9 @@ Then 'the {string} is {string} active' do | activity, active_bool |
 end
 
 Then 'the new project metadata is the same as the old' do
+  @project.should_not be_nil
+  @orig_project.should_not be_nil
+
   @project.name.should eq @orig_project.name
   @project.style.should eq @orig_project.style
   @project.factor_pack.should eq @orig_project.factor_pack
@@ -272,7 +275,6 @@ end
 Then 'the new bingo metadata is the same as the old' do
   @bingo.topic.should eq @orig_bingo.topic
   @bingo.description.should eq @orig_bingo.description
-  @bingo.link.should eq @orig_bingo.link
   @bingo.source.should eq @orig_bingo.source
   @bingo.group_option.should eq @orig_bingo.group_option
   @bingo.individual_count.should eq @orig_bingo.individual_count

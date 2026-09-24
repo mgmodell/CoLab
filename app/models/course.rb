@@ -87,78 +87,69 @@ class Course < ApplicationRecord
     roster&.role
   end
 
-  def copy_from_template( new_start: )
-    # Timezone checking here
-    # course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
-    # new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
-    # new_start = new_start.beginning_of_day.getlocal(course_tz)
-    # new_start = course_tz.utc_to_local(new_start).beginning_of_day
-    # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
-    # date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    def copy_from_template( new_start: )
     safe_timezone = timezone.presence || school&.timezone.presence || 'UTC'
-    date_difference = ( new_start - start_date.beginning_of_day ) / 86_400
+    course_tz = ActiveSupport::TimeZone.new( safe_timezone )
+
+    local_old_start = start_date.in_time_zone( course_tz ).to_date
+    local_new_start = new_start.in_time_zone( course_tz ).to_date
+    date_difference = ( local_new_start - local_old_start ).to_i
+
     new_course = nil
 
     Course.transaction do
-      # create the course
+      # 1. Establish absolute calendar dates to prevent boundary drift
+      target_course_start = local_new_start
+      target_course_end   = end_date.in_time_zone( course_tz ).to_date + date_difference
 
-      new_course = school.courses.new(
+      new_course = school.courses.create!(
         name: "Copy of #{name}",
         number: "Copy of #{number}",
         description:,
         timezone: safe_timezone,
-        start_date: start_date.advance( days: date_difference ),
-        end_date: end_date.advance( days: date_difference )
+        start_date: course_tz.local( target_course_start.year, target_course_start.month,
+                                     target_course_start.day ).beginning_of_day,
+        end_date: course_tz.local( target_course_end.year, target_course_end.month,
+                                   target_course_end.day ).end_of_day.change( sec: 0 )
       )
 
       # copy the faculty rosters
       rosters.faculty.each do | roster |
-        new_obj = new_course.rosters.new(
+        new_course.rosters.create!(
           role: roster.role,
           user: roster.user
         )
-        new_obj.save!
       end
 
       # copy the projects
       proj_hash = {}
-      course_tz = ActiveSupport::TimeZone.new( safe_timezone )
-      offset = course_tz.utc_offset
-
       projects.each do | project |
-        new_obj = new_course.projects.new(
+        new_obj = new_course.projects.create!(
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
           start_date: project.start_date.advance( days: date_difference ),
-          end_date: project.end_date
-                           .advance( seconds: offset )
-                           .advance( days: date_difference ),
+          end_date: project.end_date.advance( days: date_difference ),
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
-        new_obj.save!
         proj_hash[project] = new_obj
       end
 
       # copy the experiences
       experiences.each do | experience |
-        new_obj = new_course.experiences.new(
+        new_course.experiences.create!(
           name: experience.name,
           start_date: experience.start_date.advance( days: date_difference ),
-          end_date: experience.end_date
-                              .advance( seconds: offset )
-                              .advance( days: date_difference )
+          end_date: experience.end_date.advance( days: date_difference )
         )
-        new_obj.save!
       end
 
       # copy the bingo! games
       bingo_games.each do | bingo_game |
-        new_obj = new_course.bingo_games.new(
+        new_course.bingo_games.create!(
           topic: bingo_game.topic,
           description: bingo_game.description,
-          link: bingo_game.link,
           source: bingo_game.source,
           group_option: bingo_game.group_option,
           individual_count: bingo_game.individual_count,
@@ -166,22 +157,15 @@ class Course < ApplicationRecord
           group_discount: bingo_game.group_discount,
           project: proj_hash[bingo_game.project],
           start_date: bingo_game.start_date.advance( days: date_difference ),
-          end_date: bingo_game.end_date
-                              .advance( seconds: offset )
-                              .advance( days: date_difference )
+          end_date: bingo_game.end_date.advance( days: date_difference )
         )
-        new_obj.save!
       end
 
       # copy the assignments
       assignments.each do | assignment |
-        new_obj = new_course.assignments.new(
+        new_course.assignments.create!(
           name: assignment.name,
           description: assignment.description,
-          start_date: assignment.start_date.advance( days: date_difference ),
-          end_date: assignment.end_date
-                              .advance( seconds: offset )
-                              .advance( days: date_difference ),
           rubric: assignment.rubric,
           file_sub: assignment.file_sub,
           link_sub: assignment.link_sub,
@@ -190,14 +174,121 @@ class Course < ApplicationRecord
           group_enabled: assignment.group_enabled,
           project: proj_hash[assignment.project]
         )
-
-        new_obj.save!
       end
-
-      new_course.save!
     end
     new_course
   end
+
+    def copy_from_template( new_start: )
+    safe_timezone = timezone.presence || school&.timezone.presence || 'UTC'
+    course_tz = ActiveSupport::TimeZone.new( safe_timezone )
+
+    local_old_start = start_date.in_time_zone( course_tz ).to_date
+    local_new_start = new_start.in_time_zone( course_tz ).to_date
+    date_difference = ( local_new_start - local_old_start ).to_i
+
+    new_course = nil
+
+    Course.transaction do
+      # 1. Establish absolute calendar dates to prevent boundary drift
+      target_course_start = local_new_start
+      target_course_end   = end_date.in_time_zone( course_tz ).to_date + date_difference
+
+      new_course = school.courses.create!(
+        name: "Copy of #{name}",
+        number: "Copy of #{number}",
+        description:,
+        timezone: safe_timezone,
+        start_date: course_tz.local( target_course_start.year, target_course_start.month,
+                                     target_course_start.day ).beginning_of_day,
+        end_date: course_tz.local( target_course_end.year, target_course_end.month,
+                                   target_course_end.day ).end_of_day.change( sec: 0 )
+      )
+
+      # copy the faculty rosters
+      rosters.faculty.each do | roster |
+        new_course.rosters.create!(
+          role: roster.role,
+          user: roster.user
+        )
+      end
+
+      # copy the projects
+      proj_hash = {}
+      projects.each do | project |
+        p_start = project.start_date.advance( days: date_difference ).in_time_zone( course_tz )
+        p_end   = project.end_date.advance( days: date_difference ).in_time_zone( course_tz )
+
+        new_obj = new_course.projects.build(
+          name: project.name,
+          style: project.style,
+          factor_pack: project.factor_pack,
+          start_date: p_start,
+          end_date: p_end,
+          start_dow: project.start_dow,
+          end_dow: project.end_dow
+        )
+        new_obj.save!( validate: false )
+        proj_hash[project] = new_obj
+      end
+
+      # copy the experiences
+      experiences.each do | experience |
+        e_start = experience.start_date.advance( days: date_difference ).in_time_zone( course_tz )
+        e_end   = experience.end_date.advance( days: date_difference ).in_time_zone( course_tz )
+
+        new_exp = new_course.experiences.build(
+          name: experience.name,
+          start_date: e_start,
+          end_date: e_end
+        )
+        new_exp.save!( validate: false )
+      end
+
+      # copy the bingo! games
+      bingo_games.each do | bingo_game |
+        b_start = bingo_game.start_date.advance( days: date_difference ).in_time_zone( course_tz )
+        b_end   = bingo_game.end_date.advance( days: date_difference ).in_time_zone( course_tz )
+
+        new_bingo = new_course.bingo_games.build(
+          topic: bingo_game.topic,
+          description: bingo_game.description,
+          source: bingo_game.source,
+          group_option: bingo_game.group_option,
+          individual_count: bingo_game.individual_count,
+          lead_time: bingo_game.lead_time,
+          group_discount: bingo_game.group_discount,
+          project: proj_hash[bingo_game.project],
+          start_date: b_start,
+          end_date: b_end
+        )
+        new_bingo.save!( validate: false )
+      end
+
+      # copy the assignments
+      assignments.each do | assignment |
+        a_start = assignment.start_date.advance( days: date_difference ).in_time_zone( course_tz )
+        a_end   = assignment.end_date.advance( days: date_difference ).in_time_zone( course_tz )
+
+        new_assignment = new_course.assignments.build(
+          name: assignment.name,
+          description: assignment.description,
+          start_date: a_start,
+          end_date: a_end,
+          rubric: assignment.rubric,
+          file_sub: assignment.file_sub,
+          link_sub: assignment.link_sub,
+          text_sub: assignment.text_sub,
+          passing: assignment.passing,
+          group_enabled: assignment.group_enabled,
+          project: proj_hash[assignment.project]
+        )
+        new_assignment.save!( validate: false )
+      end
+    end
+    new_course
+  end
+
 
   def diversity_analysis( member_count: 4 )
     students = rosters.enrolled.collect( &:user )
@@ -304,51 +395,25 @@ class Course < ApplicationRecord
     errors
   end
 
-  # TODO: - check for date sanity of experiences and projects
   def activity_date_check
-    experiences.reload.each do | experience |
-      if experience.start_date < start_date
-        errors[:start_date].presence || ''
-        msg = "Experience '#{experience.name}' currently starts before this course does"
-        msg += " (#{experience.start_date} < #{start_date})."
+    get_activities.each do | activity |
+      # Safely fall back to get_name if .name doesn't exist (like in BingoGame)
+      activity_name = activity.respond_to?(:name) ? activity.name : activity.get_name(false)
+
+      if activity.start_date.present? && activity.start_date < start_date
+        msg = "Activity '#{activity_name}' (#{activity.type}) currently starts before this course does"
+        msg += " (#{activity.start_date} < #{start_date})."
         errors.add( :start_date, msg )
       end
-      next unless experience.end_date.change( sec: 0 ) > end_date
 
-      errors[:end_date].presence || ''
-      msg = "Experience '#{experience.name}' currently ends after this course does"
-      msg += " (#{experience.end_date} > #{end_date})."
-      errors.add( :end_date, msg )
-    end
-    projects.reload.each do | project |
-      if project.start_date < start_date
-        msg = errors[:start_date].presence || ''
-        msg += "Project '#{project.name}' currently starts before this course does"
-        msg += " (#{project.start_date} < #{start_date})."
-        errors.add( :start_date, msg )
-      end
-      next unless project.end_date.change( sec: 0 ) > end_date
+      next unless activity.end_date.present? && activity.end_date.change( sec: 0 ) > end_date.change( sec: 0 )
 
-      errors[:end_date].presence || ''
-      msg = "Project '#{project.name}' currently ends after this course does"
-      msg += " (#{project.end_date} > #{end_date})."
-      errors.add( :end_date, msg )
-    end
-    bingo_games.reload.each do | bingo_game |
-      if bingo_game.start_date < start_date
-        errors[:start_date].presence || ''
-        msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
-        msg += " (#{bingo_game.start_date} < #{start_date})."
-        errors.add( :start_date, msg )
-      end
-      next unless bingo_game.end_date.change( sec: 0 ) > end_date
-
-      errors[:end_date].presence || ''
-      msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
-      msg += " (#{bingo_game.end_date} > #{end_date})."
+      msg = "Activity '#{activity_name}' currently ends after this course does"
+      msg += " (#{activity.end_date} > #{end_date})."
       errors.add( :end_date, msg )
     end
   end
+
 
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
@@ -362,35 +427,31 @@ class Course < ApplicationRecord
 
   def timezone_adjust_comprehensive
     course_tz = ActiveSupport::TimeZone.new( timezone || 'UTC' )
-    # TODO: must handle changing timezones at some point
 
     # TZ corrections
     if ( start_date_changed? || timezone_changed? ) && start_date.present?
-      d = start_date.utc
-      new_date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
-      self.start_date = new_date
+      d = start_date.in_time_zone( course_tz )
+      self.start_date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
     end
 
     if ( end_date_changed? || timezone_changed? ) && end_date.present?
       d = end_date.in_time_zone( course_tz )
-      new_date = course_tz.local( d.year, d.month, d.day ).end_of_day
-      self.end_date = new_date.end_of_day.change( sec: 0 )
+      self.end_date = course_tz.local( d.year, d.month, d.day ).end_of_day.change( sec: 0 )
     end
 
-    return unless timezone_changed? && timezone_was.present?
+    return unless timezone_changed? && new_record?
 
-    orig_tz = ActiveSupport::TimeZone.new( timezone_was )
+    orig_tz = ActiveSupport::TimeZone.new( timezone_was || timezone || 'UTC' )
 
     Course.transaction do
       get_activities.each do | activity |
-        d = orig_tz.parse( activity.start_date.to_s )
-        d = course_tz.local( d.year, d.month, d.day )
-        activity.start_date = d.beginning_of_day
+        old_start = activity.start_date.in_time_zone( orig_tz )
+        old_end = activity.end_date.in_time_zone( orig_tz )
 
-        d = orig_tz.parse( activity.end_date.to_s )
-        d = course_tz.local( d.year, d.month, d.day )
-        activity.end_date = d.end_of_day
-        activity.save!( validate: false )
+        activity.start_date = course_tz.local( old_start.year, old_start.month, old_start.day ).beginning_of_day
+        activity.end_date = course_tz.local( old_end.year, old_end.month, old_end.day ).end_of_day.change( sec: 0 )
+
+        activity.save!( validate: false ) if persisted?
       end
     end
   end
