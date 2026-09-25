@@ -548,6 +548,7 @@ CREATE TABLE `candidates` (
   KEY `index_candidates_on_candidate_list_id` (`candidate_list_id`),
   KEY `index_candidates_on_concept_id` (`concept_id`),
   KEY `index_candidates_on_user_id` (`user_id`),
+  KEY `idx_on_candidate_list_id_candidate_feedback_id_e33a7a1462` (`candidate_list_id`,`candidate_feedback_id`),
   FULLTEXT KEY `index_candidates_on_term` (`term`),
   FULLTEXT KEY `index_candidates_on_definition` (`definition`),
   CONSTRAINT `fk_rails_01dfdc3a16` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
@@ -4296,6 +4297,7 @@ CREATE TABLE `installments` (
   KEY `index_installments_on_group_id` (`group_id`),
   KEY `index_installments_on_user_id` (`user_id`),
   KEY `idx_installments_graphing` (`assessment_id`,`group_id`,`user_id`),
+  KEY `index_installments_on_assessment_id_and_user_id_and_group_id` (`assessment_id`,`user_id`,`group_id`),
   CONSTRAINT `fk_rails_1a7158a65b` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `fk_rails_1a7eeb8754` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_8c4f898425` FOREIGN KEY (`assessment_id`) REFERENCES `assessments` (`id`)
@@ -4956,6 +4958,7 @@ CREATE TABLE `rosters` (
   KEY `index_rosters_on_role` (`role`),
   KEY `index_rosters_on_user_id` (`user_id`),
   KEY `idx_rosters_course_role_user` (`course_id`,`role`,`user_id`),
+  KEY `index_rosters_on_course_id_and_user_id_and_role` (`course_id`,`user_id`,`role`),
   CONSTRAINT `fk_rails_51ff61356a` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_c39627e3e4` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -5320,7 +5323,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20260923183019'),
 ('20260924013802'),
 ('20260924115106'),
-('20260924190251');
+('20260924190251'),
+('20260924220006');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5876,4 +5880,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-09-24 21:26:28
+-- Dump completed on 2026-09-25  1:30:18
