@@ -362,6 +362,7 @@ CREATE TABLE `bingo_cells` (
   KEY `index_bingo_cells_on_bingo_board_id` (`bingo_board_id`),
   KEY `index_bingo_cells_on_candidate_id` (`candidate_id`),
   KEY `index_bingo_cells_on_concept_id` (`concept_id`),
+  KEY `index_bingo_cells_on_bingo_board_id_and_row_and_column` (`bingo_board_id`,`row`,`column`),
   CONSTRAINT `fk_rails_146f272ed9` FOREIGN KEY (`bingo_board_id`) REFERENCES `bingo_boards` (`id`),
   CONSTRAINT `fk_rails_a288276ba8` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`),
   CONSTRAINT `fk_rails_e4577d19a4` FOREIGN KEY (`concept_id`) REFERENCES `concepts` (`id`)
@@ -506,6 +507,8 @@ CREATE TABLE `candidate_lists` (
   KEY `index_candidate_lists_on_user_id` (`user_id`),
   KEY `idx_candidate_lists_lookup` (`bingo_game_id`,`user_id`,`archived`),
   KEY `index_candidate_lists_on_current_candidate_list_id` (`current_candidate_list_id`),
+  KEY `index_candidate_lists_on_bingo_game_id_and_user_id` (`bingo_game_id`,`user_id`),
+  KEY `index_candidate_lists_on_bingo_game_id_and_archived` (`bingo_game_id`,`archived`),
   CONSTRAINT `fk_rails_070208024f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_536301951c` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `fk_rails_de17bb0877` FOREIGN KEY (`current_candidate_list_id`) REFERENCES `candidate_lists` (`id`),
@@ -549,6 +552,8 @@ CREATE TABLE `candidates` (
   KEY `index_candidates_on_concept_id` (`concept_id`),
   KEY `index_candidates_on_user_id` (`user_id`),
   KEY `idx_on_candidate_list_id_candidate_feedback_id_e33a7a1462` (`candidate_list_id`,`candidate_feedback_id`),
+  KEY `index_candidates_on_candidate_list_id_and_user_id` (`candidate_list_id`,`user_id`),
+  KEY `index_candidates_on_filtered_consistent` (`filtered_consistent`),
   FULLTEXT KEY `index_candidates_on_term` (`term`),
   FULLTEXT KEY `index_candidates_on_definition` (`definition`),
   CONSTRAINT `fk_rails_01dfdc3a16` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
@@ -4298,6 +4303,7 @@ CREATE TABLE `installments` (
   KEY `index_installments_on_user_id` (`user_id`),
   KEY `idx_installments_graphing` (`assessment_id`,`group_id`,`user_id`),
   KEY `index_installments_on_assessment_id_and_user_id_and_group_id` (`assessment_id`,`user_id`,`group_id`),
+  KEY `idx_installments_assessment_user_group` (`assessment_id`,`user_id`,`group_id`),
   CONSTRAINT `fk_rails_1a7158a65b` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `fk_rails_1a7eeb8754` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_rails_8c4f898425` FOREIGN KEY (`assessment_id`) REFERENCES `assessments` (`id`)
@@ -5324,7 +5330,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20260924013802'),
 ('20260924115106'),
 ('20260924190251'),
-('20260924220006');
+('20260924220006'),
+('20260925024520');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 COMMIT;
@@ -5650,6 +5657,8 @@ CREATE TABLE `values` (
   KEY `index_values_on_installment_id` (`installment_id`),
   KEY `index_values_on_user_id` (`user_id`),
   KEY `idx_values_graphing` (`installment_id`,`factor_id`,`user_id`),
+  KEY `index_values_on_installment_id_and_user_id_and_factor_id` (`installment_id`,`user_id`,`factor_id`),
+  KEY `index_values_on_installment_id_and_factor_id_and_user_id` (`installment_id`,`factor_id`,`user_id`),
   CONSTRAINT `fk_rails_1986796f2c` FOREIGN KEY (`factor_id`) REFERENCES `factors` (`id`),
   CONSTRAINT `fk_rails_3abc1a1414` FOREIGN KEY (`installment_id`) REFERENCES `installments` (`id`),
   CONSTRAINT `fk_rails_690f376fee` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -5880,4 +5889,4 @@ SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-09-25  1:30:18
+-- Dump completed on 2026-09-25  3:00:26

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_25_024520) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -123,6 +123,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
     t.integer "row"
     t.boolean "selected"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["bingo_board_id", "row", "column"], name: "index_bingo_cells_on_bingo_board_id_and_row_and_column"
     t.index ["bingo_board_id"], name: "index_bingo_cells_on_bingo_board_id"
     t.index ["candidate_id"], name: "index_bingo_cells_on_candidate_id"
     t.index ["concept_id"], name: "index_bingo_cells_on_concept_id"
@@ -179,7 +180,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
     t.boolean "is_group"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
+    t.index ["bingo_game_id", "archived"], name: "index_candidate_lists_on_bingo_game_id_and_archived"
     t.index ["bingo_game_id", "user_id", "archived"], name: "idx_candidate_lists_lookup"
+    t.index ["bingo_game_id", "user_id"], name: "index_candidate_lists_on_bingo_game_id_and_user_id"
     t.index ["current_candidate_list_id"], name: "fk_rails_de17bb0877"
     t.index ["current_candidate_list_id"], name: "index_candidate_lists_on_current_candidate_list_id"
     t.index ["group_id"], name: "index_candidate_lists_on_group_id"
@@ -198,9 +201,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
     t.integer "user_id", null: false
     t.index ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id"
     t.index ["candidate_list_id", "candidate_feedback_id"], name: "idx_on_candidate_list_id_candidate_feedback_id_e33a7a1462"
+    t.index ["candidate_list_id", "user_id"], name: "index_candidates_on_candidate_list_id_and_user_id"
     t.index ["candidate_list_id"], name: "index_candidates_on_candidate_list_id"
     t.index ["concept_id"], name: "index_candidates_on_concept_id"
     t.index ["definition"], name: "index_candidates_on_definition", type: :fulltext
+    t.index ["filtered_consistent"], name: "index_candidates_on_filtered_consistent"
     t.index ["term"], name: "index_candidates_on_term", type: :fulltext
     t.index ["user_id"], name: "index_candidates_on_user_id"
   end
@@ -432,6 +437,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["assessment_id", "group_id", "user_id"], name: "idx_installments_graphing"
+    t.index ["assessment_id", "user_id", "group_id"], name: "idx_installments_assessment_user_group"
     t.index ["assessment_id", "user_id", "group_id"], name: "index_installments_on_assessment_id_and_user_id_and_group_id"
     t.index ["assessment_id"], name: "index_installments_on_assessment_id"
     t.index ["group_id"], name: "index_installments_on_group_id"
@@ -760,6 +766,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
     t.integer "value"
     t.index ["factor_id"], name: "index_values_on_factor_id"
     t.index ["installment_id", "factor_id", "user_id"], name: "idx_values_graphing"
+    t.index ["installment_id", "factor_id", "user_id"], name: "index_values_on_installment_id_and_factor_id_and_user_id"
+    t.index ["installment_id", "user_id", "factor_id"], name: "index_values_on_installment_id_and_user_id_and_factor_id"
     t.index ["installment_id"], name: "index_values_on_installment_id"
     t.index ["user_id"], name: "index_values_on_user_id"
   end
