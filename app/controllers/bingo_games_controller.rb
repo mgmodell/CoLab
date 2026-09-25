@@ -47,16 +47,12 @@ class BingoGamesController < ApplicationController
       roster = bingo_game.course.rosters.find_by( user: current_user )
       if roster.enrolled_student?
         if bingo_game.is_open?
-          # go to candidate entry
           messages[:target] = :candidate_entry
           messages[:status] = t( 'bingo_games.candidate_entry_heading' )
-
         elsif bingo_game.reviewed?
-          # go to results
           messages[:target] = :results_review
           messages[:status] = t( 'bingo_games.results_review_heading' )
         elsif bingo_game.awaiting_review?
-          # go to be patient
           messages[:target] = :review_in_progress
           messages[:status] = t( 'bingo_games.review_in_progress_heading' )
           messages[:metadata] = {
@@ -64,7 +60,6 @@ class BingoGamesController < ApplicationController
             end_date: bingo_game.next_deadline
           }
         else
-          # not available yet
           messages[:target] = :not_available_yet
           messages[:status] = t( 'bingo_games.not_available_yet_heading' )
           messages[:metadata] = {
@@ -73,7 +68,6 @@ class BingoGamesController < ApplicationController
         end
       elsif roster.instructor? || roster.assistant?
         if bingo_game.is_open? || bingo_game.reviewed?
-          # go to admin
           messages[:target] = :admin
           messages[:status] = t( 'bingo_games.admin_review_heading' )
           messages[:metadata] = {
@@ -81,7 +75,6 @@ class BingoGamesController < ApplicationController
             bingo_game_id: bingo_game.id
           }
         else
-          # go candidate review
           messages[:target] = :review_candidates
           messages[:status] = t( 'bingo_games.review_candidates_heading' )
         end
@@ -103,9 +96,9 @@ class BingoGamesController < ApplicationController
         feedback_id: c.candidate_feedback_id,
         credit: c.candidate_feedback.credit }
     end
-    words = candidate_list.candidates.collect do | c |
-      c.definition.split( ' ' )
-    end
+    
+    # Pluck Optimization: Fetch definitions directly without instantiating AR models
+    words = candidate_list.candidates.pluck(:definition).map { |d| d.split(' ') }
     found_words = words.empty? ? [] : Candidate.filter.filter( words.flatten! )
 
     render json: {
@@ -122,10 +115,8 @@ class BingoGamesController < ApplicationController
       candidate_lists = CandidateList.where(
         bingo_game_id: params[:id],
         user_id: current_user.id
-      )
-                                     .includes( :current_candidate_list )
+      ).includes( :current_candidate_list )
 
-      # temporary storage for optimization
       cl = candidate_lists.first
 
       candidate_list = if cl.archived
@@ -136,7 +127,6 @@ class BingoGamesController < ApplicationController
 
       candidates = Candidate.completed.where( candidate_list: )
                             .includes( %i[concept candidate_feedback] )
-
     end
 
     candidates = candidates.to_a.collect do | c |
@@ -148,9 +138,9 @@ class BingoGamesController < ApplicationController
         feedback_id: c.candidate_feedback_id,
         credit: c.candidate_feedback.credit }
     end
-    words = candidate_list.bingo_game.candidates.collect do | c |
-      c.definition.split( ' ' )
-    end
+
+    # Pluck Optimization: Pluck definitions straight from database
+    words = candidate_list.bingo_game.candidates.pluck(:definition).map { |d| d.split(' ') }
 
     render json: {
       candidate_list: {
@@ -175,7 +165,7 @@ class BingoGamesController < ApplicationController
     check_bingo_editor( bingo_game: )
     anon = current_user.anonymize?
     resp = {}
-    # Get the users
+
     bingo_game.course.rosters.each do | r |
       next unless r.enrolled_student? || r.invited_student? || r.dropped_student?
 
@@ -193,7 +183,7 @@ class BingoGamesController < ApplicationController
         practice_answers: []
       }
     end
-    # Get the worksheets
+
     bingo_game.bingo_boards.each do | bb |
       next unless bb.worksheet?
 
@@ -216,18 +206,16 @@ class BingoGamesController < ApplicationController
         user_id = cl.user_id
         if resp[user_id].present?
           resp[user_id][:concepts_expected] = cl.candidates.size
-          resp[user_id][:concepts_entered] = cl.candidates
-                                               .count { | c | !( c.definition.empty? || c.term.empty? ) }
-          resp[user_id][:concepts_credited] = cl.candidates
-                                                .count do | c |
-                                                  !( c.candidate_feedback.present? &&
-                                                    CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
-          end
-          resp[user_id][:term_problems] = cl.candidates
-                                            .count do | c |
-                                              !( c.candidate_feedback.present? &&
-                                                CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
-          end
+          
+          # SQL-Level Aggregations replacing Ruby block counting
+          resp[user_id][:concepts_entered] = cl.candidates.where.not( definition: [nil, ''], term: [nil, ''] ).count
+          
+          tp_critique_id = CandidateFeedback.critiques[:term_problem]
+          resp[user_id][:concepts_credited] = cl.candidates.left_outer_joins(:candidate_feedback)
+                                                .where.not(candidate_feedbacks: { name: tp_critique_id }).count
+          resp[user_id][:term_problems] = cl.candidates.left_outer_joins(:candidate_feedback)
+                                            .where(candidate_feedbacks: { name: tp_critique_id }).count
+
           resp[user_id][:performance] = cl.performance
           candidates = []
           cl.candidates.reviewed.each do | c |
@@ -244,18 +232,14 @@ class BingoGamesController < ApplicationController
         end
       elsif cl.is_group && cl.group.present?
         concepts_expected = cl.candidates.size
-        concepts_entered = cl.candidates
-                             .count { | c | !( c.definition.empty? || c.term.empty? ) }
-        concepts_credited = cl.candidates
-                              .count do | c |
-                                !( c.candidate_feedback.present? &&
-                                  CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name )
-        end
-        term_problems = cl.candidates
-                          .count do | c |
-                            !( c.candidate_feedback.present? &&
-                              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name )
-        end
+        concepts_entered = cl.candidates.where.not( definition: [nil, ''], term: [nil, ''] ).count
+        
+        tp_critique_id = CandidateFeedback.critiques[:term_problem]
+        concepts_credited = cl.candidates.left_outer_joins(:candidate_feedback)
+                              .where.not(candidate_feedbacks: { name: tp_critique_id }).count
+        term_problems = cl.candidates.left_outer_joins(:candidate_feedback)
+                          .where(candidate_feedbacks: { name: tp_critique_id }).count
+
         performance = cl.performance
         candidates = []
         cl.candidates.completed.each do | c |
@@ -277,7 +261,6 @@ class BingoGamesController < ApplicationController
           resp[u.id][:performance] = performance
           resp[u.id][:candidates] = candidates
         end
-
       end
     end
     resp_array = []
@@ -293,6 +276,7 @@ class BingoGamesController < ApplicationController
     if current_user.is_admin?
       @bingo_games = BingoGame.includes( :course ).all
     else
+      # N+1 Fix: Load bingo games via includes on roster course associations
       rosters = current_user.rosters.includes( course: :bingo_games ).instructor
       rosters.each do | roster |
         @bingo_games.concat roster.course.bingo_games.to_a
@@ -374,7 +358,6 @@ class BingoGamesController < ApplicationController
 
     cl_map = {}
     candidate_lists = []
-    # working as a group
     cl = CandidateList.new
     cl.id = -1
     cl.is_group = true
@@ -399,7 +382,7 @@ class BingoGamesController < ApplicationController
       groups[0].users << u
       cl_map[u] = cl
     end
-    # Working on their own
+
     -4.downto( -7 ) do | index |
       u = User.new
       u.id = index
@@ -517,7 +500,6 @@ class BingoGamesController < ApplicationController
 
     else
       @bingo_game = BingoGame.find( bingo_id )
-      # Security check to support demos
       return redirect_to root_path unless current_user.present? &&
                                          @bingo_game.course.instructors.include?( current_user )
 
@@ -545,8 +527,6 @@ class BingoGamesController < ApplicationController
         candidate_map[c[:id]] = c
       end
 
-      # Process the data
-
       @bingo_game.candidates.completed
                  .includes( :candidate_feedback,
                             :user,
@@ -559,8 +539,6 @@ class BingoGamesController < ApplicationController
 
                    candidate.candidate_feedback =
                      feedback_map[entered_candidate[:candidate_feedback_id]]
-
-                   # feedback_name = candidate.candidate_feedback.name_en
 
                    if 'term_problem' != candidate.candidate_feedback_critique
                      entered_candidate[:concept][:name].present?
@@ -580,7 +558,6 @@ class BingoGamesController < ApplicationController
                    logger.debug candidate.errors.full_messages unless candidate.errors.empty?
       end
 
-      # Send notifications to students
       @bingo_game.reviewed = params['reviewed']
       if @bingo_game.reviewed && !@bingo_game.students_notified
         @bingo_game.course.enrolled_students.find_all do | student |
@@ -662,14 +639,13 @@ class BingoGamesController < ApplicationController
                                     name: c.name
                                   }
     end.as_json
-    words = bingo_game.candidates.collect do | c |
-      c.definition.split( ' ' )
-    end
+    
+    # Pluck Optimization: Pluck definitions directly rather than pulling full models
+    words = bingo_game.candidates.pluck(:definition).map { |d| d.split(' ') }
     resp[:found_words] = words.empty? ? [] : Candidate.filter.filter( words.flatten! )
     resp
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
     if params[:id].nil?
       course = Course.find( params[:course_id] )

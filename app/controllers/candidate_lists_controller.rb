@@ -14,16 +14,13 @@ class CandidateListsController < ApplicationController
     if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
     else
-      @term_counts = {}
-      @candidate_list.candidates.each do | candidate |
-        @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
-      end
+      # Aggregation Optimization: Replaced in-memory Ruby counting loop with direct SQL group count
+      @term_counts = @candidate_list.candidates.group(:filtered_consistent).count
 
       empties = @candidate_list.expected_count - @candidate_list.candidates.count
 
       empties.times do
-        @candidate_list.candidates.build( term: '', definition: '',
-                                          user_id: current_user.id )
+        @candidate_list.candidates.build( term: '', definition: '', user_id: current_user.id )
       end
 
       if @candidate_list.bingo_game_reviewed
@@ -35,7 +32,6 @@ class CandidateListsController < ApplicationController
     end
   end
 
-  # API code here
   def get_candidate_list
     bingo_game = BingoGame.find( params[:bingo_game_id] )
     candidate_list = bingo_game.candidate_list_for_user( current_user )
@@ -75,7 +71,9 @@ class CandidateListsController < ApplicationController
       @candidate_list = merge_to_group_list( @candidate_list ) if 1 == @candidate_list.others_requested_help
     else
       @candidate_list.transaction do
-        @candidate_list.bingo_game.project.group_for_user( current_user ).users.each do | user |
+        # N+1 Fix: Includes candidate_lists when iterating through group users
+        group_users = @candidate_list.bingo_game.project.group_for_user( current_user ).users.includes(:candidate_lists)
+        group_users.each do | user |
           cl = @candidate_list.bingo_game.candidate_list_for_user( user )
           cl.group_requested = false
           cl.save!
@@ -83,10 +81,10 @@ class CandidateListsController < ApplicationController
         end
       end
     end
-    @term_counts = {}
-    @candidate_list.candidates.each do | candidate |
-      @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
-    end
+    
+    # Aggregation Optimization: Replaced in-memory loop with direct SQL aggregate grouping
+    @term_counts = @candidate_list.candidates.group(:filtered_consistent).count
+
     respond_to do | format |
       format.json do
         render json: {
@@ -128,7 +126,6 @@ class CandidateListsController < ApplicationController
             candidate = @candidate_list.candidates.find { | c | c.id == id }
             candidate.term = term
             candidate.definition = definition
-            # candidate.user = current_user
           end
         end
 
@@ -231,7 +228,6 @@ class CandidateListsController < ApplicationController
     end
   end
 
-  # present as a hack to support the demo
   def create
     flash[:notice] = t( 'candidate_lists.demo_success' )
     redirect_to root_url
@@ -239,8 +235,6 @@ class CandidateListsController < ApplicationController
 
   protected
 
-  # Merge all the lists, add the merged whole to a new, group candidate_list,
-  # set archived on all existing lists and then return the new list
   def merge_to_group_list( candidate_list )
     merger_group = candidate_list.bingo_game.project.group_for_user( candidate_list.user )
     required_terms = candidate_list.bingo_game.required_terms_for_contributors( merger_group.users.size )
@@ -249,7 +243,9 @@ class CandidateListsController < ApplicationController
     merger_group.transaction do
       merged_list = []
       group_lists = []
-      merger_group.users.each do | group_member |
+      
+      # N+1 Fix: Preload candidates for each user's candidate list
+      merger_group.users.includes(candidate_lists: :candidates).each do | group_member |
         member_cl = candidate_list.bingo_game.candidate_list_for_user( group_member )
         member_cl.archived = true
         member_cl.candidates.includes( :user ).find_each do | candidate |
@@ -285,13 +281,13 @@ class CandidateListsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    if '-1' == params[:bingo_game_id] # Support for demo
+    if '-1' == params[:bingo_game_id]
       flash[:notice] = t( 'candidate_lists.demo_colab_success' )
       redirect_to root_url
     else
-      bingo_game = BingoGame.find_by id: params[:bingo_game_id]
+      # N+1 Fix: Includes candidate list hierarchy and candidates
+      bingo_game = BingoGame.includes(candidate_lists: %i[candidates current_candidate_list]).find_by id: params[:bingo_game_id]
       @candidate_list = bingo_game.candidate_list_for_user current_user
       @candidate_list = @candidate_list.current_candidate_list if @candidate_list.archived
     end
