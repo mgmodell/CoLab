@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_190251) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_220006) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -197,6 +197,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_190251) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id", null: false
     t.index ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id"
+    t.index ["candidate_list_id", "candidate_feedback_id"], name: "idx_on_candidate_list_id_candidate_feedback_id_e33a7a1462"
     t.index ["candidate_list_id"], name: "index_candidates_on_candidate_list_id"
     t.index ["concept_id"], name: "index_candidates_on_concept_id"
     t.index ["definition"], name: "index_candidates_on_definition", type: :fulltext
@@ -431,6 +432,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_190251) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["assessment_id", "group_id", "user_id"], name: "idx_installments_graphing"
+    t.index ["assessment_id", "user_id", "group_id"], name: "index_installments_on_assessment_id_and_user_id_and_group_id"
     t.index ["assessment_id"], name: "index_installments_on_assessment_id"
     t.index ["group_id"], name: "index_installments_on_group_id"
     t.index ["user_id"], name: "index_installments_on_user_id"
@@ -575,6 +577,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_190251) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id", null: false
     t.index ["course_id", "role", "user_id"], name: "idx_rosters_course_role_user"
+    t.index ["course_id", "user_id", "role"], name: "index_rosters_on_course_id_and_user_id_and_role"
     t.index ["course_id"], name: "index_rosters_on_course_id"
     t.index ["role"], name: "index_rosters_on_role"
     t.index ["user_id", "course_id"], name: "index_rosters_on_user_id_and_course_id", unique: true
