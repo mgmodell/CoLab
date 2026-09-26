@@ -158,6 +158,7 @@ class InstallmentsController < ApplicationController
         end
       end
 
+      # Safe because there are no validations
       Value.insert_all!( values_payload ) if values_payload.any?
 
       installment.reload
@@ -217,6 +218,7 @@ class InstallmentsController < ApplicationController
         }
       end
 
+      # Safe because there are no validations
       Value.upsert_all( upsert_payload ) if upsert_payload.any?
 
       render json: {

@@ -212,9 +212,9 @@ class BingoGamesController < ApplicationController
           
           tp_critique_id = CandidateFeedback.critiques[:term_problem]
           resp[user_id][:concepts_credited] = cl.candidates.left_outer_joins(:candidate_feedback)
-                                                .where.not(candidate_feedbacks: { name: tp_critique_id }).count
+                                                .where.not(candidate_feedbacks: { critique: tp_critique_id }).count
           resp[user_id][:term_problems] = cl.candidates.left_outer_joins(:candidate_feedback)
-                                            .where(candidate_feedbacks: { name: tp_critique_id }).count
+                                            .where(candidate_feedbacks: { critique: tp_critique_id }).count
 
           resp[user_id][:performance] = cl.performance
           candidates = []
@@ -236,9 +236,9 @@ class BingoGamesController < ApplicationController
         
         tp_critique_id = CandidateFeedback.critiques[:term_problem]
         concepts_credited = cl.candidates.left_outer_joins(:candidate_feedback)
-                              .where.not(candidate_feedbacks: { name: tp_critique_id }).count
+                              .where.not(candidate_feedbacks: { critique: tp_critique_id }).count
         term_problems = cl.candidates.left_outer_joins(:candidate_feedback)
-                          .where(candidate_feedbacks: { name: tp_critique_id }).count
+                          .where(candidate_feedbacks: { critique: tp_critique_id }).count
 
         performance = cl.performance
         candidates = []
