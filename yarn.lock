@@ -1670,7 +1670,7 @@ __metadata:
     immutable: "npm:^5.1.9"
     mini-css-extract-plugin: "npm:^2.10.2"
     mockdate: "npm:^3.0.5"
-    primeicons: "npm:^8.0.1"
+    primeicons: "npm:^8.0.2"
     primereact: "npm:10.9.8"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
@@ -2926,10 +2926,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primeicons@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "primeicons@npm:8.0.1"
-  checksum: 10c0/67f6e3075163fd1ca5627c23fd37554b93cc4f7b413faa07d37500d386602bb350c75eea0a17ee203dc66b21423d7f7590eca155a965af40d7d9a4c19080a4cf
+"primeicons@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "primeicons@npm:8.0.2"
+  checksum: 10c0/6a11b16368b07a5e487fa0b0272ab9c33c2ad75eb80669ab7f2584c333fe65aeb70e75f3f9069398a0ba86eaa3246a9a3954607570bc267907c1d5abe986964a
   languageName: node
   linkType: hard
 

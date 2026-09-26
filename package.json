@@ -48,7 +48,7 @@
     "immutable": "^5.1.9",
     "mini-css-extract-plugin": "^2.10.2",
     "mockdate": "^3.0.5",
-    "primeicons": "^8.0.1",
+    "primeicons": "^8.0.2",
     "primereact": "10.9.8",
     "promise-polyfill": "^8.3.0",
     "prop-types": "^15.8.1",
