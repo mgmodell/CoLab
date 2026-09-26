@@ -416,7 +416,6 @@ class User < ApplicationRecord
           pred_u.first_name = pred_u.first_name || prey_u.first_name
           pred_u.last_name = pred_u.last_name || prey_u.last_name
           pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
-          pred_u.country = pred_u.country || prey_u.country
           pred_u.timezone = pred_u.timezone || prey_u.timezone
           pred_u.theme = pred_u.theme || prey_u.theme
           pred_u.school_id = pred_u.school_id || prey_u.school_id
