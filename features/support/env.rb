@@ -66,11 +66,17 @@ end
 
 Capybara.register_driver( :remote_chrome ) do | app |
   options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument( '--disable-extensions' )
+  options.add_argument( '--no-sandbox' )
+
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.read_timeout = 120 # instead of the default of 60s
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
     url: 'http://selenium:4444/wd/hub',
+    http_client: client,
     options:
   )
 end
