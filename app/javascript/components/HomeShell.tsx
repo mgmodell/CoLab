@@ -55,8 +55,8 @@ export default function HomeShell(props: Props) {
       {
         element: "body",
         popover: {
-          title: "Welcome to the Application!",
-          description: "This stuff is awesome. More information soon!",
+          title: "Home",
+          description: "Use this page to review your current tasks, switch between task and calendar views, and open each activity.",
           align: "center",
           side: "left"
         }
