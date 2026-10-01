@@ -6,7 +6,7 @@
     "node": "26.7.0"
   },
   "dependencies": {
-    "@rails/actioncable": "8.1.301",
+    "@rails/actioncable": "8.1.400",
     "@react-oauth/google": "^0.13.5",
     "@react-spring/parallax": "10.1.2",
     "@react-spring/types": "10.1.2",
