@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mgmodell/powerpoint.git
-  revision: 07a9612e7a9cb4f2ef253748ef5801142240d296
+  revision: edd724e87fc8d8c248d92ad69f6c6d6b3bf41eb3
   specs:
     powerpoint (1.8)
       fastimage (~> 2)
