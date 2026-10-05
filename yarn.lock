@@ -220,10 +220,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rails/actioncable@npm:8.1.301":
-  version: 8.1.301
-  resolution: "@rails/actioncable@npm:8.1.301"
-  checksum: 10c0/50d395e012f23b7cbdd18ad42077baaf8f15fd2b3e55cdc93e0ae771c7d24ec0deeea97062e7e9549f0ebeae3f90d6a32ef7de909389d957f87e3384fe23501e
+"@rails/actioncable@npm:8.1.400":
+  version: 8.1.400
+  resolution: "@rails/actioncable@npm:8.1.400"
+  checksum: 10c0/69dd0c3ef4e72bfe281e0f22b18aea9766057ce6725a47832fd714db889948e439c5918279fcffcf644ed86c16c6abb55bf32fd6d8aad160d4d7ef8773bd9980
   languageName: node
   linkType: hard
 
@@ -1625,7 +1625,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:."
   dependencies:
-    "@rails/actioncable": "npm:8.1.301"
+    "@rails/actioncable": "npm:8.1.400"
     "@react-oauth/google": "npm:^0.13.5"
     "@react-spring/parallax": "npm:10.1.2"
     "@react-spring/types": "npm:10.1.2"
@@ -1659,7 +1659,7 @@ __metadata:
     d3-scale-chromatic: "npm:^3.1.0"
     d3-time-format: "npm:^4.1.0"
     dayjs: "npm:^1.11.23"
-    driver.js: "npm:^1.8.0"
+    driver.js: "npm:^1.9.0"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.8"
     i18next: "npm:^26.4.2"
@@ -2198,10 +2198,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"driver.js@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "driver.js@npm:1.8.0"
-  checksum: 10c0/a770d0bf2d93ddafa064237ce002f90d3a8d4278e60954ad9efedda45cac4e74aa5a8508f3fd8800c094d59fb9bc53a0c0634d434d0889622de5f60ecc5a1fd2
+"driver.js@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "driver.js@npm:1.9.0"
+  checksum: 10c0/33f5c9b4500884f9c251f563c14bee7a6842079c580186a27de1d09df605d852251c390c954ce52ad9913c23f88e7656dc18fa63b6d6cc9249ef33a40d279c35
   languageName: node
   linkType: hard
 

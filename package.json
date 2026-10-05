@@ -6,7 +6,7 @@
     "node": "26.7.0"
   },
   "dependencies": {
-    "@rails/actioncable": "8.1.301",
+    "@rails/actioncable": "8.1.400",
     "@react-oauth/google": "^0.13.5",
     "@react-spring/parallax": "10.1.2",
     "@react-spring/types": "10.1.2",
@@ -37,7 +37,7 @@
     "d3-scale-chromatic": "^3.1.0",
     "d3-time-format": "^4.1.0",
     "dayjs": "^1.11.23",
-    "driver.js": "^1.8.0",
+    "driver.js": "^1.9.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^6.1.8",
     "i18next": "^26.4.2",
