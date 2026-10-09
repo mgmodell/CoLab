@@ -41,6 +41,7 @@ es:
       faultline_strength: Nivel de FaultLine de tu equipo
       next_check_in: Próxima apertura de evaluación
       no_next_check_in: No hay más evaluaciones programadas.
+      check_in_completion: Porcentaje de evaluaciones completadas
       back_to_tasks: Volver a tareas
       load_error: No se pudo cargar la información del proyecto.
     edit:

@@ -187,7 +187,7 @@ export default function TaskList(props: Props) {
                     }
                     break;
                   case 'project':
-                    output = '';
+                    output = t('list.status.click_for_info');
                     break;
                   case 'bingo_game':
                     if (params.status < 0) {

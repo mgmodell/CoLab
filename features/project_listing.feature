@@ -27,6 +27,7 @@ Feature: Assessment Listing
     Then the user should see a successful login message
     Then no check-in should be open for the project
     Then user should see 1 open task
+    Then the project status should say "Click for info"
     When the user opens the project information from the task list
     Then the project information should include its description, team, scores, and next check-in
 

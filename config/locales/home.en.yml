@@ -251,3 +251,4 @@ en:
         label: Status
         incomplete: Not Completed
         complete: Completed
+        click_for_info: Click for info

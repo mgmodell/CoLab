@@ -50,7 +50,8 @@ class ProjectsController < ApplicationController
       project: {
         name: project.name,
         description: project.description,
-        course_name: project.course.get_name( false )
+        course_name: project.course.get_name( false ),
+        completion_percentage: project.get_performance( current_user )
       },
       group: {
         name: group.name,

@@ -236,3 +236,4 @@ ko:
         label: 상태
         incomplete: 완료되지 않음
         complete: 완료됨
+        click_for_info: 정보를 보려면 클릭하세요

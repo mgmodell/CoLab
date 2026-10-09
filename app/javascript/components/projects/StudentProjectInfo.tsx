@@ -21,6 +21,7 @@ interface StudentProject {
     name: string;
     description: string;
     course_name: string;
+    completion_percentage: number;
   };
   group: {
     name: string;
@@ -119,6 +120,12 @@ export default function StudentProjectInfo() {
                   )
                 : t("show.no_next_check_in")}
             </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12}>
+            <h2>{t("show.check_in_completion")}</h2>
+            <p>{data.project.completion_percentage}%</p>
           </Col>
         </Row>
         <Button
