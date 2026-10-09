@@ -71,7 +71,7 @@ export default function TaskList(props: Props) {
   const normalizedFilter = filterText.trim().toLowerCase();
   const [groupBy, setGroupBy] = React.useState<GroupBy>("course");
   const [expandedRows, setExpandedRows] = React.useState<IGroupedTaskItem[]>([]);
-  const groupingOptions = [
+  const groupingOptions: Array<{ label: string; value: GroupBy }> = [
     { label: t("list.group_by_type"), value: "type" },
     { label: t("list.group_by_course"), value: "course" },
     { label: t("list.group_by_week"), value: "week" }
@@ -104,17 +104,16 @@ export default function TaskList(props: Props) {
   ] );
 
   const groupedTasks = useMemo(() => props.tasks
-    .filter(task =>
-      normalizedFilter.length === 0
-      || task.name.toLowerCase().includes(normalizedFilter)
-      || task.course_name.toLowerCase().includes(normalizedFilter)
-    )
     .map(task => {
       if (groupBy === "type") {
         return {
           ...task,
           groupKey: `type:${task.type}`,
-          groupLabel: t(`list.task_types.${task.type}`)
+          groupLabel: t(`list.task_types.${task.type}`, {
+            defaultValue: task.type
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, letter => letter.toUpperCase())
+          })
         };
       }
 
@@ -139,18 +138,29 @@ export default function TaskList(props: Props) {
           ? t("list.week_of", { date: weekStart.toString() })
           : t("list.no_close_date")
       };
-    }), [groupBy, normalizedFilter, props.tasks, t]);
+    })
+    .sort((first, second) =>
+      first.groupKey.localeCompare(second.groupKey)
+      || (first.next_date?.toInstant().epochMilliseconds ?? Infinity)
+        - (second.next_date?.toInstant().epochMilliseconds ?? Infinity)
+    ), [groupBy, props.tasks, t]);
+
+  const visibleTasks = useMemo(() => groupedTasks.filter(task =>
+    normalizedFilter.length === 0
+    || task.name.toLowerCase().includes(normalizedFilter)
+    || task.course_name.toLowerCase().includes(normalizedFilter)
+  ), [groupedTasks, normalizedFilter]);
 
   React.useEffect(() => {
     setExpandedRows([
       ...new Map(groupedTasks.map(task => [task.groupKey, task])).values()
     ]);
-  }, [groupedTasks]);
+  }, [groupBy, groupedTasks]);
 
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
       <DataTable
-        value={groupedTasks}
+        value={visibleTasks}
         resizableColumns
         tableStyle={{
           minWidth: '50rem'

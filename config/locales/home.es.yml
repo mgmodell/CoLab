@@ -54,7 +54,7 @@ es:
   group: Grupo
   type: Tipo
   expired: Expirado
-  bingo_game: Bingo! Juego
+  bingo_game: ¡Bingo! Juego
   experience: Experiencia grupal
   other_info: Otra informatión
   start_dow: Iniciar DOW
@@ -205,6 +205,6 @@ es:
       task_types:
         assessment: Evaluación
         assignment: Tarea
-        bingo_game: Bingo! Juego
+        bingo_game: ¡Bingo! Juego
         experience: Experiencia grupal
         submission: Entrega

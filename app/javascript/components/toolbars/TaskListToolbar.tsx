@@ -16,9 +16,9 @@ type Props = {
   };
   grouping?: {
     label: string;
-    value: string;
-    options: Array<{ label: string; value: string }>;
-    setGroupByFunc: (string) => void;
+    value: "type" | "course" | "week";
+    options: Array<{ label: string; value: "type" | "course" | "week" }>;
+    setGroupByFunc: (value: "type" | "course" | "week") => void;
   };
   columnToggle?: {
     optColumns: Array<string>;
@@ -30,6 +30,7 @@ type Props = {
 export default function TaskListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
+  const groupingId = React.useId();
   const onColumnToggle = event => {
     props.columnToggle.setVisibleColumnsFunc(event.value);
   };
@@ -51,8 +52,7 @@ export default function TaskListToolbar(props: Props) {
   const grouping =
     undefined !== props.grouping ? (
       <Dropdown
-        aria-label={props.grouping.label}
-        inputId="task-group-by"
+        inputId={groupingId}
         value={props.grouping.value}
         options={props.grouping.options}
         onChange={event => props.grouping?.setGroupByFunc(event.value)}
@@ -77,5 +77,20 @@ export default function TaskListToolbar(props: Props) {
       </div>
     ) : null;
 
-  return <Toolbar center={columnToggle} end={<>{grouping}{search}</>} />;
+  return (
+    <Toolbar
+      center={columnToggle}
+      end={
+        <>
+          {grouping && props.grouping ? (
+            <div className="flex align-items-center gap-2">
+              <label htmlFor={groupingId}>{props.grouping.label}</label>
+              {grouping}
+            </div>
+          ) : null}
+          {search}
+        </>
+      }
+    />
+  );
 }
