@@ -61,6 +61,7 @@ export default function TaskList(props: Props) {
 
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
+  const normalizedFilter = filterText.trim().toLowerCase();
   const optColumns = [
     t(`list.${OPT_COLS.GROUP}`),
     t(`list.${OPT_COLS.INSTRUCTOR_TASK}`),
@@ -92,9 +93,9 @@ export default function TaskList(props: Props) {
     <>
       <DataTable
         value={props.tasks.filter((task) => {
-          return filterText.length === 0
-            || task.name.includes(filterText)
-            || task.course_name.includes(filterText);
+          return normalizedFilter.length === 0
+            || task.name.toLowerCase().includes(normalizedFilter)
+            || task.course_name.toLowerCase().includes(normalizedFilter);
         })}
         resizableColumns
         tableStyle={{
@@ -155,6 +156,7 @@ export default function TaskList(props: Props) {
           field={'course_name'}
           sortable
           filter
+          filterMatchMode="contains"
           key={'course_name'}
         />
         {visibleColumns.includes(t(`list.${OPT_COLS.GROUP}`)) ?
