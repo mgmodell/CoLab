@@ -83,6 +83,35 @@ class Reaction < ApplicationRecord
     end
   end
 
+  # Engagement timing, in seconds. Each diagnosis is timed from the
+  # previous milestone (reaction start, or the prior diagnosis) to its
+  # own creation. The reaction time runs from the final diagnosis to the
+  # recording of the reaction. Values are nil when not yet available.
+  def timing_stats
+    stamps = diagnoses.order( :created_at ).pluck( :created_at )
+    durations = []
+    previous = created_at
+    stamps.each do | stamp |
+      durations << ( stamp - previous )
+      previous = stamp
+    end
+
+    avg = nil
+    std_dev = nil
+    unless durations.empty?
+      avg = durations.sum / durations.size
+      variance = durations.sum { | d | ( d - avg )**2 } / durations.size
+      std_dev = Math.sqrt( variance )
+    end
+    reacted = behavior.present?
+    {
+      total_time: reacted ? ( updated_at - created_at ).round : nil,
+      avg_diagnosis_time: avg&.round,
+      std_dev_diagnosis_time: std_dev&.round,
+      reaction_time: reacted && stamps.any? ? ( updated_at - stamps.last ).round : nil
+    }
+  end
+
   delegate :end_date, to: :experience
 
   delegate :name, to: :experience

@@ -24,7 +24,22 @@ export interface IReaction {
   behavior: string;
   other_name: string;
   improvements: string;
+  total_time: number | null;
+  avg_diagnosis_time: number | null;
+  std_dev_diagnosis_time: number | null;
+  reaction_time: number | null;
 }
+
+const formatDuration = (seconds: number | null | undefined) => {
+  if (null === seconds || undefined === seconds) {
+    return "N/A";
+  }
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${h}:${pad(m)}:${pad(s)}`;
+};
 type Props = {
   retrievalUrl: string;
   reactionsList: Array<IReaction>;
@@ -38,7 +53,11 @@ enum OPT_COLS {
   NARRATIVE = "reactions.narrative_lbl",
   SCENARIO = "reactions.scenario_lbl",
   RESPONSE = "reactions.response_lbl",
-  IMPROVEMENTS = "reactions.improvements_lbl"
+  IMPROVEMENTS = "reactions.improvements_lbl",
+  TOTAL_TIME = "reactions.total_time_lbl",
+  AVG_DIAGNOSIS_TIME = "reactions.avg_diagnosis_time_lbl",
+  STD_DEV_DIAGNOSIS_TIME = "reactions.std_dev_diagnosis_time_lbl",
+  REACTION_TIME = "reactions.reaction_time_lbl"
 }
 
 export default function ReactionsList(props: Props) {
@@ -51,9 +70,20 @@ export default function ReactionsList(props: Props) {
     t(OPT_COLS.NARRATIVE),
     t(OPT_COLS.SCENARIO),
     t(OPT_COLS.RESPONSE),
-    t(OPT_COLS.IMPROVEMENTS)
+    t(OPT_COLS.IMPROVEMENTS),
+    t(OPT_COLS.TOTAL_TIME),
+    t(OPT_COLS.AVG_DIAGNOSIS_TIME),
+    t(OPT_COLS.STD_DEV_DIAGNOSIS_TIME),
+    t(OPT_COLS.REACTION_TIME)
   ];
-  const [visibleColumns, setVisibleColumns] = useState([t(OPT_COLS.STATUS), t(OPT_COLS.IMPROVEMENTS)]);
+  const [visibleColumns, setVisibleColumns] = useState([
+    t(OPT_COLS.STATUS),
+    t(OPT_COLS.IMPROVEMENTS),
+    t(OPT_COLS.TOTAL_TIME),
+    t(OPT_COLS.AVG_DIAGNOSIS_TIME),
+    t(OPT_COLS.STD_DEV_DIAGNOSIS_TIME),
+    t(OPT_COLS.REACTION_TIME)
+  ]);
 
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
@@ -219,6 +249,38 @@ export default function ReactionsList(props: Props) {
                 return "N/A";
               }
             }}
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.TOTAL_TIME)) ? (
+          <Column
+            header={t(OPT_COLS.TOTAL_TIME)}
+            field="total_time"
+            sortable
+            body={rowData => formatDuration(rowData.total_time)}
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.AVG_DIAGNOSIS_TIME)) ? (
+          <Column
+            header={t(OPT_COLS.AVG_DIAGNOSIS_TIME)}
+            field="avg_diagnosis_time"
+            sortable
+            body={rowData => formatDuration(rowData.avg_diagnosis_time)}
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.STD_DEV_DIAGNOSIS_TIME)) ? (
+          <Column
+            header={t(OPT_COLS.STD_DEV_DIAGNOSIS_TIME)}
+            field="std_dev_diagnosis_time"
+            sortable
+            body={rowData => formatDuration(rowData.std_dev_diagnosis_time)}
+          />
+        ) : null}
+        {visibleColumns.includes(t(OPT_COLS.REACTION_TIME)) ? (
+          <Column
+            header={t(OPT_COLS.REACTION_TIME)}
+            field="reaction_time"
+            sortable
+            body={rowData => formatDuration(rowData.reaction_time)}
           />
         ) : null}
       </DataTable>
