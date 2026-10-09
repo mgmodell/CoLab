@@ -194,3 +194,17 @@ es:
     courses_interval: (1)[a course];(2-inf)[ {{count}} courses]
     courses_proper_interval: (1)[the course];(2-inf)[the {{count}} courses]
     task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]
+    list:
+      group_by: Agrupar por
+      group_by_type: Tipo
+      group_by_course: Curso
+      group_by_week: Semana de fecha de cierre
+      week_of: Semana del {{date}}
+      no_close_date: Sin fecha de cierre
+      unknown_course: Curso desconocido
+      task_types:
+        assessment: Evaluación
+        assignment: Tarea
+        bingo_game: Bingo! Juego
+        experience: Experiencia grupal
+        submission: Entrega

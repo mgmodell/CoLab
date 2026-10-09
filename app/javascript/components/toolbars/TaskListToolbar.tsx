@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { Dropdown } from "primereact/dropdown";
 
 import { Toolbar } from "primereact/toolbar";
 
@@ -12,6 +13,12 @@ type Props = {
   filtering?: {
     filterValue: string;
     setFilterFunc: (string) => void;
+  };
+  grouping?: {
+    label: string;
+    value: string;
+    options: Array<{ label: string; value: string }>;
+    setGroupByFunc: (string) => void;
   };
   columnToggle?: {
     optColumns: Array<string>;
@@ -41,6 +48,18 @@ export default function TaskListToolbar(props: Props) {
       />
     ) : null;
 
+  const grouping =
+    undefined !== props.grouping ? (
+      <Dropdown
+        aria-label={props.grouping.label}
+        inputId="task-group-by"
+        value={props.grouping.value}
+        options={props.grouping.options}
+        onChange={event => props.grouping.setGroupByFunc(event.value)}
+        placeholder={props.grouping.label}
+      />
+    ) : null;
+
   const search =
     undefined !== props.filtering ? (
       <div className="flex justify-content-end">
@@ -58,5 +77,5 @@ export default function TaskListToolbar(props: Props) {
       </div>
     ) : null;
 
-  return <Toolbar center={columnToggle} end={search} />;
+  return <Toolbar center={columnToggle} end={<>{grouping}{search}</>} />;
 }

@@ -21,8 +21,15 @@ enum TaskType {
   experience = 'experience',
   assignment = 'assignment',
   assessment = 'assessment',
-  bingo = 'bingo_game'
+  bingo = 'bingo_game',
+  submission = 'submission'
+}
 
+type GroupBy = "type" | "course" | "week";
+
+interface IGroupedTaskItem extends ITaskItem {
+  groupKey: string;
+  groupLabel: string;
 }
 
 enum OPT_COLS {
@@ -43,7 +50,7 @@ interface ITaskItem {
   group_name: string,
   status: string,
   start_date: Temporal.ZonedDateTime,
-  end_date: Temporal.ZonedDateTime,
+  end_date: Temporal.ZonedDateTime | null,
   next_date: Temporal.ZonedDateTime,
   link: string,
   consent_link: string,
@@ -62,6 +69,15 @@ export default function TaskList(props: Props) {
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
   const normalizedFilter = filterText.trim().toLowerCase();
+  const [groupBy, setGroupBy] = React.useState<GroupBy>("course");
+  const [expandedRows, setExpandedRows] = React.useState<
+    Record<string, boolean> | any[]
+  >([]);
+  const groupingOptions = [
+    { label: t("list.group_by_type"), value: "type" },
+    { label: t("list.group_by_course"), value: "course" },
+    { label: t("list.group_by_week"), value: "week" }
+  ];
   const optColumns = [
     t(`list.${OPT_COLS.GROUP}`),
     t(`list.${OPT_COLS.INSTRUCTOR_TASK}`),
@@ -89,19 +105,67 @@ export default function TaskList(props: Props) {
     5, 10, 20, props.tasks.length
   ] );
 
+  const groupedTasks = useMemo(() => props.tasks
+    .filter(task =>
+      normalizedFilter.length === 0
+      || task.name.toLowerCase().includes(normalizedFilter)
+      || task.course_name.toLowerCase().includes(normalizedFilter)
+    )
+    .map(task => {
+      if (groupBy === "type") {
+        return {
+          ...task,
+          groupKey: `type:${task.type}`,
+          groupLabel: t(`list.task_types.${task.type}`)
+        };
+      }
+
+      if (groupBy === "course") {
+        const courseName = task.course_name || t("list.unknown_course");
+        return {
+          ...task,
+          groupKey: `course:${courseName}`,
+          groupLabel: courseName
+        };
+      }
+
+      const closeDate = task.end_date?.toPlainDate();
+      const weekStart = closeDate?.subtract({
+        days: closeDate.dayOfWeek - 1
+      });
+
+      return {
+        ...task,
+        groupKey: `week:${weekStart?.toString() ?? "none"}`,
+        groupLabel: weekStart
+          ? t("list.week_of", { date: weekStart.toString() })
+          : t("list.no_close_date")
+      };
+    }), [groupBy, normalizedFilter, props.tasks, t]);
+
+  React.useEffect(() => {
+    setExpandedRows(Object.fromEntries(
+      groupedTasks.map(task => [task.groupKey, true] as const)
+    ));
+  }, [groupedTasks]);
+
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
       <DataTable
-        value={props.tasks.filter((task) => {
-          return normalizedFilter.length === 0
-            || task.name.toLowerCase().includes(normalizedFilter)
-            || task.course_name.toLowerCase().includes(normalizedFilter);
-        })}
+        value={groupedTasks}
         resizableColumns
         tableStyle={{
           minWidth: '50rem'
         }}
         reorderableColumns
+        rowGroupMode="subheader"
+        groupRowsBy="groupKey"
+        expandableRowGroups
+        expandedRows={expandedRows}
+        onRowToggle={event => setExpandedRows(event.data)}
+        rowGroupHeaderTemplate={(task: IGroupedTaskItem) => (
+          <span>{task.groupLabel}</span>
+        )}
         paginator
         rows={5}
         rowsPerPageOptions={ paginatorOpts }
@@ -110,13 +174,19 @@ export default function TaskList(props: Props) {
             filterValue: filterText,
             setFilterFunc: setFilterText
           }}
+          grouping={{
+            label: t("list.group_by"),
+            value: groupBy,
+            options: groupingOptions,
+            setGroupByFunc: setGroupBy
+          }}
           columnToggle={{
             optColumns: optColumns,
             visibleColumns: visibleColumns,
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField={OPT_COLS.NEXT_DATE}
+        sortField="groupKey"
         sortOrder={1}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
