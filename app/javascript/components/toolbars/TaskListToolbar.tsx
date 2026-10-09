@@ -56,7 +56,7 @@ export default function TaskListToolbar(props: Props) {
     <div className="flex align-items-center gap-2">
       <label htmlFor={groupingId}>{groupingProps.label}</label>
       <Dropdown
-        inputId={groupingId}
+        inputId='task-group-by'
         value={groupingProps.value}
         options={groupingProps.options}
         onChange={event => groupingProps.setGroupByFunc(event.value)}

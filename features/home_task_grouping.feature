@@ -8,15 +8,16 @@ Feature: Home task grouping
 
   @javascript
   Scenario: Selecting and expanding task groups
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "2 months hence"
     And the experience "has" been activated
     And the user is "a random" user
     When the user logs in
+    Then user should see 1 open task
     Then the user selects task grouping "Type"
     And the task group header contains "Group Experience"
-    When the user collapses the task group "Group Experience"
+    When the user expands or collapses the task group "Group Experience"
     Then the experience task is hidden
-    When the user expands the task group "Group Experience"
+    When the user expands or collapses the task group "Group Experience"
     Then the experience task is visible
     When the user selects task grouping "Course"
     Then the task group header contains the course name

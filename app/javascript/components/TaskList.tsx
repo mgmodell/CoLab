@@ -117,42 +117,43 @@ export default function TaskList(props: Props) {
     () => props.tasks.map(task => {
       const closeDate = task.next_date ?? task.end_date;
       const closeDateSort = closeDate?.toInstant().epochMilliseconds ?? Infinity;
-      if (groupBy === "type") {
-        return {
-          ...task,
-          groupKey: `type:${task.type}`,
-          closeDateSort,
-          groupLabel: t(`list.task_types.${task.type}`, {
+      const retVal = {
+        ...task,
+        groupKey: "",
+        closeDateSort,
+        groupLabel: ""
+      };
+
+      switch (groupBy) {
+        case "type":
+          retVal.groupKey = `type:${task.type}`;
+          retVal.groupLabel = t(`list.task_types.${task.type}`, {
             defaultValue: task.type
               .replace(/_/g, " ")
               .replace(/\b\w/g, letter => letter.toUpperCase())
-          })
-        };
+          });
+          break;
+        case "course":
+          const courseName = task.course_name || t("list.unknown_course");
+          retVal.groupKey = `course:${courseName}`;
+          retVal.groupLabel = courseName;
+          break;
+        case "week":
+          const closeDatePlain = closeDate?.toPlainDate();
+          const weekStart = closeDatePlain?.subtract({
+            days: closeDatePlain.dayOfWeek - 1
+          });
+          retVal.groupKey = `week:${weekStart?.toString() ?? "none"}`;
+          retVal.groupLabel = weekStart
+            ? t("list.week_of", { date: weekStart.toString() })
+            : t("list.no_close_date");
+          break;
+        default:
+          retVal.groupKey = "none";
+          retVal.groupLabel = t("list.no_grouping");
       }
+      return retVal;
 
-      if (groupBy === "course") {
-        const courseName = task.course_name || t("list.unknown_course");
-        return {
-          ...task,
-          groupKey: `course:${courseName}`,
-          closeDateSort,
-          groupLabel: courseName
-        };
-      }
-
-      const closeDatePlain = closeDate?.toPlainDate();
-      const weekStart = closeDatePlain?.subtract({
-        days: closeDatePlain.dayOfWeek - 1
-      });
-
-      return {
-        ...task,
-        groupKey: `week:${weekStart?.toString() ?? "none"}`,
-        closeDateSort,
-        groupLabel: weekStart
-          ? t("list.week_of", { date: weekStart.toString() })
-          : t("list.no_close_date")
-      };
     }),
     [groupBy, props.tasks, t]
   );

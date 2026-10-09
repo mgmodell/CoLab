@@ -2,7 +2,7 @@
 
 When( 'the user selects task grouping {string}' ) do | grouping |
   wait_for_render
-  find( :xpath, "//*[@id='task-group-by']/ancestor::div[contains(@class,'p-dropdown')]" ).click
+  find( :xpath, "//*[@id='task-group-by']/ancestor::div[contains(@class,'p-dropdown')]", visible: :any ).click
   find( :xpath, "//li[@role='option' and normalize-space(.)=#{xpath_literal(grouping)}]" ).click
   wait_for_render
 end
@@ -20,14 +20,7 @@ Then( 'the task group header contains the close-date week' ) do
   find( :xpath, "//tr[contains(@class,'p-rowgroup-header')]" ).text.should include( week_start )
 end
 
-When( 'the user collapses the task group {string}' ) do | group_name |
-  header = find( :xpath,
-                 "//tr[contains(@class,'p-rowgroup-header') and contains(.,#{xpath_literal(group_name)})]" )
-  header.find( 'button' ).click
-  wait_for_render
-end
-
-When( 'the user expands the task group {string}' ) do | group_name |
+When( 'the user expands or collapses the task group {string}' ) do | group_name |
   header = find( :xpath,
                  "//tr[contains(@class,'p-rowgroup-header') and contains(.,#{xpath_literal(group_name)})]" )
   header.find( 'button' ).click
