@@ -21,6 +21,7 @@ enum TaskType {
   experience = 'experience',
   assignment = 'assignment',
   assessment = 'assessment',
+  project = 'project',
   bingo = 'bingo_game',
   submission = 'submission'
 }
@@ -308,6 +309,9 @@ export default function TaskList(props: Props) {
                     } else {
                       output = t('list.status.complete');
                     }
+                    break;
+                  case 'project':
+                    output = t('list.status.click_for_info');
                     break;
                   case 'bingo_game':
                     if (params.status < 0) {

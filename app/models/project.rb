@@ -83,6 +83,38 @@ class Project < ApplicationRecord
     anonymous ? anon_name : name
   end
 
+  def next_assessment_opening
+    zone = ActiveSupport::TimeZone.new( course_timezone )
+    today = Time.current.in_time_zone( zone ).to_date
+    first_possible_date = [today, start_date.to_date].max
+    days_until_open = ( start_dow - first_possible_date.wday ) % 7
+    opening_date = first_possible_date + days_until_open
+    return if opening_date > end_date.to_date
+
+    zone.local( opening_date.year, opening_date.month, opening_date.day )
+  end
+
+  def task_data( current_user: )
+    group = group_for_user( current_user )
+    return if group.nil?
+
+    {
+      id:,
+      type: :project,
+      instructor_task: false,
+      name: get_name( false ),
+      group_name: group.get_name( false ),
+      status: nil,
+      course_name: course.get_name( false ),
+      start_date: nil,
+      end_date: nil,
+      next_date: next_assessment_opening,
+      link: "project/#{id}",
+      consent_link: nil,
+      active:
+    }
+  end
+
   def self.get_occurence_count_hash( input_array )
     dup_hash = Hash.new( 0 )
     input_array.each { | v | dup_hash.store( v.id, dup_hash[v.id] + 1 ) }

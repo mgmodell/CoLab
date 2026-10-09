@@ -44,6 +44,7 @@ class HomeController < ApplicationController
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
         taskListUrl: task_list_path,
+        studentProjectInfoUrl: student_project_info_path( id: '' ),
         oauthValidate: validation_path
       },
       installment: {
