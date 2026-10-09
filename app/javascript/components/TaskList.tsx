@@ -70,9 +70,7 @@ export default function TaskList(props: Props) {
   const [filterText, setFilterText] = React.useState('');
   const normalizedFilter = filterText.trim().toLowerCase();
   const [groupBy, setGroupBy] = React.useState<GroupBy>("course");
-  const [expandedRows, setExpandedRows] = React.useState<
-    Record<string, boolean> | any[]
-  >([]);
+  const [expandedRows, setExpandedRows] = React.useState<IGroupedTaskItem[]>([]);
   const groupingOptions = [
     { label: t("list.group_by_type"), value: "type" },
     { label: t("list.group_by_course"), value: "course" },
@@ -144,9 +142,9 @@ export default function TaskList(props: Props) {
     }), [groupBy, normalizedFilter, props.tasks, t]);
 
   React.useEffect(() => {
-    setExpandedRows(Object.fromEntries(
-      groupedTasks.map(task => [task.groupKey, true] as const)
-    ));
+    setExpandedRows([
+      ...new Map(groupedTasks.map(task => [task.groupKey, task])).values()
+    ]);
   }, [groupedTasks]);
 
   const tableOfTasks = null !== user.lastRetrieved ? (
@@ -162,7 +160,7 @@ export default function TaskList(props: Props) {
         groupRowsBy="groupKey"
         expandableRowGroups
         expandedRows={expandedRows}
-        onRowToggle={event => setExpandedRows(event.data)}
+        onRowToggle={event => setExpandedRows(event.data as IGroupedTaskItem[])}
         rowGroupHeaderTemplate={(task: IGroupedTaskItem) => (
           <span>{task.groupLabel}</span>
         )}

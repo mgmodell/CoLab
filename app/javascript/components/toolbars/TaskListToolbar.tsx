@@ -55,7 +55,7 @@ export default function TaskListToolbar(props: Props) {
         inputId="task-group-by"
         value={props.grouping.value}
         options={props.grouping.options}
-        onChange={event => props.grouping.setGroupByFunc(event.value)}
+        onChange={event => props.grouping?.setGroupByFunc(event.value)}
         placeholder={props.grouping.label}
       />
     ) : null;
