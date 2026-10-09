@@ -9,6 +9,8 @@ import { Dropdown } from "primereact/dropdown";
 
 import { Toolbar } from "primereact/toolbar";
 
+export type GroupBy = "type" | "course" | "week";
+
 type Props = {
   filtering?: {
     filterValue: string;
@@ -16,9 +18,9 @@ type Props = {
   };
   grouping?: {
     label: string;
-    value: "type" | "course" | "week";
-    options: Array<{ label: string; value: "type" | "course" | "week" }>;
-    setGroupByFunc: (value: "type" | "course" | "week") => void;
+    value: GroupBy;
+    options: Array<{ label: string; value: GroupBy }>;
+    setGroupByFunc: (value: GroupBy) => void;
   };
   columnToggle?: {
     optColumns: Array<string>;
