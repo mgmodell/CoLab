@@ -5,13 +5,22 @@ import { useTranslation } from "react-i18next";
 
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { Dropdown } from "primereact/dropdown";
 
 import { Toolbar } from "primereact/toolbar";
+
+export type GroupBy = "type" | "course" | "week";
 
 type Props = {
   filtering?: {
     filterValue: string;
     setFilterFunc: (string) => void;
+  };
+  grouping?: {
+    label: string;
+    value: GroupBy;
+    options: Array<{ label: string; value: GroupBy }>;
+    setGroupByFunc: (value: GroupBy) => void;
   };
   columnToggle?: {
     optColumns: Array<string>;
@@ -23,6 +32,7 @@ type Props = {
 export default function TaskListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
+  const groupingId = React.useId();
   const onColumnToggle = event => {
     props.columnToggle.setVisibleColumnsFunc(event.value);
   };
@@ -41,6 +51,19 @@ export default function TaskListToolbar(props: Props) {
       />
     ) : null;
 
+  const groupingProps = props.grouping;
+  const grouping = groupingProps ? (
+    <div className="flex align-items-center gap-2">
+      <label htmlFor={groupingId}>{groupingProps.label}</label>
+      <Dropdown
+        inputId='task-group-by'
+        value={groupingProps.value}
+        options={groupingProps.options}
+        onChange={event => groupingProps.setGroupByFunc(event.value)}
+      />
+    </div>
+  ) : null;
+
   const search =
     undefined !== props.filtering ? (
       <div className="flex justify-content-end">
@@ -58,5 +81,15 @@ export default function TaskListToolbar(props: Props) {
       </div>
     ) : null;
 
-  return <Toolbar center={columnToggle} end={search} />;
+  return (
+    <Toolbar
+      center={columnToggle}
+      end={
+        <>
+          {grouping}
+          {search}
+        </>
+      }
+    />
+  );
 }

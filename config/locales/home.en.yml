@@ -242,6 +242,19 @@ en:
       start_date: Open Date
       next_date: Close Date
       all_tasks: All
+      group_by: Group by
+      group_by_type: Type
+      group_by_course: Course
+      group_by_week: Close date week
+      week_of: Week of {{date}}
+      no_close_date: No close date
+      unknown_course: Unknown course
+      task_types:
+        assessment: Assessment
+        assignment: Assignment
+        bingo_game: Bingo! Game
+        experience: Group Experience
+        submission: Submission
       consent_form:
         label: Consent Form
         absent: Not for Research
