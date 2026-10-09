@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -10,8 +10,8 @@ import {
   endTask,
   addMessage,
   Priorities,
-  setDirty,
-  setClean
+  useDirtyStatus,
+  DIRTY_STATUS
 } from "../infrastructure/StatusSlice";
 import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router";
@@ -38,10 +38,6 @@ export default function SchoolDataAdmin(props) {
     return null != state.profile.lastRetrieved;
   });
 
-  const dirty = useTypedSelector(state => {
-    return state.status.dirtyStatus[category];
-  });
-
   const dispatch = useDispatch();
 
   let { schoolIdParam } = useParams();
@@ -49,6 +45,10 @@ export default function SchoolDataAdmin(props) {
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
+
+  const [dirty, setDirty] = useDirtyStatus(null == schoolId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
+  const suppressDirtyRef = useRef( false );
+
   const [messages, setMessages] = useState({});
 
   const timezones = useTypedSelector(state => {
@@ -63,6 +63,7 @@ export default function SchoolDataAdmin(props) {
     } else {
       url = url + schoolId + ".json";
     }
+    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -71,14 +72,15 @@ export default function SchoolDataAdmin(props) {
         setSchoolName(school.name || "");
         setSchoolDescription(school.description || "");
         setSchoolTimezone(school.timezone || "UTC");
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
+        suppressDirtyRef.current = false;
         dispatch(endTask());
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       });
   };
   const saveSchool = () => {
@@ -111,7 +113,7 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          dispatch(setClean(category));
+          setDirty(DIRTY_STATUS.CLEAN);
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
           dispatch(refreshSchools());
@@ -137,7 +139,10 @@ export default function SchoolDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch(setDirty(category));
+    if (suppressDirtyRef.current) {
+      return;
+    }
+    setDirty(DIRTY_STATUS.DIRTY);
   }, [schoolTimezone, schoolName, schoolDescription]);
 
   const saveButton = dirty ? (

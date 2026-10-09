@@ -180,8 +180,14 @@ export default function CourseUsersList(props: Props) {
           globalFilterFields={["first_name", "last_name", "email", "status"]}
           filters={filters}
           filterDisplay="row"
+          sortField="last_name"
           paginator
           rows={5}
+          sortOrder={1}
+          paginatorDropdownAppendTo={"self"}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          dataKey="id"
           tableStyle={{
             minWidth: "50rem"
           }}
@@ -224,11 +230,6 @@ export default function CourseUsersList(props: Props) {
               }}
             />
           }
-          sortOrder={-1}
-          paginatorDropdownAppendTo={"self"}
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} to {last} of {totalRecords}"
-          dataKey="id"
         >
           <Column
             header={t("first_name")}

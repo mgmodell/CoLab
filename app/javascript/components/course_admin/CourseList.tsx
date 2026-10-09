@@ -18,6 +18,7 @@ import {
   startTask,
   endTask,
   addMessage,
+  unsetDirty,
   Priorities
 } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
@@ -69,6 +70,7 @@ export default function CourseList(props) {
       .then(response => {
         //Process the data
         setCourses(response.data);
+        dispatch( unsetDirty( category ) );
       })
       .catch(error => {
         console.log("error", error);
