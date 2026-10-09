@@ -114,6 +114,9 @@ export default function HomeShell(props: Props) {
             case "assessment":
               value.title = t('projects.task_list_fmt', { group_name: value.group_name, project_name: value.name });
               break;
+            case "project":
+              value.title = value.name;
+              break;
             case "bingo_game":
               if (value.instructor_task === true) {
                 value.title = t("candidate_lists.review", { task: value.name });

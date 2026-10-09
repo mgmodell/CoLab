@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: %i[show edit update destroy activate
                                        rescore_group rescore_groups suggest_groups]
   before_action :check_editor, except: %i[rescore_group rescore_groups
-                                          show index get_groups
+                                          show index get_groups student_info
                                           set_groups]
   before_action :check_viewer, only: %i[show index]
 
@@ -38,6 +38,30 @@ class ProjectsController < ApplicationController
         render json: response
       end
     end
+  end
+
+  def student_info
+    project = Project.find( params[:id] )
+    enrolled = project.course.rosters.enrolled_student.exists?( user: current_user )
+    group = project.group_for_user( current_user )
+    return head :not_found unless project.active? && enrolled && group.present?
+
+    render json: {
+      project: {
+        name: project.name,
+        description: project.description,
+        course_name: project.course.get_name( false )
+      },
+      group: {
+        name: group.name,
+        users: group.users.order( :first_name, :last_name ).map do | member |
+          { id: member.id, name: member.informal_name( false ) }
+        end,
+        perspective_points: group.calc_diversity_score,
+        faultline_strength: group.calc_faultline_strength
+      },
+      next_check_in: project.next_assessment_opening
+    }
   end
 
   def edit; end

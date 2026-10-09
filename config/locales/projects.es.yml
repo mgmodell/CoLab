@@ -36,6 +36,13 @@ es:
       y evaluación por pares semanales de CoLab.
     show:
       title: Detalles del proyecto
+      team: Tu equipo
+      perspective_points: Puntuación de puntos de perspectiva de tu equipo
+      faultline_strength: Nivel de FaultLine de tu equipo
+      next_check_in: Próxima apertura de evaluación
+      no_next_check_in: No hay más evaluaciones programadas.
+      back_to_tasks: Volver a tareas
+      load_error: No se pudo cargar la información del proyecto.
     edit:
       title: Editar detalles del proyecto
       editing: Proyecto de edición

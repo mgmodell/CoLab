@@ -28,6 +28,9 @@ Rails.application.routes.draw do
     get 'projects/add_group' => 'projects#add_group', as: :add_group
     get 'projects/remove_group' => 'projects#remove_group', as: :remove_group
     get 'projects/activate' => 'projects#activate', as: :activate_project
+    get 'projects/student_info/:id' => 'projects#student_info',
+        as: :student_project_info,
+        constraints: ->(req) { req.format == :json }
     get 'projects/groups/:id' => 'projects#get_groups',
         as: :groups,
         constraints: ->(req) { req.format == :json }

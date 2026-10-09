@@ -32,6 +32,7 @@ const AssignmentShell = React.lazy(() => import("./assignments/AssignmentShell")
 
 import ProfileDataAdmin from "./profile/ProfileDataAdmin";
 import InstallmentReport from "./checkin/InstallmentReport";
+import StudentProjectInfo from "./projects/StudentProjectInfo";
 import Experience from "./experiences/Experience";
 import ConsentLog from "./Consent/ConsentLog";
 import Admin from "./Admin";
@@ -127,6 +128,10 @@ export default function PageWrapper(props: Readonly<Props>) {
             <Route
               path={`project/checkin/:projectId`}
               element={<InstallmentReport />}
+            />
+            <Route
+              path={`project/:projectId`}
+              element={<StudentProjectInfo />}
             />
             <Route path="bingo/*" element={<BingoShell />} />
             {/* Perhaps subgroup under Experience */}

@@ -329,9 +329,20 @@ class User < ApplicationRecord
 
   def waiting_student_tasks
     cur_date = DateTime.current
-    waiting_tasks = assessments.includes( course: :consent_form ).active_at( cur_date ).to_a
+    active_assessments = assessments.includes( course: :consent_form ).active_at( cur_date ).to_a
+    waiting_tasks = active_assessments.dup
 
     # Check available tasks for students
+
+    active_project_ids = active_assessments.map( &:project_id )
+    projects.joins( course: :rosters )
+            .where( projects: { active: true },
+                    rosters: { user_id: id, role: Roster.roles[:enrolled_student] } )
+            .distinct
+            .includes( :course, :groups )
+            .each do | project |
+      waiting_tasks << project unless active_project_ids.include?( project.id )
+    end
 
     # Add the experiences
     waiting_experiences = Experience.active_at( cur_date )
