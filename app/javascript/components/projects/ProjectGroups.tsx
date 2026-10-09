@@ -43,7 +43,7 @@ export default function ProjectGroups(props: Props) {
   const [targetGroupType, setTargetGroupType] = useState<'count' | 'size'>('size');
   const [targetGroupTypeValue, setTargetGroupTypeValue] = useState(4);
   const [sortBy, setSortBy] = useState("last_name");
-  const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
+  const [sortDirection, setSortDirection] = useState(SortDirection.ASC);
   const [groupsRaw, setGroupsRaw] = useState({});
   const [studentsRaw, setStudentsRaw] = useState<Record<number, IUser>>({});
   const [suggestedGroupsRaw, setSuggestedGroupsRaw] = useState(null);
@@ -451,10 +451,12 @@ export default function ProjectGroups(props: Props) {
                 />
                 <span
                   onClick={() => {
-                    setSortBy("group_id");
                     setSortDirection(prev =>
-                      prev === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+                      sortBy === "group_id"
+                        ? prev === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+                        : SortDirection.ASC
                     );
+                    setSortBy("group_id");
                   }}
                 >
                   <i className="pi pi-sort-alt" />
