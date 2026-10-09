@@ -3,7 +3,11 @@ import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
+import {
+  startTask,
+  unsetDirty,
+  endTask
+} from "../infrastructure/StatusSlice";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
@@ -64,6 +68,7 @@ export default function SchoolList( /*props : Props */ ) {
   useEffect(() => {
     if (endpointStatus) {
       getSchools();
+      dispatch( unsetDirty( `${category}s` ) );
       dispatch(endTask("loading"));
     }
   }, [endpointStatus]);

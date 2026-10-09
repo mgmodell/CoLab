@@ -69,8 +69,8 @@ export default function CourseList(props) {
       .get(url, {})
       .then(response => {
         //Process the data
+        dispatch( unsetDirty( `${category}s` ) );
         setCourses(response.data);
-        dispatch( unsetDirty( category ) );
       })
       .catch(error => {
         console.log("error", error);
