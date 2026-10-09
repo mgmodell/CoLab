@@ -19,6 +19,18 @@ Feature: Assessment Listing
     Then user should see 1 open task
 
 @javascript
+  Scenario: A project without an open check-in shows student team information
+    Given the project started "last month" and ends "next month", opened "tomorrow" and closes "tomorrow"
+    Given the project description is "A collaborative research project."
+    Given the project has been activated
+    When the user logs in
+    Then the user should see a successful login message
+    Then no check-in should be open for the project
+    Then user should see 1 open task
+    When the user opens the project information from the task list
+    Then the project information should include its description, team, scores, and next check-in
+
+@javascript
   Scenario: User cannot log in using the wrong password
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has been activated
