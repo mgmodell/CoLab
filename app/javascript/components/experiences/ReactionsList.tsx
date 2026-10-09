@@ -53,7 +53,7 @@ export default function ReactionsList(props: Props) {
     t(OPT_COLS.RESPONSE),
     t(OPT_COLS.IMPROVEMENTS)
   ];
-  const [visibleColumns, setVisibleColumns] = useState([OPT_COLS.STATUS, OPT_COLS.IMPROVEMENTS]);
+  const [visibleColumns, setVisibleColumns] = useState([t(OPT_COLS.STATUS), t(OPT_COLS.IMPROVEMENTS)]);
 
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
@@ -117,13 +117,11 @@ export default function ReactionsList(props: Props) {
             }}
           />
         }
-        sortField="course_name"
+        sortField="user"
         sortOrder={-1}
         paginatorDropdownAppendTo={"self"}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        //paginatorLeft={paginatorLeft}
-        //paginatorRight={paginatorRight}
         dataKey="id"
       >
         <Column

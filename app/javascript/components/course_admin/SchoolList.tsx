@@ -51,7 +51,7 @@ export default function SchoolList( /*props : Props */ ) {
   const getSchools = () => {
     const url = endpoints.baseUrl + ".json";
 
-    dispatch(startTask());
+    dispatch(startTask('loading'));
     axios.get(url, {}).then(response => {
       //Process the data
       setSchools(response.data);

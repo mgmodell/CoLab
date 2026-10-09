@@ -180,6 +180,7 @@ export default function CourseUsersList(props: Props) {
           globalFilterFields={["first_name", "last_name", "email", "status"]}
           filters={filters}
           filterDisplay="row"
+          sortField="last_name"
           paginator
           rows={5}
           tableStyle={{
