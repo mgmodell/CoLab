@@ -44,5 +44,7 @@ Then( /^the reaction timing stats show a reaction time of (\d+) seconds$/ ) do |
 end
 
 Then( /^the reaction timing stats show no times$/ ) do
-  @reaction.timing_stats.values.should all( be_nil )
+  @reaction.timing_stats.each_value do | value |
+    value.should be_nil
+  end
 end
