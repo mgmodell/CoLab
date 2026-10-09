@@ -78,7 +78,8 @@ export default function BingoGameDataAdminTable(props: Props) {
           width: "100%"
         }}
         scrollable
-        sortField="student"
+        sortField="last_name"
+        sortOrder={1}
         scrollHeight="calc(100vh - 20rem)"
         className="p-datatable-striped p-datatable-gridlines"
         dataKey="id"

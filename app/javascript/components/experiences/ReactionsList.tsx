@@ -117,8 +117,8 @@ export default function ReactionsList(props: Props) {
             }}
           />
         }
-        sortField="user"
-        sortOrder={-1}
+        sortField="user.name"
+        sortOrder={1}
         paginatorDropdownAppendTo={"self"}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
