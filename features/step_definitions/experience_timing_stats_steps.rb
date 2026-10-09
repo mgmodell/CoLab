@@ -46,3 +46,15 @@ end
 Then( /^the reaction timing stats show no times$/ ) do
   @reaction.timing_stats.values.should all( be_nil )
 end
+
+Then( 'the results row for the reaction shows these times' ) do | table |
+  wait_for_render
+  row = find( :xpath, "//tbody/tr[.//a[@href='mailto:#{@reaction.user.email}']]", wait: 10 )
+  headers = all( :xpath, '//thead/tr/th' ).map { | th | th.text.strip }
+  cells = row.all( :xpath, './td' ).map { | td | td.text.strip }
+  table.hashes.first.each do | header, expected |
+    index = headers.index { | h | h.start_with?( header ) }
+    index.should_not be_nil, "Column '#{header}' not found in #{headers}"
+    cells[index].should eq expected
+  end
+end
