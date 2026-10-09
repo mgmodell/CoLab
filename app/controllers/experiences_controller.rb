@@ -52,7 +52,8 @@ class ExperiencesController < ApplicationController
           id: reaction.id,
           user: {
             email: reaction.user.email,
-            name: reaction.user.name( anon )
+            name: reaction.user.name( anon ),
+            last_name: anon ? reaction.user.anon_last_name : reaction.user.last_name,
           },
           student_status: rosters_hash[reaction.user_id].role,
           status: reaction.status,
