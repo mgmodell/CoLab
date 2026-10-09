@@ -28,6 +28,7 @@ import ResponsesWordCloud from "../Reports/ResponsesWordCloud";
 import parse from 'html-react-parser';
 import { FloatLabel } from "primereact/floatlabel";
 import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
+import StudentProgress from "../StudentProgress";
 
 interface IExperience {
   id: string;
@@ -321,6 +322,11 @@ export default function ExperienceDataAdmin(props) {
       <TabPanel header={t("tabs.results")} disabled={null == experienceId}>
         {reactionListing}
       </TabPanel>
+      {experienceId ? (
+        <TabPanel header="Student progress">
+          <StudentProgress activityId={experienceId} activityType="experience" />
+        </TabPanel>
+      ) : null}
       <TabPanel header={t("tabs.response_word_cloud")}>
         Download the Data: 
         <Button

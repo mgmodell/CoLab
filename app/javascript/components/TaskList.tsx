@@ -60,6 +60,9 @@ interface ITaskItem {
   link: string,
   consent_link: string,
   active: boolean
+  admin_task?: boolean;
+  completed_count?: number;
+  total_students?: number;
 }
 
 type Props = {
@@ -301,6 +304,9 @@ export default function TaskList(props: Props) {
               sortable
               key={'status'}
               body={(params) => {
+                if (params.admin_task) {
+                  return `${params.status}% complete (${params.completed_count}/${params.total_students})`;
+                }
                 let output = 'No status'
                 switch (params.type) {
                   case 'assessment':

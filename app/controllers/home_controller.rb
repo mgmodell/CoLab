@@ -13,9 +13,12 @@ class HomeController < ApplicationController
     waiting_consent_logs = current_user.waiting_consent_logs
     waiting_rosters = current_user.rosters.invited_student.includes( :course )
 
+    tasks = waiting_tasks.map { | t | t.task_data( current_user: ) }
+    tasks.concat( open_instructor_activity_tasks ) if current_user.is_instructor? || current_user.is_admin?
+
     resp_hash = {
       # REFACTOR: Use shorthand Ruby block formatting and cleaner mapping
-      tasks: waiting_tasks.map { | t | t.task_data( current_user: ) },
+      tasks:,
       consent_logs: waiting_consent_logs.map { | cl | { id: cl.id, consent_form_id: cl.consent_form_id } },
       waiting_rosters: waiting_rosters.map do | r |
         {
@@ -34,6 +37,26 @@ class HomeController < ApplicationController
     end
   end
 
+  def activity_progress
+    activity = progress_activity
+    return head :not_found if activity.nil?
+
+    course = activity.course
+    return head :forbidden unless current_user.is_admin? ||
+                                  course.rosters.instructor.exists?( user_id: current_user.id )
+
+    students = course.rosters.enrolled_student.includes( :user ).map( &:user )
+    progress = activity_student_progress( activity, students )
+    completed_count = progress.count { | student | student[:complete] }
+
+    render json: {
+      students: progress,
+      completed_count:,
+      total_students: students.size,
+      completion_percent: students.empty? ? 0 : 100 * completed_count / students.size
+    }
+  end
+
   def endpoints
     ep_hash = {
       home: {
@@ -44,6 +67,7 @@ class HomeController < ApplicationController
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
         taskListUrl: task_list_path,
+        activityProgressUrl: '/api-backend/activity_progress',
         studentProjectInfoUrl: student_project_info_path( id: '' ),
         oauthValidate: validation_path
       },
@@ -604,6 +628,137 @@ class HomeController < ApplicationController
   end
 
   private
+
+  def progress_activity
+    activity_class = {
+      'assignment' => Assignment,
+      'bingo_game' => BingoGame,
+      'experience' => Experience,
+      'project' => Project
+    }[params[:activity_type]]
+    activity_class&.find_by( id: params[:id] )
+  end
+
+  def open_instructor_activity_tasks
+    now = Time.current
+    courses = current_user.rosters.instructor.includes( :course ).map( &:course )
+
+    courses.flat_map do | course |
+      students = course.rosters.enrolled_student.includes( :user ).map( &:user )
+      activities = []
+      activities.concat course.projects.where( active: true, deleted: false ).to_a.select( &:is_available? )
+      activities.concat course.experiences.active_at( now ).to_a.select( &:is_open? )
+      activities.concat course.assignments.where( active: true, deleted: false )
+                        .where( 'start_date <= ? AND end_date >= ?', now, now ).to_a
+      activities.concat course.bingo_games.where( active: true, deleted: false )
+                        .where( 'start_date <= ? AND end_date >= ?', now, now ).to_a.select( &:is_open? )
+
+      activities.map do | activity |
+        progress = activity_student_progress( activity, students )
+        completed_count = progress.count { | student | student[:complete] }
+        activity_type = case activity
+                        when BingoGame then 'bingo_game'
+                        when Experience then 'experience'
+                        when Assignment then 'assignment'
+                        else 'project'
+                        end
+        {
+          id: activity.id,
+          type: activity_type,
+          instructor_task: true,
+          admin_task: true,
+          name: activity.is_a?( BingoGame ) ? activity.get_name( false ) : activity.name,
+          group_name: '',
+          status: students.empty? ? 0 : 100 * completed_count / students.size,
+          completed_count:,
+          total_students: students.size,
+          course_name: course.get_name( false ),
+          start_date: activity.start_date,
+          end_date: activity.end_date,
+          next_date: activity.respond_to?( :next_assessment_opening ) ? activity.next_assessment_opening : activity.end_date,
+          link: "courses/#{course.id}/#{activity_type}/#{activity.id}",
+          active: activity.active
+        }
+      end
+    end
+  end
+
+  def activity_student_progress( activity, students )
+    case activity
+    when Assignment
+      submissions = activity.submissions.where.not( submitted: nil ).where( withdrawn: nil ).to_a
+      group_ids = submissions.filter_map( &:group_id ).uniq
+      group_users = if activity.group_enabled && group_ids.present?
+                      activity.project.groups.joins( :users ).where( groups: { id: group_ids } )
+                              .pluck( 'groups.id', 'users.id' )
+                              .each_with_object( Hash.new { | hash, key | hash[key] = [] } ) do | ( group_id, user_id ), users_by_group |
+                        users_by_group[group_id] << user_id
+                      end
+                    else
+                      {}
+                    end
+      students.map do | student |
+        student_submissions = submissions.select do | submission |
+          submission.user_id == student.id ||
+            group_users.fetch( submission.group_id, [] ).include?( student.id )
+        end
+        complete = student_submissions.any?
+        {
+          id: student.id,
+          name: student.name( current_user.anonymize? ),
+          complete:,
+          status: complete ? 'Complete' : 'Incomplete',
+          progress: if complete
+                      count = student_submissions.size
+                      "#{count} submission#{'s' unless count == 1}"
+                    else
+                      'No submission'
+                    end
+        }
+      end
+    when Experience
+      reactions = activity.reactions.index_by( &:user_id )
+      students.map do | student |
+        reaction = reactions[student.id]
+        complete = reaction&.behavior.present?
+        {
+          id: student.id,
+          name: student.name( current_user.anonymize? ),
+          complete:,
+          status: complete ? 'Complete' : 'Incomplete',
+          progress: "#{reaction&.status || 0}%"
+        }
+      end
+    when BingoGame
+      candidate_lists = activity.candidate_lists.includes( :candidates ).index_by( &:user_id )
+      students.map do | student |
+        candidate_list = candidate_lists[student.id]
+        candidate_list = candidate_list.current_candidate_list if candidate_list&.archived?
+        percent_complete = candidate_list&.percent_completed || 0
+        complete = percent_complete >= 100
+        {
+          id: student.id,
+          name: student.name( current_user.anonymize? ),
+          complete:,
+          status: complete ? 'Complete' : 'Incomplete',
+          progress: "#{percent_complete}%"
+        }
+      end
+    when Project
+      assessment = activity.assessments.active_at( Time.current ).order( :start_date ).last
+      installments = assessment&.installments&.index_by( &:user_id ) || {}
+      students.map do | student |
+        complete = installments.key?( student.id )
+        {
+          id: student.id,
+          name: student.name( current_user.anonymize? ),
+          complete:,
+          status: complete ? 'Complete' : 'Incomplete',
+          progress: complete ? "Check-in submitted on #{installments[student.id].inst_date}" : 'No check-in'
+        }
+      end
+    end
+  end
 
   # REMOVED USER.COUNTRY: Removed any permitted parameters for country or country_id[cite: 2]
   def profile_params
