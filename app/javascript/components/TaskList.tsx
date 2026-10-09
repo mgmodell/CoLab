@@ -12,7 +12,7 @@ import { iconForType } from "./ActivityLib";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Logo from "./svgs/Logo";
 import { useTranslation } from "react-i18next";
-import TaskListToolbar from "./toolbars/TaskListToolbar";
+import TaskListToolbar, { type GroupBy } from "./toolbars/TaskListToolbar";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
 import { p } from "react-router/dist/development/index-react-server-client-BBd0A0TL";
@@ -22,9 +22,20 @@ enum TaskType {
   assignment = 'assignment',
   assessment = 'assessment',
   project = 'project',
-  bingo = 'bingo_game'
-
+  bingo = 'bingo_game',
+  submission = 'submission'
 }
+
+interface IGroupedTaskItem extends ITaskItem {
+  groupKey: string;
+  groupLabel: string;
+  closeDateSort: number;
+}
+
+type SortMeta = {
+  field: string;
+  order: 1 | 0 | -1 | null | undefined;
+};
 
 enum OPT_COLS {
   GROUP = 'group_name',
@@ -40,11 +51,11 @@ interface ITaskItem {
   type: TaskType,
   instructor_task: boolean,
   name: string,
-  course_name: string,
+  course_name: string | null,
   group_name: string,
   status: string,
   start_date: Temporal.ZonedDateTime,
-  end_date: Temporal.ZonedDateTime,
+  end_date: Temporal.ZonedDateTime | null,
   next_date: Temporal.ZonedDateTime,
   link: string,
   consent_link: string,
@@ -62,6 +73,20 @@ export default function TaskList(props: Props) {
 
   const navigate = useNavigate();
   const [filterText, setFilterText] = React.useState('');
+  const normalizedFilter = filterText.trim().toLowerCase();
+  const [groupBy, setGroupBy] = React.useState<GroupBy>("course");
+  const [collapsedGroupKeys, setCollapsedGroupKeys] = React.useState<Set<string>>(
+    () => new Set()
+  );
+  const [sortMeta, setSortMeta] = React.useState<SortMeta[]>([
+    { field: "groupKey", order: 1 as const },
+    { field: "closeDateSort", order: 1 as const }
+  ]);
+  const groupingOptions: Array<{ label: string; value: GroupBy }> = [
+    { label: t("list.group_by_type"), value: "type" },
+    { label: t("list.group_by_course"), value: "course" },
+    { label: t("list.group_by_week"), value: "week" }
+  ];
   const optColumns = [
     t(`list.${OPT_COLS.GROUP}`),
     t(`list.${OPT_COLS.INSTRUCTOR_TASK}`),
@@ -89,19 +114,101 @@ export default function TaskList(props: Props) {
     5, 10, 20, props.tasks.length
   ] );
 
+  const groupedTasks = useMemo(
+    () => props.tasks.map(task => {
+      const closeDate = task.next_date ?? task.end_date;
+      const closeDateSort = closeDate?.toInstant().epochMilliseconds ?? Infinity;
+      const retVal = {
+        ...task,
+        groupKey: "",
+        closeDateSort,
+        groupLabel: ""
+      };
+
+      switch (groupBy) {
+        case "type":
+          retVal.groupKey = `type:${task.type}`;
+          retVal.groupLabel = t(`list.task_types.${task.type}`, {
+            defaultValue: task.type
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, letter => letter.toUpperCase())
+          });
+          break;
+        case "course":
+          const courseName = task.course_name || t("list.unknown_course");
+          retVal.groupKey = `course:${courseName}`;
+          retVal.groupLabel = courseName;
+          break;
+        case "week":
+          const closeDatePlain = closeDate?.toPlainDate();
+          const weekStart = closeDatePlain?.subtract({
+            days: closeDatePlain.dayOfWeek - 1
+          });
+          retVal.groupKey = `week:${weekStart?.toString() ?? "none"}`;
+          retVal.groupLabel = weekStart
+            ? t("list.week_of", { date: weekStart.toString() })
+            : t("list.no_close_date");
+          break;
+        default:
+          retVal.groupKey = "none";
+          retVal.groupLabel = t("list.no_grouping");
+      }
+      return retVal;
+
+    }),
+    [groupBy, props.tasks, t]
+  );
+
+  const visibleTasks = useMemo(() => groupedTasks.filter(task =>
+    normalizedFilter.length === 0
+    || task.name.toLowerCase().includes(normalizedFilter)
+    || task.course_name?.toLowerCase().includes(normalizedFilter)
+  ), [groupedTasks, normalizedFilter]);
+
+  const expandedRows = useMemo(() => {
+    const groupRepresentatives = new Map<string, IGroupedTaskItem>();
+    visibleTasks.forEach(task => {
+      if (!collapsedGroupKeys.has(task.groupKey)) {
+        groupRepresentatives.set(task.groupKey, task);
+      }
+    });
+    return [...groupRepresentatives.values()];
+  }, [collapsedGroupKeys, visibleTasks]);
+
+  const onRowToggle = (event: { data: IGroupedTaskItem[] }) => {
+    const expandedGroupKeys = new Set(event.data.map(task => task.groupKey));
+    const visibleGroupKeys = new Set(visibleTasks.map(task => task.groupKey));
+
+    setCollapsedGroupKeys(current => {
+      const next = new Set(
+        [...current].filter(groupKey => !visibleGroupKeys.has(groupKey))
+      );
+      visibleGroupKeys.forEach(groupKey => {
+        if (!expandedGroupKeys.has(groupKey)) {
+          next.add(groupKey);
+        }
+      });
+      return next;
+    });
+  };
+
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
       <DataTable
-        value={props.tasks.filter((task) => {
-          return filterText.length === 0
-            || task.name.includes(filterText)
-            || task.course_name.includes(filterText);
-        })}
+        value={visibleTasks}
         resizableColumns
         tableStyle={{
           minWidth: '50rem'
         }}
         reorderableColumns
+        rowGroupMode="subheader"
+        groupRowsBy="groupKey"
+        expandableRowGroups
+        expandedRows={expandedRows}
+        onRowToggle={onRowToggle}
+        rowGroupHeaderTemplate={(task: IGroupedTaskItem) => (
+          <span>{task.groupLabel}</span>
+        )}
         paginator
         rows={5}
         rowsPerPageOptions={ paginatorOpts }
@@ -110,14 +217,30 @@ export default function TaskList(props: Props) {
             filterValue: filterText,
             setFilterFunc: setFilterText
           }}
+          grouping={{
+            label: t("list.group_by"),
+            value: groupBy,
+            options: groupingOptions,
+            setGroupByFunc: setGroupBy
+          }}
           columnToggle={{
             optColumns: optColumns,
             visibleColumns: visibleColumns,
             setVisibleColumnsFunc: setVisibleColumns,
           }}
         />}
-        sortField={OPT_COLS.NEXT_DATE}
-        sortOrder={1}
+        sortMode="multiple"
+        multiSortMeta={sortMeta}
+        onSort={event => {
+          const otherSortFields = (event.multiSortMeta || []).filter(
+            sort => sort.field !== "groupKey" && sort.field !== "closeDateSort"
+          );
+          setSortMeta([
+            { field: "groupKey", order: 1 },
+            ...otherSortFields,
+            { field: "closeDateSort", order: 1 }
+          ]);
+        }}
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
@@ -156,6 +279,7 @@ export default function TaskList(props: Props) {
           field={'course_name'}
           sortable
           filter
+          filterMatchMode="contains"
           key={'course_name'}
         />
         {visibleColumns.includes(t(`list.${OPT_COLS.GROUP}`)) ?

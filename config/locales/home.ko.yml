@@ -227,6 +227,19 @@ ko:
       start_date: 시작 날짜
       next_date: 종료 날짜
       all_tasks: 모든 할 일
+      group_by: 그룹 기준
+      group_by_type: 유형
+      group_by_course: 수업
+      group_by_week: 마감일 주간
+      week_of: "{{date}} 주간"
+      no_close_date: 마감일 없음
+      unknown_course: 알 수 없는 수업
+      task_types:
+        assessment: 평가
+        assignment: 과제
+        bingo_game: 빙고 게임!
+        experience: 그룹 경험
+        submission: 제출물
       consent_form:
         label: 동의서
         absent: 연구 목적 아님
