@@ -51,16 +51,18 @@ export default function TaskListToolbar(props: Props) {
       />
     ) : null;
 
-  const grouping =
-    undefined !== props.grouping ? (
+  const groupingProps = props.grouping;
+  const grouping = groupingProps ? (
+    <div className="flex align-items-center gap-2">
+      <label htmlFor={groupingId}>{groupingProps.label}</label>
       <Dropdown
         inputId={groupingId}
-        value={props.grouping.value}
-        options={props.grouping.options}
-        onChange={event => props.grouping?.setGroupByFunc(event.value)}
-        placeholder={props.grouping.label}
+        value={groupingProps.value}
+        options={groupingProps.options}
+        onChange={event => groupingProps.setGroupByFunc(event.value)}
       />
-    ) : null;
+    </div>
+  ) : null;
 
   const search =
     undefined !== props.filtering ? (
@@ -84,12 +86,7 @@ export default function TaskListToolbar(props: Props) {
       center={columnToggle}
       end={
         <>
-          {grouping && props.grouping ? (
-            <div className="flex align-items-center gap-2">
-              <label htmlFor={groupingId}>{props.grouping.label}</label>
-              {grouping}
-            </div>
-          ) : null}
+          {grouping}
           {search}
         </>
       }

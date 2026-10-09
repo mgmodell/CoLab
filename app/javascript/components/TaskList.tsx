@@ -115,7 +115,8 @@ export default function TaskList(props: Props) {
 
   const groupedTasks = useMemo(
     () => props.tasks.map(task => {
-      const closeDateSort = task.end_date?.toInstant().epochMilliseconds ?? Infinity;
+      const closeDate = task.next_date ?? task.end_date;
+      const closeDateSort = closeDate?.toInstant().epochMilliseconds ?? Infinity;
       if (groupBy === "type") {
         return {
           ...task,
@@ -139,9 +140,9 @@ export default function TaskList(props: Props) {
         };
       }
 
-      const closeDate = task.end_date?.toPlainDate();
-      const weekStart = closeDate?.subtract({
-        days: closeDate.dayOfWeek - 1
+      const closeDatePlain = closeDate?.toPlainDate();
+      const weekStart = closeDatePlain?.subtract({
+        days: closeDatePlain.dayOfWeek - 1
       });
 
       return {
@@ -171,10 +172,6 @@ export default function TaskList(props: Props) {
     });
     return [...groupRepresentatives.values()];
   }, [collapsedGroupKeys, groupedTasks]);
-
-  React.useEffect(() => {
-    setCollapsedGroupKeys(new Set());
-  }, [groupBy]);
 
   const onRowToggle = (event: { data: IGroupedTaskItem[] }) => {
     const expandedGroupKeys = new Set(event.data.map(task => task.groupKey));
