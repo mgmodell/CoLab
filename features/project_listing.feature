@@ -62,7 +62,8 @@ Feature: Assessment Listing
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 0 open task
+    Then user should see 1 open task
+    Then the project status should say "Click for info"
     
 @javascript
   Scenario: Checking for projects with one outside the day range ( not crossing sat/sun)
@@ -70,7 +71,8 @@ Feature: Assessment Listing
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 0 open task
+    Then user should see 1 open task
+     And the project status should say "Click for info"
 
 @javascript
   Scenario: Checking for assessments with one outside the day range (crossing sat/sun)
@@ -78,7 +80,8 @@ Feature: Assessment Listing
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 0 open task
+    Then user should see 1 open task
+     And the project status should say "Click for info"
 
 @javascript
   Scenario: Checking for assessments with one starting today and ending yesterday
