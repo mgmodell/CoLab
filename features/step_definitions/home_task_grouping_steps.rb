@@ -16,7 +16,7 @@ Then( 'the task group header contains the course name' ) do
 end
 
 Then( 'the task group header contains the close-date week' ) do
-  week_start = @experience.end_date.in_time_zone( @course.timezone ).to_date.beginning_of_week.iso8601
+  week_start = @experience.next_deadline.in_time_zone( @course.timezone ).to_date.beginning_of_week.iso8601
   find( :xpath, "//tr[contains(@class,'p-rowgroup-header')]" ).text.should include( week_start )
 end
 
