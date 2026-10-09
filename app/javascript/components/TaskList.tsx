@@ -165,13 +165,13 @@ export default function TaskList(props: Props) {
 
   const expandedRows = useMemo(() => {
     const groupRepresentatives = new Map<string, IGroupedTaskItem>();
-    groupedTasks.forEach(task => {
+    visibleTasks.forEach(task => {
       if (!collapsedGroupKeys.has(task.groupKey)) {
         groupRepresentatives.set(task.groupKey, task);
       }
     });
     return [...groupRepresentatives.values()];
-  }, [collapsedGroupKeys, groupedTasks]);
+  }, [collapsedGroupKeys, visibleTasks]);
 
   const onRowToggle = (event: { data: IGroupedTaskItem[] }) => {
     const expandedGroupKeys = new Set(event.data.map(task => task.groupKey));
