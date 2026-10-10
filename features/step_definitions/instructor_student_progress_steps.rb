@@ -8,7 +8,7 @@ Then 'the instructor sees the experience and its student progress' do
   wait_for_render
   page.current_path.should eq "/admin/courses/#{@course.id}/experience/#{@experience.id}"
 
-  find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
+  find( :xpath, "//*[@role='tab' and contains(.,'Student progress')]" ).click
   wait_for_render
   page.should have_content( '0% complete (0 of 4 students)' )
   page.should have_content( 'Incomplete' )
