@@ -15,8 +15,18 @@ module InstructorStudentProgressAssertions
     find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
     wait_for_render
     page.should have_content( "#{completion_percent}% complete (#{completed_count} of #{total_students} students)" )
-    page.should have_content( completed_count.positive? ? 'Complete' : 'Incomplete' )
-    page.should have_content( progress_detail )
+    if completed_count.positive?
+      page.find(
+        :xpath,
+        "//tbody/tr[@role='row'][td[2][normalize-space(.)='Complete'] and td[3][normalize-space(.)=#{xpath_literal( progress_detail )}]]"
+      )
+      page.all( :xpath, "//tbody/tr[@role='row'][td[2][normalize-space(.)='Incomplete']]" )
+          .size.should eq total_students - completed_count
+    else
+      page.should have_content( 'Incomplete' )
+      page.all( :xpath, "//tbody/tr[@role='row'][td[2][normalize-space(.)='Incomplete']]" )
+          .size.should eq total_students
+    end
     page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq total_students
   end
 
