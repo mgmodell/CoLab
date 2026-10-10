@@ -118,7 +118,9 @@ export default function HomeShell(props: Props) {
               value.title = value.name;
               break;
             case "bingo_game":
-              if (value.instructor_task === true) {
+              if (value.admin_task) {
+                value.title = value.name;
+              } else if (value.instructor_task === true) {
                 value.title = t("candidate_lists.review", { task: value.name });
               } else if (value.status < 0) {
                 value.title = t("candidate_lists.play", { task: value.name });
@@ -132,7 +134,9 @@ export default function HomeShell(props: Props) {
               value.title = value.name;
               break;
           }
-          if (props.rootPath === undefined) {
+          if (value.admin_task) {
+            value.url = `/${props.rootPath ? `${props.rootPath}/` : ""}admin/${value.link}`;
+          } else if (props.rootPath === undefined) {
             value.url = `/home/${value.link}`;
           } else {
             value.url = `/${props.rootPath}/home/${value.link}`;
