@@ -16,3 +16,29 @@ Feature: Instructor student progress
     And the experience "has" been activated
     When the user logs in
     Then the instructor sees the experience and its student progress
+
+  @javascript
+  Scenario: Instructor opens progress for an active assignment
+    Given the course has an open "assignment" activity for progress
+    When the user logs in
+    Then the instructor sees student progress for the "assignment" activity
+
+  @javascript
+  Scenario: Instructor sees completed assignment progress
+    Given the course has an open "assignment" activity for progress
+    And one student has completed the progress assignment
+    When the user logs in
+    Then user should see 2 open task
+    Then the instructor sees 1 completed student for the "assignment" activity
+
+  @javascript
+  Scenario: Instructor opens progress for an active Bingo game
+    Given the course has an open "bingo_game" activity for progress
+    When the user logs in
+    Then the instructor sees student progress for the "bingo_game" activity
+
+  @javascript
+  Scenario: Instructor opens progress for an active project
+    Given the course has an open "project" activity for progress
+    When the user logs in
+    Then the instructor sees student progress for the "project" activity
