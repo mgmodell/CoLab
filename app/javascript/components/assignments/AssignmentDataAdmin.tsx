@@ -24,6 +24,7 @@ import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATU
 import { Col, Container, Row } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import { FloatLabel } from "primereact/floatlabel";
+import StudentProgress from "../StudentProgress";
 
 
 export default function AssignmentDataAdmin(props) {
@@ -460,14 +461,8 @@ export default function AssignmentDataAdmin(props) {
               </Row>
             </Container>
           </TabPanel>
-          <TabPanel header={t("edit.assignment_submissions_pnl")}>
-            <Container>
-              <Row>
-                <Col xs={5}>
-                  <span>Nothing here yet</span>
-                </Col>
-              </Row>
-            </Container>
+          <TabPanel header="Student progress">
+            <StudentProgress activityId={assignmentId} activityType="assignment" />
           </TabPanel>
         </TabView>
       </Panel>

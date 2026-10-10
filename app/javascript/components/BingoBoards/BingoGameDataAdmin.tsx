@@ -24,6 +24,7 @@ import { Container, Row, Col } from "react-grid-system";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 import BingoResponseData from "./BingoResponseData";
+import StudentProgress from "../StudentProgress";
 
 export default function BingoGameDataAdmin(props) {
   const category = "bingo_game";
@@ -470,6 +471,11 @@ export default function BingoGameDataAdmin(props) {
               reviewed={reviewed}
             />
           </TabPanel>
+          {bingoGameId ? (
+            <TabPanel header="Student progress">
+              <StudentProgress activityId={bingoGameId} activityType="bingo_game" />
+            </TabPanel>
+          ) : null}
           {bingoGameId && endpoints?.ltiConnectionUrl ? (
             <TabPanel header={t("lti.panel_title")}>
               <LtiConnectionPanel
