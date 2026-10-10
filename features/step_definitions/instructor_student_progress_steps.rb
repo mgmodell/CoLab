@@ -5,17 +5,21 @@ module InstructorStudentProgressAssertions
     activity_name = activity.respond_to?( :name ) ? activity.name : activity.get_name( false )
     wait_for_render
     row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( activity_name )})]]" )
-    row.text.should include( '0% complete (0/4)' )
+    row.text.should include( "0% complete (0/#{student_count})" )
     row.click
     wait_for_render
     page.current_path.should eq "/admin/courses/#{@course.id}/#{activity_type}/#{activity.id}"
 
     find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
     wait_for_render
-    page.should have_content( '0% complete (0 of 4 students)' )
+    page.should have_content( "0% complete (0 of #{student_count} students)" )
     page.should have_content( 'Incomplete' )
     page.should have_content( progress_detail )
-    page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq 4
+    page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq student_count
+  end
+
+  def student_count
+    @course.rosters.enrolled_student.count
   end
 end
 
@@ -38,7 +42,7 @@ Given( 'the course has an open {string} activity for progress' ) do | activity_t
       text_sub: true
     )
     @progress_activity.update_column( :active, true )
-  when 'Bingo'
+  when 'bingo_game'
     @progress_activity = @course.bingo_games.create!(
       topic: 'Progress Bingo',
       source: 'Cucumber progress test',

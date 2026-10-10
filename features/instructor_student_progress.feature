@@ -25,7 +25,7 @@ Feature: Instructor student progress
 
   @javascript
   Scenario: Instructor opens progress for an active Bingo game
-    Given the course has an open "Bingo" activity for progress
+    Given the course has an open "bingo_game" activity for progress
     When the user logs in
     Then the instructor sees student progress for the "bingo_game" activity
 
