@@ -1,16 +1,73 @@
 # frozen_string_literal: true
 
 Then 'the instructor sees the experience and its student progress' do
+  assert_instructor_progress( @experience, 'experience' )
+end
+
+Given( 'the course has an open {string} activity for progress' ) do | activity_type |
+  start_date = 1.day.ago
+  end_date = 2.months.from_now
+
+  case activity_type
+  when 'assignment'
+    @progress_activity = @course.assignments.create!(
+      name: 'Progress Assignment',
+      start_date:,
+      end_date:,
+      text_sub: true
+    )
+    @progress_activity.update_column( :active, true )
+  when 'Bingo'
+    @progress_activity = @course.bingo_games.create!(
+      topic: 'Progress Bingo',
+      source: 'Cucumber progress test',
+      group_option: false,
+      individual_count: 4,
+      group_discount: 0,
+      start_date:,
+      end_date:,
+      lead_time: 2
+    )
+    @progress_activity.update_column( :active, true )
+  when 'project'
+    current_weekday = Time.current.in_time_zone( @course.timezone ).wday
+    @progress_activity = @course.projects.create!(
+      name: 'Progress Project',
+      start_date:,
+      end_date:,
+      start_dow: current_weekday,
+      end_dow: current_weekday,
+      style: Style.find( 2 )
+    )
+    @progress_activity.update_column( :active, true )
+  else
+    raise "Unknown activity type: #{activity_type}"
+  end
+end
+
+Then( 'the instructor sees student progress for the {string} activity' ) do | activity_type |
+  assert_instructor_progress( @progress_activity, activity_type, activity_type )
+end
+
+def assert_instructor_progress( activity, activity_type, progress_detail = '0%' )
+  activity_name = activity.respond_to?( :name ) ? activity.name : activity.get_name( false )
+  progress_detail = {
+    'assignment' => 'No submission',
+    'bingo_game' => '0%',
+    'experience' => '0%',
+    'project' => 'No check-in'
+  }.fetch( progress_detail, progress_detail )
   wait_for_render
-  row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( @experience.name )})]]" )
+  row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( activity_name )})]]" )
   row.text.should include( '0% complete (0/4)' )
   row.click
   wait_for_render
-  page.current_path.should eq "/admin/courses/#{@course.id}/experience/#{@experience.id}"
+  page.current_path.should eq "/admin/courses/#{@course.id}/#{activity_type}/#{activity.id}"
 
   find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
   wait_for_render
   page.should have_content( '0% complete (0 of 4 students)' )
   page.should have_content( 'Incomplete' )
+  page.should have_content( progress_detail )
   page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq 4
 end
