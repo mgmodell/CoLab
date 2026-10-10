@@ -1,7 +1,28 @@
 # frozen_string_literal: true
 
+module InstructorStudentProgressAssertions
+  def assert_instructor_progress( activity, activity_type, progress_detail )
+    activity_name = activity.respond_to?( :name ) ? activity.name : activity.get_name( false )
+    wait_for_render
+    row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( activity_name )})]]" )
+    row.text.should include( '0% complete (0/4)' )
+    row.click
+    wait_for_render
+    page.current_path.should eq "/admin/courses/#{@course.id}/#{activity_type}/#{activity.id}"
+
+    find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
+    wait_for_render
+    page.should have_content( '0% complete (0 of 4 students)' )
+    page.should have_content( 'Incomplete' )
+    page.should have_content( progress_detail )
+    page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq 4
+  end
+end
+
+World( InstructorStudentProgressAssertions )
+
 Then 'the instructor sees the experience and its student progress' do
-  assert_instructor_progress( @experience, 'experience' )
+  assert_instructor_progress( @experience, 'experience', '0%' )
 end
 
 Given( 'the course has an open {string} activity for progress' ) do | activity_type |
@@ -46,28 +67,10 @@ Given( 'the course has an open {string} activity for progress' ) do | activity_t
 end
 
 Then( 'the instructor sees student progress for the {string} activity' ) do | activity_type |
-  assert_instructor_progress( @progress_activity, activity_type, activity_type )
-end
-
-def assert_instructor_progress( activity, activity_type, progress_detail = '0%' )
-  activity_name = activity.respond_to?( :name ) ? activity.name : activity.get_name( false )
   progress_detail = {
     'assignment' => 'No submission',
     'bingo_game' => '0%',
-    'experience' => '0%',
     'project' => 'No check-in'
-  }.fetch( progress_detail, progress_detail )
-  wait_for_render
-  row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( activity_name )})]]" )
-  row.text.should include( '0% complete (0/4)' )
-  row.click
-  wait_for_render
-  page.current_path.should eq "/admin/courses/#{@course.id}/#{activity_type}/#{activity.id}"
-
-  find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
-  wait_for_render
-  page.should have_content( '0% complete (0 of 4 students)' )
-  page.should have_content( 'Incomplete' )
-  page.should have_content( progress_detail )
-  page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq 4
+  }.fetch( activity_type )
+  assert_instructor_progress( @progress_activity, activity_type, progress_detail )
 end
