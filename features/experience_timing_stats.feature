@@ -2,6 +2,8 @@ Feature: Experience completion timing stats
   Instructors need to see how long students engage with an Experience.
 
   Background:
+    Given a user has signed up
+    Given the user "has" had demographics requested
     Given there is a course with an experience
     Given the course has 1 confirmed users
 
