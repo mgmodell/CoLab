@@ -48,6 +48,14 @@ en:
       and peer assessment requests.
     show:
       title: Project Details
+      team: Your team
+      perspective_points: Your team's Perspective Points score
+      faultline_strength: Your team's FaultLine strength
+      next_check_in: Next check-in opens
+      no_next_check_in: No further check-ins are scheduled.
+      check_in_completion: Your check-in completion
+      back_to_tasks: Back to tasks
+      load_error: Project information could not be loaded.
     edit:
       title: Edit Project Details
       editing: Editing Project

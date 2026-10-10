@@ -40,6 +40,10 @@ Given( /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes
   log @project.errors.full_messages if @project.errors.present?
 end
 
+Given( /^the project description is "(.*?)"$/ ) do | description |
+  @project.update!( description: description )
+end
+
 Given( /^the project has a group with (\d+) confirmed users$/ ) do | user_count |
   @group = @project.groups.new(
     name: "#{Faker::Hobby.activity} Group"
@@ -99,6 +103,34 @@ Then( /^user should see (\d+) open task$/ ) do | open_project_count |
   else
     page.should have_content( "#{open_project_count} tasks today" )
   end
+end
+
+Then( /^no check-in should be open for the project$/ ) do
+  @project.assessments.active_at( Time.current ).should be_empty
+end
+
+Then( /^the project status should say "(.*?)"$/ ) do | status |
+  find( :xpath, "//tbody/tr[td[normalize-space(.)='#{@project.name}']]/td[normalize-space(.)='#{status}']" )
+    .should be_present
+end
+
+When( /^the user opens the project information from the task list$/ ) do
+  find( :xpath, "//tbody/tr/td[normalize-space(.)='#{@project.name}']" ).click
+  wait_for_render
+end
+
+Then( /^the project information should include its description, team, scores, and next check-in$/ ) do
+  page.should have_content @project.description
+  page.should have_content @group.name
+  @group.users.each do | member |
+    page.should have_content member.informal_name( false )
+  end
+  page.should have_content "Your team's Perspective Points score"
+  page.should have_content "Your team's FaultLine strength"
+  page.should have_content 'Next check-in opens'
+  page.should have_content Date.tomorrow.strftime( '%-m/%-d/%Y' )
+  page.should have_content 'Your check-in completion'
+  page.should have_content "#{@project.get_performance( @user )}%"
 end
 
 Then( /^the user will see the main index page$/ ) do

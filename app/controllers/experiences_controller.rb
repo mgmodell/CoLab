@@ -62,7 +62,7 @@ class ExperiencesController < ApplicationController
           scenario: reaction.narrative.scenario.name,
           other_name: reaction.other_name,
           improvements: reaction.improvements || ''
-        }
+        }.merge( reaction.timing_stats )
       end.as_json
     }
   end

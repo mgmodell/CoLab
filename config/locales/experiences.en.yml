@@ -75,6 +75,10 @@ en:
       response_lbl: Response
       improvements_lbl: Improvements
       suggestions_lbl: Suggestions
+      total_time_lbl: Total Time
+      avg_diagnosis_time_lbl: Avg. Diagnosis Time
+      std_dev_diagnosis_time_lbl: Diagnosis Time Std. Dev.
+      reaction_time_lbl: Reaction Time
       none_yet: No reactions yet.
       
     tz_warn: This experience occurs in the %{time_zone} time zone and all dates reflect this.
