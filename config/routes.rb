@@ -225,6 +225,9 @@ Rails.application.routes.draw do
 
     get 'task_list' => 'home#task_list', as: :task_list,
         constraints: ->(req) { req.format == :json }
+    get 'activity_progress/:activity_type/:id' => 'home#activity_progress',
+        as: :activity_progress,
+        constraints: ->(req) { req.format == :json }
 
     # self registration
     get 'course/enroll/:id', to: 'courses#self_reg_init', as: :self_reg_init,

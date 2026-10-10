@@ -33,6 +33,7 @@ import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
 
 import ProjectGroups from "./ProjectGroups";
 import ChartContainer from "../Reports/ChartContainer";
+import StudentProgress from "../StudentProgress";
 
 interface ProjectDataAdminProps {}
 
@@ -390,6 +391,11 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         />
       </TabPanel>
       <TabPanel header="Reporting">{chartContainer}</TabPanel>
+      {projectId ? (
+        <TabPanel header="Student progress">
+          <StudentProgress activityId={projectId} activityType="project" />
+        </TabPanel>
+      ) : null}
       {projectId && endpoints?.ltiConnectionUrl ? (
         <TabPanel header={t("lti.panel_title")}>
           <LtiConnectionPanel
