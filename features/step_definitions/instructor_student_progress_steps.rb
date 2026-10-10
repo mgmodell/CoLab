@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
 module InstructorStudentProgressAssertions
-  def assert_instructor_progress( activity, activity_type, progress_detail )
+  def assert_instructor_progress( activity, activity_type, progress_detail, completed_count = 0 )
     activity_name = activity.respond_to?( :name ) ? activity.name : activity.get_name( false )
+    total_students = student_count
+    completion_percent = total_students.zero? ? 0 : 100 * completed_count / total_students
     wait_for_render
     row = find( :xpath, "//tr[td[contains(.,#{xpath_literal( activity_name )})]]" )
-    row.text.should include( "0% complete (0/#{student_count})" )
+    row.text.should include( "#{completion_percent}% complete (#{completed_count}/#{total_students})" )
     row.click
     wait_for_render
     page.current_path.should eq "/admin/courses/#{@course.id}/#{activity_type}/#{activity.id}"
 
     find( :xpath, "//li[@role='tab' and contains(.,'Student progress')]" ).click
     wait_for_render
-    page.should have_content( "0% complete (0 of #{student_count} students)" )
-    page.should have_content( 'Incomplete' )
+    page.should have_content( "#{completion_percent}% complete (#{completed_count} of #{total_students} students)" )
+    page.should have_content( completed_count.positive? ? 'Complete' : 'Incomplete' )
     page.should have_content( progress_detail )
-    page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq student_count
+    page.all( :xpath, "//tbody/tr[@role='row']" ).size.should eq total_students
   end
 
   def student_count
@@ -77,4 +79,36 @@ Then( 'the instructor sees student progress for the {string} activity' ) do | ac
     'project' => 'No check-in'
   }.fetch( activity_type )
   assert_instructor_progress( @progress_activity, activity_type, progress_detail )
+end
+
+Given( 'one student has completed the progress assignment' ) do
+  rubric = Rubric.create!(
+    name: 'Progress Rubric',
+    description: 'Progress test rubric',
+    school: @user.school,
+    user: @user
+  )
+  rubric.criteria.create!(
+    description: 'Criterion',
+    sequence: 1,
+    l1_description: 'Beginning'
+  )
+  @progress_activity.update!( rubric: )
+  student = @users.first
+  @progress_activity.submissions.create!(
+    submitted: Time.current,
+    sub_text: '<p>Submitted work</p>',
+    user: student,
+    creator: student,
+    rubric:
+  )
+end
+
+Then( 'the instructor sees {int} completed student for the {string} activity' ) do | completed_count, activity_type |
+  assert_instructor_progress(
+    @progress_activity,
+    activity_type,
+    "#{completed_count} submission",
+    completed_count
+  )
 end
