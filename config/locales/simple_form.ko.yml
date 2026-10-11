@@ -1,0 +1,49 @@
+ko:
+  simple_form:
+    "yes": '예'
+    "no": '아니요'
+    required:
+      text: '필수'
+      mark: '*'
+    error_notification:
+      default_message: "아래 문제를 검토하세요:"
+    prompt:
+      user:
+        gender: 성별 선택
+        cip_code: 전공 선택
+        timezone: 시간대 선택
+        school: 대학 선택
+        primary_language: 집에서 사용하는 언어 선택
+        theme: UI 테마 선택
+        language: UI 언어 선택
+    labels:
+      user:
+        first_name: 이름
+        last_name: 성
+        gender: 성별은 무엇입니까?
+        date_of_birth: 출생일은 언제입니까?
+        started_school: 대학을 시작한 시기는 언제입니까?
+        cip_code: 무엇을 공부하고 있습니까?
+        timezone: 어떤 시간대에 계십니까?
+        school: 현재 어떤 학교에 다니고 있습니까?
+        primary_language: 집에서 사용하는 언어는 무엇입니까?
+        theme: 어떤 UI 테마를 사용하시겠습니까?
+        language: CoLab에서 어떤 언어를 사용하시겠습니까?
+        researcher: 이름을 익명으로 표시할까요?
+      consent_form:
+        name: 연구 이름
+        user: 연구 수석 관리자
+        pdf: 연구 동의서 PDF
+        projects: 이 양식이 적용되는 특정 프로젝트
+        form_text: 동의서 본문
+      consent_log:
+        accepted: 동의합니다
+    hints:
+      consent_form:
+        name: >
+          이것은 각 잠재적 참여자에게 제시될 연구 제목입니다.
+        projects: >
+          프로젝트가 선택되지 않으면 이 동의서는 모든 CoLab 프로젝트에 적용됩니다.
+        form_text: >
+          이 텍스트는 모든 잠재적 연구 참여자에게 제시됩니다. 기본 HTML을 사용하여 텍스트를
+          형식화하세요.

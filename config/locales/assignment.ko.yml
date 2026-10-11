@@ -1,0 +1,101 @@
+ko:
+  assignments:
+    index:
+      title: 과제 목록
+    edit:
+      title: 과제 편집
+      assignment_details_pnl: 과제 세부 사항
+      assignment_submissions_pnl: 제출물
+      update_assignment_btn: 과제 저장
+      group_option: 그룹을 사용 가능하게 할까요?
+      group_source: 그룹 출처
+      select_rubric: 어떤 평가 기준을 적용할까요?
+      sub_type_select: 어떤 유형의 제출물이 허용됩니까?
+      text_sub: CoLab에 직접 입력한 텍스트?
+      link_sub: 제출물 링크(URL)?
+      file_sub: 파일 업로드?
+      start_date_lbl: 시작 날짜
+      start_date_placeholder: 시작 날짜를 선택하려면 클릭하세요
+      end_date_lbl: 종료 날짜
+      end_date_placeholder: 종료 날짜를 선택하려면 클릭하세요
+      date_to_lbl: 까지
+      status_saving: 과제 저장 중
+    show:
+      title: 과제 세부 사항
+      edit_string: 과제 세부 사항 편집
+      published: 게시됨?
+      creator: 작성자
+    new:
+      title: 새 과제
+      create_assignment_btn: 과제 만들기
+    status:
+      name: 과제 이름
+      brief: 개요
+      eval_criteria: 평가 기준
+      rubric_name: 평가 기준 제목
+      rubric_version: 버전
+      rubric_minimum: 최소 요구 사항 미충족
+    submissions:
+      new_header: 새 답변
+      edit_header: 답변 편집
+      sub_text_lbl: 텍스트 답변
+      sub_text_placeholder: 클릭하여 답변 입력
+      sub_link_lbl: 답변 링크
+      sub_link_placehldr: 답변 링크 입력
+      create: 새 답변 만들기
+      save: 답변을 초안으로 저장
+      submit: 새 답변 제출
+      past_header: 이전 답변
+      score: 점수
+      id: 제출 ID
+      user: 제출자
+      submitted: 제출 날짜
+      withdrawn: 철회 날짜
+      submitter: 제출자
+      submit_revision_btn: 채점을 위한 수정본 제출
+      draft_revision_btn: 추가 편집을 위해 수정본 저장
+      copy_submission_btn: 이 수정본 복사
+      withdraw_btn: 수정본 철회
+      new_btn: 새 답변
+      response_tab_lbl: 답변
+    progress:
+      progress_tab_lbl: 진행 상황
+      in_progress_msg: 진행 중
+    visualization:
+      label: 차트 유형
+      stacked_area: 누적 영역
+      layered_area: 레이어드 영역
+      lines: 선형 차트
+    create_success: 과제가 성공적으로 만들어졌습니다!
+    destroy_success: 과제가 성공적으로 삭제되었습니다!
+    soft_delete_success: 과제가 비활성화되어 삭제 표시되었습니다.
+    update_success: 과제가 성공적으로 업데이트되었습니다!
+    back: 과제 목록으로 돌아가기
+    name: 과제 이름
+    open_date: 시작 날짜
+    close_date: 종료 날짜
+    description: 과제 설명
+    active: 활성화됨?
+    version: 버전
+    demo:
+      student_title: 디자인 챌린지
+      student_description: >
+        감사의 디자인 공간에 기여하세요. 인간 중심 디자인 접근 방식을 활용하여 더 넓은 커뮤니티에
+        감사, 애정, 친절 또는 감사를 표현하고, 공유하거나 전달하는 새로운 방법을 개발하세요.
+        감사는 우리에게 힘을 주고, 생각에 긍정성을 자극하며, 신체적·정신적 웰빙을 향상시킵니다.
+        (CHI 2022 학생 디자인 대회)
+      instructor_title: 좋아하는 보네것
+      instructor_description: >
+        커트 보네것의 작품 중 가장 좋아하는 작품을 깊이 다루는 8-10페이지 분량의 논문.
+        작품 요약, 주제와 아이디어에 대한 논의, 그리고 그 작품이 작성된 역사적 맥락과
+        이 과정의 주제와 어떻게 관련되는지에 대한 논의가 포함되어야 합니다.
+    error:
+      submission_type: 최소한 하나의 제출 유형을 선택해야 합니다
+      create_failed: >
+        새 과제를 만들 수 없습니다. 아래 오류를 해결하고 다시 시도하세요.
+      update_failed: >
+        과제를 저장할 수 없습니다. 아래 오류를 해결하고 다시 시도하세요.
+      group_required: >
+        그룹을 활성화하려면 그룹을 가져올 프로젝트도 선택해야 합니다.
+      no_update_error: 과제가 성공적으로 저장되었습니다.
+      no_create_error: 과제가 성공적으로 만들어졌습니다.
