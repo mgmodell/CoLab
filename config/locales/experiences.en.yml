@@ -1,5 +1,6 @@
 en:
   experience_admins:
+    reset_btn: Reset
     name: Experience name
     lead_time_lbl: Days for instructor prep
     student_deadline_msg: "Students must have this done by {{date}}."

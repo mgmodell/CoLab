@@ -1,5 +1,6 @@
 en:
   rubrics:
+    reset_btn: Reset
     index:
       title: List of Rubrics
       empty: No rubrics found
@@ -69,4 +70,3 @@ en:
       down: Move criteria down
       copy: Copy criteria
       delete: Remove this criteria
-

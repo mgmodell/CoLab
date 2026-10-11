@@ -1,5 +1,6 @@
 en:
   bingo_games:
+    reset_btn: Reset
     update_bingo_btn: Update Bingo Game
     scored_game:
       list_title: scored item

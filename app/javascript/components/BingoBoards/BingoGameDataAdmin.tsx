@@ -43,7 +43,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useDirtyStatus( bingoGameIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = useRef(false);
+  const cleanGameRef = useRef<any>(null);
   const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -87,15 +87,29 @@ export default function BingoGameDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current || null === bingoGameId ) {
+    if (!cleanGameRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentGame = {
+      topic: gameTopic,
+      description: gameDescriptionEditor,
+      source: gameSource,
+      active: gameActive,
+      startDate: gameStartDate,
+      endDate: gameEndDate,
+      individualCount: gameIndividualCount,
+      leadTime: gameLeadTime,
+      groupOption: gameGroupOption,
+      groupDiscount: gameGroupDiscount,
+      groupProjectId: gameGroupProjectId
+    };
+    setDirty(JSON.stringify(currentGame) === JSON.stringify(cleanGameRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     gameTopic,
     gameDescriptionEditor,
     gameSource,
-    gameTimezone,
     gameActive,
     gameStartDate,
     gameEndDate,
@@ -165,6 +179,19 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupOption(bingo_game.group_option || false);
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
+        cleanGameRef.current = {
+          topic: bingo_game.topic || "",
+          description: bingo_game.description || "",
+          source: bingo_game.source || "",
+          active: bingo_game.active || false,
+          startDate: new Date(Date.parse(bingo_game.start_date)),
+          endDate: new Date(Date.parse(bingo_game.end_date)),
+          individualCount: bingo_game.individual_count || 0,
+          leadTime: bingo_game.lead_time || 0,
+          groupOption: bingo_game.group_option || false,
+          groupDiscount: bingo_game.group_discount || 0,
+          groupProjectId: bingo_game.project_id
+        };
         setFoundWords(data.found_words);
         setDirty(DIRTY_STATUS.CLEAN);
 
@@ -177,7 +204,6 @@ export default function BingoGameDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
@@ -205,7 +231,6 @@ export default function BingoGameDataAdmin(props) {
   };
 
   const getBingoGameData = () => {
-    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {
@@ -226,6 +251,19 @@ export default function BingoGameDataAdmin(props) {
 
         //Set the bingo_game stuff
         const bingo_game = data.bingo_game;
+        cleanGameRef.current = {
+          topic: bingo_game.topic || "",
+          description: bingo_game.description || "",
+          source: bingo_game.source || "",
+          active: bingo_game.active || false,
+          startDate: new Date(Date.parse(bingo_game.start_date)),
+          endDate: new Date(Date.parse(bingo_game.end_date)),
+          individualCount: bingo_game.individual_count || 0,
+          leadTime: bingo_game.lead_time || 0,
+          groupOption: bingo_game.group_option || false,
+          groupDiscount: bingo_game.group_discount || 0,
+          groupProjectId: bingo_game.project_id
+        };
         setBingoGameId(bingo_game.id);
         setGameTopic(bingo_game.topic || "");
         setGameDescriptionEditor(bingo_game.description || "");
@@ -252,7 +290,6 @@ export default function BingoGameDataAdmin(props) {
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
@@ -278,6 +315,30 @@ export default function BingoGameDataAdmin(props) {
         {null == bingoGameId ? t("create_bingo_btn") : t("update_bingo_btn")}
       </Button>
     </Suspense>
+  );
+
+  const resetGame = () => {
+    const cleanGame = cleanGameRef.current;
+    if (cleanGame) {
+      setGameTopic(cleanGame.topic);
+      setGameDescriptionEditor(cleanGame.description);
+      setGameSource(cleanGame.source);
+      setGameActive(cleanGame.active);
+      setGameStartDate(cleanGame.startDate);
+      setGameEndDate(cleanGame.endDate);
+      setGameIndividualCount(cleanGame.individualCount);
+      setGameLeadTime(cleanGame.leadTime);
+      setGameGroupOption(cleanGame.groupOption);
+      setGameGroupDiscount(cleanGame.groupDiscount);
+      setGameGroupProjectId(cleanGame.groupProjectId);
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const reset_btn = (
+    <Button onClick={resetGame} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
   );
 
   const group_options = gameGroupOption ? (
@@ -457,7 +518,7 @@ export default function BingoGameDataAdmin(props) {
               </Row>
               <Row>
                 <Col xs={12}>
-                  {save_btn} {messages.status}
+                  {reset_btn} {save_btn} {messages.status}
                   <span>{saveStatus}</span>
                 </Col>
               </Row>

@@ -1,4 +1,4 @@
-import React, { useState, Dispatch } from "react";
+import React, { useState, useEffect, useRef, Dispatch } from "react";
 import axios from "axios";
 
 //Redux store stuff
@@ -55,6 +55,19 @@ export default function RubricScorer(props: Props) {
 
   const [overrideScore, setOverrideScore] = useState( false );
   const [overriddenScore, setOverriddenScore] = useState <number | null >( null );
+  const cleanFeedbackRef = useRef<ISubmissionFeedback>(
+    JSON.parse(JSON.stringify(props.submission.submission_feedback))
+  );
+  const feedbackIsDirty =
+    JSON.stringify(props.submission.submission_feedback) !== JSON.stringify(cleanFeedbackRef.current) ||
+    overrideScore;
+
+  useEffect(() => {
+    cleanFeedbackRef.current = JSON.parse(JSON.stringify(props.submission.submission_feedback));
+    setOverrideScore(false);
+    setOverriddenScore(null);
+  }, [props.submission.id]);
+
   const handleOverRideScoreChange = () =>{
     const newOverrideSetting = !overrideScore;
     if( newOverrideSetting ){
@@ -113,6 +126,9 @@ export default function RubricScorer(props: Props) {
             type: SubmissionActions.set_submission_feedback_full,
             submission_feedback: r_sub_fdbk,
           })
+          cleanFeedbackRef.current = JSON.parse(JSON.stringify(r_sub_fdbk));
+          setOverrideScore(false);
+          setOverriddenScore(null);
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
         } else {
           Object.values( messages ).forEach( (message)=>{
@@ -132,12 +148,30 @@ export default function RubricScorer(props: Props) {
   const saveBtn = (
     <Button
       id='save_feedback'
+      disabled={!feedbackIsDirty}
       onClick={() => {
         saveSubmissionFeedback();
       }
     }
     >
       {t("save_btn")}
+    </Button>
+  );
+
+  const resetBtn = (
+    <Button
+      id="reset_feedback"
+      disabled={!feedbackIsDirty}
+      onClick={() => {
+        props.submissionReducer({
+          type: SubmissionActions.set_submission_feedback_full,
+          submission_feedback: JSON.parse(JSON.stringify(cleanFeedbackRef.current))
+        });
+        setOverrideScore(false);
+        setOverriddenScore(null);
+      }}
+    >
+      {t("reset_btn")}
     </Button>
   );
 
@@ -368,6 +402,7 @@ export default function RubricScorer(props: Props) {
       </Row>
       <Row >
         <Col xs={12}>
+        {resetBtn}
         {saveBtn}
         </Col>
       </Row>

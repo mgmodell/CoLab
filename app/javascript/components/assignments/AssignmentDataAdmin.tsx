@@ -45,7 +45,7 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useDirtyStatus();
-  const suppressDirtyRef = useRef(false);
+  const cleanAssignmentRef = useRef<any>(null);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -100,10 +100,25 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanAssignmentRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentAssignment = {
+      name: assignmentName,
+      description: assignmentDescriptionEditor,
+      active: assignmentActive,
+      startDate: assignmentStartDate,
+      endDate: assignmentEndDate,
+      groupEnabled: assignmentGroupOption,
+      fileSub: assignmentFileSub,
+      linkSub: assignmentLinkSub,
+      textSub: assignmentTextSub,
+      rubricId: assignmentRubricId,
+      groupProjectId: assignmentGroupProjectId
+    };
+    setDirty(JSON.stringify(currentAssignment) === JSON.stringify(cleanAssignmentRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     assignmentName,
     assignmentDescriptionEditor,
@@ -148,7 +163,6 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    suppressDirtyRef.current = true;
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -185,7 +199,6 @@ export default function AssignmentDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
@@ -204,6 +217,19 @@ export default function AssignmentDataAdmin(props) {
 
     //Set the bingo_game stuff
     const assignment = data.assignment;
+    cleanAssignmentRef.current = {
+      name: assignment.name || "",
+      description: assignment.description || "",
+      active: assignment.active || false,
+      startDate: new Date(Date.parse(assignment.start_date)),
+      endDate: new Date(Date.parse(assignment.end_date)),
+      groupEnabled: assignment.group_enabled || false,
+      fileSub: assignment.file_sub,
+      linkSub: assignment.link_sub,
+      textSub: assignment.text_sub,
+      rubricId: assignment.rubric_id || -1,
+      groupProjectId: assignment.project_id || -1
+    };
     setAssignmentId(assignment.id);
     setAssignmentName(assignment.name || "");
     setAssignmentDescriptionEditor(assignment.description || "");
@@ -223,7 +249,6 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {
@@ -243,7 +268,6 @@ export default function AssignmentDataAdmin(props) {
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };
@@ -263,6 +287,30 @@ export default function AssignmentDataAdmin(props) {
       </Button>
     </Suspense>
   )
+
+  const resetAssignment = () => {
+    const cleanAssignment = cleanAssignmentRef.current;
+    if (cleanAssignment) {
+      setAssignmentName(cleanAssignment.name);
+      setAssignmentDescriptionEditor(cleanAssignment.description);
+      setAssignmentActive(cleanAssignment.active);
+      setAssignmentStartDate(cleanAssignment.startDate);
+      setAssignmentEndDate(cleanAssignment.endDate);
+      setAssignmentGroupOption(cleanAssignment.groupEnabled);
+      setAssignmentFileSub(cleanAssignment.fileSub);
+      setAssignmentLinkSub(cleanAssignment.linkSub);
+      setAssignmentTextSub(cleanAssignment.textSub);
+      setAssignmentRubricId(cleanAssignment.rubricId);
+      setAssignmentGroupProjectId(cleanAssignment.groupProjectId);
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetBtn = (
+    <Button onClick={resetAssignment} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
+  );
 
   const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton className="mb-2" />}>
@@ -455,6 +503,7 @@ export default function AssignmentDataAdmin(props) {
                 </Col>
                 {group_options}
                 <Col xs={12}>
+                  {resetBtn}
                   {saveBtn}
                   <span>{saveStatus}</span>
                 </Col>

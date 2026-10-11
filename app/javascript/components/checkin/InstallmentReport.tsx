@@ -81,7 +81,7 @@ export default function InstallmentReport(props: Props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
   const [dirty, setDirty] = useDirtyStatus();
-  const suppressDirtyRef = useRef(false);
+  const cleanInstallmentRef = useRef<any>(null);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
   const [redirectUrl, setRedirectUrl] = useState<string | undefined>(undefined);
@@ -102,13 +102,16 @@ export default function InstallmentReport(props: Props) {
   };
 
   useEffect(() => {
-    console.log("InstallmentReport: dirty", dirty);
-    console.log("SuppressDirtyRef.current", suppressDirtyRef.current);
-    if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
+    if (!cleanInstallmentRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentData = {
+      contributions,
+      comments: installment.comments || ""
+    };
+    setDirty(JSON.stringify(currentData) === JSON.stringify(cleanInstallmentRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [contributions, installment]);
 
   useEffect(() => {
@@ -136,9 +139,23 @@ export default function InstallmentReport(props: Props) {
     </Button>
   );
 
+  const resetInstallment = () => {
+    const cleanInstallment = cleanInstallmentRef.current;
+    if (cleanInstallment) {
+      setContributions(JSON.parse(JSON.stringify(cleanInstallment.contributions)));
+      setInstallment(current => ({ ...current, comments: cleanInstallment.comments }));
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button disabled={!dirty} onClick={resetInstallment}>
+      {t("reset_btn")}
+    </Button>
+  );
+
   //Retrieve the latest data
   const getContributions = () => {
-    suppressDirtyRef.current = true;
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`
@@ -203,6 +220,10 @@ export default function InstallmentReport(props: Props) {
         setInstallment(data.installment);
 
         setContributions(contributions);
+        cleanInstallmentRef.current = {
+          contributions: JSON.parse(JSON.stringify(contributions)),
+          comments: data.installment.comments || ""
+        };
         setDirty(DIRTY_STATUS.CLEAN);
         setGroup(data.group);
 
@@ -213,7 +234,6 @@ export default function InstallmentReport(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   //Store what we've got
@@ -254,8 +274,12 @@ export default function InstallmentReport(props: Props) {
             },
             {}
           );
-          suppressDirtyRef.current = true;
+          cleanInstallmentRef.current = {
+            contributions: JSON.parse(JSON.stringify(receivedContributions)),
+            comments: data.installment.comments || ""
+          };
           setContributions(receivedContributions);
+          setDirty(DIRTY_STATUS.CLEAN);
           navigate('/home');
         }
         if (data.messages?.status !== undefined) {
@@ -402,6 +426,7 @@ export default function InstallmentReport(props: Props) {
           </AccordionTab>
         </Accordion>
       </Suspense>
+      {resetButton}
       {saveButton}
       <div
         id="installment_debug_div"

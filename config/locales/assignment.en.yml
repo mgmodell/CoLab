@@ -1,5 +1,6 @@
 en:
   assignments:
+    reset_btn: Reset
     index:
       title: List of Assignments
     edit:

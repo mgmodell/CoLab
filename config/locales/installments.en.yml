@@ -1,5 +1,6 @@
 en:
   installments:
+    reset_btn: Reset
     title: How did your group work together?
     subtitle: Your weekly check-in
     submit: Submit Weekly Check-In

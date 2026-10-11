@@ -51,7 +51,7 @@ export default function SchoolDataAdmin(props : Props) {
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
 
   const [dirty, setDirty] = useDirtyStatus(null == schoolId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
-  const suppressDirtyRef = useRef( false );
+  const cleanSchoolRef = useRef<any>(null);
 
   const [messages, setMessages] = useState({});
 
@@ -67,15 +67,20 @@ export default function SchoolDataAdmin(props : Props) {
     } else {
       url = url + schoolId + ".json";
     }
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
         const school = response.data.school;
 
-        setSchoolName(school.name || "");
-        setSchoolDescription(school.description || "");
-        setSchoolTimezone(school.timezone || "UTC");
+        const cleanSchool = {
+          name: school.name || "",
+          description: school.description || "",
+          timezone: school.timezone || "UTC"
+        };
+        cleanSchoolRef.current = cleanSchool;
+        setSchoolName(cleanSchool.name);
+        setSchoolDescription(cleanSchool.description);
+        setSchoolTimezone(cleanSchool.timezone);
         setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
@@ -83,7 +88,6 @@ export default function SchoolDataAdmin(props : Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveSchool = () => {
@@ -97,7 +101,6 @@ export default function SchoolDataAdmin(props : Props) {
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
 
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -114,9 +117,15 @@ export default function SchoolDataAdmin(props : Props) {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const school = data.school;
           setSchoolId(school.id);
-          setSchoolName(school.name);
-          setSchoolDescription(school.description);
-          setSchoolTimezone(school.timezone);
+          const cleanSchool = {
+            name: school.name || "",
+            description: school.description || "",
+            timezone: school.timezone || "UTC"
+          };
+          cleanSchoolRef.current = cleanSchool;
+          setSchoolName(cleanSchool.name);
+          setSchoolDescription(cleanSchool.description);
+          setSchoolTimezone(cleanSchool.timezone);
 
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
@@ -134,24 +143,44 @@ export default function SchoolDataAdmin(props : Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
   useEffect(() => {
     if (endpointStatus) {
-      suppressDirtyRef.current = true;
       getSchool();
       setDirty(DIRTY_STATUS.CLEAN);
     }
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanSchoolRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentSchool = {
+      name: schoolName,
+      description: schoolDescription,
+      timezone: schoolTimezone
+    };
+    setDirty(JSON.stringify(currentSchool) === JSON.stringify(cleanSchoolRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [schoolTimezone, schoolName, schoolDescription]);
+
+  const resetSchool = () => {
+    if (cleanSchoolRef.current) {
+      setSchoolName(cleanSchoolRef.current.name);
+      setSchoolDescription(cleanSchoolRef.current.description);
+      setSchoolTimezone(cleanSchoolRef.current.timezone);
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetSchool} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
+  );
 
   const saveButton = dirty ? (
     <Button onClick={saveSchool} disabled={!dirty}>
@@ -200,6 +229,7 @@ export default function SchoolDataAdmin(props : Props) {
         <label htmlFor="school-description">{t("index.description_lbl")}</label>
       </FloatLabel>
       <br />
+      {resetButton}
       {saveButton}
     </Panel>
   ) : null;

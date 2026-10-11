@@ -76,7 +76,7 @@ export default function CourseDataAdmin() {
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
   const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = React.useRef(false);
+  const cleanCourseRef = useRef<ICourse | null>(null);
 
   const [course, setCourse] = useState<ICourse>({
     id: courseId,
@@ -108,7 +108,6 @@ export default function CourseDataAdmin() {
   const getCourse = () => {
     dispatch(startTask());
     setDirty(DIRTY_STATUS.DIRTY);
-    suppressDirtyRef.current = true;
     const url = isNaN(courseId)
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
@@ -138,6 +137,7 @@ export default function CourseDataAdmin() {
           activities: course.activities
         }
         setCourse(localCourse);
+        cleanCourseRef.current = localCourse;
 
         setDirty(DIRTY_STATUS.CLEAN);
 
@@ -146,7 +146,6 @@ export default function CourseDataAdmin() {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       })
   };
 
@@ -158,7 +157,6 @@ export default function CourseDataAdmin() {
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
 
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -203,6 +201,7 @@ export default function CourseDataAdmin() {
             }
           );
           setCourse(localCourse);
+          cleanCourseRef.current = localCourse;
           setCourseId(localCourse.id);
           navigate(`../${localCourse.id}`, { replace: true });
         }
@@ -212,7 +211,6 @@ export default function CourseDataAdmin() {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       })
   };
 
@@ -234,10 +232,12 @@ export default function CourseDataAdmin() {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current ) {
+    if (!cleanCourseRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    setDirty(JSON.stringify(course) === JSON.stringify(cleanCourseRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     course,
     course.id, course.number, course.description, course.start_date, course.end_date,
@@ -256,6 +256,19 @@ export default function CourseDataAdmin() {
         {Boolean(courseId) ? t( 'save_btn' ) : t( 'create_btn' ) }
       </Button>
     </React.Fragment>
+  );
+
+  const resetCourse = () => {
+    if (cleanCourseRef.current) {
+      setCourse({ ...cleanCourseRef.current });
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetCourse} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
   );
 
   const setCourseValue = (field, value) => {
@@ -501,6 +514,7 @@ export default function CourseDataAdmin() {
           navigate('courseWizard');
         }}
       />
+      {resetButton}
       {saveButton}
       {messages["status"]}
     </Panel>

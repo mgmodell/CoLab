@@ -1,5 +1,6 @@
 es:
   assignments:
+    reset_btn: Deshacer cambios
     index:
       title: Lista de Tareas
     edit:

@@ -1,5 +1,6 @@
 ko:
   consent_forms:
+    reset_btn: 변경 사항 초기화
     new_title: 새 동의서
     title: 동의 응답 업데이트
     multiple: 연구 참여

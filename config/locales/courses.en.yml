@@ -1,5 +1,6 @@
 en:
   courses:
+    reset_btn: Reset
     dialog_title: Create a copy
     btn_tooltip_title: Create a copy based on this course
     copy_btn_aria: Make a copy

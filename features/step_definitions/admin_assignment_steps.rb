@@ -61,6 +61,16 @@ Then( 'the user sets the assignment {string} to {string}' ) do | field_name, val
   end
 end
 
+Then( 'the assignment {string} setting is {string}' ) do | field_name, value |
+  checkbox_id = {
+    'link' => 'sub_link',
+    'text' => 'sub_text',
+    'files' => 'sub_file'
+  }.fetch(field_name)
+
+  find(:xpath, "//input[@name='#{checkbox_id}']", visible: :all)[:checked].should eq(value == 'true')
+end
+
 Then( 'retrieve the {string} assignment from the db' ) do | which_assignment |
   @assignment = if 'latest' == which_assignment
                   Assignment.last

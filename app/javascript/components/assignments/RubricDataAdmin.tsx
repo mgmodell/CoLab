@@ -61,15 +61,12 @@ export default function RubricDataAdmin(props) {
   };
 
   const editableTextValueSetter = event => {
-    let { rowData, newValue, field, originalEvent: oEvent } = event;
-
-    rowData[field] = newValue;
-    const row = rubricCriteria.find(criterium => {
-      return criterium.id === rowData.id;
-    });
-    row[field] = newValue;
-
-    setRubricCriteria(rubricCriteria);
+    const { rowData, newValue, field } = event;
+    setRubricCriteria(rubricCriteria.map(criterium =>
+      criterium.id === rowData.id
+        ? { ...criterium, [field]: newValue }
+        : criterium
+    ));
   };
 
   const renumCriteria = criteriaArray => {
@@ -94,7 +91,7 @@ export default function RubricDataAdmin(props) {
   const [rubricSchoolId, setRubricSchoolId] = useState(0);
 
   const [dirty, setDirty] = useDirtyStatus( null == rubricId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN, category );
-  const suppressDirtyRef = useRef(false);
+  const cleanRubricRef = useRef<any>(null);
 
   const [rubricCriteria, setRubricCriteria] = useState([
     Object.assign(
@@ -118,7 +115,6 @@ export default function RubricDataAdmin(props) {
     } else {
       url = url + rubricId + ".json";
     }
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -134,15 +130,19 @@ export default function RubricDataAdmin(props) {
 
         rubric.criteria = renumCriteria(rubric.criteria);
         setRubricCriteria(rubric.criteria || []);
+        cleanRubricRef.current = {
+          name: rubric.name || "",
+          description: rubric.description || "",
+          criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+        };
 
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
         setDirty( DIRTY_STATUS.CLEAN );
       });
   };
@@ -150,8 +150,6 @@ export default function RubricDataAdmin(props) {
     const action = rubricPublished ? "activate" : "publish";
     const url = `${endpoints["baseUrl"]}/${action}/${rubricId}.json`;
     dispatch(startTask(action));
-    suppressDirtyRef.current = true;
-
     axios
       .get(url)
       .then(resp => {
@@ -170,6 +168,11 @@ export default function RubricDataAdmin(props) {
 
           rubric.criteria = renumCriteria(rubric.criteria);
           setRubricCriteria(rubric.criteria || []);
+          cleanRubricRef.current = {
+            name: rubric.name || "",
+            description: rubric.description || "",
+            criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+          };
 
           setDirty( DIRTY_STATUS.CLEAN );
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
@@ -183,7 +186,6 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask(action));
       });
   };
@@ -202,7 +204,6 @@ export default function RubricDataAdmin(props) {
       tmpCriteria.id = value.id < 1 ? null : value.id;
       return tmpCriteria;
     });
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -220,6 +221,12 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
+          rubric.criteria = renumCriteria(rubric.criteria);
+          cleanRubricRef.current = {
+            name: rubric.name || "",
+            description: rubric.description || "",
+            criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+          };
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
             dispatch(
@@ -235,7 +242,6 @@ export default function RubricDataAdmin(props) {
             setRubricActive(rubric.active);
             setRubricCreator(rubric.creator);
 
-            rubric.criteria = renumCriteria(rubric.criteria);
             setRubricCriteria(rubric.criteria || []);
 
             setDirty( DIRTY_STATUS.CLEAN );
@@ -250,7 +256,6 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask("saving"));
       });
   };
@@ -262,10 +267,17 @@ export default function RubricDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanRubricRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentRubric = {
+      name: rubricName,
+      description: rubricDescription,
+      criteria: rubricCriteria
+    };
+    setDirty(JSON.stringify(currentRubric) === JSON.stringify(cleanRubricRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [rubricName, rubricDescription, rubricCriteria]);
 
   const saveButton = dirty ? (
@@ -273,6 +285,22 @@ export default function RubricDataAdmin(props) {
       {parseInt(rubricId) > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
+
+  const resetRubric = () => {
+    const cleanRubric = cleanRubricRef.current;
+    if (cleanRubric) {
+      setRubricName(cleanRubric.name);
+      setRubricDescription(cleanRubric.description);
+      setRubricCriteria(JSON.parse(JSON.stringify(cleanRubric.criteria)));
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button aria-label="reset-rubric" onClick={resetRubric} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
+  );
 
   const publishOrActivateButton =
     parseInt(rubricId) > 0 ? (
@@ -533,6 +561,7 @@ export default function RubricDataAdmin(props) {
           </DataTable>
         </div>
       </div>
+      {resetButton}
       {saveButton}
       {publishOrActivateButton}
     </Panel>

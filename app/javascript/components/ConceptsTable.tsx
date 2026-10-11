@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 import { SortDirection } from "react-virtualized";
@@ -52,6 +52,7 @@ export default function ConceptsTable() {
 
   const [dirty, setDirty] = useDirtyStatus();
   const [editing, setEditing] = useState(false);
+  const cleanConceptNameRef = useRef("");
   const startEditing = () => {
     setEditing(true);
   }
@@ -70,7 +71,7 @@ export default function ConceptsTable() {
 
   const setName = newName => {
     setConceptName(newName);
-    setDirty(DIRTY_STATUS.DIRTY);
+    setDirty(newName === cleanConceptNameRef.current ? DIRTY_STATUS.CLEAN : DIRTY_STATUS.DIRTY);
   };
 
   const getConcepts = () => {
@@ -95,7 +96,13 @@ export default function ConceptsTable() {
   const drillDown = event => {
     setConceptId(event.data.id);
     setConceptName(event.data.name);
+    cleanConceptNameRef.current = event.data.name;
     startEditing();
+    setDirty(DIRTY_STATUS.CLEAN);
+  };
+
+  const resetConcept = () => {
+    setConceptName(cleanConceptNameRef.current);
     setDirty(DIRTY_STATUS.CLEAN);
   };
   const updateConcept = (id, name) => {
@@ -207,6 +214,7 @@ export default function ConceptsTable() {
         header={t("edit.title")}
         footer={
           <>
+            <Button onClick={resetConcept} disabled={!dirty}>{t("reset_btn")}</Button>
             <Button onClick={() => stopEditing()}>{t("cancel")}</Button>
             <Button
               id="update_concept"

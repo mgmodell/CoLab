@@ -1,5 +1,6 @@
 en:
   consent_forms:
+    reset_btn: Reset
     new_title: New Consent Form
     title: Update Consent Response
     multiple: Research Participation
@@ -32,4 +33,3 @@ en:
       date_summ: >
         This consent form applies between <strong>%{start_date}</strong> and 
         <strong>%{end_date}</strong>.
-

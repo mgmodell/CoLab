@@ -40,6 +40,7 @@ export default function ConsentFormDataAdmin(props) {
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cleanConsentFormRef = useRef<any>(null);
 
   const [consentFormId, setConsentFormId] = useState(
     consentFormIDParam === "new" ? null : consentFormIDParam
@@ -81,20 +82,23 @@ export default function ConsentFormDataAdmin(props) {
       .then(response => {
         const data = response.data;
         const consentForm = data.consent_form;
-
-        setConsentFormName(consentForm.name || "");
-        setConsentFormActive(consentForm.active || false);
-
-        if (consentForm.start_date) {
-          setConsentFormStartDate(new Date(Date.parse(consentForm.start_date)));
-        }
-        if (consentForm.end_date) {
-          setConsentFormEndDate(new Date(Date.parse(consentForm.end_date)));
-        }
-
-        setConsentFormFormTextEn(consentForm.form_text_en || "");
-        setConsentFormFormTextKo(consentForm.form_text_ko || "");
-        setConsentFormPdfUrl(consentForm.pdf_url || null);
+        const cleanConsentForm = {
+          name: consentForm.name || "",
+          active: consentForm.active || false,
+          startDate: consentForm.start_date ? new Date(Date.parse(consentForm.start_date)) : consentFormStartDate,
+          endDate: consentForm.end_date ? new Date(Date.parse(consentForm.end_date)) : consentFormEndDate,
+          formTextEn: consentForm.form_text_en || "",
+          formTextKo: consentForm.form_text_ko || "",
+          pdfUrl: consentForm.pdf_url || null
+        };
+        cleanConsentFormRef.current = cleanConsentForm;
+        setConsentFormName(cleanConsentForm.name);
+        setConsentFormActive(cleanConsentForm.active);
+        setConsentFormStartDate(cleanConsentForm.startDate || now);
+        setConsentFormEndDate(cleanConsentForm.endDate || now);
+        setConsentFormFormTextEn(cleanConsentForm.formTextEn);
+        setConsentFormFormTextKo(cleanConsentForm.formTextKo);
+        setConsentFormPdfUrl(cleanConsentForm.pdfUrl);
 
         setDirty(false);
       })
@@ -142,19 +146,23 @@ export default function ConsentFormDataAdmin(props) {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.consent_form;
           setConsentFormId(consentForm.id);
-          setConsentFormName(consentForm.name);
-
-          setConsentFormActive(consentForm.active || false);
-          if (consentForm.start_date) {
-            setConsentFormStartDate(new Date(Date.parse(consentForm.start_date)));
-          }
-          if (consentForm.end_date) {
-            setConsentFormEndDate(new Date(Date.parse(consentForm.end_date)));
-          }
-
-          setConsentFormFormTextEn(consentForm.form_text_en || "");
-          setConsentFormFormTextKo(consentForm.form_text_ko || "");
-          setConsentFormPdfUrl(consentForm.pdf_url || null);
+          const cleanConsentForm = {
+            name: consentForm.name || "",
+            active: consentForm.active || false,
+            startDate: consentForm.start_date ? new Date(Date.parse(consentForm.start_date)) : consentFormStartDate,
+            endDate: consentForm.end_date ? new Date(Date.parse(consentForm.end_date)) : consentFormEndDate,
+            formTextEn: consentForm.form_text_en || "",
+            formTextKo: consentForm.form_text_ko || "",
+            pdfUrl: consentForm.pdf_url || null
+          };
+          cleanConsentFormRef.current = cleanConsentForm;
+          setConsentFormName(cleanConsentForm.name);
+          setConsentFormActive(cleanConsentForm.active);
+          setConsentFormStartDate(cleanConsentForm.startDate || now);
+          setConsentFormEndDate(cleanConsentForm.endDate || now);
+          setConsentFormFormTextEn(cleanConsentForm.formTextEn);
+          setConsentFormFormTextKo(cleanConsentForm.formTextKo);
+          setConsentFormPdfUrl(cleanConsentForm.pdfUrl);
 
           setConsentFormDoc(null);
           setDirty(false);
@@ -177,12 +185,54 @@ export default function ConsentFormDataAdmin(props) {
     }
   }, [endpointStatus]);
 
-  useEffect(() => setDirty(true), [
+  useEffect(() => {
+    const cleanConsentForm = cleanConsentFormRef.current;
+    if (cleanConsentForm) {
+      const currentConsentForm = {
+        name: consentFormName,
+        active: consentFormActive,
+        startDate: consentFormStartDate,
+        endDate: consentFormEndDate,
+        formTextEn: consentFormFormTextEn,
+        formTextKo: consentFormFormTextKo,
+        pdfUrl: consentFormPdfUrl
+      };
+      setDirty(Boolean(consentFormDoc) || JSON.stringify(currentConsentForm) !== JSON.stringify(cleanConsentForm));
+    }
+  }, [
     consentFormName,
     consentFormActive,
     consentFormStartDate,
-    consentFormEndDate
+    consentFormEndDate,
+    consentFormFormTextEn,
+    consentFormFormTextKo,
+    consentFormPdfUrl,
+    consentFormDoc
   ]);
+
+  const resetConsentForm = () => {
+    const cleanConsentForm = cleanConsentFormRef.current;
+    if (cleanConsentForm) {
+      setConsentFormName(cleanConsentForm.name);
+      setConsentFormActive(cleanConsentForm.active);
+      setConsentFormStartDate(cleanConsentForm.startDate || now);
+      setConsentFormEndDate(cleanConsentForm.endDate || now);
+      setConsentFormFormTextEn(cleanConsentForm.formTextEn);
+      setConsentFormFormTextKo(cleanConsentForm.formTextKo);
+      setConsentFormPdfUrl(cleanConsentForm.pdfUrl);
+      setConsentFormDoc(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setDirty(false);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetConsentForm} disabled={!dirty}>
+      {t("reset_btn")}
+    </Button>
+  );
 
   const saveButton = dirty ? (
     <Button onClick={saveConsentForm}>
@@ -300,6 +350,7 @@ export default function ConsentFormDataAdmin(props) {
       )}
       <br />
       <br />
+      {resetButton}
       {saveButton}
     </Panel>
   );

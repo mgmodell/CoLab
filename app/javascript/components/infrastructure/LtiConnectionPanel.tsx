@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import { useDispatch } from "react-redux";
@@ -50,6 +50,7 @@ export default function LtiConnectionPanel(props: Props) {
   const [connection, setConnection] = useState<ILtiConnection>({
     ...EMPTY_CONNECTION
   });
+  const cleanConnectionRef = useRef<ILtiConnection>({ ...EMPTY_CONNECTION });
   const [configured, setConfigured] = useState(false);
   const [dirty, setDirty] = useState(false);
 
@@ -65,7 +66,9 @@ export default function LtiConnectionPanel(props: Props) {
       .get(connectionUrl)
       .then(response => {
         const data = response.data;
-        setConnection(data.lti_connection || { ...EMPTY_CONNECTION });
+        const cleanConnection = data.lti_connection || { ...EMPTY_CONNECTION };
+        cleanConnectionRef.current = { ...cleanConnection };
+        setConnection(cleanConnection);
         setConfigured(data.configured || false);
         setDirty(false);
       })
@@ -83,7 +86,9 @@ export default function LtiConnectionPanel(props: Props) {
       .patch(connectionUrl, { lti_connection: connection })
       .then(response => {
         const data = response.data;
-        setConnection(data.lti_connection || { ...EMPTY_CONNECTION });
+        const cleanConnection = data.lti_connection || { ...EMPTY_CONNECTION };
+        cleanConnectionRef.current = { ...cleanConnection };
+        setConnection(cleanConnection);
         setConfigured(data.configured || false);
         setDirty(false);
         if (data.messages?.main) {
@@ -134,8 +139,14 @@ export default function LtiConnectionPanel(props: Props) {
   };
 
   const handleChange = (field: keyof ILtiConnection, value: string) => {
-    setConnection(prev => ({ ...prev, [field]: value }));
-    setDirty(true);
+    const updatedConnection = { ...connection, [field]: value };
+    setConnection(updatedConnection);
+    setDirty(JSON.stringify(updatedConnection) !== JSON.stringify(cleanConnectionRef.current));
+  };
+
+  const resetConnection = () => {
+    setConnection({ ...cleanConnectionRef.current });
+    setDirty(false);
   };
 
   return (
@@ -213,6 +224,13 @@ export default function LtiConnectionPanel(props: Props) {
               />
               <label htmlFor="lti_iss">{t("lti.iss_lbl")}</label>
             </FloatLabel>
+          </Col>
+          <Col xs={6}>
+            <Button
+              label={t("reset_btn")}
+              disabled={!dirty}
+              onClick={resetConnection}
+            />
           </Col>
           <Col xs={6}>
             <Button
