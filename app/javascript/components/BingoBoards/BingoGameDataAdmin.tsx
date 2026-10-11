@@ -337,7 +337,7 @@ export default function BingoGameDataAdmin(props) {
 
   const reset_btn = (
     <Button onClick={resetGame} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

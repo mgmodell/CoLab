@@ -1,5 +1,6 @@
 es:
   projects:
+    reset_btn: Deshacer cambios
     create_success: El proyecto fue creado exitosamente.
     create_success_inactive: >
       El proyecto fue creado exitosamente. ¡No olvides activarlo!

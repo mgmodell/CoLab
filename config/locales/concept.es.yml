@@ -1,5 +1,6 @@
 es:
   concepts:
+    reset_btn: Deshacer cambios
     index:
       title: Lista de conceptos
     edit:

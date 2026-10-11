@@ -1,5 +1,6 @@
 es:
   consent_forms:
+    reset_btn: Deshacer cambios
     new_title: Nuevo formulario de consentimiento
     title: Actualizar la respuesta de consentimiento
     multiple: Partcipacion en investigacion
@@ -25,4 +26,3 @@ es:
       date_summ: >
         Este formulario de consentimiento se aplica entre <strong>%{start_date}</strong> y 
         <strong>%{end_date}</strong>.
-

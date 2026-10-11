@@ -255,7 +255,7 @@ export default function ExperienceDataAdmin(props) {
 
   const resetButton = (
     <Button onClick={resetExperience} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

@@ -1,5 +1,6 @@
 en:
   concepts:
+    reset_btn: Reset
     index:
       title: List of Concepts
     edit:

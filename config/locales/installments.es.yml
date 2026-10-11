@@ -1,5 +1,6 @@
 es:
   installments:
+    reset_btn: Deshacer cambios
     title: Comó trabajo su grupo juntos?
     subtitle: Tu cuota semanal 
     submit: Enviar cuota semanal 

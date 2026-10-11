@@ -1,5 +1,6 @@
 es:
   bingo_games:
+    reset_btn: Deshacer cambios
     update_bingo_btn: Actualizar juego de bingo
     scored_game:
       list_title: Artículo calificado
@@ -90,4 +91,3 @@ es:
     end_date_err: >
       The bingo game cannot begin after the course has ended
       (%{end_date} > %{course_end_date})
-

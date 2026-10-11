@@ -279,7 +279,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
 
   const resetButton = (
     <Button onClick={resetProject} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

@@ -227,7 +227,7 @@ export default function LtiConnectionPanel(props: Props) {
           </Col>
           <Col xs={6}>
             <Button
-              label="Reset"
+              label={t("reset_btn")}
               disabled={!dirty}
               onClick={resetConnection}
             />

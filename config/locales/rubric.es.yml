@@ -1,5 +1,6 @@
 es:
   rubrics:
+    reset_btn: Deshacer cambios
     index:
       title: Lista de Rúbricas
     edit:
@@ -44,4 +45,3 @@ es:
       down: Mover criterios hacia abajo
       copy: Criterios de copia
       delete: Eliminar este criterio
-

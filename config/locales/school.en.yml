@@ -1,5 +1,6 @@
 en:
   schools:
+    reset_btn: Reset
     index:
       title: List of Schools
       name_lbl: Name

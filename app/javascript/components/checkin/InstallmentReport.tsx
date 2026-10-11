@@ -150,7 +150,7 @@ export default function InstallmentReport(props: Props) {
 
   const resetButton = (
     <Button disabled={!dirty} onClick={resetInstallment}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

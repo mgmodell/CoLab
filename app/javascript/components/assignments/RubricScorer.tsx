@@ -171,7 +171,7 @@ export default function RubricScorer(props: Props) {
         setOverriddenScore(null);
       }}
     >
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

@@ -308,7 +308,7 @@ export default function AssignmentDataAdmin(props) {
 
   const resetBtn = (
     <Button onClick={resetAssignment} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

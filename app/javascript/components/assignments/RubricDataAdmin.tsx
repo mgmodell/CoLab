@@ -298,7 +298,7 @@ export default function RubricDataAdmin(props) {
 
   const resetButton = (
     <Button aria-label="reset-rubric" onClick={resetRubric} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

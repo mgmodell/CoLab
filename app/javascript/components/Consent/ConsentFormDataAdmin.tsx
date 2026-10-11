@@ -230,7 +230,7 @@ export default function ConsentFormDataAdmin(props) {
 
   const resetButton = (
     <Button onClick={resetConsentForm} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

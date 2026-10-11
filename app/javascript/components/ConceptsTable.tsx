@@ -214,7 +214,7 @@ export default function ConceptsTable() {
         header={t("edit.title")}
         footer={
           <>
-            <Button onClick={resetConcept} disabled={!dirty}>Reset</Button>
+            <Button onClick={resetConcept} disabled={!dirty}>{t("reset_btn")}</Button>
             <Button onClick={() => stopEditing()}>{t("cancel")}</Button>
             <Button
               id="update_concept"

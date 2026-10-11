@@ -262,7 +262,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const resetBtn = (
     <Button disabled={!dirtyStatus || !notSubmitted} onClick={resetSubmission}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

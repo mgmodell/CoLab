@@ -1,5 +1,6 @@
 en:
   critiques:
+    reset_btn: Reset
     critique_title: Critiques
     error:
       not_loaded: No submission loaded

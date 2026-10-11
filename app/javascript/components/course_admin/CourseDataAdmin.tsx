@@ -267,7 +267,7 @@ export default function CourseDataAdmin() {
 
   const resetButton = (
     <Button onClick={resetCourse} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 

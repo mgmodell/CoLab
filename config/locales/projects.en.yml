@@ -1,5 +1,6 @@
 en:
   projects:
+    reset_btn: Reset
     create_btn: Create Project
     save_btn: Save Project
     create_success: Project was successfully created.

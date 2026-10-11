@@ -178,7 +178,7 @@ export default function SchoolDataAdmin(props : Props) {
 
   const resetButton = (
     <Button onClick={resetSchool} disabled={!dirty}>
-      Reset
+      {t("reset_btn")}
     </Button>
   );
 
