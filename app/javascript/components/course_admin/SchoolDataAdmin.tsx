@@ -51,7 +51,6 @@ export default function SchoolDataAdmin(props : Props) {
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
 
   const [dirty, setDirty] = useDirtyStatus(null == schoolId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
-  const suppressDirtyRef = useRef( false );
   const cleanSchoolRef = useRef<any>(null);
 
   const [messages, setMessages] = useState({});
@@ -68,7 +67,6 @@ export default function SchoolDataAdmin(props : Props) {
     } else {
       url = url + schoolId + ".json";
     }
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -90,7 +88,6 @@ export default function SchoolDataAdmin(props : Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveSchool = () => {
@@ -104,7 +101,6 @@ export default function SchoolDataAdmin(props : Props) {
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
 
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -147,20 +143,18 @@ export default function SchoolDataAdmin(props : Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
   useEffect(() => {
     if (endpointStatus) {
-      suppressDirtyRef.current = true;
       getSchool();
       setDirty(DIRTY_STATUS.CLEAN);
     }
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanSchoolRef.current) {
       return;
     }
     const currentSchool = {

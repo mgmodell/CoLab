@@ -61,7 +61,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
     "new" === projectIdParam ? null : Number(projectIdParam)
   );
   const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = useRef(false);
   const cleanProjectRef = useRef<any>(null);
 
   const [projectName, setProjectName] = useState("");
@@ -94,7 +93,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
     } else {
       url = url + projectId + ".json";
     }
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -132,7 +130,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveProject = () => {
@@ -145,7 +142,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       (null == projectId ? courseIdParam : projectId) +
       ".json";
 
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -216,7 +212,6 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
   useEffect(() => {
@@ -231,7 +226,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanProjectRef.current) {
       return;
     }
     const currentProject = {

@@ -64,7 +64,6 @@ export default function ExperienceDataAdmin(props) {
     "new" === experienceIdParam ? null : experienceIdParam
   );
   const [dirty, setDirty] = useDirtyStatus( null === experienceIdParam ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = useRef(false);
   const cleanExperienceRef = useRef<any>(null);
   const [experienceName, setExperienceName] = useState("");
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
@@ -88,7 +87,6 @@ export default function ExperienceDataAdmin(props) {
 
   const getExperience = () => {
     dispatch(startTask());
-    suppressDirtyRef.current = true;
     var url = endpoints.baseUrl + "/";
     if (null == experienceId) {
       url = url + "new/" + courseIdParam + ".json";
@@ -129,13 +127,11 @@ export default function ExperienceDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
     dispatch(startTask("saving"));
-    suppressDirtyRef.current = true;
 
     const url =
       endpoints.baseUrl +
@@ -201,7 +197,6 @@ export default function ExperienceDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
@@ -212,7 +207,7 @@ export default function ExperienceDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanExperienceRef.current) {
       return;
     }
     const currentExperience = {

@@ -42,7 +42,6 @@ export default function AssignmentSubmission(props: Props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [t, i18n] = useTranslation(`${category}s`);
-  const suppressDirtyRef = useRef(false);
   const [dirtyStatus, setDirtyStatus] = useDirtyStatus( );
   const cleanSubmissionRef = useRef({ text: "", link: "" });
 
@@ -62,9 +61,6 @@ export default function AssignmentSubmission(props: Props) {
   }, [endpointStatus, submissionId]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
-      return;
-    }
     const currentSubmission = {
       text: submissionTextEditor,
       link: submissionLink
@@ -75,7 +71,6 @@ export default function AssignmentSubmission(props: Props) {
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
-    suppressDirtyRef.current = true;
     const url = props.rootPath === undefined
       ? `${endpoints.submissionUrl}${submissionId}.json`
       : `/${props.rootPath}${endpoints.submissionUrl}${submissionId}.json`;
@@ -113,7 +108,6 @@ export default function AssignmentSubmission(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("loading"));
-        suppressDirtyRef.current = false;
       });
   };
 
@@ -167,8 +161,6 @@ export default function AssignmentSubmission(props: Props) {
 
     const method = null === submissionId ? "PUT" : "PATCH";
     dispatch(startTask("saving"));
-    suppressDirtyRef.current = true;
-
     axios({
       url: url,
       method: method,

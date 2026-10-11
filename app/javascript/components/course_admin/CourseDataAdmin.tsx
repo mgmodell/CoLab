@@ -76,7 +76,6 @@ export default function CourseDataAdmin() {
     parseInt("new" === courseIdParam ? null : courseIdParam)
   );
   const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
-  const suppressDirtyRef = React.useRef(false);
   const cleanCourseRef = useRef<ICourse | null>(null);
 
   const [course, setCourse] = useState<ICourse>({
@@ -109,7 +108,6 @@ export default function CourseDataAdmin() {
   const getCourse = () => {
     dispatch(startTask());
     setDirty(DIRTY_STATUS.DIRTY);
-    suppressDirtyRef.current = true;
     const url = isNaN(courseId)
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
@@ -148,7 +146,6 @@ export default function CourseDataAdmin() {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       })
   };
 
@@ -160,7 +157,6 @@ export default function CourseDataAdmin() {
       ? `${endpoints.baseUrl}/new.json`
       : `${endpoints.baseUrl}/${courseId}.json`;
 
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -215,7 +211,6 @@ export default function CourseDataAdmin() {
         console.log("error:", error);
       }).finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       })
   };
 
@@ -237,7 +232,7 @@ export default function CourseDataAdmin() {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current ) {
+    if (!cleanCourseRef.current) {
       return;
     }
     setDirty(JSON.stringify(course) === JSON.stringify(cleanCourseRef.current)

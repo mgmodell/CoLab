@@ -81,7 +81,6 @@ export default function InstallmentReport(props: Props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState<IInstallmentState>({ comments: "" });
   const [dirty, setDirty] = useDirtyStatus();
-  const suppressDirtyRef = useRef(false);
   const cleanInstallmentRef = useRef<any>(null);
 
   const [redirectState, setRedirectState] = useState(RedirectState.DECIDING);
@@ -103,10 +102,7 @@ export default function InstallmentReport(props: Props) {
   };
 
   useEffect(() => {
-    console.log("InstallmentReport: dirty", dirty);
-    console.log("SuppressDirtyRef.current", suppressDirtyRef.current);
-    if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
+    if (!cleanInstallmentRef.current) {
       return;
     }
     const currentData = {
@@ -160,7 +156,6 @@ export default function InstallmentReport(props: Props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    suppressDirtyRef.current = true;
     const url =
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${projectId}.json`
@@ -239,7 +234,6 @@ export default function InstallmentReport(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   //Store what we've got
@@ -284,7 +278,6 @@ export default function InstallmentReport(props: Props) {
             contributions: JSON.parse(JSON.stringify(receivedContributions)),
             comments: data.installment.comments || ""
           };
-          suppressDirtyRef.current = true;
           setContributions(receivedContributions);
           setDirty(DIRTY_STATUS.CLEAN);
           navigate('/home');

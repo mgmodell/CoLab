@@ -45,7 +45,6 @@ export default function AssignmentDataAdmin(props) {
   const navigate = useNavigate();
 
   const [dirty, setDirty] = useDirtyStatus();
-  const suppressDirtyRef = useRef(false);
   const cleanAssignmentRef = useRef<any>(null);
   const [curTab, setCurTab] = useState(0);
   const [assignmentProjects, setAssignmentProjects] = useState([
@@ -101,7 +100,7 @@ export default function AssignmentDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanAssignmentRef.current) {
       return;
     }
     const currentAssignment = {
@@ -164,7 +163,6 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    suppressDirtyRef.current = true;
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -201,7 +199,6 @@ export default function AssignmentDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 
@@ -252,7 +249,6 @@ export default function AssignmentDataAdmin(props) {
     setAssignmentRubricId(assignment.rubric_id || -1);
   };
   const getAssignmentData = () => {
-    suppressDirtyRef.current = true;
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === assignmentId) {
@@ -272,7 +268,6 @@ export default function AssignmentDataAdmin(props) {
         return [{ id: -1, name: "no data" }];
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask());
       });
   };

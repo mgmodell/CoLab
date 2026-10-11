@@ -91,7 +91,6 @@ export default function RubricDataAdmin(props) {
   const [rubricSchoolId, setRubricSchoolId] = useState(0);
 
   const [dirty, setDirty] = useDirtyStatus( null == rubricId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN, category );
-  const suppressDirtyRef = useRef(false);
   const cleanRubricRef = useRef<any>(null);
 
   const [rubricCriteria, setRubricCriteria] = useState([
@@ -116,7 +115,6 @@ export default function RubricDataAdmin(props) {
     } else {
       url = url + rubricId + ".json";
     }
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -145,7 +143,6 @@ export default function RubricDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
         setDirty( DIRTY_STATUS.CLEAN );
       });
   };
@@ -153,8 +150,6 @@ export default function RubricDataAdmin(props) {
     const action = rubricPublished ? "activate" : "publish";
     const url = `${endpoints["baseUrl"]}/${action}/${rubricId}.json`;
     dispatch(startTask(action));
-    suppressDirtyRef.current = true;
-
     axios
       .get(url)
       .then(resp => {
@@ -191,7 +186,6 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask(action));
       });
   };
@@ -210,7 +204,6 @@ export default function RubricDataAdmin(props) {
       tmpCriteria.id = value.id < 1 ? null : value.id;
       return tmpCriteria;
     });
-    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -263,7 +256,6 @@ export default function RubricDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask("saving"));
       });
   };
@@ -275,7 +267,7 @@ export default function RubricDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
+    if (!cleanRubricRef.current) {
       return;
     }
     const currentRubric = {
