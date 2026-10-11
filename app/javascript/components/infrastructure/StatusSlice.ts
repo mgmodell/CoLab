@@ -1,8 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { data, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { createSlice } from "@reduxjs/toolkit";
-import { Root } from "react-dom/client";
 import { RootState } from "./AppReducers";
 
 export enum Priorities {

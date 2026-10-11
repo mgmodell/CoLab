@@ -24,7 +24,11 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 
-export default function SchoolDataAdmin(props) {
+interface Props {
+  schoolId?: number;
+}
+
+export default function SchoolDataAdmin(props : Props) {
   const category = "school";
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
@@ -41,7 +45,7 @@ export default function SchoolDataAdmin(props) {
   const dispatch = useDispatch();
 
   let { schoolIdParam } = useParams();
-  const [schoolId, setSchoolId] = useState(schoolIdParam);
+  const [schoolId, setSchoolId] = useState( parseInt( schoolIdParam ) || null );
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
@@ -78,9 +82,8 @@ export default function SchoolDataAdmin(props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         dispatch(endTask());
-        setDirty(DIRTY_STATUS.CLEAN);
+        suppressDirtyRef.current = false;
       });
   };
   const saveSchool = () => {
@@ -90,9 +93,11 @@ export default function SchoolDataAdmin(props) {
     const url =
       endpoints["baseUrl"] +
       "/" +
+      //Not sure I really want this here.
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
 
+    suppressDirtyRef.current = true;
     axios({
       method: method,
       url: url,
@@ -113,10 +118,10 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          setDirty(DIRTY_STATUS.CLEAN);
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
           dispatch(refreshSchools());
+          setDirty(DIRTY_STATUS.CLEAN);
         } else {
           dispatch(
             addMessage(data.messages.main, new Date(), Priorities.ERROR)
@@ -129,12 +134,15 @@ export default function SchoolDataAdmin(props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
+        suppressDirtyRef.current = false;
       });
   };
 
   useEffect(() => {
     if (endpointStatus) {
+      suppressDirtyRef.current = true;
       getSchool();
+      setDirty(DIRTY_STATUS.CLEAN);
     }
   }, [endpointStatus]);
 
@@ -147,7 +155,7 @@ export default function SchoolDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button onClick={saveSchool} disabled={!dirty}>
-      {schoolId > 0 ? "Save" : "Create"} School
+      {schoolId && schoolId > 0 ? "Save" : "Create"} School
     </Button>
   ) : null;
 
