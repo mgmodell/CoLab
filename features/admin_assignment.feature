@@ -229,6 +229,15 @@ Feature: Assignment administration
      And the assignment project is the course project
 
   @javascript
+  Scenario: Instructor resets unsaved assignment changes
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+     And the user selects the "Sack Troy" activity
+    Then the user sets the assignment "link" to "true"
+    Then the user clicks "Reset"
+    Then the assignment "link" setting is "false"
+
+  @javascript
   Scenario: Inactive assignment shows 'Not Activated' status in Activities tab
     Then the user opens the course
     Then the user switches to the "Activities" tab

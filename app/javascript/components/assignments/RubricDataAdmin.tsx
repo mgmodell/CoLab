@@ -61,15 +61,12 @@ export default function RubricDataAdmin(props) {
   };
 
   const editableTextValueSetter = event => {
-    let { rowData, newValue, field, originalEvent: oEvent } = event;
-
-    rowData[field] = newValue;
-    const row = rubricCriteria.find(criterium => {
-      return criterium.id === rowData.id;
-    });
-    row[field] = newValue;
-
-    setRubricCriteria(rubricCriteria);
+    const { rowData, newValue, field } = event;
+    setRubricCriteria(rubricCriteria.map(criterium =>
+      criterium.id === rowData.id
+        ? { ...criterium, [field]: newValue }
+        : criterium
+    ));
   };
 
   const renumCriteria = criteriaArray => {
@@ -95,6 +92,7 @@ export default function RubricDataAdmin(props) {
 
   const [dirty, setDirty] = useDirtyStatus( null == rubricId ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN, category );
   const suppressDirtyRef = useRef(false);
+  const cleanRubricRef = useRef<any>(null);
 
   const [rubricCriteria, setRubricCriteria] = useState([
     Object.assign(
@@ -134,8 +132,13 @@ export default function RubricDataAdmin(props) {
 
         rubric.criteria = renumCriteria(rubric.criteria);
         setRubricCriteria(rubric.criteria || []);
+        cleanRubricRef.current = {
+          name: rubric.name || "",
+          description: rubric.description || "",
+          criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+        };
 
-        dispatch(setClean(category));
+        setDirty(DIRTY_STATUS.CLEAN);
       })
       .catch(error => {
         console.log("error", error);
@@ -170,6 +173,11 @@ export default function RubricDataAdmin(props) {
 
           rubric.criteria = renumCriteria(rubric.criteria);
           setRubricCriteria(rubric.criteria || []);
+          cleanRubricRef.current = {
+            name: rubric.name || "",
+            description: rubric.description || "",
+            criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+          };
 
           setDirty( DIRTY_STATUS.CLEAN );
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
@@ -220,6 +228,12 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
+          rubric.criteria = renumCriteria(rubric.criteria);
+          cleanRubricRef.current = {
+            name: rubric.name || "",
+            description: rubric.description || "",
+            criteria: JSON.parse(JSON.stringify(rubric.criteria || []))
+          };
           if (rubric.id != rubricId) {
             dispatch(endTask("saving"));
             dispatch(
@@ -235,7 +249,6 @@ export default function RubricDataAdmin(props) {
             setRubricActive(rubric.active);
             setRubricCreator(rubric.creator);
 
-            rubric.criteria = renumCriteria(rubric.criteria);
             setRubricCriteria(rubric.criteria || []);
 
             setDirty( DIRTY_STATUS.CLEAN );
@@ -265,7 +278,14 @@ export default function RubricDataAdmin(props) {
     if (suppressDirtyRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentRubric = {
+      name: rubricName,
+      description: rubricDescription,
+      criteria: rubricCriteria
+    };
+    setDirty(JSON.stringify(currentRubric) === JSON.stringify(cleanRubricRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [rubricName, rubricDescription, rubricCriteria]);
 
   const saveButton = dirty ? (
@@ -273,6 +293,22 @@ export default function RubricDataAdmin(props) {
       {parseInt(rubricId) > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
+
+  const resetRubric = () => {
+    const cleanRubric = cleanRubricRef.current;
+    if (cleanRubric) {
+      setRubricName(cleanRubric.name);
+      setRubricDescription(cleanRubric.description);
+      setRubricCriteria(JSON.parse(JSON.stringify(cleanRubric.criteria)));
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button aria-label="reset-rubric" onClick={resetRubric} disabled={!dirty}>
+      Reset
+    </Button>
+  );
 
   const publishOrActivateButton =
     parseInt(rubricId) > 0 ? (
@@ -533,6 +569,7 @@ export default function RubricDataAdmin(props) {
           </DataTable>
         </div>
       </div>
+      {resetButton}
       {saveButton}
       {publishOrActivateButton}
     </Panel>

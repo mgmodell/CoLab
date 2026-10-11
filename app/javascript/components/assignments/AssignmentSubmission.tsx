@@ -44,6 +44,7 @@ export default function AssignmentSubmission(props: Props) {
   const [t, i18n] = useTranslation(`${category}s`);
   const suppressDirtyRef = useRef(false);
   const [dirtyStatus, setDirtyStatus] = useDirtyStatus( );
+  const cleanSubmissionRef = useRef({ text: "", link: "" });
 
   const [submissionId, setSubmissionId] = useState<string>();
   const [updatedDate, setUpdatedDate] = useState<Temporal.ZonedDateTime | null>(null);
@@ -64,7 +65,13 @@ export default function AssignmentSubmission(props: Props) {
     if (suppressDirtyRef.current) {
       return;
     }
-    setDirtyStatus(true);
+    const currentSubmission = {
+      text: submissionTextEditor,
+      link: submissionLink
+    };
+    setDirtyStatus(JSON.stringify(currentSubmission) !== JSON.stringify(cleanSubmissionRef.current)
+      ? DIRTY_STATUS.DIRTY
+      : DIRTY_STATUS.CLEAN);
   }, [submissionTextEditor, submissionLink]);
 
   const loadSubmission = () => {
@@ -97,7 +104,12 @@ export default function AssignmentSubmission(props: Props) {
           data.submission.recorded_score || data.submission.calculated_score
         );
         setSubmissionTextEditor(data.submission.sub_text || "");
-        setDirtyStatus(false);
+        setSubmissionLink(data.submission.sub_link || "");
+        cleanSubmissionRef.current = {
+          text: data.submission.sub_text || "",
+          link: data.submission.sub_link || ""
+        };
+        setDirtyStatus(DIRTY_STATUS.CLEAN);
       })
       .finally(() => {
         dispatch(endTask("loading"));
@@ -191,7 +203,12 @@ export default function AssignmentSubmission(props: Props) {
           }
           setRecordedScore(data.submission.recorded_score);
           setSubmissionTextEditor(data.submission.sub_text || "");
-          setDirtyStatus(false);
+          setSubmissionLink(data.submission.sub_link || "");
+          cleanSubmissionRef.current = {
+            text: data.submission.sub_text || "",
+            link: data.submission.sub_link || ""
+          };
+          setDirtyStatus(DIRTY_STATUS.CLEAN);
 
           if (submitIt) {
             navigate("/home");
@@ -245,6 +262,18 @@ export default function AssignmentSubmission(props: Props) {
     </Button>
   );
 
+  const resetSubmission = () => {
+    setSubmissionTextEditor(cleanSubmissionRef.current.text);
+    setSubmissionLink(cleanSubmissionRef.current.link);
+    setDirtyStatus(DIRTY_STATUS.CLEAN);
+  };
+
+  const resetBtn = (
+    <Button disabled={!dirtyStatus || !notSubmitted} onClick={resetSubmission}>
+      Reset
+    </Button>
+  );
+
   const draftSubmitBtn = (
     <Button disabled={!notSubmitted } onClick={() => saveSubmission(true)}>
       {t("submissions.submit_revision_btn")}
@@ -284,6 +313,7 @@ export default function AssignmentSubmission(props: Props) {
       </Row>
       {sub_text}
       {subLink}
+      {resetBtn}
       {draftSaveBtn}
       {draftSubmitBtn}
       {revCopyBtn}

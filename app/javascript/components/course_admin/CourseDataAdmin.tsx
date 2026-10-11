@@ -77,6 +77,7 @@ export default function CourseDataAdmin() {
   );
   const [dirty, setDirty] = useDirtyStatus( courseId === null || courseId === undefined ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
   const suppressDirtyRef = React.useRef(false);
+  const cleanCourseRef = useRef<ICourse | null>(null);
 
   const [course, setCourse] = useState<ICourse>({
     id: courseId,
@@ -138,6 +139,7 @@ export default function CourseDataAdmin() {
           activities: course.activities
         }
         setCourse(localCourse);
+        cleanCourseRef.current = localCourse;
 
         setDirty(DIRTY_STATUS.CLEAN);
 
@@ -203,6 +205,7 @@ export default function CourseDataAdmin() {
             }
           );
           setCourse(localCourse);
+          cleanCourseRef.current = localCourse;
           setCourseId(localCourse.id);
           navigate(`../${localCourse.id}`, { replace: true });
         }
@@ -237,7 +240,9 @@ export default function CourseDataAdmin() {
     if (suppressDirtyRef.current ) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    setDirty(JSON.stringify(course) === JSON.stringify(cleanCourseRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     course,
     course.id, course.number, course.description, course.start_date, course.end_date,
@@ -256,6 +261,19 @@ export default function CourseDataAdmin() {
         {Boolean(courseId) ? t( 'save_btn' ) : t( 'create_btn' ) }
       </Button>
     </React.Fragment>
+  );
+
+  const resetCourse = () => {
+    if (cleanCourseRef.current) {
+      setCourse({ ...cleanCourseRef.current });
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetCourse} disabled={!dirty}>
+      Reset
+    </Button>
   );
 
   const setCourseValue = (field, value) => {
@@ -501,6 +519,7 @@ export default function CourseDataAdmin() {
           navigate('courseWizard');
         }}
       />
+      {resetButton}
       {saveButton}
       {messages["status"]}
     </Panel>

@@ -65,6 +65,7 @@ export default function ExperienceDataAdmin(props) {
   );
   const [dirty, setDirty] = useDirtyStatus( null === experienceIdParam ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
   const suppressDirtyRef = useRef(false);
+  const cleanExperienceRef = useRef<any>(null);
   const [experienceName, setExperienceName] = useState("");
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
@@ -105,15 +106,19 @@ export default function ExperienceDataAdmin(props) {
         setCourseTimezone(course.timezone);
         setReactionsUrl(data.reactionsUrl);
 
-        setExperienceName(experience.name || "");
-        setExperienceActive(experience.active || false);
-        setExperienceLeadTime(experience.lead_time || 3);
-
-        var receivedDate = new Date(Date.parse(experience.start_date));
-        setExperienceStartDate(receivedDate);
-
-        receivedDate = new Date(Date.parse(experience.end_date));
-        setExperienceEndDate(new Date(Date.parse(experience.end_date)));
+        const cleanExperience = {
+          name: experience.name || "",
+          active: experience.active || false,
+          leadTime: experience.lead_time || 3,
+          startDate: new Date(Date.parse(experience.start_date)),
+          endDate: new Date(Date.parse(experience.end_date))
+        };
+        cleanExperienceRef.current = cleanExperience;
+        setExperienceName(cleanExperience.name);
+        setExperienceActive(cleanExperience.active);
+        setExperienceLeadTime(cleanExperience.leadTime);
+        setExperienceStartDate(cleanExperience.startDate);
+        setExperienceEndDate(cleanExperience.endDate);
 
         setResponseWords(data.response_words);
 
@@ -159,12 +164,20 @@ export default function ExperienceDataAdmin(props) {
           setExperienceId(experience.id);
           setExperienceName(experience.name);
           setExperienceActive(experience.active);
+          setExperienceLeadTime(experience.lead_time || 3);
 
           var receivedDate = new Date(Date.parse(experience.start_date));
           setExperienceStartDate(receivedDate);
 
           receivedDate = new Date(Date.parse(experience.end_date));
           setExperienceEndDate(receivedDate);
+          cleanExperienceRef.current = {
+            name: experience.name || "",
+            active: experience.active || false,
+            leadTime: experience.lead_time || 3,
+            startDate: new Date(Date.parse(experience.start_date)),
+            endDate: new Date(Date.parse(experience.end_date))
+          };
 
           const course = data.course;
           setCourseName(course.name);
@@ -172,7 +185,7 @@ export default function ExperienceDataAdmin(props) {
             addMessage(data.messages.status, new Date(), Priorities.INFO)
           );
           setMessages(data.messages);
-          dispatch(setClean(category));
+          setDirty(DIRTY_STATUS.CLEAN);
         } else {
           setMessages(data.messages);
           dispatch(
@@ -202,7 +215,16 @@ export default function ExperienceDataAdmin(props) {
     if (suppressDirtyRef.current) {
       return;
     }
-    setDirty( DIRTY_STATUS.DIRTY );
+    const currentExperience = {
+      name: experienceName,
+      active: experienceActive,
+      leadTime: experienceLeadTime,
+      startDate: experienceStartDate,
+      endDate: experienceEndDate
+    };
+    setDirty(JSON.stringify(currentExperience) === JSON.stringify(cleanExperienceRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     experienceName,
     experienceLeadTime,
@@ -223,6 +245,24 @@ export default function ExperienceDataAdmin(props) {
       {null == experienceId ? t('create') : t('save')}
     </Button>
   ) : null;
+
+  const resetExperience = () => {
+    const cleanExperience = cleanExperienceRef.current;
+    if (cleanExperience) {
+      setExperienceName(cleanExperience.name);
+      setExperienceActive(cleanExperience.active);
+      setExperienceLeadTime(cleanExperience.leadTime);
+      setExperienceStartDate(cleanExperience.startDate);
+      setExperienceEndDate(cleanExperience.endDate);
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetExperience} disabled={!dirty}>
+      Reset
+    </Button>
+  );
 
   //Later I want to call the activate/deactivate right here
   const toggleActive = () => {
@@ -302,6 +342,7 @@ export default function ExperienceDataAdmin(props) {
       <br />
 
       <br />
+      {resetButton}
       {saveButton}
     </Panel>
   );

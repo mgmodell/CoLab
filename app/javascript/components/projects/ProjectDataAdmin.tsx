@@ -62,6 +62,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   );
   const [dirty, setDirty] = useDirtyStatus( projectIdParam === "new" ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN );
   const suppressDirtyRef = useRef(false);
+  const cleanProjectRef = useRef<any>(null);
 
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
@@ -106,19 +107,27 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         setCourseName(course.name);
         setCourseTimezone(course.timezone);
 
-        setProjectName(project.name || "");
-        setProjectDescription(project.description || "");
-        setProjectActive(project.active);
-
-        var receivedDate = new Date(Date.parse(project.start_date));
-        setProjectStartDate(receivedDate);
-
-        receivedDate = new Date(Date.parse(project.end_date));
-        setProjectEndDate(receivedDate);
-        setProjectFactorPackId(project.factor_pack_id);
-        setProjectStyleId(project.style_id);
-        setProjectStartDOW(project.start_dow);
-        setProjectEndDOW(project.end_dow);
+        const cleanProject = {
+          name: project.name || "",
+          description: project.description || "",
+          active: project.active,
+          startDate: new Date(Date.parse(project.start_date)),
+          endDate: new Date(Date.parse(project.end_date)),
+          factorPackId: project.factor_pack_id,
+          styleId: project.style_id,
+          startDOW: project.start_dow,
+          endDOW: project.end_dow
+        };
+        cleanProjectRef.current = cleanProject;
+        setProjectName(cleanProject.name);
+        setProjectDescription(cleanProject.description);
+        setProjectActive(cleanProject.active);
+        setProjectStartDate(cleanProject.startDate);
+        setProjectEndDate(cleanProject.endDate);
+        setProjectFactorPackId(cleanProject.factorPackId);
+        setProjectStyleId(cleanProject.styleId);
+        setProjectStartDOW(cleanProject.startDOW);
+        setProjectEndDOW(cleanProject.endDOW);
         setDirty(DIRTY_STATUS.CLEAN);
       })
       .finally(() => {
@@ -175,6 +184,17 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
           setProjectEndDOW(project.end_dow);
 
           const course = data.course;
+          cleanProjectRef.current = {
+            name: project.name || "",
+            description: project.description || "",
+            active: project.active,
+            startDate: new Date(Date.parse(project.start_date)),
+            endDate: new Date(Date.parse(project.end_date)),
+            factorPackId: project.factor_pack_id,
+            styleId: project.style_id,
+            startDOW: project.start_dow,
+            endDOW: project.end_dow
+          };
           setCourseName(course.name);
           setMessages(data.messages);
           dispatch(
@@ -211,10 +231,23 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (suppressDirtyRef.current || projectId == null) {
+    if (suppressDirtyRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
+    const currentProject = {
+      name: projectName,
+      description: projectDescription,
+      active: projectActive,
+      startDate: projectStartDate,
+      endDate: projectEndDate,
+      factorPackId: projectFactorPackId,
+      styleId: projectStyleId,
+      startDOW: projectStartDOW,
+      endDOW: projectEndDOW
+    };
+    setDirty(JSON.stringify(currentProject) === JSON.stringify(cleanProjectRef.current)
+      ? DIRTY_STATUS.CLEAN
+      : DIRTY_STATUS.DIRTY);
   }, [
     projectName,
     projectDescription,
@@ -230,6 +263,28 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
   const saveButton = (
     <Button onClick={saveProject} disabled={dirty !== DIRTY_STATUS.DIRTY && projectId} className="p-button-success">
       {null == projectId ? t('create_btn') : t('save_btn')}
+    </Button>
+  );
+
+  const resetProject = () => {
+    const cleanProject = cleanProjectRef.current;
+    if (cleanProject) {
+      setProjectName(cleanProject.name);
+      setProjectDescription(cleanProject.description);
+      setProjectActive(cleanProject.active);
+      setProjectStartDate(cleanProject.startDate);
+      setProjectEndDate(cleanProject.endDate);
+      setProjectFactorPackId(cleanProject.factorPackId);
+      setProjectStyleId(cleanProject.styleId);
+      setProjectStartDOW(cleanProject.startDOW);
+      setProjectEndDOW(cleanProject.endDOW);
+      setDirty(DIRTY_STATUS.CLEAN);
+    }
+  };
+
+  const resetButton = (
+    <Button onClick={resetProject} disabled={!dirty}>
+      Reset
     </Button>
   );
 
@@ -360,6 +415,7 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         <label htmlFor="factor_pack">{t("factor_pack")}</label>
       </FloatLabel>
       <br />
+      {resetButton}
       {saveButton}
     </Panel>
   );
