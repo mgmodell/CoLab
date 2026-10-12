@@ -86,7 +86,7 @@ end
 Then( 'the user opens the assignment task' ) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find( :xpath, %{//tbody/tr/td[contains(.,'#{@assignment.name}')]} ).click
+  find( :xpath, %{//tr[td[contains(.,#{xpath_literal(@assignment.name)})] and td[contains(text(),#{xpath_literal('submitted')})]]} ).click
   wait_for_render
 end
 
