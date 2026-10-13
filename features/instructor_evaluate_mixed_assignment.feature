@@ -31,7 +31,8 @@ Feature: Instructor can evaluate a submitted leveled assignment
   Scenario: Instructor doesn't see a withdrawn task
    Given the submission has been withdrawn
    Given the user logs in
-    Then the user sees 'You do not currently have any tasks due'
+    Then user should see 1 open task
+    Then the user sees "% complete ("
 
   @javascript
   Scenario: Instructor grades the submitted assignment proficient
