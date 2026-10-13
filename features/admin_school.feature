@@ -33,7 +33,7 @@ Feature: School Administration
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user selects "Seoul" as the "Time Zone"
     Then the user clicks "Create School"
-     And the user will dismiss the error "Unable to save. Please resolve the issues and try again."
+     And the user will dismiss the error "Please review the problems below"
      #Now we complete it
      And the user sets the "Name" field to "life"
     Then close all messages
