@@ -37,7 +37,8 @@ Given( /^the user sees (\d+) assessment every hour of the day$/ ) do | assessmen
     step "that the system's set_up_assessments process runs"
     visit '/home'
     wait_for_render
-    step "user should see #{assessment_count} open task"
+    step "user should see #{assessment_count + 1} open task"
+    step 'the project status should say "Click for info"'
     @dest_date = DateTime.current + 30.minutes
     travel_to( @dest_date )
     if :rack_test != Capybara.current_driver
@@ -48,7 +49,8 @@ Given( /^the user sees (\d+) assessment every hour of the day$/ ) do | assessmen
     step "that the system's set_up_assessments process runs"
     visit '/home'
     wait_for_render
-    step "user should see #{assessment_count} open task"
+    step "user should see #{assessment_count + 1} open task"
+    step 'the project status should say "Click for info"'
     @dest_date = DateTime.current + 30.minutes
     travel_to( @dest_date )
     if :rack_test != Capybara.current_driver

@@ -141,7 +141,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the "Description" field to "this is really the coolest"
     Then close all messages
     Then the user clicks "Save Project"
      And the user sees a success message
@@ -150,7 +150,7 @@ Feature: Project Administration
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
+    Then the project "Description" is "this is really the coolest"
     #check the dates
     Then the project "start" date is "5/10/1976"
     Then the project "end" date is "11/01/2012"
@@ -417,7 +417,8 @@ Feature: Project Administration
      Then 4 emails will be tracked
      When the user logs in
      Then the user should see a successful login message
-     Then user should see 0 open task
+    Then user should see 1 open task
+    Then the project status should say "Click for info"
 
 @javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sun=> no emails, no access
@@ -452,7 +453,8 @@ Feature: Project Administration
      Then 4 emails will be tracked
      When the user logs in
      Then the user should see a successful login message
-     Then user should see 0 open task
+    Then user should see 1 open task
+    Then the project status should say "Click for info"
 
 @javascript
   Scenario: End date=> 10/10/1979 on 11/10/1979=> no emails, no access
@@ -472,7 +474,8 @@ Feature: Project Administration
      Then 0 emails will be tracked
      When the user logs in
      Then the user should see a successful login message
-     Then user should see 0 open task
+    Then user should see 1 open task
+    Then the project status should say "Click for info"
 
 @javascript
   Scenario: A deactivated project incurs no emails and is not listed

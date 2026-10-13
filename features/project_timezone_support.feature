@@ -51,7 +51,8 @@ Feature: Timezone Support
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 0 open task
+    Then user should see 1 open task
+    Then the project status should say "Click for info"
     When the system emails stragglers
     When the system emails stragglers
     Then 0 emails will be sent
