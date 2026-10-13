@@ -274,7 +274,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const revCopyBtn = !notSubmitted ? (
     <Button
-      disabled={!dirtyStatus || notSubmitted}
+      disabled={notSubmitted || (null !== withdrawnDate && !dirtyStatus) }
       onClick={() => saveSubmission(false)}
     >
       {t("submissions.copy_submission_btn")}
