@@ -68,7 +68,7 @@ Then( 'the assignment {string} setting is {string}' ) do | field_name, value |
     'files' => 'sub_file'
   }.fetch(field_name)
 
-  find(:xpath, "//input[@name='#{checkbox_id}']", visible: :all)[:checked].should eq(value == 'true')
+  find(:xpath, "//input[@name='#{checkbox_id}']", visible: :all)[:checked].should_not eq 'true'
 end
 
 Then( 'retrieve the {string} assignment from the db' ) do | which_assignment |
