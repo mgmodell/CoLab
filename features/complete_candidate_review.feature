@@ -49,7 +49,8 @@ Feature: Review Candidate words for Bingo!
   @javascript
   Scenario: Instructor does not see the review until the prep time
     Given the user logs in
-     Then user should see 0 open task
+    Then user should see 1 open task
+    Then the user sees "% complete ("
 
   @javascript
   Scenario: Instructor sees 66 candidates
