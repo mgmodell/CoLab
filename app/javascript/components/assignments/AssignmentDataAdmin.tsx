@@ -364,7 +364,10 @@ export default function AssignmentDataAdmin(props) {
                     value={assignmentDescriptionEditor}
                     headerTemplate={<EditorToolbar />}
                     onTextChange={event => {
-                      setAssignmentDescriptionEditor(event.htmlValue);
+                      if( 'user' !== event.source ) {
+                        return;
+                      }
+                      setAssignmentDescriptionEditor(null === event.htmlValue ? "" : event.htmlValue);
                     }}
                   />
                 </Col>
