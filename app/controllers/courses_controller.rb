@@ -389,6 +389,7 @@ class CoursesController < ApplicationController
             ),
             messages: { main: notice }
           }
+          response[:course][:reg_link] = course_reg_qr_path( id: @course.id )
           render json: response
         end
       end
@@ -419,6 +420,7 @@ class CoursesController < ApplicationController
             ),
             messages: { main: notice }
           }
+          response[:course][:reg_link] = course_reg_qr_path( id: @course.id )
           render json: response
         end
       end
