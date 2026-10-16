@@ -125,3 +125,52 @@ Then( 'the instructor sees {int} completed student for the {string} activity' ) 
     completed_count
   )
 end
+
+Given( 'the project has equal team evaluations for progress' ) do
+  members = @course.rosters.enrolled_student.includes( :user ).limit( 2 ).map( &:user )
+  group = @progress_activity.groups.create!( name: 'Reporting Group' )
+  group.users = members
+  assessment = @progress_activity.assessments.create!(
+    start_date: 1.day.ago.beginning_of_day,
+    end_date: 1.day.from_now.end_of_day,
+    active: true
+  )
+
+  members.each do | rater |
+    installment = assessment.installments.build(
+      user: rater,
+      group:,
+      inst_date: Time.current
+    )
+    members.each do | member |
+      @progress_activity.factors.each do | factor |
+        installment.values.build(
+          factor:,
+          user: member,
+          value: Installment::TOTAL_VAL / members.size
+        )
+      end
+    end
+    installment.save!
+  end
+end
+
+Then( 'the instructor sees group evaluation agreement' ) do
+  wait_for_render
+  find(
+    :xpath,
+    "//tr[td[contains(text(), #{xpath_literal( @progress_activity.name )})] and td[contains(text(), 'complete')]]"
+  ).click
+  wait_for_render
+  find( :xpath, "//*[@role='tab' and contains(.,'Student progress')]" ).click
+  wait_for_render
+
+  page.should have_content( 'Reporting Group' )
+  group_row = find( :xpath, "//tr[@role='row'][td[contains(.,'Reporting Group')]]" )
+  group_row.find( 'button' ).click
+  wait_for_render
+  page.should have_content( 'Project: 100%' )
+  page.should have_content( 'This week: 100%' )
+  page.should have_content( 'Trend:' )
+  page.should have_content( 'Highest contribution this week' )
+end
