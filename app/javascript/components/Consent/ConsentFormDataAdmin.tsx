@@ -311,7 +311,10 @@ export default function ConsentFormDataAdmin(props) {
             aria-label={"en_form"}
             headerTemplate={<EditorToolbar />}
             onTextChange={event => {
-              setConsentFormFormTextEn(event.htmlValue);
+              if( 'user' !== event.source ) {
+                return;
+              }
+              setConsentFormFormTextEn(null === event.htmlValue ? "" : event.htmlValue);
             }}
             value={consentFormFormTextEn}
           />
@@ -323,7 +326,10 @@ export default function ConsentFormDataAdmin(props) {
             aria-label={"ko_form"}
             headerTemplate={<EditorToolbar />}
             onTextChange={event => {
-              setConsentFormFormTextKo(event.htmlValue);
+              if( 'user' !== event.source ) {
+                return;
+              }
+              setConsentFormFormTextKo(null === event.htmlValue ? "" : event.htmlValue);
             }}
             value={consentFormFormTextKo}
           />

@@ -411,6 +411,9 @@ export default function BingoGameDataAdmin(props) {
                     value={gameDescriptionEditor}
                     headerTemplate={<EditorToolbar />}
                     onTextChange={event => {
+                      if ('user' !== event.source ) {
+                        return;
+                      }
                       setGameDescriptionEditor(null === event.htmlValue ? "" : event.htmlValue);
                     }}
                   />
