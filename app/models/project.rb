@@ -27,8 +27,8 @@ class Project < ApplicationRecord
 
   # Helpful scope
   scope :active_at, lambda { | date |
-                        where( 'end_date >= ?', date )
-                        .where( 'start_date <= ?', date )
+                        where( 'projects.end_date >= ?', date )
+                        .where( 'projects.start_date <= ?', date )
                         .where( active: true )
                     }
 
