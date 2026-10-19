@@ -9,6 +9,7 @@ class ProjectStudentProgressReport
   end
 
   def assessment
+    # Show the active assessment when available, otherwise retain the latest completed period.
     @assessment ||= @project.assessments.active_at( Time.current ).order( :start_date, :id ).last ||
                     @project.assessments.order( :start_date, :id ).last
   end
@@ -19,7 +20,7 @@ class ProjectStudentProgressReport
     values_by_group_assessment = Hash.new { | hash, key | hash[key] = [] }
 
     if assessments.any?
-      Value.includes( :installment )
+      Value.joins( :installment ).includes( :installment )
            .where( installments: { assessment_id: assessments.map( &:id ) } )
            .order( :id ).each do | value |
         installment = value.installment
@@ -33,9 +34,7 @@ class ProjectStudentProgressReport
         group:, members:, factors:, assessments:, values_by_group_assessment:
       )
       group_behaviors = group_behavior_metrics( period_results, factors )
-      overall_trend = period_results.filter_map do | period |
-        { date: period[:date], agreement: period[:overall_agreement] } if period[:overall_agreement]
-      end
+      overall_trend = trend_points( period_results ) { | period | period[:overall_agreement] }
 
       {
         id: group.id,
@@ -126,9 +125,8 @@ class ProjectStudentProgressReport
 
   def group_behavior_metrics( period_results, factors )
     factors.map do | factor |
-      trends = period_results.filter_map do | period |
-        metric = period[:behavior_metrics_by_factor][factor.id]
-        { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
+      trends = trend_points( period_results ) do | period |
+        period[:behavior_metrics_by_factor][factor.id][:agreement]
       end
       {
         factor_id: factor.id,
@@ -147,9 +145,8 @@ class ProjectStudentProgressReport
     end
     week_metric = current_period_individual( period_results, member.id )
     member_behaviors = factors.map do | factor |
-      trends = member_periods.filter_map do | period |
-        metric = period[:metric][:behavior_metrics_by_factor][factor.id]
-        { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
+      trends = trend_points( member_periods ) do | period |
+        period[:metric][:behavior_metrics_by_factor][factor.id][:agreement]
       end
       contributions = member_periods.filter_map do | period |
         period[:metric][:behavior_metrics_by_factor][factor.id][:contribution]
@@ -165,10 +162,7 @@ class ProjectStudentProgressReport
         week_contribution: week_behavior&.dig( :contribution )
       }
     end
-    member_overall_trend = member_periods.filter_map do | period |
-      agreement = period[:metric][:overall_agreement]
-      { date: period[:date], agreement: } if agreement
-    end
+    member_overall_trend = trend_points( member_periods ) { | period | period[:metric][:overall_agreement] }
 
     {
       id: member.id,
@@ -193,6 +187,13 @@ class ProjectStudentProgressReport
   def average_percentage( values )
     values = values.compact
     values.empty? ? nil : ( values.sum.to_f / values.size ).round( 1 )
+  end
+
+  def trend_points( periods )
+    periods.filter_map do | period |
+      agreement = yield period
+      { date: period[:date], agreement: } if agreement
+    end
   end
 
   def period_metric( periods, factor_id )

@@ -136,7 +136,7 @@ Given( 'the project has equal team evaluations for progress' ) do
     assessment = @progress_activity.assessments.create!(
       start_date: 1.day.ago.beginning_of_day,
       end_date: 1.day.from_now.end_of_day,
-      active: true
+      active: false
     )
     members.each do | rater |
       installment = assessment.installments.build(
@@ -157,7 +157,7 @@ Given( 'the project has equal team evaluations for progress' ) do
       end
       installment.save!
     end
-    # Installment validation rejects expired periods, so backdate after creating valid evaluations.
+    # Installment validation requires an unexpired assessment; backdate after creating valid evaluations.
     assessment.update_columns(
       start_date: assessment_start.beginning_of_day,
       end_date: ( assessment_start + 1.day ).end_of_day
