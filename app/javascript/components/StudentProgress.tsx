@@ -36,10 +36,10 @@ export default function StudentProgress({ activityId, activityType }: Props) {
 
   const formatAgreement = (value: number | null | undefined) =>
     value == null ? "—" : `${value}%`;
-  const formatTrend = (trend: Array<{ date: string; agreement: number }>) =>
-    trend?.length
-      ? trend.map(point => `${point.date}: ${point.agreement}%`).join(", ")
-      : "—";
+  const formatTrend = (slope: number | null | undefined) =>
+    slope == null
+      ? "—"
+      : `${slope > 0 ? "+" : ""}${slope.toFixed(2)} percentage points/week`;
   const metricBody = (metric: any) => (
     <div>
       <div>Project: {formatAgreement(metric?.agreement)}</div>

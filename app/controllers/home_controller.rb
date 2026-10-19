@@ -48,13 +48,14 @@ class HomeController < ApplicationController
     students = course.rosters.enrolled_student.includes( :user ).map( &:user )
     progress = activity_student_progress( activity, students )
     completed_count = progress.count { | student | student[:complete] }
+    group_reports = activity.is_a?( Project ) ? project_group_reporting( activity ) : nil
 
     render json: {
       students: progress,
       completed_count:,
       total_students: students.size,
       completion_percent: students.empty? ? 0 : 100 * completed_count / students.size,
-      groups: activity.is_a?( Project ) ? project_group_reporting( activity ) : nil
+      groups: group_reports
     }
   end
 
@@ -746,7 +747,7 @@ class HomeController < ApplicationController
         }
       end
     when Project
-      assessment = activity.assessments.active_at( Time.current ).order( :start_date ).last
+      assessment = project_reporting_assessment( activity )
       installments = assessment&.installments&.index_by( &:user_id ) || {}
       students.map do | student |
         complete = installments.key?( student.id )
@@ -764,7 +765,7 @@ class HomeController < ApplicationController
   def project_group_reporting( project )
     factors = project.factors.order( :id ).to_a
     assessments = project.assessments.order( :start_date, :id ).to_a
-    current_assessment = project.assessments.active_at( Time.current ).order( :start_date ).last
+    current_assessment = project_reporting_assessment( project )
     values_by_group_assessment = Hash.new { | hash, key | hash[key] = [] }
 
     if assessments.any?
@@ -802,7 +803,7 @@ class HomeController < ApplicationController
             behaviors: behavior_metrics,
             overall_agreement: average_percentage( behavior_metrics.map { | metric | metric[:agreement] } )
           }
-        end
+        end.transform_keys( &:id )
 
         group_behaviors = factors.map do | factor |
           {
@@ -834,7 +835,7 @@ class HomeController < ApplicationController
           name: factor.name,
           agreement: average_percentage( trends.map { | item | item[:agreement] } ),
           week_agreement: period_metric( period_results, current_assessment, :behaviors, factor.id ),
-          trend: trends
+          trend: agreement_trend_slope( trends )
         }
       end
       overall_trend = period_results.filter_map do | period |
@@ -846,7 +847,7 @@ class HomeController < ApplicationController
         name: group.get_name( current_user.anonymize? ),
         overall_agreement: average_percentage( overall_trend.map { | item | item[:agreement] } ),
         week_overall_agreement: period_overall_metric( period_results, current_assessment ),
-        overall_trend:,
+        overall_trend: agreement_trend_slope( overall_trend ),
         behaviors: group_behaviors,
         members: members.map do | member |
           member_periods = period_results.filter_map do | period |
@@ -868,7 +869,7 @@ class HomeController < ApplicationController
               name: factor.name,
               agreement: average_percentage( trends.map { | item | item[:agreement] } ),
               week_agreement: week_behavior&.dig( :agreement ),
-              trend: trends,
+              trend: agreement_trend_slope( trends ),
               contribution: all_contributions.empty? ? nil : all_contributions.sum / all_contributions.size,
               week_contribution: week_behavior&.dig( :contribution )
             }
@@ -883,7 +884,7 @@ class HomeController < ApplicationController
             name: member.name( current_user.anonymize? ),
             overall_agreement: average_percentage( overall_trend.map { | item | item[:agreement] } ),
             week_overall_agreement: week_metric&.dig( :overall_agreement ),
-            overall_trend:,
+            overall_trend: agreement_trend_slope( overall_trend ),
             behaviors: member_behaviors,
             highest_contribution: highest_contribution( member_behaviors, :contribution ),
             week_highest_contribution: highest_contribution( member_behaviors, :week_contribution )
@@ -900,6 +901,25 @@ class HomeController < ApplicationController
 
     differences = ratings.combination( 2 ).map { | left, right | ( left - right ).abs }
     ( 100 * ( 1 - differences.sum.to_f / differences.size / Installment::TOTAL_VAL ) ).round( 1 )
+  end
+
+  def agreement_trend_slope( points )
+    return if points.size < 2
+
+    start_date = Date.iso8601( points.first[:date] )
+    weeks = points.map { | point | ( Date.iso8601( point[:date] ) - start_date ).to_f / 7 }
+    average_week = weeks.sum / weeks.size
+    agreements = points.map { | point | point[:agreement] }
+    average_agreement = agreements.sum.to_f / agreements.size
+    denominator = weeks.sum { | week | ( week - average_week )**2 }
+    return if denominator.zero?
+
+    ( weeks.zip( agreements ).sum { | week, agreement | ( week - average_week ) * ( agreement - average_agreement ) } / denominator ).round( 2 )
+  end
+
+  def project_reporting_assessment( project )
+    project.assessments.active_at( Time.current ).order( :start_date, :id ).last ||
+      project.assessments.order( :start_date, :id ).last
   end
 
   def average_percentage( values )

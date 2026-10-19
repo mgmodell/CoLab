@@ -128,30 +128,37 @@ end
 
 Given( 'the project has equal team evaluations for progress' ) do
   members = @course.rosters.enrolled_student.includes( :user ).limit( 2 ).map( &:user )
+  @reporting_members = members
   group = @progress_activity.groups.create!( name: 'Reporting Group' )
   group.users = members
-  assessment = @progress_activity.assessments.create!(
-    start_date: 1.day.ago.beginning_of_day,
-    end_date: 1.day.from_now.end_of_day,
-    active: true
-  )
 
-  members.each do | rater |
-    installment = assessment.installments.build(
-      user: rater,
-      group:,
-      inst_date: Time.current
+  [2.weeks.ago, 1.week.ago].each_with_index do | assessment_start, period |
+    assessment = @progress_activity.assessments.create!(
+      start_date: 1.day.ago.beginning_of_day,
+      end_date: 1.day.from_now.end_of_day,
+      active: true
     )
-    members.each do | member |
-      @progress_activity.factors.each do | factor |
-        installment.values.build(
-          factor:,
-          user: member,
-          value: Installment::TOTAL_VAL / members.size
-        )
+    members.each do | rater |
+      installment = assessment.installments.build(
+        user: rater,
+        group:,
+        inst_date: Time.current
+      )
+      members.each do | member |
+        @progress_activity.factors.each do | factor |
+          installment.values.build(
+            factor:,
+            user: member,
+            value: period.zero? && rater != member ? 0 : Installment::TOTAL_VAL / members.size
+          )
+        end
       end
+      installment.save!
     end
-    installment.save!
+    assessment.update_columns(
+      start_date: assessment_start.beginning_of_day,
+      end_date: ( assessment_start + 1.day ).end_of_day
+    )
   end
 end
 
@@ -169,8 +176,11 @@ Then( 'the instructor sees group evaluation agreement' ) do
   group_row = find( :xpath, "//tr[@role='row'][td[contains(.,'Reporting Group')]]" )
   group_row.find( 'button' ).click
   wait_for_render
+  @reporting_members.each do | member |
+    page.should have_content( member.name( false ) )
+  end
   page.should have_content( 'Project: 100%' )
   page.should have_content( 'This week: 100%' )
-  page.should have_content( 'Trend:' )
+  page.should have_content( 'Trend: +100.00 percentage points/week' )
   page.should have_content( 'Highest contribution this week' )
 end
