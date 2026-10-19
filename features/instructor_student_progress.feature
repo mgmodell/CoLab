@@ -44,7 +44,7 @@ Feature: Instructor student progress
     Then the instructor sees student progress for the "project" activity
 
   @javascript
-  Scenario: Instructor sees grouped project evaluation agreement
+  Scenario: Instructor sees latest grouped project evaluation between assessments
     Given the course has an open "project" activity for progress
     And the project has equal team evaluations for progress
     When the user logs in

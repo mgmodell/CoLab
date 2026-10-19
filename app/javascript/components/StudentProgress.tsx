@@ -71,7 +71,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
           body={(member: any) => studentProgress.get(member.id)?.progress ?? "No check-in"}
         />
         <Column header="Overall agreement" body={overallMetricBody} />
-        {data.groups[0]?.behaviors.map((behavior: any) => (
+        {group.behaviors.map((behavior: any) => (
           <Column
             key={behavior.factor_id}
             header={behavior.name}

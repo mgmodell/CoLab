@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
@@ -780,64 +782,10 @@ class HomeController < ApplicationController
 
     groups = project.groups.includes( :users ).order( :id ).map do | group |
       members = group.users.sort_by { | user | user.name( current_user.anonymize? ) }
-      member_ids = members.map( &:id )
-      period_results = assessments.map do | assessment |
-        ratings = Hash.new { | hash, key | hash[key] = {} }
-        values_by_group_assessment[[group.id, assessment.id]].each do | value |
-          next unless member_ids.include?( value.user_id )
-
-          ratings[[value.user_id, value.factor_id]][value.installment.user_id] = value.value
-        end
-
-        individuals = members.index_with do | member |
-          behavior_metrics = factors.map do | factor |
-            factor_ratings = ratings[[member.id, factor.id]].values
-            {
-              factor_id: factor.id,
-              name: factor.name,
-              agreement: agreement_percentage( factor_ratings ),
-              contribution: factor_ratings.empty? ? nil : factor_ratings.sum.to_f / factor_ratings.size
-            }
-          end
-          {
-            behaviors: behavior_metrics,
-            overall_agreement: average_percentage( behavior_metrics.map { | metric | metric[:agreement] } )
-          }
-        end.transform_keys( &:id )
-
-        group_behaviors = factors.map do | factor |
-          {
-            factor_id: factor.id,
-            name: factor.name,
-            agreement: average_percentage(
-              individuals.values.map do | individual |
-                individual[:behaviors].find { | metric | metric[:factor_id] == factor.id }[:agreement]
-              end
-            )
-          }
-        end
-        {
-          assessment_id: assessment.id,
-          date: assessment.start_date.to_date.iso8601,
-          individuals:,
-          behaviors: group_behaviors,
-          overall_agreement: average_percentage( group_behaviors.map { | metric | metric[:agreement] } )
-        }
-      end
-
-      group_behaviors = factors.map do | factor |
-        trends = period_results.filter_map do | period |
-          metric = period[:behaviors].find { | item | item[:factor_id] == factor.id }
-          { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
-        end
-        {
-          factor_id: factor.id,
-          name: factor.name,
-          agreement: average_percentage( trends.map { | item | item[:agreement] } ),
-          week_agreement: period_metric( period_results, current_assessment, :behaviors, factor.id ),
-          trend: agreement_trend_slope( trends )
-        }
-      end
+      period_results = project_group_period_results(
+        group:, members:, factors:, assessments:, values_by_group_assessment:
+      )
+      group_behaviors = project_group_behavior_metrics( period_results, factors, current_assessment )
       overall_trend = period_results.filter_map do | period |
         { date: period[:date], agreement: period[:overall_agreement] } if period[:overall_agreement]
       end
@@ -850,45 +798,7 @@ class HomeController < ApplicationController
         overall_trend: agreement_trend_slope( overall_trend ),
         behaviors: group_behaviors,
         members: members.map do | member |
-          member_periods = period_results.filter_map do | period |
-            metric = period[:individuals][member.id]
-            { date: period[:date], metric: } if metric
-          end
-          week_metric = current_period_individual( period_results, current_assessment, member.id )
-          member_behaviors = factors.map do | factor |
-            trends = member_periods.filter_map do | period |
-              metric = period[:metric][:behaviors].find { | item | item[:factor_id] == factor.id }
-              { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
-            end
-            all_contributions = member_periods.filter_map do | period |
-              period[:metric][:behaviors].find { | item | item[:factor_id] == factor.id }[:contribution]
-            end
-            week_behavior = week_metric&.dig( :behaviors )&.find { | item | item[:factor_id] == factor.id }
-            {
-              factor_id: factor.id,
-              name: factor.name,
-              agreement: average_percentage( trends.map { | item | item[:agreement] } ),
-              week_agreement: week_behavior&.dig( :agreement ),
-              trend: agreement_trend_slope( trends ),
-              contribution: all_contributions.empty? ? nil : all_contributions.sum / all_contributions.size,
-              week_contribution: week_behavior&.dig( :contribution )
-            }
-          end
-          overall_trend = member_periods.filter_map do | period |
-            if period[:metric][:overall_agreement]
-              { date: period[:date], agreement: period[:metric][:overall_agreement] }
-            end
-          end
-          {
-            id: member.id,
-            name: member.name( current_user.anonymize? ),
-            overall_agreement: average_percentage( overall_trend.map { | item | item[:agreement] } ),
-            week_overall_agreement: week_metric&.dig( :overall_agreement ),
-            overall_trend: agreement_trend_slope( overall_trend ),
-            behaviors: member_behaviors,
-            highest_contribution: highest_contribution( member_behaviors, :contribution ),
-            week_highest_contribution: highest_contribution( member_behaviors, :week_contribution )
-          }
+          project_member_reporting( member, period_results, factors, current_assessment )
         end
       }
     end
@@ -896,14 +806,127 @@ class HomeController < ApplicationController
     groups
   end
 
+  def project_group_period_results( group:, members:, factors:, assessments:, values_by_group_assessment: )
+    member_ids = members.map( &:id ).to_set
+    assessments.map do | assessment |
+      ratings = Hash.new { | hash, key | hash[key] = {} }
+      values_by_group_assessment[[group.id, assessment.id]].each do | value |
+        next unless member_ids.include?( value.user_id )
+
+        ratings[[value.user_id, value.factor_id]][value.installment.user_id] = value.value
+      end
+
+      individuals = members.to_h do | member |
+        behavior_metrics = factors.map do | factor |
+          factor_ratings = ratings[[member.id, factor.id]].values
+          {
+            factor_id: factor.id,
+            name: factor.name,
+            agreement: agreement_percentage( factor_ratings ),
+            contribution: factor_ratings.empty? ? nil : factor_ratings.sum.to_f / factor_ratings.size
+          }
+        end
+        behavior_metrics_by_factor = behavior_metrics.index_by { | metric | metric[:factor_id] }
+        [
+          member.id,
+          {
+            behaviors: behavior_metrics,
+            behavior_metrics_by_factor:,
+            overall_agreement: average_percentage( behavior_metrics.map { | metric | metric[:agreement] } )
+          }
+        ]
+      end
+
+      group_behaviors = factors.map do | factor |
+        {
+          factor_id: factor.id,
+          name: factor.name,
+          agreement: average_percentage(
+            individuals.values.map do | individual |
+              individual[:behavior_metrics_by_factor][factor.id][:agreement]
+            end
+          )
+        }
+      end
+      {
+        assessment_id: assessment.id,
+        date: assessment.start_date.to_date.iso8601,
+        individuals:,
+        behaviors: group_behaviors,
+        behavior_metrics_by_factor: group_behaviors.index_by { | metric | metric[:factor_id] },
+        overall_agreement: average_percentage( group_behaviors.map { | metric | metric[:agreement] } )
+      }
+    end
+  end
+
+  def project_group_behavior_metrics( period_results, factors, current_assessment )
+    factors.map do | factor |
+      trends = period_results.filter_map do | period |
+        metric = period[:behavior_metrics_by_factor][factor.id]
+        { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
+      end
+      {
+        factor_id: factor.id,
+        name: factor.name,
+        agreement: average_percentage( trends.map { | item | item[:agreement] } ),
+        week_agreement: period_metric( period_results, current_assessment, :behaviors, factor.id ),
+        trend: agreement_trend_slope( trends )
+      }
+    end
+  end
+
+  def project_member_reporting( member, period_results, factors, current_assessment )
+    member_periods = period_results.filter_map do | period |
+      metric = period[:individuals][member.id]
+      { date: period[:date], metric: } if metric
+    end
+    week_metric = current_period_individual( period_results, current_assessment, member.id )
+    member_behaviors = factors.map do | factor |
+      trends = member_periods.filter_map do | period |
+        metric = period[:metric][:behavior_metrics_by_factor][factor.id]
+        { date: period[:date], agreement: metric[:agreement] } if metric[:agreement]
+      end
+      contributions = member_periods.filter_map do | period |
+        period[:metric][:behavior_metrics_by_factor][factor.id][:contribution]
+      end
+      week_behavior = week_metric&.dig( :behavior_metrics_by_factor, factor.id )
+      {
+        factor_id: factor.id,
+        name: factor.name,
+        agreement: average_percentage( trends.map { | item | item[:agreement] } ),
+        week_agreement: week_behavior&.dig( :agreement ),
+        trend: agreement_trend_slope( trends ),
+        contribution: contributions.empty? ? nil : contributions.sum / contributions.size,
+        week_contribution: week_behavior&.dig( :contribution )
+      }
+    end
+    member_overall_trend = member_periods.filter_map do | period |
+      agreement = period[:metric][:overall_agreement]
+      { date: period[:date], agreement: } if agreement
+    end
+
+    {
+      id: member.id,
+      name: member.name( current_user.anonymize? ),
+      overall_agreement: average_percentage( member_overall_trend.map { | item | item[:agreement] } ),
+      week_overall_agreement: week_metric&.dig( :overall_agreement ),
+      overall_trend: agreement_trend_slope( member_overall_trend ),
+      behaviors: member_behaviors,
+      highest_contribution: highest_contribution( member_behaviors, :contribution ),
+      week_highest_contribution: highest_contribution( member_behaviors, :week_contribution )
+    }
+  end
+
   def agreement_percentage( ratings )
     return if ratings.size < 2
 
+    # Convert the mean pairwise absolute rating difference into agreement on a 0–100 scale.
     differences = ratings.combination( 2 ).map { | left, right | ( left - right ).abs }
     ( 100 * ( 1 - differences.sum.to_f / differences.size / Installment::TOTAL_VAL ) ).round( 1 )
   end
 
   def agreement_trend_slope( points )
+    # Fit agreement against elapsed weeks; fewer than two assessments cannot define a slope.
     return if points.size < 2
 
     start_date = Date.iso8601( points.first[:date] )

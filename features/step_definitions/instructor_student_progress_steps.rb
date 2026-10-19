@@ -177,10 +177,13 @@ Then( 'the instructor sees group evaluation agreement' ) do
   group_row.find( 'button' ).click
   wait_for_render
   @reporting_members.each do | member |
-    page.should have_content( member.name( false ) )
+    member_row = find(
+      :xpath,
+      "//tr[@role='row'][td[normalize-space(.)=#{xpath_literal( member.name( false ) )}]]"
+    )
+    member_row.should have_content( 'Project: 100%' )
+    member_row.should have_content( 'This week: 100%' )
   end
-  page.should have_content( 'Project: 100%' )
-  page.should have_content( 'This week: 100%' )
   page.should have_content( 'Trend: +100.00 percentage points/week' )
   page.should have_content( 'Highest contribution this week' )
 end
