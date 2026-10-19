@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
 import { Column } from "primereact/column";
@@ -21,6 +21,31 @@ export default function StudentProgress({ activityId, activityType }: Props) {
   );
   const [data, setData] = useState<any>();
   const [expandedRows, setExpandedRows] = useState<any>();
+  const studentProgressById = useMemo(
+    () =>
+      new Map<number, any>(
+        (data?.students ?? []).map(
+          (student: any): [number, any] => [student.id, student]
+        )
+      ),
+    [data?.students]
+  );
+  const behaviorColumns: BehaviorColumn[] = useMemo(
+    () =>
+      Array.from(
+        new Map<number, BehaviorColumn>(
+          (data?.groups ?? []).flatMap((group: any) =>
+            group.behaviors.map(
+              (behavior: BehaviorColumn): [number, BehaviorColumn] => [
+                behavior.factor_id,
+                behavior
+              ]
+            )
+          )
+        ).values()
+      ),
+    [data?.groups]
+  );
 
   useEffect(() => {
     if (!endpointsLoaded || !activityId || !endpoints?.activityProgressUrl) return;
@@ -57,20 +82,16 @@ export default function StudentProgress({ activityId, activityType }: Props) {
     });
 
   const groupDetails = (group: any) => {
-    const studentProgress = new Map(
-      data.students.map((student: any) => [student.id, student])
-    );
-
     return (
       <DataTable value={group.members} dataKey="id" emptyMessage="No group members">
         <Column field="name" header="Student" />
         <Column
           header="Status"
-          body={(member: any) => studentProgress.get(member.id)?.status ?? "Incomplete"}
+          body={(member: any) => studentProgressById.get(member.id)?.status ?? "Incomplete"}
         />
         <Column
           header="Progress"
-          body={(member: any) => studentProgress.get(member.id)?.progress ?? "No check-in"}
+          body={(member: any) => studentProgressById.get(member.id)?.progress ?? "No check-in"}
         />
         <Column header="Overall agreement" body={overallMetricBody} />
         {group.behaviors.map((behavior: any) => (
@@ -99,18 +120,6 @@ export default function StudentProgress({ activityId, activityType }: Props) {
   };
 
   const hasGroupReports = activityType === "project" && data.groups?.length > 0;
-  const behaviorColumns: BehaviorColumn[] = Array.from(
-    new Map<number, BehaviorColumn>(
-      (data.groups ?? []).flatMap((group: any) =>
-        group.behaviors.map(
-          (behavior: BehaviorColumn): [number, BehaviorColumn] => [
-            behavior.factor_id,
-            behavior
-          ]
-        )
-      )
-    ).values()
-  );
 
   return (
     <div>

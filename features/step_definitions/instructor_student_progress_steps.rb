@@ -146,10 +146,12 @@ Given( 'the project has equal team evaluations for progress' ) do
       )
       members.each do | member |
         @progress_activity.factors.each do | factor |
+          disagrees_with_teammate = period.zero? && rater != member
+          rating_value = disagrees_with_teammate ? 0 : Installment::TOTAL_VAL / members.size
           installment.values.build(
             factor:,
             user: member,
-            value: period.zero? && rater != member ? 0 : Installment::TOTAL_VAL / members.size
+            value: rating_value
           )
         end
       end
