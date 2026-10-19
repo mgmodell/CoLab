@@ -937,7 +937,10 @@ class HomeController < ApplicationController
     denominator = weeks.sum { | week | ( week - average_week )**2 }
     return if denominator.zero?
 
-    ( weeks.zip( agreements ).sum { | week, agreement | ( week - average_week ) * ( agreement - average_agreement ) } / denominator ).round( 2 )
+    numerator = weeks.zip( agreements ).sum do | week, agreement |
+      ( week - average_week ) * ( agreement - average_agreement )
+    end
+    ( numerator / denominator ).round( 2 )
   end
 
   def project_reporting_assessment( project )

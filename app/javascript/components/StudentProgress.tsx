@@ -12,6 +12,8 @@ type Props = {
   activityType: string;
 };
 
+type BehaviorColumn = { factor_id: number; name: string };
+
 export default function StudentProgress({ activityId, activityType }: Props) {
   const endpoints = useTypedSelector(state => state.context.endpoints.home);
   const endpointsLoaded = useTypedSelector(
@@ -97,6 +99,18 @@ export default function StudentProgress({ activityId, activityType }: Props) {
   };
 
   const hasGroupReports = activityType === "project" && data.groups?.length > 0;
+  const behaviorColumns: BehaviorColumn[] = Array.from(
+    new Map<number, BehaviorColumn>(
+      (data.groups ?? []).flatMap((group: any) =>
+        group.behaviors.map(
+          (behavior: BehaviorColumn): [number, BehaviorColumn] => [
+            behavior.factor_id,
+            behavior
+          ]
+        )
+      )
+    ).values()
+  );
 
   return (
     <div>
@@ -117,7 +131,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
           <Column expander />
           <Column field="name" header="Group" />
           <Column header="Overall agreement" body={overallMetricBody} />
-          {data.groups[0].behaviors.map((behavior: any) => (
+          {behaviorColumns.map(behavior => (
             <Column
               key={behavior.factor_id}
               header={behavior.name}
