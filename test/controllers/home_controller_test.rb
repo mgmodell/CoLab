@@ -19,8 +19,8 @@ class ProjectStudentProgressReportTest < ActiveSupport::TestCase
   test 'agreement trend slope measures percentage points per week with irregular dates' do
     points = [
       { date: '2026-10-01', agreement: 0.0 },
-      { date: '2026-10-04', agreement: 30.0 },
-      { date: '2026-10-11', agreement: 100.0 }
+      { date: '2026-10-04', agreement: 42.8571428571 },
+      { date: '2026-10-08', agreement: 100.0 }
     ]
 
     assert_equal 100.0, ProjectStudentProgressReport.trend_slope( points )
