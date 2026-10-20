@@ -42,7 +42,8 @@ export default function ConsentLog(props: Props) {
   const [logLastUpdated, setLogLastUpdated] = useState(new Date());
 
   useEffect(() => {
-    if( suppressDirtyRef.current ) {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);
@@ -64,7 +65,9 @@ export default function ConsentLog(props: Props) {
         setFormName(data.consent_log.name);
         setFormText(data.consent_log.formText);
         setFormPdfLink(data.consent_log.pdfLink);
-        setFormAccepted(data.consent_log.accepted || false);
+        const accepted = data.consent_log.accepted || false;
+        suppressDirtyRef.current = accepted !== formAccepted;
+        setFormAccepted(accepted);
         setFormPresented(data.consent_log.presented);
         setLogLastUpdated(new Date(data.consent_log.updatedAt));
       })
@@ -72,7 +75,6 @@ export default function ConsentLog(props: Props) {
         console.log("error", error);
       })
       .finally(() => {
-        suppressDirtyRef.current = false;
         setDirty(DIRTY_STATUS.CLEAN);
         dispatch(endTask("loading"));
       });

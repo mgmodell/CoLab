@@ -94,7 +94,8 @@ export default function CandidatesReviewTable(props: Props) {
   const suppressDirtyRef = useRef(false);
 
   useEffect(() => {
-    if( suppressDirtyRef.current ) {
+    if (suppressDirtyRef.current) {
+      suppressDirtyRef.current = false;
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);
@@ -164,7 +165,6 @@ export default function CandidatesReviewTable(props: Props) {
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -186,6 +186,7 @@ export default function CandidatesReviewTable(props: Props) {
           setCompleted(item);
         });
 
+        suppressDirtyRef.current = true;
         setCandidates(data.candidates);
 
         setReviewStatus(t("review.data_loaded_msg"));
@@ -196,11 +197,9 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveFeedback = () => {
-    suppressDirtyRef.current = true;
     dispatch(startTask("saving"));
     setReviewStatus(t("review.saving_msg"));
 
@@ -228,7 +227,6 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
   };
 

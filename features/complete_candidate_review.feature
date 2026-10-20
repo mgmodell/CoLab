@@ -59,6 +59,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
      Then the user sees 66 candidate items for review
+     Then the "Save" button will be disabled
 
   @javascript
   Scenario: Instructor logs in and assigns feedback to candidates
