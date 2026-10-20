@@ -8,8 +8,6 @@ import { useTranslation } from "react-i18next";
 
 import DiversityScore from "../DiversityScore";
 
-import { SortDirection } from "react-virtualized";
-
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -22,6 +20,8 @@ import { Dialog } from "primereact/dialog";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
+
+const SortDirection = { ASC: "ASC", DESC: "DESC" } as const;
 
 type Props = {
   projectId: number;
