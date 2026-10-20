@@ -52,6 +52,9 @@ type CandidateReviewState = {
 const copyReviewState = (state: CandidateReviewState): CandidateReviewState =>
   JSON.parse(JSON.stringify(state));
 
+const sameReviewState = (first: CandidateReviewState, second: CandidateReviewState) =>
+  JSON.stringify(first) === JSON.stringify(second);
+
 export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
@@ -112,7 +115,7 @@ export default function CandidatesReviewTable(props: Props) {
     }
     const currentReview = { candidates, reviewComplete };
     setDirty(
-      JSON.stringify(currentReview) === JSON.stringify(cleanReviewRef.current)
+      sameReviewState(currentReview, cleanReviewRef.current)
         ? DIRTY_STATUS.CLEAN
         : DIRTY_STATUS.DIRTY
     );
@@ -240,9 +243,10 @@ export default function CandidatesReviewTable(props: Props) {
         const data = response.data;
         setReviewStatus(data.notice);
         if (data.success) {
+          // Keep unfinished candidates in the baseline even though the request omits them.
           cleanReviewRef.current = submittedReview;
           setDirty(
-            JSON.stringify(currentReviewRef.current) === JSON.stringify(submittedReview)
+            sameReviewState(currentReviewRef.current, submittedReview)
               ? DIRTY_STATUS.CLEAN
               : DIRTY_STATUS.DIRTY
           );
@@ -250,7 +254,7 @@ export default function CandidatesReviewTable(props: Props) {
           const cleanReview = cleanReviewRef.current;
           setDirty(
             !cleanReview ||
-              JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReview)
+              sameReviewState(currentReviewRef.current, cleanReview)
               ? DIRTY_STATUS.CLEAN
               : DIRTY_STATUS.DIRTY
           );
