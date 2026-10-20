@@ -54,14 +54,22 @@ Write-Host "  CoLab CTF - LIVE DEMO (room 1: IDOR)" -ForegroundColor Cyan
 Write-Host "  Watch: menu -> pick room -> Chrome briefing + toolkit open -> attack -> capture." -ForegroundColor DarkGray
 Write-Host ""
 
+# Console.InputEncoding drives the child's stdin StreamWriter; a UTF-8-with-BOM
+# encoding would prepend a BOM that the TUI reads as part of the first input.
+try { [Console]::InputEncoding = New-Object System.Text.UTF8Encoding $false } catch {}
+
 $psi = New-Object System.Diagnostics.ProcessStartInfo
 $psi.FileName  = 'podman'
 $psi.Arguments = "run --rm -i --name $name -p 8000:8000 --entrypoint bash -e CTF_HOME=/opt/ctf -e CTF_USER=student -e CTF_FORCE_COLOR=1 -e COLORTERM=truecolor -v `"$mount`" -w /opt/ctf $img /opt/ctf/ctf.sh"
 $psi.UseShellExecute = $false
 $psi.RedirectStandardInput = $true
 $p = [System.Diagnostics.Process]::Start($psi)
+$p.StandardInput.NewLine = "`n"   # LF only (TUI also strips any stray CR)
 
-function Send([string]$c, [double]$w) { try { $p.StandardInput.WriteLine($c); $p.StandardInput.Flush() } catch {}; Start-Sleep -Seconds $w }
+function Send([string]$c, [double]$w) {
+  try { $p.StandardInput.WriteLine($c); $p.StandardInput.Flush() } catch {}
+  Start-Sleep -Seconds $w
+}
 
 Start-Sleep -Seconds 8
 Send '1' 8                       # open room 1 -> loading bar -> READY -> briefing

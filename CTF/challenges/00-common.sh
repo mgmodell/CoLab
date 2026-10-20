@@ -103,7 +103,7 @@ challenge_ready_gate() { # id
   printf '  %s%s ❯%s ' "$T_DIM" "$id" "$T_RESET"
   if [[ ! -t 0 ]]; then printf '\n'; sleep 2; return 0; fi   # non-interactive → show, then engage
   read -r ans || return 1
-  case "$(printf '%s' "$ans" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
+  case "$(printf '%s' "$ans" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')" in
     b|back|q) return 1 ;;
     *) return 0 ;;
   esac
@@ -167,7 +167,7 @@ challenge_menu() {
     printf '  %stype %s!hint%s anytime for a hint%s\n' "$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
     printf '  %s%s ❯%s ' "$T_DIM" "${id}" "$T_RESET"
     read -r choice || return 0
-    case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
+    case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')" in
       s|submit)         challenge_submit "$id" ;;
       h|hint|'!hint'|'!hints') challenge_hint "$id" ;;
       t|toolkit|kit)    ctf_toolkit_menu "$id" ;;
@@ -184,6 +184,7 @@ challenge_submit() {
   local id="$1" input award
   printf '  %spaste captured flag ❯%s ' "$T_CYAN" "$T_RESET"
   read -r input || return 0
+  input="${input%$'\r'}"; input="${input#"${input%%[![:space:]]*}"}"; input="${input%"${input##*[![:space:]]}"}"
   if flags_verify "$id" "$input"; then
     if state_is_captured "$id"; then
       printf '  %s✓ correct — this room is already on your board.%s\n' "$T_GREEN" "$T_RESET"

@@ -215,7 +215,7 @@ ctf_toolkit_menu() {
     printf '\n  %s[s]%s drop to a Kali shell    %s[b]%s back\n' "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET"
     printf '  %stoolkit%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r choice || return 0
-    case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
+    case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')" in
       s|shell)
         printf '\n  %sKali shell — type %sexit%s to return to the CTF.%s\n\n' "$T_DIM" "$T_BOLD" "$T_RESET$T_DIM" "$T_RESET"
         ( cd "$CTF_HOME" && "${SHELL:-bash}" -i ) ;;
@@ -277,7 +277,7 @@ ctf_main() {
       "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
     printf '  %scolab-ctf%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r sel || break
-    sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' ')"
+    sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')"
     case "$sel" in
       q|quit|exit) break ;;
       t|toolkit)   ctf_toolkit_menu ;;
