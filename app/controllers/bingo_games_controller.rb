@@ -465,7 +465,7 @@ class BingoGamesController < ApplicationController
                      candidate_lists:, candidates: )
     render json: {
       bingo_game: bingo_game.as_json( only:
-        %i[id topic description status close_date] ),
+        %i[id topic description status close_date reviewed] ),
       users: users.as_json( only:
         %i[id first_name last_name], methods: :email ),
       groups: groups.as_json( only:
@@ -484,7 +484,8 @@ class BingoGamesController < ApplicationController
   def demo_update_review_candidates
     response = {
       notice: 'demo done!',
-      reviewed: params[:reviewed]
+      reviewed: params[:reviewed],
+      success: true
     }
     respond_to do | format |
       format.json { render json: response }
@@ -497,6 +498,7 @@ class BingoGamesController < ApplicationController
     if bingo_id < 1
       response[:notice] = 'Error!'
       response[:reviewed] = params[:reviewed]
+      response[:success] = false
 
     else
       @bingo_game = BingoGame.find( bingo_id )
@@ -572,9 +574,11 @@ class BingoGamesController < ApplicationController
       if @bingo_game.errors.empty?
         response[:notice] = ( t 'bingo_games.review_success' )
         response[:reviewed] = @bingo_game.reviewed
+        response[:success] = true
       elsif !@bingo_game.errors.empty?
         response[:notice] = ( t 'bingo_games.review_problems' )
         response[:reviewed] = false
+        response[:success] = false
       end
     end
     respond_to do | format |

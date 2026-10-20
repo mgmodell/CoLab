@@ -5,6 +5,7 @@ plugins:
   - rubocop-capybara
 
 AllCops:
+  NewCops: enable
   Include:
     - '**/Rakefile'
     - '**/config.ru'

@@ -42,7 +42,7 @@ export default function ConsentLog(props: Props) {
   const [logLastUpdated, setLogLastUpdated] = useState(new Date());
 
   useEffect(() => {
-    if( suppressDirtyRef.current ) {
+    if (suppressDirtyRef.current) {
       return;
     }
     setDirty(DIRTY_STATUS.DIRTY);
