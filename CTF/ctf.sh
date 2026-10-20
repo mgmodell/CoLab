@@ -139,36 +139,72 @@ ctf_teardown() {
   esac
 }
 
-_tk_row() { # cmd  desc  example
-  local cmd="$1" desc="$2" ex="$3" mark
-  if command -v "$cmd" >/dev/null 2>&1; then mark="${T_GREEN}✓${T_RESET}"; else mark="${T_SLATE}○${T_RESET}"; fi
-  printf '   %s %s%-9s%s %s%-32s%s %s%s%s\n' \
-    "$mark" "$T_WHITE" "$cmd" "$T_RESET" "$T_SLATE" "$desc" "$T_RESET" "$T_DIM" "$ex" "$T_RESET"
+# Tool catalog — one "cmd|description|example" line each. The example's live
+# target URL/port/IP are expanded at render time. Consumed by both the full
+# toolkit view and the per-room view, so new tools are added in ONE place.
+_tk_catalog() { # target_url
+  local u="$1"
+  cat <<CAT
+curl|raw HTTP requests|curl $u/api/me
+httpie|friendlier HTTP client|http GET $u/api/me
+ffuf|content / parameter fuzzing|ffuf -u $u/FUZZ -w /usr/share/wordlists/dirb/common.txt
+gobuster|directory / endpoint brute force|gobuster dir -u $u -w /usr/share/wordlists/dirb/common.txt
+sqlmap|automated SQL injection (rm 4)|sqlmap -u "$u/api/search?q=1" --batch --dump
+nmap|port / service scan|nmap -sV -p$TARGET_PORT $TARGET_IP
+nuclei|vuln template scanner|nuclei -u $u
+nikto|web-server misconfig scan|nikto -h $u
+jwt_tool|JWT / bearer forgery (rm 9)|jwt_tool <token> -T
+hydra|credential brute force|hydra -l admin -P rockyou.txt $TARGET_IP http-post-form
+gitleaks|secret scanning (rm 3)|gitleaks dir .
+searchsploit|offline exploit-db lookup|searchsploit <product> <version>
+jq|JSON parsing|curl -s $u/api/me | jq .
+base64|encode / decode (rm 8, 9)|echo <data> | base64 -d
+CAT
 }
 
+_tk_row() { # cmd  desc  example  [name_color]
+  local cmd="$1" desc="$2" ex="$3" col="${4:-$T_WHITE}" mark
+  if command -v "$cmd" >/dev/null 2>&1; then mark="${T_GREEN}✓${T_RESET}"; else mark="${T_SLATE}○${T_RESET}"; fi
+  printf '   %s %s%-12s%s %s%-30s%s %s%s%s\n' \
+    "$mark" "$col" "$cmd" "$T_RESET" "$T_SLATE" "$desc" "$T_RESET" "$T_DIM" "$ex" "$T_RESET"
+}
+
+# Does room $1 declare tool $2 in its CH_TOOLS?
+_tk_wanted() { local csv=",${CH_TOOLS[$1]//[[:space:]]/},"; [[ "$csv" == *",$2,"* ]]; }
+
+# Optional arg: a room id → show a focused "for this room" kit; else the full set.
 ctf_toolkit_menu() {
-  local choice u="$TARGET_URL"
+  local room="${1:-}" choice u="$TARGET_URL" cmd desc ex
   while true; do
     ui_clear
     printf '\n  %s❯ TOOLKIT%s  %s(Kali toolbox — same tools as the Sec engagement)%s\n' \
       "$T_BOLD$T_CYAN" "$T_RESET" "$T_DIM" "$T_RESET"
     if [[ -n "$CTF_TARGET_PID" ]]; then
-      printf '  %sattack target%s  %s%s%s  %s(also http://127.0.0.1:%s — serves whichever room you open)%s\n\n' \
-        "$T_SLATE" "$T_RESET" "$T_BOLD$T_RED" "$u" "$T_RESET" "$T_DIM" "$TARGET_PORT" "$T_RESET"
+      printf '  %sattack target%s  %s%s%s  %s(serves whichever room you open)%s\n' \
+        "$T_SLATE" "$T_RESET" "$T_BOLD$T_RED" "$u" "$T_RESET" "$T_DIM" "$T_RESET"
     else
-      printf '  %sattack target%s  %soffline mock — use ./colab-http (no python3 for a live HTTP target)%s\n\n' \
+      printf '  %sattack target%s  %soffline mock — use ./colab-http (install python3 for a live target)%s\n' \
         "$T_SLATE" "$T_RESET" "$T_DIM" "$T_RESET"
     fi
-    _tk_row curl     "raw HTTP requests"               "curl $u/api/..."
-    _tk_row sqlmap   "automated SQL injection (rm 4)"  "sqlmap -u \"$u/api/search?q=1\" --batch"
-    _tk_row ffuf     "content / parameter fuzzing"     "ffuf -u $u/FUZZ -w <wordlist>"
-    _tk_row nuclei   "vuln template scanner"           "nuclei -u $u"
-    _tk_row nmap     "port / service scan"             "nmap -sV -p$TARGET_PORT $TARGET_IP"
-    _tk_row jwt_tool "JWT / bearer forgery (rm 9)"     "jwt_tool <token>"
-    _tk_row gitleaks "secret scanning (rm 3)"          "gitleaks dir ."
-    _tk_row jq       "JSON parsing"                    "curl -s $u/... | jq ."
-    _tk_row base64   "encode / decode (rm 8, 9)"       "echo ... | base64 -d"
-    printf '\n  %sEach room also stages ./colab-http + room-specific helpers in its working dir.%s\n' "$T_DIM" "$T_RESET"
+
+    if [[ -n "$room" ]]; then
+      printf '\n  %sfor this room%s  %s%s%s\n' "$T_BOLD$T_SKY" "$T_RESET" "$T_WHITE" "${CH_TITLE[$room]}" "$T_RESET"
+      printf '  %sendpoint%s  %s%s%s\n\n' "$T_SLATE" "$T_RESET" "$T_CYAN" "${CH_ENDPOINT[$room]:-—}" "$T_RESET"
+      while IFS='|' read -r cmd desc ex; do
+        [[ -z "$cmd" ]] && continue
+        _tk_wanted "$room" "$cmd" && _tk_row "$cmd" "$desc" "$ex" "$T_BOLD$T_WHITE"
+      done < <(_tk_catalog "$u")
+      printf '\n  %sthese are the tools this room calls for · the full kit is on the main menu [t].%s\n' "$T_DIM" "$T_RESET"
+    else
+      printf '\n'
+      while IFS='|' read -r cmd desc ex; do
+        [[ -z "$cmd" ]] && continue
+        _tk_row "$cmd" "$desc" "$ex"
+      done < <(_tk_catalog "$u")
+      printf '\n  %sEach room also stages ./colab-http + room-specific helpers in its working dir.%s\n' "$T_DIM" "$T_RESET"
+    fi
+
+    printf '  %stype %s!hint%s anytime for a hint toward the solution%s\n' "$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
     printf '\n  %s[s]%s drop to a Kali shell    %s[b]%s back\n' "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET"
     printf '  %stoolkit%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r choice || return 0
@@ -176,6 +212,11 @@ ctf_toolkit_menu() {
       s|shell)
         printf '\n  %sKali shell — type %sexit%s to return to the CTF.%s\n\n' "$T_DIM" "$T_BOLD" "$T_RESET$T_DIM" "$T_RESET"
         ( cd "$CTF_HOME" && "${SHELL:-bash}" -i ) ;;
+      '!hint'|'!hints'|hint)
+        local h="${room:-${CTF_ACTIVE_ID:-}}"
+        if [[ -n "$h" ]]; then challenge_hint "$h"
+        else printf '  %sopen a room first — then !hint helps you move forward.%s\n' "$T_SLATE" "$T_RESET"; fi
+        printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true ;;
       b|back|q) return 0 ;;
     esac
   done
@@ -226,14 +267,21 @@ ctf_main() {
     echo
     ctf_header
     ctf_list
-    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit\n' \
-      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
+    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit   %s!hint%s\n' \
+      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET" "$T_YELLOW" "$T_RESET"
     printf '  %scolab-ctf%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r sel || break
     sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' ')"
     case "$sel" in
       q|quit|exit) break ;;
       t|toolkit)   ctf_toolkit_menu ;;
+      '!hint'|'!hints'|hint)
+        if [[ -n "${CTF_ACTIVE_ID:-}" ]]; then
+          challenge_hint "$CTF_ACTIVE_ID"
+        else
+          printf '  %sopen a room first — then !hint gives a hint for it from anywhere.%s\n' "$T_SLATE" "$T_RESET"
+        fi
+        printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true ;;
       a|reset)     ctf_reset_all ;;
       x|teardown|down) ctf_teardown ;;
       v|victory|trophy)   # hidden: re-view the completion screen once unlocked

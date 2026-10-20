@@ -99,6 +99,17 @@ ui_box_title() { # text
     "$T_CYAN" "$T_RESET" "$pad_l" "" "$T_BOLD$T_SKY" "$text" "$T_RESET" "$pad_r" "" "$T_CYAN" "$T_RESET"
 }
 
+# ---- progress bar -----------------------------------------------------------
+# Two-tone bar of `width` cells for pct (0-100). Green = done, slate = remaining.
+ui_bar() { # pct [width]
+  local pct="${1:-0}" width="${2:-28}" filled
+  (( pct < 0 )) && pct=0; (( pct > 100 )) && pct=100
+  filled=$(( pct * width / 100 ))
+  printf '%s' "$T_GREEN"; (( filled > 0 ))         && printf '█%.0s' $(seq 1 "$filled")
+  printf '%s' "$T_SLATE"; (( width - filled > 0 )) && printf '░%.0s' $(seq 1 $(( width - filled )))
+  printf '%s' "$T_RESET"
+}
+
 ui_clear() { [[ -t 1 ]] && printf '\e[2J\e[H' || true; }
 
 # Simple key/value line

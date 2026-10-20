@@ -83,17 +83,65 @@ challenge_briefing() {
   echo
 }
 
+# ---- "READY TO START" go-screen ---------------------------------------------
+# Shown AFTER the lab is fully booted (challenge_boot). ASCII banner + status;
+# Enter engages, [b] drops back to the main menu (target stays armed).
+challenge_ready_gate() { # id
+  local id="$1" ans
+  [[ -t 0 ]] || return 0             # non-interactive (smoke test) → auto-engage
+  ui_clear
+  banner_ready
+  ui_box_top; ui_box_title "READY TO START — ${CH_TITLE[$id]}"; ui_box_bottom
+  printf '\n  %s●%s lab fully booted — target armed · flag planted · toolkit staged\n' \
+    "$T_GREEN" "$T_RESET"
+  printf '  %starget%s  %s%s%s    %sendpoint%s  %s%s%s\n' \
+    "$T_SLATE" "$T_RESET" "$T_BOLD$T_RED" "${TARGET_URL:-./colab-http}" "$T_RESET" \
+    "$T_SLATE" "$T_RESET" "$T_CYAN" "${CH_ENDPOINT[$id]:-—}" "$T_RESET"
+  printf '\n  %sReady to start?%s   %s[Enter]%s engage    %s[b]%s back to menu\n' \
+    "$T_BOLD$T_SKY" "$T_RESET" "$T_GREEN" "$T_RESET" "$T_SLATE" "$T_RESET"
+  printf '  %s%s ❯%s ' "$T_DIM" "$id" "$T_RESET"
+  read -r ans || return 1
+  case "$(printf '%s' "$ans" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
+    b|back|q) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+_boot_step() { # pct label  — redraw one loading-bar line in place
+  printf '\r  %s%3d%%%s %s  %s%-40s%s' \
+    "$T_BOLD$T_YELLOW" "$1" "$T_RESET" "$(ui_bar "$1" 28)" "$T_SKY" "$2" "$T_RESET"
+}
+
+# Provision the room behind a loading bar tracking the REAL boot steps. The
+# steps' own output (sim-mode podman recipes, etc.) goes to state/boot.log so
+# the single-line bar stays intact.
+challenge_boot() { # id
+  local id="$1" log="$CTF_HOME/state/boot.log"
+  : > "$log" 2>/dev/null || true
+  echo
+  printf '  %sdeploying %s…%s\n\n' "$T_DIM" "${CH_TITLE[$id]}" "$T_RESET"
+  _boot_step 10 "establishing isolated network"
+  provision_net                 >>"$log" 2>&1; sleep 0.25
+  _boot_step 35 "provisioning target + planting flag"
+  provision_reset "$id"         >>"$log" 2>&1
+  "${CH_PROVISION[$id]}" "$id"  >>"$log" 2>&1; sleep 0.25
+  _boot_step 65 "arming live HTTP target"
+  ctf_target_active "$id"       >>"$log" 2>&1; sleep 0.25
+  _boot_step 90 "staging toolkit, objective + hints"
+  toolkit_prepare "$id"         >>"$log" 2>&1; sleep 0.25
+  _boot_step 100 "ready"; sleep 0.25
+  printf '\n\n  %s✓%s target up · flag planted · toolkit staged  %s(boot log: state/boot.log)%s\n' \
+    "$T_GREEN" "$T_RESET" "$T_DIM" "$T_RESET"
+}
+
 # ---- open / play a challenge ------------------------------------------------
 challenge_open() {
   local id="$1"
-  challenge_briefing "$id"
-  printf '  %sProvisioning isolated target…%s\n' "$T_DIM" "$T_RESET"
-  provision_net
-  provision_reset "$id"
-  "${CH_PROVISION[$id]}" "$id"       # enable ONLY this vuln + plant the flag
-  ctf_target_active "$id"            # point the live HTTP target at this room
-  toolkit_prepare "$id"              # stage working dir, tools, hints, objective
-  printf '  %s✓%s target up · flag planted · toolkit staged\n' "$T_GREEN" "$T_RESET"
+  CTF_ACTIVE_ID="$id"                       # remember the room so !hint works anywhere
+  ui_clear
+  challenge_boot "$id"                       # loading bar — boot the lab FIRST
+  challenge_ready_gate "$id" || return 0    # ASCII "READY" go-screen, shown once booted
+  challenge_briefing "$id"                   # working view: scenario + target card
   provision_engine_line
   echo
   toolkit_summary "$id"
@@ -112,14 +160,16 @@ challenge_menu() {
   while true; do
     echo
     _challenge_status_line "$id"
-    printf '  %s[s]%s submit  %s[h]%s hint  %s[r]%s reset  %s[w]%s writeup  %s[i]%s briefing  %s[b]%s back\n' \
-      "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" \
+    printf '  %s[s]%s submit  %s[h]%s hint  %s[t]%s toolkit  %s[r]%s reset  %s[w]%s writeup  %s[i]%s briefing  %s[b]%s back\n' \
+      "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" \
       "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
+    printf '  %stype %s!hint%s anytime for a hint%s\n' "$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
     printf '  %s%s ❯%s ' "$T_DIM" "${id}" "$T_RESET"
     read -r choice || return 0
     case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
-      s|submit)   challenge_submit "$id" ;;
-      h|hint)     challenge_hint "$id" ;;
+      s|submit)         challenge_submit "$id" ;;
+      h|hint|'!hint'|'!hints') challenge_hint "$id" ;;
+      t|toolkit|kit)    ctf_toolkit_menu "$id" ;;
       r|reset)    challenge_reset "$id" ;;
       w|writeup)  challenge_writeup "$id" ;;
       i|brief|briefing) challenge_briefing "$id"; toolkit_summary "$id" ;;

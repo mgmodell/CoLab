@@ -19,6 +19,11 @@ BANNER_RED_R=(252 248 239 220 185 153)
 BANNER_RED_G=(165 113  68  38  28  27)
 BANNER_RED_B=(165 113  68  38  28  27)
 
+# Green gradient for the post-boot "READY" banner (top light → bottom deep).
+BANNER_GREEN_R=(167 133 110  74  54  40)
+BANNER_GREEN_G=(243 236 230 222 196 168)
+BANNER_GREEN_B=(208 190 170 128 110  92)
+
 # ---- Hardcoded fallback blocks ----------------------------------------------
 _banner_hardcoded_colab() {
 cat <<'EOF'
@@ -39,6 +44,31 @@ cat <<'EOF'
 ╚██████╗   ██║   ██║
  ╚═════╝   ╚═╝   ╚═╝
 EOF
+}
+
+_banner_hardcoded_ready() {
+cat <<'EOF'
+██████╗ ███████╗ █████╗ ██████╗ ██╗   ██╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝
+██████╔╝█████╗  ███████║██║  ██║ ╚████╔╝
+██╔══██╗██╔══╝  ██╔══██║██║  ██║  ╚██╔╝
+██║  ██║███████╗██║  ██║██████╔╝   ██║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝
+EOF
+}
+
+# Public: the gradient-green "READY" banner for the post-boot go-screen.
+banner_ready() {
+  local -a r; mapfile -t r < <(_banner_hardcoded_ready)
+  _banner_trim_blank r
+  local i bi n=${#r[@]}
+  printf '\n'
+  for (( i=0; i<n; i++ )); do
+    bi=$i; (( bi >= ${#BANNER_GREEN_R[@]} )) && bi=$(( ${#BANNER_GREEN_R[@]} - 1 ))
+    printf '  %s%s%s\n' \
+      "$(ui_fg "${BANNER_GREEN_R[$bi]}" "${BANNER_GREEN_G[$bi]}" "${BANNER_GREEN_B[$bi]}")" "${r[$i]}" "$(ui_reset)"
+  done
+  printf '\n'
 }
 
 # Drop trailing blank / whitespace-only lines from a named array.
