@@ -371,13 +371,13 @@ export default function CandidatesReviewTable(props: Props) {
       progress={progress}
       uniqueConcepts={uniqueConcepts}
       acceptableUniqueConcepts={acceptableUniqueConcepts}
-      dirty={dirty}
       reviewStatus={reviewStatus}
       reviewComplete={reviewComplete}
       setReviewCompleteFunc={setReviewComplete}
       saveFeedbackFunc={saveFeedback}
       resetFunc={resetReview}
       reloadFunc={getData}
+      dirty={dirty === DIRTY_STATUS.DIRTY}
       optColumns={optColumns}
       visibleColumns={visibleColumns}
       setVisibleColumnsFunc={setVisibleColumns}
