@@ -85,8 +85,7 @@ ui_rule() { # optional color var
   printf '%s' "$col"; printf '─%.0s' $(seq 1 "$UI_WIDTH"); printf '%s\n' "$T_RESET"
 }
 
-ui_box_top()    { printf '%s╭%s─%.0s%s╮%s\n' "$T_CYAN" "" $(seq 1 "$UI_WIDTH") "" "$T_RESET" 2>/dev/null || \
-                  { printf '%s╭' "$T_CYAN"; printf '─%.0s' $(seq 1 "$UI_WIDTH"); printf '╮%s\n' "$T_RESET"; }; }
+ui_box_top()    { printf '%s╭' "$T_CYAN"; printf '─%.0s' $(seq 1 "$UI_WIDTH"); printf '╮%s\n' "$T_RESET"; }
 ui_box_bottom() { printf '%s╰' "$T_CYAN"; printf '─%.0s' $(seq 1 "$UI_WIDTH"); printf '╯%s\n' "$T_RESET"; }
 
 # Centered title line inside a cyan box.
