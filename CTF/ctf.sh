@@ -204,7 +204,7 @@ ctf_toolkit_menu() {
       printf '\n  %sEach room also stages ./colab-http + room-specific helpers in its working dir.%s\n' "$T_DIM" "$T_RESET"
     fi
 
-    printf '  %stype %s!hint%s anytime for a hint toward the solution%s\n' "$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
+    [[ -n "$room" ]] && printf '  %stype %s!hint%s anytime for a hint toward the solution%s\n' "$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
     printf '\n  %s[s]%s drop to a Kali shell    %s[b]%s back\n' "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET"
     printf '  %stoolkit%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r choice || return 0
@@ -213,10 +213,9 @@ ctf_toolkit_menu() {
         printf '\n  %sKali shell — type %sexit%s to return to the CTF.%s\n\n' "$T_DIM" "$T_BOLD" "$T_RESET$T_DIM" "$T_RESET"
         ( cd "$CTF_HOME" && "${SHELL:-bash}" -i ) ;;
       '!hint'|'!hints'|hint)
-        local h="${room:-${CTF_ACTIVE_ID:-}}"
-        if [[ -n "$h" ]]; then challenge_hint "$h"
-        else printf '  %sopen a room first — then !hint helps you move forward.%s\n' "$T_SLATE" "$T_RESET"; fi
-        printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true ;;
+        if [[ -n "$room" ]]; then challenge_hint "$room"
+          printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true
+        fi ;;
       b|back|q) return 0 ;;
     esac
   done
@@ -267,21 +266,14 @@ ctf_main() {
     echo
     ctf_header
     ctf_list
-    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit   %s!hint%s\n' \
-      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET" "$T_YELLOW" "$T_RESET"
+    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit\n' \
+      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
     printf '  %scolab-ctf%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r sel || break
     sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' ')"
     case "$sel" in
       q|quit|exit) break ;;
       t|toolkit)   ctf_toolkit_menu ;;
-      '!hint'|'!hints'|hint)
-        if [[ -n "${CTF_ACTIVE_ID:-}" ]]; then
-          challenge_hint "$CTF_ACTIVE_ID"
-        else
-          printf '  %sopen a room first — then !hint gives a hint for it from anywhere.%s\n' "$T_SLATE" "$T_RESET"
-        fi
-        printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true ;;
       a|reset)     ctf_reset_all ;;
       x|teardown|down) ctf_teardown ;;
       v|victory|trophy)   # hidden: re-view the completion screen once unlocked

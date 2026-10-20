@@ -137,7 +137,6 @@ challenge_boot() { # id
 # ---- open / play a challenge ------------------------------------------------
 challenge_open() {
   local id="$1"
-  CTF_ACTIVE_ID="$id"                       # remember the room so !hint works anywhere
   ui_clear
   challenge_boot "$id"                       # loading bar — boot the lab FIRST
   challenge_ready_gate "$id" || return 0    # ASCII "READY" go-screen, shown once booted

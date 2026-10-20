@@ -8,6 +8,12 @@
 # ---- Color capability detection ---------------------------------------------
 # CTF_COLOR: "truecolor" | "256" | "none"
 ui_detect_color() {
+  # CTF_FORCE_COLOR: honor color even when stdout isn't a TTY (piped to a
+  # window/log, driven playthroughs, CI). NO_COLOR still wins.
+  if [[ -z "${NO_COLOR:-}" && -n "${CTF_FORCE_COLOR:-}" ]]; then
+    case "${COLORTERM:-}" in truecolor|24bit) CTF_COLOR="truecolor" ;; *) CTF_COLOR="256" ;; esac
+    return
+  fi
   if [[ "${NO_COLOR:-}" != "" ]] || [[ ! -t 1 ]]; then
     CTF_COLOR="none"; return
   fi
@@ -109,7 +115,7 @@ ui_bar() { # pct [width]
   printf '%s' "$T_RESET"
 }
 
-ui_clear() { [[ -t 1 ]] && printf '\e[2J\e[H' || true; }
+ui_clear() { if [[ -t 1 || -n "${CTF_FORCE_COLOR:-}" ]]; then printf '\e[2J\e[H'; fi; }
 
 # Simple key/value line
 ui_kv() { # key value [valuecolor]
