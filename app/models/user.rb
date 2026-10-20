@@ -336,8 +336,8 @@ class User < ApplicationRecord
 
     active_project_ids = active_assessments.map( &:project_id )
     projects.joins( course: :rosters )
-            .where( projects: { active: true },
-                    rosters: { user_id: id, role: Roster.roles[:enrolled_student] } )
+            .active_at( cur_date )
+            .where( rosters: { user_id: id, role: Roster.roles[:enrolled_student] } )
             .distinct
             .includes( :course, :groups )
             .each do | project |

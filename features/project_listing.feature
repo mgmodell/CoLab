@@ -62,8 +62,7 @@ Feature: Assessment Listing
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open task
-    Then the project status should say "Click for info"
+    Then user should see 0 open task
     
 @javascript
   Scenario: Checking for projects with one outside the day range ( not crossing sat/sun)
