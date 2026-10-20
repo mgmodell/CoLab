@@ -19,15 +19,18 @@ $name  = 'colab_ctf_lab'
 $afile = 'C:\Users\issia\CoLab\CTF\state\active_challenge'
 $attackWin = 'C:\Users\issia\CoLab\CTF\._labattack_win.ps1'
 
-podman machine inspect podman-machine-default *> $null
-if ($LASTEXITCODE -ne 0) { }
 podman info *> $null
 if ($LASTEXITCODE -ne 0) { Write-Host "  starting podman machine..." -ForegroundColor DarkGray; podman machine start *> $null }
-podman rm -f $name *> $null
+# Free port 8000 / clear any prior lab container so this one can bind it.
+$stale = podman ps -q --filter ancestor=localhost/colab_pentest:latest
+if ($stale) { podman kill $stale *> $null }
+podman rm -f $name colab_ctf_web *> $null
 
 function Open-RoomSurfaces {
-  Start-Process chrome "http://localhost:8000/"
-  Start-Sleep -Milliseconds 800
+  Start-Process chrome "http://localhost:8000/lab"    # the task briefing (what to do)
+  Start-Sleep -Milliseconds 900
+  Start-Process chrome "http://localhost:8000/"       # the CoLab site (your own grades)
+  Start-Sleep -Milliseconds 900
   Start-Process powershell -ArgumentList '-NoExit','-NoProfile','-ExecutionPolicy','Bypass','-File',$attackWin
 }
 
@@ -71,19 +74,37 @@ function Send([string]$c, [double]$w) {
   Start-Sleep -Seconds $w
 }
 
-Start-Sleep -Seconds 8
-Send '1' 8                       # open room 1 -> loading bar -> READY -> briefing
-Write-Host "`n  >> room selected: opening Chrome briefing + toolkit terminal..." -ForegroundColor Cyan
+Start-Sleep -Seconds 10
+Write-Host "`n  ===== STEP 1: picking room 1 (IDOR) from the menu =====" -ForegroundColor Yellow
+Start-Sleep -Seconds 3
+Send '1' 2
+for ($i = 0; $i -lt 25; $i++) {
+  $a = ''
+  try { $a = (Get-Content $afile -Raw -ErrorAction Stop).Trim() } catch {}
+  if ($a -eq 'easy-idor') { break }
+  Start-Sleep -Milliseconds 700
+}
+Start-Sleep -Seconds 5            # let the boot bar / READY / briefing be read in this window
+Write-Host "`n  ===== STEP 2: the room is live =====" -ForegroundColor Yellow
+Write-Host "  >>> LOOK AT GOOGLE CHROME: tab 1 = the task, tab 2 = the CoLab grades site (your record)." -ForegroundColor Cyan
 Open-RoomSurfaces
-Start-Sleep -Seconds 18          # the toolkit window performs the live IDOR attack
-Write-Host "`n  >> submitting the recovered flag in the menu..." -ForegroundColor Cyan
-Send 's' 2.5
-Send 'CoLab{idor_grade_ledger_cd022499}' 4
-Send 'n' 3
-Send 'b' 2
+Start-Sleep -Seconds 14           # pause so the CoLab site + briefing can be read
+Write-Host "`n  ===== STEP 3: the attack (toolkit) =====" -ForegroundColor Yellow
+Write-Host "  >>> LOOK AT THE TOOLKIT WINDOW: it runs the IDOR attack with curl." -ForegroundColor Cyan
+Start-Sleep -Seconds 30           # the toolkit window performs the paced live attack
+Write-Host "`n  ===== STEP 3b: the SAME IDOR, in the browser, on the CoLab site =====" -ForegroundColor Yellow
+Write-Host "  >>> LOOK AT CHROME: changing the id to 1337 shows another student's CONFIDENTIAL record + flag." -ForegroundColor Cyan
+Start-Process chrome "http://localhost:8000/?id=1337"
+Start-Sleep -Seconds 12
+Write-Host "`n  ===== STEP 4: submitting the recovered flag here in the menu =====" -ForegroundColor Yellow
+Start-Sleep -Seconds 2
+Send 's' 3
+Send 'CoLab{idor_grade_ledger_cd022499}' 5
+Send 'n' 4
 Write-Host ""
-Write-Host "  DEMO COMPLETE - room 1 captured. Menu, Chrome briefing, and toolkit are all live." -ForegroundColor Green
+Write-Host "  ===== DEMO COMPLETE - room 1 captured (+100). All three windows stay live. =====" -ForegroundColor Green
 Read-Host "  Press Enter to close the lab"
+Send 'b' 1
 Send 'q' 1
 try { $p.StandardInput.Close() } catch {}
 $p.WaitForExit()
