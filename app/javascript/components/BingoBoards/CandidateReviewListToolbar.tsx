@@ -19,6 +19,7 @@ type Props = {
   reviewComplete: boolean;
   setReviewCompleteFunc: (boolean) => void;
   saveFeedbackFunc: () => void;
+  resetFunc: () => void;
   reloadFunc: () => void;
   optColumns: Array<IColumnMeta>;
   visibleColumns: Array<IColumnMeta>;
@@ -95,6 +96,9 @@ export default function CandidateReviewListToolbar(props: Props) {
     <React.Fragment>
       <Button onClick={() => props.reloadFunc()}>
         {t("review.reload_btn")}
+      </Button>
+      <Button disabled={!props.dirty} onClick={() => props.resetFunc()}>
+        {t("reset_btn")}
       </Button>
       {saveButton}
       {notify}

@@ -60,6 +60,9 @@ Feature: Review Candidate words for Bingo!
     Given the user clicks the link to the candidate review
      Then the user sees 66 candidate items for review
      Then the "Save" button will be disabled
+    Given the user assigns "Accept" feedback to all candidates
+    Then the user clicks "Reset"
+     Then the "Save" button will be disabled
 
   @javascript
   Scenario: Instructor logs in and assigns feedback to candidates
@@ -72,6 +75,7 @@ Feature: Review Candidate words for Bingo!
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user sees a success message
+     Then the "Save" button will be disabled
      Then the user logs out
      Then the user logs in
      Then the user will see "100%"

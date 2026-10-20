@@ -44,6 +44,14 @@ type CandidateRow = {
   definition?: string;
 };
 
+type CandidateReviewState = {
+  candidates: CandidateRow[];
+  reviewComplete: boolean;
+};
+
+const copyReviewState = (state: CandidateReviewState): CandidateReviewState =>
+  JSON.parse(JSON.stringify(state));
+
 export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
@@ -85,21 +93,26 @@ export default function CandidatesReviewTable(props: Props) {
   const [reviewComplete, setReviewComplete] = useState(false);
   const [reviewStatus, setReviewStatus] = useState("");
   const [progress, setProgress] = useState(0);
+  const cleanReviewRef = useRef<CandidateReviewState | null>(null);
 
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useDirtyStatus( );
-  const suppressDirtyRef = useRef(false);
+  const currentReviewRef = useRef<CandidateReviewState>({ candidates, reviewComplete });
+  currentReviewRef.current = { candidates, reviewComplete };
 
   useEffect(() => {
-    if (suppressDirtyRef.current) {
-      suppressDirtyRef.current = false;
+    if (!cleanReviewRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
-  }, [reviewComplete, candidates]);
+    setDirty(
+      JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReviewRef.current)
+        ? DIRTY_STATUS.CLEAN
+        : DIRTY_STATUS.DIRTY
+    );
+  }, [reviewComplete, candidates, setDirty]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -186,8 +199,13 @@ export default function CandidatesReviewTable(props: Props) {
           setCompleted(item);
         });
 
-        suppressDirtyRef.current = true;
+        const loadedReview = {
+          candidates: data.candidates,
+          reviewComplete: data.bingo_game.reviewed || false
+        };
+        cleanReviewRef.current = copyReviewState(loadedReview);
         setCandidates(data.candidates);
+        setReviewComplete(loadedReview.reviewComplete);
 
         setReviewStatus(t("review.data_loaded_msg"));
         setDirty(DIRTY_STATUS.CLEAN);
@@ -200,6 +218,7 @@ export default function CandidatesReviewTable(props: Props) {
       });
   };
   const saveFeedback = () => {
+    const submittedReview = copyReviewState(currentReviewRef.current);
     dispatch(startTask("saving"));
     setReviewStatus(t("review.saving_msg"));
 
@@ -210,13 +229,20 @@ export default function CandidatesReviewTable(props: Props) {
 
     axios
       .patch(url, {
-        candidates: candidates.filter(c => 0 < c.completed),
-        reviewed: reviewComplete
+        candidates: submittedReview.candidates.filter(c => 0 < c.completed),
+        reviewed: submittedReview.reviewComplete
       })
       .then(response => {
         const data = response.data;
         setReviewStatus(data.notice);
-        setDirty( typeof data.success !== "undefined" ? DIRTY_STATUS.CLEAN : DIRTY_STATUS.DIRTY );
+        if (data.success) {
+          cleanReviewRef.current = submittedReview;
+          setDirty(
+            JSON.stringify(currentReviewRef.current) === JSON.stringify(submittedReview)
+              ? DIRTY_STATUS.CLEAN
+              : DIRTY_STATUS.DIRTY
+          );
+        }
       })
       .catch(error => {
         const fail_data = new Object();
@@ -228,6 +254,15 @@ export default function CandidatesReviewTable(props: Props) {
       .finally(() => {
         dispatch(endTask("saving"));
       });
+  };
+
+  const resetReview = () => {
+    if (!cleanReviewRef.current) {
+      return;
+    }
+    const cleanReview = copyReviewState(cleanReviewRef.current);
+    setCandidates(cleanReview.candidates);
+    setReviewComplete(cleanReview.reviewComplete);
   };
 
   const conceptSet = (id: number, value: string) => {
@@ -325,6 +360,7 @@ export default function CandidatesReviewTable(props: Props) {
       reviewComplete={reviewComplete}
       setReviewCompleteFunc={setReviewComplete}
       saveFeedbackFunc={saveFeedback}
+      resetFunc={resetReview}
       reloadFunc={getData}
       optColumns={optColumns}
       visibleColumns={visibleColumns}
