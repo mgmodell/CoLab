@@ -11,13 +11,13 @@
 
 declare -A CH_TITLE CH_DIFF CH_POINTS CH_HINT_PENALTY CH_OWASP CH_CVSS CH_SLUG \
            CH_TOOLS CH_OBJECTIVE CH_SCENARIO CH_ENDPOINT CH_REMEDIATION \
-           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER
+           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER CH_BROWSE CH_HINTSTEP
 CHALLENGE_ORDER=()
 
 register_challenge() {
   local id="" title="" diff="" points="" penalty="" owasp="" cvss="" slug="" \
         tools="" objective="" scenario="" endpoint="" remediation="" finding="" \
-        hints="" provision="" toolkit="" handler=""
+        hints="" provision="" toolkit="" handler="" browse="" hintstep=""
   local kv key val
   for kv in "$@"; do
     key="${kv%%=*}"; val="${kv#*=}"
@@ -27,6 +27,7 @@ register_challenge() {
       tools) tools="$val";; objective) objective="$val";; scenario) scenario="$val";;
       endpoint) endpoint="$val";; remediation) remediation="$val";; finding) finding="$val";;
       hints) hints="$val";; provision) provision="$val";; toolkit) toolkit="$val";; handler) handler="$val";;
+      browse) browse="$val";; hintstep) hintstep="$val";;
     esac
   done
   [[ -z "$id" ]] && { echo "register_challenge: missing id" >&2; return 1; }
@@ -37,6 +38,7 @@ register_challenge() {
   CH_SCENARIO[$id]="$scenario";  CH_ENDPOINT[$id]="$endpoint"; CH_REMEDIATION[$id]="$remediation"
   CH_FINDING[$id]="$finding";    CH_HINTS[$id]="$hints";     CH_PROVISION[$id]="$provision"
   CH_TOOLKIT[$id]="$toolkit";    CH_HANDLER[$id]="$handler"
+  CH_BROWSE[$id]="$browse";      CH_HINTSTEP[$id]="$hintstep"
 }
 
 # ---- helpers ----------------------------------------------------------------
@@ -214,7 +216,7 @@ challenge_celebrate() {
 }
 
 challenge_hint() {
-  local id="$1" total used next ans
+  local id="$1" total used ans idx
   total="$(toolkit_hint_count "$id")"
   used="$(state_hints_used "$id")"
   if (( total == 0 )); then printf '  %sno hints for this room.%s\n' "$T_SLATE" "$T_RESET"; return; fi
@@ -228,15 +230,23 @@ challenge_hint() {
     local i; for (( i=1; i<=total; i++ )); do printf '   %d. %s\n' "$i" "$(toolkit_get_hint "$id" "$i")"; done
     return
   fi
-  next=$(( used + 1 ))
-  printf '  reveal hint %s/%s? costs %s%s pts%s [y/N] ❯ ' \
-    "$next" "$total" "$T_YELLOW" "${CH_HINT_PENALTY[$id]}" "$T_RESET"
+  # Step-reflective: if the room defines a hintstep hook, show the hint for the
+  # step the student is actually on (based on their logged progress); else the
+  # next sequential hint.
+  idx=""
+  if [[ -n "${CH_HINTSTEP[$id]:-}" ]] && declare -F "${CH_HINTSTEP[$id]}" >/dev/null 2>&1; then
+    idx="$("${CH_HINTSTEP[$id]}" "$id" 2>/dev/null)"
+  fi
+  [[ "$idx" =~ ^[0-9]+$ ]] || idx=$(( used + 1 ))
+  (( idx < 1 )) && idx=1; (( idx > total )) && idx=total
+  printf '  reveal the hint for your current step (%s/%s)? costs %s%s pts%s [y/N] ❯ ' \
+    "$idx" "$total" "$T_YELLOW" "${CH_HINT_PENALTY[$id]}" "$T_RESET"
   read -r ans || return 0
   case "$ans" in
     y|Y|yes)
       state_use_hint "$id" >/dev/null
       toolkit_write_hints "$id"
-      printf '  %sHint %s:%s %s\n' "$T_YELLOW" "$next" "$T_RESET" "$(toolkit_get_hint "$id" "$next")"
+      printf '  %sStep %s:%s %s\n' "$T_YELLOW" "$idx" "$T_RESET" "$(toolkit_get_hint "$id" "$idx")"
       printf '  %s(award if solved now: %s pts)%s\n' "$T_DIM" "$(state_award_value "$id")" "$T_RESET" ;;
     *) printf '  %scancelled.%s\n' "$T_SLATE" "$T_RESET" ;;
   esac

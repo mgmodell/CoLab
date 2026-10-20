@@ -12,9 +12,23 @@ idor_provision() {
   printf '{"student_id":1337,"name":"j. okafor","gpa":4.0,"instructor_note":"CONFIDENTIAL — %s"}' "$flag" > "$d/1337.json"
 }
 
+# Which step is the student on? Reads what they've actually requested so the
+# hint system reflects where they are, not a fixed sequence.
+#   step 1 = hasn't tried an id other than their own
+#   step 2 = enumerating other ids but hasn't hit the confidential 1337
+#   step 3 = has read 1337; just needs to pull the flag out / submit
+idor_hintstep() {
+  local id="$1" prog; prog="$(pv_work_dir "$id")/.progress"
+  [[ -f "$prog" ]] || { printf 1; return; }
+  grep -q 'grades/1337' "$prog" && { printf 3; return; }
+  if grep -oE 'grades/[0-9]+' "$prog" | grep -qvx 'grades/1001'; then printf 2; return; fi
+  printf 1
+}
+
 # GET /api/grades/:id  — no ownership check (the bug).
 idor_handle() {
   local rid f
+  printf '%s\n' "$REQ_PATH" >> "$(pv_work_dir easy-idor)/.progress" 2>/dev/null || true
   if [[ "$REQ_PATH" == /api/grades/* ]]; then
     rid="${REQ_PATH##*/}"
     f="$(pv_target_dir easy-idor)/grades/${rid}.json"
@@ -43,6 +57,8 @@ register_challenge \
   scenario="You are signed in as student #1001 on the CoLab LMS. The grade API returns YOUR record at /api/grades/1001. But the controller looks records up by id alone and never checks that the record belongs to the caller. Other students' records sit at nearby ids." \
   objective="Enumerate the grade endpoint to read a record that isn't yours and recover the flag hidden in a confidential instructor note." \
   remediation="Enforce per-object ownership checks (scope queries to current_user); use non-sequential ids." \
+  browse="/api/grades/1001" \
+  hintstep="idor_hintstep" \
   hints="Your own record is at /api/grades/1001 — what happens if you ask for a different id?
 The interesting record is a 'confidential' one. Try ids around your own, and round numbers like 1337.
 colab-http GET /api/grades/1337  — read the instructor_note field." \
