@@ -10,7 +10,7 @@
 import os
 import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlsplit, unquote_plus
+from urllib.parse import urlsplit, unquote_plus, parse_qs
 
 CTF_HOME = os.environ.get("CTF_HOME") or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = int(os.environ.get("CTF_TARGET_PORT", "8000"))
@@ -39,6 +39,16 @@ def brief_html(cid):
         return out or "<!doctype html><title>CoLab CTF</title><p>briefing unavailable</p>"
     except Exception as e:  # noqa: BLE001
         return "<!doctype html><title>CoLab CTF</title><p>briefing error: %s</p>" % e
+
+
+def portal_html(cid, sid):
+    env = dict(os.environ)
+    env["CTF_PORTAL_ID"] = sid or ""
+    try:
+        out = subprocess.run(["bash", CTF_SH, "__portal", cid], capture_output=True, text=True, env=env, timeout=20).stdout
+        return out or "<!doctype html><title>CoLab</title><p>CoLab is unavailable</p>"
+    except Exception as e:  # noqa: BLE001
+        return "<!doctype html><title>CoLab</title><p>CoLab error: %s</p>" % e
 
 
 def serve_via_handler(cid, method, path, query, headers, body):
@@ -74,8 +84,14 @@ class Handler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length") or 0)
         body = self.rfile.read(length).decode("utf-8", "replace") if length else ""
         ctype = "application/json"
-        # "/" and "/lab" render the room's HTML briefing (boot-up) page.
-        if method == "GET" and path in ("/", "/lab", "/index.html"):
+        # "/" is the CoLab site the student attacks; "/lab" is the task briefing.
+        if method == "GET" and path in ("/", "/index.html"):
+            if not cid:
+                code, out, ctype = 200, LANDING, "text/plain; charset=utf-8"
+            else:
+                sid = (parse_qs(parts.query).get("id") or ["1001"])[0]
+                code, out, ctype = 200, portal_html(cid, sid), "text/html; charset=utf-8"
+        elif method == "GET" and path in ("/lab", "/brief"):
             if not cid:
                 code, out, ctype = 200, LANDING, "text/plain; charset=utf-8"
             else:

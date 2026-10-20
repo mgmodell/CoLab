@@ -11,13 +11,13 @@
 
 declare -A CH_TITLE CH_DIFF CH_POINTS CH_HINT_PENALTY CH_OWASP CH_CVSS CH_SLUG \
            CH_TOOLS CH_OBJECTIVE CH_SCENARIO CH_ENDPOINT CH_REMEDIATION \
-           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER CH_BROWSE CH_HINTSTEP
+           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER CH_BROWSE CH_HINTSTEP CH_PORTAL
 CHALLENGE_ORDER=()
 
 register_challenge() {
   local id="" title="" diff="" points="" penalty="" owasp="" cvss="" slug="" \
         tools="" objective="" scenario="" endpoint="" remediation="" finding="" \
-        hints="" provision="" toolkit="" handler="" browse="" hintstep=""
+        hints="" provision="" toolkit="" handler="" browse="" hintstep="" portal=""
   local kv key val
   for kv in "$@"; do
     key="${kv%%=*}"; val="${kv#*=}"
@@ -27,7 +27,7 @@ register_challenge() {
       tools) tools="$val";; objective) objective="$val";; scenario) scenario="$val";;
       endpoint) endpoint="$val";; remediation) remediation="$val";; finding) finding="$val";;
       hints) hints="$val";; provision) provision="$val";; toolkit) toolkit="$val";; handler) handler="$val";;
-      browse) browse="$val";; hintstep) hintstep="$val";;
+      browse) browse="$val";; hintstep) hintstep="$val";; portal) portal="$val";;
     esac
   done
   [[ -z "$id" ]] && { echo "register_challenge: missing id" >&2; return 1; }
@@ -38,7 +38,7 @@ register_challenge() {
   CH_SCENARIO[$id]="$scenario";  CH_ENDPOINT[$id]="$endpoint"; CH_REMEDIATION[$id]="$remediation"
   CH_FINDING[$id]="$finding";    CH_HINTS[$id]="$hints";     CH_PROVISION[$id]="$provision"
   CH_TOOLKIT[$id]="$toolkit";    CH_HANDLER[$id]="$handler"
-  CH_BROWSE[$id]="$browse";      CH_HINTSTEP[$id]="$hintstep"
+  CH_BROWSE[$id]="$browse";      CH_HINTSTEP[$id]="$hintstep";   CH_PORTAL[$id]="$portal"
 }
 
 # ---- helpers ----------------------------------------------------------------

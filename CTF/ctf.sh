@@ -24,6 +24,7 @@ source "$CTF_HOME/lib/toolkit.sh"
 source "$CTF_HOME/lib/banner.sh"
 source "$CTF_HOME/lib/victory.sh"
 source "$CTF_HOME/lib/brief.sh"
+source "$CTF_HOME/lib/portal.sh"
 
 # ---- auto-discover challenges (00-common.sh sorts first) --------------------
 for _cf in "$CTF_HOME"/challenges/*.sh; do
@@ -52,6 +53,12 @@ fi
 # ---- hidden briefing renderer for the target server (Chrome boot-up page) ----
 if [[ "${1:-}" == "__brief" ]]; then
   ctf_brief_html "${2:-}"
+  exit $?
+fi
+
+# ---- hidden CoLab-site renderer for the target server (the vulnerable page) --
+if [[ "${1:-}" == "__portal" ]]; then
+  ctf_portal_html "${2:-}"
   exit $?
 fi
 

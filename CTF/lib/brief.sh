@@ -65,7 +65,7 @@ ctf_brief_html() { # id
     <p class="k">Your task</p>
     <p class="task">${objective}</p>
     <p class="sm mut">Work against: <code>${endpoint}</code></p>
-    <a class="cta" href="${browse}" target="_blank" rel="noopener">Open the live target &rarr;</a>
+    <a class="cta" href="${browse}" target="_blank" rel="noopener">Enter the CoLab site &rarr;</a>
   </div>
 
   <div class="card">
