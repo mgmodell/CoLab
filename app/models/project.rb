@@ -25,6 +25,13 @@ class Project < ApplicationRecord
   validates :end_date, :start_date, presence: true
   before_create :anonymize
 
+  # Helpful scope
+  scope :active_at, lambda { | date |
+                        where( 'projects.end_date >= ?', date )
+                        .where( 'projects.start_date <= ?', date )
+                        .where( active: true )
+                    }
+
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
     less_than_or_equal_to: 6
