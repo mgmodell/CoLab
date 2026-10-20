@@ -100,15 +100,19 @@ export default function CandidatesReviewTable(props: Props) {
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useDirtyStatus( );
-  const currentReviewRef = useRef<CandidateReviewState>({ candidates, reviewComplete });
-  currentReviewRef.current = { candidates, reviewComplete };
+  const currentReview = { candidates, reviewComplete };
+  const currentReviewRef = useRef<CandidateReviewState>(currentReview);
+
+  useEffect(() => {
+    currentReviewRef.current = currentReview;
+  }, [reviewComplete, candidates]);
 
   useEffect(() => {
     if (!cleanReviewRef.current) {
       return;
     }
     setDirty(
-      JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReviewRef.current)
+      JSON.stringify(currentReview) === JSON.stringify(cleanReviewRef.current)
         ? DIRTY_STATUS.CLEAN
         : DIRTY_STATUS.DIRTY
     );
