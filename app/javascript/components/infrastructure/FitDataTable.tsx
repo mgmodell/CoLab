@@ -25,7 +25,9 @@ type Props = Omit<DataTableProps<DataTableValueArray>, PaginationProps | "scroll
 
 /**
  * A DataTable that fills the vertical space remaining in the window (below
- * its own top edge) and scrolls internally instead of paginating.
+ * its own top edge) and scrolls internally instead of paginating. The wrapper
+ * gets the fixed height and the table fills it ("flex"), so the table's own
+ * header, column headings and footer are included in the height budget.
  */
 export default function FitDataTable(props: Props) {
   const {
@@ -72,8 +74,8 @@ export default function FitDataTable(props: Props) {
   }, [recalc]);
 
   return (
-    <div ref={wrapperRef} className="fit-data-table">
-      <DataTable {...tableProps} scrollable scrollHeight={`${height}px`} />
+    <div ref={wrapperRef} className="fit-data-table" style={{ height: `${height}px` }}>
+      <DataTable {...tableProps} scrollable scrollHeight="flex" />
     </div>
   );
 }
