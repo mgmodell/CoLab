@@ -9,7 +9,7 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import StandardListToolbar from "./toolbars/StandardListToolbar";
 
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 
@@ -140,7 +140,7 @@ export default function ConceptsTable() {
   };
   return (
     <React.Fragment>
-      <DataTable
+      <FitDataTable
         value={concepts.filter(concept => {
           return (
             filterText.length === 0 ||
@@ -207,7 +207,7 @@ export default function ConceptsTable() {
             key="bingos"
           />
         ) : null}
-      </DataTable>
+      </FitDataTable>
       <Dialog
         visible={editing}
         onHide={() => stopEditing()}

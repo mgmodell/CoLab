@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 import AdminListToolbar from "../toolbars/AdminListToolbar";
 
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
@@ -84,7 +84,7 @@ export default function RubricList(props: RubricListProps) {
     <React.Fragment>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataTable
+          <FitDataTable
             value={rubrics.filter(rubric => {
               return (
                 filterText.length === 0 || rubric.name.includes(filterText)
@@ -222,7 +222,7 @@ export default function RubricList(props: RubricListProps) {
                 );
               }}
             />
-          </DataTable>
+          </FitDataTable>
         </div>
       </div>
     </React.Fragment>

@@ -14,7 +14,7 @@ import { Container, Row, Col } from "react-grid-system";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -358,7 +358,7 @@ export default function CandidatesReviewTable(props: Props) {
       ) : (
         <Skeleton height={20} />
       )}
-      <DataTable
+      <FitDataTable
         value={candidates}
         resizableColumns
         tableStyle={{ minWidth: "50rem" }}
@@ -430,7 +430,7 @@ export default function CandidatesReviewTable(props: Props) {
             return output;
           }}
         />
-      </DataTable>
+      </FitDataTable>
     </ScrollPanel>
   );
 }

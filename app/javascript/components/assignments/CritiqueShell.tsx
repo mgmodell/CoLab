@@ -17,7 +17,7 @@ import { ISubmissionFeedback } from "./RubricScorer";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
 
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from "react-grid-system";
 import { Splitter, SplitterPanel } from "primereact/splitter";
@@ -277,7 +277,7 @@ export default function CritiqueShell(props: Props) {
                     <InplaceDisplay>{t('submission_list_hidden')}</InplaceDisplay>
                     <InplaceContent>
 
-                      <DataTable
+                      <FitDataTable
                         value={submissionsIndex}
                         resizableColumns
                         tableStyle={{
@@ -365,7 +365,7 @@ export default function CritiqueShell(props: Props) {
                             return `${param.user.last_name}, ${param.user.first_name}`;
                           }}
                         />
-                      </DataTable>
+                      </FitDataTable>
                     </InplaceContent>
                   </Inplace>
 

@@ -13,7 +13,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Panel } from "primereact/panel";
 import { Toolbar } from "primereact/toolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
 import { Dialog } from "primereact/dialog";
@@ -394,7 +394,7 @@ export default function ProjectGroups(props: Props) {
         breakpoints={{ '960px': '75vw', '641px': '95vw' }}
       />
 
-      <DataTable
+      <FitDataTable
         value={students}
         resizableColumns
         reorderableColumns
@@ -510,7 +510,7 @@ export default function ProjectGroups(props: Props) {
             />
           )}
         />
-      </DataTable>
+      </FitDataTable>
     </Panel>
   );
 }

@@ -2,7 +2,7 @@
 import React, {useEffect} from "react";
 
 import { useTranslation } from "react-i18next";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -67,7 +67,7 @@ export default function BingoGameDataAdminTable(props: Props) {
   console.log( props.reviewed );
   return (
     <Panel>
-      <DataTable
+      <FitDataTable
         value={props.results_raw}
         resizableColumns
         reorderableColumns
@@ -170,7 +170,7 @@ export default function BingoGameDataAdminTable(props: Props) {
             key={"term_problems"}
           />
         ) : null}
-      </DataTable>
+      </FitDataTable>
       <BingoGameResults
         open={dialogOpen}
         student={individual.student}

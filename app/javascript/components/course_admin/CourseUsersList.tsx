@@ -7,7 +7,7 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import UserListAdminToolbar from "./UserListAdminToolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -158,7 +158,7 @@ export default function CourseUsersList(props: Props) {
   const newUserList = useMemo(() => {
     return (
       <>
-        <DataTable
+        <FitDataTable
           value={props.usersList.filter(user => {
             if( UserListType.declined_student === user.status ||
                 UserListType.dropped_student === user.status ||
@@ -441,7 +441,7 @@ export default function CourseUsersList(props: Props) {
               return btns;
             }}
           />
-        </DataTable>
+        </FitDataTable>
       </>
     );
   }, [props.usersList, columnsToShow, filterText]);

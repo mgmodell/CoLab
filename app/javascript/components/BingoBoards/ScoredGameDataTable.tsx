@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { IBingoCandidate } from "./BingoBuilder";
@@ -31,7 +31,7 @@ export default function ScoredGameDataTable(props: Props) {
   const [visibleColumns, setVisibleColumns] = useState(optColumns);
 
   return (
-    <DataTable
+    <FitDataTable
       value={props.candidates}
       resizableColumns
       tableStyle={{
@@ -100,6 +100,6 @@ export default function ScoredGameDataTable(props: Props) {
           key="credit"
         />
       ) : null}
-    </DataTable>
+    </FitDataTable>
   );
 }

@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 import { useTranslation } from "react-i18next";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
@@ -89,7 +89,7 @@ export default function DecisionEnrollmentsTable(props: Props) {
         accept or decline each enrollment.
       </p>
       <WorkingIndicator identifier="loading_enrollments" />
-      <DataTable
+      <FitDataTable
         value={requests.filter(request => {
           return (
             filterText.length === 0 ||
@@ -164,7 +164,7 @@ export default function DecisionEnrollmentsTable(props: Props) {
             );
           }}
         />
-      </DataTable>
+      </FitDataTable>
     </Panel>
   ) : null;
 }

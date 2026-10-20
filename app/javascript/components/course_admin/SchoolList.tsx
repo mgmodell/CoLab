@@ -12,7 +12,7 @@ import {
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 
 enum OPT_COLS {
@@ -74,7 +74,7 @@ export default function SchoolList( /*props : Props */ ) {
   }, [endpointStatus]);
 
   const schoolTable = (
-    <DataTable
+    <FitDataTable
       value={schools.filter(school => {
         return filterText.length === 0 || school.name.includes(filterText);
       })}
@@ -171,7 +171,7 @@ export default function SchoolList( /*props : Props */ ) {
           key={"terms_list"}
         />
       ) : null}
-    </DataTable>
+    </FitDataTable>
   );
 
   return (

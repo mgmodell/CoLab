@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
 
@@ -69,7 +69,7 @@ export default function ConsentFormList(props) {
   };
 
   const dataTable = (
-    <DataTable
+    <FitDataTable
       value={consentForms.filter(course => {
         return filterText.length === 0 || course.name.includes(filterText);
       })}
@@ -122,7 +122,7 @@ export default function ConsentFormList(props) {
           return <Checkbox checked={param.active} disabled />;
         }}
       />
-    </DataTable>
+    </FitDataTable>
   );
 
   return (
