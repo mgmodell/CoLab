@@ -100,17 +100,17 @@ export default function CandidatesReviewTable(props: Props) {
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useDirtyStatus( );
-  const currentReview = { candidates, reviewComplete };
-  const currentReviewRef = useRef<CandidateReviewState>(currentReview);
+  const currentReviewRef = useRef<CandidateReviewState>({ candidates, reviewComplete });
 
   useEffect(() => {
-    currentReviewRef.current = currentReview;
+    currentReviewRef.current = { candidates, reviewComplete };
   }, [reviewComplete, candidates]);
 
   useEffect(() => {
     if (!cleanReviewRef.current) {
       return;
     }
+    const currentReview = { candidates, reviewComplete };
     setDirty(
       JSON.stringify(currentReview) === JSON.stringify(cleanReviewRef.current)
         ? DIRTY_STATUS.CLEAN
@@ -243,6 +243,12 @@ export default function CandidatesReviewTable(props: Props) {
           cleanReviewRef.current = submittedReview;
           setDirty(
             JSON.stringify(currentReviewRef.current) === JSON.stringify(submittedReview)
+              ? DIRTY_STATUS.CLEAN
+              : DIRTY_STATUS.DIRTY
+          );
+        } else {
+          setDirty(
+            JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReviewRef.current)
               ? DIRTY_STATUS.CLEAN
               : DIRTY_STATUS.DIRTY
           );
