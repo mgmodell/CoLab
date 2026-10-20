@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-import { SortDirection } from "react-virtualized";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +16,8 @@ import { Dialog } from "primereact/dialog";
 import { useDispatch } from "react-redux";
 import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "./infrastructure/StatusSlice";
 import { InputText } from "primereact/inputtext";
+
+const SortDirection = { ASC: "ASC", DESC: "DESC" } as const;
 
 enum OPT_COLS {
   NAME = "name",
