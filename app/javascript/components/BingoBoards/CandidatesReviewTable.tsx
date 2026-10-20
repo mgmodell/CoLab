@@ -50,10 +50,25 @@ type CandidateReviewState = {
 };
 
 const copyReviewState = (state: CandidateReviewState): CandidateReviewState =>
-  JSON.parse(JSON.stringify(state));
+  ({
+    reviewComplete: state.reviewComplete,
+    candidates: state.candidates.map(candidate => ({
+      ...candidate,
+      concept: candidate.concept ? { ...candidate.concept } : candidate.concept
+    }))
+  });
 
 const sameReviewState = (first: CandidateReviewState, second: CandidateReviewState) =>
-  JSON.stringify(first) === JSON.stringify(second);
+  first.reviewComplete === second.reviewComplete &&
+  first.candidates.length === second.candidates.length &&
+  first.candidates.every((candidate, index) => {
+    const otherCandidate = second.candidates[index];
+    return (
+      candidate.id === otherCandidate.id &&
+      candidate.candidate_feedback_id === otherCandidate.candidate_feedback_id &&
+      candidate.concept?.name === otherCandidate.concept?.name
+    );
+  });
 
 export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
