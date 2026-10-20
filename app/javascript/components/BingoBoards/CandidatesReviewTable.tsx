@@ -247,8 +247,10 @@ export default function CandidatesReviewTable(props: Props) {
               : DIRTY_STATUS.DIRTY
           );
         } else {
+          const cleanReview = cleanReviewRef.current;
           setDirty(
-            JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReviewRef.current)
+            !cleanReview ||
+              JSON.stringify(currentReviewRef.current) === JSON.stringify(cleanReview)
               ? DIRTY_STATUS.CLEAN
               : DIRTY_STATUS.DIRTY
           );
