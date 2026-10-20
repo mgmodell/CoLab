@@ -88,7 +88,6 @@ challenge_briefing() {
 # Enter engages, [b] drops back to the main menu (target stays armed).
 challenge_ready_gate() { # id
   local id="$1" ans
-  [[ -t 0 ]] || return 0             # non-interactive (smoke test) → auto-engage
   ui_clear
   banner_ready
   ui_box_top; ui_box_title "READY TO START — ${CH_TITLE[$id]}"; ui_box_bottom
@@ -100,6 +99,7 @@ challenge_ready_gate() { # id
   printf '\n  %sReady to start?%s   %s[Enter]%s engage    %s[b]%s back to menu\n' \
     "$T_BOLD$T_SKY" "$T_RESET" "$T_GREEN" "$T_RESET" "$T_SLATE" "$T_RESET"
   printf '  %s%s ❯%s ' "$T_DIM" "$id" "$T_RESET"
+  if [[ ! -t 0 ]]; then printf '\n'; sleep 2; return 0; fi   # non-interactive → show, then engage
   read -r ans || return 1
   case "$(printf '%s' "$ans" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" in
     b|back|q) return 1 ;;
