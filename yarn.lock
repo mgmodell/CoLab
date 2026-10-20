@@ -1659,10 +1659,10 @@ __metadata:
     d3-scale-chromatic: "npm:^3.1.0"
     d3-time-format: "npm:^4.1.0"
     dayjs: "npm:^1.11.23"
-    driver.js: "npm:^1.10.1"
+    driver.js: "npm:^1.10.2"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.8"
-    i18next: "npm:^26.4.5"
+    i18next: "npm:^26.5.2"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^8.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -1680,7 +1680,7 @@ __metadata:
     react-cookie-consent: "npm:^10.0.2"
     react-dom: "npm:^19.3.1"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.0.17"
+    react-i18next: "npm:^17.1.0"
     react-on-rails: "npm:17.2.0"
     react-redux: "npm:^9.3.0"
     react-refresh: "npm:^0.19.0"
@@ -2198,10 +2198,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"driver.js@npm:^1.10.1":
-  version: 1.10.1
-  resolution: "driver.js@npm:1.10.1"
-  checksum: 10c0/2d3337e4f1dd8d8ccd40e3543190553bf94315a56062e8272e2c22a8f37d8613efefb998eeef5808171ba1cf2626425d5750198b53a85b2c676d28406d2621c7
+"driver.js@npm:^1.10.2":
+  version: 1.10.2
+  resolution: "driver.js@npm:1.10.2"
+  checksum: 10c0/e1e14b567d4d62b9b614c8f93c3ebfc4fe357b306f4a72472285f5927b86013681140d72c383fc1a81d82a957bd17ce6b7b22edb74266abe67094f8a37719916
   languageName: node
   linkType: hard
 
@@ -2528,15 +2528,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.4.5":
-  version: 26.4.5
-  resolution: "i18next@npm:26.4.5"
+"i18next@npm:^26.5.2":
+  version: 26.5.2
+  resolution: "i18next@npm:26.5.2"
   peerDependencies:
     typescript: ^5 || ^6 || ^7
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/e3c8fc1a53f0c52ee04b524c773fe1b21bf4d11919b0be76424d37783fce5cc51f32a1f7fc30e17d67e101c5ad955cfc4ce890eaed2bdb61e5da9f5a71d69faf
+  checksum: 10c0/b2edaba4af8f907d685bb133b8878cc1f03a7eaac3e76937da736b819d6d9500a82f516441b272994e9988c227bbcbbbc38fd185b4a2f67ab6bf9884ecf31167
   languageName: node
   linkType: hard
 
@@ -3104,9 +3104,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.0.17":
-  version: 17.0.17
-  resolution: "react-i18next@npm:17.0.17"
+"react-i18next@npm:^17.1.0":
+  version: 17.1.0
+  resolution: "react-i18next@npm:17.1.0"
   dependencies:
     "@babel/runtime": "npm:^7.29.7"
     html-parse-stringify: "npm:^4.0.1"
@@ -3122,7 +3122,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/aa21d08b52fa7d47dd020b528c1e25ddafa3c3d04e7f8fbc79f8856c946dcb71d1d8466aaea7ab2845682b03193f0fbe1b09366064478c3aadda28c49eda6720
+  checksum: 10c0/5ba9de18304f8fc20511de9f64f2a71594cb607c55b06692463867721f256770ae71489639bd96554bc556b5b310d495cff526ebbbaac091f9bae0ca8f547f24
   languageName: node
   linkType: hard
 
