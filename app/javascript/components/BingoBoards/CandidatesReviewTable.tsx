@@ -44,6 +44,32 @@ type CandidateRow = {
   definition?: string;
 };
 
+type CandidateReviewState = {
+  candidates: CandidateRow[];
+  reviewComplete: boolean;
+};
+
+const copyReviewState = (state: CandidateReviewState): CandidateReviewState =>
+  ({
+    reviewComplete: state.reviewComplete,
+    candidates: state.candidates.map(candidate => ({
+      ...candidate,
+      concept: candidate.concept ? { ...candidate.concept } : candidate.concept
+    }))
+  });
+
+const sameReviewState = (first: CandidateReviewState, second: CandidateReviewState) =>
+  first.reviewComplete === second.reviewComplete &&
+  first.candidates.length === second.candidates.length &&
+  first.candidates.every((candidate, index) => {
+    const otherCandidate = second.candidates[index];
+    return (
+      candidate.id === otherCandidate.id &&
+      candidate.candidate_feedback_id === otherCandidate.candidate_feedback_id &&
+      candidate.concept?.name === otherCandidate.concept?.name
+    );
+  });
+
 export default function CandidatesReviewTable(props: Props) {
   const category = "candidate_review";
 
@@ -85,20 +111,30 @@ export default function CandidatesReviewTable(props: Props) {
   const [reviewComplete, setReviewComplete] = useState(false);
   const [reviewStatus, setReviewStatus] = useState("");
   const [progress, setProgress] = useState(0);
+  const cleanReviewRef = useRef<CandidateReviewState | null>(null);
 
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useDirtyStatus( );
-  const suppressDirtyRef = useRef(false);
+  const currentReviewRef = useRef<CandidateReviewState>({ candidates, reviewComplete });
 
   useEffect(() => {
-    if( suppressDirtyRef.current ) {
+    currentReviewRef.current = { candidates, reviewComplete };
+  }, [reviewComplete, candidates]);
+
+  useEffect(() => {
+    if (!cleanReviewRef.current) {
       return;
     }
-    setDirty(DIRTY_STATUS.DIRTY);
-  }, [reviewComplete, candidates]);
+    const currentReview = { candidates, reviewComplete };
+    setDirty(
+      sameReviewState(currentReview, cleanReviewRef.current)
+        ? DIRTY_STATUS.CLEAN
+        : DIRTY_STATUS.DIRTY
+    );
+  }, [reviewComplete, candidates, setDirty]);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -164,7 +200,6 @@ export default function CandidatesReviewTable(props: Props) {
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
-    suppressDirtyRef.current = true;
     axios
       .get(url, {})
       .then(response => {
@@ -186,7 +221,13 @@ export default function CandidatesReviewTable(props: Props) {
           setCompleted(item);
         });
 
+        const loadedReview = {
+          candidates: data.candidates,
+          reviewComplete: data.bingo_game.reviewed || false
+        };
+        cleanReviewRef.current = copyReviewState(loadedReview);
         setCandidates(data.candidates);
+        setReviewComplete(loadedReview.reviewComplete);
 
         setReviewStatus(t("review.data_loaded_msg"));
         setDirty(DIRTY_STATUS.CLEAN);
@@ -196,11 +237,10 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .finally(() => {
         dispatch(endTask());
-        suppressDirtyRef.current = false;
       });
   };
   const saveFeedback = () => {
-    suppressDirtyRef.current = true;
+    const submittedReview = copyReviewState(currentReviewRef.current);
     dispatch(startTask("saving"));
     setReviewStatus(t("review.saving_msg"));
 
@@ -211,13 +251,29 @@ export default function CandidatesReviewTable(props: Props) {
 
     axios
       .patch(url, {
-        candidates: candidates.filter(c => 0 < c.completed),
-        reviewed: reviewComplete
+        candidates: submittedReview.candidates.filter(c => 0 < c.completed),
+        reviewed: submittedReview.reviewComplete
       })
       .then(response => {
         const data = response.data;
         setReviewStatus(data.notice);
-        setDirty( typeof data.success !== "undefined" ? DIRTY_STATUS.CLEAN : DIRTY_STATUS.DIRTY );
+        if (data.success) {
+          // Keep unfinished candidates in the baseline even though the request omits them.
+          cleanReviewRef.current = submittedReview;
+          setDirty(
+            sameReviewState(currentReviewRef.current, submittedReview)
+              ? DIRTY_STATUS.CLEAN
+              : DIRTY_STATUS.DIRTY
+          );
+        } else {
+          const cleanReview = cleanReviewRef.current;
+          setDirty(
+            !cleanReview ||
+              sameReviewState(currentReviewRef.current, cleanReview)
+              ? DIRTY_STATUS.CLEAN
+              : DIRTY_STATUS.DIRTY
+          );
+        }
       })
       .catch(error => {
         const fail_data = new Object();
@@ -228,8 +284,16 @@ export default function CandidatesReviewTable(props: Props) {
       })
       .finally(() => {
         dispatch(endTask("saving"));
-        suppressDirtyRef.current = false;
       });
+  };
+
+  const resetReview = () => {
+    if (!cleanReviewRef.current) {
+      return;
+    }
+    const cleanReview = copyReviewState(cleanReviewRef.current);
+    setCandidates(cleanReview.candidates);
+    setReviewComplete(cleanReview.reviewComplete);
   };
 
   const conceptSet = (id: number, value: string) => {
@@ -322,12 +386,13 @@ export default function CandidatesReviewTable(props: Props) {
       progress={progress}
       uniqueConcepts={uniqueConcepts}
       acceptableUniqueConcepts={acceptableUniqueConcepts}
-      dirty={dirty}
       reviewStatus={reviewStatus}
       reviewComplete={reviewComplete}
       setReviewCompleteFunc={setReviewComplete}
       saveFeedbackFunc={saveFeedback}
+      resetFunc={resetReview}
       reloadFunc={getData}
+      dirty={dirty === DIRTY_STATUS.DIRTY}
       optColumns={optColumns}
       visibleColumns={visibleColumns}
       setVisibleColumnsFunc={setVisibleColumns}
