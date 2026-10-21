@@ -58,7 +58,23 @@ export default function FitDataTable(props: Props) {
     const el = wrapperRef.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top;
-    setHeight(Math.max(MIN_HEIGHT, Math.floor(window.innerHeight - top - BOTTOM_MARGIN)));
+    // Space below the table that belongs to its containers (bottom padding,
+    // border and margin of each ancestor, e.g. a panel's frame).
+    let below = 0;
+    for (
+      let node = el.parentElement;
+      node && node !== document.body && node !== document.documentElement;
+      node = node.parentElement
+    ) {
+      const style = window.getComputedStyle(node);
+      below +=
+        (parseFloat(style.paddingBottom) || 0) +
+        (parseFloat(style.borderBottomWidth) || 0) +
+        (parseFloat(style.marginBottom) || 0);
+    }
+    setHeight(
+      Math.max(MIN_HEIGHT, Math.floor(window.innerHeight - top - BOTTOM_MARGIN - below))
+    );
   }, []);
 
   useLayoutEffect(recalc);
