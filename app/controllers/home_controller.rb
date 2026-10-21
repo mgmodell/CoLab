@@ -46,14 +46,18 @@ class HomeController < ApplicationController
                                   course.rosters.instructor.exists?( user_id: current_user.id )
 
     students = course.rosters.enrolled_student.includes( :user ).map( &:user )
-    progress = activity_student_progress( activity, students )
+    project_report = if activity.is_a?( Project )
+                       ProjectStudentProgressReport.new( project: activity, anonymize: current_user.anonymize? )
+                     end
+    progress = activity_student_progress( activity, students, project_report: )
     completed_count = progress.count { | student | student[:complete] }
 
     render json: {
       students: progress,
       completed_count:,
       total_students: students.size,
-      completion_percent: students.empty? ? 0 : 100 * completed_count / students.size
+      completion_percent: students.empty? ? 0 : 100 * completed_count / students.size,
+      groups: project_report&.call
     }
   end
 
@@ -683,7 +687,7 @@ class HomeController < ApplicationController
     end
   end
 
-  def activity_student_progress( activity, students )
+  def activity_student_progress( activity, students, project_report: nil )
     case activity
     when Assignment
       submissions = activity.submissions.where.not( submitted: nil ).where( withdrawn: nil ).to_a
@@ -747,7 +751,11 @@ class HomeController < ApplicationController
         }
       end
     when Project
-      assessment = activity.assessments.active_at( Time.current ).order( :start_date ).last
+      report = project_report || ProjectStudentProgressReport.new(
+        project: activity,
+        anonymize: current_user.anonymize?
+      )
+      assessment = report.assessment
       installments = assessment&.installments&.index_by( &:user_id ) || {}
       students.map do | student |
         complete = installments.key?( student.id )

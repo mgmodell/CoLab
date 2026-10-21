@@ -125,3 +125,68 @@ Then( 'the instructor sees {int} completed student for the {string} activity' ) 
     completed_count
   )
 end
+
+Given( 'the project has equal team evaluations for progress' ) do
+  members = @course.rosters.enrolled_student.includes( :user ).limit( 2 ).map( &:user )
+  @reporting_members = members
+  group = @progress_activity.groups.create!( name: 'Reporting Group' )
+  group.users = members
+
+  [2.weeks.ago, 1.week.ago].each_with_index do | assessment_start, period |
+    assessment = @progress_activity.assessments.create!(
+      start_date: 1.day.ago.beginning_of_day,
+      end_date: 1.day.from_now.end_of_day,
+      active: false
+    )
+    members.each do | rater |
+      installment = assessment.installments.build(
+        user: rater,
+        group:,
+        inst_date: Time.current
+      )
+      members.each do | member |
+        @progress_activity.factors.each do | factor |
+          disagrees_with_teammate = period.zero? && rater != member
+          rating_value = disagrees_with_teammate ? 0 : Installment::TOTAL_VAL / members.size
+          installment.values.build(
+            factor:,
+            user: member,
+            value: rating_value
+          )
+        end
+      end
+      installment.save!
+    end
+    # Installment validation requires an unexpired assessment; backdate after creating valid evaluations.
+    assessment.update_columns(
+      start_date: assessment_start.beginning_of_day,
+      end_date: ( assessment_start + 1.day ).end_of_day
+    )
+  end
+end
+
+Then( 'the instructor sees group evaluation agreement' ) do
+  wait_for_render
+  find(
+    :xpath,
+    "//tr[td[contains(text(), #{xpath_literal( @progress_activity.name )})] and td[contains(text(), 'complete')]]"
+  ).click
+  wait_for_render
+  find( :xpath, "//*[@role='tab' and contains(.,'Student progress')]" ).click
+  wait_for_render
+
+  page.should have_content( 'Reporting Group' )
+  group_row = find( :xpath, "//tr[@role='row'][td[contains(.,'Reporting Group')]]" )
+  group_row.find( 'button' ).click
+  wait_for_render
+  @reporting_members.each do | member |
+    member_row = find(
+      :xpath,
+      "//tr[@role='row'][td[normalize-space(.)=#{xpath_literal( member.name( false ) )}]]"
+    )
+    member_row.should have_content( 'Project: 100%' )
+    member_row.should have_content( 'This week: 100%' )
+  end
+  page.should have_content( 'Trend: +100.00 percentage points/week' )
+  page.should have_content( 'Highest contribution this week' )
+end
