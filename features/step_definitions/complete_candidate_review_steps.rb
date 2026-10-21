@@ -81,8 +81,6 @@ Then( /^the user sees (\d+) candidate items for review$/ ) do | candidate_count 
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 
   page.all( :xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all )
       .count.should eq candidate_count.to_i
@@ -124,8 +122,6 @@ Given( 'the user assigns {string} feedback to all candidates' ) do | feedback_ty
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -249,8 +245,6 @@ When( /^the user clicks the link to the candidate review$/ ) do
 
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[contains(.,'#{max_rows}')]" ).click
 end
 
 Then( /^there will be (\d+) concepts$/ ) do | concept_count |
