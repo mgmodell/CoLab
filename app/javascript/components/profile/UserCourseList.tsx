@@ -10,7 +10,7 @@ import BingoDataRepresentation from "../BingoBoards/BingoDataRepresentation";
 import { useTranslation } from "react-i18next";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 import { Panel } from "primereact/panel";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 
 interface ICourse {
@@ -80,7 +80,7 @@ export default function UserCourseList(props: Props) {
   const courseList =
     null != props.coursesList ? (
       <>
-        <DataTable
+        <FitDataTable
           value={props.coursesList.filter(course => {
             return (
               filterText.length === 0 ||
@@ -166,7 +166,7 @@ export default function UserCourseList(props: Props) {
               return `${rowData.experience_performance}%`;
             }}
           />
-        </DataTable>
+        </FitDataTable>
       </>
     ) : (
       "The course data is loading"

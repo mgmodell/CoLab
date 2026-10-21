@@ -6,7 +6,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { Temporal } from "../infrastructure/TemporalSettings";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Panel } from "primereact/panel";
 
@@ -58,7 +58,7 @@ export default function ResearchParticipationList(props: Props) {
   const consentFormList =
     null != props.consentFormList ? (
       <>
-        <DataTable
+        <FitDataTable
           value={props.consentFormList}
           resizableColumns
           tableStyle={{
@@ -117,7 +117,7 @@ export default function ResearchParticipationList(props: Props) {
               return <a href={rowData.link}>Review/Update</a>;
             }}
           />
-        </DataTable>
+        </FitDataTable>
       </>
     ) : (
       "The course data is loading"

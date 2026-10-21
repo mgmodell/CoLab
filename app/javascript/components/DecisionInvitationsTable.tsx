@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 
 import { Temporal, parseISO, formatZonedDateTime, DATETIME_MED } from "./infrastructure/TemporalSettings";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import StandardListToolbar from "./toolbars/StandardListToolbar";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -48,7 +48,7 @@ export default function DecisionInvitationsTable(props: Props) {
           })
         })}
       </p>
-      <DataTable
+      <FitDataTable
         value={props.invitations}
         resizableColumns
         tableStyle={{
@@ -157,7 +157,7 @@ export default function DecisionInvitationsTable(props: Props) {
             return retVal;
           }}
         />
-      </DataTable>
+      </FitDataTable>
     </React.Fragment>
   );
 }

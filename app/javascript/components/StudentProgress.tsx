@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import { Skeleton } from "primereact/skeleton";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -40,7 +40,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
         {data.completion_percent}% complete ({data.completed_count} of{" "}
         {data.total_students} students)
       </p>
-      <DataTable
+      <FitDataTable
         value={data.students}
         dataKey="id"
         emptyMessage="No enrolled students"
@@ -48,7 +48,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
         <Column field="name" header="Student" />
         <Column field="status" header="Status" />
         <Column field="progress" header="Progress" />
-      </DataTable>
+      </FitDataTable>
     </div>
   );
 }
