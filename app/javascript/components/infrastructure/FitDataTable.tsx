@@ -26,8 +26,10 @@ type Props = Omit<DataTableProps<DataTableValueArray>, PaginationProps | "scroll
 /**
  * A DataTable that fills the vertical space remaining in the window (below
  * its own top edge) and scrolls internally instead of paginating. The
- * rendered table's bottom edge is measured and the scrolling body's height
- * is corrected so the whole table (toolbar, headings, filters, footer) fits.
+ * wrapper is given the remaining window height and the table fills it
+ * (scrollHeight="flex"), so its toolbar, headings, filters and footer are
+ * always inside that height. Virtual scrolling is not supported in flex mode,
+ * so virtualScrollerOptions is ignored; the table scrolls natively.
  */
 export default function FitDataTable(props: Props) {
   const {
@@ -45,6 +47,7 @@ export default function FitDataTable(props: Props) {
     alwaysShowPaginator,
     scrollable,
     scrollHeight,
+    virtualScrollerOptions,
     ...tableProps
   } = props as any;
 
@@ -54,18 +57,8 @@ export default function FitDataTable(props: Props) {
   const recalc = useCallback(() => {
     const el = wrapperRef.current;
     if (!el) return;
-    const limit = window.innerHeight - BOTTOM_MARGIN;
-    const available = Math.max(MIN_HEIGHT, Math.floor(limit - el.getBoundingClientRect().top));
-    // Measure how far the rendered table (toolbar, headings, filters and
-    // footer included) overshoots or undershoots the limit and correct the
-    // scroll height by that amount. This avoids depending on PrimeReact's
-    // internal layout. Growth is capped so short tables converge.
-    const root = el.firstElementChild as HTMLElement | null;
-    const delta = root ? Math.round(limit - root.getBoundingClientRect().bottom) : 0;
-    setHeight(current => {
-      if (Math.abs(delta) <= 1) return Math.min(available, current);
-      return Math.min(available, Math.max(MIN_HEIGHT, current + delta));
-    });
+    const top = el.getBoundingClientRect().top;
+    setHeight(Math.max(MIN_HEIGHT, Math.floor(window.innerHeight - top - BOTTOM_MARGIN)));
   }, []);
 
   useLayoutEffect(recalc);
@@ -76,10 +69,6 @@ export default function FitDataTable(props: Props) {
     if (typeof ResizeObserver !== "undefined") {
       observer = new ResizeObserver(recalc);
       observer.observe(document.body);
-      const root = wrapperRef.current?.firstElementChild;
-      if (root) {
-        observer.observe(root);
-      }
     }
     return () => {
       window.removeEventListener("resize", recalc);
@@ -88,8 +77,12 @@ export default function FitDataTable(props: Props) {
   }, [recalc]);
 
   return (
-    <div ref={wrapperRef} className="fit-data-table">
-      <DataTable {...tableProps} scrollable scrollHeight={`${height}px`} />
+    <div
+      ref={wrapperRef}
+      className="fit-data-table"
+      style={{ height: `${height}px`, overflow: "hidden" }}
+    >
+      <DataTable {...tableProps} scrollable scrollHeight="flex" />
     </div>
   );
 }
