@@ -697,11 +697,13 @@ class HomeController < ApplicationController
                     else
                       {}
                     end
+      submissions_by_user = Hash.new { | hash, key | hash[key] = [] }
+      submissions.each do | submission |
+        member_ids = [submission.user_id, *group_users.fetch( submission.group_id, [] )].compact.uniq
+        member_ids.each { | user_id | submissions_by_user[user_id] << submission }
+      end
       students.map do | student |
-        student_submissions = submissions.select do | submission |
-          submission.user_id == student.id ||
-            group_users.fetch( submission.group_id, [] ).include?( student.id )
-        end
+        student_submissions = submissions_by_user.fetch( student.id, [] )
         complete = student_submissions.any?
         {
           id: student.id,
