@@ -25,9 +25,9 @@ type Props = Omit<DataTableProps<DataTableValueArray>, PaginationProps | "scroll
 
 /**
  * A DataTable that fills the vertical space remaining in the window (below
- * its own top edge) and scrolls internally instead of paginating. The wrapper
- * gets the fixed height and the table fills it ("flex"), so the table's own
- * header, column headings and footer are included in the height budget.
+ * its own top edge) and scrolls internally instead of paginating. The
+ * space used by the table's own toolbar, column headings/filters and footer
+ * is measured and subtracted from the height given to the scrolling body.
  */
 export default function FitDataTable(props: Props) {
   const {
@@ -55,7 +55,13 @@ export default function FitDataTable(props: Props) {
     const el = wrapperRef.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top;
-    setHeight(Math.max(MIN_HEIGHT, Math.floor(window.innerHeight - top - BOTTOM_MARGIN)));
+    const available = window.innerHeight - top - BOTTOM_MARGIN;
+    // Space used by everything in the table other than its scrolling body:
+    // toolbar/header, column headings and filters, and footer.
+    const body = el.querySelector(".p-datatable-scrollable-body") as HTMLElement | null;
+    const root = el.querySelector(".p-datatable") as HTMLElement | null;
+    const chrome = body && root ? Math.max(0, root.offsetHeight - body.offsetHeight) : 0;
+    setHeight(Math.max(MIN_HEIGHT, Math.floor(available - chrome)));
   }, []);
 
   useLayoutEffect(recalc);
@@ -66,6 +72,10 @@ export default function FitDataTable(props: Props) {
     if (typeof ResizeObserver !== "undefined") {
       observer = new ResizeObserver(recalc);
       observer.observe(document.body);
+      const root = wrapperRef.current?.querySelector(".p-datatable");
+      if (root) {
+        observer.observe(root);
+      }
     }
     return () => {
       window.removeEventListener("resize", recalc);
@@ -74,8 +84,8 @@ export default function FitDataTable(props: Props) {
   }, [recalc]);
 
   return (
-    <div ref={wrapperRef} className="fit-data-table" style={{ height: `${height}px` }}>
-      <DataTable {...tableProps} scrollable scrollHeight="flex" />
+    <div ref={wrapperRef} className="fit-data-table">
+      <DataTable {...tableProps} scrollable scrollHeight={`${height}px`} />
     </div>
   );
 }
