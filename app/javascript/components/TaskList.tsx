@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import parse from 'html-react-parser';
 
 
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 
 import { Temporal, formatZonedDateTime, DATETIME_MED } from "./infrastructure/TemporalSettings";
 
@@ -197,7 +197,7 @@ export default function TaskList(props: Props) {
 
   const tableOfTasks = null !== user.lastRetrieved ? (
     <>
-      <DataTable
+      <FitDataTable
         value={visibleTasks}
         resizableColumns
         tableStyle={{
@@ -400,7 +400,7 @@ export default function TaskList(props: Props) {
           ) : null
         }
 
-      </DataTable>
+      </FitDataTable>
     </>
   ) : (
     <Logo height={100} width={100} spinning />

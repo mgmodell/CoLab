@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
 
 import { OverlayPanel } from "primereact/overlaypanel";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 
 export interface IReaction {
@@ -116,7 +116,7 @@ export default function ReactionsList(props: Props) {
 
   return undefined !== props.reactionsList ? (
     <React.Fragment>
-      <DataTable
+      <FitDataTable
         value={props.reactionsList.filter(reaction => {
           return (
             filterText.length === 0 ||
@@ -283,7 +283,7 @@ export default function ReactionsList(props: Props) {
             body={rowData => formatDuration(rowData.reaction_time)}
           />
         ) : null}
-      </DataTable>
+      </FitDataTable>
       <OverlayPanel
         ref={op}
         showCloseIcon

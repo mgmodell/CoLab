@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import { Skeleton } from "primereact/skeleton";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -83,7 +83,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
 
   const groupDetails = (group: any) => {
     return (
-      <DataTable value={group.members} dataKey="id" emptyMessage="No group members">
+      <FitDataTable value={group.members} dataKey="id" emptyMessage="No group members">
         <Column field="name" header="Student" />
         <Column
           header="Status"
@@ -115,7 +115,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
           header="Highest contribution over project"
           body={(member: any) => member.highest_contribution?.name ?? "—"}
         />
-      </DataTable>
+      </FitDataTable>
     );
   };
 
@@ -129,7 +129,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
         {data.total_students} students)
       </p>
       {hasGroupReports ? (
-        <DataTable
+        <FitDataTable
           value={data.groups}
           dataKey="id"
           expandedRows={expandedRows}
@@ -153,9 +153,9 @@ export default function StudentProgress({ activityId, activityType }: Props) {
               }
             />
           ))}
-        </DataTable>
+        </FitDataTable>
       ) : (
-        <DataTable
+        <FitDataTable
           value={data.students}
           dataKey="id"
           emptyMessage="No enrolled students"
@@ -163,7 +163,7 @@ export default function StudentProgress({ activityId, activityType }: Props) {
           <Column field="name" header="Student" />
           <Column field="status" header="Status" />
           <Column field="progress" header="Progress" />
-        </DataTable>
+        </FitDataTable>
       )}
     </div>
   );

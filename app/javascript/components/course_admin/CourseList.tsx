@@ -8,7 +8,7 @@ import { parseISO } from "../infrastructure/TemporalSettings";
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
 
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 
 import CopyActivityButton from "./CopyActivityButton";
@@ -95,7 +95,7 @@ export default function CourseList(props) {
 
   const dataTable = (
     <>
-      <DataTable
+      <FitDataTable
         value={courses.filter(course => {
           return filterText.length === 0 || course.name.includes(filterText);
         })}
@@ -254,7 +254,7 @@ export default function CourseList(props) {
             );
           }}
         />
-      </DataTable>
+      </FitDataTable>
     </>
   );
 

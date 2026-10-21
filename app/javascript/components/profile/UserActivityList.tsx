@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Temporal } from "../infrastructure/TemporalSettings";
 import StandardListToolbar from "../toolbars/StandardListToolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Panel } from "primereact/panel";
 
@@ -81,7 +81,7 @@ export default function UserActivityList(props: Props) {
 
   const activityList =
     undefined !== props.activitiesList ? (
-      <DataTable
+      <FitDataTable
         value={props.activitiesList.filter(activity => {
           return (
             filterText.length === 0 ||
@@ -151,7 +151,7 @@ export default function UserActivityList(props: Props) {
           sortable
           filter
         />
-      </DataTable>
+      </FitDataTable>
     ) : (
       "The activities are loading"
     );

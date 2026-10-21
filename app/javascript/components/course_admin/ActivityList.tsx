@@ -15,7 +15,7 @@ import {
 
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 
 import CourseAdminListToolbar from "./CourseAdminListToolbar";
 import { iconForType } from "../ActivityLib";
@@ -67,7 +67,7 @@ export default function ActivityList(props: Props) {
   const [optActivityColumns, setOptActivityColumns] = useState(optColumns);
 
   return (
-    <DataTable
+    <FitDataTable
       value={props.activities.filter(activity => {
         //Add filtering here
         return filterText.length === 0 || activity.name.includes(filterText);
@@ -194,7 +194,7 @@ export default function ActivityList(props: Props) {
           );
         }}
       />
-    </DataTable>
+    </FitDataTable>
   );
 }
 

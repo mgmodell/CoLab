@@ -7,7 +7,7 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import UserListToolbar from "./UserListToolbar";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Tooltip } from "primereact/tooltip";
 import { Panel } from "primereact/panel";
@@ -42,7 +42,7 @@ export default function UserEmailList(props: Props) {
       <>
         <Tooltip target={".primary-email"} />
         <Tooltip target={".remove-email"} />
-        <DataTable
+        <FitDataTable
           value={props.emailList}
           resizableColumns
           tableStyle={{
@@ -156,7 +156,7 @@ export default function UserEmailList(props: Props) {
               );
             }}
           />
-        </DataTable>
+        </FitDataTable>
       </>
     ) : null;
 

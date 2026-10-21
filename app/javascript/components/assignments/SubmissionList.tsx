@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import {Temporal, TemporalSettings} from "../infrastructure/TemporalSettings";
   
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 import AdminListToolbar from "../toolbars/AdminListToolbar";
 import { Column } from "primereact/column";
 
@@ -43,7 +43,7 @@ export default function SubmissionList(props: Props) {
     <React.Fragment>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataTable
+          <FitDataTable
             value={props.submissions.filter(submission => {
               return (
                 filterText.length === 0 || submission.user.includes(filterText)
@@ -129,7 +129,7 @@ export default function SubmissionList(props: Props) {
               filter
               key={OPT_COLS.USER}
             />
-          </DataTable>
+          </FitDataTable>
         </div>
       </div>
     </React.Fragment>

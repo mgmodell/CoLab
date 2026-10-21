@@ -11,7 +11,7 @@ import {
 } from "../infrastructure/StatusSlice";
 import { useNavigate, useParams } from "react-router";
 
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "../infrastructure/FitDataTable";
 
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
@@ -386,7 +386,7 @@ export default function RubricDataAdmin(props) {
       <br />
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataTable
+          <FitDataTable
             value={rubricCriteria}
             resizableColumns
             tableStyle={{
@@ -558,7 +558,7 @@ export default function RubricDataAdmin(props) {
                 );
               }}
             />
-          </DataTable>
+          </FitDataTable>
         </div>
       </div>
       {resetButton}

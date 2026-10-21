@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-import { SortDirection } from "react-virtualized";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
@@ -10,13 +9,15 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import StandardListToolbar from "./toolbars/StandardListToolbar";
 
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
+import FitDataTable from "./infrastructure/FitDataTable";
 import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask, addMessage, Priorities, useDirtyStatus, DIRTY_STATUS } from "./infrastructure/StatusSlice";
 import { InputText } from "primereact/inputtext";
+
+const SortDirection = { ASC: "ASC", DESC: "DESC" } as const;
 
 enum OPT_COLS {
   NAME = "name",
@@ -139,7 +140,7 @@ export default function ConceptsTable() {
   };
   return (
     <React.Fragment>
-      <DataTable
+      <FitDataTable
         value={concepts.filter(concept => {
           return (
             filterText.length === 0 ||
@@ -206,7 +207,7 @@ export default function ConceptsTable() {
             key="bingos"
           />
         ) : null}
-      </DataTable>
+      </FitDataTable>
       <Dialog
         visible={editing}
         onHide={() => stopEditing()}

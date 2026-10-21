@@ -14,7 +14,7 @@ import { Button } from 'primereact/button';
 import { ButtonGroup } from 'primereact/buttongroup';
 import { Panel } from "primereact/panel";
 import { Col, Container, Row } from 'react-grid-system';
-import { DataTable } from 'primereact/datatable';
+import FitDataTable from "../infrastructure/FitDataTable";
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Checkbox } from 'primereact/checkbox';
@@ -287,7 +287,7 @@ export default function UsersDataAdmin(props: Props) {
                     </Col>
                 </Row>
             </Container>
-            <DataTable
+            <FitDataTable
                 value={foundUsers}
                 resizableColumns
                 tableStyle={{ minWidth: '50rem' }}
@@ -383,7 +383,7 @@ export default function UsersDataAdmin(props: Props) {
                         }}
                     />
                 )}
-            </DataTable>
+            </FitDataTable>
             <Dialog
                 header={t("merge_users_dialog_header")}
                 visible={showMergeDialog}
