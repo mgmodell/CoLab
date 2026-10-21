@@ -194,7 +194,8 @@ end
 #
 
 Before '@javascript' do
-  page.driver.browser.manage.window.resize_to( 1024, 768 )
+  page.driver.browser.manage.window.maximize
+  # page.driver.browser.manage.window.resize_to( 1024, 768 )
   DatabaseCleaner.strategy = :truncation
 end
 
