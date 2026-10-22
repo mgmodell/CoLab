@@ -1652,8 +1652,8 @@ __metadata:
     dayjs: "npm:^1.11.23"
     driver.js: "npm:^1.10.2"
     email-validator: "npm:^2.0.4"
-    html-react-parser: "npm:^6.1.8"
-    i18next: "npm:^26.5.3"
+    html-react-parser: "npm:^6.1.9"
+    i18next: "npm:^26.5.4"
     i18next-browser-languagedetector: "npm:^8.2.1"
     i18next-fetch-backend: "npm:^8.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
@@ -2434,9 +2434,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-react-parser@npm:^6.1.8":
-  version: 6.1.8
-  resolution: "html-react-parser@npm:6.1.8"
+"html-react-parser@npm:^6.1.9":
+  version: 6.1.9
+  resolution: "html-react-parser@npm:6.1.9"
   dependencies:
     domhandler: "npm:6.0.1"
     html-dom-parser: "npm:8.0.2"
@@ -2448,7 +2448,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/8b935bcd5233346567925f36b8c230e590ed847f655345cb29f643a06970be6a754e1f8213526057ece03b9f598349c1558d1f9b0c7d395e39a4bdab33b0215d
+  checksum: 10c0/9cc13b894a72b38a7685a925b90b964e934f22e5d61acbf4bff0716e5a5412b206a39dd2f0e9a275a3229834dcf937cd065763ecaa2fd843a2f0b12723761ebd
   languageName: node
   linkType: hard
 
@@ -2504,15 +2504,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.5.3":
-  version: 26.5.3
-  resolution: "i18next@npm:26.5.3"
+"i18next@npm:^26.5.4":
+  version: 26.5.4
+  resolution: "i18next@npm:26.5.4"
   peerDependencies:
     typescript: ^5 || ^6 || ^7
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/85b8f7b45b9eb5a90e396f5a8270f45d4cb0a1add3da21253a3211ed892ffdc0d1c32dbb50124199db3ef279133c19edfeaeaf3278ce8326c447d65d5f33e05c
+  checksum: 10c0/b2ee46803cf19c565d3b80f9a8542ca4fcc92d96434202926f09e032d08e20188d6640434cd3f7987b7a1144cd3c2e034d27f51129a31ca18db8b8cea475c11f
   languageName: node
   linkType: hard
 
