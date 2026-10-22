@@ -77,7 +77,7 @@ export default function FitDataTable(props: Props) {
     );
   }, []);
 
-  useLayoutEffect(recalc);
+  useLayoutEffect(recalc, [recalc]);
 
   useEffect(() => {
     window.addEventListener("resize", recalc);
