@@ -3,7 +3,7 @@ node = "26.12.1"
 overmind = "latest"
 podman = { version = "6.1.4", rename_exe = "podman" }
 python = "3.13.7"
-ruby = "4.0.7"
+ruby = "4.0.9"
 rust = "1.97.1"
-usage = { version = "7.1.0", workflow = "publish-cli.yml" }
+usage = { version = "7.1.1", workflow = "publish-cli.yml" }
 yarn = "4.18.1"
