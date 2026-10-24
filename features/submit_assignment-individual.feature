@@ -256,6 +256,7 @@ Feature: (Re)Submitting individual assignments
      Then the user creates a new submission
      Then the user enters a 'combo' submission
      Then the user clicks 'Submit revision for grading'
+    Then the user sees a success message
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
