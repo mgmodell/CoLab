@@ -6,7 +6,8 @@ module InstructorStudentProgressAssertions
     total_students = student_count
     completion_percent = total_students.zero? ? 0 : 100 * completed_count / total_students
     wait_for_render
-    row = find( :xpath, "//tr[td[contains(text(), #{xpath_literal( activity_name )})] and td[contains(text(), #{xpath_literal( 'complete' )})]]" )
+    row = find( :xpath,
+                "//tr[td[contains(text(), #{xpath_literal( activity_name )})] and td[contains(text(), #{xpath_literal( 'complete' )})]]" )
 
     row.text.should include( "#{completion_percent}% complete (#{completed_count}/#{total_students})" )
     row.click
@@ -15,7 +16,7 @@ module InstructorStudentProgressAssertions
 
     find( :xpath, "//*[@role='tab' and contains(.,'Student progress')]" ).click
     wait_for_render
-    page.should have_content( "#{completion_percent}% complete (#{completed_count} of #{total_students} students)" )
+    page.should have_text( "#{completion_percent}% complete (#{completed_count} of #{total_students} students)" )
     if completed_count.positive?
       page.find(
         :xpath,
@@ -24,7 +25,7 @@ module InstructorStudentProgressAssertions
       page.all( :xpath, "//tbody/tr[@role='row'][td[2][normalize-space(.)='Incomplete']]" )
           .size.should eq total_students - completed_count
     else
-      page.should have_content( 'Incomplete' )
+      page.should have_text( 'Incomplete' )
       page.all( :xpath, "//tbody/tr[@role='row'][td[2][normalize-space(.)='Incomplete']]" )
           .size.should eq total_students
     end
@@ -126,7 +127,7 @@ Then( 'the instructor sees {int} completed student for the {string} activity' ) 
   )
 end
 
-Given( 'the project has equal team evaluations for progress' ) do
+Given( 'the project has {string} team evaluations for progress' ) do | equal_or_not |
   members = @course.rosters.enrolled_student.includes( :user ).limit( 2 ).map( &:user )
   @reporting_members = members
   group = @progress_activity.groups.create!( name: 'Reporting Group' )
@@ -146,7 +147,7 @@ Given( 'the project has equal team evaluations for progress' ) do
       )
       members.each do | member |
         @progress_activity.factors.each do | factor |
-          disagrees_with_teammate = period.zero? && rater != member
+          disagrees_with_teammate = 'unequal' == equal_or_not && period.zero? && rater != member
           rating_value = disagrees_with_teammate ? 0 : Installment::TOTAL_VAL / members.size
           installment.values.build(
             factor:,
@@ -165,7 +166,8 @@ Given( 'the project has equal team evaluations for progress' ) do
   end
 end
 
-Then( 'the instructor sees group evaluation agreement' ) do
+Then( 'the instructor sees {string} group evaluation agreement' ) do | equal_or_not |
+  equal = 'equal' == equal_or_not
   wait_for_render
   find(
     :xpath,
@@ -175,7 +177,7 @@ Then( 'the instructor sees group evaluation agreement' ) do
   find( :xpath, "//*[@role='tab' and contains(.,'Student progress')]" ).click
   wait_for_render
 
-  page.should have_content( 'Reporting Group' )
+  page.should have_text( 'Reporting Group' )
   group_row = find( :xpath, "//tr[@role='row'][td[contains(.,'Reporting Group')]]" )
   group_row.find( 'button' ).click
   wait_for_render
@@ -184,9 +186,19 @@ Then( 'the instructor sees group evaluation agreement' ) do
       :xpath,
       "//tr[@role='row'][td[normalize-space(.)=#{xpath_literal( member.name( false ) )}]]"
     )
-    member_row.should have_content( 'Project: 100%' )
-    member_row.should have_content( 'This week: 100%' )
+    if equal
+      member_row.should have_text( 'Project: 100%' )
+      member_row.should have_text( 'This week: 100%' )
+    else
+      member_row.should_not have_text( 'Project: 50%' )
+      member_row.should !have_text( 'This week: 0%' )
+    end
   end
-  page.should have_content( 'Trend: +100.00 percentage points/week' )
-  page.should have_content( 'Highest contribution this week' )
+
+  if equal
+    page.should have_text( 'Trend: 0.00 percentage points/week' )
+  else
+    page.should_not have_text( 'Trend: 0.00 percentage points/week' )
+  end
+  page.should have_text( 'Highest contribution this week' )
 end
