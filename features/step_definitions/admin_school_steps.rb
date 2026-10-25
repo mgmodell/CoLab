@@ -12,7 +12,7 @@ Then 'the school {string} field is {string}' do | field_name, value |
   when 'name'
     @school.name.should eq value
   when 'description'
-    @school.description.should eq value
+    ActionController::Base.helpers.strip_tags(@school.description.to_s).strip.should eq value
   when 'timezone'
     @school.timezone.should eq value
   else

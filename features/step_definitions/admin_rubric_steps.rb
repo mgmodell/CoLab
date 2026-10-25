@@ -48,7 +48,7 @@ Then( 'the rubric {string} is {string}' ) do | field, value |
   when 'name'
     @rubric.name.should eq value
   when 'description'
-    @rubric.description.should eq value
+    ActionController::Base.helpers.strip_tags(@rubric.description.to_s).strip.should eq value
   else
     true.should be false
   end

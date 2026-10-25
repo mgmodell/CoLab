@@ -27,7 +27,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
      And the user sees a success message
@@ -58,7 +58,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
      And the user sees a success message
@@ -87,7 +87,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
      And the user sees a success message
@@ -119,7 +119,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
      And the user sees a success message
@@ -141,7 +141,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is really the coolest"
+    Then the user sets the rich "description" field to "this is really the coolest"
     Then close all messages
     Then the user clicks "Save Project"
      And the user sees a success message
@@ -172,7 +172,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
      And the user sees a success message
@@ -197,7 +197,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
      And the user sees a success message
@@ -230,7 +230,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Create Project"
      And the user sees a success message
@@ -252,7 +252,7 @@ Feature: Project Administration
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then close all messages
     Then the user clicks "Save Project"
      And the user sees a success message

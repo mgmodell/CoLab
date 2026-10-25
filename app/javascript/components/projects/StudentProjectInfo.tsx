@@ -7,6 +7,7 @@ import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { Container, Row, Col } from "react-grid-system";
 import { useTranslation } from "react-i18next";
+import parse from "html-react-parser";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { endTask, startTask } from "../infrastructure/StatusSlice";
@@ -85,7 +86,7 @@ export default function StudentProjectInfo() {
             <h1>{data.project.name}</h1>
             <p>{data.project.course_name}</p>
             <h2>{t("description_lbl")}</h2>
-            <p>{data.project.description}</p>
+            <div>{parse(data.project.description)}</div>
           </Col>
         </Row>
         <Row>

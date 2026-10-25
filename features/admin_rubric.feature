@@ -23,7 +23,7 @@ Feature: Rubric administration
     Then the user sees 5 rubrics
     Then the user clicks the "New rubric" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
-     And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
+     And the user sets the rich "rubric-description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
      And the user sets criteria 1 "Description" to "History"
      And the user sets criteria 1 level 3 to "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 2 to "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
@@ -249,4 +249,3 @@ Feature: Rubric administration
   # For later implementation
   # Scenario: Instructor adds a counter element to a rubric
   # Scenario: Instructor removes a counter element from a rubric
-
