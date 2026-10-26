@@ -19,11 +19,13 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import RubricCriteriaToolbar from "./RubricCriteriaToolbar";
 import { Column } from "primereact/column";
+import { Editor } from "primereact/editor";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
 import { Panel } from "primereact/panel";
 import { FloatLabel } from "primereact/floatlabel";
+import EditorToolbar from "../toolbars/EditorToolbar";
 
 export default function RubricDataAdmin(props) {
   const category = "rubric";
@@ -368,18 +370,20 @@ export default function RubricDataAdmin(props) {
       </FloatLabel>
       &nbsp;
       <br />
-      <FloatLabel>
-        <InputTextarea
-          itemID="rubric-description"
-          id="rubric-description"
-          placeholder="Enter a description of the rubric"
-          rows={2}
-          autoResize={true}
-          value={rubricDescription}
-          onChange={event => setRubricDescription(event.target.value)}
-        />
-        <label htmlFor="rubric-description">{t("description")}</label>
-      </FloatLabel>
+      <label htmlFor="rubric-description">{t("description")}</label>
+      <Editor
+        id="rubric-description"
+        aria-label={t("description")}
+        placeholder="Enter a description of the rubric"
+        value={rubricDescription}
+        headerTemplate={<EditorToolbar />}
+        onTextChange={event => {
+          if ('user' !== event.source) {
+            return;
+          }
+          setRubricDescription(null === event.htmlValue ? "" : event.htmlValue);
+        }}
+      />
       <p>Version {rubricVersion}</p>
       <p>Published {rubricPublished ? "Yes" : "No"}</p>
       <p>Active {rubricActive ? "Yes" : "No"}</p>

@@ -48,12 +48,16 @@ Then 'the course {string} field is {string}' do | field_name, value |
   when 'number'
     @course.number.should eq value
   when 'description'
-    @course.description.should eq value
+    ActionController::Base.helpers.strip_tags(@course.description.to_s).strip.should eq value
   when 'timezone'
     @course.timezone.should eq value
   else
     log 'Not testing anything'
   end
+end
+
+Then 'the course description is saved as rich text' do
+  @course.description.should match(/<p>.*<\/p>/m)
 end
 
 Then 'the course start date is {string} and the end date is {string}' do | start_date, end_date |

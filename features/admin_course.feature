@@ -55,7 +55,7 @@ Feature: Course Administration
     And the user clicks the "New course" button
     And the user sets the "Name" field to "Off"
     And the user sets the "Number" field to "099"
-    And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+    And the user sets the rich "course-description" field to "I love to eat peas and carrots all day long"
     And the user sets the "course" start date to "tomorrow" and the end date to "next month"
     And the timezone "is" "Nairobi"
     And the timezone "isn't" "Mexico City"
@@ -67,6 +67,7 @@ Feature: Course Administration
     And the course "Name" field is "Off"
     And the course "Number" field is "099"
     And the course "Description" field is "I love to eat peas and carrots all day long"
+    And the course description is saved as rich text
     And the course start date is "tomorrow" and the end date is "next month"
     And the course "timezone" is "Nairobi"
 
@@ -79,7 +80,7 @@ Feature: Course Administration
     #no name
     And the user sets the "Name" field to ""
     And the user sets the "Number" field to "099"
-    And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+    And the user sets the rich "course-description" field to "I love to eat peas and carrots all day long"
     Then the user sets the "course" start date to "tomorrow" and the end date to "next month"
     And the timezone "is" "Nairobi"
     And the timezone "isn't" "Mexico City"
@@ -89,7 +90,7 @@ Feature: Course Administration
     #no number or description
     And the user sets the "Name" field to "Off"
     And the user sets the "Number" field to ""
-    And the user sets the "Description" field to ""
+    And the user sets the rich "course-description" field to ""
     And the user sets the "course" start date to "tomorrow" and the end date to "next month"
     And the timezone "is" "Nairobi"
     And the timezone "isn't" "Mexico City"
@@ -121,7 +122,7 @@ Feature: Course Administration
     #Then the user clicks "Edit Course Details"
     And the user sets the "Name" field to "Off"
     And the user sets the "Number" field to "099"
-    And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+    And the user sets the rich "course-description" field to "I love to eat peas and carrots all day long"
     And the user sets the "course" start date to "5/11/1976" and the end date to "next month"
     And the timezone "is" "Mexico City"
     And the user sets the course timezone to "Nairobi"

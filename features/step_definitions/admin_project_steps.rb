@@ -211,7 +211,7 @@ Then( /^the project "([^"]*)" is "([^"]*)"$/ ) do | field, value |
   when 'name'
     @project.name.should eq value
   when 'description'
-    @project.description.should eq value
+    ActionController::Base.helpers.strip_tags(@project.description.to_s).strip.should eq value
   else
     log "We didn't test anything there: #{field} not found"
   end

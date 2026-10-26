@@ -1,9 +1,10 @@
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Editor } from "primereact/editor";
 import React from "react";
 import { Col, Container, Row } from "react-grid-system";
 import { useTranslation } from "react-i18next";
 import { ICourse } from "../CourseDataAdmin";
+import EditorToolbar from "../../toolbars/EditorToolbar";
 
 type Props = {
   course: ICourse;
@@ -54,19 +55,21 @@ export default function CourseNameAndNumberWizard(props: Props) {
           <p>{t("wizard.course_description_desc")}</p>
         </Col>
         <Col sm={12}>
-          <InputTextarea
+          <Editor
             placeholder="Course Description"
             id="course-description"
+            aria-label="Course Description"
             value={props.course.description}
-            onChange={event => {
+            headerTemplate={<EditorToolbar />}
+            onTextChange={event => {
+              if ('user' !== event.source) {
+                return;
+              }
               props.setCourseFunc({
                 ...props.course,
-                description: event.target.value
+                description: null === event.htmlValue ? "" : event.htmlValue
               });
             }}
-            rows={5}
-            cols={30}
-            autoResize={true}
           />
         </Col>
       </Row>

@@ -20,9 +20,10 @@ import { useParams } from "react-router";
 import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
+import EditorToolbar from "../toolbars/EditorToolbar";
 
 interface Props {
   schoolId?: number;
@@ -216,18 +217,20 @@ export default function SchoolDataAdmin(props : Props) {
         <label htmlFor="school_timezone">{t("time_zone")}</label>
       </FloatLabel>
       <br />
-      <FloatLabel>
-        <InputTextarea
-          id="school-description"
-          placeholder="Enter a description of the school"
-          rows={4}
-          cols={30}
-          autoResize={true}
-          value={schoolDescription}
-          onChange={event => setSchoolDescription(event.target.value)}
-        />
-        <label htmlFor="school-description">{t("index.description_lbl")}</label>
-      </FloatLabel>
+      <label htmlFor="school-description">{t("index.description_lbl")}</label>
+      <Editor
+        id="school-description"
+        aria-label={t("index.description_lbl")}
+        placeholder="Enter a description of the school"
+        value={schoolDescription}
+        headerTemplate={<EditorToolbar />}
+        onTextChange={event => {
+          if ('user' !== event.source) {
+            return;
+          }
+          setSchoolDescription(null === event.htmlValue ? "" : event.htmlValue);
+        }}
+      />
       <br />
       {resetButton}
       {saveButton}

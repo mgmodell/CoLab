@@ -13,7 +13,7 @@ Feature: School Administration
     Then the user logs in and accesses the "Schools" admin page
      And the user clicks the "New school" button
      And the user sets the "Name" field to "hard knocks"
-     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+     And the user sets the rich "school-description" field to "I love to eat peas and carrots all day long"
     Then close all messages
     Then the user clicks "Create School"
      And the user sees a success message
@@ -30,7 +30,7 @@ Feature: School Administration
      And the user clicks the "New school" button
      #no name
      And the user sets the "Name" field to ""
-     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+     And the user sets the rich "school-description" field to "I love to eat peas and carrots all day long"
      And the user selects "Seoul" as the "Time Zone"
     Then the user clicks "Create School"
      And the user will dismiss the error "Please review the problems below"
@@ -63,7 +63,7 @@ Feature: School Administration
     Then the user opens the school
     # Then the user clicks "Edit school details"
      And the user sets the "Name" field to "Off"
-     And the user sets the "Description" field to "blue is the best"
+     And the user sets the rich "school-description" field to "blue is the best"
     Then close all messages
     Then the user clicks "Save School"
     Then the user waits to see "School was updated successfully"

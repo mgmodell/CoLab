@@ -24,12 +24,13 @@ import { Dropdown } from "primereact/dropdown";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Editor } from "primereact/editor";
 import { Panel } from "primereact/panel";
 import { Skeleton } from "primereact/skeleton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
 import LtiConnectionPanel from "../infrastructure/LtiConnectionPanel";
+import EditorToolbar from "../toolbars/EditorToolbar";
 
 import ProjectGroups from "./ProjectGroups";
 import ChartContainer from "../Reports/ChartContainer";
@@ -299,15 +300,19 @@ export default function ProjectDataAdmin(props: ProjectDataAdminProps) {
         />
         <label htmlFor="name">{t("name_lbl")}</label>
       </FloatLabel>
-      <FloatLabel>
-        <InputTextarea
-          id="description"
-          itemID="description"
-          value={projectDescription}
-          onChange={event => setProjectDescription(event.target.value)}
-        />
-        <label htmlFor="description">{t("description_lbl")}</label>
-      </FloatLabel>
+      <label htmlFor="description">{t("description_lbl")}</label>
+      <Editor
+        id="description"
+        aria-label={t("description_lbl")}
+        value={projectDescription}
+        headerTemplate={<EditorToolbar />}
+        onTextChange={event => {
+          if ('user' !== event.source) {
+            return;
+          }
+          setProjectDescription(null === event.htmlValue ? "" : event.htmlValue);
+        }}
+      />
       <InputSwitch
         checked={projectActive}
         onChange={() => toggleActive()}

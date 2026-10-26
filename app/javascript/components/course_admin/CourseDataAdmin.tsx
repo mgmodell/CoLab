@@ -26,10 +26,11 @@ import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Editor } from "primereact/editor";
 import { Message } from "primereact/message";
 import { Calendar } from "primereact/calendar";
 import { FloatLabel } from "primereact/floatlabel";
+import EditorToolbar from "../toolbars/EditorToolbar";
 import ActivityList, { Activity } from "./ActivityList";
 import CourseWizard from "./wizard/CourseWizard";
 import { utcAdjustDate, utcAdjustEndDate } from "../infrastructure/Utilities";
@@ -312,16 +313,18 @@ export default function CourseDataAdmin() {
       <label htmlFor="course-description" id="course-description_lbl">
         {t('edit.description')}
       </label>
-      <InputTextarea
+      <Editor
         placeholder={t('edit.description')}
         id="course-description"
+        aria-label={t('edit.description')}
         value={course.description}
-        onChange={event => {
-          setCourseValue('description', event.target.value);
+        headerTemplate={<EditorToolbar />}
+        onTextChange={event => {
+          if ('user' !== event.source) {
+            return;
+          }
+          setCourseValue('description', null === event.htmlValue ? "" : event.htmlValue);
         }}
-        rows={5}
-        cols={30}
-        autoResize={true}
       />
       {Boolean(messages['course_description']) ? (
         <Message severity="error" text={messages['course_description']} />

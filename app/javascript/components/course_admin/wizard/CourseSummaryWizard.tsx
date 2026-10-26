@@ -62,9 +62,9 @@ export default function CourseSummaryWizard(props: Props) {
               </p>
             </Col>
             <Col sm={9}>
-              <p>
-                {props.course.description}
-              </p>
+              <div>
+                {parse(props.course.description)}
+              </div>
             </Col>
           </Row>
           <Row onClick={() => {
