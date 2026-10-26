@@ -5,7 +5,7 @@ __metadata:
   version: 10
   cacheKey: 10c0
 
-"@babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.29.7, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.27.1, @babel/runtime@npm:^7.29.2, @babel/runtime@npm:^7.29.7, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.3, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.29.10
   resolution: "@babel/runtime@npm:7.29.10"
   checksum: 10c0/32f975da8e9c2cae6b33e1a477f8fe8bbff6722c982b5ce35f99affaf3a7a1b612c8272b43afa0e51d3000928d6f3ba38f9296301115db5640264907c027b0cd
@@ -1653,8 +1653,8 @@ __metadata:
     driver.js: "npm:^1.10.2"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.9"
-    i18next: "npm:^26.5.7"
-    i18next-browser-languagedetector: "npm:^8.2.1"
+    i18next: "npm:^26.5.10"
+    i18next-browser-languagedetector: "npm:^8.2.2"
     i18next-fetch-backend: "npm:^8.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
     i18next-localstorage-cache: "npm:^1.1.1"
@@ -1671,7 +1671,7 @@ __metadata:
     react-cookie-consent: "npm:^10.0.2"
     react-dom: "npm:^19.3.1"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.1.4"
+    react-i18next: "npm:^17.1.8"
     react-on-rails: "npm:17.2.0"
     react-redux: "npm:^9.3.0"
     react-refresh: "npm:^0.19.0"
@@ -2474,12 +2474,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-browser-languagedetector@npm:^8.2.1":
-  version: 8.2.1
-  resolution: "i18next-browser-languagedetector@npm:8.2.1"
+"i18next-browser-languagedetector@npm:^8.2.2":
+  version: 8.2.2
+  resolution: "i18next-browser-languagedetector@npm:8.2.2"
   dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-  checksum: 10c0/d200847a79b4cb2764ef59b33e5399085d4d56b2b038e884bb54fffe17953b467899142a6ef6e985592234f10049d14d06b80f2c56441ae80648c5a6717704f3
+    "@babel/runtime": "npm:^7.29.2"
+  checksum: 10c0/c4380554d871928153a442c80f647161227146f84d9c56e77cf6bc096c47125fb48272f8904eef869800bcfd86b062e72611e815a37c186888a086acd1f627cd
   languageName: node
   linkType: hard
 
@@ -2504,15 +2504,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.5.7":
-  version: 26.5.7
-  resolution: "i18next@npm:26.5.7"
+"i18next@npm:^26.5.10":
+  version: 26.5.10
+  resolution: "i18next@npm:26.5.10"
   peerDependencies:
     typescript: ^5 || ^6 || ^7
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/c5da205990515dfc0a963682d98506927ed51b5232d87e95b447bbae574d089be551c1c14ccc80ca25fb97665fc321a489009745082b626f665a8be68ea0e8af
+  checksum: 10c0/8377a89144f0c94997410a68f3219b5d516c5e98235a8213fbbc0fffc1f67663680bbd76c6053bf50ad52ee967c269f4c07c97514a01ddc838919a935be1ac72
   languageName: node
   linkType: hard
 
@@ -3080,9 +3080,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.1.4":
-  version: 17.1.4
-  resolution: "react-i18next@npm:17.1.4"
+"react-i18next@npm:^17.1.8":
+  version: 17.1.8
+  resolution: "react-i18next@npm:17.1.8"
   dependencies:
     "@babel/runtime": "npm:^7.29.7"
     html-parse-stringify: "npm:^4.0.1"
@@ -3098,7 +3098,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/22f64db17fa42bd4d86e931b93b06f42f1f9b482d2442c6a801ed0fa84b503a66e0bc1527bf36c5c061e7e167c129db3a75256e5373948de719001eb4f9588eb
+  checksum: 10c0/3caa62c1d1ee9227abdbce68bbce9c7504ed3729d0924a6ff7714e960e04ca2b4f61d53cf01385c81bdfcc4f68bcd1bf56d08ededccdc4ff14f8e4bae8fa3a1e
   languageName: node
   linkType: hard
 
