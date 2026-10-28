@@ -76,6 +76,16 @@ Given( 'the project has an LTI connection configured' ) do
   ).save!
 end
 
+Then( 'completing the candidate review queues an LTI grade push' ) do
+  jobs = ActiveJob::Base.queue_adapter.enqueued_jobs
+  previous_count = jobs.count { | job | job[:job] == LtiGradePushJob }
+
+  @bingo.update!( reviewed: true )
+
+  jobs = ActiveJob::Base.queue_adapter.enqueued_jobs
+  jobs.count { | job | job[:job] == LtiGradePushJob }.should eq( previous_count + 1 )
+end
+
 # ---------------------------------------------------------------------------
 # UI assertions
 # ---------------------------------------------------------------------------

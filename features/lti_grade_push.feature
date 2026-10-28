@@ -217,3 +217,7 @@ Feature: LTI Grade Push
     Then the user switches to the "LTI Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the "Push Grades to LMS" button is disabled
+
+  Scenario: Candidate review completion automatically queues an LTI grade push
+    Given the bingo game has an LTI connection configured
+    Then completing the candidate review queues an LTI grade push

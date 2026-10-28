@@ -194,6 +194,6 @@ class Assessment < ApplicationRecord
   private
 
   def schedule_lti_grade_push
-    LtiGradePushJob.set( wait_until: end_date.end_of_day ).perform_later( project, end_date.to_i )
+    LtiGradePushJob.set( wait_until: end_date.end_of_day ).perform_later( self, end_date.to_i )
   end
 end

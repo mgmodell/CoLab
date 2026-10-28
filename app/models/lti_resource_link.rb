@@ -22,7 +22,7 @@ class LtiResourceLink < ApplicationRecord
     http.use_ssl = uri.scheme == 'https'
 
     request = Net::HTTP::Post.new( uri.request_uri )
-    request['Authorization'] = "******"
+    request['Authorization'] = ['Bearer', access_token].join( ' ' )
     request['Content-Type'] = 'application/vnd.ims.lis.v1.score+json'
     request.body = {
       userId: user_id,
