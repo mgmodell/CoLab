@@ -75,6 +75,27 @@ en:
   activities: Activities
   consent_form: Consent Form
   actions: Actions
+  breadcrumbs:
+    home: Home
+    welcome: Welcome
+    profile: Profile
+    perspective: Perspective
+    concept: Concept
+    experience: Group Experience
+    project: Project
+    assessment: Assessment
+    bingo_game: Bingo! Game
+    assignment: Assignment
+    submission: Submission
+    rubric: Rubric
+    course: Course
+    user: User
+    reporting: Reporting
+    admin: Administration
+    school: School
+    consent_form: Consent Form
+    demonstration: Demonstration
+    item: Item
   activate: Activate?
   back: Back
   next: Next
