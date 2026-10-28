@@ -109,7 +109,7 @@ export default function ActivityList(props: Props) {
         header={t("activities.type_col")}
         field="type"
         body={rowData => {
-          return iconForType(rowData.type);
+          return iconForType(rowData.type, t);
         }}
       />
       <Column

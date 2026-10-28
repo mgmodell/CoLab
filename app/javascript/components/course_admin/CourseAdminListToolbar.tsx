@@ -36,7 +36,7 @@ export default function CourseAdminListToolbar(props: Props) {
     return {
       label: ` New ${linkData.name}…`,
       key: linkData.name,
-      icon: iconForType(linkData.name),
+      icon: iconForType(linkData.name, t),
       command: event => {
         setMenuAnchorEl(null);
         navigate(`${linkData.link}/new`);

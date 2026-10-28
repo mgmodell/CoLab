@@ -66,6 +66,27 @@ es:
   activities: Ocupaciones
   consent_form: Formulario de consentimiento
   actions: Acćions
+  breadcrumbs:
+    home: Inicio
+    welcome: Bienvenida
+    profile: Perfil
+    perspective: Perspectiva
+    concept: Concepto
+    experience: Experiencia grupal
+    project: Proyecto
+    assessment: Evaluación
+    bingo_game: ¡Bingo! Juego
+    assignment: Tarea
+    submission: Entrega
+    rubric: Rúbrica
+    course: Curso
+    user: Usuario
+    reporting: Informes
+    admin: Administración
+    school: Escuela
+    consent_form: Formulario de consentimiento
+    demonstration: Demostración
+    item: Elemento
   activate: Activar?
   back: Atras
   next: Siguiente

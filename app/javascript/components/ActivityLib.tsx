@@ -1,7 +1,27 @@
 import React from "react";
-import { Tooltip } from "primereact/tooltip";
+import type { TFunction } from "i18next";
 
-export function iconForType(type: string) {
+const tooltipAliases: Record<string, string> = {
+  courses: "course",
+  concepts: "concept",
+  "group experience": "experience",
+  experiences: "experience",
+  project: "project",
+  assessments: "assessment",
+  "terms list": "bingo_game",
+  bingo_games: "bingo_game",
+  "bingo games": "bingo_game",
+  "group assignment": "assignment",
+  assignments: "assignment",
+  rubrics: "rubric",
+  users: "user",
+  schools: "school",
+  consent_forms: "consent_form",
+  admin: "admin",
+  demonstration: "demonstration"
+};
+
+export function iconForType(type: string, t?: TFunction) {
   const iconData = {
     icon: <></>,
     className: "",
@@ -99,10 +119,11 @@ export function iconForType(type: string) {
       iconData.className = `unit-${type}`;
       iconData.icon = <i className={`${iconData.className} pi pi-asterisk`} />;
   }
+  const tooltipType = tooltipAliases[type.toLowerCase()] ?? iconData.className;
+  const tooltipKey = `breadcrumbs.${tooltipType.startsWith("unit-") ? "item" : tooltipType}`;
   return (
-    <>
-      <Tooltip target={iconData.className} content={type} />
-      {iconData.icon}
-    </>
+    React.cloneElement(iconData.icon, {
+      title: t ? t(tooltipKey, { ns: "base" }) : type
+    })
   );
 }
