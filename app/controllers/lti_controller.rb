@@ -395,8 +395,6 @@ class LtiController < ApplicationController
       return
     end
 
-    deployment = resource_link.lti_deployment
-
     # We need the NRPS membership endpoint stored on the resource link
     membership_url = resource_link.names_roles_url
     unless membership_url.present?
@@ -405,13 +403,9 @@ class LtiController < ApplicationController
       return
     end
 
-    token_response = deployment.request_access_token(scopes: [NRPS_SCOPE])
-    access_token = token_response['access_token']
+    synced, members_received = sync_nrps_roster(resource_link)
 
-    members = fetch_memberships(membership_url, access_token)
-    synced = sync_roster(resource_link.course, members)
-
-    render json: { synced_count: synced, members_received: members.size }
+    render json: { synced_count: synced, members_received: }
   rescue StandardError => e
     logger.error "NRPS sync error: #{e.message}"
     render json: { error: e.message }, status: :internal_server_error
@@ -522,10 +516,14 @@ class LtiController < ApplicationController
       resource_link.context_id    = context_id
       resource_link.context_title = context_title
       resource_link.course_id     = params[:course_id] if params[:course_id].present?
+      store_names_roles_url(resource_link, {
+        LTI_NAMES_ROLES_SERVICE => { 'context_memberships_url' => params[:names_roles_url] }
+      })
       resource_link.save
 
       roles = ['http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor']
       enroll_lti_user(user, { LTI_ROLES => roles }, resource_link.course) if resource_link.course
+      sync_nrps_roster(resource_link) if resource_link.course && resource_link.names_roles_url.present?
 
       sign_in user
       session[:lti_embedded] = true
@@ -711,6 +709,18 @@ class LtiController < ApplicationController
     synced
   end
 
+  def store_names_roles_url(resource_link, payload)
+    service_claim = payload[LTI_NAMES_ROLES_SERVICE]
+    membership_url = service_claim['context_memberships_url'] if service_claim.is_a?(Hash)
+    resource_link.names_roles_url = membership_url if membership_url.present?
+  end
+
+  def sync_nrps_roster(resource_link)
+    token_response = resource_link.lti_deployment.request_access_token(scopes: [NRPS_SCOPE])
+    members = fetch_memberships(resource_link.names_roles_url, token_response['access_token'])
+    [sync_roster(resource_link.course, members), members.size]
+  end
+
   def push_grades(assignment, line_item_url, access_token)
     score_url = "#{line_item_url.chomp('/')}/scores"
     uri = URI(score_url)
@@ -798,6 +808,7 @@ class LtiController < ApplicationController
       resource_link.course_id = custom['colab_course_id'].to_i
     end
 
+    store_names_roles_url(resource_link, payload)
     resource_link.save
 
     ags_claim = payload[LTI_AGS_CLAIM]
@@ -815,6 +826,15 @@ class LtiController < ApplicationController
     enroll_lti_user(user, payload, resource_link.course) if resource_link.course
 
     sign_in user
+
+    if resource_link.course && resource_link.names_roles_url.present? &&
+       (payload[LTI_ROLES] || []).any? { |role| role.include?('Instructor') }
+      begin
+        sync_nrps_roster(resource_link)
+      rescue StandardError => e
+        logger.warn "LTI NRPS sync failed for resource link #{resource_link.id}: #{e.message}"
+      end
+    end
 
     # Mark the session as LTI-embedded so that ApplicationController removes
     # X-Frame-Options from all subsequent responses in this session, preventing
