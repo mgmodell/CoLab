@@ -44,6 +44,9 @@ Rails.application.routes.draw do
     post 'projects/suggest_groups/:id' => 'projects#suggest_groups',
          as: :suggest_groups,
          constraints: ->(req) { req.format == :json }
+    post 'projects/preview_lti_groups/:id' => 'projects#preview_lti_groups',
+         as: :preview_lti_groups,
+         constraints: ->(req) { req.format == :json }
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate',
         as: :activate_bingo_game
 

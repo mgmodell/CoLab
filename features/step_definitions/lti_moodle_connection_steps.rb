@@ -140,6 +140,56 @@ Given( 'the Moodle NRPS roster includes {string}' ) do | email |
     )
 end
 
+Given( 'the Moodle NRPS response includes group assignments for the course' ) do
+  WebMock.enable!
+  @nrps_url = 'http://moodle:8080/mod/lti/services.php/CourseSection/1/bindings/2/groups'
+  stub_request( :post, @deployment.auth_token_url )
+    .to_return( status: 200, body: { access_token: 'test_nrps_access_token' }.to_json )
+
+  memberships = @course.rosters.enrolled.includes( user: :emails ).map.with_index do |roster, index|
+    {
+      email: roster.user.email,
+      groups: [{
+        id: "lti-team-#{index / 4}",
+        name: "LTI Team #{index < 4 ? 'A' : 'B'}"
+      }]
+    }
+  end
+  stub_request( :get, @nrps_url )
+    .to_return( status: 200, body: { members: memberships }.to_json )
+
+  @deployment.lti_resource_links.create!(
+    resource_link_id: "bdd_group_link_#{SecureRandom.hex(4)}",
+    course: @course,
+    names_roles_url: @nrps_url
+  )
+end
+
+Then( 'the user compares NRPS groups without replacing the existing groups' ) do
+  existing_groups = @project.groups.includes( :users ).map do |group|
+    [group.id, group.users.pluck( :id ).sort]
+  end
+  step 'the user clicks "Retrieve Groups from LTI"'
+  page.should have_content 'Current CoLab Groups'
+  page.should have_content 'Retrieved LTI Groups'
+  page.should have_content 'LTI Team A'
+  page.should have_content 'LTI Team B'
+  @project.reload.groups.includes( :users ).map { |group| [group.id, group.users.pluck( :id ).sort] }
+          .should eq existing_groups
+
+  step 'the user clicks "Cancel"'
+  page.should have_no_content 'Retrieved LTI Groups'
+  @project.reload.groups.includes( :users ).map { |group| [group.id, group.users.pluck( :id ).sort] }
+          .should eq existing_groups
+end
+
+Then( 'the user replaces the existing groups with the retrieved NRPS groups' ) do
+  step 'the user clicks "Retrieve Groups from LTI"'
+  page.should have_content 'LTI Team A'
+  step 'the user clicks "Replace Current Groups"'
+  step 'the user sees a success message'
+end
+
 Given( 'the Moodle course {string} is already linked to the CoLab course' ) do | context_title |
   deployment = @deployment || LtiDeployment.find_by( issuer: 'http://moodle:8080' )
   lrl = deployment.lti_resource_links.find_or_create_by!(

@@ -61,3 +61,14 @@ es:
       title: Nuevo proyecto
     projects: Proyecto
     diversity_scores: Puntos de perspectiva
+    groups:
+      retrieve_lti_groups: Recuperar grupos de LTI
+      lti_groups_preview: Vista previa de grupos de LTI
+      existing_groups: Grupos actuales de CoLab
+      imported_groups: Grupos recuperados de LTI
+      replace_lti_groups: Reemplazar grupos actuales
+      cancel_lti_groups: Cancelar
+      lti_groups_replace_warning: Reemplazar estos grupos eliminará los grupos actuales del proyecto.
+      lti_groups_no_connection: No hay un enlace LTI con acceso NRPS para este curso.
+      lti_groups_not_found: La respuesta de NRPS no incluyó asignaciones de grupos.
+      lti_groups_fetch_failed: No se pudieron recuperar los grupos de la plataforma LTI.

@@ -79,6 +79,16 @@ en:
       recalculate_diversity: Recalculate Perspectives
       recommend_groups: Recommend Groups
       save_groups: Save Groups
+      retrieve_lti_groups: Retrieve Groups from LTI
+      lti_groups_preview: LTI Group Preview
+      existing_groups: Current CoLab Groups
+      imported_groups: Retrieved LTI Groups
+      replace_lti_groups: Replace Current Groups
+      cancel_lti_groups: Cancel
+      lti_groups_replace_warning: Replacing these groups will remove the current project groups.
+      lti_groups_no_connection: No LTI resource link with NRPS access is available for this course.
+      lti_groups_not_found: The NRPS response did not include any group assignments.
+      lti_groups_fetch_failed: Unable to retrieve groups from the LTI platform.
       students_shown: Showing {{count}} of {{total}}
       replace_groups_warning: >
         Accepting these suggested groups will remove and replace the existing

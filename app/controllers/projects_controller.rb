@@ -5,7 +5,8 @@ class ProjectsController < ApplicationController
   include LtiGradable
 
   before_action :set_project, only: %i[show edit update destroy activate
-                                       rescore_group rescore_groups suggest_groups]
+                                       rescore_group rescore_groups suggest_groups
+                                       preview_lti_groups]
   before_action :check_editor, except: %i[rescore_group rescore_groups
                                           show index get_groups student_info
                                           set_groups]
@@ -240,6 +241,23 @@ class ProjectsController < ApplicationController
         max_faultline_strength: suggestion[:max_faultline_strength]
       }
     }
+  end
+
+  def preview_lti_groups
+    importer = LtiGroupImport.new(@project)
+    resource_link = importer.resource_link
+    return render json: { error: t('projects.lti_groups_no_connection') },
+                  status: :unprocessable_entity unless resource_link
+
+    preview = importer.preview(resource_link)
+    return render json: { error: t('projects.lti_groups_not_found') },
+                  status: :unprocessable_entity if preview[:groups].empty?
+
+    render json: preview
+  rescue StandardError => e
+    logger.error "NRPS group import error: #{e.message}"
+    render json: { error: t('projects.lti_groups_fetch_failed') },
+           status: :bad_gateway
   end
 
   def get_groups_helper( project:, message: nil )

@@ -23,10 +23,19 @@ import { Dropdown } from "primereact/dropdown";
 
 const SortDirection = { ASC: "ASC", DESC: "DESC" } as const;
 
+type LtiGroup = { id: number; name: string; member_count: number };
+type LtiStudent = { id: number; first_name: string; last_name: string; group_id?: number };
+type GroupStudent = { first_name: string; last_name: string; group_id?: number };
+type LtiGroupsPreview = {
+  groups: Record<string, LtiGroup>;
+  students: Record<string, LtiStudent>;
+};
+
 type Props = {
   projectId: number;
   groupsUrl: string;
   suggestGroupsUrl: string;
+  previewLtiGroupsUrl: string;
   diversityCheckUrl: string;
   diversityRescoreGroup: string;
   diversityRescoreGroups: string;
@@ -50,15 +59,18 @@ export default function ProjectGroups(props: Props) {
   const [suggestedStudentsRaw, setSuggestedStudentsRaw] = useState(null);
   const [suggestedGroups, setSuggestedGroups] = useState([]);
   const [suggestionSummary, setSuggestionSummary] = useState(null);
+  const [ltiGroupsPreview, setLtiGroupsPreview] = useState<LtiGroupsPreview | null>(null);
 
   // Modal Dialog UI States
   const [showConfigDialog, setShowConfigDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showLtiGroupsDialog, setShowLtiGroupsDialog] = useState(false);
 
   const dispatch = useDispatch();
 
   // Derived state: groups array directly from dict
   const groups = Object.values(groupsRaw);
+  const currentGroups = groups as Array<{ id: number; name: string; member_count?: number }>;
 
   // Derived state: students array computed with filtering & sorting
   const students = useMemo(() => {
@@ -289,6 +301,62 @@ export default function ProjectGroups(props: Props) {
     saveGroups(suggestedGroupsRaw, suggestedStudentsRaw);
   };
 
+  const retrieveLtiGroups = () => {
+    setWorking(true);
+    setMessage("");
+    dispatch(startTask());
+    axios
+      .post(`${props.previewLtiGroupsUrl}${props.projectId}.json`)
+      .then(response => {
+        setLtiGroupsPreview(response.data);
+        setShowLtiGroupsDialog(true);
+      })
+      .catch(error => {
+        setMessage(error?.response?.data?.error || t("groups.lti_groups_fetch_failed"));
+      })
+      .finally(() => {
+        setWorking(false);
+        dispatch(endTask());
+      });
+  };
+
+  const replaceLtiGroups = () => {
+    if (!ltiGroupsPreview) return;
+    setShowLtiGroupsDialog(false);
+    saveGroups(
+      ltiGroupsPreview.groups,
+      ltiGroupsPreview.students as unknown as typeof studentsRaw
+    );
+    setLtiGroupsPreview(null);
+  };
+
+  const cancelLtiGroupsPreview = () => {
+    setShowLtiGroupsDialog(false);
+    setLtiGroupsPreview(null);
+  };
+
+  const groupMembers = (groupId: number, groupStudents: GroupStudent[]) =>
+    groupStudents
+      .filter(student => student.group_id === groupId)
+      .map(student => `${student.first_name} ${student.last_name}`);
+
+  const ltiGroupsDialogFooter = (
+    <div>
+      <Button
+        label={t("groups.cancel_lti_groups")}
+        icon="pi pi-times"
+        onClick={cancelLtiGroupsPreview}
+        className="p-button-text"
+      />
+      <Button
+        label={t("groups.replace_lti_groups")}
+        icon="pi pi-check"
+        severity="danger"
+        onClick={replaceLtiGroups}
+      />
+    </div>
+  );
+
   const suggestedMembers = groupId => {
     if (null == suggestedStudentsRaw) return [];
     return Object.values(suggestedStudentsRaw).filter(student => student.group_id == groupId);
@@ -394,6 +462,49 @@ export default function ProjectGroups(props: Props) {
         breakpoints={{ '960px': '75vw', '641px': '95vw' }}
       />
 
+      <Dialog
+        header={t("groups.lti_groups_preview")}
+        visible={showLtiGroupsDialog}
+        style={{ width: "60vw" }}
+        breakpoints={{ "960px": "80vw", "641px": "95vw" }}
+        footer={ltiGroupsDialogFooter}
+        onHide={cancelLtiGroupsPreview}
+      >
+        <p>{t("groups.lti_groups_replace_warning")}</p>
+        <div className="grid">
+          <div className="col-6">
+            <h3>{t("groups.existing_groups")}</h3>
+            <ul>
+              {currentGroups.map(group => (
+                <li key={`current-${group.id}`}>
+                  {group.name} ({group.member_count || 0})
+                  <ul>
+                    {groupMembers(group.id, Object.values(studentsRaw)).map(name => (
+                      <li key={`current-${group.id}-${name}`}>{name}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="col-6">
+            <h3>{t("groups.imported_groups")}</h3>
+            <ul>
+              {Object.values(ltiGroupsPreview?.groups || {}).map(group => (
+                <li key={`lti-${group.id}`}>
+                  {group.name} ({group.member_count || 0})
+                  <ul>
+                    {groupMembers(group.id, Object.values(ltiGroupsPreview?.students || {})).map(name => (
+                      <li key={`lti-${group.id}-${name}`}>{name}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Dialog>
+
       <FitDataTable
         value={students}
         resizableColumns
@@ -422,6 +533,13 @@ export default function ProjectGroups(props: Props) {
                     {t( 'groups.save_groups')}
                   </Button>
                 ) : null}
+                <Button
+                  onClick={retrieveLtiGroups}
+                  icon="pi pi-download"
+                  disabled={working || dirty === DIRTY_STATUS.DIRTY}
+                >
+                  {t("groups.retrieve_lti_groups")}
+                </Button>
                 <span>{message}</span>
                 <Button onClick={() => setShowConfigDialog(true)} icon="pi pi-sparkles" disabled={working}>
                   {t( 'groups.recommend_groups')}
