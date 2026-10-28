@@ -15,6 +15,7 @@ class Experience < ApplicationRecord
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
+  after_commit :schedule_lti_grade_push, on: %i[create update], if: :saved_change_to_end_date?
 
   scope :active_at, lambda { | date |
                       where( active: true )
@@ -27,6 +28,13 @@ class Experience < ApplicationRecord
     reaction = Reaction.create( user:, experience: self, instructed: false ) if reaction.nil?
     reaction.assign_narrative if reaction.narrative.nil?
     reaction
+  end
+
+  def lti_grade_scores
+    reactions.includes( :user ).map do | reaction |
+      score = reaction.status.is_a?( Integer ) && reaction.status.positive? ? 100 : 0
+      { user_id: reaction.user_id.to_s, score_given: score, score_maximum: 100 }
+    end
   end
 
   def get_link
@@ -245,6 +253,10 @@ class Experience < ApplicationRecord
     return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
 
     self.student_end_date = end_date - ( 1 + lead_time ).days
+  end
+
+  def schedule_lti_grade_push
+    LtiGradePushJob.set( wait_until: end_date.end_of_day ).perform_later( self, end_date.to_i )
   end
 
   def anonymize

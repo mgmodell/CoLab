@@ -398,10 +398,6 @@ class ExperiencesController < ApplicationController
   end
 
   def grade_scores_for( experience )
-    experience.reactions.includes( :user ).map do | reaction |
-      # Status 0 = not started, positive integer = completed steps
-      score = reaction.status.is_a?( Integer ) && reaction.status.positive? ? 100 : 0
-      { user_id: reaction.user_id.to_s, score_given: score, score_maximum: 100 }
-    end
+    experience.lti_grade_scores
   end
 end

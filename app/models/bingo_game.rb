@@ -38,6 +38,7 @@ class BingoGame < ApplicationRecord
 
   before_create :anonymize
   before_save :reset_notification
+  after_commit :enqueue_lti_grade_push, on: :update, if: :saved_change_to_reviewed?
 
   def status_for_user( user )
     candidate_list_for_user( user ).status
@@ -49,6 +50,15 @@ class BingoGame < ApplicationRecord
       100 * candidates.reviewed.count / candidates.completed.count
     else
       0
+    end
+
+    def lti_grade_scores
+      candidate_lists.includes( :group, candidates: :candidate_feedback )
+                     .flat_map do | candidate_list |
+        users = candidate_list.is_group && candidate_list.group.present? ? candidate_list.group.users : [candidate_list.user].compact
+        score = candidate_list.performance.to_f
+        users.map { | user | { user_id: user.id.to_s, score_given: score, score_maximum: 100 } }
+      end
     end
   end
 
@@ -277,6 +287,10 @@ class BingoGame < ApplicationRecord
   end
 
   private
+
+  def enqueue_lti_grade_push
+    LtiGradePushJob.perform_later( self ) if reviewed?
+  end
 
   def reset_notification
     self.instructor_notified = false if end_date_changed? && instructor_notified && term_list_date <= end_date

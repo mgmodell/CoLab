@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Assessment < ApplicationRecord
+  after_commit :schedule_lti_grade_push, on: %i[create update], if: :saved_change_to_end_date?
+
   belongs_to :project, inverse_of: :assessments
   has_one :course, through: :project
   validates :end_date, :start_date, presence: true
@@ -116,7 +118,6 @@ class Assessment < ApplicationRecord
                     priority: AdministrativeMailer::PRIORITY[:INFO]
                   )
                 end
-
                 assessment.instructor_updated = true
                 assessment.save
                 logger.debug assessment.errors.full_messages unless assessment.errors.empty?
@@ -189,4 +190,10 @@ class Assessment < ApplicationRecord
 
   delegate :name, to: :project
   delegate :description, to: :project
+
+  private
+
+  def schedule_lti_grade_push
+    LtiGradePushJob.set( wait_until: end_date.end_of_day ).perform_later( project, end_date.to_i )
+  end
 end

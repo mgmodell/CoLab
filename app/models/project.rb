@@ -67,6 +67,14 @@ class Project < ApplicationRecord
     assessments.count.zero? ? 100 : 100 * installments_count / assessments.count
   end
 
+  def lti_grade_scores
+    groups.includes( :users ).flat_map do | group |
+      group.users.map do | user |
+        { user_id: user.id.to_s, score_given: get_performance( user ).to_f, score_maximum: 100 }
+      end
+    end
+  end
+
   # TODO: Not ideal structuring for UI
   def get_link
     # helpers = Rails.application.routes.url_helpers
