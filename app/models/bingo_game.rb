@@ -30,14 +30,14 @@ class BingoGame < ApplicationRecord
       allow_nil: true }
   validates :individual_count, numericality: {
     only_integer: true,
-    greater_than_or_equal_to: 1,
+    greater_than_or_equal_to: 1
   }
   validate :review_completed
 
   validate :group_components
 
-  before_create :anonymize
   before_save :reset_notification
+  before_create :anonymize
   after_commit :enqueue_lti_grade_push, on: :update, if: :saved_change_to_reviewed?
 
   def status_for_user( user )
@@ -51,14 +51,14 @@ class BingoGame < ApplicationRecord
     else
       0
     end
+  end
 
-    def lti_grade_scores
-      candidate_lists.includes( :group, candidates: :candidate_feedback )
-                     .flat_map do | candidate_list |
-        users = candidate_list.is_group && candidate_list.group.present? ? candidate_list.group.users : [candidate_list.user].compact
-        score = candidate_list.performance.to_f
-        users.map { | user | { user_id: user.id.to_s, score_given: score, score_maximum: 100 } }
-      end
+  def lti_grade_scores
+    candidate_lists.includes( :group, candidates: :candidate_feedback )
+                   .flat_map do | candidate_list |
+      users = candidate_list.is_group && candidate_list.group.present? ? candidate_list.group.users : [candidate_list.user].compact
+      score = candidate_list.performance.to_f
+      users.map { | user | { user_id: user.id.to_s, score_given: score, score_maximum: 100 } }
     end
   end
 
