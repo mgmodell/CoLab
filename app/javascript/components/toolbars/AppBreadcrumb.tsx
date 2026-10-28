@@ -36,7 +36,6 @@ export default function AppBreadCrumb() {
                     <Link to={url}
                         className={options.className}>
                             {iconForType(crumb)}
-                            {combineWithNext && <>&nbsp;{iconForType(array[index + 1])}</>}
                     </Link>
                 )
             };

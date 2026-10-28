@@ -8,11 +8,11 @@ Then( 'the course listing and item breadcrumb links are separate' ) do
   item_link.find( 'i' )[ 'title' ].should eq 'Item'
 end
 
-Then( 'the course activity breadcrumb combines its type and item marker' ) do
+Then( 'the course activity breadcrumb shows its type icon only' ) do
   activity_path = "/admin/courses/#{@course.id}/project/#{@project.id}"
   visit activity_path
   wait_for_render
 
   activity_link = find( :css, ".p-breadcrumb a[href='#{activity_path}']" )
-  activity_link.all( 'i' ).map { |icon| icon[ 'title' ] }.should eq [ 'Project', 'Item' ]
+  activity_link.all( 'i' ).map { |icon| icon[ 'title' ] }.should eq [ 'Project' ]
 end

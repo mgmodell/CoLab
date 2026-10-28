@@ -12,4 +12,4 @@ Feature: Application breadcrumbs
     Then the user logs in and accesses the "Courses" admin page
     Then the user opens the course
     Then the course listing and item breadcrumb links are separate
-    Then the course activity breadcrumb combines its type and item marker
+    Then the course activity breadcrumb shows its type icon only
