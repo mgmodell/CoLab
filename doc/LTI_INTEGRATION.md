@@ -165,6 +165,12 @@ Once associated:
 
 ## Roster Sync (NRPS)
 
+When an instructor launches a resource link associated with a CoLab course, CoLab
+refreshes that course's roster from the NRPS membership endpoint included in the LTI
+launch. This also makes roster updates available to projects, which use their course
+roster for group management. A manual sync can be requested for a resource link as
+described below.
+
 Trigger a roster sync for a resource link from a controller, job, or Rails console:
 
 ```ruby

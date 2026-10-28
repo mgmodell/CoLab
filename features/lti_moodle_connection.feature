@@ -57,3 +57,12 @@ Feature: LTI Moodle Platform Connection
     Given the Moodle course "Introduction to CoLab" is already linked to the CoLab course
     When a Moodle instructor launches CoLab and links it to the CoLab course as "instructor@moodle.local"
     Then the CoLab course has exactly 1 LTI resource link from "http://moodle:8080"
+
+  @javascript
+  Scenario: An instructor launch imports course members through NRPS
+    Given a registered LTI deployment exists for issuer "http://moodle:8080"
+    Given the Moodle NRPS roster includes "student@moodle.local"
+    When a Moodle instructor launches CoLab and links it to the CoLab course as "instructor@moodle.local"
+    Then the user "student@moodle.local" is enrolled in the CoLab course
+    And the user "student@moodle.local" has the enrolled_student role in the CoLab course
+    And the LTI resource link stores its NRPS membership URL

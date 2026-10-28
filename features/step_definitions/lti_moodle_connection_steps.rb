@@ -104,16 +104,40 @@ When( 'a Moodle LTI launch links the Moodle course {string} to the CoLab course'
 end
 
 When( 'a Moodle instructor launches CoLab and links it to the CoLab course as {string}' ) do | email |
-  simulate_lti_launch(
-    iss: @deployment.issuer,
-    message_type: 'LtiResourceLinkRequest',
+  launch_params = {
     resource_link_id: 'bdd_rl_enrol_001',
     course_id: @course.id,
     context_id: 'moodle_ctx_enrol_001',
     context_title: 'Introduction to CoLab',
     user_email: email
+  }
+  launch_params[:names_roles_url] = @nrps_url if @nrps_url
+
+  simulate_lti_launch(
+    iss: @deployment.issuer,
+    message_type: 'LtiResourceLinkRequest',
+    **launch_params
   )
   sleep 0.5 # Wait for the previous launch to complete and the user to be provisioned before simulating the next launch.
+end
+
+Given( 'the Moodle NRPS roster includes {string}' ) do | email |
+  WebMock.enable!
+  @nrps_url = 'http://moodle:8080/mod/lti/services.php/CourseSection/1/bindings/2/memberships'
+  stub_request( :post, @deployment.auth_token_url )
+    .to_return( status: 200, body: { access_token: 'test_nrps_access_token' }.to_json )
+  stub_request( :get, @nrps_url )
+    .to_return(
+      status: 200,
+      body: {
+        members: [{
+          email: email,
+          given_name: 'Imported',
+          family_name: 'Student',
+          roles: ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner']
+        }]
+      }.to_json
+    )
 end
 
 Given( 'the Moodle course {string} is already linked to the CoLab course' ) do | context_title |
@@ -167,4 +191,16 @@ Then( 'the user {string} has the instructor role in the CoLab course' ) do | ema
   roster = Roster.find_by( user: user, course: @course )
   roster.should be_present
   roster.role.should eq 'instructor'
+end
+
+Then( 'the user {string} has the enrolled_student role in the CoLab course' ) do | email |
+  user = User.joins( :emails ).find_by( emails: { email: email } )
+  roster = Roster.find_by( user: user, course: @course )
+  roster.should be_present
+  roster.role.should eq 'enrolled_student'
+end
+
+Then( 'the LTI resource link stores its NRPS membership URL' ) do
+  resource_link = @deployment.lti_resource_links.find_by!( resource_link_id: 'bdd_rl_enrol_001' )
+  resource_link.names_roles_url.should eq @nrps_url
 end
