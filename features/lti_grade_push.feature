@@ -221,3 +221,15 @@ Feature: LTI Grade Push
   Scenario: Candidate review completion automatically queues an LTI grade push
     Given the bingo game has an LTI connection configured
     Then completing the candidate review queues an LTI grade push
+
+  Scenario: Assignment grading automatically queues an LTI grade push
+    Given a linked LTI assignment submission exists
+    Then grading the assignment submission queues an LTI grade push
+
+  Scenario: Ended assessment automatically queues an LTI grade push
+    Given the project has an ended assessment
+    Then the hourly reminder sweep queues its LTI grade push
+
+  Scenario: Ended experience automatically queues an LTI grade push
+    Given the course has an ended experience
+    Then the hourly reminder sweep queues its LTI grade push
