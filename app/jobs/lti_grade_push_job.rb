@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class LtiGradePushJob < ApplicationJob
+  def self.enqueue_ended_period_grades
+    Assessment.joins( :project )
+              .where( assessments: { active: true, instructor_updated: false }, projects: { active: true } )
+              .where( 'assessments.end_date < ?', Time.current )
+              .find_each { | assessment | perform_later( assessment ) }
+
+    Experience.where( instructor_updated: false )
+              .where( 'experiences.student_end_date < ?', Time.current )
+              .find_each { | experience | perform_later( experience ) }
+  end
+
   def perform( record, expected_end_date = nil )
     if record.is_a?( Assessment )
       return if expected_end_date && record.end_date.to_i != expected_end_date

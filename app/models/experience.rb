@@ -15,8 +15,6 @@ class Experience < ApplicationRecord
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
-  after_commit :schedule_lti_grade_push, on: %i[create update], if: :saved_change_to_end_date?
-
   scope :active_at, lambda { | date |
                       where( active: true )
                         .where( 'experiences.start_date <= ? AND experiences.end_date >= ?', date, date )
@@ -253,10 +251,6 @@ class Experience < ApplicationRecord
     return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
 
     self.student_end_date = end_date - ( 1 + lead_time ).days
-  end
-
-  def schedule_lti_grade_push
-    LtiGradePushJob.set( wait_until: end_date.end_of_day ).perform_later( self, end_date.to_i )
   end
 
   def anonymize

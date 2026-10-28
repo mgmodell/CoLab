@@ -9,6 +9,7 @@ namespace :admin do
   desc 'Set up infrastructure and send reminders and summaries'
   task remind: :environment do
     Assessment.set_up_assessments
+    LtiGradePushJob.enqueue_ended_period_grades
     AdministrativeMailer.send_reminder_emails
     AdministrativeMailer.inform_instructors
   end

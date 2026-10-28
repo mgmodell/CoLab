@@ -14,36 +14,45 @@ class LtiGradePushJobTest < ActiveSupport::TestCase
     end
   end
 
-  test 'assessment end date schedules a project grade push' do
+  test 'reminder sweep queues ended assessment grades' do
     assessment = assessments( :one )
-    assessment.project = projects( :one )
-    assessment.end_date = 1.day.from_now
+    assessment_query = relation_yielding( assessment )
+    experience_query = relation_yielding
 
     assert_enqueued_with job: LtiGradePushJob do
-      assessment.save!( validate: false )
+      Assessment.stub( :joins, assessment_query ) do
+        Experience.stub( :where, experience_query ) do
+          LtiGradePushJob.enqueue_ended_period_grades
+        end
+      end
     end
   end
 
-  test 'experience end date schedules a grade push' do
+  test 'reminder sweep queues ended experience grades' do
+    assessment_query = relation_yielding
     experience = experiences( :one )
-    experience.course = courses( :one )
-    experience.end_date = 1.day.from_now
+    experience_query = relation_yielding( experience )
 
     assert_enqueued_with job: LtiGradePushJob do
-      experience.save!( validate: false )
+      Assessment.stub( :joins, assessment_query ) do
+        Experience.stub( :where, experience_query ) do
+          LtiGradePushJob.enqueue_ended_period_grades
+        end
+      end
     end
   end
 
   test 'assignment score changes enqueue a grade push' do
     user = users( :one )
+    rubric = Rubric.new( name: 'Test rubric' )
+    rubric.save!( validate: false )
     assignment = Assignment.new(
       course: courses( :one ),
+      rubric:,
       start_date: Time.current,
       end_date: 1.day.from_now
     )
     assignment.save!( validate: false )
-    rubric = Rubric.new( name: 'Test rubric' )
-    rubric.save!( validate: false )
     submission = Submission.new(
       assignment:,
       user:,
@@ -57,5 +66,35 @@ class LtiGradePushJobTest < ActiveSupport::TestCase
     assert_enqueued_with job: LtiGradePushJob do
       submission.update!( recorded_score: 85 )
     end
+  end
+
+  test 'assignment grade push submits the recorded score to linked resource links' do
+    submission = Submission.new(
+      assignment_id: 42,
+      user_id: 24,
+      recorded_score: 85,
+      updated_at: Time.current
+    )
+    received_score = nil
+    resource_link = Object.new
+    resource_link.define_singleton_method( :push_score ) { | **score | received_score = score }
+
+    LtiResourceLink.stub( :where, relation_yielding( resource_link ) ) do
+      LtiGradePushJob.perform_now( submission )
+    end
+
+    assert_equal(
+      { user_id: '24', score_given: 85, score_maximum: 100, timestamp: submission.updated_at },
+      received_score
+    )
+  end
+
+  private
+
+  def relation_yielding( *records )
+    relation = Object.new
+    relation.define_singleton_method( :where ) { | * | self }
+    relation.define_singleton_method( :find_each ) { | &block | records.each( &block ) }
+    relation
   end
 end
