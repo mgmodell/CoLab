@@ -263,7 +263,7 @@ export default function TaskList(props: Props) {
           sortable
           key={'type'}
           body={(params) => {
-            return iconForType(params.type, t)
+            return iconForType(params.type)
           }}
         />
         <Column

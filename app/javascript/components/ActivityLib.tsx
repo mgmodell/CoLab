@@ -1,5 +1,7 @@
 import React from "react";
-import type { TFunction } from "i18next";
+import i18n from "./infrastructure/i18n";
+
+const t = i18n.getFixedT(null, "base");
 
 const tooltipAliases: Record<string, string> = {
   courses: "course",
@@ -21,7 +23,7 @@ const tooltipAliases: Record<string, string> = {
   demonstration: "demonstration"
 };
 
-export function iconForType(type: string, t?: TFunction) {
+export function iconForType(type: string) {
   const iconData = {
     icon: <></>,
     className: "",
@@ -123,7 +125,7 @@ export function iconForType(type: string, t?: TFunction) {
   const tooltipKey = `breadcrumbs.${tooltipType.startsWith("unit-") ? "item" : tooltipType}`;
   return (
     React.cloneElement(iconData.icon, {
-      title: t ? t(tooltipKey, { ns: "base" }) : type
+      title: t(tooltipKey)
     })
   );
 }

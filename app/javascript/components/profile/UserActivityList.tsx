@@ -136,7 +136,7 @@ export default function UserActivityList(props: Props) {
           sortable
           filter
           body={rowData => {
-            return iconForType(rowData.type, t);
+            return iconForType(rowData.type);
           }}
         />
         <Column

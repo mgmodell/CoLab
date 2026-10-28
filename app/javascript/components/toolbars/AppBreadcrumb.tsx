@@ -35,8 +35,8 @@ export default function AppBreadCrumb() {
                 template: ( item: any, options: any) => (
                     <Link to={url}
                         className={options.className}>
-                            {iconForType(crumb, t)}
-                            {combineWithNext && <>&nbsp;{iconForType(array[index + 1], t)}</>}
+                            {iconForType(crumb)}
+                            {combineWithNext && <>&nbsp;{iconForType(array[index + 1])}</>}
                     </Link>
                 )
             };
