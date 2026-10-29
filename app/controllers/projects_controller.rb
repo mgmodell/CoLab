@@ -246,17 +246,17 @@ class ProjectsController < ApplicationController
   def preview_lti_groups
     importer = LtiGroupImport.new(@project)
     resource_link = importer.resource_link
-    return render json: { error: t('projects.lti_groups_no_connection') },
+    return render json: { error: t('projects.groups.lti_groups_no_connection') },
                   status: :unprocessable_entity unless resource_link
 
     preview = importer.preview(resource_link)
-    return render json: { error: t('projects.lti_groups_not_found') },
+    return render json: { error: t('projects.groups.lti_groups_not_found') },
                   status: :unprocessable_entity if preview[:groups].empty?
 
     render json: preview
   rescue StandardError => e
-    logger.error "NRPS group import error: #{e.message}"
-    render json: { error: t('projects.lti_groups_fetch_failed') },
+    logger.error "NRPS group import error (#{e.class}): #{e.message}"
+    render json: { error: t('projects.groups.lti_groups_fetch_failed') },
            status: :bad_gateway
   end
 
