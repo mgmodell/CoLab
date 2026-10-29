@@ -85,7 +85,7 @@ Then( 'completing the candidate review queues an LTI grade push' ) do
 end
 
 Given( 'a linked LTI assignment submission exists' ) do
-  rubric = Rubric.new( name: 'LTI Cucumber rubric' )
+  rubric = Rubric.new( name: 'LTI Cucumber rubric', school: @user.school, user: @user )
   rubric.save!( validate: false )
   @lti_assignment = Assignment.new(
     course: @course,
@@ -107,8 +107,15 @@ Given( 'a linked LTI assignment submission exists' ) do
   )
   @lti_submission.save!( validate: false )
 
+  deployment = LtiDeployment.create!(
+    issuer: 'https://lms.example.com',
+    client_id: "cucumber-client-#{@lti_assignment.id}",
+    auth_login_url: 'https://lms.example.com/login',
+    auth_token_url: 'https://lms.example.com/login/oauth2/token',
+    key_set_url: 'https://lms.example.com/jwks'
+  )
   LtiResourceLink.create!(
-    lti_deployment: LtiDeployment.find_by!( issuer: 'http://moodle:8080' ),
+    lti_deployment: deployment,
     assignment: @lti_assignment,
     resource_link_id: "cucumber-assignment-#{@lti_assignment.id}",
     line_item_url: 'https://lms.example.com/api/lti/line_items/30'
@@ -156,8 +163,9 @@ Then( 'the hourly reminder sweep queues its LTI grade push' ) do
 end
 
 def lti_grade_push_job_count
-  ActiveJob::Base.queue_adapter.enqueued_jobs.count do | job |
-    job[:job] == LtiGradePushJob
+  adapter = ActiveJob::Base.queue_adapter
+  [adapter.enqueued_jobs, adapter.performed_jobs].sum do | jobs |
+    jobs.count { | job | job[:job] == LtiGradePushJob }
   end
 end
 

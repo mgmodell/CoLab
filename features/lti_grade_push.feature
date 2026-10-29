@@ -221,10 +221,12 @@ Feature: LTI Grade Push
   @javascript
   Scenario: Candidate review completion automatically queues an LTI grade push
     Given the bingo game has an LTI connection configured
+    Given the LMS grade push endpoint is available
     Then completing the candidate review queues an LTI grade push
 
   @javascript
   Scenario: Assignment grading automatically queues an LTI grade push
+    Given the LMS grade push endpoint is available
     Given a linked LTI assignment submission exists
     Then grading the assignment submission queues an LTI grade push
 
