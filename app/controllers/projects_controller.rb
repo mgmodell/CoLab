@@ -402,11 +402,6 @@ class ProjectsController < ApplicationController
   end
 
   def grade_scores_for( project )
-    project.groups.includes( :users ).flat_map do | group |
-      group.users.map do | user |
-        score = project.get_performance( user ).to_f
-        { user_id: user.id.to_s, score_given: score, score_maximum: 100 }
-      end
-    end
+    project.lti_grade_scores
   end
 end

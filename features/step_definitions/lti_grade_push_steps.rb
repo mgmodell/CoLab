@@ -76,6 +76,99 @@ Given( 'the project has an LTI connection configured' ) do
   ).save!
 end
 
+Then( 'completing the candidate review queues an LTI grade push' ) do
+  previous_count = lti_grade_push_job_count
+
+  @bingo.update!( reviewed: true )
+
+  lti_grade_push_job_count.should eq( previous_count + 1 )
+end
+
+Given( 'a linked LTI assignment submission exists' ) do
+  rubric = Rubric.new( name: 'LTI Cucumber rubric', school: @user.school, user: @user )
+  rubric.save!( validate: false )
+  @lti_assignment = Assignment.new(
+    course: @course,
+    rubric:,
+    name: 'LTI Cucumber assignment',
+    start_date: Time.current,
+    end_date: 1.day.from_now
+  )
+  @lti_assignment.save!( validate: false )
+
+  student = @course.enrolled_students.first
+  @lti_submission = Submission.new(
+    assignment: @lti_assignment,
+    user: student,
+    creator: student,
+    rubric:,
+    submitted: Time.current,
+    sub_text: 'Submitted assignment'
+  )
+  @lti_submission.save!( validate: false )
+
+  deployment = LtiDeployment.create!(
+    issuer: 'https://lms.example.com',
+    client_id: "cucumber-client-#{@lti_assignment.id}",
+    auth_login_url: 'https://lms.example.com/login',
+    auth_token_url: 'https://lms.example.com/login/oauth2/token',
+    key_set_url: 'https://lms.example.com/jwks'
+  )
+  LtiResourceLink.create!(
+    lti_deployment: deployment,
+    assignment: @lti_assignment,
+    resource_link_id: "cucumber-assignment-#{@lti_assignment.id}",
+    line_item_url: 'https://lms.example.com/api/lti/line_items/30'
+  )
+end
+
+Then( 'grading the assignment submission queues an LTI grade push' ) do
+  previous_count = lti_grade_push_job_count
+
+  @lti_submission.update!( recorded_score: 85 )
+
+  lti_grade_push_job_count.should eq( previous_count + 1 )
+end
+
+Given( 'the project has an ended assessment' ) do
+  @project.update_columns( active: true )
+  @ended_assessment = Assessment.new(
+    project: @project,
+    start_date: 2.days.ago,
+    end_date: 1.day.ago,
+    active: true,
+    instructor_updated: false
+  )
+  @ended_assessment.save!( validate: false )
+end
+
+Given( 'the course has an ended experience' ) do
+  @ended_experience = Experience.new(
+    course: @course,
+    name: 'Ended LTI Cucumber experience',
+    start_date: 3.days.ago,
+    end_date: 2.days.ago,
+    student_end_date: 1.day.ago,
+    instructor_updated: false
+  )
+  @ended_experience.save!( validate: false )
+end
+
+Then( 'the hourly reminder sweep queues its LTI grade push' ) do
+  previous_count = lti_grade_push_job_count
+
+  LtiGradePushJob.enqueue_ended_period_grades
+
+  lti_grade_push_job_count.should eq( previous_count + 1 )
+end
+
+def lti_grade_push_job_count
+  adapter = ActiveJob::Base.queue_adapter
+  [adapter.enqueued_jobs, adapter.performed_jobs].sum do | jobs |
+    jobs.count { | job | job[:job] == LtiGradePushJob }
+  end
+end
+
 # ---------------------------------------------------------------------------
 # UI assertions
 # ---------------------------------------------------------------------------

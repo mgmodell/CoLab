@@ -217,3 +217,25 @@ Feature: LTI Grade Push
     Then the user switches to the "LTI Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the "Push Grades to LMS" button is disabled
+
+  @javascript
+  Scenario: Candidate review completion automatically queues an LTI grade push
+    Given the bingo game has an LTI connection configured
+    Given the LMS grade push endpoint is available
+    Then completing the candidate review queues an LTI grade push
+
+  @javascript
+  Scenario: Assignment grading automatically queues an LTI grade push
+    Given the LMS grade push endpoint is available
+    Given a linked LTI assignment submission exists
+    Then grading the assignment submission queues an LTI grade push
+
+  @javascript
+  Scenario: Ended assessment automatically queues an LTI grade push
+    Given the project has an ended assessment
+    Then the hourly reminder sweep queues its LTI grade push
+
+  @javascript
+  Scenario: Ended experience automatically queues an LTI grade push
+    Given the course has an ended experience
+    Then the hourly reminder sweep queues its LTI grade push
