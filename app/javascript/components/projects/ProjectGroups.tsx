@@ -60,6 +60,7 @@ export default function ProjectGroups(props: Props) {
   const [suggestedGroups, setSuggestedGroups] = useState([]);
   const [suggestionSummary, setSuggestionSummary] = useState(null);
   const [ltiGroupsPreview, setLtiGroupsPreview] = useState<LtiGroupsPreview | null>(null);
+  const [ltiGroupsAvailable, setLtiGroupsAvailable] = useState(false);
 
   // Modal Dialog UI States
   const [showConfigDialog, setShowConfigDialog] = useState(false);
@@ -173,6 +174,7 @@ export default function ProjectGroups(props: Props) {
         setSuggestionSummary(null);
         setGroupsRaw(data.groups);
         setStudentsRaw(data.students);
+        setLtiGroupsAvailable(data.lti_groups_available);
       })
       .catch(error => {
         console.log("error", error);
@@ -536,7 +538,7 @@ export default function ProjectGroups(props: Props) {
                 <Button
                   onClick={retrieveLtiGroups}
                   icon="pi pi-download"
-                  disabled={working || dirty === DIRTY_STATUS.DIRTY}
+                  disabled={working || dirty === DIRTY_STATUS.DIRTY || !ltiGroupsAvailable}
                 >
                   {t("groups.retrieve_lti_groups")}
                 </Button>

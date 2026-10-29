@@ -269,7 +269,8 @@ class ProjectsController < ApplicationController
         render json: {
           message:,
           groups:,
-          students:
+          students:,
+          lti_groups_available: LtiGroupImport.new( project ).resource_link.present?
         }
       end
     end

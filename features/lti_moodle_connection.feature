@@ -82,3 +82,11 @@ Feature: LTI Moodle Platform Connection
     Then the project has 2 groups
     Then group "LTI Team A" has 4 user
     Then group "LTI Team B" has 4 user
+
+  @javascript
+  Scenario: Group retrieval is disabled when the course has no NRPS connection
+    Then the user logs in and accesses the "Courses" admin page
+    Then the user opens the course
+    Then the user clicks on the existing project
+    Then the user switches to the "Groups" tab
+    Then the "Retrieve Groups from LTI" button is disabled
