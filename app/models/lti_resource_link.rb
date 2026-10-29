@@ -20,7 +20,7 @@ class LtiResourceLink < ApplicationRecord
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER if http.use_ssl?
 
     request = Net::HTTP::Get.new(uri)
-    request['Authorization'] = 'Bearer '.concat(access_token)
+    request['Authorization'] = ['Bearer', access_token].join(' ')
     request['Accept'] = 'application/vnd.ims.lti-nrps.v2.membershipcontainer+json'
 
     response = http.request(request)

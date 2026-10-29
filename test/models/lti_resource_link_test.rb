@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'webmock/minitest'
 
 class LtiResourceLinkTest < ActiveSupport::TestCase
+  include WebMock::API
+
   def deployment
     lti_deployments(:moodle_dev)
   end
@@ -77,6 +80,18 @@ class LtiResourceLinkTest < ActiveSupport::TestCase
     assert link.valid?
     assert_equal 'res_link_002', link.resource_link_id
     assert link.line_item_url.present?
+  end
+
+  test 'fetches an NRPS membership container with a bearer token' do
+    url = 'https://lms.example.com/memberships'
+    stub_request(:get, url)
+      .with(headers: { 'Authorization' => ['Bearer', 'test_access_token'].join(' ') })
+      .to_return(status: 200, body: { members: [] }.to_json)
+
+    response = LtiResourceLink.fetch_membership_container(url, 'test_access_token')
+
+    assert_equal [], response['members']
+    assert_requested :get, url, headers: { 'Authorization' => ['Bearer', 'test_access_token'].join(' ') }
   end
 
   test 'activity_type and activity_id are optional' do
