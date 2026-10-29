@@ -1,4 +1,4 @@
-appId: org.mgmodell.colab
+appId: com.mmp.colab
 ---
 - launchApp:
     clearState: true

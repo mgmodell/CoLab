@@ -4,8 +4,8 @@
     "slug": "colab-mobile",
     "version": "0.1.0",
     "orientation": "portrait",
-    "ios": { "bundleIdentifier": "org.mgmodell.colab" },
-    "android": { "package": "org.mgmodell.colab" },
+    "ios": { "bundleIdentifier": "com.mmp.colab" },
+    "android": { "package": "com.mmp.colab" },
     "extra": { "apiUrl": "http://10.0.2.2:3000" }
   }
 }

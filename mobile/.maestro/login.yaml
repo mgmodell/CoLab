@@ -1,6 +1,6 @@
 # Runs on both iOS and Android: `maestro test .maestro`
 # Requires a running CoLab server seeded with the user below.
-appId: org.mgmodell.colab
+appId: com.mmp.colab
 ---
 - launchApp:
     clearState: true
