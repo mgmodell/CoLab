@@ -15,6 +15,7 @@ class Submission < ApplicationRecord
 
   before_validation :set_rubric
   validate :group_valid, :can_submit
+  after_commit :enqueue_lti_grade_push, on: :update, if: :saved_change_to_recorded_score?
 
   validates :user, presence: true
   validates :creator, presence: true
@@ -41,6 +42,10 @@ class Submission < ApplicationRecord
   end
 
   private
+
+  def enqueue_lti_grade_push
+    LtiGradePushJob.perform_later( self ) unless recorded_score.nil?
+  end
 
   def group_valid
     return unless assignment.group_enabled && group.nil?

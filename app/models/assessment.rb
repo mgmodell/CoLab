@@ -116,7 +116,6 @@ class Assessment < ApplicationRecord
                     priority: AdministrativeMailer::PRIORITY[:INFO]
                   )
                 end
-
                 assessment.instructor_updated = true
                 assessment.save
                 logger.debug assessment.errors.full_messages unless assessment.errors.empty?
@@ -189,4 +188,5 @@ class Assessment < ApplicationRecord
 
   delegate :name, to: :project
   delegate :description, to: :project
+
 end

@@ -692,11 +692,6 @@ class BingoGamesController < ApplicationController
   end
 
   def grade_scores_for( bingo_game )
-    bingo_game.candidate_lists.includes( :group, candidates: :candidate_feedback )
-              .flat_map do | cl |
-      users = cl.is_group && cl.group.present? ? cl.group.users : [cl.user].compact
-      score = cl.performance.to_f
-      users.map { | u | { user_id: u.id.to_s, score_given: score, score_maximum: 100 } }
-    end
+    bingo_game.lti_grade_scores
   end
 end

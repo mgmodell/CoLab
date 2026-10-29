@@ -15,7 +15,6 @@ class Experience < ApplicationRecord
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
-
   scope :active_at, lambda { | date |
                       where( active: true )
                         .where( 'experiences.start_date <= ? AND experiences.end_date >= ?', date, date )
@@ -27,6 +26,13 @@ class Experience < ApplicationRecord
     reaction = Reaction.create( user:, experience: self, instructed: false ) if reaction.nil?
     reaction.assign_narrative if reaction.narrative.nil?
     reaction
+  end
+
+  def lti_grade_scores
+    reactions.includes( :user ).map do | reaction |
+      score = reaction.status.is_a?( Integer ) && reaction.status.positive? ? 100 : 0
+      { user_id: reaction.user_id.to_s, score_given: score, score_maximum: 100 }
+    end
   end
 
   def get_link
