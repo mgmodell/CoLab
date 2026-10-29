@@ -80,8 +80,8 @@ Feature: LTI Moodle Platform Connection
     Then the user replaces the existing groups with the retrieved NRPS groups
     Then retrieve the latest project from the db
     Then the project has 2 groups
-    Then group "LTI Team A" has 4 user
-    Then group "LTI Team B" has 4 user
+    Then group "LMS Team A" has 4 user
+    Then group "LMS Team B" has 4 user
 
   @javascript
   Scenario: Group retrieval is disabled when the course has no NRPS connection

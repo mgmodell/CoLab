@@ -1,7 +1,7 @@
 en:
   lti:
     register:
-      title: "CoLab – LTI Dynamic Registration"
+      title: "CoLab – LMS Dynamic Registration"
       heading: "CoLab – LTI Dynamic Registration"
       error_heading: "Registration error:"
       error_detail: >

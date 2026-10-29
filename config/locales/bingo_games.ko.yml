@@ -118,7 +118,7 @@ ko:
     scored_success: >
       점수가 성공적으로 저장되었습니다.
     lti:
-      panel_title: LTI 성적 전달
+      panel_title: LMS 성적 전달
       line_item_url_lbl: LMS 라인 항목 URL
       line_item_url_placeholder: "예: https://lms.example.com/api/lti/courses/1/line_items/1"
       ags_token_url_lbl: AGS 액세스 토큰 URL
@@ -126,7 +126,7 @@ ko:
       client_id_lbl: 클라이언트 ID
       deployment_id_lbl: 배포 ID
       iss_lbl: 발급자 (iss)
-      save_btn: LTI 연결 저장
+      save_btn: LMS 연결 저장
       push_btn: LMS에 성적 전송
       not_configured: 구성되지 않음
       configured: 연결됨

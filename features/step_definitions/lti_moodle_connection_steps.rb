@@ -151,7 +151,7 @@ Given( 'the Moodle NRPS response includes group assignments for the course' ) do
       email: roster.user.email,
       groups: [{
         id: "lti-team-#{index / 4}",
-        name: "LTI Team #{index < 4 ? 'A' : 'B'}"
+        name: "LMS Team #{index < 4 ? 'A' : 'B'}"
       }]
     }
   end
@@ -171,21 +171,21 @@ Then( 'the user compares NRPS groups without replacing the existing groups' ) do
   end
   step 'the user clicks "Retrieve Groups from LTI"'
   page.should have_content 'Current CoLab Groups'
-  page.should have_content 'Retrieved LTI Groups'
-  page.should have_content 'LTI Team A'
-  page.should have_content 'LTI Team B'
+  page.should have_content 'Retrieved LMS Groups'
+  page.should have_content 'LMS Team A'
+  page.should have_content 'LMS Team B'
   @project.reload.groups.includes( :users ).map { |group| [group.id, group.users.pluck( :id ).sort] }
           .should eq existing_groups
 
   step 'the user clicks "Cancel"'
-  page.should have_no_content 'Retrieved LTI Groups'
+  page.should have_no_content 'Retrieved LMS Groups'
   @project.reload.groups.includes( :users ).map { |group| [group.id, group.users.pluck( :id ).sort] }
           .should eq existing_groups
 end
 
 Then( 'the user replaces the existing groups with the retrieved NRPS groups' ) do
   step 'the user clicks "Retrieve Groups from LTI"'
-  page.should have_content 'LTI Team A'
+  page.should have_content 'LMS Team A'
   step 'the user clicks "Replace Current Groups"'
   step 'the user sees a success message'
 end
