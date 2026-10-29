@@ -66,3 +66,27 @@ Feature: LTI Moodle Platform Connection
     Then the user "student@moodle.local" is enrolled in the CoLab course
     And the user "student@moodle.local" has the enrolled_student role in the CoLab course
     And the LTI resource link stores its NRPS membership URL
+
+  @javascript
+  Scenario: An instructor previews NRPS groups before choosing whether to replace CoLab groups
+    Given a registered LTI deployment exists for issuer "http://moodle:8080"
+    And the Moodle NRPS response includes group assignments for the course
+    And the project has a group with 4 confirmed users
+    Then the user logs in and accesses the "Courses" admin page
+    Then the user opens the course
+    Then the user clicks on the existing project
+    Then the user switches to the "Groups" tab
+    Then the user compares NRPS groups without replacing the existing groups
+    Then the user replaces the existing groups with the retrieved NRPS groups
+    Then retrieve the latest project from the db
+    Then the project has 2 groups
+    Then group "LMS Team A" has 4 user
+    Then group "LMS Team B" has 4 user
+
+  @javascript
+  Scenario: Group retrieval is disabled when the course has no NRPS connection
+    Then the user logs in and accesses the "Courses" admin page
+    Then the user opens the course
+    Then the user clicks on the existing project
+    Then the user switches to the "Groups" tab
+    Then the "Retrieve Groups from LTI" button is disabled

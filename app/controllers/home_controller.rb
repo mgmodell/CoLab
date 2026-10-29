@@ -165,6 +165,7 @@ class HomeController < ApplicationController
           diversityCheckUrl: check_diversity_score_path,
           groupsUrl: groups_path( id: '' ),
           suggestGroupsUrl: suggest_groups_path( id: '' ),
+          previewLtiGroupsUrl: preview_lti_groups_path( id: '' ),
           diversityRescoreGroup: rescore_group_path( id: '' ),
           diversityRescoreGroups: rescore_groups_path( id: '' ),
           ltiConnectionUrl: project_lti_connection_path( id: '' ),
