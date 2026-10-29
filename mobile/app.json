@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "CoLab",
+    "slug": "colab-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "ios": { "bundleIdentifier": "org.mgmodell.colab" },
+    "android": { "package": "org.mgmodell.colab" },
+    "extra": { "apiUrl": "http://10.0.2.2:3000" }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "colab-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "e2e": "maestro test .maestro"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "expo": "~53.0.0",
+    "expo-constants": "~17.1.0",
+    "expo-secure-store": "~14.2.0",
+    "react": "19.0.0",
+    "react-native": "0.79.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/react": "~19.0.10",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "~5.8.3"
+  }
+}

@@ -1,0 +1,17 @@
+# Runs on both iOS and Android: `maestro test .maestro`
+# Requires a running CoLab server seeded with the user below.
+appId: org.mgmodell.colab
+---
+- launchApp:
+    clearState: true
+- assertVisible: "CoLab"
+- tapOn:
+    id: "email"
+- inputText: "${E2E_EMAIL}"
+- tapOn:
+    id: "password"
+- inputText: "${E2E_PASSWORD}"
+- tapOn:
+    id: "sign-in"
+- assertVisible:
+    id: "home"

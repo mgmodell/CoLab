@@ -1,0 +1,14 @@
+appId: org.mgmodell.colab
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: "email"
+- inputText: "nobody@example.com"
+- tapOn:
+    id: "password"
+- inputText: "wrong-password"
+- tapOn:
+    id: "sign-in"
+- assertVisible:
+    id: "login-error"
