@@ -12,6 +12,7 @@
     "e2e": "maestro test .maestro"
   },
   "dependencies": {
+    "@react-native-google-signin/google-signin": "^15.0.0",
     "axios": "^1.20.0",
     "expo": "~53.0.0",
     "expo-constants": "~17.1.0",

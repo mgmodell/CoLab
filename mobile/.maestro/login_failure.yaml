@@ -12,3 +12,7 @@ appId: com.mmp.colab
     id: "sign-in"
 - assertVisible:
     id: "login-error"
+# Google sign-in uses a native account chooser that cannot be automated, so only
+# its presence is checked here.
+- assertVisible:
+    id: "google-sign-in"

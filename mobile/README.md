@@ -45,3 +45,17 @@ This seeds `mobile_e2e@example.com` / `password` (override with `E2E_EMAIL` /
 **iOS:** simulators only run on macOS and cannot run in a Linux container. With
 the backend published on `localhost:3000`, run `mobile/scripts/e2e_ios.sh` on the
 Mac host. CI builds the iOS app on a macOS runner.
+
+## Google sign-in
+
+The login screen offers "Continue with Google" using
+`@react-native-google-signin/google-signin` (needs a dev build / `expo prebuild`,
+not Expo Go). The app gets the Google web client id from the server
+(`lookups.oauth_ids.google`, same as the web UI), obtains an ID token natively,
+and posts it to `/auth/validate.json`, the endpoint the web client uses.
+
+Setup: in Google Cloud create an Android client (package `org.mgmodell.colab`,
+with your signing SHA-1) and an iOS client, then replace the
+`REPLACE_WITH_IOS_CLIENT_ID` placeholders in `app.json`. The native account
+chooser can't be automated by Maestro, so the e2e flows only check that the
+button is present.

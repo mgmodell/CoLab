@@ -119,4 +119,51 @@ describe("AuthClient", () => {
     expect((await client.signOut()).status).toBe("signedOut");
     expect(await storage.get(SAVED_CREDS_KEY)).toBeNull();
   });
+
+  it("signs in with a Google ID token via /auth/validate", async () => {
+    const storage = memStorage();
+    const calls: any[] = [];
+    const client = new AuthClient(
+      httpReturning(o => {
+        calls.push(o);
+        return { status: 200, headers: hdrs(future()), data: { message: "ok" } };
+      }),
+      storage
+    );
+    expect((await client.signInWithGoogle("idtok")).status).toBe("signedIn");
+    expect(calls[0].url).toBe("/auth/validate.json");
+    expect(calls[0].data).toEqual({ id_token: "idtok" });
+    expect(await storage.get(SAVED_CREDS_KEY)).toContain("tok");
+  });
+
+  it("errors when the server returns no credentials for a Google token", async () => {
+    const client = new AuthClient(
+      httpReturning(() => ({ status: 200, headers: {}, data: { message: "no login yet" } })),
+      memStorage()
+    );
+    expect(await client.signInWithGoogle("idtok")).toEqual({
+      status: "error",
+      message: "google_failed"
+    });
+  });
+
+  it("treats a cancelled Google flow as signed out, not an error", () => {
+    const client = new AuthClient(httpReturning(() => ({})), memStorage());
+    client.googleFailed(true);
+    expect(client.getState().status).toBe("signedOut");
+    client.googleFailed(false);
+    expect(client.getState().message).toBe("google_failed");
+  });
+
+  it("reads the Google client id from the server lookups", async () => {
+    const client = new AuthClient(
+      httpReturning(() => ({
+        status: 200,
+        headers: {},
+        data: { lookups: { oauth_ids: { google: "gid" } } }
+      })),
+      memStorage()
+    );
+    expect(await client.getGoogleClientId()).toBe("gid");
+  });
 });

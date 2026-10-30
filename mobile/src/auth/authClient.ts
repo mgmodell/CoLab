@@ -114,6 +114,60 @@ export class AuthClient {
     }
   }
 
+  /** Google client id published by the server (same lookup the web sign-in uses). */
+  async getGoogleClientId(): Promise<string | null> {
+    try {
+      const resp = await this.http.request({
+        method: "GET",
+        url: "/endpoints.json"
+      });
+      return resp.data?.lookups?.oauth_ids?.google ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Exchange a Google ID token for a CoLab session using the same endpoint as
+   * the web client (users/omniauth_callbacks#validate).
+   */
+  async signInWithGoogle(idToken: string): Promise<AuthState> {
+    if (!idToken) {
+      this.set({ status: "error", message: "google_failed" });
+      return this.state;
+    }
+    this.set({ status: "loading" });
+    try {
+      const resp = await this.http.request({
+        method: "POST",
+        url: "/auth/validate.json",
+        data: { id_token: idToken }
+      });
+      if (!pickAuthHeaders(resp.headers)) {
+        this.set({ status: "error", message: "google_failed" });
+      } else {
+        await this.persist(resp.headers);
+        this.set({ status: "signedIn" });
+      }
+    } catch (e: any) {
+      const code = e?.response?.status ?? e?.status;
+      this.set({
+        status: "error",
+        message: code === 401 ? "google_failed" : "network"
+      });
+    }
+    return this.state;
+  }
+
+  /** Report a failure from the native Google flow (user cancellation is not an error). */
+  googleFailed(cancelled: boolean) {
+    this.set(
+      cancelled
+        ? { status: "signedOut" }
+        : { status: "error", message: "google_failed" }
+    );
+  }
+
   async signIn(email: string, password: string): Promise<AuthState> {
     if (!email || !password) {
       this.set({ status: "error", message: "missing_credentials" });

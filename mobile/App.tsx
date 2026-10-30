@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, SafeAreaView, Text, View } from "react-native";
-import { authClient } from "./src/auth/platform";
+import { authClient, signInWithGoogle } from "./src/auth/platform";
 import { AuthState } from "./src/auth/authClient";
 import LoginScreen from "./src/screens/LoginScreen";
 
@@ -24,6 +24,7 @@ export default function App() {
         <LoginScreen
           state={state}
           onSignIn={(e, p) => authClient.signIn(e, p)}
+          onGoogleSignIn={signInWithGoogle}
         />
       )}
     </SafeAreaView>

@@ -12,15 +12,17 @@ import { AuthState } from "../auth/authClient";
 interface Props {
   state: AuthState;
   onSignIn: (email: string, password: string) => void;
+  onGoogleSignIn: () => void;
 }
 
 const messages: { [key: string]: string } = {
   invalid_credentials: "Invalid email or password.",
   missing_credentials: "Enter your email and password.",
+  google_failed: "Google sign-in failed. Try again.",
   network: "Unable to reach the server. Try again."
 };
 
-export default function LoginScreen({ state, onSignIn }: Props) {
+export default function LoginScreen({ state, onSignIn, onGoogleSignIn }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const loading = state.status === "loading";
@@ -62,6 +64,13 @@ export default function LoginScreen({ state, onSignIn }: Props) {
           testID="sign-in"
           title="Sign in"
           onPress={() => onSignIn(email, password)}
+        />
+      )}
+      {!loading && (
+        <Button
+          testID="google-sign-in"
+          title="Continue with Google"
+          onPress={onGoogleSignIn}
         />
       )}
     </View>
