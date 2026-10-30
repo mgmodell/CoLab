@@ -6,10 +6,14 @@ The auth layer (`src/auth/authClient.ts`) is platform neutral and uses the same
 devise_token_auth contract as the web client (`/auth/sign_in`, token headers,
 `/endpoints.json`). Auth states: `signedOut`, `loading`, `signedIn`, `expired`, `error`.
 
-- `yarn install && yarn test` – unit tests
-- `yarn typecheck`
-- `yarn android` / `yarn ios` – build and run
-- `E2E_EMAIL=… E2E_PASSWORD=… yarn e2e` – [Maestro](https://maestro.mobile.dev) flows in `.maestro/`
+`mobile/` is its own **npm** project (the repo root uses Yarn 4, which refuses to
+run in a nested directory it doesn't manage). Use `npm`, not `yarn`, in here:
+
+- `npm ci --legacy-peer-deps` – install (first time; use `npm install --legacy-peer-deps` to change deps)
+- `npm test` – unit tests
+- `npm run typecheck`
+- `npm run android` / `npm run ios` – build and run (needs the Android SDK / Xcode; in the containers use `scripts/e2e_android.sh`, which installs them)
+- `E2E_EMAIL=… E2E_PASSWORD=… npm run e2e` – [Maestro](https://maestro.mobile.dev) flows in `.maestro/`
   (same flows run on iOS simulator and Android emulator)
 
 ## End-to-end tests in the containers
