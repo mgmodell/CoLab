@@ -54,7 +54,7 @@ not Expo Go). The app gets the Google web client id from the server
 (`lookups.oauth_ids.google`, same as the web UI), obtains an ID token natively,
 and posts it to `/auth/validate.json`, the endpoint the web client uses.
 
-Setup: in Google Cloud create an Android client (package `org.mgmodell.colab`,
+Setup: in Google Cloud create an Android client (package `com.mmp.colab`,
 with your signing SHA-1) and an iOS client, then replace the
 `REPLACE_WITH_IOS_CLIENT_ID` placeholders in `app.json`. The native account
 chooser can't be automated by Maestro, so the e2e flows only check that the
