@@ -42,6 +42,29 @@ backend runs in the container.
 
 `scripts/e2e_ios.sh` automates the iOS part of this.
 
+### Troubleshooting: "The emulator (...) quit before it finished opening"
+
+`expo run:android` only launches the AVD; the failure is in the emulator itself.
+Start it by hand to see the real error:
+
+    $ANDROID_HOME/emulator/emulator @Medium_Phone_API_37.0 -verbose
+
+Common causes:
+
+- **Wrong CPU architecture.** On Apple silicon the AVD must use an `arm64-v8a`
+  system image. An `x86_64` image will exit immediately. In Android Studio's
+  Device Manager, delete the AVD and create a new one from an arm64 image.
+- **Missing or old emulator.** Update *Android Emulator* and the system image in
+  SDK Manager > SDK Tools. A brand-new preview API level (such as 37) is the most
+  likely to be flaky; try a stable image (e.g. API 35 or 36).
+- **Not enough disk or RAM.** The emulator needs several GB free.
+- **Stale state.** Run it once with `-wipe-data`, or start it from Android
+  Studio's Device Manager first, wait for the home screen, then run
+  `npm run android` so Expo finds the running device.
+
+You can also ignore the `npm audit` and `fsevents` warnings during install; they
+come from build tooling and don't affect the app.
+
 ## End-to-end tests in the containers (x86_64 Linux with /dev/kvm only)
 
 The Maestro flows need an emulator and a seeded backend. Both are wired into the
