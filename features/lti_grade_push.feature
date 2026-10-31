@@ -26,7 +26,7 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks on the existing bingo game
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the user sets the "LMS Line Item URL" field to "https://lms.example.com/api/lti/line_items/1"
     Then the user sets the "AGS Access Token URL" field to "https://lms.example.com/login/oauth2/token"
@@ -34,7 +34,7 @@ Feature: LTI Grade Push
     Then the user sets the "Deployment ID" field to "deploy-001"
     Then the user sets the "Issuer (iss)" field to "https://lms.example.com"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest Bingo! game from the db
@@ -55,11 +55,11 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks on the existing bingo game
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user sets the "LMS Line Item URL" field to "https://updated-lms.example.com/api/lti/line_items/2"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest Bingo! game from the db
@@ -76,7 +76,7 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks on the existing bingo game
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
@@ -93,13 +93,13 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user edits the existing experience
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the user sets the "LMS Line Item URL" field to "https://lms.example.com/api/lti/line_items/10"
     Then the user sets the "AGS Access Token URL" field to "https://lms.example.com/login/oauth2/token"
     Then the user sets the "Client ID" field to "exp-client-789"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest Experience from the db
@@ -119,11 +119,11 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user edits the existing experience
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user sets the "Client ID" field to "updated-exp-client"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest Experience from the db
@@ -142,7 +142,7 @@ Feature: LTI Grade Push
     Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user edits the existing experience
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
@@ -156,14 +156,14 @@ Feature: LTI Grade Push
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing project
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the user sets the "LMS Line Item URL" field to "https://lms.example.com/api/lti/line_items/20"
     Then the user sets the "AGS Access Token URL" field to "https://lms.example.com/login/oauth2/token"
     Then the user sets the "Client ID" field to "proj-client-456"
     Then the user sets the "Deployment ID" field to "deploy-proj-001"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest project from the db
@@ -180,11 +180,11 @@ Feature: LTI Grade Push
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing project
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user sets the "Deployment ID" field to "updated-deploy-002"
     Then close all messages
-    Then the user clicks "Save LTI Connection"
+    Then the user clicks "Save LMS Connection"
     Then the user waits to see "saved successfully"
     Then close all messages
     Then retrieve the latest project from the db
@@ -200,7 +200,7 @@ Feature: LTI Grade Push
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing project
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Connected"
     Then the user clicks "Push Grades to LMS" and confirms the grade push dialog
     Then the user waits to see "Successfully pushed"
@@ -214,7 +214,7 @@ Feature: LTI Grade Push
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks on the existing project
-    Then the user switches to the "LTI Grade Passback" tab
+    Then the user switches to the "LMS Grade Passback" tab
     Then the user sees the LTI connection status is "Not configured"
     Then the "Push Grades to LMS" button is disabled
 
