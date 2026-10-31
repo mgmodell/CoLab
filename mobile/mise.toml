@@ -1,0 +1,3 @@
+# Merged with the repo-root mise.toml when working in mobile/
+[tools]
+java = "temurin-17"

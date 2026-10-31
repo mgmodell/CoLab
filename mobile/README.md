@@ -45,10 +45,10 @@ backend runs in the container.
 ### Troubleshooting: "Unsupported class file major version 69"
 
 Gradle is running on JDK 25, which the Gradle bundled with React Native 0.79
-can't read. Install JDK 17 (`brew install --cask temurin@17`) and use
-`npm run android`, which now selects JDK 17/21 automatically (or set `JAVA_HOME`
-yourself). Then `rm -rf android` is not needed, but if it still fails run
-`cd android && ./gradlew --stop` to kill the old Gradle daemon.
+can't read. `mobile/mise.toml` pins `java = "temurin-17"`, and `npm run android`
+installs it with mise and uses it automatically (no mise? it falls back to a JDK
+17/21 found by `/usr/libexec/java_home`). If it still fails, run
+`cd android && ./gradlew --stop` and retry.
 
 ### Troubleshooting: "The emulator (...) quit before it finished opening"
 
