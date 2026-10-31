@@ -325,6 +325,10 @@ Moodle, Canvas, Blackboard, Brightspace, and other compliant LMS platforms.
 See [doc/LTI_INTEGRATION.md](doc/LTI_INTEGRATION.md) for step-by-step connection
 instructions.
 
+## Mobile
+
+CoLab supports a mobile application written in [ReactNative](https://github.com/expo/expo). Documentation is [available](mobile/README.md).
+
 ## Security (penetration-testing) environment
 
 An isolated container stack for **authorized** security testing pairs a faithful

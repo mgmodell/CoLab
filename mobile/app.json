@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "CoLab",
+    "slug": "colab-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "ios": { "bundleIdentifier": "com.mmp.colab" },
+    "android": { "package": "com.mmp.colab" },
+    "plugins": [["@react-native-google-signin/google-signin", { "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_IOS_CLIENT_ID" }]],
+    "extra": {
+      "googleIosClientId": "REPLACE_WITH_IOS_CLIENT_ID.apps.googleusercontent.com", "apiUrl": "http://10.0.2.2:3000" }
+  }
+}
