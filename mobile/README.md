@@ -42,6 +42,14 @@ backend runs in the container.
 
 `scripts/e2e_ios.sh` automates the iOS part of this.
 
+### Troubleshooting: "Unsupported class file major version 69"
+
+Gradle is running on JDK 25, which the Gradle bundled with React Native 0.79
+can't read. Install JDK 17 (`brew install --cask temurin@17`) and use
+`npm run android`, which now selects JDK 17/21 automatically (or set `JAVA_HOME`
+yourself). Then `rm -rf android` is not needed, but if it still fails run
+`cd android && ./gradlew --stop` to kill the old Gradle daemon.
+
 ### Troubleshooting: "The emulator (...) quit before it finished opening"
 
 `expo run:android` only launches the AVD; the failure is in the emulator itself.
