@@ -12,11 +12,37 @@ run in a nested directory it doesn't manage). Use `npm`, not `yarn`, in here:
 - `npm ci --legacy-peer-deps` – install (first time; use `npm install --legacy-peer-deps` to change deps)
 - `npm test` – unit tests
 - `npm run typecheck`
-- `npm run android` / `npm run ios` – build and run (needs the Android SDK / Xcode; in the containers use `scripts/e2e_android.sh`, which installs them)
+- `npm run android` / `npm run ios` – build and run on an emulator/simulator. These need the Android SDK / Xcode and an emulator, which the containers do not have, so **run them on the host**, not in the dev container (see "Running on a Mac")
 - `E2E_EMAIL=… E2E_PASSWORD=… npm run e2e` – [Maestro](https://maestro.mobile.dev) flows in `.maestro/`
   (same flows run on iOS simulator and Android emulator)
 
-## End-to-end tests in the containers
+## Running on a Mac (Apple silicon or Intel)
+
+The Android emulator container needs `/dev/kvm`, which Podman on macOS doesn't
+provide, so on a Mac the emulator/simulator runs on the **host** and only the
+backend runs in the container.
+
+1. Install on the host: Node 22, Xcode (iOS), and Android Studio (Android SDK +
+   an emulator image; create an AVD in Device Manager).
+2. Start the backend from the dev container (`bin/rails server -b 0.0.0.0`, port
+   3000 is already published to the host) and seed a login:
+   `bin/rails mobile:seed_e2e` (mobile_e2e@example.com / password).
+3. On the host, in `mobile/`:
+
+       npm ci --legacy-peer-deps
+       export ANDROID_HOME="$HOME/Library/Android/sdk"
+       export PATH="$ANDROID_HOME/platform-tools:$PATH"
+       # start the AVD from Android Studio first, then:
+       COLAB_API_URL=http://10.0.2.2:3000 npm run android   # Android emulator
+       COLAB_API_URL=http://localhost:3000 npm run ios      # iOS simulator
+
+   `10.0.2.2` is how the Android emulator reaches the host's localhost.
+4. Maestro on the host (`brew install maestro`, or the installer at
+   <https://maestro.mobile.dev>): `E2E_EMAIL=mobile_e2e@example.com E2E_PASSWORD=password npm run e2e`.
+
+`scripts/e2e_ios.sh` automates the iOS part of this.
+
+## End-to-end tests in the containers (x86_64 Linux with /dev/kvm only)
 
 The Maestro flows need an emulator and a seeded backend. Both are wired into the
 Podman setups; `mobile/scripts/e2e_android.sh` does the work (installs a JDK,
