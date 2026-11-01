@@ -133,7 +133,9 @@ The error line now shows a detail underneath (and `console.warn` logs it; see
   - The **Android** OAuth client is never put in `app.json`. Google matches it
     on the app's package name (`org.mgmodell.colab`) plus the **SHA-1 of the
     keystore that signed the build**. For `npm run android` that is the debug
-    keystore: `keytool -list -v -keystore mobile/android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android`.
+    keystore: `keytool -list -v -keystore mobile/android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android`
+    (or just run `mobile/scripts/signing_report.sh`, which also uses the right JDK; a bare
+    `./gradlew signingReport` fails without `ANDROID_HOME`).
     Paste that SHA-1 into the Android client. It can take several minutes to propagate.
   - The ID token is requested for the **Web** client id, which the server
     publishes from `credentials.google.client_id`. That must be the Web
