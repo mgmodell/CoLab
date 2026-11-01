@@ -55,10 +55,10 @@ mkdir -p tmp log
 bundle exec rails server -p 3000 -b 0.0.0.0 -P tmp/pids/mobile_e2e.pid >log/mobile_e2e_server.log 2>&1 &
 RAILS_PID=$!
 for _ in $(seq 1 60); do
-  curl -fs http://localhost:3000/endpoints.json >/dev/null 2>&1 && break
+  curl -fs http://localhost:3000/infra/endpoints.json >/dev/null 2>&1 && break
   sleep 2
 done
-curl -fs http://localhost:3000/endpoints.json >/dev/null || {
+curl -fs http://localhost:3000/infra/endpoints.json >/dev/null || {
   echo "ERROR: backend did not start; see log/mobile_e2e_server.log" >&2
   exit 1
 }

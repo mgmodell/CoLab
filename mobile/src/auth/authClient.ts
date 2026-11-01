@@ -4,7 +4,7 @@ import { ROUTES } from "./routes";
  * Platform-neutral authentication layer. It speaks the same devise_token_auth
  * contract as the web client (app/javascript/components/infrastructure/
  * ContextSlice.ts): POST /auth/sign_in, the access-token/client/uid/expiry
- * headers, and GET /endpoints.json for the logged_in check.
+ * headers, and GET /infra/endpoints.json (see routes.ts) for the logged_in check.
  */
 
 export type AuthStatus =
