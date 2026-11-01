@@ -120,3 +120,28 @@ with your signing SHA-1) and an iOS client, then replace the
 `REPLACE_WITH_IOS_CLIENT_ID` placeholders in `app.json`. The native account
 chooser can't be automated by Maestro, so the e2e flows only check that the
 button is present.
+
+### Troubleshooting: "Google sign-in failed"
+
+The error line now shows a detail underneath (and `console.warn` logs it; see
+`npx react-native log-android` or `adb logcat *:S ReactNativeJS:V`). Match it to:
+
+- `no_client_id` / "server did not provide a Google client id": the app
+  reached the server but `credentials.google.client_id` is unset, or `apiUrl` is
+  wrong.
+- `10` / `DEVELOPER_ERROR`: the Google Cloud setup doesn't match the build.
+  - The **Android** OAuth client is never put in `app.json`. Google matches it
+    on the app's package name (`org.mgmodell.colab`) plus the **SHA-1 of the
+    keystore that signed the build**. For `npm run android` that is the debug
+    keystore: `keytool -list -v -keystore mobile/android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android`.
+    Paste that SHA-1 into the Android client. It can take several minutes to propagate.
+  - The ID token is requested for the **Web** client id, which the server
+    publishes from `credentials.google.client_id`. That must be the Web
+    application client (the same one the web UI uses), in the **same Google Cloud
+    project** as the Android client.
+- `12500` / `SIGN_IN_FAILED`, or `PLAY_SERVICES_NOT_AVAILABLE`: the emulator image
+  needs Google Play (pick a "Google Play" system image) and a signed-in Google
+  account (Settings > Passwords & accounts).
+- `server: ...` / `server request failed (...)`: Google worked, but
+  `/auth/validate.json` rejected the token (e.g. the account isn't allowed, or the
+  server can't reach googleapis.com).

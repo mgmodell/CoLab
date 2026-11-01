@@ -143,7 +143,8 @@ describe("AuthClient", () => {
     );
     expect(await client.signInWithGoogle("idtok")).toEqual({
       status: "error",
-      message: "google_failed"
+      message: "google_failed",
+      detail: "server: no login yet"
     });
   });
 
