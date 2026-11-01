@@ -147,3 +147,11 @@ The error line now shows a detail underneath (and `console.warn` logs it; see
 - `server: ...` / `server request failed (...)`: Google worked, but
   `/auth/validate.json` rejected the token (e.g. the account isn't allowed, or the
   server can't reach googleapis.com).
+
+### Troubleshooting: iOS `pod install` "Swift pods cannot yet be integrated as static libraries"
+
+Google Sign-In's pods (`AppCheckCore`, ...) are Swift and must build as
+frameworks. `app.json` enables this with the `expo-build-properties` plugin
+(`ios.useFrameworks: "static"`). After pulling this change, regenerate the native
+project: `rm -rf ios && npx expo prebuild --platform ios --clean`, then
+`npm run ios`.
