@@ -4,9 +4,28 @@
     "slug": "colab-mobile",
     "version": "0.1.0",
     "orientation": "portrait",
-    "ios": { "bundleIdentifier": "com.mmp.colab" },
-    "android": { "package": "com.mmp.colab" },
-    "plugins": [["@react-native-google-signin/google-signin", { "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_IOS_CLIENT_ID" }]],
+    "ios": {
+      "bundleIdentifier": "com.mmp.colab"
+    },
+    "android": {
+      "package": "com.mmp.colab"
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_IOS_CLIENT_ID"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
     "extra": {
       "googleIosClientId": "881119118431-ov2rejguejndvej3r7umkq4u801p83br.apps.googleusercontent.com", "apiUrl": "http://10.0.2.2:3000" }
   }
