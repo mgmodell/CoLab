@@ -1,3 +1,4 @@
+import { ROUTES } from "../src/auth/routes";
 import {
   AuthClient,
   Http,
@@ -166,5 +167,28 @@ describe("AuthClient", () => {
       memStorage()
     );
     expect(await client.getGoogleClientId()).toBe("gid");
+  });
+
+  it("uses the server's real paths (see config/routes.rb)", async () => {
+    expect(ROUTES.endpoints).toBe("/infra/endpoints.json");
+    const urls: string[] = [];
+    const record = httpReturning(o => {
+      urls.push(o.url);
+      return { status: 200, headers: hdrs(future()), data: { logged_in: true } };
+    });
+    const storage = memStorage({ [SAVED_CREDS_KEY]: JSON.stringify(hdrs(future())) });
+    const client = new AuthClient(record, storage);
+    await client.getGoogleClientId();
+    await client.restore();
+    await client.signIn("a@b.com", "pw");
+    await client.signInWithGoogle("t");
+    await client.signOut();
+    expect(urls).toEqual([
+      "/infra/endpoints.json",
+      "/infra/endpoints.json",
+      "/auth/sign_in",
+      "/auth/validate.json",
+      "/auth/sign_out"
+    ]);
   });
 });

@@ -4,7 +4,7 @@ Student-facing mobile client. This first slice supports logging in.
 
 The auth layer (`src/auth/authClient.ts`) is platform neutral and uses the same
 devise_token_auth contract as the web client (`/auth/sign_in`, token headers,
-`/endpoints.json`). Auth states: `signedOut`, `loading`, `signedIn`, `expired`, `error`.
+`/infra/endpoints.json`; all paths live in `src/auth/routes.ts`). Auth states: `signedOut`, `loading`, `signedIn`, `expired`, `error`.
 
 `mobile/` is its own **npm** project (the repo root uses Yarn 4, which refuses to
 run in a nested directory it doesn't manage). Use `npm`, not `yarn`, in here:

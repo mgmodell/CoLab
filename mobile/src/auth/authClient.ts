@@ -1,3 +1,5 @@
+import { ROUTES } from "./routes";
+
 /*
  * Platform-neutral authentication layer. It speaks the same devise_token_auth
  * contract as the web client (app/javascript/components/infrastructure/
@@ -121,7 +123,7 @@ export class AuthClient {
     try {
       const resp = await this.http.request({
         method: "GET",
-        url: "/endpoints.json"
+        url: ROUTES.endpoints
       });
       return resp.data?.lookups?.oauth_ids?.google ?? null;
     } catch {
@@ -142,7 +144,7 @@ export class AuthClient {
     try {
       const resp = await this.http.request({
         method: "POST",
-        url: "/auth/validate.json",
+        url: ROUTES.googleValidate,
         data: { id_token: idToken }
       });
       if (!pickAuthHeaders(resp.headers)) {
@@ -184,7 +186,7 @@ export class AuthClient {
     try {
       const resp = await this.http.request({
         method: "POST",
-        url: "/auth/sign_in",
+        url: ROUTES.signIn,
         data: { email, password }
       });
       if (resp.data?.error || !pickAuthHeaders(resp.headers)) {
@@ -219,7 +221,7 @@ export class AuthClient {
     try {
       const resp = await this.http.request({
         method: "GET",
-        url: "/endpoints.json",
+        url: ROUTES.endpoints,
         headers
       });
       if (resp.data?.logged_in) {
@@ -247,7 +249,7 @@ export class AuthClient {
       if (headers) {
         await this.http.request({
           method: "DELETE",
-          url: "/auth/sign_out",
+          url: ROUTES.signOut,
           headers
         });
       }
