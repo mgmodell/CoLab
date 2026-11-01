@@ -21,6 +21,8 @@ print_help ( ) {
   echo " -f [features]  Specify specific features to run"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code (recommended)"
+  echo " -m             Run the mobile (Android) end-to-end tests against an"
+  echo "                emulator container (requires /dev/kvm)"
   echo " -t             Run a shell"
   echo " -e             Exit before running tests"
   echo " -h             Show this help and terminate"
@@ -36,6 +38,7 @@ fi
 
 SHOW_FAILS=false
 RUN_TERM=false
+RUN_MOBILE=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
 MYSQL_SESSION=false
@@ -45,7 +48,7 @@ RUN=false
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "soxb:clndf:rteq:h" opt; do
+while getopts "soxb:clndf:rmteq:h" opt; do
   case $opt in
     x) # Open up a terminal
       RUN=false
@@ -58,6 +61,10 @@ while getopts "soxb:clndf:rteq:h" opt; do
     t) # Open up a terminal
       RUN=false
       RUN_TERM=true
+      ;;
+    m) # Mobile end-to-end tests
+      RUN=false
+      RUN_MOBILE=true
       ;;
     q) # Open a mysql session
       RUN=false
@@ -79,7 +86,16 @@ done
 
 pushd containers/test_env/
 mkdir -p ../../reports
-if [ "$RUN_TERM" = true ]; then
+if [ "$RUN_MOBILE" = true ]; then
+  podman compose --profile mobile up -d android
+  DB_EXISTS=$(podman compose exec -T db mysqlshow -u test -ptest 2>/dev/null | awk '/colab_test_/ { count++ } END { print count + 0 }')
+  if [ "$DB_EXISTS" -eq 0 ]; then
+    echo "Creating the DB"
+    podman compose run --rm app -c
+  fi
+  podman compose run --rm app -m
+
+elif [ "$RUN_TERM" = true ]; then
   podman compose run --rm --entrypoint='/bin/bash -l' app
 
 elif [ "$MYSQL_SESSION" = true ]; then

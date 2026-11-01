@@ -1,0 +1,18 @@
+appId: com.mmp.colab
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: "email"
+- inputText: "nobody@example.com"
+- tapOn:
+    id: "password"
+- inputText: "wrong-password"
+- tapOn:
+    id: "sign-in"
+- assertVisible:
+    id: "login-error"
+# Google sign-in uses a native account chooser that cannot be automated, so only
+# its presence is checked here.
+- assertVisible:
+    id: "google-sign-in"

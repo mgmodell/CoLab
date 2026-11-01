@@ -6,6 +6,7 @@ RUN apt-get update && apt-get upgrade -y && \
   imagemagick \
   libvips \
   make \
+  unzip \
   ruby-build \
   vim \
   autoconf \

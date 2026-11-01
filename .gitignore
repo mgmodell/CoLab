@@ -67,3 +67,13 @@ shakapacker-config-exports/
 # Copy .env.example to .env and fill in your values.
 .env
 
+mobile/my-release-key.jks
+mobile/.idea/caches/deviceStreaming.xml
+*iml
+mobile/.idea/misc.xml
+mobile/.idea/modules.xml
+mobile/.idea/vcs.xml
+mobile/.idea/deviceManager.xml
+
+mobile/shelf/
+mobile/workspace.xml

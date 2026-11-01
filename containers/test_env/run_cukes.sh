@@ -26,6 +26,7 @@ print_help ( ) {
   echo "                If there were failures in a previous test,"
   echo "                this will run only the previously failed tests."
   echo " 		Use the -n option to start over."
+  echo " -m             Run the mobile (Android) end-to-end tests"
   echo " -t             Run a shell"
   echo " -e             Exit before running tests"
   echo " -h             Show this help and terminate"
@@ -51,8 +52,9 @@ SHOW_HELP=false
 SPEC_FEATURE=false
 CHECKOUT_BRANCH=''
 RUN_TESTS=true
+RUN_MOBILE=false
 
-while getopts "eocrhsnb:f:d:tl" opt; do
+while getopts "eocrhsnb:f:d:tlm" opt; do
   case $opt in
     c)
       DB_RESET=true
@@ -89,6 +91,10 @@ while getopts "eocrhsnb:f:d:tl" opt; do
     n)
       echo "Removing Rerun File" >&2
       CLEAR_RERUN=true
+      ;;
+    m)
+      RUN_MOBILE=true
+      RUN_TESTS=false
       ;;
     t)
       /bin/bash -i
@@ -151,6 +157,13 @@ if [ "$DB_RESET" = true ]; then
   fi
   echo "Database initialised successfully"
   exit 0;
+fi
+
+if [ "$RUN_MOBILE" = true ]; then
+  mkdir -p reports
+  # The mobile script seeds and serves the test DB; the emulator is the 'android' service
+  RAILS_ENV=$RAILS_ENV COLAB_DB=db $HOME/src/app/mobile/scripts/e2e_android.sh
+  exit $?
 fi
 
 # Show previous failures

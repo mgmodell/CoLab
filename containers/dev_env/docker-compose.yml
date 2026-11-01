@@ -105,6 +105,21 @@ services:
       - moodledata:/var/www/moodledata
       - moodlehtml:/var/www/html
 
+  # Android emulator for the mobile end-to-end tests. Needs /dev/kvm (x86_64
+  # Linux hosts, or a Podman machine with nested virtualisation).
+  # Start with:  podman compose --profile mobile up -d android
+  # Watch it at http://localhost:6081
+  android:
+    image: docker.io/budtmo/docker-android:emulator_14.0
+    profiles: ["mobile"]
+    devices:
+      - /dev/kvm
+    environment:
+      - EMULATOR_DEVICE=Samsung Galaxy S10
+      - WEB_VNC=true
+      - EMULATOR_ARGS=-no-snapshot
+    ports:
+      - 6081:6080
 
 volumes:
   devmise:

@@ -24,6 +24,7 @@ RUN apt-get update && apt-get upgrade -y && \
   mysql-client \
   ruby-build \
   tmux \
+  unzip \
   vim \
   zlib1g-dev \
   zsh
