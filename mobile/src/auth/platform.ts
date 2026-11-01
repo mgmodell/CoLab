@@ -42,7 +42,10 @@ export const authClient = new AuthClient(http, storage);
 export async function signInWithGoogle(): Promise<void> {
   const webClientId = await authClient.getGoogleClientId();
   if (!webClientId) {
-    authClient.googleFailed(false);
+    console.warn(
+      "[google] server returned no lookups.oauth_ids.google; check credentials.google.client_id and apiUrl"
+    );
+    authClient.googleFailed(false, "no_client_id");
     return;
   }
   try {
@@ -58,7 +61,8 @@ export async function signInWithGoogle(): Promise<void> {
       authClient.googleFailed(true);
     }
   } catch (e: any) {
-    // SIGN_IN_CANCELLED
-    authClient.googleFailed(e?.code === "-5" || e?.code === "SIGN_IN_CANCELLED");
+    console.warn("[google] sign-in error", e?.code, e?.message);
+    const cancelled = e?.code === "-5" || e?.code === "SIGN_IN_CANCELLED";
+    authClient.googleFailed(cancelled, `${e?.code ?? "unknown"}: ${e?.message ?? ""}`);
   }
 }

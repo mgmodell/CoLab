@@ -15,6 +15,8 @@ export type AuthStatus =
 export interface AuthState {
   status: AuthStatus;
   message?: string;
+  /** Technical detail (e.g. a native error code) to help diagnose failures */
+  detail?: string;
 }
 
 export type AuthHeaders = { [key: string]: string };
@@ -144,7 +146,11 @@ export class AuthClient {
         data: { id_token: idToken }
       });
       if (!pickAuthHeaders(resp.headers)) {
-        this.set({ status: "error", message: "google_failed" });
+        this.set({
+          status: "error",
+          message: "google_failed",
+          detail: `server: ${resp.data?.message ?? "no credentials returned"}`
+        });
       } else {
         await this.persist(resp.headers);
         this.set({ status: "signedIn" });
@@ -153,18 +159,19 @@ export class AuthClient {
       const code = e?.response?.status ?? e?.status;
       this.set({
         status: "error",
-        message: code === 401 ? "google_failed" : "network"
+        message: code === 401 ? "google_failed" : "network",
+        detail: `server request failed (${code ?? e?.message ?? "no response"})`
       });
     }
     return this.state;
   }
 
   /** Report a failure from the native Google flow (user cancellation is not an error). */
-  googleFailed(cancelled: boolean) {
+  googleFailed(cancelled: boolean, detail?: string) {
     this.set(
       cancelled
         ? { status: "signedOut" }
-        : { status: "error", message: "google_failed" }
+        : { status: "error", message: "google_failed", detail }
     );
   }
 

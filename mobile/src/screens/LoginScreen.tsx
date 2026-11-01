@@ -19,6 +19,7 @@ const messages: { [key: string]: string } = {
   invalid_credentials: "Invalid email or password.",
   missing_credentials: "Enter your email and password.",
   google_failed: "Google sign-in failed. Try again.",
+  no_client_id: "The server did not provide a Google client id.",
   network: "Unable to reach the server. Try again."
 };
 
@@ -38,6 +39,11 @@ export default function LoginScreen({ state, onSignIn, onGoogleSignIn }: Props) 
       {state.status === "error" && (
         <Text testID="login-error" style={styles.error}>
           {messages[state.message ?? "network"] ?? messages.network}
+        </Text>
+      )}
+      {state.status === "error" && state.detail && (
+        <Text testID="login-error-detail" style={styles.detail}>
+          {state.detail}
         </Text>
       )}
       <TextInput
@@ -81,5 +87,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 24, gap: 12 },
   title: { fontSize: 28, fontWeight: "bold", textAlign: "center" },
   input: { borderWidth: 1, borderColor: "#999", borderRadius: 4, padding: 10 },
-  error: { color: "#b00020" }
+  error: { color: "#b00020" },
+  detail: { color: "#666", fontSize: 12 }
 });
