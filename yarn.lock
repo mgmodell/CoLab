@@ -606,30 +606,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspack/dev-middleware@npm:^2.0.3":
-  version: 2.0.5
-  resolution: "@rspack/dev-middleware@npm:2.0.5"
+"@rspack/dev-middleware@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "@rspack/dev-middleware@npm:2.0.6"
   peerDependencies:
     "@rspack/core": ^2.0.0
   peerDependenciesMeta:
     "@rspack/core":
       optional: true
-  checksum: 10c0/25228d6e35ddf4d81f7994cb004eccf8ab67da27f513a57139e86fb4a576e3ec0b447a060b86edc873ed8a05bdd8e1e78de0f01a1414364317049fac89ea0236
+  checksum: 10c0/f1ba53218a512b8c9bf3660542afc2c9cfcfe808702beac45d6bc5d02a65069fa8976a77279bdfec99ce23bb5254454575c44e0c8834dec8a4a5ca142183dc82
   languageName: node
   linkType: hard
 
-"@rspack/dev-server@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "@rspack/dev-server@npm:2.2.1"
+"@rspack/dev-server@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@rspack/dev-server@npm:2.2.2"
   dependencies:
-    "@rspack/dev-middleware": "npm:^2.0.3"
+    "@rspack/dev-middleware": "npm:^2.0.6"
   peerDependencies:
     "@rspack/core": ^2.0.0
     selfsigned: ^5.0.0
   peerDependenciesMeta:
     selfsigned:
       optional: true
-  checksum: 10c0/8ee9d29d0f23d23e6ac8261e36ca4045bfb68317d42a1a7b48b391c2f17bb05a2086460b0966db4522e6b34748c8a46e943f63d7efe143843bf82e2606e5907e
+  checksum: 10c0/cb9f03cf6645805bac79ff4b05086477c6d1b4c388796862afe45abddbdbe49e24cb8af802e2c6e85f8f0d98ae80fd7ec55e7bdcd409a58757ea1ed7a9ee5c1d
   languageName: node
   linkType: hard
 
@@ -1624,7 +1624,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.13.0"
     "@rspack/cli": "npm:^2.2.9"
     "@rspack/core": "npm:^2.2.9"
-    "@rspack/dev-server": "npm:^2.2.1"
+    "@rspack/dev-server": "npm:^2.2.2"
     "@rspack/plugin-react-refresh": "npm:^2.0.2"
     "@swc/core": "npm:^1.16.20"
     "@types/d3-array": "npm:^3.2.2"
@@ -1642,7 +1642,7 @@ __metadata:
     "@visx/wordcloud": "npm:^4.0.0"
     "@visx/xychart": "npm:^4.0.0"
     autosuggest-highlight: "npm:^3.3.4"
-    axios: "npm:^1.20.0"
+    axios: "npm:^1.21.0"
     chroma-js: "npm:^3.2.0"
     css-loader: "npm:^7.1.5"
     d3-array: "npm:^3.2.4"
@@ -1653,8 +1653,8 @@ __metadata:
     driver.js: "npm:^1.10.2"
     email-validator: "npm:^2.0.4"
     html-react-parser: "npm:^6.1.9"
-    i18next: "npm:^26.5.10"
-    i18next-browser-languagedetector: "npm:^8.2.2"
+    i18next: "npm:^26.5.11"
+    i18next-browser-languagedetector: "npm:^8.2.3"
     i18next-fetch-backend: "npm:^8.0.0"
     i18next-intervalplural-postprocessor: "npm:^3.0.0"
     i18next-localstorage-cache: "npm:^1.1.1"
@@ -1662,7 +1662,7 @@ __metadata:
     mini-css-extract-plugin: "npm:^2.10.2"
     mockdate: "npm:^3.0.5"
     primeicons: "npm:^8.0.2"
-    primereact: "npm:10.9.8"
+    primereact: "npm:10.9.9"
     promise-polyfill: "npm:^8.3.0"
     prop-types: "npm:^15.8.1"
     quill: "npm:^2.0.3"
@@ -1671,11 +1671,11 @@ __metadata:
     react-cookie-consent: "npm:^10.0.2"
     react-dom: "npm:^19.3.1"
     react-grid-system: "npm:^8.2.1"
-    react-i18next: "npm:^17.1.8"
+    react-i18next: "npm:^17.1.9"
     react-on-rails: "npm:17.2.0"
-    react-redux: "npm:^9.3.0"
+    react-redux: "npm:^9.3.1"
     react-refresh: "npm:^0.19.0"
-    react-router: "npm:^8.5.0"
+    react-router: "npm:^8.5.1"
     react-spring: "npm:10.0.4"
     react_ujs: "npm:^3.3.1"
     rspack-manifest-plugin: "npm:^5.2.2"
@@ -1739,15 +1739,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.20.0":
-  version: 1.20.0
-  resolution: "axios@npm:1.20.0"
+"axios@npm:^1.21.0":
+  version: 1.21.0
+  resolution: "axios@npm:1.21.0"
   dependencies:
     follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.6"
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/976088acf532286356f4c2e65df1ef47ba7da3936d83e928d0d64357bbf5370456abd3eb5826c15df322335fcb1fe200d4a84b4fcf20ffccdd63b40d80fa495c
+  checksum: 10c0/adaf1e81762aa7476b95a588f173796e9251a2683c1ffc3e2dfb3ae705c4f629976ef05ded4e7a513832214072058d480fb0bc7e46fe819621909a70f9571ed2
   languageName: node
   linkType: hard
 
@@ -2474,12 +2474,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-browser-languagedetector@npm:^8.2.2":
-  version: 8.2.2
-  resolution: "i18next-browser-languagedetector@npm:8.2.2"
+"i18next-browser-languagedetector@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "i18next-browser-languagedetector@npm:8.2.3"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
-  checksum: 10c0/c4380554d871928153a442c80f647161227146f84d9c56e77cf6bc096c47125fb48272f8904eef869800bcfd86b062e72611e815a37c186888a086acd1f627cd
+  checksum: 10c0/f3af9c54a586f95bda29565c07ad660503efe7df59eb1e751a93ee675dac8b06d36788e8b142dd176ba53621107521b24e8905a6732f72b8e3140140efb10d7e
   languageName: node
   linkType: hard
 
@@ -2504,15 +2504,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^26.5.10":
-  version: 26.5.10
-  resolution: "i18next@npm:26.5.10"
+"i18next@npm:^26.5.11":
+  version: 26.5.11
+  resolution: "i18next@npm:26.5.11"
   peerDependencies:
     typescript: ^5 || ^6 || ^7
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/8377a89144f0c94997410a68f3219b5d516c5e98235a8213fbbc0fffc1f67663680bbd76c6053bf50ad52ee967c269f4c07c97514a01ddc838919a935be1ac72
+  checksum: 10c0/b2ecb58a38420530d928d93761efc1d4e966f24cf99518df843f5b8797be135d7b6defb01ca97b61bf2bc614a6fab56bd874032b42567ae22cfa84909c2187cd
   languageName: node
   linkType: hard
 
@@ -2909,9 +2909,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"primereact@npm:10.9.8":
-  version: 10.9.8
-  resolution: "primereact@npm:10.9.8"
+"primereact@npm:10.9.9":
+  version: 10.9.9
+  resolution: "primereact@npm:10.9.9"
   dependencies:
     "@types/react-transition-group": "npm:^4.4.1"
     react-transition-group: "npm:^4.4.1"
@@ -2922,7 +2922,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/dcbff6a1db6a19f6e66403587b159e5e08bccba0eee4dd8daf1a17ee4a27d32c256f69a8f00f0f9573910a9ee27c227d7bab44732fc8f0482472753e782cf971
+  checksum: 10c0/d4225edfca8e402825eccbb5c5a6086fd2d2cb707a8a5fcf8d08ce4d9d974cc7a282e8cb466fd4175fd1fba35ce2fe68cb65b67071dacecfc9d385ab082490d6
   languageName: node
   linkType: hard
 
@@ -3080,9 +3080,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:^17.1.8":
-  version: 17.1.8
-  resolution: "react-i18next@npm:17.1.8"
+"react-i18next@npm:^17.1.9":
+  version: 17.1.9
+  resolution: "react-i18next@npm:17.1.9"
   dependencies:
     "@babel/runtime": "npm:^7.29.7"
     html-parse-stringify: "npm:^4.0.1"
@@ -3098,7 +3098,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/3caa62c1d1ee9227abdbce68bbce9c7504ed3729d0924a6ff7714e960e04ca2b4f61d53cf01385c81bdfcc4f68bcd1bf56d08ededccdc4ff14f8e4bae8fa3a1e
+  checksum: 10c0/f3c263df1d152a6a757cd47895c86568fa36cd583ac659276afa9c5a97e6babd72e3197f22587862f7382de628428e39f757b6d67ad03ebbfd333296237d44d7
   languageName: node
   linkType: hard
 
@@ -3152,9 +3152,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^9.3.0":
-  version: 9.3.0
-  resolution: "react-redux@npm:9.3.0"
+"react-redux@npm:^9.3.1":
+  version: 9.3.1
+  resolution: "react-redux@npm:9.3.1"
   dependencies:
     "@types/use-sync-external-store": "npm:^0.0.6"
     use-sync-external-store: "npm:^1.4.0"
@@ -3167,7 +3167,7 @@ __metadata:
       optional: true
     redux:
       optional: true
-  checksum: 10c0/b9f4efcfbfbc90cac9d1709ab3affb1e18a9dc9bd3cceda43bd2e1d9d2394ee0c29df36ec2202d52b566db774888b594c8c5aa86b64f27ef34fca607c687c9e3
+  checksum: 10c0/71898ea69fc16447dd0876886ed2572d8f53cf8e92fc96bc477508f686e37f9d8ecfcc6e4e9b8a576c06587c566bd89ce468307e1c32befaddc46acc8d1221b4
   languageName: node
   linkType: hard
 
@@ -3178,9 +3178,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^8.5.0":
-  version: 8.5.0
-  resolution: "react-router@npm:8.5.0"
+"react-router@npm:^8.5.1":
+  version: 8.5.1
+  resolution: "react-router@npm:8.5.1"
   dependencies:
     "@remix-run/route-pattern": "npm:^0.22.1"
     cookie-es: "npm:^3.1.1"
@@ -3196,7 +3196,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/072edf07459485149dc85d9b7f4ee6b127d1443f83f4ba2dd3bb9443ed065ecc36964cdbc26c46cbd3517b93d51d888cb50d8c89d5e42bed79b6fd4a5abf39ea
+  checksum: 10c0/07503a26d5c5669d84d044e59e3a7f97dad36946dbb9ade14f243f187096bc12cea5bf7401f8681c602d9100238cef752bd3d0e6a742e1c0794e2abd20662368
   languageName: node
   linkType: hard
 
