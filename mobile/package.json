@@ -14,12 +14,12 @@
   "dependencies": {
     "@react-native-google-signin/google-signin": "^15.0.0",
     "axios": "^1.20.0",
-    "expo": "~53.0.0",
+    "expo": "~58.0.22",
     "expo-build-properties": "~0.14.8",
-    "expo-constants": "~17.1.0",
+    "expo-constants": "~58.0.14",
     "expo-secure-store": "~14.2.0",
     "react": "19.0.0",
-    "react-native": "0.79.5"
+    "react-native": "0.88.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
