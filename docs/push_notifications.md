@@ -43,3 +43,18 @@ The native app, once the user is signed in, calls (JSON, with the usual auth hea
 5. In the app, obtain the token with `FirebaseMessaging.getInstance().token` (and in `onNewToken`)
    and send it to the endpoint above with `platform: "google"`. On Android 13+ request the
    `POST_NOTIFICATIONS` runtime permission.
+
+## Mobile app (`mobile/`, React Native / Expo)
+
+The app uses `expo-notifications` and `expo-device`:
+
+* After sign-in it asks for notification permission, creates the Android `default`
+  channel, obtains the native APNs/FCM device token (`getDevicePushTokenAsync`) and
+  registers it with `POST /api-backend/push_devices`; sign-out calls `DELETE`.
+* Foreground notifications are shown as a standard banner (iOS) / heads-up (Android);
+  background ones are presented by the OS.
+* iOS: the `expo-notifications` config plugin adds the `aps-environment` entitlement;
+  build with an App ID that has Push Notifications enabled (`npx expo prebuild`, then run on a real device).
+* Android: download `google-services.json` from Firebase and set
+  `GOOGLE_SERVICES_FILE=/absolute/path/google-services.json` when building.
+* Push only works on physical devices, not simulators/emulators without Play Services.
