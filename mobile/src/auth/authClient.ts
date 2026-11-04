@@ -111,6 +111,11 @@ export class AuthClient {
     }
   }
 
+  /** The saved credential headers for the current session, if any. */
+  async getAuthHeaders(): Promise<AuthHeaders | null> {
+    return this.saved();
+  }
+
   private async persist(headers: { [key: string]: string }) {
     const picked = pickAuthHeaders(headers);
     if (picked) {
