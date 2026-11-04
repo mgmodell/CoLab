@@ -56,6 +56,10 @@ class AdministrativeMailer < ApplicationMailer
       priority: PRIORITY[:INFO]
     )
 
+    PushNotifier.notify( user,
+                         title: 'CoLab',
+                         body: I18n.t( 'notifications.bingo_activity_available', activity_name: activity ) )
+
     mail( to: "#{user.first_name} #{user.last_name} <#{user.email}>",
           subject: "CoLab: #{activity} is available" )
   end
@@ -112,6 +116,10 @@ class AdministrativeMailer < ApplicationMailer
           message: I18n.t( 'notifications.pending_activities' ),
           priority: PRIORITY[:INFO]
         )
+
+        PushNotifier.notify( u,
+                             title: 'CoLab',
+                             body: I18n.t( 'notifications.pending_activities' ) )
 
         u.last_emailed = curr_date
         u.save
