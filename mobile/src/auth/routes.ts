@@ -11,9 +11,14 @@ const INFRA = "/infra";
 // config/routes.rb: mount_devise_token_auth_for 'User', at: 'auth'
 const AUTH = "/auth";
 
+// config/routes.rb: scope 'api-backend' do ... get 'task_list' ... end
+const API = "/api-backend";
+
 export const ROUTES = {
   /** home#endpoints: logged_in flag, lookups (incl. oauth_ids) and endpoint map */
   endpoints: `${INFRA}/endpoints.json`,
+  /** home#task_list: tasks, consent_logs and waiting_rosters for the user */
+  taskList: `${API}/task_list.json`,
   /** devise_token_auth sessions */
   signIn: `${AUTH}/sign_in`,
   signOut: `${AUTH}/sign_out`,

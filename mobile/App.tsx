@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, SafeAreaView, Text, View } from "react-native";
-import { authClient, signInWithGoogle } from "./src/auth/platform";
+import { SafeAreaView } from "react-native";
+import { apiUrl, authClient, signInWithGoogle } from "./src/auth/platform";
 import { AuthState } from "./src/auth/authClient";
 import LoginScreen from "./src/screens/LoginScreen";
+import TasksScreen from "./src/screens/TasksScreen";
+import { fetchTasks } from "./src/tasks/tasks";
 
 export default function App() {
   const [state, setState] = useState<AuthState>(authClient.getState());
@@ -16,10 +18,11 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {state.status === "signedIn" ? (
-        <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
-          <Text testID="home">Welcome to CoLab</Text>
-          <Button title="Sign out" onPress={() => authClient.signOut()} />
-        </View>
+        <TasksScreen
+          baseUrl={apiUrl}
+          loadTasks={() => fetchTasks(authClient)}
+          onSignOut={() => authClient.signOut()}
+        />
       ) : (
         <LoginScreen
           state={state}

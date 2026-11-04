@@ -7,13 +7,13 @@ import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 import { AuthClient, Http, Storage } from "./authClient";
 
-const baseURL: string =
+export const apiUrl: string =
   (Constants.expoConfig?.extra as any)?.apiUrl ?? "http://localhost:3000";
 
 const http: Http = {
   async request({ method, url, headers, data }) {
     const resp = await axios.request({
-      baseURL,
+      baseURL: apiUrl,
       method,
       url,
       headers: { Accept: "application/json", ...headers },
