@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { apiGet, apiUrl, authClient, signInWithGoogle } from "./src/auth/platform";
+import { apiUrl, authClient, signInWithGoogle } from "./src/auth/platform";
 import { AuthState } from "./src/auth/authClient";
 import LoginScreen from "./src/screens/LoginScreen";
 import TasksScreen from "./src/screens/TasksScreen";
@@ -20,7 +20,7 @@ export default function App() {
       {state.status === "signedIn" ? (
         <TasksScreen
           baseUrl={apiUrl}
-          loadTasks={() => fetchTasks(apiGet)}
+          loadTasks={() => fetchTasks()}
           onSignOut={() => authClient.signOut()}
         />
       ) : (

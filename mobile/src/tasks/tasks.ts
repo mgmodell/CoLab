@@ -1,3 +1,4 @@
+import axios from "axios";
 import { ROUTES } from "../auth/routes";
 
 /*
@@ -17,17 +18,15 @@ export interface Task {
   instructor_task?: boolean;
 }
 
-export type Getter = (url: string) => Promise<any>;
-
 /**
  * The task list path comes from the server's endpoint map
  * (home#endpoints -> endpoints.home.taskListUrl), as in the web HomeShell.
  */
-export async function fetchTasks(get: Getter): Promise<Task[]> {
-  const eps = await get(ROUTES.endpoints);
+export async function fetchTasks(): Promise<Task[]> {
+  const eps = (await axios.get(ROUTES.endpoints)).data;
   const path = eps?.endpoints?.home?.taskListUrl;
   if (!path) throw new Error("taskListUrl missing from endpoints");
-  const data = await get(`${path}.json`);
+  const data = (await axios.get(`${path}.json`)).data;
   return Array.isArray(data?.tasks) ? data.tasks : [];
 }
 
