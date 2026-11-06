@@ -1,38 +1,62 @@
-import { AuthClient, Http, SAVED_CREDS_KEY, Storage } from "../src/auth/authClient";
+import { SAVED_CREDS_KEY, Storage } from "../src/auth/authClient";
+import {
+  appendAuthHeaders,
+  storeRetrievedCredentials
+} from "../src/auth/interceptors";
 import { ROUTES } from "../src/auth/routes";
 import { fetchTasks, taskUrl } from "../src/tasks/tasks";
 
-const storage: Storage = {
-  get: async k =>
-    k === SAVED_CREDS_KEY ? JSON.stringify({ "access-token": "old" }) : null,
-  set: async () => {},
-  remove: async () => {}
+const memStorage = (init: { [k: string]: string } = {}): Storage => {
+  const m = { ...init };
+  return {
+    get: async k => m[k] ?? null,
+    set: async (k, v) => {
+      m[k] = v;
+    },
+    remove: async k => {
+      delete m[k];
+    }
+  };
 };
 
+describe("auth interceptors", () => {
+  it("appends saved headers to requests", async () => {
+    const s = memStorage({
+      [SAVED_CREDS_KEY]: JSON.stringify({ "access-token": "old", uid: "u" })
+    });
+    const cfg = await appendAuthHeaders(s)({ headers: {} });
+    expect(cfg.headers["access-token"]).toBe("old");
+    expect(cfg.headers.uid).toBe("u");
+  });
+
+  it("stores rotated headers from responses", async () => {
+    const s = memStorage();
+    await storeRetrievedCredentials(s)({ headers: { "access-token": "new" } });
+    expect(JSON.parse((await s.get(SAVED_CREDS_KEY))!)["access-token"]).toBe(
+      "new"
+    );
+  });
+});
+
 describe("tasks", () => {
-  it("fetches tasks with saved auth headers", async () => {
-    const seen: any[] = [];
-    const http: Http = {
-      request: async o => {
-        seen.push(o);
-        return {
-          status: 200,
-          headers: {},
-          data: { tasks: [{ id: 1, type: "assessment", name: "A", link: "x/1" }] }
-        };
-      }
+  it("gets the task list url from the endpoints map", async () => {
+    const urls: string[] = [];
+    const get = async (url: string) => {
+      urls.push(url);
+      return url === ROUTES.endpoints
+        ? { endpoints: { home: { taskListUrl: "/api-backend/task_list" } } }
+        : { tasks: [{ id: 1, type: "assessment", name: "A", link: "x/1" }] };
     };
-    const tasks = await fetchTasks(new AuthClient(http, storage));
-    expect(tasks).toHaveLength(1);
-    expect(seen[0].url).toBe(ROUTES.taskList);
-    expect(seen[0].headers["access-token"]).toBe("old");
+    expect(await fetchTasks(get)).toHaveLength(1);
+    expect(urls).toEqual([ROUTES.endpoints, "/api-backend/task_list.json"]);
   });
 
   it("returns an empty list when no tasks are present", async () => {
-    const http: Http = {
-      request: async () => ({ status: 200, headers: {}, data: {} })
-    };
-    expect(await fetchTasks(new AuthClient(http, storage))).toEqual([]);
+    const get = async (url: string) =>
+      url === ROUTES.endpoints
+        ? { endpoints: { home: { taskListUrl: "/t" } } }
+        : {};
+    expect(await fetchTasks(get)).toEqual([]);
   });
 
   it("builds a deep link to the website", () => {

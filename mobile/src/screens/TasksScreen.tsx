@@ -4,11 +4,11 @@ import {
   Button,
   FlatList,
   Linking,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
+import { styles } from "../styles/styles";
 import { Task, taskKey, taskUrl } from "../tasks/tasks";
 
 interface Props {
@@ -84,12 +84,3 @@ export default function TasksScreen({ baseUrl, loadTasks, onSignOut }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24 },
-  title: { fontSize: 22, fontWeight: "600", marginBottom: 12 },
-  note: { marginVertical: 12 },
-  error: { color: "#b00020" },
-  row: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth },
-  name: { fontWeight: "600" }
-});

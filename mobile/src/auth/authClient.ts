@@ -205,18 +205,6 @@ export class AuthClient {
     return this.state;
   }
 
-  /** GET an authenticated JSON resource, keeping the rotated token headers. */
-  async authedGet(url: string): Promise<any> {
-    const headers = await this.saved();
-    const resp = await this.http.request({
-      method: "GET",
-      url,
-      headers: headers ?? undefined
-    });
-    await this.persist(resp.headers);
-    return resp.data;
-  }
-
   /** Restore a session at app start, validating against the server. */
   async restore(): Promise<AuthState> {
     const headers = await this.saved();

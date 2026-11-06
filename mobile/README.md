@@ -158,8 +158,8 @@ project: `rm -rf ios && npx expo prebuild --platform ios --clean`, then
 
 ## Tasks
 
-After sign-in the app lists the user's available tasks (`/api-backend/task_list.json`,
-the same data as the web `TaskList`). Selecting one shows a stub page with an
+After sign-in the app lists the user's available tasks (the task list URL comes from
+`/infra/endpoints.json` as `endpoints.home.taskListUrl`; same data as the web `TaskList`). Selecting one shows a stub page with an
 "Open in CoLab" button that deep-links to the activity on the website.
 Native components are used (PrimeReact does not run in React Native); the
 platform-neutral data layer lives in `src/tasks/tasks.ts`.

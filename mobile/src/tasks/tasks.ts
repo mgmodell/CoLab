@@ -1,4 +1,3 @@
-import { AuthClient } from "../auth/authClient";
 import { ROUTES } from "../auth/routes";
 
 /*
@@ -18,8 +17,17 @@ export interface Task {
   instructor_task?: boolean;
 }
 
-export async function fetchTasks(client: AuthClient): Promise<Task[]> {
-  const data = await client.authedGet(ROUTES.taskList);
+export type Getter = (url: string) => Promise<any>;
+
+/**
+ * The task list path comes from the server's endpoint map
+ * (home#endpoints -> endpoints.home.taskListUrl), as in the web HomeShell.
+ */
+export async function fetchTasks(get: Getter): Promise<Task[]> {
+  const eps = await get(ROUTES.endpoints);
+  const path = eps?.endpoints?.home?.taskListUrl;
+  if (!path) throw new Error("taskListUrl missing from endpoints");
+  const data = await get(`${path}.json`);
   return Array.isArray(data?.tasks) ? data.tasks : [];
 }
 
