@@ -10,7 +10,7 @@ import { AuthClient, Http, Storage } from "./authClient";
 const baseURL: string =
   (Constants.expoConfig?.extra as any)?.apiUrl ?? "http://localhost:3000";
 
-const http: Http = {
+export const http: Http = {
   async request({ method, url, headers, data }) {
     const resp = await axios.request({
       baseURL,

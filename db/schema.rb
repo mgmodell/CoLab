@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_25_024520) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_04_012500) do
+  create_table "action_push_native_devices", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "platform", null: false
+    t.string "token", null: false
+    t.string "owner_type"
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_type", "owner_id"], name: "index_action_push_native_devices_on_owner"
+  end
+
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false

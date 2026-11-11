@@ -9,6 +9,7 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::ResourceFinder
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
+  has_many :push_devices, as: :owner, class_name: 'ActionPushNative::Device', dependent: :destroy
   has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,
