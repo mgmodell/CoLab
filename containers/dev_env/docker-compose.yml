@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ../../:/home/colab/src/app:cached
+      - ../../:/home/colab/src/app:cached,z
       # Use a named volume for node_modules so the container always holds
       # Linux-native binaries regardless of what is installed on the Windows
       # (or macOS) host.  Without this, packages like @rspack/binding that
