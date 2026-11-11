@@ -38,14 +38,14 @@ services:
       - devdata:/var/lib/mysql
 
   redis:
-    image: redis:latest
+    image: docker.io/library/redis:latest
     restart: unless-stopped
     ports:
       - 6379:6379
   # Docs at https://github.com/MRColorR/vnc-browser
   browser:
     container_name: vnc-browser
-    image: mrcolorrain/vnc-browser:debian
+    image: docker.io/mrcolorrain/vnc-browser:debian
     ports:
       - 5909:5900
       - 6080:6080
