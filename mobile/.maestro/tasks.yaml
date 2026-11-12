@@ -1,0 +1,17 @@
+# Requires the seeded user to have at least one task available.
+appId: com.mmp.colab
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: "email"
+- inputText: "${E2E_EMAIL}"
+- tapOn:
+    id: "password"
+- inputText: "${E2E_PASSWORD}"
+- tapOn:
+    id: "sign-in"
+- assertVisible:
+    id: "home"
+- assertVisible:
+    id: "task-list"
