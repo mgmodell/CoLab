@@ -131,7 +131,7 @@ The error line now shows a detail underneath (and `console.warn` logs it; see
   wrong.
 - `10` / `DEVELOPER_ERROR`: the Google Cloud setup doesn't match the build.
   - The **Android** OAuth client is never put in `app.json`. Google matches it
-    on the app's package name (`org.mgmodell.colab`) plus the **SHA-1 of the
+    on the app's package name (`com.mmp.colab`) plus the **SHA-1 of the
     keystore that signed the build**. For `npm run android` that is the debug
     keystore: `keytool -list -v -keystore mobile/android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android`
     (or just run `mobile/scripts/signing_report.sh`, which also uses the right JDK; a bare
