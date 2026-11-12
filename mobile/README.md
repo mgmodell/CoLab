@@ -131,7 +131,7 @@ The error line now shows a detail underneath (and `console.warn` logs it; see
   wrong.
 - `10` / `DEVELOPER_ERROR`: the Google Cloud setup doesn't match the build.
   - The **Android** OAuth client is never put in `app.json`. Google matches it
-    on the app's package name (`org.mgmodell.colab`) plus the **SHA-1 of the
+    on the app's package name (`com.mmp.colab`) plus the **SHA-1 of the
     keystore that signed the build**. For `npm run android` that is the debug
     keystore: `keytool -list -v -keystore mobile/android/app/debug.keystore -alias androiddebugkey -storepass android -keypass android`
     (or just run `mobile/scripts/signing_report.sh`, which also uses the right JDK; a bare
@@ -155,3 +155,11 @@ frameworks. `app.json` enables this with the `expo-build-properties` plugin
 (`ios.useFrameworks: "static"`). After pulling this change, regenerate the native
 project: `rm -rf ios && npx expo prebuild --platform ios --clean`, then
 `npm run ios`.
+
+## Tasks
+
+After sign-in the app lists the user's available tasks (the task list URL comes from
+`/infra/endpoints.json` as `endpoints.home.taskListUrl`; same data as the web `TaskList`). Selecting one shows a stub page with an
+"Open in CoLab" button that deep-links to the activity on the website.
+Native components are used (PrimeReact does not run in React Native); the
+platform-neutral data layer lives in `src/tasks/tasks.ts`.

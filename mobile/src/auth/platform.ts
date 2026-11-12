@@ -6,14 +6,18 @@ import {
 import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 import { AuthClient, Http, Storage } from "./authClient";
+import { attachAuthInterceptors } from "./interceptors";
 
-const baseURL: string =
+export const apiUrl: string =
   (Constants.expoConfig?.extra as any)?.apiUrl ?? "http://localhost:3000";
+
+// Configure the global axios instance so any module can call axios directly.
+axios.defaults.baseURL = apiUrl;
+axios.defaults.headers.common["Accept"] = "application/json";
 
 const http: Http = {
   async request({ method, url, headers, data }) {
     const resp = await axios.request({
-      baseURL,
       method,
       url,
       headers: { Accept: "application/json", ...headers },
@@ -32,6 +36,10 @@ const storage: Storage = {
   set: (key, value) => SecureStore.setItemAsync(key, value),
   remove: key => SecureStore.deleteItemAsync(key)
 };
+
+// Same model as the web client (ContextSlice.ts): axios adds the saved auth
+// headers to every request and stores the rotated ones from every response.
+attachAuthInterceptors(axios, storage);
 
 export const authClient = new AuthClient(http, storage);
 
