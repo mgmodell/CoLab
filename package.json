@@ -40,7 +40,7 @@
     "driver.js": "^1.11.0",
     "email-validator": "^2.0.4",
     "html-react-parser": "^6.1.9",
-    "i18next": "^26.7.2",
+    "i18next": "^27.0.1",
     "i18next-browser-languagedetector": "^8.3.0",
     "i18next-fetch-backend": "^8.0.0",
     "i18next-intervalplural-postprocessor": "^3.0.0",
