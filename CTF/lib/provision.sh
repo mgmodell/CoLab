@@ -44,7 +44,10 @@ pv_run() {
 }
 
 provision_engine_line() {
-  if [[ "$PV_LIVE" == "1" ]]; then
+  if [[ -n "${CTF_TARGET_REAL:-}" ]]; then
+    printf '  %s●%s engine: %sPodman%s · live CoLab app · target %s%s%s · --internal net · no host ports\n' \
+      "$T_GREEN" "$T_RESET" "$T_WHITE" "$T_RESET" "$T_BOLD$T_WHITE" "$CTF_TARGET_REAL" "$T_RESET"
+  elif [[ "$PV_LIVE" == "1" ]]; then
     printf '  %s●%s engine: %s%s (live)%s  ·  --internal net · no host ports\n' \
       "$T_GREEN" "$T_RESET" "$T_WHITE" "$PV_ENGINE" "$T_RESET"
   elif [[ "$PV_ENGINE" != "sim" ]]; then

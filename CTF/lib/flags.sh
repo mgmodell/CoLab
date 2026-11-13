@@ -56,8 +56,20 @@ flags_seed() {
   } > "$store"
 
   for id in "${CHALLENGE_ORDER[@]}"; do
-    slug="${CH_SLUG[$id]:-flag}"
-    flag="CoLab{${slug}_$(flags_rand)}"
+    # Real-app rooms (easy-sqli, easy-idor) have a FIXED flag planted in the live
+    # CoLab DB by CTF/lab-setup/, so theirs must match exactly - not be randomized.
+    case "$id" in
+      easy-idor-url) flag="CoLab{IDOR_RECORDS_2026}" ;;
+      easy-idor)     flag="CoLab{IDOR_FLAG_2026}" ;;
+      easy-xss)      flag="CoLab{XSS_STORED_2026}" ;;
+      easy-verbose)  flag="CoLab{VERBOSE_SECRETS_2026}" ;;
+      med-bac)       flag="CoLab{BAC_RESEARCHER_2026}" ;;
+      med-csrf)      flag="CoLab{CSRF_EMAIL_2026}" ;;
+      hard-deser)    flag="CoLab{DESER_MARSHAL_2026}" ;;
+      hard-token)    flag="CoLab{TOKEN_FORGED_2026}" ;;
+      crit-ssrf)     flag="CoLab{SSRF_METADATA_2026}" ;;
+      *)             slug="${CH_SLUG[$id]:-flag}"; flag="CoLab{${slug}_$(flags_rand)}" ;;
+    esac
     hash="$(flags_sha256 "$flag")"
     printf '%s\t%s\n' "$id" "$flag" >> "$plain"
     printf '%s\t%s\n' "$id" "$hash" >> "$store"

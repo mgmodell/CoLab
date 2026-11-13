@@ -71,9 +71,9 @@ ctf_brief_html() { # id
   <div class="card">
     <p class="k">Your toolkit</p>
     <div class="foot">
-      <span class="tool">curl</span><span class="tool">httpie</span><span class="tool">jq</span>
-      <span class="tool">sqlmap</span><span class="tool">ffuf</span><span class="tool">nmap</span>
-      <span class="tool">jwt_tool</span><span class="tool">./colab-http</span>
+      <span class="tool">curl</span><span class="tool">jq</span><span class="tool">jwt_tool</span>
+      <span class="tool">ruby</span><span class="tool">python3</span><span class="tool">nmap</span>
+      <span class="tool">ffuf</span><span class="tool">base64</span><span class="tool">openssl</span>
     </div>
     <p class="sm mut" style="margin-top:12px">Everything runs in the CoLab CTF toolbox terminal that opened with this room.
     Stuck? Type <code>!hint</code> in that terminal — it adapts to the step you're actually on.</p>

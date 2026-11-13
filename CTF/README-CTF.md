@@ -1,249 +1,250 @@
-# CoLab CTF — Gamified Training Range
+# CoLab CTF — Gamified Penetration-Testing Competition
 
-A self-contained, TryHackMe-style capture-the-flag mode built from the
-vulnerabilities documented in our CoLab.online penetration test (SURE program,
-faculty-supervised, FERPA-scoped). It is **completely separate** from the
-Black/White/Gray box ("Sec") engagement boot: it never runs `boot_mode.sh`,
-never writes `containers/sec_env/.env`, and never boots the app/db/proxy target
-stack. Everything lives under `CTF/` and is launched by its own `ctf_serv.sh`.
+A hands-on, TryHackMe-style capture-the-flag built **into the real CoLab web app**.
+Ten "rooms", each a genuine vulnerability embedded in CoLab's actual code — you
+break into the live site with a real toolkit, capture a flag, and score points.
+Use the hints and you lose points. It's a gamified version of a real penetration
+test: the goal is to learn to **think and work like a pentester**, not to follow a
+tutorial.
 
-See **`CoLab CTF - Quick Start.txt`** for the full startup guide.
-
----
-
-## Launching
-
-From a HOST shell (Git Bash / PowerShell → run `./CTF/ctf_serv.sh` from Git Bash):
-
-```bash
-cd /c/Users/issia/CoLab/CTF
-
-./ctf_serv.sh            # launch the CTF INSIDE the Sec Kali toolbox (full toolkit)
-./ctf_serv.sh -p        # drop into the Kali toolbox shell (CTF at /opt/ctf)
-./ctf_serv.sh -H        # run the CTF directly on the host (no container)
-./ctf_serv.sh -x        # tear down the CTF container + internal network
-./ctf_serv.sh -b        # (re)build the toolbox image (reuses the Sec Dockerfile)
-./ctf_serv.sh -h        # help
-```
-
-Default mode reuses the **`colab_pentest`** Kali image (the same toolkit as the
-Sec engagement — curl, sqlmap, jwt_tool, ffuf, gitleaks, nuclei, nmap, python3,
-jq …), on its own isolated `--internal` network, with `CTF/` bind-mounted
-writable at `/opt/ctf`. If podman or the image isn't available it automatically
-falls back to host mode. You can also run the menu directly with `bash CTF/ctf.sh`.
-
-> Requires `bash` + one of `sha256sum` / `shasum` / `openssl`. The toolbox path
-> additionally needs podman (machine started) and the `colab_pentest` image.
+> **Authorized training only.** This is a deliberately-vulnerable copy of CoLab you
+> run on your *own* machine for a supervised club event. Everything here is scoped
+> to that local copy. Never point these techniques at a system you don't own or
+> aren't authorized to test.
 
 ---
 
-## Booting the toolkit & the site
+## Table of contents
+1. [What you're playing](#what-youre-playing)
+2. [The 10 rooms](#the-10-rooms)
+3. [Setup guide](#setup-guide)  ← start here
+4. [How to play](#how-to-play)
+5. [Scoring & hints](#scoring--hints)
+6. [The toolkit](#the-toolkit)
+7. [Links](#links)
+8. [Safety & isolation](#safety--isolation)
 
-Two separate things you can start. **For the CTF you only need the toolkit** — the
-challenge targets are offline mocks, so the CoLab *site* does **not** need to run.
-Booting the real site is optional (for the Sec engagement, or to poke at the real
-app). The CTF and the Sec engagement are independent — `ctf_serv.sh` never boots
-or touches the site.
+---
 
-### 1) The toolkit (Kali toolbox) — needed for the CTF
+## What you're playing
 
-One command boots the toolkit in **podman** and drops you into the CTF:
+Each student runs their **own local copy** of the whole thing: the real CoLab app
+(with the vulnerabilities turned on) plus a Kali toolbox full of pentest tools.
+You play in front of the instructor; at the end you open the **FINAL SCORE** screen
+and your points decide the winner.
 
-```bash
-# Git Bash
-cd /c/Users/issia/CoLab/CTF && ./ctf_serv.sh
-# PowerShell
-cd C:\Users\issia\CoLab\CTF ;  .\ctf_serv.ps1
+Every room is designed so it is **100% solvable by a human** using only:
+
+1. the **toolkit** we ship (curl, jq, jwt_tool, ruby, python3, nmap, ffuf, …),
+2. the **CoLab web app** in your browser, and
+3. your **own knowledge**.
+
+Nothing is handed to you. No secret is pre-dumped, no token is left lying around.
+If a room needs a token cracked or a service reached, there's a legitimate in-scope
+path to get there — exactly like a real engagement. The **hints** are the one place
+hand-holding lives, and they cost points.
+
+---
+
+## The 10 rooms
+
+Three Easy, four Medium, three Hard — **2,800 points** on the board.
+
+| # | Room | Class | Difficulty | Pts | OWASP |
+|---|------|-------|:---------:|:---:|:-----:|
+| 1 | IDOR: Student Records | Broken access control | Easy | 100 | [A01][a01] |
+| 2 | SQL Injection: Authentication Bypass | Injection | Easy | 100 | [A03][a03] |
+| 3 | Sensitive Data Exposure: Verbose API Errors | Misconfiguration | Easy | 100 | [A05][a05] |
+| 4 | Reflected XSS: Content Preview | Injection (XSS) | Medium | 250 | [A03][a03] |
+| 5 | Broken Access Control: Mass-Assignment | Privilege escalation | Medium | 250 | [A01][a01] |
+| 6 | CSRF: Account Recovery Email | Request forgery | Medium | 250 | [A01][a01] |
+| 7 | Command Injection: Diagnostics Tool | Injection (OS cmd) | Medium | 250 | [A03][a03] |
+| 8 | SSRF: Internal Service Pivot | Server-side request forgery | Hard | 500 | [A10][a10] |
+| 9 | Insecure Deserialization: Unsigned Marshal RCE | Integrity failure | Hard | 500 | [A08][a08] |
+| 10 | Auth Token Forgery: Weak-Secret JWT | Auth failure | Hard | 500 | [A07][a07] |
+
+Each room maps to an OWASP Top 10 category (linked above) so you can read the theory
+behind what you just exploited.
+
+---
+
+## Setup guide
+
+You do the whole setup yourself, on your own machine — we never touch your computer.
+The **first-time setup needs internet** (to pull/build the container images); after
+that it runs **offline**. Plan for a one-time download of a few GB.
+
+Everything below is **Windows + PowerShell**, which is the fully-supported path
+(it auto-opens your browser to the live site). A Git Bash note is at the end.
+
+> **This CTF runs on Podman — not Docker.** Every launcher calls `podman` directly,
+> so you must install **Podman Desktop** (a free, daemonless Docker alternative).
+> Docker Desktop will **not** run these scripts.
+
+### Prerequisites (install once)
+
+| You need | Why | Download |
+|----------|-----|----------|
+| **Podman Desktop** | **Required — Podman, not Docker.** Runs the containers; every launcher calls `podman`. | <https://podman-desktop.io/> |
+| **Git** (incl. Git Bash) | Clone the repo; the launchers use Git Bash under the hood. | <https://git-scm.com/downloads> |
+| **Google Chrome** | The launcher opens the live CoLab for you in Chrome. | <https://www.google.com/chrome/> |
+
+After installing Podman Desktop, start its engine once:
+
+```powershell
+podman machine start
 ```
 
-- First time only: make sure Podman Desktop is installed and build the image once
-  with `./ctf_serv.sh -b` (or reuse the Sec lab's `./sec_serv.sh -b`). `ctf_serv`
-  auto-starts the podman machine if it's stopped.
-- Want just the Kali shell (tools, no menu)? `./ctf_serv.sh -p`
-  (`.\ctf_serv.ps1 -Shell`). The CTF is at `/opt/ctf`; run `./ctf.sh` to play.
-- Check readiness: `./ctf_serv.sh -s` (`.\ctf_serv.ps1 -Status`).
+### Step 1 — Get the code
 
-### 2) The site (the real CoLab target) — optional, via the Sec lab
-
-The CTF does not use the site. If you also want the real CoLab app running, boot it
-with the **Sec** driver from the repo root (`C:\Users\issia\CoLab`):
-
-```bash
-podman machine start                 # if the engine is stopped
-cd /c/Users/issia/CoLab
-./sec_serv.sh -u                     # PowerShell: .\sec_serv.ps1 -Up
-#   -> runs the Black/White/Gray mode selector, then brings app/db/proxy up
-./sec_serv.sh -e                     # first run: seed data + sandbox test users
-./sec_serv.sh -p                     # open the Sec Kali toolbox against the site
+```powershell
+git clone -b CTF https://github.com/mgmodell/CoLab.git CoLab
+cd CoLab
 ```
 
-Site URLs once it's up:
+That `-b CTF` checks out the **`CTF`** branch, which is the competition.
+
+### Step 2 — Build the images (one-time, large)
+
+```powershell
+.\sec_serv.ps1 -Build      # the CoLab app + database + proxy
+.\ctf_serv.ps1 -Build      # the Kali toolbox (~8 GB, one-time)
+```
+
+### Step 3 — Boot the target app
+
+```powershell
+.\sec_serv.ps1 -Up         # pick any mode at the prompt; wait for "Target is UP"
+.\sec_serv.ps1 -Init       # load the database
+.\sec_serv.ps1 -Seed       # seed accounts + data
+```
+
+When it's up the app is reachable at:
 
 | URL | Use |
 |-----|-----|
-| `https://localhost:13443` | login / full app (HTTPS — accept the self-signed cert) |
-| `http://localhost:13000`  | direct HTTP (recon/tools; login won't persist here) |
-| `http://app:3000`         | in-network address (from inside the toolbox) |
+| <https://localhost:13443> | the site in your browser (accept the self-signed cert) |
+| `http://localhost:13000` | direct HTTP for recon/tools |
+| `http://app:3000` | the in-network address your toolkit attacks |
 
-**Which do I want?**
-- Play the vulns as a game → **toolkit only** (`./ctf_serv.sh`). No site needed.
-- Test the real app → **Sec lab** (`./sec_serv.sh -u` for the site, `-p` for the toolbox).
+### Step 4 — Turn on the CTF vulnerabilities
 
----
+```powershell
+cd CTF\lab-setup
+.\apply-embeds.ps1         # embeds rooms 2–10 into the real app
+.\apply-box1.ps1           # embeds room 1 (student-records IDOR)
+cd ..\..
+```
 
-## Challenge roster (10)
+> Re-run these two only if you ever **recreate** the app container — the
+> vulnerabilities live in its writable layer and survive restarts.
 
-| # | Room | OWASP | Pts | Report ref |
-|---|------|-------|-----|------------|
-| 1 | IDOR: Grade Record Access — Easy | A01 | 100 | fragile read-path authz |
-| 2 | Stored XSS: Course Comments — Easy | A03 | 100 | teaching (XSS held up) |
-| 3 | Sensitive Data Exposure: Verbose API Errors — Easy | A05/A04 | 100 | secrets + debug errors |
-| 4 | SQL Injection: Search Endpoint — Medium | A03 | 250 | teaching (SQLi held up) |
-| 5 | Broken Access Control: Instructor Panel — Medium | A01 | 250 | **mass-assignment researcher (CVSS 7.1)** |
-| 6 | CSRF: Account Email Change — Medium | A01 | 250 | account-update / takeover path |
-| 7 | Server-Side Template Injection: Report Generator — Hard | A03 | 500 | teaching (SSTI held up) |
-| 8 | Insecure Deserialization: Session Cookie — Hard | A08 | 500 | teaching |
-| 9 | Bearer Token Forgery: Auth Bypass — Hard | A07 | 500 | teaching (token forgery held up) |
-| 10 | **SSRF: Internal Service Pivot — Critical** | A10 | 1000 | **Check 07 — SSRF `/lti/tool_connect`, CVSS 9.3** |
+### Step 5 — Play
 
-The **Critical SSRF is the real engagement finding**: `POST /lti/tool_connect`,
-unauthenticated, no allow-list. The flag sits on an internal-only cloud-metadata
-service reachable **only** by pivoting the SSRF through the lab's internal
-network (`169.254.169.254` → role creds) — mirroring Report Chain A.
+```powershell
+cd CTF
+.\ctf_serv.ps1
+```
 
-Rooms 5 and 6 map to real findings (mass-assignment self-promotion; account-update
-CSRF/takeover). Rooms 2, 4, 7, 8, 9 are **teaching rooms** for classes that were
-*tested and hardened* in the real engagement — the CTF target is a separate,
-deliberately-vulnerable app, not the hardened production stack.
+Chrome opens on the live CoLab, and the game menu runs in your terminal. Pick a
+room and go.
 
----
+### Every time after that
 
-## Playing a room
+```powershell
+podman machine start       # if the engine is stopped
+.\sec_serv.ps1 -Up         # if the app isn't already running
+cd CTF ;  .\ctf_serv.ps1   # play
+```
 
-Select a number. Each room:
-
-1. **Briefing** — scenario, vulnerability class, objective, OWASP mapping, CVSS,
-   report reference, and a difficulty/points badge.
-2. **Provision** — resets the target to a clean state, enables *only* that room's
-   vulnerability, and plants that room's flag where it's reachable only by
-   exploiting the bug.
-3. **Toolkit** — stages a per-room working dir with `./colab-http` (a curl-ish
-   client for the isolated target), an `OBJECTIVE.txt`, a `HINTS.txt`, any
-   room-specific helpers (JWT forger, cookie forger, SSRF harness, sqli
-   cheatsheet, CSRF PoC), and a `WRITEUP.md` template.
-
-Then use the room menu: `[s]` submit · `[h]` hint · `[r]` reset · `[w]` writeup ·
-`[i]` briefing · `[b]` back.
+### Git Bash alternative
 
 ```bash
-# example (IDOR room working dir):
-cd CTF/state/work/easy-idor
-./colab-http GET /api/grades/1337
+cd /c/Users/issia/CoLab/CTF && ./ctf_serv.sh
 ```
 
-### Toolkit menu & the live attack target
-
-The main menu has a **`[t] toolkit`** entry and shows a **`TARGET`** line, e.g.
-`TARGET http://10.88.0.3:8000`. That's a **real HTTP service** (started
-automatically inside the toolbox) that serves whichever room you currently have
-open — so the Sec tools work against a genuine `IP:port`, TryHackMe-style:
-
-```bash
-curl http://10.88.0.3:8000/api/grades/1337                       # IDOR (room 1)
-curl "http://10.88.0.3:8000/api/search?q=x' UNION SELECT flag FROM secrets-- "  # SQLi (room 4)
-sqlmap -u "http://10.88.0.3:8000/api/search?q=1" --batch          # room 4, automated
-nmap -sV -p8000 10.88.0.3                                         # it's a real port
-```
-
-- The `[t] toolkit` screen lists the available tools (curl, sqlmap, jwt_tool,
-  ffuf, gitleaks, nuclei, nmap, jq, base64) with ✓/○ availability, an example
-  command against the current target, and `[s]` to drop into a Kali shell.
-- The target IP is the toolbox container's address on the isolated internal
-  network (plus `http://127.0.0.1:8000` from inside). It serves the **open**
-  room; at the main menu it shows a landing page.
-- `./colab-http` still works too (offline, no IP needed). If `python3` isn't
-  available the live target is skipped and you use `./colab-http` only.
+The Git Bash launcher runs the same game, but you open <https://localhost:13443>
+in your browser yourself. On Windows, prefer the PowerShell launcher.
 
 ---
 
-## Flags & verification
+## How to play
 
-- Format: `CoLab{lowercase_snake_case}`.
-- **No plaintext flags are stored in the repo.** `CTF/flags/flag-hashes.txt`
-  holds **SHA-256 hashes only**. Plaintext is generated at first launch into
-  `CTF/state/flags.plain` (gitignored, `chmod 600`) and used only to plant
-  targets. Submissions are verified by hashing your input and comparing to the
-  stored hash.
-- Submit from the room menu (`[s]`), paste the flag, done.
+Select a room number. Each room gives you:
 
----
+1. **A briefing** — the attack type, your objective, and a free nudge toward the
+   tools that help. It tells you *what* and *why* — never the solution.
+2. **The live target** — your browser opens on the real CoLab page in scope, and
+   your toolkit terminal can hit `http://app:3000` directly.
+3. **A working directory** with a short recon note for that room.
 
-## Scoring, hints, progress
+Then work the room like a real finding: recon → find the flaw → exploit it →
+retrieve the `CoLab{...}` flag → submit it.
 
-- **Points:** Easy 100 · Medium 250 · Hard 500 · Critical 1000 (total **3550**).
-  A TryHackMe-style running score shows in the menu header.
-- **Hints:** 2–3 progressive hints per room, revealed on request; each reveal
-  reduces that room's award (Easy −15 · Medium −35 · Hard −70 · Critical −140),
-  floored at 40% of base.
-- **Saved per user, across sessions:** on launch you're asked *"Who's playing?"*
-  Each name gets its own saved profile at
-  `CTF/state/profiles/<name>/progress.tsv` (+ a readable `progress.json`) —
-  captured flags, points, hints used, and capture time per room. `state/` is
-  bind-mounted to the host, so **your progress survives quitting and relaunching**
-  — you're greeted with *"welcome back … resuming N pts across X/10 rooms"* and
-  the menu shows `[✓]` markers, your running score, and your name as `PLAYER`.
-  Press Enter at the prompt to continue as the last player; set `CTF_USER=<name>`
-  (env, forwarded by `ctf_serv`) to skip the prompt. Different names keep
-  independent progress on the same machine; a pre-existing single-file progress
-  is migrated into the default `player` profile automatically.
-- **Writeups:** after a capture you're offered a scratch `WRITEUP.md`
-  (vuln / steps / payload / remediation) to journal the solve.
+Room menu: `[s]` submit flag · `[h]` hint · `[r]` reset room · `[i]` briefing · `[b]` back.
+
+When you're done (or time's up), pick **`[f]` Complete CTF** from the menu for the
+retro-arcade **FINAL SCORE** screen — that's what the instructor reads to score you.
 
 ---
 
-## Reset / teardown
+## Scoring & hints
 
-- Per-room `[r]` — re-provisions a fresh target and clears that room's progress
-  (replayable).
-- Menu `[a]` — reset all progress + re-provision every room.
-- Menu `[t]` — tear down all targets and the internal network (progress kept).
-
----
-
-## Isolation guarantees
-
-- Targets live **only** on an `--internal` Podman network (`colab_ctf_net`) with
-  **no host port publishing** — reachable solely from the lab's pentest
-  container, never the host or outside world, and never real CoLab
-  infrastructure.
-- By default the launcher **does not execute** container commands (so it can't
-  hang on a stopped podman machine and is safe to run anywhere): it prints the
-  exact podman commands the real lab would run and serves an **offline,
-  network-free mock target** under `CTF/state/`, which is what the flag-capture
-  logic runs against. Set `CTF_LIVE_PODMAN=1` inside the real lab to execute the
-  container path.
+- **Points:** Easy 100 · Medium 250 · Hard 500 — **2,800 total**.
+- **Hints cost points.** A room's points are split evenly across its hint steps.
+  Each hint you reveal forfeits one step's share. Use **every** hint in a room and
+  you score **0** for it — but you still capture the flag and clear the room.
+- **That's the trade-off the game is about:** solve it on your own for full points,
+  or buy help and give points back. The hints *will* walk you all the way to the
+  answer if you need them.
+- **Progress is saved** per player on your machine, so you can quit and resume.
+- **FINAL SCORE** (`[f]`) shows your total, a letter rank, and a per-room breakdown.
+  Highest score wins the event.
 
 ---
 
-## Adding a challenge (modular)
+## The toolkit
 
-Drop a new file in `CTF/challenges/` (numeric prefix controls menu order) that:
-
-1. Defines its `*_provision`, optional `*_toolkit`, and `*_handle` functions.
-2. Calls `register_challenge` with `key=value` metadata (id, title, diff, points,
-   penalty, owasp, cvss, slug, tools, scenario, objective, endpoint,
-   remediation, finding, hints, provision, toolkit, handler).
-
-`ctf.sh` auto-discovers `challenges/*.sh`; the menu, flag seed, scoring, and
-progress all key off the registry. No other file needs editing.
+Fundamentals only — the same tools a real tester reaches for first, all packaged
+**inside** the CTF toolbox (nothing extra to install):
 
 ```
-CTF/
-  ctf_serv.sh            # startup: runs the CTF in the Kali toolbox (or --host)
-  ctf.sh                 # the range itself: menu + hidden __serve dispatcher
-  CoLab CTF - Quick Start.txt   # startup guide
-  lib/                   # ui, banner, flags, state, provision, toolkit, mockweb
-  challenges/            # 00-common.sh (framework) + one file per room
-  flags/flag-hashes.txt  # SHA-256 hashes only
-  state/                 # runtime (gitignored): progress, flags.plain, targets, work
+curl   jq   jwt_tool   ruby   python3   nmap   ffuf   base64   openssl   nc
 ```
+
+Plus the classic **`rockyou.txt`** wordlist for cracking. There are deliberately
+**no** one-button auto-exploiters (no sqlmap, hydra, or metasploit) — you do the
+steps yourself, which is the whole point.
+
+---
+
+## Links
+
+- **Podman Desktop** (container engine) — <https://podman-desktop.io/>
+- **Git / Git Bash** — <https://git-scm.com/downloads>
+- **Google Chrome** — <https://www.google.com/chrome/>
+- **OWASP Top 10 (2021)** — <https://owasp.org/Top10/>
+- Live app (after setup): **<https://localhost:13443>**
+
+OWASP categories used in the rooms: [A01 Broken Access Control][a01] ·
+[A03 Injection][a03] · [A05 Security Misconfiguration][a05] ·
+[A07 Identification & Authentication Failures][a07] ·
+[A08 Software & Data Integrity Failures][a08] ·
+[A10 Server-Side Request Forgery][a10].
+
+[a01]: https://owasp.org/Top10/A01_2021-Broken_Access_Control/
+[a03]: https://owasp.org/Top10/A03_2021-Injection/
+[a05]: https://owasp.org/Top10/A05_2021-Security_Misconfiguration/
+[a07]: https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/
+[a08]: https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/
+[a10]: https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/
+
+---
+
+## Safety & isolation
+
+- The app and toolbox run in **containers on an isolated network** on your own
+  machine. Nothing is published to the internet.
+- This is a **deliberately-vulnerable training copy** of CoLab — never the real,
+  hardened production site.
+- Run it only for the supervised event, and only against your own local copy.

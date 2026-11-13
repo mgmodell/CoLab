@@ -74,17 +74,36 @@ function Ensure-Net {
 function Invoke-Toolbox {
     param([string[]]$Cmd)
     Ensure-Net
+    # Also join the Sec engagement network (if the real CoLab stack is up) so
+    # real-app rooms can attack the live target as app:3000.
+    $extraNet = @()
+    podman network exists 'sec_env_engagement_net' *> $null
+    if ($LASTEXITCODE -eq 0) { $extraNet = @('--network', 'sec_env_engagement_net') }
+    else { Write-Host "  (real-app rooms need the CoLab stack: .\sec_serv.ps1 -u)" -ForegroundColor DarkYellow }
     $mount = "${ScriptDir}:/opt/ctf"
     & podman run --rm -it `
         --name $Container `
-        --network $Net `
+        --network $Net @extraNet `
         --hostname colab-ctf `
         -e COLORTERM=truecolor -e TERM=xterm-256color `
         -e "CTF_USER=$env:CTF_USER" `
+        -e CTF_TARGET_REAL=http://app:3000 `
         --entrypoint /bin/bash `
         -v $mount `
         -w /opt/ctf `
         $Image @Cmd
+}
+
+# Resolve Chrome's full path (chrome is usually NOT on PATH, so a bare-name
+# launch silently no-ops). The host opens Chrome directly between picking a room
+# and entering it — no background job.
+function Resolve-Chrome {
+    foreach ($c in @("$env:ProgramFiles\Google\Chrome\Application\chrome.exe",
+                     "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe",
+                     "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe")) {
+        if (Test-Path $c) { return $c }
+    }
+    return 'chrome'   # last resort: hope it's on PATH
 }
 
 if ($Status) {
@@ -130,9 +149,48 @@ if ($Shell) {
     Write-Host "  Kali toolbox shell - CTF is at /opt/ctf (run ./ctf.sh)" -ForegroundColor Cyan
     Write-Host "  tools: curl sqlmap jwt_tool ffuf gitleaks nuclei nmap python3 jq ..." -ForegroundColor DarkGray
     Invoke-Toolbox @('-l')
-} else {
-    Write-Host "  CoLab CTF - booting in Podman ($Image)" -ForegroundColor Cyan
-    Write-Host "  isolated internal net '$Net' - CTF at /opt/ctf - full Sec toolkit - progress saved on host" -ForegroundColor DarkGray
-    Invoke-Toolbox @('/opt/ctf/ctf.sh')
-    Write-Host "  CTF container stopped - your progress is saved." -ForegroundColor DarkGray
+    return
+}
+
+# Default: one Kali container stays up; the menu runs inside it as two phases
+# (__pick then __room) via `podman exec -it`, so the HOST regains control between
+# them and opens Chrome directly when you start a room - no background job.
+Ensure-Net
+$extraNet = @()
+podman network exists 'sec_env_engagement_net' *> $null
+if ($LASTEXITCODE -eq 0) { $extraNet = @('--network', 'sec_env_engagement_net') }
+else { Write-Host "  (real-app rooms need the CoLab stack up: .\sec_serv.ps1 -u)" -ForegroundColor DarkYellow }
+$mount     = "${ScriptDir}:/opt/ctf"
+$chromeExe = Resolve-Chrome
+$selRoom = Join-Path $ScriptDir 'state\selected_room'
+$selUrl  = Join-Path $ScriptDir 'state\selected_url'
+$ctl     = Join-Path $ScriptDir 'state\ctl'
+
+podman rm -f $Container *> $null
+& podman run -d --name $Container `
+    --network $Net @extraNet `
+    --hostname colab-ctf `
+    -e COLORTERM=truecolor -e TERM=xterm-256color `
+    -e "CTF_USER=$env:CTF_USER" `
+    -e CTF_TARGET_REAL=http://app:3000 `
+    -v $mount -w /opt/ctf `
+    --entrypoint sleep $Image infinity *> $null
+
+Write-Host "  CoLab CTF - pick a vulnerability; Chrome opens the live CoLab when you start a room." -ForegroundColor Cyan
+try {
+    while ($true) {
+        Remove-Item $selRoom, $selUrl, $ctl -Force -ErrorAction SilentlyContinue
+        & podman exec -it $Container /opt/ctf/ctf.sh __pick
+        if ((Test-Path $ctl) -and (((Get-Content $ctl -Raw) -replace '\s','') -eq 'quit')) { break }
+        if (-not (Test-Path $selRoom)) { continue }
+        $room = (Get-Content $selRoom -Raw).Trim()
+        if (Test-Path $selUrl) {
+            $u = (Get-Content $selUrl -Raw).Trim()
+            if ($u) { Start-Process $chromeExe -ArgumentList '--new-window', $u }
+        }
+        & podman exec -it $Container /opt/ctf/ctf.sh __room $room
+    }
+} finally {
+    podman rm -f $Container *> $null
+    Write-Host "  CTF stopped - progress saved." -ForegroundColor DarkGray
 }

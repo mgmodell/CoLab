@@ -11,13 +11,13 @@
 
 declare -A CH_TITLE CH_DIFF CH_POINTS CH_HINT_PENALTY CH_OWASP CH_CVSS CH_SLUG \
            CH_TOOLS CH_OBJECTIVE CH_SCENARIO CH_ENDPOINT CH_REMEDIATION \
-           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER CH_BROWSE CH_HINTSTEP CH_PORTAL
+           CH_FINDING CH_HINTS CH_PROVISION CH_TOOLKIT CH_HANDLER CH_BROWSE CH_HINTSTEP CH_PORTAL CH_LIVE
 CHALLENGE_ORDER=()
 
 register_challenge() {
   local id="" title="" diff="" points="" penalty="" owasp="" cvss="" slug="" \
         tools="" objective="" scenario="" endpoint="" remediation="" finding="" \
-        hints="" provision="" toolkit="" handler="" browse="" hintstep="" portal=""
+        hints="" provision="" toolkit="" handler="" browse="" hintstep="" portal="" live=""
   local kv key val
   for kv in "$@"; do
     key="${kv%%=*}"; val="${kv#*=}"
@@ -27,7 +27,7 @@ register_challenge() {
       tools) tools="$val";; objective) objective="$val";; scenario) scenario="$val";;
       endpoint) endpoint="$val";; remediation) remediation="$val";; finding) finding="$val";;
       hints) hints="$val";; provision) provision="$val";; toolkit) toolkit="$val";; handler) handler="$val";;
-      browse) browse="$val";; hintstep) hintstep="$val";; portal) portal="$val";;
+      browse) browse="$val";; hintstep) hintstep="$val";; portal) portal="$val";; live) live="$val";;
     esac
   done
   [[ -z "$id" ]] && { echo "register_challenge: missing id" >&2; return 1; }
@@ -39,6 +39,7 @@ register_challenge() {
   CH_FINDING[$id]="$finding";    CH_HINTS[$id]="$hints";     CH_PROVISION[$id]="$provision"
   CH_TOOLKIT[$id]="$toolkit";    CH_HANDLER[$id]="$handler"
   CH_BROWSE[$id]="$browse";      CH_HINTSTEP[$id]="$hintstep";   CH_PORTAL[$id]="$portal"
+  CH_LIVE[$id]="$live"
 }
 
 # ---- helpers ----------------------------------------------------------------
@@ -78,7 +79,7 @@ challenge_briefing() {
   ui_kv "CVSS"          "${CH_CVSS[$id]:-—}"
   ui_kv "Reward"        "${CH_POINTS[$id]} pts" "$(ui_difficulty_color "${CH_DIFF[$id]}")"
   if [[ -n "${CTF_TARGET_PID:-}" ]]; then
-    ui_kv "Attack target" "${TARGET_URL:-http://127.0.0.1:8000}  (curl · sqlmap · ffuf …)" "$T_RED"
+    ui_kv "Attack target" "${TARGET_URL:-http://app:3000}  (curl · jq · jwt_tool · ruby …)" "$T_RED"
   else
     ui_kv "Attack target" "./colab-http  (offline mock in the room work dir)" "$T_RED"
   fi
@@ -109,8 +110,10 @@ challenge_ready_gate() { # id
   esac
 }
 
-_boot_step() { # pct label  — redraw one loading-bar line in place
-  printf '\r  %s%3d%%%s %s  %s%-40s%s' \
+_boot_step() { # pct label  — one clean line per step
+  # (an in-place \r redraw stacks into a mess through `podman exec -it`, so
+  #  print each step on its own line instead.)
+  printf '  %s%3d%%%s %s  %s%s%s\n' \
     "$T_BOLD$T_YELLOW" "$1" "$T_RESET" "$(ui_bar "$1" 28)" "$T_SKY" "$2" "$T_RESET"
 }
 
@@ -120,6 +123,10 @@ _boot_step() { # pct label  — redraw one loading-bar line in place
 challenge_boot() { # id
   local id="$1" log="$CTF_HOME/state/boot.log"
   : > "$log" 2>/dev/null || true
+  # Room isolation: drop any curl auth a PRIOR room saved (e.g. the grade-IDOR
+  # room pre-logs-in the instructor via ~/.curlrc). Otherwise a later room's own
+  # login would silently ride the stale instructor token. easy-idor re-writes it.
+  rm -f "${HOME:-/root}/.curlrc" 2>/dev/null || true
   echo
   printf '  %sdeploying %s…%s\n\n' "$T_DIM" "${CH_TITLE[$id]}" "$T_RESET"
   _boot_step 10 "establishing isolated network"
@@ -129,6 +136,13 @@ challenge_boot() { # id
   "${CH_PROVISION[$id]}" "$id"  >>"$log" 2>&1; sleep 0.25
   _boot_step 65 "arming live HTTP target"
   ctf_target_active "$id"       >>"$log" 2>&1; sleep 0.25
+  if [[ -n "${CH_LIVE[$id]:-}" ]]; then
+    _boot_step 80 "opening CoLab in your browser"
+    # The host launcher reads this right after the picker exits and opens Chrome
+    # itself (foreground, no background job).
+    printf '%s' "${CH_LIVE[$id]}" > "$CTF_HOME/state/selected_url" 2>/dev/null || true
+    sleep 0.25
+  fi
   _boot_step 90 "staging toolkit, objective + hints"
   toolkit_prepare "$id"         >>"$log" 2>&1; sleep 0.25
   _boot_step 100 "ready"; sleep 0.25
@@ -147,7 +161,7 @@ challenge_open() {
   echo
   toolkit_summary "$id"
   if [[ -n "${CTF_TARGET_PID:-}" ]]; then
-    printf '\n  %sHit it:%s %scurl %s%s%s  ·  or ./colab-http in the work dir  ·  point sqlmap/ffuf here too\n' \
+    printf '\n  %sHit it:%s %scurl %s%s%s  ·  craft payloads with ruby/python  ·  crack & forge tokens with jwt_tool\n' \
       "$T_DIM" "$T_RESET" "$T_CYAN" "${TARGET_URL:-}" "$T_RESET" "$T_DIM"
   else
     printf '\n  %sTip:%s cd into the working dir and use %s./colab-http%s to hit the target.\n' \
@@ -241,7 +255,7 @@ challenge_hint() {
   [[ "$idx" =~ ^[0-9]+$ ]] || idx=$(( used + 1 ))
   (( idx < 1 )) && idx=1; (( idx > total )) && idx=total
   printf '  reveal the hint for your current step (%s/%s)? costs %s%s pts%s [y/N] ❯ ' \
-    "$idx" "$total" "$T_YELLOW" "${CH_HINT_PENALTY[$id]}" "$T_RESET"
+    "$idx" "$total" "$T_YELLOW" "$(state_hint_cost "$id")" "$T_RESET"
   read -r ans || return 0
   case "$ans" in
     y|Y|yes)

@@ -3,8 +3,8 @@
 # ctf_serv.sh — CoLab CTF launcher (Git Bash / Linux).
 #
 # Boots the CoLab CTF training range IN PODMAN — inside the same Kali toolbox
-# image the engagement uses (colab_pentest), so students get the full toolkit
-# (curl, sqlmap, jwt_tool, ffuf, gitleaks, nuclei, python3, jq …) right next to
+# image the engagement uses (colab_pentest), so students get the fundamentals kit
+# (curl, jq, jwt_tool, ruby, python3, nmap, ffuf, base64, openssl …) right next to
 # the challenges. Runs on its own isolated internal network with this CTF/
 # folder bind-mounted writable at /opt/ctf. Progress is saved on the host.
 #
@@ -108,7 +108,7 @@ open_shell() {
   ensure_engine || exit 1
   ensure_image  || exit 1
   say "  ${C_CYAN}Kali toolbox shell${C_RESET} — CTF is at ${C_BOLD}/opt/ctf${C_RESET}  (run ./ctf.sh)"
-  say "  ${C_DIM}tools: curl sqlmap jwt_tool ffuf gitleaks nuclei nmap python3 jq …${C_RESET}\n"
+  say "  ${C_DIM}tools: curl jq jwt_tool ruby python3 nmap ffuf base64 openssl …${C_RESET}\n"
   run_toolbox -l
 }
 

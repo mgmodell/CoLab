@@ -66,13 +66,17 @@ fi
 TARGET_PORT="${CTF_TARGET_PORT:-8000}"
 TARGET_IP="$( { hostname -I 2>/dev/null || hostname -i 2>/dev/null; } | awk '{print $1}' )"
 [[ -z "$TARGET_IP" ]] && TARGET_IP="127.0.0.1"
-TARGET_URL="http://${TARGET_IP}:${TARGET_PORT}"
-CTF_TARGET_PID=""
+if [[ -n "${CTF_TARGET_REAL:-}" ]]; then
+  TARGET_URL="$CTF_TARGET_REAL"; CTF_TARGET_PID="live"   # rooms attack the live CoLab app (Podman)
+else
+  TARGET_URL="http://${TARGET_IP}:${TARGET_PORT}"; CTF_TARGET_PID=""
+fi
 
 # Point the target server at the room the operator is currently in.
 ctf_target_active() { printf '%s' "${1:-}" > "$CTF_HOME/state/active_challenge" 2>/dev/null || true; }
 
 ctf_target_start() {
+  [[ -n "${CTF_TARGET_REAL:-}" ]] && return 0          # live app is the target; no local mock needed
   command -v python3 >/dev/null 2>&1 || return 0     # optional; ./colab-http still works
   mkdir -p "$CTF_HOME/state"; ctf_target_active ""
   CTF_TARGET_PORT="$TARGET_PORT" python3 "$CTF_HOME/lib/target_server.py" \
@@ -81,7 +85,7 @@ ctf_target_start() {
   sleep 0.4
   kill -0 "$CTF_TARGET_PID" 2>/dev/null || CTF_TARGET_PID=""
 }
-ctf_target_stop() { [[ -n "$CTF_TARGET_PID" ]] && kill "$CTF_TARGET_PID" 2>/dev/null; CTF_TARGET_PID=""; }
+ctf_target_stop() { [[ "$CTF_TARGET_PID" =~ ^[0-9]+$ ]] && kill "$CTF_TARGET_PID" 2>/dev/null; CTF_TARGET_PID=""; }
 trap ctf_target_stop EXIT
 
 # ---- scope / isolation banner -----------------------------------------------
@@ -102,7 +106,10 @@ ctf_header() {
     "$T_BOLD$T_CYAN" "$T_RESET" "$T_GREEN" "$cap" "$n" "$T_RESET" \
     "$T_BOLD$T_CYAN" "$T_RESET" "$T_BOLD$T_WHITE" "${CTF_PROFILE:-player}" "$T_RESET"
   provision_engine_line
-  if [[ -n "$CTF_TARGET_PID" ]]; then
+  if [[ -n "${CTF_TARGET_REAL:-}" ]]; then
+    printf '  %sTARGET%s %s%s%s  %s(the live CoLab app · Podman --internal net)%s\n' \
+      "$T_BOLD$T_RED" "$T_RESET" "$T_BOLD$T_WHITE" "$TARGET_URL" "$T_RESET" "$T_DIM" "$T_RESET"
+  elif [[ -n "$CTF_TARGET_PID" ]]; then
     printf '  %sTARGET%s %s%s%s  %s(serves the room you open · also http://127.0.0.1:%s)%s\n' \
       "$T_BOLD$T_RED" "$T_RESET" "$T_BOLD$T_WHITE" "$TARGET_URL" "$T_RESET" "$T_DIM" "$TARGET_PORT" "$T_RESET"
   else
@@ -156,23 +163,24 @@ ctf_teardown() {
 # Tool catalog — one "cmd|description|example" line each. The example's live
 # target URL/port/IP are expanded at render time. Consumed by both the full
 # toolkit view and the per-room view, so new tools are added in ONE place.
+# Fundamentals-first kit: the tools a student needs to PERFORM each technique by
+# hand. No one-button auto-exploiters (sqlmap/hydra/metasploit) - this is a
+# learn-the-attack range, not a press-and-win one. The per-room view filters this
+# to the tools that room declares (CH_TOOLS).
 _tk_catalog() { # target_url
   local u="$1"
   cat <<CAT
-curl|raw HTTP requests|curl $u/api/me
-httpie|friendlier HTTP client|http GET $u/api/me
-ffuf|content / parameter fuzzing|ffuf -u $u/FUZZ -w /usr/share/wordlists/dirb/common.txt
-gobuster|directory / endpoint brute force|gobuster dir -u $u -w /usr/share/wordlists/dirb/common.txt
-sqlmap|automated SQL injection (rm 4)|sqlmap -u "$u/api/search?q=1" --batch --dump
-nmap|port / service scan|nmap -sV -p$TARGET_PORT $TARGET_IP
-nuclei|vuln template scanner|nuclei -u $u
-nikto|web-server misconfig scan|nikto -h $u
-jwt_tool|JWT / bearer forgery (rm 9)|jwt_tool <token> -T
-hydra|credential brute force|hydra -l admin -P rockyou.txt $TARGET_IP http-post-form
-gitleaks|secret scanning (rm 3)|gitleaks dir .
-searchsploit|offline exploit-db lookup|searchsploit <product> <version>
-jq|JSON parsing|curl -s $u/api/me | jq .
-base64|encode / decode (rm 8, 9)|echo <data> | base64 -d
+curl|raw HTTP requests - the workhorse|curl $u/api/reports/admin
+jq|parse JSON responses|curl -s $u/api/portal/login | jq .
+jwt_tool|crack & forge JSON Web Tokens|jwt_tool <token> -C -d /usr/share/wordlists/rockyou.txt
+ruby|craft payloads / serialize objects|ruby -rbase64 -e 'print Base64.urlsafe_encode64(Marshal.dump(obj))'
+python3|quick scripting / encoders|python3 -c 'import base64,sys; ...'
+base64|encode / decode blobs|echo <data> | base64 -d
+openssl|hashing / HMAC / TLS|openssl dgst -sha256 -hmac <key>
+nmap|port / service scan|nmap -sV $TARGET_HOST
+ffuf|content / endpoint discovery|ffuf -u $u/FUZZ -w /usr/share/wordlists/dirb/common.txt
+gobuster|directory brute force|gobuster dir -u $u -w /usr/share/wordlists/dirb/common.txt
+nc|raw TCP / banner grab|nc $TARGET_HOST 80
 CAT
 }
 
@@ -224,8 +232,11 @@ ctf_toolkit_menu() {
     read -r choice || return 0
     case "$(printf '%s' "$choice" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')" in
       s|shell)
-        printf '\n  %sKali shell — type %sexit%s to return to the CTF.%s\n\n' "$T_DIM" "$T_BOLD" "$T_RESET$T_DIM" "$T_RESET"
-        ( cd "$CTF_HOME" && "${SHELL:-bash}" -i ) ;;
+        local _wd="$CTF_HOME"
+        [[ -n "$room" ]] && _wd="$(pv_work_dir "$room")"
+        printf '\n  %sKali shell in %s%s%s — the exploit helper %s./attack%s is here. type %sexit%s to return.%s\n\n' \
+          "$T_DIM" "$T_WHITE" "$_wd" "$T_DIM" "$T_CYAN" "$T_DIM" "$T_BOLD" "$T_RESET$T_DIM" "$T_RESET"
+        ( cd "$_wd" && "${SHELL:-bash}" -i ) ;;
       '!hint'|'!hints'|hint)
         if [[ -n "$room" ]]; then challenge_hint "$room"
           printf '  %s(enter to continue)%s ' "$T_DIM" "$T_RESET"; read -r _ || true
@@ -280,14 +291,15 @@ ctf_main() {
     echo
     ctf_header
     ctf_list
-    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit\n' \
-      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
+    printf '\n  %s[1-%s]%s open room   %s[t]%s toolkit   %s[f]%s complete CTF   %s[a]%s reset all   %s[x]%s teardown   %s[q]%s quit\n' \
+      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
     printf '  %scolab-ctf%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
     read -r sel || break
     sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')"
     case "$sel" in
       q|quit|exit) break ;;
       t|toolkit)   ctf_toolkit_menu ;;
+      f|finish|complete|score|done) ctf_final_score ;;
       a|reset)     ctf_reset_all ;;
       x|teardown|down) ctf_teardown ;;
       v|victory|trophy)   # hidden: re-view the completion screen once unlocked
@@ -309,4 +321,70 @@ ctf_main() {
     "$(state_captured_count)" "$n" "$T_RESET"
 }
 
-ctf_main "$@"
+# --- Host-orchestrated split (no background job) ------------------------------
+# ctf_serv.ps1 runs the menu as two phases via `podman exec -it`:
+#   __pick : show the menu, pick + confirm a room, run the loading bar, then EXIT
+#            (writing state/selected_room + state/selected_url). The host then
+#            opens Chrome itself and calls __room.
+#   __room : briefing + the room's toolkit/hint/submit menu, until [b] back.
+# This lets the host open Chrome synchronously between the two, with no watcher.
+
+ctf_pick() {
+  flags_seed
+  ui_clear; banner_wordmark
+  ctf_select_user
+  state_init
+  rm -f "$CTF_HOME/state/selected_room" "$CTF_HOME/state/selected_url" "$CTF_HOME/state/ctl" 2>/dev/null || true
+  local sel n="${#CHALLENGE_ORDER[@]}" id ans
+  while true; do
+    ui_clear; banner_wordmark; ctf_scope_banner; echo; ctf_header; ctf_list
+    printf '\n  %s[1-%s]%s pick a vulnerability   %s[f]%s complete CTF (final score)   %s[q]%s quit\n' \
+      "$T_CYAN" "$n" "$T_RESET" "$T_CYAN" "$T_RESET" "$T_SLATE" "$T_RESET"
+    printf '  %scolab-ctf%s %s❯%s ' "$T_DIM" "$T_RESET" "$T_CYAN" "$T_RESET"
+    read -r sel || { printf 'quit' > "$CTF_HOME/state/ctl"; return 0; }
+    sel="$(printf '%s' "$sel" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')"
+    case "$sel" in
+      q|quit|exit) printf 'quit' > "$CTF_HOME/state/ctl"; return 0 ;;
+      f|finish|complete|score|done) ctf_final_score ;;
+      ''|*[!0-9]*) printf '  %sinvalid selection.%s\n' "$T_RED" "$T_RESET"; sleep 1 ;;
+      *)
+        if (( sel >= 1 && sel <= n )); then
+          id="${CHALLENGE_ORDER[$(( sel - 1 ))]}"
+          # confirm this is the vulnerability they want
+          ui_clear; ui_box_top; ui_box_title "${CH_TITLE[$id]}"; ui_box_bottom
+          printf '\n  %s   %s%s%s\n\n' "$(challenge_badge "$id")" "$T_DIM" "${CH_OWASP[$id]}" "$T_RESET"
+          _wrap "${CH_SCENARIO[$id]}"; echo
+          printf '\n  %sStart this room?%s  %s[Enter]%s yes   %s[b]%s pick another\n' \
+            "$T_BOLD$T_SKY" "$T_RESET" "$T_GREEN" "$T_RESET" "$T_SLATE" "$T_RESET"
+          printf '  %s%s ❯%s ' "$T_DIM" "$id" "$T_RESET"
+          read -r ans || ans=""
+          case "$(printf '%s' "$ans" | tr '[:upper:]' '[:lower:]' | tr -d ' \r')" in
+            b|back|n|no) : ;;                       # loop back to the picker
+            *) challenge_boot "$id"                 # loading bar (provision + stage + selected_url)
+               printf '%s' "$id" > "$CTF_HOME/state/selected_room"
+               return 0 ;;
+          esac
+        else
+          printf '  %sno room #%s.%s\n' "$T_RED" "$sel" "$T_RESET"; sleep 1
+        fi ;;
+    esac
+  done
+}
+
+ctf_room() {
+  local id="${1:-}"
+  [[ -z "$id" ]] && return 0
+  state_init
+  challenge_briefing "$id"   # clears the screen and draws the room header itself
+  provision_engine_line; echo
+  toolkit_summary "$id"
+  printf '\n  %sAttack from the toolkit: %s[t]%s toolkit then %s[s]%s for a Kali shell. Type %s!hint%s for help.%s\n' \
+    "$T_DIM" "$T_CYAN" "$T_RESET$T_DIM" "$T_CYAN" "$T_RESET$T_DIM" "$T_YELLOW" "$T_RESET$T_DIM" "$T_RESET"
+  challenge_menu "$id"
+}
+
+case "${1:-}" in
+  __pick) ctf_pick ;;
+  __room) ctf_room "${2:-}" ;;
+  *)      ctf_main "$@" ;;
+esac

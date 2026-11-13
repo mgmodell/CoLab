@@ -6,8 +6,9 @@
 #  columns: id <TAB> captured(0/1) <TAB> points_awarded <TAB> hints_used <TAB> captured_at
 #  state/ is bind-mounted to the host, so a user's progress survives across
 #  sessions (container restarts). Flags are shared; only progress is per-user.
-#  Scoring: base points per difficulty; each revealed hint reduces that
-#  challenge's award, floored at 40% of base.
+#  Scoring: base points per difficulty, split evenly across the room's hint
+#  steps. Each hint revealed forfeits one step's share; reveal them all and the
+#  award reaches 0 (you still capture the flag — you just score nothing for it).
 # =============================================================================
 
 CTF_PROFILE="${CTF_PROFILE:-player}"
@@ -78,14 +79,28 @@ state_use_hint() {
 }
 
 # Points that WOULD be awarded now, given hints already used.
+# Proportional model: the room's points are split evenly across its hint steps;
+# each hint revealed forfeits one step's share. Use every hint → 0 (you still
+# get the flag/completion, you just score nothing for the room).
 state_award_value() {
-  local id="$1" base pen hints award floor
-  base="${CH_POINTS[$id]:-0}"; pen="${CH_HINT_PENALTY[$id]:-0}"
-  hints="$(state_hints_used "$id")"
-  award=$(( base - hints * pen ))
-  floor=$(( base * 40 / 100 ))
-  (( award < floor )) && award=$floor
+  local id="$1" base n used award
+  base="${CH_POINTS[$id]:-0}"
+  n="$(toolkit_hint_count "$id" 2>/dev/null)"; [[ "$n" =~ ^[0-9]+$ ]] || n=0
+  used="$(state_hints_used "$id")"
+  (( n <= 0 )) && { printf '%s' "$base"; return; }
+  (( used > n )) && used=$n
+  award=$(( base * (n - used) / n ))
+  (( award < 0 )) && award=0
   printf '%s' "$award"
+}
+
+# What revealing the NEXT hint costs (one hint-step's share of the room).
+state_hint_cost() {
+  local id="$1" base n
+  base="${CH_POINTS[$id]:-0}"
+  n="$(toolkit_hint_count "$id" 2>/dev/null)"; [[ "$n" =~ ^[0-9]+$ ]] || n=0
+  (( n <= 0 )) && { printf '0'; return; }
+  printf '%s' "$(( base / n ))"
 }
 
 # Mark captured. Echoes awarded points. Returns 2 if already captured.
