@@ -8,6 +8,7 @@
 #  Bind: 0.0.0.0:${CTF_TARGET_PORT:-8000}.  Active room: state/active_challenge.
 # ============================================================================
 import os
+import re
 import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit, unquote_plus, parse_qs
@@ -25,6 +26,31 @@ LANDING = (
 )
 
 
+_SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,64}$")
+_SAFE_HEADER_RE = re.compile(r"^[\x20-\x7E]{0,4096}$")
+_SAFE_PATH_QUERY_RE = re.compile(r"^[\x20-\x7E]{0,8192}$")
+_ALLOWED_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE"}
+
+
+def _safe_id(value, default=""):
+    value = (value or "").strip()
+    return value if _SAFE_ID_RE.match(value) else default
+
+
+def _safe_header_value(value):
+    value = value or ""
+    if "\x00" in value or not _SAFE_HEADER_RE.match(value):
+        return ""
+    return value
+
+
+def _safe_path_query(value):
+    value = value or ""
+    if "\x00" in value or not _SAFE_PATH_QUERY_RE.match(value):
+        return ""
+    return value
+
+
 def active_challenge():
     try:
         with open(ACTIVE_FILE) as f:
@@ -34,6 +60,9 @@ def active_challenge():
 
 
 def brief_html(cid):
+    cid = _safe_id(cid)
+    if not cid:
+        return "<!doctype html><title>CoLab CTF</title><p>briefing unavailable</p>"
     try:
         out = subprocess.run(["bash", CTF_SH, "__brief", cid], capture_output=True, text=True, timeout=20).stdout
         return out or "<!doctype html><title>CoLab CTF</title><p>briefing unavailable</p>"
@@ -42,8 +71,12 @@ def brief_html(cid):
 
 
 def portal_html(cid, sid):
+    cid = _safe_id(cid)
+    sid = _safe_id(sid, default="")
+    if not cid:
+        return "<!doctype html><title>CoLab</title><p>CoLab is unavailable</p>"
     env = dict(os.environ)
-    env["CTF_PORTAL_ID"] = sid or ""
+    env["CTF_PORTAL_ID"] = sid
     try:
         out = subprocess.run(["bash", CTF_SH, "__portal", cid], capture_output=True, text=True, env=env, timeout=20).stdout
         return out or "<!doctype html><title>CoLab</title><p>CoLab is unavailable</p>"
@@ -52,17 +85,30 @@ def portal_html(cid, sid):
 
 
 def serve_via_handler(cid, method, path, query, headers, body):
-    p = path + ("?" + unquote_plus(query) if query else "")
+    cid = _safe_id(cid)
+    method = method if method in _ALLOWED_METHODS else "GET"
+    safe_path = _safe_path_query(path)
+    safe_query = _safe_path_query(unquote_plus(query) if query else "")
+    p = safe_path + ("?" + safe_query if safe_query else "")
+    if not cid or not safe_path:
+        return 400, "invalid request"
+
     args = ["bash", CTF_SH, "__serve", cid, method, p]
-    if headers.get("Authorization"):
-        args += ["-H", "Authorization: " + headers.get("Authorization")]
-    if headers.get("X-CSRF-Token"):
-        args += ["-H", "X-CSRF-Token: " + headers.get("X-CSRF-Token")]
-    if headers.get("Cookie"):
-        args += ["-b", headers.get("Cookie")]
+    auth = _safe_header_value(headers.get("Authorization"))
+    csrf = _safe_header_value(headers.get("X-CSRF-Token"))
+    cookie = _safe_header_value(headers.get("Cookie"))
+    if auth:
+        args += ["-H", "Authorization: " + auth]
+    if csrf:
+        args += ["-H", "X-CSRF-Token: " + csrf]
+    if cookie:
+        args += ["-b", cookie]
     if body:
         ctype = (headers.get("Content-Type") or "").lower()
-        args += ["-d", unquote_plus(body) if "form-urlencoded" in ctype else body]
+        body_value = unquote_plus(body) if "form-urlencoded" in ctype else body
+        body_value = _safe_path_query(body_value)
+        if body_value:
+            args += ["-d", body_value]
     env = dict(os.environ)
     env["CTF_RAW"] = "1"
     try:
@@ -89,7 +135,7 @@ class Handler(BaseHTTPRequestHandler):
             if not cid:
                 code, out, ctype = 200, LANDING, "text/plain; charset=utf-8"
             else:
-                sid = (parse_qs(parts.query).get("id") or ["1001"])[0]
+                sid = _safe_id((parse_qs(parts.query).get("id") or ["1001"])[0], default="1001")
                 code, out, ctype = 200, portal_html(cid, sid), "text/html; charset=utf-8"
         elif method == "GET" and path in ("/lab", "/brief"):
             if not cid:
