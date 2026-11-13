@@ -1,0 +1,2 @@
+# Runtime state lives here (progress.tsv, progress.json, flags.plain, targets/, work/).
+# Everything except this file is gitignored — see repo .gitignore.

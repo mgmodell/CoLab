@@ -1,0 +1,24 @@
+==============================================================================
+  CoLab CTF  -  QUICK START
+==============================================================================
+
+The full guide now lives in ONE place:
+
+    CTF/README-CTF.md
+
+Open that file for:
+  - what you're playing (10 rooms, 2,800 points)
+  - the step-by-step SETUP GUIDE (install Podman Desktop, clone, build, boot,
+    turn on the vulnerabilities, play) with download links
+  - how to play, scoring, hints, and the FINAL SCORE screen
+  - the toolkit and the safety/isolation notes
+
+TL;DR once you're set up (Windows PowerShell, from C:\Users\issia\CoLab):
+
+    podman machine start
+    .\sec_serv.ps1 -Up          # boot the CoLab target (wait for "Target is UP")
+    cd CTF ;  .\ctf_serv.ps1    # play
+
+First-time setup (build images, seed the DB, turn on the rooms) is in
+README-CTF.md > "Setup guide".
+==============================================================================
