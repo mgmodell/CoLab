@@ -1,7 +1,7 @@
 [tools]
-node = "26.13.0"
+node = "26.13.1"
 overmind = "latest"
-podman = { version = "6.1.4", rename_exe = "podman" }
+podman = { version = "6.2.0", rename_exe = "podman" }
 python = "3.13.7"
 ruby = "4.0.9"
 rust = "1.97.1"
