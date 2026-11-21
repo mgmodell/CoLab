@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '4.0.9'
+ruby '4.0.10'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.4.1'
 
-gem 'puma', '~> 8.0.0'
+gem 'puma', '~> 8.1.2'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
