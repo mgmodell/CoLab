@@ -74,15 +74,16 @@ class AdministrativeMailer < ApplicationMailer
     logger.debug 'Sending reminder emails'
     curr_date = DateTime.current
 
-    current_users = User.joins( :rosters, groups: { project: :assessments } )
-                        .where.missing( :installments )
-                        .where( 'assessments.start_date <= ? ' \
-                              'AND assessments.end_date >= ? '\
-                              'AND projects.active = TRUE ' \
-                              'AND rosters.role IN (?)',
-                                curr_date, curr_date,
-                                [Roster.roles[:invited_student],
-                                 Roster.roles[:enrolled_student]] ).to_a
+    current_users = User.joins( rosters: :course )
+                        .joins( groups: { project: :assessments } )
+                        .where( 'projects.course_id = courses.id' )
+                        .where.not(
+                          Installment.where( 'installments.assessment_id = assessments.id' )
+                                     .where( 'installments.user_id = users.id' )
+                                     .arel.exists
+                        )
+                        .merge( Assessment.active_at( DateTime.current ) )
+                        .merge( Roster.enrolled ).to_a
 
     Experience.active_at( curr_date ).each do | experience |
       next unless experience.is_open?
