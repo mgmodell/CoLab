@@ -9,7 +9,8 @@ print_help ( ) {
   echo "                Generates a self-signed certificate in tmp/ssl/ on"
   echo "                first run.  Required for LTI Dynamic Registration,"
   echo "                Deep Linking, and Grade Push testing."
-  echo " -f [features]  Specify specific features to run"
+  echo " -f [features]  Run specific features and generate an HTML report"
+  echo " -F             Generate an HTML report for a feature run"
   echo ""
   echo " -p             Prepare the DB (run db:create task)"
   echo " -d             Migrate the DB"
@@ -86,7 +87,7 @@ STARTUP_TLS=false
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "a:cf:q:dtsm:e:ph" opt; do
+while getopts "a:cf:Fq:dtsm:e:ph" opt; do
   case $opt in
     q)
       if [[ $OPTARG == "moodle" ]]; then
@@ -101,6 +102,10 @@ while getopts "a:cf:q:dtsm:e:ph" opt; do
       FEATURE=true
       FEATURES=$OPTARG
       MIGRATE=true
+      export CUCUMBER_HTML_REPORT_ENABLED=true
+      ;;
+    F)
+      export CUCUMBER_HTML_REPORT_ENABLED=true
       ;;
     c)
       rails console
@@ -178,7 +183,8 @@ fi
 # Test a feature
 if [ "$FEATURE" = true ]; then
   echo 'Testing Feature'
-  rails cucumber DRIVER=docker FEATURE=$FEATURES COLAB_DB=db COLAB_DB_PORT=3306
+  mkdir -p reports || exit 1
+  rails cucumber DRIVER=docker "FEATURE=$FEATURES" COLAB_DB=db COLAB_DB_PORT=3306
 fi
 
 # Returns true (exit 0) when overmind should be skipped:

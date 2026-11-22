@@ -65,5 +65,6 @@ ENV MISE_TRUST_ALL=1
 
 ENV DRIVER=docker
 
+USER root
 ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
 CMD -r
