@@ -10,7 +10,6 @@ print_help ( ) {
   echo "                first run.  Required for LTI Dynamic Registration,"
   echo "                Deep Linking, and Grade Push testing."
   echo " -f [features]  Run specific features and generate an HTML report"
-  echo " -F             Generate an HTML report for a feature run"
   echo ""
   echo " -p             Prepare the DB (run db:create task)"
   echo " -d             Migrate the DB"
@@ -87,7 +86,7 @@ STARTUP_TLS=false
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "a:cf:Fq:dtsm:e:ph" opt; do
+while getopts "a:cf:q:dtsm:e:ph" opt; do
   case $opt in
     q)
       if [[ $OPTARG == "moodle" ]]; then
@@ -102,9 +101,6 @@ while getopts "a:cf:Fq:dtsm:e:ph" opt; do
       FEATURE=true
       FEATURES=$OPTARG
       MIGRATE=true
-      export CUCUMBER_HTML_REPORT_ENABLED=true
-      ;;
-    F)
       export CUCUMBER_HTML_REPORT_ENABLED=true
       ;;
     c)
