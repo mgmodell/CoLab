@@ -285,8 +285,9 @@ Run `./dev_serv.sh -h` inside the devcontainer to see all available options.
 
 Run `./run_tests.sh -h` for a full list of options.
 
-Use `./run_tests.sh -f features/path.feature` to run a feature with an HTML
-report, or `./run_tests.sh -n -l -r -o -F` to report on a full run. Open
+Use `./run_tests.sh -f features/path.feature -F` to run a feature with an HTML
+report, or `./run_tests.sh -n -l -r -o -F` to report on a full run. Without
+`-F`, the test runner does not enable HTML output. Open
 `reports/cucumber_report.html` on the host. Inside the devcontainer,
 `./dev_serv.sh -f features/path.feature` also generates this report.
 The report contains test results, so treat it as potentially sensitive.

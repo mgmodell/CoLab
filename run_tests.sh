@@ -18,7 +18,7 @@ print_help ( ) {
   echo " -x             Shut down support processes and terminate"
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
-  echo " -f [features]  Run specific features and generate an HTML report"
+  echo " -f [features]  Specify specific features to run"
   echo " -F             Generate an HTML report for a test run"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code (recommended)"

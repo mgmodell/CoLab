@@ -21,7 +21,7 @@ print_help ( ) {
   echo " -n             Wipe previous runs"
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
-  echo " -f [features]  Run specific features and generate an HTML report"
+  echo " -f [features]  Specify specific features to run"
   echo " -F             Generate an HTML report for a test run"
   echo " -r             Run automated tests (recommended)."
   echo "                If there were failures in a previous test,"
@@ -81,7 +81,6 @@ while getopts "eocrhsnb:f:Fd:tlm" opt; do
       echo "Features Specified $OPTARG" >&2
       SPEC_FEATURE=true
       FEATURE=$OPTARG
-      export CUCUMBER_HTML_REPORT_ENABLED=true
       ;;
     F)
       export CUCUMBER_HTML_REPORT_ENABLED=true
