@@ -69,6 +69,46 @@ class CucumberReportTest < Minitest::Test
     refute_match(/^ENV MISE_TRUST_ALL=/, dockerfile)
   end
 
+  def test_test_runner_finds_mise_in_home_local_bin_for_database_setup
+    app = File.join(@directory, 'src/app')
+    bin = File.join(@directory, 'bin')
+    local_bin = File.join(@directory, '.local/bin')
+    FileUtils.mkdir_p([app, bin, local_bin])
+    %w[git bundle yarn rails].each do |command|
+      path = File.join(bin, command)
+      File.write(path, "#!/bin/bash\nprintf '%s\\n' '#{command}' \"$@\" >> \"$HOME/commands\"\n")
+      File.chmod(0o755, path)
+    end
+    mise = File.join(local_bin, 'mise')
+    File.write(mise, "#!/bin/bash\nprintf '%s\\n' \"mise $*\" >> \"$HOME/commands\"\n")
+    File.chmod(0o755, mise)
+    runner = File.expand_path('../containers/test_env/run_cukes.sh', __dir__)
+    env = { 'HOME' => @directory, 'PATH' => bin }
+
+    output, status = Open3.capture2e(env, '/bin/bash', runner, '-c')
+    assert status.success?, output
+    commands = File.readlines(File.join(@directory, 'commands'), chomp: true)
+    assert_includes commands, 'mise self-update -y'
+    assert_includes commands, 'mise install'
+    assert_includes commands, 'mise env --shell bash'
+    assert_includes commands, 'testing:db_init'
+  end
+
+  def test_test_runner_stops_when_mise_is_missing
+    app = File.join(@directory, 'src/app')
+    bin = File.join(@directory, 'bin')
+    FileUtils.mkdir_p([app, bin])
+    git = File.join(bin, 'git')
+    File.write(git, "#!/bin/bash\nexit 0\n")
+    File.chmod(0o755, git)
+    runner = File.expand_path('../containers/test_env/run_cukes.sh', __dir__)
+
+    output, status = Open3.capture2e({ 'HOME' => @directory, 'PATH' => bin }, '/bin/bash', runner, '-c')
+    refute status.success?
+    assert_includes output, 'ERROR: mise not found'
+    refute_includes output, 'Installing gems'
+  end
+
   def test_test_runner_enables_html_only_with_uppercase_f
     app = File.join(@directory, 'src/app')
     bin = File.join(@directory, 'bin')
