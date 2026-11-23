@@ -19,6 +19,7 @@ print_help ( ) {
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
+  echo " -F             Generate an HTML report for a test run"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code (recommended)"
   echo " -m             Run the mobile (Android) end-to-end tests against an"
@@ -48,7 +49,7 @@ RUN=false
 # Set up a variable for the container
 export HOSTNAME=$(hostname -s)
 
-while getopts "soxb:clndf:rmteq:h" opt; do
+while getopts "soxb:clndf:Frmteq:h" opt; do
   case $opt in
     x) # Open up a terminal
       RUN=false
@@ -77,6 +78,8 @@ while getopts "soxb:clndf:rmteq:h" opt; do
     o)
       SHOW_OUTPUT=true
       ;;
+    F)
+      ;;
     h|\?) #Invalid option
       print_help
       exit 0;
@@ -96,7 +99,7 @@ if [ "$RUN_MOBILE" = true ]; then
   podman compose run --rm app -m
 
 elif [ "$RUN_TERM" = true ]; then
-  podman compose run --rm --entrypoint='/bin/bash -l' app
+  podman compose run --rm --user=colab --entrypoint='/bin/bash -l' app
 
 elif [ "$MYSQL_SESSION" = true ]; then
   if [[ $MYSQL_DB == "moodle" ]]; then
@@ -123,7 +126,7 @@ else
     fi
     NUM_TESTERS=`podman ps | grep colab_testers | wc -l`
     if [ $NUM_TESTERS -lt 1 ]; then 
-      podman compose run --rm -d app $@
+      podman compose run --rm -d app "$@"
     fi
   fi
   if [ "$SHOW_OUTPUT" = true ]; then

@@ -22,6 +22,7 @@ print_help ( ) {
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
+  echo " -F             Generate an HTML report for a test run"
   echo " -r             Run automated tests (recommended)."
   echo "                If there were failures in a previous test,"
   echo "                this will run only the previously failed tests."
@@ -54,7 +55,7 @@ CHECKOUT_BRANCH=''
 RUN_TESTS=true
 RUN_MOBILE=false
 
-while getopts "eocrhsnb:f:d:tlm" opt; do
+while getopts "eocrhsnb:f:Fd:tlm" opt; do
   case $opt in
     c)
       DB_RESET=true
@@ -80,6 +81,9 @@ while getopts "eocrhsnb:f:d:tlm" opt; do
       echo "Features Specified $OPTARG" >&2
       SPEC_FEATURE=true
       FEATURE=$OPTARG
+      ;;
+    F)
+      export CUCUMBER_HTML_REPORT_ENABLED=true
       ;;
     r)
     echo "(re)Run the tests" >&2
@@ -172,7 +176,7 @@ if [ "$SHOW_FAILS" = true ]; then
 fi
 
 # Ensure reports directory exists and is writable for cucumber HTML formatter
-mkdir -p reports
+mkdir -p reports || exit 1
 
 #Run the tests according to the request
 # Clear old log files
@@ -181,7 +185,7 @@ if [ "$RUN_TESTS" = false ]; then
 elif [ "$SPEC_FEATURE" = true ]; then
   # Run the specialised tests
   echo "Begin the specified test executions: $FEATURE" >&2
-  rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER FEATURE=$FEATURE COLAB_DB=db
+  rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER "FEATURE=$FEATURE" COLAB_DB=db
 else
   # Run the tests
   echo "Begin the remaining test executions" >&2
