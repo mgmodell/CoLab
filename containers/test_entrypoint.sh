@@ -23,4 +23,6 @@ cd $dir
 git checkout .
 git pull --all
 
+mise trust --all
+export MISE_TRUST_ALL=1
 $HOME/src/app/containers/test_env/run_cukes.sh "$@"
