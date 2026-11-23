@@ -58,10 +58,8 @@ COPY containers/test_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
 RUN mise settings add idiomatic_version_file_enable_tools ruby
 
-# Trust all mise configs so managed tools are activated in every context
-# (non-interactive scripts and mise exec subprocesses) without requiring
-# an explicit `mise trust` call to succeed first.
-ENV MISE_TRUST_ALL=1
+# Trust mise configs in the test checkout, including its mobile subdirectory.
+ENV MISE_TRUSTED_CONFIG_PATHS=/home/colab/src/app
 
 ENV DRIVER=docker
 

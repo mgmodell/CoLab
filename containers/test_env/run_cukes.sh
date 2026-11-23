@@ -3,8 +3,7 @@
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
 cd $HOME/src/app
-mise trust "$HOME/src/app/mise.toml"
-export PATH=$HOME/src/app/node_modules/.bin:$HOME/.local/share/mise/shims:$PATH
+export PATH="${HOME}/src/app/node_modules/.bin:${HOME}/.local/share/mise/shims:${HOME}/.local/bin:${PATH}"
 # eval "$(~/.local/bin/mise activate bash)"
 
 
@@ -137,11 +136,14 @@ export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
 echo "Installing platforms"
+if ! command -v mise >/dev/null 2>&1; then
+  echo "ERROR: mise not found; rebuild the tester image with ./buildContainers.sh -t" >&2
+  exit 1
+fi
 mise self-update -y
 export RUBY_BUILD_VENDOR_OPENSSL=1
 mise install
 eval "$(mise env --shell bash)"
-mise trust --all
 echo "Installing gems"
 bundle install --quiet
 echo "Installing packages using yarn"
