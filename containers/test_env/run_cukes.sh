@@ -141,6 +141,7 @@ mise self-update -y
 export RUBY_BUILD_VENDOR_OPENSSL=1
 mise install
 eval "$(mise env --shell bash)"
+mise trust --all
 echo "Installing gems"
 bundle install --quiet
 echo "Installing packages using yarn"
