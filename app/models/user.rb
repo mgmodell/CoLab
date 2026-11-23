@@ -68,6 +68,13 @@ class User < ApplicationRecord
 
   before_save :anonymize
 
+  scope :project_check_ins_at, lambda { |date|
+    joins( rosters: { course: { projects: :assessments } } )
+    left_joins( rosters: { course: { projects: { assessments: :installments } } } )
+      .merge( Assessment.active_at( date ) )
+      .merge( Roster.enrolled )
+  }
+
   # Give us a standard form of the name
   def name( anonymous )
     if anonymous

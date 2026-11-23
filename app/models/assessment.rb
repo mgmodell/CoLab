@@ -17,7 +17,7 @@ class Assessment < ApplicationRecord
                         .where( 'assessments.end_date >= ?', date )
                         .where( 'assessments.start_date <= ?', date )
                         .where( assessments: { active: true } )
-                        .where( projects: { active: true } )
+                        .where( projects: { active: true, deleted: false } )
                     }
 
   def is_completed_by_user( user )

@@ -13,6 +13,14 @@ class Installment < ApplicationRecord
 
   before_save :normalize_sums
 
+  scope :active_at, lambda { | date |
+                      joins( assessment: :project )
+                        .where( 'assessments.end_date >= ?', date )
+                        .where( 'assessments.start_date <= ?', date )
+                        .where( assessments: { active: true } )
+                        .where( projects: { active: true, deleted: false } )
+                    }
+
   TOTAL_VAL = 6000.0
 
   # Support inclusion of comments

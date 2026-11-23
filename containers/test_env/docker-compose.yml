@@ -7,7 +7,7 @@ services:
     volumes:
       - src:/home/colab/src/app
       - testmise:/home/colab/.local/share/mise
-      - ../../reports:/home/colab/src/app/reports
+      - ../../reports:/home/colab/src/app/reports:z
     depends_on:
       - db
       - selenium
