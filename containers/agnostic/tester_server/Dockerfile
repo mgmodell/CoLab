@@ -62,12 +62,9 @@ RUN mise settings add idiomatic_version_file_enable_tools ruby
 # (non-interactive scripts and mise exec subprocesses) without requiring
 # an explicit `mise trust` call to succeed first.
 ENV MISE_TRUST_ALL=1
-mise trust --all
 
 ENV DRIVER=docker
 
 USER root
-ENV MISE_TRUST_ALL=1
-mise trust --all
 ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
 CMD -r
