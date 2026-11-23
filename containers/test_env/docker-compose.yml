@@ -4,6 +4,7 @@ services:
     hostname: test-server-${HOSTNAME}
     environment:
       - PARENT=${HOSTNAME}
+      - MISE_TRUSTED_CONFIG_PATHS=/home/colab/src/app
     volumes:
       - src:/home/colab/src/app
       - testmise:/home/colab/.local/share/mise

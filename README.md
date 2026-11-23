@@ -296,7 +296,9 @@ After updating the test container, rebuild the tester image with
 `./buildContainers.sh -t` before running tests. Podman relabels the reports
 directory for SELinux and maps its ownership to the container user; with
 rootless Podman, use `podman unshare chown -R 0:0 reports` if you need to
-restore ownership to your host user.
+restore ownership to your host user. The test container automatically trusts
+mise configurations under its checkout, including `mobile/mise.toml`; only run
+trusted code in that checkout.
 
 ### Database management
 

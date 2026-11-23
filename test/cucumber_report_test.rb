@@ -58,6 +58,17 @@ class CucumberReportTest < Minitest::Test
     assert_includes options, 'progress'
   end
 
+  def test_test_container_trusts_only_the_checkout_for_mise
+    root = File.expand_path('..', __dir__)
+    compose = YAML.safe_load(File.read(File.join(root, 'containers/test_env/docker-compose.yml')))
+    environment = compose.fetch('services').fetch('app').fetch('environment')
+    assert_includes environment, 'MISE_TRUSTED_CONFIG_PATHS=/home/colab/src/app'
+
+    dockerfile = File.read(File.join(root, 'containers/agnostic/tester_server/Dockerfile'))
+    assert_match(/^ENV MISE_TRUSTED_CONFIG_PATHS=\/home\/colab\/src\/app$/, dockerfile)
+    refute_match(/^ENV MISE_TRUST_ALL=/, dockerfile)
+  end
+
   def test_test_runner_enables_html_only_with_uppercase_f
     app = File.join(@directory, 'src/app')
     bin = File.join(@directory, 'bin')
