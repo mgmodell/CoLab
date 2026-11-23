@@ -285,6 +285,19 @@ Run `./dev_serv.sh -h` inside the devcontainer to see all available options.
 
 Run `./run_tests.sh -h` for a full list of options.
 
+Use `./run_tests.sh -f features/path.feature -F` to run a feature with an HTML
+report, or `./run_tests.sh -n -l -r -o -F` to report on a full run. Without
+`-F`, the test runner does not enable HTML output. Open
+`reports/cucumber_report.html` on the host. Inside the devcontainer,
+`./dev_serv.sh -f features/path.feature` also generates this report.
+The report contains test results, so treat it as potentially sensitive.
+
+After updating the test container, rebuild the tester image with
+`./buildContainers.sh -t` before running tests. Podman relabels the reports
+directory for SELinux and maps its ownership to the container user; with
+rootless Podman, use `podman unshare chown -R 0:0 reports` if you need to
+restore ownership to your host user.
+
 ### Database management
 
 `mng_db.sh` manages database snapshots. Run it from your host machine (not inside the devcontainer). No host MySQL client is required — it uses `podman compose exec` internally, so the DB container must be running:
