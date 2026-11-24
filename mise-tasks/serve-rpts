@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="Serve the project's reports directory locally (for SSH port forwarding)"
+#MISE dir="{{config_root}}/reports"
+#USAGE arg "[port]" help="Port to listen on" default="8000"
+set -euo pipefail
+
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "Error: python3 is not installed or not in PATH." >&2
+    exit 1
+fi
+
+PORT="${usage_port}"
+
+echo "Serving '${PWD}' on 127.0.0.1:${PORT} (Press Ctrl+C to stop)"
+python3 -m http.server "$PORT" --bind 127.0.0.1
+
