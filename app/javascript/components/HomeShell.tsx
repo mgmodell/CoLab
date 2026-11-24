@@ -191,7 +191,7 @@ export default function HomeShell(props: Props) {
         <React.Fragment>
           <h1>{t("home.your_tasks")}</h1>
           <p>
-            {t("home.greeting", { name: user.first_name })},<br />
+            {t("home.greeting", { name: user.first_name })}<br />
             {t("home.task_interval", {
               postProcess: "interval",
               count: tasks.length

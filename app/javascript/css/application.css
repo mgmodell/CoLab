@@ -3,6 +3,9 @@
   --darker-color: hsl(35, 50%, 20%);
   --lighter-color: hsl(246, 56%, 34%);
 }
+html {
+  font-size: 11px;
+}
 body {
   /* max-width: 50rem; */
   padding: 1rem;
