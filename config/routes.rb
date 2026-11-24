@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   get 'hello_world', to: 'hello_world#index'
   scope 'api-backend' do
+    post 'push_devices' => 'push_devices#create', as: :push_devices,
+          constraints: ->(req) { req.format == :json }
+    delete 'push_devices' => 'push_devices#destroy',
+          constraints: ->(req) { req.format == :json }
     post "users/directory_search" => "user#directory_search", as: :directory_search,
           constraints: ->(req) { req.format == :json }
     post "users/delete_user" => "user#delete_user", as: :delete_user,

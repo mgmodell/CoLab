@@ -6,7 +6,10 @@ ruby '4.0.10'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.4.1'
 
-gem 'puma', '~> 8.1.2'
+# Native (iOS/Android) push notifications
+gem 'action_push_native'
+
+gem 'puma', '~> 8.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 

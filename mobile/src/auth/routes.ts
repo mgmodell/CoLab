@@ -18,5 +18,7 @@ export const ROUTES = {
   signIn: `${AUTH}/sign_in`,
   signOut: `${AUTH}/sign_out`,
   /** users/omniauth_callbacks#validate (Google ID token exchange) */
-  googleValidate: `${AUTH}/validate.json`
+  googleValidate: `${AUTH}/validate.json`,
+  /** push_devices#create / #destroy (native push token registration) */
+  pushDevices: `/api-backend/push_devices`
 } as const;
