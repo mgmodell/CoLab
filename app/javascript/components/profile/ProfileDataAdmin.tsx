@@ -69,6 +69,9 @@ export default function ProfileDataAdmin(props: Props) {
     state => state.context.status.lookupsLoaded
   );
   const user: IUser = useTypedSelector(state => state.profile.user);
+  const persistedUser: IUser = useTypedSelector(
+    state => state.profile.user_persisted
+  );
 
   const { setTourSteps } = useTour();
 
@@ -164,7 +167,16 @@ export default function ProfileDataAdmin(props: Props) {
   const existingProfile = profileReady && undefined != user && user.id > 0;
 
   const timezones = useTypedSelector(state => state.context.lookups.timezones);
-  const countries = useTypedSelector(state => state.context.lookups.countries);
+  const lookupCountries = useTypedSelector(
+    state => state.context.lookups.countries
+  );
+  const countries = useMemo(
+    () =>
+      Object.values(lookupCountries || {}).sort((a: any, b: any) =>
+        String(a.name).localeCompare(String(b.name))
+      ),
+    [lookupCountries]
+  );
   const cipCodes = useTypedSelector(state => state.context.lookups.cip_codes);
   const genders = useTypedSelector(state => state.context.lookups.genders);
   const schools = useTypedSelector(state => state.context.lookups.schools);
@@ -298,19 +310,22 @@ export default function ProfileDataAdmin(props: Props) {
           .then(response => {
             const data = response.data;
             //Find the selected state in the retrieved list
-            const foundSelectedStates = data.filter(item => {
-              return (
-                user.home_state_id === item.id ||
-                item.code === "__:" + countryCode
-              );
-            });
+            const ownState = data.filter(
+              item => user.home_state_id === item.id
+            );
+            const foundSelectedStates =
+              ownState.length > 0
+                ? ownState
+                : data.filter(item => item.code === "__:" + countryCode);
 
             setStates(data);
 
-            if (1 === foundSelectedStates.length) {
+            if (
+              1 === foundSelectedStates.length &&
+              foundSelectedStates[0].id !== user.home_state_id
+            ) {
               setProfileHomeState(foundSelectedStates[0].id);
             }
-            setDirty(DIRTY_STATUS.CLEAN);
           })
           .catch(error => {
             console.log("error", error);
@@ -427,15 +442,24 @@ export default function ProfileDataAdmin(props: Props) {
     setSuggestedLocalHomeLanguages
   ] = useState(languages);
 
+  const profileChanged = useMemo(
+    () => JSON.stringify(user) !== JSON.stringify(persistedUser),
+    [user, persistedUser]
+  );
+
+  useEffect(() => {
+    setDirty(profileChanged ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
+  }, [profileChanged]);
+
   const saveButton = useMemo(
     () => {
       return (
-      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && !(!user.welcomed || !tourCompleted)}>
+      <Button id="profile-save-btn" onClick={saveProfile} disabled={!dirty && Boolean(user.welcomed)}>
         {null == user.id ? t('create_btn') : t('save_btn')}
       </Button>
     )
   },
-    [dirty, user.welcomed, tourCompleted]
+    [dirty, user.welcomed, user]
   );
 
   const resetButton = (
@@ -681,7 +705,7 @@ export default function ProfileDataAdmin(props: Props) {
                     itemID="profile_country"
                     name="profile_country"
                     value={user.country || 0}
-                    options={Object.values(countries)}
+                    options={countries}
                     optionValue="code"
                     optionLabel="name"
                     onChange={event => {
