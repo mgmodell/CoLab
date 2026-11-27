@@ -321,6 +321,7 @@ class HomeController < ApplicationController
 
     # REFACTOR: Consolidated boolean flags
     profile_hash[:user].merge!(
+      country: current_user.home_state&.home_country&.code,
       is_instructor: current_user.is_instructor?,
       is_admin: current_user.is_admin?,
       is_researcher: current_user.is_researcher?,
