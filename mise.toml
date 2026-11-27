@@ -1,9 +1,9 @@
 [tools]
 node = "26.13.1"
 overmind = "latest"
-podman = { version = "6.2.0", rename_exe = "podman" }
+podman = { version = "6.2.1", rename_exe = "podman" }
 python = "3.13.7"
 ruby = "4.0.10"
 rust = "1.97.1"
-usage = { version = "7.4.0", workflow = "publish-cli.yml" }
+usage = { version = "7.4.1", workflow = "publish-cli.yml" }
 yarn = "4.19.0"
