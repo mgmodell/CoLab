@@ -62,7 +62,7 @@ export default function ProfileDataAdmin(props: Props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const [, setDirty] = useDirtyStatus();
+  const [dirty, setDirty] = useDirtyStatus();
 
   const { t } = useTranslation(`${category}s`);
   const lookupStatus = useTypedSelector(
@@ -442,14 +442,14 @@ export default function ProfileDataAdmin(props: Props) {
     setSuggestedLocalHomeLanguages
   ] = useState(languages);
 
-  const dirty = useMemo(
+  const profileChanged = useMemo(
     () => JSON.stringify(user) !== JSON.stringify(persistedUser),
     [user, persistedUser]
   );
 
   useEffect(() => {
-    setDirty(dirty ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
-  }, [dirty]);
+    setDirty(profileChanged ? DIRTY_STATUS.DIRTY : DIRTY_STATUS.CLEAN);
+  }, [profileChanged]);
 
   const saveButton = useMemo(
     () => {
